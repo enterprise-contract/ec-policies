@@ -18,5 +18,8 @@ jobs:
     - name: Install opa
       run: make install-opa
 
+    - name: Validate formatting
+      run: make fmt-check
+
     - name: Run tests
       run: make test

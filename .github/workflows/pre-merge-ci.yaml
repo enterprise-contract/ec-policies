@@ -1,0 +1,26 @@
+---
+name: Pre-merge CI
+
+on:
+  pull_request:
+    branches:
+    - main
+
+  push:
+    branches:
+    - main
+
+  workflow_dispatch:
+
+jobs:
+  opa-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install opa
+      run: make install-opa
+
+    - name: Run tests
+      run: make test

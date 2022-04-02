@@ -24,11 +24,15 @@ fmt-check:
 ci: fmt-check test
 
 OPA_VER=v0.39.0
-OPA_URL=https://openpolicyagent.org/downloads/$(OPA_VER)/opa_linux_amd64_static
+OPA_FILE=opa_linux_amd64_static
+OPA_URL=https://openpolicyagent.org/downloads/$(OPA_VER)/$(OPA_FILE)
+OPA_SHA=19a24f51d954190c02aafeac5867c9add286c6ab12ea85b3d8d348c98d633319
 OPA_DEST=/usr/bin/opa
 
 install-opa:
-	sudo curl -s -L -o $(OPA_DEST) $(OPA_URL)
+	curl -s -L -O $(OPA_URL)
+	echo "$(OPA_SHA) $(OPA_FILE)" | sha256sum --check
+	sudo cp $(OPA_FILE) $(OPA_DEST)
 	sudo chmod 755 $(OPA_DEST)
 
 .PHONY: help test fmt fmt-check ci install-opa

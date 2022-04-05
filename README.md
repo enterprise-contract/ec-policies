@@ -15,12 +15,22 @@ If you're using Linux you can install it like this:
     make install-opa
 
 
+Formatting
+----------
+
+The rego files should be formatted using the standard format. To apply the
+standard format run this before committing:
+
+    make fmt
+
+
 Running tests
 -------------
 
-From the top level directory you can run all tests like this:
+From the top level directory you can run all tests and formatting checks like
+this:
 
-    make test
+    make ci
 
 
 Writing tests

@@ -23,6 +23,17 @@ From the top level directory you can run all tests like this:
     make test
 
 
+Writing tests
+-------------
+
+Policies must have unit tests validating them.
+All test files must adhere to the naming convention:
+
+    file.rego file_test.rego
+
+Refer to the [policy testing docs](https://www.openpolicyagent.org/docs/latest/policy-testing/) for more information.
+
+
 See also
 --------
 

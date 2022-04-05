@@ -27,12 +27,17 @@ OPA_VER=v0.39.0
 OPA_FILE=opa_linux_amd64_static
 OPA_URL=https://openpolicyagent.org/downloads/$(OPA_VER)/$(OPA_FILE)
 OPA_SHA=19a24f51d954190c02aafeac5867c9add286c6ab12ea85b3d8d348c98d633319
-OPA_DEST=/usr/bin/opa
+ifndef OPA_BIN
+	OPA_BIN=$(HOME)/bin
+endif
+OPA_DEST=$(OPA_BIN)/opa
 
 install-opa:
 	curl -s -L -O $(OPA_URL)
 	echo "$(OPA_SHA) $(OPA_FILE)" | sha256sum --check
-	sudo cp $(OPA_FILE) $(OPA_DEST)
-	sudo chmod 755 $(OPA_DEST)
+	mkdir -p $(OPA_BIN)
+	cp $(OPA_FILE) $(OPA_DEST)
+	chmod 755 $(OPA_DEST)
+	rm $(OPA_FILE)
 
 .PHONY: help test fmt fmt-check ci install-opa

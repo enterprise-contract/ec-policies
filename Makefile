@@ -11,6 +11,7 @@ help:
 	@echo "  make show-data    # Show all data visible to opa in one big object"
 	@echo "  make show-keys    # List all the keys in the data"
 	@echo "  make check        # Check rego policies against the fetched data"
+	@echo "  make data-to-rego # Regenerate the policies/test_data.rego file"
 
 test:
 	@opa test . -v
@@ -63,6 +64,22 @@ check:
 	  --format $(OPA_FORMAT) \
 	  $(OPA_QUERY)
 
+# Generate a rego file that contains a full and complete set of realistic
+# data in a rego var. This is useful for writing tests.
+#
+TEST_DATA_REGO_FILE=$(POLICIES_DIR)/test_data.rego
+
+data-to-rego:
+	@( \
+	  echo "package test_data"; \
+	  echo "# Generated automatically with \`make data-to-rego\`"; \
+	  echo -n "data :="; \
+	  $(MAKE) --no-print-directory show-json | jq; \
+	) > $(TEST_DATA_REGO_FILE)
+	@$(MAKE) --no-print-directory fmt
+	@echo "To stage changes:"
+	@echo "  git add $$(realpath --relative-to=$$(pwd) $(TEST_DATA_REGO_FILE))"
+
 OPA_VER=v0.39.0
 OPA_FILE=opa_linux_amd64_static
 OPA_URL=https://openpolicyagent.org/downloads/$(OPA_VER)/$(OPA_FILE)
@@ -80,4 +97,4 @@ install-opa:
 	chmod 755 $(OPA_DEST)
 	rm $(OPA_FILE)
 
-.PHONY: help test fmt fmt-check ci install-opa fetch-data show-data check
+.PHONY: help test fmt fmt-check ci install-opa fetch-data show-data check data-to-rego

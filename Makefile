@@ -9,6 +9,9 @@ help:
 test:
 	@opa test . -v
 
+quiet-test:
+	@opa test .
+
 # Rewrite all rego files with the preferred format
 # Use before you commit
 fmt:
@@ -21,7 +24,7 @@ fmt-check:
 	@opa fmt . --list --fail >/dev/null 2>&1
 
 # For convenience. If this passes then it should pass in GitHub
-ci: fmt-check test
+ci: fmt-check quiet-test
 
 OPA_VER=v0.39.0
 OPA_FILE=opa_linux_amd64_static

@@ -8,6 +8,7 @@ help:
 
 test:
 	@opa test . -v
+	@opa test . --threshold 100 >/dev/null 2>&1
 
 # Rewrite all rego files with the preferred format
 # Use before you commit

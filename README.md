@@ -44,6 +44,29 @@ All test files must adhere to the naming convention:
 Refer to the [policy testing docs](https://www.openpolicyagent.org/docs/latest/policy-testing/) for more information.
 
 
+Running policies against real data
+----------------------------------
+
+Assuming you're authenticated to a cluster, the cluster has at least one
+pipeline run, and you've have checked out the build-definitions repo in a
+sibling directory to this one:
+
+    make fetch-data
+
+or
+
+    make fetch-data PR=<pipeline-run-name>
+
+To inspect the fetched data:
+
+    make show-data
+    make show-keys
+
+To run the policies against the fetched data:
+
+    make check
+
+
 See also
 --------
 

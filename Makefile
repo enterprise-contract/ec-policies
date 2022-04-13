@@ -5,9 +5,18 @@ help:
 	@echo "  make fmt          # Apply default formatting to all rego files"
 	@echo "  make ci           # Check formatting and run all tests"
 	@echo "  make install-opa  # Install opa if you don't have it already (Linux only)"
+	@echo "  make fetch-data   # Fetch data for the most recent pipeline run"
+	@echo "                    # Add \`PR=prname\` to fetch a specific pipeline run"
+	@echo "  make show-files   # List data files"
+	@echo "  make show-data    # Show all data visible to opa in one big object"
+	@echo "  make show-keys    # List all the keys in the data"
+	@echo "  make check        # Check rego policies against the fetched data"
 
 test:
 	@opa test . -v
+
+quiet-test:
+	@opa test .
 
 # Rewrite all rego files with the preferred format
 # Use before you commit
@@ -21,7 +30,38 @@ fmt-check:
 	@opa fmt . --list --fail >/dev/null 2>&1
 
 # For convenience. If this passes then it should pass in GitHub
-ci: fmt-check test
+ci: fmt-check quiet-test
+
+# Assume you have the build-definitions repo checked out close by
+#
+THIS_DIR=$(shell git rev-parse --show-toplevel)
+BUILD_DEFS=$(THIS_DIR)/../build-definitions
+BUILD_DEFS_SCRIPTS=$(BUILD_DEFS)/appstudio-utils/util-scripts
+DATA_DIR=$(THIS_DIR)/data
+
+define BD_SCRIPT
+.PHONY: $(1)-$(2)
+$(1)-$(2):
+	@cd $(BUILD_DEFS_SCRIPTS) && env DATA_DIR=$(DATA_DIR) ./$(1)-ec-data.sh $(2) $(3)
+endef
+$(eval $(call BD_SCRIPT,fetch,,$(PR)))
+$(eval $(call BD_SCRIPT,show,files))
+$(eval $(call BD_SCRIPT,show,keys))
+$(eval $(call BD_SCRIPT,show,json))
+$(eval $(call BD_SCRIPT,show,yaml))
+
+show-data: show-yaml
+fetch-data: fetch-
+
+POLICIES_DIR=$(THIS_DIR)/policies
+OPA_FORMAT=pretty
+OPA_QUERY=data.hacbs.contract.main.deny
+check:
+	@opa eval \
+	  --data $(DATA_DIR) \
+	  --data $(POLICIES_DIR) \
+	  --format $(OPA_FORMAT) \
+	  $(OPA_QUERY)
 
 OPA_VER=v0.39.0
 OPA_FILE=opa_linux_amd64_static
@@ -40,4 +80,4 @@ install-opa:
 	chmod 755 $(OPA_DEST)
 	rm $(OPA_FILE)
 
-.PHONY: help test fmt fmt-check ci install-opa
+.PHONY: help test fmt fmt-check ci install-opa fetch-data show-data check

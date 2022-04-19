@@ -14,6 +14,7 @@ help:
 
 test:
 	@opa test . -v
+	@opa test . --threshold 100 >/dev/null 2>&1
 
 quiet-test:
 	@opa test .

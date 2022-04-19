@@ -1,11 +1,17 @@
 package hacbs.contract.main
 
+import data.hacbs.contract.attestation_type
 import data.hacbs.contract.not_useful
-import data.hacbs.contract.transparency_log_attestations
+import data.hacbs.contract.step_image_registries
 
 deny[msg] {
-	not skip("transparency_log_attestations")
-	count(transparency_log_attestations.deny[msg]) > 0
+	not skip("attestation_type")
+	count(attestation_type.deny[msg]) > 0
+}
+
+deny[msg] {
+	not skip("step_image_registries")
+	count(step_image_registries.deny[msg]) > 0
 }
 
 deny[msg] {

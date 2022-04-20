@@ -16,8 +16,3 @@ quoted_values_string(value_list) = result {
 
 	result := concat(", ", quoted_list)
 }
-
-# (Just an idea, it's not currently used)
-log_entry_string(log_index, rekor_host) = result {
-	result := sprintf("in transparency log entry %d on %s", [log_index, rekor_host])
-}

@@ -20,7 +20,3 @@ test_quoted_values_string {
 	"'a', 'b', 'c'" == quoted_values_string(my_list)
 	"'a', 'b', 'c'" == quoted_values_string(my_set)
 }
-
-test_log_entry_string {
-	"in transparency log entry 123 on example.com" == log_entry_string(123, "example.com")
-}

@@ -11,13 +11,19 @@ help:
 	@echo "  make show-data    # Show all data visible to opa in one big object"
 	@echo "  make show-keys    # List all the keys in the data"
 	@echo "  make check        # Check rego policies against the fetched data"
+	@echo "  make coverage     # Show which lines of code are not covered by tests"
 
 test:
 	@opa test . -v
 	@opa test . --threshold 100 >/dev/null 2>&1
 
+# Show which lines of code are not covered
+coverage:
+	@opa test . --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null"
+
 quiet-test:
 	@opa test .
+	@opa test . --threshold 100 >/dev/null 2>&1
 
 # Rewrite all rego files with the preferred format
 # Use before you commit

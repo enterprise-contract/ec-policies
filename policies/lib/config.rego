@@ -16,3 +16,8 @@ allowed_registries := [
 	"registry.redhat.io/openshift-pipelines",
 	"registry.redhat.io/openshift4",
 ]
+
+#
+# List of allowed annotations used in task steps.
+#
+allowed_annotations := ["Red Hat"]

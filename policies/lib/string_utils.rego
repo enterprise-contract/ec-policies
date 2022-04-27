@@ -1,7 +1,7 @@
 package lib
 
 item_in_list(item, list_or_set) {
-	list_or_set[_] = item
+	list_or_set[_] == item
 }
 
 list_includes_item(list_or_set, item) {

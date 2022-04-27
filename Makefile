@@ -35,6 +35,13 @@ quiet-test:
 	@opa test .
 	@opa test . --threshold 100 >/dev/null 2>&1
 
+# Do `dnf install entr` then run this a separate terminal or split window while hacking
+live-test:
+	@trap exit SIGINT; \
+	while true; do \
+	  git ls-files -c -o '*.rego' | entr -d -c $(MAKE) --no-print-directory quiet-test; \
+	done
+
 # Rewrite all rego files with the preferred format
 # Use before you commit
 fmt:
@@ -135,5 +142,5 @@ install-opa:
 
 #--------------------------------------------------------------------
 
-.PHONY: help test fmt fmt-check ci install-opa check \
-  clean-data dummy-config fetch-att fetch-data show-data
+.PHONY: help test coverage quiet-test live-test fmt fmt-check ci clean-data \
+  dummy-config fetch-att show-data fetch-data check install-opa

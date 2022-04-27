@@ -32,6 +32,8 @@ this:
 
     make ci
 
+See `Makefile` for other ways to run the tests.
+
 
 Writing tests
 -------------

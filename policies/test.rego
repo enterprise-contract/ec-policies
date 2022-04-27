@@ -19,7 +19,7 @@ deny[{"msg": msg}] {
 	msg := "Found tests without results"
 }
 
-# Check if all tests succeeded 
+# Check if all tests succeeded
 deny[{"msg": msg}] {
 	# Collect all failed tests and convert their name to "test:<name>" format
 	# Reminder: the tests reside in $DATA_DIR/test/<name>/data.json

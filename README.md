@@ -32,6 +32,8 @@ this:
 
     make ci
 
+See `Makefile` for other ways to run the tests.
+
 
 Writing tests
 -------------
@@ -47,14 +49,18 @@ Refer to the [policy testing docs](https://www.openpolicyagent.org/docs/latest/p
 Running policies against real data
 ----------------------------------
 
-Assuming you're authenticated to a cluster, the cluster has at least one
-pipeline run, and you've have checked out the build-definitions repo in a
-sibling directory to this one:
+Fetch a signed attestation from a registry:
+
+    make fetch-att
+    make fetch-att IMAGE=<image-url-and-ref>
+
+Fetch pipeline run data from a cluster (deprecated):
+
+Requires that you're authenticated to a cluster with a pipeline run, and you
+have the build-definitions repo checked out in a sibling directory to this
+one:
 
     make fetch-data
-
-or
-
     make fetch-data PR=<pipeline-run-name>
 
 To inspect the fetched data:
@@ -62,9 +68,16 @@ To inspect the fetched data:
     make show-data
     make show-keys
 
+or just take a look at it under `./data`.
+
 To run the policies against the fetched data:
 
     make check
+
+Todo:
+- Describe `data/config/policy/data.json` and how to create it.
+- Describe how to get realistic data for `conftest-clair`
+  and `sanity-label-check` under `data/test`
 
 
 See also

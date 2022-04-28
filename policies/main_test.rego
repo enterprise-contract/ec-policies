@@ -27,3 +27,24 @@ test_test_succeeds {
 test_test_fails {
 	count(deny) > 0 with data.test as [{"result": "FAILURE"}] with data.config.policy as {"non_blocking_checks": all_tests - {"test"}}
 }
+
+test_pass_messages {
+	expected := {{"msg": "[bar] All good"}}
+	expected == passed with data.lib.messages.messages as {"bar": {"pass_message": "All good"}} with data.hacbs.contract.main.deny as set()
+}
+
+test_final_result {
+	mock_messages := {"bar": {"pass_message": "All good"}}
+	expected_1 := {"failed": set(), "passed": {{"msg": "[bar] All good"}}}
+
+	expected_1 == final_result with data.lib.messages.messages as mock_messages
+		with data.hacbs.contract.main.deny as set()
+
+	expected_2 := {"failed": {{"msg": "[bar] Bar failed"}}, "passed": {{"msg": "[bar] All good"}}}
+
+	# Todo: This is how it should work. If the error code appears in the failed list, then it should
+	# be removed from the pass messages.
+	#expected_2 := {"failed": {{"msg": "[bar] Bar failed"}}, "passed": set()}
+	expected_2 == final_result with data.lib.messages.messages as mock_messages
+		with data.hacbs.contract.main.deny as {{"msg": "[bar] Bar failed"}}
+}

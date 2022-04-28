@@ -18,6 +18,6 @@ test_image_registry_valid {
 test_attestation_type_invalid {
 	deny_set := deny with data.attestations as prepare_mock_attestation_data(bad_image)
 	count(deny_set) == 1
-	expected_msg := "Step 0 has disallowed registry 'hackz.io/openshift-pipelines' for attestation."
+	expected_msg := "[step_image_disallowed] Step 0 has disallowed registry 'hackz.io/openshift-pipelines' for attestation."
 	deny_set == {{"msg": expected_msg}}
 }

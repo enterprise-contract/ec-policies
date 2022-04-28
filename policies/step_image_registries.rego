@@ -15,10 +15,7 @@ deny[{"msg": msg}] {
 	registry_without_tag := split(registry, "@")[0]
 	not registry_is_allowed(registry_without_tag)
 
-	msg := sprintf(
-		"Step %d has disallowed registry '%s' for attestation.",
-		[step_index, registry],
-	)
+	msg := lib.messages.fail_message("step_image_disallowed", [step_index, registry])
 }
 
 registry_is_allowed(registry) {

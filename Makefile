@@ -113,7 +113,7 @@ fetch-data: fetch-
 
 POLICIES_DIR=$(THIS_DIR)/policies
 OPA_FORMAT=pretty
-OPA_QUERY=data.hacbs.contract.main.deny
+OPA_QUERY=data.hacbs.contract.main.final_result
 check:
 	@opa eval \
 	  --data $(DATA_DIR) \

@@ -1,4 +1,4 @@
-package hacbs.contract.test
+package hacbs.contract.policies.test
 
 # Check if we have any test data is present
 deny[{"msg": msg}] {

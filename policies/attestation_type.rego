@@ -1,4 +1,4 @@
-package hacbs.contract.attestation_type
+package hacbs.contract.policies.attestation_type
 
 import data.lib
 

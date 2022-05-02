@@ -1,4 +1,4 @@
-package hacbs.contract.not_useful
+package hacbs.contract.policies.not_useful
 
 test_not_useful {
 	count(deny) == 1

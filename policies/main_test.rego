@@ -1,6 +1,6 @@
 package hacbs.contract.main
 
-all_tests := {"chains_config", "cluster_sanity", "transparency_urls", "transparency_log_attestations", "not_useful", "test"}
+all_tests := {p | data.hacbs.contract.policies[policy]; p := policy}
 
 test_main {
 	deny with data.hacbs.contract.attestation_type.deny as {{"msg": "foo"}}
@@ -9,7 +9,10 @@ test_main {
 }
 
 test_failing_without_skipping {
-	count(deny) > 0 with data.config.policy as {"non_blocking_checks": {}}
+	# Let's make sure that the contract remains the same by checking what `deny` is set to
+	# this makes this test a bit more fragile, but the assertion is better as we know that
+	# the output hasn't changed it's shape
+	{{"msg": "It just feels like a bad day to do a release"}, {"msg": "No test data provided"}} == deny with data.config.policy as {"non_blocking_checks": {}}
 }
 
 test_succeeding_when_skipping_all {
@@ -17,7 +20,7 @@ test_succeeding_when_skipping_all {
 }
 
 test_test_can_be_skipped {
-	count(deny) > 0 with data.config.policy as {"non_blocking_checks": all_tests - {"test"}}
+	{{"msg": "No test data provided"}} == deny with data.config.policy as {"non_blocking_checks": all_tests - {"test"}}
 }
 
 test_test_succeeds {
@@ -25,5 +28,5 @@ test_test_succeeds {
 }
 
 test_test_fails {
-	count(deny) > 0 with data.test as [{"result": "FAILURE"}] with data.config.policy as {"non_blocking_checks": all_tests - {"test"}}
+	{{"msg": "All tests did not end with SUCCESS"}} == deny with data.test as [{"result": "FAILURE"}] with data.config.policy as {"non_blocking_checks": all_tests - {"test"}}
 }

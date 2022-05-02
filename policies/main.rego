@@ -1,9 +1,9 @@
-package hacbs.contract.main
+package main
 
 deny = {denial |
 	not skip(policy)
-	data.hacbs.contract.policies[policy].deny[_]
-	denial := data.hacbs.contract.policies[policy].deny[_]
+	data.policies[policy].deny[_]
+	denial := data.policies[policy].deny[_]
 }
 
 skip(test_name) {

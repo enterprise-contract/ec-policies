@@ -1,4 +1,4 @@
-package hacbs.contract.policies.attestation_type
+package policies.attestation_type
 
 test_attestation_type_ok {
 	attestation_type_valid("https://in-toto.io/Statement/v0.1")

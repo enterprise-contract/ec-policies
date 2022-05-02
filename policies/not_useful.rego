@@ -1,4 +1,4 @@
-package hacbs.contract.policies.not_useful
+package policies.not_useful
 
 #
 # This is demoing the concept of being able to conveniently exclude

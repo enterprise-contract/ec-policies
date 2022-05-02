@@ -1,11 +1,11 @@
-package hacbs.contract.main
+package main
 
-all_tests := {p | data.hacbs.contract.policies[policy]; p := policy}
+all_tests := {p | data.policies[policy]; p := policy}
 
 test_main {
-	deny with data.hacbs.contract.attestation_type.deny as {{"msg": "foo"}}
-	deny with data.hacbs.contract.step_image_registries.deny as {{"msg": "foo"}}
-	deny with data.hacbs.contract.not_useful.deny as {{"msg": "foo"}} with data.config.policy.non_blocking_checks as []
+	deny with data.attestation_type.deny as {{"msg": "foo"}}
+	deny with data.step_image_registries.deny as {{"msg": "foo"}}
+	deny with data.not_useful.deny as {{"msg": "foo"}} with data.config.policy.non_blocking_checks as []
 }
 
 test_failing_without_skipping {

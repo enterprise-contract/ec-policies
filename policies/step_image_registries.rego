@@ -1,4 +1,4 @@
-package hacbs.contract.policies.step_image_registries
+package policies.step_image_registries
 
 import data.lib
 

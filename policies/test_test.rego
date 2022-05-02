@@ -1,4 +1,4 @@
-package hacbs.contract.test
+package policies.test
 
 test_needs_to_have_data {
 	deny == {{"msg": "No test data provided"}}

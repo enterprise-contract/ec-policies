@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+COVERAGE = @opa test . --threshold 100 2>&1 | sed -e '/^Code coverage/!d' -e 's/^/ERROR: /'; exit $${PIPESTATUS[0]}
 
 help:
 	@echo "Usage:"
@@ -25,7 +27,7 @@ help:
 
 test:
 	@opa test . -v
-	@opa test . --threshold 100 >/dev/null 2>&1
+	$(COVERAGE)
 
 # Show which lines of code are not covered
 coverage:
@@ -33,7 +35,7 @@ coverage:
 
 quiet-test:
 	@opa test .
-	@opa test . --threshold 100 >/dev/null 2>&1
+	$(COVERAGE)
 
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
 live-test:

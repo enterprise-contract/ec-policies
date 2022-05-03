@@ -22,8 +22,5 @@ jobs:
     - name: Install opa
       run: make install-opa OPA_BIN=$HOME/.local/bin
 
-    - name: Validate formatting
-      run: make fmt-check
-
-    - name: Run tests
-      run: make test
+    - name: Run checks
+      run: make ci

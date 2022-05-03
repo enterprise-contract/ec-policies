@@ -58,3 +58,9 @@ test_policy_not_ignored_when_effective_missing {
 	# Verify that the policy is enforced by default
 	expected_error == deny with data.config.policy as policy_config
 }
+
+test_future_denial {
+	future := time.add_date(time.now_ns(), 0, 0, 1)
+	{{"msg": "It just feels like a bad day to do a release"}} == future_deny with data.config.policy as {"non_blocking_checks": all_tests - {"not_useful"}}
+		with data.policies.not_useful.effective_on as future
+}

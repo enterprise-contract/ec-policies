@@ -58,7 +58,6 @@ fmt-check:
 opa-check:
 	@opa check . --strict
 
-# For convenience. If this passes then it should pass in GitHub
 ci: fmt-check quiet-test opa-check
 
 #--------------------------------------------------------------------

@@ -125,10 +125,10 @@ check:
 
 #--------------------------------------------------------------------
 
-OPA_VER=v0.39.0
+OPA_VER=v0.40.0
 OPA_FILE=opa_linux_amd64_static
 OPA_URL=https://openpolicyagent.org/downloads/$(OPA_VER)/$(OPA_FILE)
-OPA_SHA=19a24f51d954190c02aafeac5867c9add286c6ab12ea85b3d8d348c98d633319
+OPA_SHA=73e96d8071c6d71b4a9878d7f55bcb889173c40c91bbe599f9b7b06d3a472c5f
 ifndef OPA_BIN
   OPA_BIN=$(HOME)/bin
 endif

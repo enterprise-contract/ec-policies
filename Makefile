@@ -126,9 +126,15 @@ check:
 #--------------------------------------------------------------------
 
 OPA_VER=v0.40.0
-OPA_FILE=opa_linux_amd64_static
+OPA_SHA_darwin_amd64=bbd2b41ce8ce3f2cbe06e06a2d05c66185a5e099ff7ac0edcce30116e5cd7831
+OPA_SHA_darwin_arm64_static=4b3f54b8dd45e5cc0c2b4242b94516f400202aa84f9e91054145853cfbba4d5f
+OPA_SHA_linux_amd64_static=73e96d8071c6d71b4a9878d7f55bcb889173c40c91bbe599f9b7b06d3a472c5f
+OPA_SHA_windows_amd64=120ac24bde96cb022028357045edb5680b983c7cfb253b81b4270aedcf9bdf59
+OPA_OS_ARCH=$(shell go env GOOS)_$(shell go env GOARCH)
+OPA_STATIC=$(if $(OPA_SHA_${OPA_OS_ARCH}_static),_static)
+OPA_FILE=opa_$(OPA_OS_ARCH)$(OPA_STATIC)
 OPA_URL=https://openpolicyagent.org/downloads/$(OPA_VER)/$(OPA_FILE)
-OPA_SHA=73e96d8071c6d71b4a9878d7f55bcb889173c40c91bbe599f9b7b06d3a472c5f
+OPA_SHA=$(OPA_SHA_${OPA_OS_ARCH}${OPA_STATIC})
 ifndef OPA_BIN
   OPA_BIN=$(HOME)/bin
 endif

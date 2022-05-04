@@ -55,8 +55,10 @@ fmt-check:
 	@opa fmt . --list | xargs -r -n1 echo 'Incorrect formatting found in'
 	@opa fmt . --list --fail >/dev/null 2>&1
 
-# For convenience. If this passes then it should pass in GitHub
-ci: fmt-check quiet-test
+opa-check:
+	@opa check . --strict
+
+ci: fmt-check quiet-test opa-check
 
 #--------------------------------------------------------------------
 

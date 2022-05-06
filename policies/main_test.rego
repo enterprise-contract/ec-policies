@@ -32,35 +32,55 @@ test_test_fails {
 }
 
 test_policy_ignored_when_not_yet_effective {
-	# Change effective_on date to tomorrow to verify it becomes ignored
-	future := time.add_date(time.now_ns(), 0, 0, 1)
-	set() == deny with data.config.policy as {"non_blocking_checks": all_tests - {"not_useful"}}
-		with data.policies.not_useful.effective_on as future
+	future_denial := {"msg": "fails in the distant future", "effective_on": "2099-05-02T00:00:00Z"}
+	set() == deny with denials as {future_denial}
+		with data.config.policy as {"non_blocking_checks": all_tests - {"test", "not_useful"}}
+
+	{future_denial} == future_deny with denials as {future_denial}
+		with data.config.policy as {"non_blocking_checks": all_tests - {"test", "not_useful"}}
+}
+
+format_rfc3339_ns(ns) = fmt {
+	date := time.date(ns)
+	clock := time.clock(ns)
+	fmt := sprintf("%0.2d-%0.2d-%0.2dT%0.2d:%0.2d:%0.2dZ", array.concat(date, clock))
 }
 
 test_policy_not_ignored_when_effective_with_time_travel {
 	# On the policy, change effective_on date to tomorrow so it should become ignored, but
 	# also change the policy config to a future date (time travel) so it is no longer ignored
 	future := time.add_date(time.now_ns(), 0, 0, 1)
-	policy_config := {"non_blocking_checks": all_tests - {"not_useful"}, "when_ns": future}
-	expected_error := {{"msg": "It just feels like a bad day to do a release"}}
-	expected_error == deny with data.config.policy as policy_config
-		with data.policies.not_useful.effective_on as future
+	policy_config := {"when_ns": future}
+	expected_error := {{"msg": "should fail", "effective_on": format_rfc3339_ns(future)}}
+
+	{expected_error} == deny with denials as {expected_error}
+		with data.config.policy as policy_config
+
+	set() == future_deny with denials as {expected_error}
+		with data.config.policy as policy_config
 }
 
 test_policy_not_ignored_when_effective_missing {
-	# Verify the assumption that effective_on is not set on the policy
-	object.get(data.policies.not_useful, ["effective_on"], "<undefined>") == "<undefined>"
-
-	policy_config := {"non_blocking_checks": all_tests - {"not_useful"}}
-	expected_error := {{"msg": "It just feels like a bad day to do a release"}}
+	policy_config := {}
+	expected_error := {{"msg": "should fail"}}
 
 	# Verify that the policy is enforced by default
-	expected_error == deny with data.config.policy as policy_config
+	{expected_error} == deny with denials as {expected_error}
+		with data.config.policy as policy_config
 }
 
 test_future_denial {
 	future := time.add_date(time.now_ns(), 0, 0, 1)
-	{{"msg": "It just feels like a bad day to do a release"}} == future_deny with data.config.policy as {"non_blocking_checks": all_tests - {"not_useful"}}
-		with data.policies.not_useful.effective_on as future
+	expected_error := {"msg": "should not fail", "effective_on": format_rfc3339_ns(future)}
+
+	set() == deny with denials as {expected_error}
+		with data.config as {}
+
+	{expected_error} == future_deny with denials as {expected_error}
+		with data.config as {}
+}
+
+test_in_future {
+	denial := {"msg": "should fail", "effective_on": "2099-05-02T00:00:00Z"}
+	true == in_future(denial) with data.config as {}
 }

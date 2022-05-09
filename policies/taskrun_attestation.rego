@@ -1,4 +1,4 @@
-package hacbs.contract.pipelinerun_attestation
+package hacbs.contract.taskrun_attestation
 
 
 deny[msg] {

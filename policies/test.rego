@@ -2,7 +2,7 @@ package policies.test
 
 # Check if we have any test data is present
 deny[{"msg": msg}] {
-	not input.test
+	not input.result
 	msg := "No tests provided"
 }
 

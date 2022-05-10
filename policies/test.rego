@@ -2,19 +2,19 @@ package policies.test
 
 # Check if we have any test data is present
 deny[{"msg": msg}] {
-	not input.result
-	msg := "No tests provided"
+	not data.test
+	msg := "No test data provided"
 }
 
 # Check if we have any test data provided
 deny[{"msg": msg}] {
-	count(input.test) == 0
+	count(data.test) == 0
 	msg := "Empty test data provided"
 }
 
 deny[{"msg": msg}] {
-	with_results := [result | result := input.test[_].result]
-	count(with_results) != count(input.test)
+	with_results := [result | result := data.test[_].result]
+	count(with_results) != count(data.test)
 
 	msg := "Found tests without results"
 }

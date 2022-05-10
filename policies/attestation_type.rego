@@ -6,7 +6,7 @@ import data.lib
 # Using attestations, confirm they all have the expected attestation type
 #
 deny[{"msg": msg}] {
-	att := input.attestations[_]
+	att := data.attestations[_]
 	att_data_type := att._type
 
 	# Deny if we can see an invalid type

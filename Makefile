@@ -6,7 +6,6 @@ help:
 	@echo "  make test         # Run all tests"
 	@echo "  make fmt          # Apply default formatting to all rego files"
 	@echo "  make ci           # Check formatting and run all tests"
-	@echo "  make coverage     # Show which lines of rego are not covered by tests"
 	@echo
 	@echo "  make install-opa  # Install opa if you don't have it already (Linux only)"
 	@echo
@@ -26,39 +25,26 @@ help:
 	@echo "  make check        # Check rego policies against the fetched data"
 
 test:
-	@opa test . -v
-	$(COVERAGE)
-
-# Show which lines of code are not covered
-coverage:
-	@opa test . --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null"
-
-quiet-test:
-	@opa test .
-	$(COVERAGE)
+	@conftest verify -d policy/data --report full
 
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
 live-test:
 	@trap exit SIGINT; \
 	while true; do \
-	  git ls-files -c -o '*.rego' | entr -d -c $(MAKE) --no-print-directory quiet-test; \
+	  git ls-files -c -o '*.rego' | entr -d -c $(MAKE) --no-print-directory test; \
 	done
 
 # Rewrite all rego files with the preferred format
 # Use before you commit
 fmt:
-	@opa fmt . --write
+	@conftest fmt .
 
 # Return non-zero exit code if formatting is needed
 # Used in CI
 fmt-check:
-	@opa fmt . --list | xargs -r -n1 echo 'Incorrect formatting found in'
-	@opa fmt . --list --fail >/dev/null 2>&1
+	@conftest fmt . --check 
 
-opa-check:
-	@opa check . --strict
-
-ci: fmt-check quiet-test opa-check
+ci: fmt-check test
 
 #--------------------------------------------------------------------
 

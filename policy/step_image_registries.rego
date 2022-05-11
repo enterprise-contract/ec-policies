@@ -1,16 +1,15 @@
 package policies.step_image_registries
 
-import data.lib
+import data.allowed_registries
 
 #
 # Check the image used by a particular task step and ensure it
 # comes from an allowed image repo
 #
-deny[{"msg": msg}] {
-	att := data.attestations[_]
 
+deny[msg] {
 	some step_index
-	step := att.predicate.buildConfig.steps[step_index]
+	step := input.predicate.buildConfig.steps[step_index]
 	registry := concat("/", array.slice(split(step.environment.image, "/"), 0, 2))
 	registry_without_tag := split(registry, "@")[0]
 	not registry_is_allowed(registry_without_tag)
@@ -22,5 +21,5 @@ deny[{"msg": msg}] {
 }
 
 registry_is_allowed(registry) {
-	lib.config.allowed_registries[_] == registry
+	allowed_registries[_] == registry
 }

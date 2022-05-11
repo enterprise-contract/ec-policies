@@ -1,13 +1,13 @@
-package policies.attestation_type
+package policy.attestation_type
 
+import data.expected_attestation_types
 import data.lib
 
 #
 # Using attestations, confirm they all have the expected attestation type
 #
-deny[{"msg": msg}] {
-	att := data.attestations[_]
-	att_data_type := att._type
+deny[msg] {
+	att_data_type := input._type
 
 	# Deny if we can see an invalid type
 	not attestation_type_valid(att_data_type)
@@ -19,5 +19,5 @@ deny[{"msg": msg}] {
 }
 
 attestation_type_valid(attestation_type) {
-	lib.item_in_list(attestation_type, lib.config.expected_attestation_types)
+	lib.item_in_list(attestation_type, expected_attestation_types)
 }

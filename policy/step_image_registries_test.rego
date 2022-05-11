@@ -1,4 +1,4 @@
-package policies.step_image_registries
+package policy.step_image_registries
 
 good_image := "registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:af7dd5b3b"
 

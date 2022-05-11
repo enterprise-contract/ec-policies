@@ -1,4 +1,4 @@
-package policies.step_image_registries
+package policy.step_image_registries
 
 import data.allowed_registries
 

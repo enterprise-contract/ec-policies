@@ -1,28 +1,27 @@
 SHELL := /bin/bash
-COVERAGE = @opa test . --threshold 100 2>&1 | sed -e '/^Code coverage/!d' -e 's/^/ERROR: /'; exit $${PIPESTATUS[0]}
 
 help:
 	@echo "Usage:"
-	@echo "  make test         # Run all tests"
-	@echo "  make fmt          # Apply default formatting to all rego files"
-	@echo "  make ci           # Check formatting and run all tests"
+	@echo "  make test             # Run all tests"
+	@echo "  make fmt              # Apply default formatting to all rego files"
+	@echo "  make ci               # Check formatting and run all tests"
 	@echo
-	@echo "  make install-opa  # Install opa if you don't have it already (Linux only)"
+	@echo "  make install-conftest # Install conftest if you don't have it already (Linux and OSX only)"
 	@echo
-	@echo "  make fetch-att    # Fetch an attestation for an image"
-	@echo "                    # Add \`IMAGE=<someimage>\` to fetch a specific attestation"
-	@echo "                    # Note: This is compatible with the 'verify-enterprise-contract' task"
+	@echo "  make fetch-att        # Fetch an attestation for an image"
+	@echo "                        # Add \`IMAGE=<someimage>\` to fetch a specific attestation"
+	@echo "                        # Note: This is compatible with the 'verify-enterprise-contract' task"
 	@echo
-	@echo "  make fetch-data   # Fetch data for the most recent pipeline run"
-	@echo "                    # Add \`PR=<prname>\` to fetch a specific pipeline run"
-	@echo "                    # Note: This is compatible with the deprecated 'enterprise-contract' task"
-	@echo "                    # and requires the build-definitions repo checked out in ../build-definitions"
+	@echo "  make fetch-data       # Fetch data for the most recent pipeline run"
+	@echo "                        # Add \`PR=<prname>\` to fetch a specific pipeline run"
+	@echo "                        # Note: This is compatible with the deprecated 'enterprise-contract' task"
+	@echo "                        # and requires the build-definitions repo checked out in ../build-definitions"
 	@echo
-	@echo "  make show-files   # List data files"
-	@echo "  make show-data    # Show all data visible to opa in one big object"
-	@echo "  make show-keys    # List all the keys in the data"
+	@echo "  make show-files       # List data files"
+	@echo "  make show-data        # Show all data visible to conftest in one big object"
+	@echo "  make show-keys        # List all the keys in the data"
 	@echo
-	@echo "  make check        # Check rego policies against the fetched data"
+	@echo "  make check            # Check rego policies against the fetched data"
 
 test:
 	@conftest verify -d policy/data --report full
@@ -104,14 +103,14 @@ fetch-data: fetch-
 
 POLICIES_DIR=$(THIS_DIR)/policy
 DATA_DIR=$(POLICIES_DIR)/data
-OPA_FORMAT=pretty
-OPA_QUERY="policy.step_image_registries,policy.attestation_type"
+CONFTEST_FORMAT=pretty
+CONFTEST_QUERY="policy.step_image_registries,policy.attestation_type"
 INPUT_FILE=$(INPUT_DIR)/attestations.json
 check-att:
 	@conftest test \
 	$(INPUT_FILE) \
 	--data $(DATA_DIR) \
-	--namespace $(OPA_QUERY) \
+	--namespace $(CONFTEST_QUERY) \
 	-o json
 
 #--------------------------------------------------------------------
@@ -120,14 +119,12 @@ CONFTEST_VER=0.32.0
 CONFTEST_SHA_darwin_amd64=a692cd676cbcdc318d16f261c353c69e0ef69aff5fb0442f3cb909df13beb895
 CONFTEST_SHA_linux_amd64=e368ef4fcb49885e9c89052ec0c29cf4d4587707a589fefcaa3dc9cc72065055
 CONFTEST_GOOS=$(shell go env GOOS)
-CONFTEST_GOARCH=$(shell go env GOARCH)
-
 ifeq ($(CONFTEST_GOOS),darwin)
 	CONFTEST_GOOS=Darwin
-	# this might only be a Mac issue
-	ifeq ($(CONFTEST_GOARCH),amd64)
-		CONFTEST_GOARCH=x86_64
-	endif
+endif
+CONFTEST_GOARCH=$(shell go env GOARCH)
+ifeq ($(CONFTEST_GOARCH),amd64)
+	CONFTEST_GOARCH=x86_64
 endif
 
 CONFTEST_OS_ARCH=$(CONFTEST_GOOS)_$(CONFTEST_GOARCH)
@@ -137,11 +134,11 @@ ifndef CONFTEST_BIN
 endif
 
 install-conftest:
-	curl -L $(CONFTEST_URL) > conftest.tar.gz
-	tar xzf conftest.tar.gz
+	curl -L $(CONFTEST_URL) > /tmp/conftest.tar.gz
+	tar xzf /tmp/conftest.tar.gz conftest
 	mv conftest $(CONFTEST_BIN)
 
 #--------------------------------------------------------------------
 
-.PHONY: help test coverage quiet-test live-test fmt fmt-check ci clean-data \
-  dummy-config fetch-att show-data fetch-data check install-opa
+.PHONY: help test quiet-test live-test fmt fmt-check ci clean-data \
+  dummy-config fetch-att show-data fetch-data check install-conftest

@@ -53,8 +53,8 @@ clean-data:
 
 # Avoid a "feels like a bad day.." violation
 dummy-config:
-	@mkdir -p $(DATA_DIR)/config/policy
-	@echo '{"non_blocking_checks":["not_useful"]}' | jq > $(DATA_DIR)/config/policy/data.json
+	@mkdir -p $(DATA_DIR)
+	@echo '{"non_blocking_checks":["not_useful"]}' | jq > $(DATA_DIR)/data.json
 
 # Set IMAGE as required like this:
 #   make fetch-attestation IMAGE=<someimage>

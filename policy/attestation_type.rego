@@ -7,14 +7,12 @@ import data.lib
 # Using attestations, confirm they all have the expected attestation type
 #
 deny[msg] {
-	att_data_type := input._type
-
 	# Deny if we can see an invalid type
-	not attestation_type_valid(att_data_type)
+	not attestation_type_valid(input._type)
 
 	msg := sprintf(
 		"Unexpected attestation type. Expecting %s but found %s",
-		[lib.quoted_values_string(lib.config.expected_attestation_types), att_data_type],
+		[lib.quoted_values_string(expected_attestation_types), input._type],
 	)
 }
 

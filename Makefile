@@ -49,7 +49,7 @@ ci: fmt-check test
 #--------------------------------------------------------------------
 
 clean-data:
-	@rm -rf $(DATA_DIR)
+	@rm -rf $(INPUT_DIR)
 
 # Avoid a "feels like a bad day.." violation
 dummy-config:
@@ -71,10 +71,10 @@ ifndef IMAGE
 endif
 
 fetch-att: clean-data dummy-config
-	@mkdir -p $(DATA_DIR)/attestations
+	@mkdir -p $(INPUT_DIR)
 	cosign download attestation $(IMAGE) | \
 	  jq -s '[.[].payload | @base64d | fromjson]' > \
-	    $(DATA_DIR)/attestations/data.json
+	    $(INPUT_DIR)/attestations.json
 
 #--------------------------------------------------------------------
 
@@ -84,6 +84,7 @@ THIS_DIR=$(shell git rev-parse --show-toplevel)
 BUILD_DEFS=$(THIS_DIR)/../build-definitions
 BUILD_DEFS_SCRIPTS=$(BUILD_DEFS)/appstudio-utils/util-scripts
 DATA_DIR=$(THIS_DIR)/data
+INPUT_DIR=$(THIS_DIR)/input
 
 define BD_SCRIPT
 .PHONY: $(1)-$(2)
@@ -101,15 +102,17 @@ fetch-data: fetch-
 
 #--------------------------------------------------------------------
 
-POLICIES_DIR=$(THIS_DIR)/policies
+POLICIES_DIR=$(THIS_DIR)/policy
+DATA_DIR=$(POLICIES_DIR)/data
 OPA_FORMAT=pretty
-OPA_QUERY=data.main.deny
-check:
-	@opa eval \
-	  --data $(DATA_DIR) \
-	  --data $(POLICIES_DIR) \
-	  --format $(OPA_FORMAT) \
-	  $(OPA_QUERY)
+OPA_QUERY="policy.step_image_registries,policy.attestation_type"
+INPUT_FILE=$(INPUT_DIR)/attestations.json
+check-att:
+	@conftest test \
+	$(INPUT_FILE) \
+	--data $(DATA_DIR) \
+	--namespace $(OPA_QUERY) \
+	-o json
 
 #--------------------------------------------------------------------
 
@@ -128,7 +131,7 @@ ifndef OPA_BIN
 endif
 OPA_DEST=$(OPA_BIN)/opa
 
-install-opa:
+install-conftest:
 	curl -s -L -O $(OPA_URL)
 	echo "$(OPA_SHA) $(OPA_FILE)" | sha256sum --check
 	mkdir -p $(OPA_BIN)

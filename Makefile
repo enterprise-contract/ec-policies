@@ -56,6 +56,10 @@ live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` ne
 	  git ls-files -c -o '*.rego' | entr -d -c $(MAKE) --no-print-directory quiet-test; \
 	done
 
+conftest-test: ## Run unit tests with conftest
+	@conftest verify \
+	  --policy $(POLICIES_DIR)
+
 fmt: ## Apply default formatting to all rego files. Use before you commit
 	@opa fmt . --write
 
@@ -152,6 +156,12 @@ check: ## Run policy evaluation with currently fetched data in `./data` and poli
 	  --format $(OPA_FORMAT) \
 	  $(OPA_QUERY)
 
+conftest-check: ## Run policy evaluation using conftest
+	@conftest test $(INPUT_FILE) \
+	  --policy $(POLICIES_DIR) \
+	  --data $(DATA_DIR) \
+	  --output json
+
 #--------------------------------------------------------------------
 
 OPA_VER=v0.40.0
@@ -182,4 +192,5 @@ install-opa: ## Install `opa` CLI from GitHub releases
 #--------------------------------------------------------------------
 
 .PHONY: help test coverage quiet-test live-test fmt fmt-check ci clean-data \
-  dummy-config dummy-test-results fetch-att show-data fetch-data check install-opa
+  dummy-config dummy-test-results fetch-att show-data fetch-data check install-opa \
+  conftest-check conftest-test

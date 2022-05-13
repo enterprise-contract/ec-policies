@@ -7,7 +7,7 @@ import data.lib
 # comes from an allowed image repo
 #
 deny[{"msg": msg}] {
-	att := data.attestations[_]
+	att := input.attestations[_]
 
 	some step_index
 	step := att.predicate.buildConfig.steps[step_index]

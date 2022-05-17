@@ -81,6 +81,10 @@ dummy-config: ## Changes the configuration to mark the `not_useful` check as non
 	@mkdir -p $(DATA_DIR)/config/policy
 	@echo '{"non_blocking_checks":["not_useful"]}' | jq > $(DATA_DIR)/config/policy/data.json
 
+dummy-test-results: ## Creates some fake test result data to avoid a "No test data..." violation
+	@mkdir -p $(DATA_DIR)
+	@echo '{"test":{"fake_test":{"result":"SUCCESS"}}}' | jq > $(DATA_DIR)/test.json
+
 # Set IMAGE as required like this:
 #   make fetch-att IMAGE=<someimage>
 #
@@ -168,4 +172,4 @@ install-opa: ## Install `opa` CLI from GitHub releases
 #--------------------------------------------------------------------
 
 .PHONY: help test coverage quiet-test live-test fmt fmt-check ci clean-data \
-  dummy-config fetch-att show-data fetch-data check install-opa
+  dummy-config dummy-test-results fetch-att show-data fetch-data check install-opa

@@ -56,6 +56,10 @@ live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` ne
 	  git ls-files -c -o '*.rego' | entr -d -c $(MAKE) --no-print-directory quiet-test; \
 	done
 
+conftest-test: ## Run unit tests with conftest
+	@conftest verify \
+	  --policy $(POLICIES_DIR)
+
 fmt: ## Apply default formatting to all rego files. Use before you commit
 	@opa fmt . --write
 
@@ -74,12 +78,21 @@ ci: fmt-check quiet-test opa-check ## Runs all checks and tests. Used in CI.
 
 ##@ Data helpers
 
+clean-input: ## Removes everything from the `./input` directory
+	@rm -rf $(INPUT_DIR)
+	@mkdir $(INPUT_DIR)
+
 clean-data: ## Removes everything from the `./data` directory
 	@rm -rf $(DATA_DIR)
+	@mkdir $(DATA_DIR)
 
 dummy-config: ## Changes the configuration to mark the `not_useful` check as non-blocking to avoid a "feels like a bad day.." violation
-	@mkdir -p $(DATA_DIR)/config/policy
-	@echo '{"non_blocking_checks":["not_useful"]}' | jq > $(DATA_DIR)/config/policy/data.json
+	@mkdir -p $(DATA_DIR)
+	@echo '{"config":{"policy":{"non_blocking_checks":["not_useful"]}}}' | jq > $(CONFIG_DATA_FILE)
+
+dummy-test-results: ## Creates some fake test result data to avoid a "No test data..." violation
+	@mkdir -p $(DATA_DIR)
+	@echo '{"test":{"fake_test":{"result":"SUCCESS"}}}' | jq > $(TEST_DATA_FILE)
 
 # Set IMAGE as required like this:
 #   make fetch-att IMAGE=<someimage>
@@ -95,11 +108,9 @@ ifndef IMAGE
   IMAGE="quay.io/lucarval/tekton-test@sha256:3dde9d48a4ba03187d7a7f5768672fd1bc0eda754afaf982f0768983bb95a06f"
 endif
 
-fetch-att: clean-data dummy-config ## Fetches attestation data for IMAGE, use `make fetch-att IMAGE=<ref>`. Note: This is compatible with the 'verify-enterprise-contract' task
-	@mkdir -p $(DATA_DIR)/attestations
+fetch-att: clean-input ## Fetches attestation data for IMAGE, use `make fetch-att IMAGE=<ref>`. Note: This is compatible with the 'verify-enterprise-contract' task
 	cosign download attestation $(IMAGE) | \
-	  jq -s '[.[].payload | @base64d | fromjson]' > \
-	    $(DATA_DIR)/attestations/data.json
+	  jq -s '{ "attestations": [.[].payload | @base64d | fromjson] }' > $(INPUT_FILE)
 
 #--------------------------------------------------------------------
 
@@ -108,7 +119,13 @@ fetch-att: clean-data dummy-config ## Fetches attestation data for IMAGE, use `m
 THIS_DIR=$(shell git rev-parse --show-toplevel)
 BUILD_DEFS=$(THIS_DIR)/../build-definitions
 BUILD_DEFS_SCRIPTS=$(BUILD_DEFS)/appstudio-utils/util-scripts
+
 DATA_DIR=$(THIS_DIR)/data
+TEST_DATA_FILE=$(DATA_DIR)/test.json
+CONFIG_DATA_FILE=$(DATA_DIR)/config.json
+
+INPUT_DIR=$(THIS_DIR)/input
+INPUT_FILE=$(INPUT_DIR)/input.json
 
 define BD_SCRIPT
 .PHONY: $(1)-$(2)
@@ -133,10 +150,17 @@ OPA_FORMAT=pretty
 OPA_QUERY=data.main.deny
 check: ## Run policy evaluation with currently fetched data in `./data` and policy rules in `./policies`
 	@opa eval \
+	  --input $(INPUT_FILE) \
 	  --data $(DATA_DIR) \
 	  --data $(POLICIES_DIR) \
 	  --format $(OPA_FORMAT) \
 	  $(OPA_QUERY)
+
+conftest-check: ## Run policy evaluation using conftest
+	@conftest test $(INPUT_FILE) \
+	  --policy $(POLICIES_DIR) \
+	  --data $(DATA_DIR) \
+	  --output json
 
 #--------------------------------------------------------------------
 
@@ -168,4 +192,5 @@ install-opa: ## Install `opa` CLI from GitHub releases
 #--------------------------------------------------------------------
 
 .PHONY: help test coverage quiet-test live-test fmt fmt-check ci clean-data \
-  dummy-config fetch-att show-data fetch-data check install-opa
+  dummy-config dummy-test-results fetch-att show-data fetch-data check install-opa \
+  conftest-check conftest-test

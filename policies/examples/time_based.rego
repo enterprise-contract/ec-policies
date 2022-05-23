@@ -4,7 +4,7 @@
 #   effective_on: 2000-01-01T00:00:00Z
 package examples.time_based
 
-import future.keywords.in
+import data.lib.time
 
 # This policy always fails
 # METADATA
@@ -17,7 +17,7 @@ import future.keywords.in
 deny[{"msg": msg, "effective_on": effective_on}] {
 	true
 	msg := "Roads?"
-	effective_on := when(rego.metadata.chain())
+	effective_on := time.when(rego.metadata.chain())
 }
 
 # This policy always fails, but doesn't have effective_on set
@@ -35,7 +35,7 @@ deny[{"msg": msg}] {
 deny[{"msg": msg, "effective_on": effective_on}] {
 	true
 	msg := "from the past"
-	effective_on := when(rego.metadata.chain())
+	effective_on := time.when(rego.metadata.chain())
 }
 
 # This policy fails if today is after 2000-01-01T00:00:00Z but not before it
@@ -43,17 +43,5 @@ deny[{"msg": msg, "effective_on": effective_on}] {
 deny[{"msg": msg, "effective_on": effective_on}] {
 	true
 	msg := "Y2K"
-	effective_on := when(rego.metadata.chain())
-}
-
-when(m) = effective_on {
-	precedence := ["rule", "document", "package"]
-	all_effective_on := [e |
-		a := m[_].annotations
-		e = a.custom.effective_on
-		a.scope in precedence
-	]
-
-	# first one found in precedence 
-	effective_on := all_effective_on[0]
+	effective_on := time.when(rego.metadata.chain())
 }

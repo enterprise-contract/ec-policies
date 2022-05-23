@@ -2,22 +2,22 @@ package policies.attestation_type
 
 import data.lib
 
+# Currently this is the only type we know about
+known_types := ["https://in-toto.io/Statement/v0.1"]
+
+# METADATA
+# title: An unknown attestation type was found
+# custom:
+#   short_name: unknown_att_type
+#   failure_msg: Unknown attestation type '%s'
 #
-# Using attestations, confirm they all have the expected attestation type
-#
-deny[{"msg": msg}] {
+deny[result] {
 	att := input.attestations[_]
-	att_data_type := att._type
-
-	# Deny if we can see an invalid type
-	not attestation_type_valid(att_data_type)
-
-	msg := sprintf(
-		"Unexpected attestation type. Expecting %s but found %s",
-		[lib.quoted_values_string(lib.config.expected_attestation_types), att_data_type],
-	)
+	att_type := att._type
+	not known_att_type(att_type)
+	result := lib.result_helper(rego.metadata.rule(), [att_type])
 }
 
-attestation_type_valid(attestation_type) {
-	lib.item_in_list(attestation_type, lib.config.expected_attestation_types)
+known_att_type(att_type) {
+	lib.item_in_list(att_type, known_types)
 }

@@ -1,6 +1,7 @@
 # METADATA
 # custom:
 #   effective_on: 2001-02-03T00:00:00Z
+#   scope: package
 package lib.time
 
 # METADATA

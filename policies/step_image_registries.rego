@@ -2,25 +2,33 @@ package policies.step_image_registries
 
 import data.lib
 
+# List of allowed registry prefixes for task images used to run task steps
+# This is placeholder since I have no idea what the real policy should be
+allowed_registry_prefixes := [
+	"quay.io/buildah",
+	"quay.io/redhat-appstudio",
+	"registry.access.redhat.com/ubi8",
+	"registry.access.redhat.com/ubi8-minimal",
+	"registry.redhat.io/ocp-tools-4-tech-preview",
+	"registry.redhat.io/openshift4",
+	"registry.redhat.io/openshift-pipelines",
+]
+
+# METADATA
+# title: Task steps ran on container images that are disallowed
+# custom:
+#   short_name: disallowed_task_step_image
+#   failure_msg: Step %d has disallowed image ref '%s'
 #
-# Check the image used by a particular task step and ensure it
-# comes from an allowed image repo
-#
-deny[{"msg": msg}] {
+deny[result] {
 	att := input.attestations[_]
-
-	some step_index
 	step := att.predicate.buildConfig.steps[step_index]
-	registry := concat("/", array.slice(split(step.environment.image, "/"), 0, 2))
-	registry_without_tag := split(registry, "@")[0]
-	not registry_is_allowed(registry_without_tag)
+	image_ref := step.environment.image
+	not image_ref_permitted(image_ref)
 
-	msg := sprintf(
-		"Step %d has disallowed registry '%s' for attestation.",
-		[step_index, registry],
-	)
+	result := lib.result_helper(rego.metadata.rule(), [step_index, image_ref])
 }
 
-registry_is_allowed(registry) {
-	lib.config.allowed_registries[_] == registry
+image_ref_permitted(image_ref) {
+	startswith(image_ref, allowed_registry_prefixes[_])
 }

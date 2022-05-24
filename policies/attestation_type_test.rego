@@ -1,23 +1,26 @@
 package policies.attestation_type
 
-test_attestation_type_ok {
-	attestation_type_valid("https://in-toto.io/Statement/v0.1")
-	not attestation_type_valid("http://in-toto.io/Statement/v0.1")
-	not attestation_type_valid("foobar")
+import data.lib
+
+good_type := "https://in-toto.io/Statement/v0.1"
+
+bad_type := "https://in-toto.io/Statement/v0.0.9999999"
+
+mock_data(att_type) = d {
+	d := [{"_type": att_type}]
 }
 
-prepare_mock_attestation_data(att_type) = result {
-	result := [{"_type": att_type}]
+test_known_att_type {
+	known_att_type(good_type)
+	not known_att_type(bad_type)
+	not known_att_type("asdf")
 }
 
-test_attestation_type_valid {
-	deny_set := deny with input.attestations as prepare_mock_attestation_data("https://in-toto.io/Statement/v0.1")
-	count(deny_set) == 0
+test_allow_when_permitted {
+	lib.assert_empty(deny) with input.attestations as mock_data(good_type)
 }
 
-test_attestation_type_invalid {
-	deny_set := deny with input.attestations as prepare_mock_attestation_data("https://in-toto.io/Statement/v6.283")
-	count(deny_set) == 1
-	expected_msg := "Unexpected attestation type. Expecting 'https://in-toto.io/Statement/v0.1' but found https://in-toto.io/Statement/v6.283"
-	deny_set == {{"msg": expected_msg}}
+test_deny_when_not_permitted {
+	expected_msg := sprintf("Unknown attestation type '%s'", [bad_type])
+	lib.assert_equal(deny, {{"code": "unknown_att_type", "msg": expected_msg}}) with input.attestations as mock_data(bad_type)
 }

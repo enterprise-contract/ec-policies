@@ -1,7 +1,11 @@
 package lib
 
+import future.keywords.in
+
 item_in_list(item, list_or_set) {
-	list_or_set[_] == item
+	# Without the in keyword it could be done like this:
+	# list_or_set[_] == item
+	item in list_or_set
 }
 
 list_includes_item(list_or_set, item) {
@@ -15,4 +19,11 @@ quoted_values_string(value_list) = result {
 	]
 
 	result := concat(", ", quoted_list)
+}
+
+result_helper(rule_metadata, failure_sprintf_params) = result {
+	result := {
+		"code": rule_metadata.custom.short_name,
+		"msg": sprintf(rule_metadata.custom.failure_msg, failure_sprintf_params),
+	}
 }

@@ -1,28 +1,50 @@
 package policies.test
 
-# Check if we have any test data is present
-deny[{"msg": msg}] {
+import data.lib
+
+# METADATA
+# title: No test data was found
+# custom:
+#   short_name: test_data_missing
+#   failure_msg: No test data provided
+#
+deny[result] {
 	not data.test
-	msg := "No test data provided"
+	result := lib.result_helper(rego.metadata.rule(), [])
 }
 
-# Check if we have any test data provided
-deny[{"msg": msg}] {
+# METADATA
+# title: Test data is empty
+# custom:
+#   short_name: test_data_empty
+#   failure_msg: Empty test data provided
+#
+deny[result] {
 	count(data.test) == 0
-	msg := "Empty test data provided"
+	result := lib.result_helper(rego.metadata.rule(), [])
 }
 
-deny[{"msg": msg}] {
+# METADATA
+# title: Test data is missing results
+# custom:
+#   short_name: test_results_missing
+#   failure_msg: Found tests without results
+#
+deny[result] {
 	with_results := [result | result := data.test[_].result]
 	count(with_results) != count(data.test)
-
-	msg := "Found tests without results"
+	result := lib.result_helper(rego.metadata.rule(), [])
 }
 
-# Check if all tests succeeded
-deny[{"msg": msg}] {
+# METADATA
+# title: Some tests did not pass
+# custom:
+#   short_name: test_result_failures
+#   failure_msg: "The following tests failed: %s"
+#
+deny[result] {
 	# Collect all failed tests and convert their name to "test:<name>" format
-	# Reminder: the tests reside in $DATA_DIR/test/<name>/data.json
+	# Reminder: the tests reside in $DATA_DIR/test.json
 	all_failed := {failure | data.test[name].result != "SUCCESS"; failure := sprintf("test:%s", [name])}
 
 	# For the complement operation below (subtraction) we need
@@ -36,5 +58,9 @@ deny[{"msg": msg}] {
 	# Fail if there are any
 	count(failed_blocking) > 0
 
-	msg := "All tests did not end with SUCCESS"
+	short_failed_blocking := [f | f := split(failed_blocking[_], ":")[1]]
+	result := lib.result_helper(
+		rego.metadata.rule(),
+		[concat(", ", short_failed_blocking)],
+	)
 }

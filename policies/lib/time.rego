@@ -10,6 +10,6 @@ when(m) = effective_on {
 		a.scope in precedence
 	]
 
-	# first one found in precedence 
+	# first one found in precedence
 	effective_on := all_effective_on[0]
 }

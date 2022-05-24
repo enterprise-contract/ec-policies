@@ -1,43 +1,53 @@
 package main
 
+import data.lib
+
 all_tests := {p | data.policies[policy]; p := policy}
+
+nonblocking_except(except_tests) = d {
+	d := {"non_blocking_checks": all_tests - except_tests}
+}
+
+nonblocking_only(only_tests) = d {
+	d := {"non_blocking_checks": only_tests}
+}
 
 test_main {
 	deny with data.attestation_type.deny as {{"msg": "foo"}}
 	deny with data.step_image_registries.deny as {{"msg": "foo"}}
-	deny with data.not_useful.deny as {{"msg": "foo"}} with data.config.policy.non_blocking_checks as []
+	deny with data.not_useful.deny as {{"msg": "foo"}} with data.config.policy as nonblocking_only(set())
 }
 
 test_failing_without_skipping {
 	# Let's make sure that the contract remains the same by checking what `deny` is set to
 	# this makes this test a bit more fragile, but the assertion is better as we know that
 	# the output hasn't changed it's shape
-	{{"msg": "It just feels like a bad day to do a release"}, {"msg": "No test data provided"}} == deny with data.config.policy as {"non_blocking_checks": {}}
+	lib.assert_equal(deny, {{"code": "bad_day", "msg": "It just feels like a bad day to do a release"}, {"code": "test_data_missing", "msg": "No test data provided"}}) with data.config.policy as nonblocking_only(set())
 }
 
 test_succeeding_when_skipping_all {
-	count(deny) == 0 with data.config.policy as {"non_blocking_checks": all_tests}
+	lib.assert_empty(deny) with data.config.policy as nonblocking_except(set())
 }
 
 test_test_can_be_skipped {
-	{{"msg": "No test data provided"}} == deny with data.config.policy as {"non_blocking_checks": all_tests - {"test"}}
+	{{"code": "test_data_missing", "msg": "No test data provided"}} == deny with data.config.policy as nonblocking_except({"test"})
 }
 
 test_test_succeeds {
-	count(deny) == 0 with data.test as [{"result": "SUCCESS"}] with data.config.policy as {"non_blocking_checks": all_tests - {"test"}}
+	lib.assert_empty(deny) with data.test as [{"result": "SUCCESS"}] with data.config.policy as nonblocking_except({"test"})
 }
 
 test_test_fails {
-	{{"msg": "All tests did not end with SUCCESS"}} == deny with data.test as [{"result": "FAILURE"}] with data.config.policy as {"non_blocking_checks": all_tests - {"test"}}
+	lib.assert_equal(deny, {{"code": "test_result_failures", "msg": "The following tests failed: test1"}}) with data.test.test1 as {"result": "FAILURE"} with data.config.policy as nonblocking_except({"test"})
 }
 
 test_policy_ignored_when_not_yet_effective {
 	future_denial := {"msg": "fails in the distant future", "effective_on": "2099-05-02T00:00:00Z"}
 	set() == deny with denials as {future_denial}
-		with data.config.policy as {"non_blocking_checks": all_tests - {"test", "not_useful"}}
+		with data.config.policy as nonblocking_except({"test", "not_useful"})
 
 	{future_denial} == future_deny with denials as {future_denial}
-		with data.config.policy as {"non_blocking_checks": all_tests - {"test", "not_useful"}}
+		with data.config.policy as nonblocking_except({"test", "not_useful"})
 }
 
 format_rfc3339_ns(ns) = fmt {

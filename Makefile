@@ -184,13 +184,38 @@ OPA_DEST=$(OPA_BIN)/opa
 install-opa: ## Install `opa` CLI from GitHub releases
 	curl -s -L -O $(OPA_URL)
 	echo "$(OPA_SHA) $(OPA_FILE)" | sha256sum --check
-	mkdir -p $(OPA_BIN)
+	@mkdir -p $(OPA_BIN)
 	cp $(OPA_FILE) $(OPA_DEST)
 	chmod 755 $(OPA_DEST)
 	rm $(OPA_FILE)
 
 #--------------------------------------------------------------------
 
+CONFTEST_VER=0.32.0
+CONFTEST_SHA_Darwin_x86_64=a692cd676cbcdc318d16f261c353c69e0ef69aff5fb0442f3cb909df13beb895
+CONFTEST_SHA_Darwin_arm64=a52365dffe6a424a3e72517fb987a45accd736540e792625a44d9d10f4d527fe
+CONFTEST_SHA_Linux_x86_64=e368ef4fcb49885e9c89052ec0c29cf4d4587707a589fefcaa3dc9cc72065055
+CONFTEST_GOOS=$(shell go env GOOS | sed 's/./\u&/' )
+CONFTEST_GOARCH=$(shell go env GOARCH | sed 's/amd64/x86_64/' )
+CONFTEST_OS_ARCH=$(CONFTEST_GOOS)_$(CONFTEST_GOARCH)
+CONFTEST_FILE=conftest_$(CONFTEST_VER)_$(CONFTEST_OS_ARCH).tar.gz
+CONFTEST_URL=https://github.com/open-policy-agent/conftest/releases/download/v$(CONFTEST_VER)/$(CONFTEST_FILE)
+CONFTEST_SHA=$(CONFTEST_SHA_${CONFTEST_OS_ARCH})
+ifndef CONFTEST_BIN
+  CONFTEST_BIN=$(HOME)/bin
+endif
+CONFTEST_DEST=$(CONFTEST_BIN)/conftest
+
+install-conftest: ## Install `conftest` CLI from GitHub releases
+	curl -s -L -O $(CONFTEST_URL)
+	echo "$(CONFTEST_SHA) $(CONFTEST_FILE)" | sha256sum --check
+	tar xzf $(CONFTEST_FILE) conftest
+	@mkdir -p $(CONFTEST_BIN)
+	mv conftest $(CONFTEST_DEST)
+	rm $(CONFTEST_FILE)
+
+#--------------------------------------------------------------------
+
 .PHONY: help test coverage quiet-test live-test fmt fmt-check ci clean-data \
   dummy-config dummy-test-results fetch-att show-data fetch-data check install-opa \
-  conftest-check conftest-test
+  conftest-check conftest-test install-conftest

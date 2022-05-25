@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  opa-tests:
+  ci:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
@@ -24,3 +24,15 @@ jobs:
 
     - name: Run checks
       run: make ci
+
+    - name: Install gomplate
+      run: make install-gomplate GOMPLATE_BIN=$HOME/.local/bin
+
+    - name: Build docs
+      run: make docs
+
+    - name: Save docs
+      uses: actions/upload-artifact@v3
+      with:
+        name: docs.md
+        path: docs-build/docs.md

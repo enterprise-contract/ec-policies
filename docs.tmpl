@@ -1,0 +1,53 @@
+
+HACBS Enterprise Contract Documentation
+=======================================
+
+About
+-----
+
+The HACBS Enterprise Contract is a Tekton task that can be used to verify the
+provenence of a container image built in HACBS and validate it against a set of
+policies.
+
+The policies are defined in
+[rego](https://www.openpolicyagent.org/docs/latest/policy-language/) and are
+described here.
+
+Policy Rules
+------------
+
+{{ $p2_stash := "" }}
+{{ range (datasource "input").annotations }}
+{{ $p1 := (index (index .path 1) "value") }}
+{{ $p2 := (index (index .path 2) "value") }}
+
+{{/* Skip rules that are not under data.policies */}}
+{{ if eq $p1 "policies" }}
+
+{{/* Show a heading for each separate package */}}
+{{ if ne $p2 $p2_stash }}
+### {{ $p2 | regexp.Replace "_" " " | strings.Title }} Rules
+{{ $p2_stash = $p2 }}
+{{ end }}
+
+#### `[{{ .annotations.custom.short_name }}]` {{ .annotations.title }}
+
+{{.annotations.description}}
+
+{{/* Special handling */}}
+{{ if has .annotations.custom "allowed_registry_prefixes" }}
+The permitted registry prefixes are:
+
+```
+{{- range .annotations.custom.allowed_registry_prefixes }}
+{{ . }}{{ end }}
+```
+
+{{ end }}
+
+* Path: `{{ range $i, $v := .path }}{{ if ne 0 $i }}.{{ end }}{{ $v.value }}{{ end }}`
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/{{ regexp.Find "[a-z_]+\\.rego$" .location.file }}#L{{ .location.row }})
+{{ if coll.Has .annotations.custom "effective_on" }}* Effective from: {{ .annotations.custom.effective_on }}{{ end }}
+
+{{ end }}{{/* if eq $p1 ... */}}
+{{ end }}{{/* range ... */}}

@@ -191,6 +191,19 @@ ifndef OPA_BIN
 endif
 OPA_DEST=$(OPA_BIN)/opa
 
+#--------------------------------------------------------------------
+##@ Documentation
+
+DOCS_BUILD_DIR=$(THIS_DIR)/docs-build
+DOCS_TMP_JSON=$(DOCS_BUILD_DIR)/tmp.json
+DOCS_MD=$(DOCS_BUILD_DIR)/docs.md
+DOCS_TEMPLATE=docs.tmpl
+docs: ## Generate documentation
+	@mkdir -p $(DOCS_BUILD_DIR)
+	@opa inspect --annotations --format json $(POLICIES_DIR) > $(DOCS_TMP_JSON)
+	@gomplate --datasource input=$(DOCS_TMP_JSON) --file $(DOCS_TEMPLATE) | cat -s > $(DOCS_MD)
+	@rm $(DOCS_TMP_JSON)
+
 ##@ Utility
 
 install-opa: ## Install `opa` CLI from GitHub releases
@@ -225,6 +238,21 @@ install-conftest: ## Install `conftest` CLI from GitHub releases
 	@mkdir -p $(CONFTEST_BIN)
 	mv conftest $(CONFTEST_DEST)
 	rm $(CONFTEST_FILE)
+
+GOMPLATE_VER=3.10.0
+GOMPLATE_OS_ARCH=$(shell go env GOOS)-$(shell go env GOARCH)
+GOMPLATE_FILE=gomplate_$(GOMPLATE_OS_ARCH)
+GOMPLATE_URL=https://github.com/hairyhenderson/gomplate/releases/download/v$(GOMPLATE_VER)/$(GOMPLATE_FILE)
+ifndef GOMPLATE_BIN
+  GOMPLATE_BIN=$(HOME)/bin
+endif
+GOMPLATE_DEST=$(GOMPLATE_BIN)/gomplate
+install-gomplate: ## Install `gomplate` from GitHub releases
+	curl -s -L -O $(GOMPLATE_URL)
+	@mkdir -p $(GOMPLATE_BIN)
+	cp $(GOMPLATE_FILE) $(GOMPLATE_DEST)
+	chmod 755 $(GOMPLATE_DEST)
+	rm $(GOMPLATE_FILE)
 
 #--------------------------------------------------------------------
 

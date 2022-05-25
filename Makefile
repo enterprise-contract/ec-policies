@@ -56,6 +56,18 @@ live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` ne
 	  git ls-files -c -o '*.rego' | entr -d -c $(MAKE) --no-print-directory quiet-test; \
 	done
 
+##
+## Fixme: Currently conftest verify produces a error:
+##   "rego_type_error: package annotation redeclared"
+## In these two files:
+##   policies/examples/time_based.rego
+##   policies/lib/time_test.rego:1
+## The error only appears when running the tests.
+##
+## Since the metadata support is a new feature in opa, it might be this
+## is a bug that will go away in a future release of conftest. So for now
+## we will ignore the error and not use conftest verify in the CI.
+##
 conftest-test: ## Run unit tests with conftest
 	@conftest verify \
 	  --policy $(POLICIES_DIR)

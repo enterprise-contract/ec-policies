@@ -66,6 +66,16 @@ fmt: ## Apply default formatting to all rego files. Use before you commit
 opa-check: ## Check Rego files with strict mode (https://www.openpolicyagent.org/docs/latest/strict/)
 	@opa check . --strict
 
+DOCS_BUILD_DIR=$(THIS_DIR)/docs
+DOCS_TMP_JSON=$(DOCS_BUILD_DIR)/annotations-data.json
+DOCS_MD=$(DOCS_BUILD_DIR)/index.md
+DOCS_TEMPLATE=docs.tmpl
+build-docs: ## Generate documentation. Use this before commit if you modified any rules or annotations
+	@mkdir -p $(DOCS_BUILD_DIR)
+	@opa inspect --annotations --format json $(POLICIES_DIR) > $(DOCS_TMP_JSON)
+	@gomplate --datasource input=$(DOCS_TMP_JSON) --file $(DOCS_TEMPLATE) | cat --squeeze-blank > $(DOCS_MD)
+	@rm $(DOCS_TMP_JSON)
+
 ##@ CI
 
 fmt-check: ## Check formatting of Rego files. Used in CI.
@@ -164,6 +174,8 @@ conftest-check: ## Run policy evaluation using conftest
 
 #--------------------------------------------------------------------
 
+##@ Utility
+
 OPA_VER=v0.40.0
 OPA_SHA_darwin_amd64=bbd2b41ce8ce3f2cbe06e06a2d05c66185a5e099ff7ac0edcce30116e5cd7831
 OPA_SHA_darwin_arm64_static=4b3f54b8dd45e5cc0c2b4242b94516f400202aa84f9e91054145853cfbba4d5f
@@ -178,9 +190,6 @@ ifndef OPA_BIN
   OPA_BIN=$(HOME)/bin
 endif
 OPA_DEST=$(OPA_BIN)/opa
-
-##@ Utility
-
 install-opa: ## Install `opa` CLI from GitHub releases
 	curl -s -L -O $(OPA_URL)
 	echo "$(OPA_SHA) $(OPA_FILE)" | sha256sum --check
@@ -189,8 +198,23 @@ install-opa: ## Install `opa` CLI from GitHub releases
 	chmod 755 $(OPA_DEST)
 	rm $(OPA_FILE)
 
+GOMPLATE_VER=3.10.0
+GOMPLATE_OS_ARCH=$(shell go env GOOS)-$(shell go env GOARCH)
+GOMPLATE_FILE=gomplate_$(GOMPLATE_OS_ARCH)
+GOMPLATE_URL=https://github.com/hairyhenderson/gomplate/releases/download/v$(GOMPLATE_VER)/$(GOMPLATE_FILE)
+ifndef GOMPLATE_BIN
+  GOMPLATE_BIN=$(HOME)/bin
+endif
+GOMPLATE_DEST=$(GOMPLATE_BIN)/gomplate
+install-gomplate: ## Install `gomplate` from GitHub releases
+	curl -s -L -O $(GOMPLATE_URL)
+	@mkdir -p $(GOMPLATE_BIN)
+	cp $(GOMPLATE_FILE) $(GOMPLATE_DEST)
+	chmod 755 $(GOMPLATE_DEST)
+	rm $(GOMPLATE_FILE)
+
 #--------------------------------------------------------------------
 
 .PHONY: help test coverage quiet-test live-test fmt fmt-check ci clean-data \
   dummy-config dummy-test-results fetch-att show-data fetch-data check install-opa \
-  conftest-check conftest-test
+  install-gomplate conftest-check conftest-test build-docs

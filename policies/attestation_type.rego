@@ -7,6 +7,10 @@ known_types := ["https://in-toto.io/Statement/v0.1"]
 
 # METADATA
 # title: An unknown attestation type was found
+# description: |-
+#   A sanity check that the attestation found for the image has the expected
+#   attestation type. Currently there type is only one attestation type supported,
+#   `https://in-toto.io/Statement/v0.1`.
 # custom:
 #   short_name: unknown_att_type
 #   failure_msg: Unknown attestation type '%s'

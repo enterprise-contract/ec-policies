@@ -60,7 +60,7 @@ registry.redhat.io/openshift-pipelines
 ```
 
 * Path: `data.policies.step_image_registries.deny`
-* Failure message: `Step %d has disallowed image ref '%s'`
+* Failure message: `Step %d in task '%s' has disallowed image ref '%s'`
 * [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/step_image_registries.rego#L23)
 
 ### Test Rules

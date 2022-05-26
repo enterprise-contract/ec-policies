@@ -21,7 +21,7 @@ import data.lib
 #   - registry.redhat.io/openshift-pipelines
 #
 deny[result] {
-	att := input.attestations[_]
+	att := lib.pipelinerun_attestations[_]
 	step := att.predicate.buildConfig.steps[step_index]
 	image_ref := step.environment.image
 	not image_ref_permitted(image_ref, rego.metadata.rule().custom.allowed_registry_prefixes)

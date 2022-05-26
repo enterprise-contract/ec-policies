@@ -78,11 +78,22 @@ build-docs: ## Generate documentation. Use this before commit if you modified an
 
 ##@ CI
 
-fmt-check: ## Check formatting of Rego files. Used in CI.
-	@opa fmt . --list | xargs -r -n1 echo 'Incorrect formatting found in'
+fmt-check: ## Check formatting of Rego files
+	@opa fmt . --list | xargs -r -n1 echo 'FAIL: Incorrect formatting found in'
 	@opa fmt . --list --fail >/dev/null 2>&1
 
-ci: fmt-check quiet-test opa-check ## Runs all checks and tests. Used in CI.
+DOCS_CHECK_TMP=$(DOCS_BUILD_DIR)/docs-check.md
+docs-check: ## Check if docs/index.md is up to date
+	@cp $(DOCS_MD) $(DOCS_CHECK_TMP)
+	@$(MAKE) --no-print-directory build-docs
+	@if [[ -n $$(git diff --name-only -- $(DOCS_MD)) ]]; then \
+	  mv $(DOCS_CHECK_TMP) $(DOCS_MD); \
+	  echo "FAIL: A docs update is needed"; \
+	  exit 1; \
+	fi
+	@mv $(DOCS_CHECK_TMP) $(DOCS_MD)
+
+ci: fmt-check quiet-test opa-check docs-check ## Runs all checks and tests
 
 #--------------------------------------------------------------------
 
@@ -215,6 +226,6 @@ install-gomplate: ## Install `gomplate` from GitHub releases
 
 #--------------------------------------------------------------------
 
-.PHONY: help test coverage quiet-test live-test fmt fmt-check ci clean-data \
+.PHONY: help test coverage quiet-test live-test fmt fmt-check docs-check ci clean-data \
   dummy-config dummy-test-results fetch-att show-data fetch-data check install-opa \
   install-gomplate conftest-check conftest-test build-docs

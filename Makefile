@@ -126,7 +126,7 @@ dummy-test-results: ## Creates some fake test result data to avoid a "No test da
 ifndef IMAGE
   # Default value for convenience/laziness. You're encouraged to specify your own IMAGE.
   # (The default has no special significance other than it's known to have an attestation.)
-  IMAGE="quay.io/lucarval/tekton-test@sha256:3dde9d48a4ba03187d7a7f5768672fd1bc0eda754afaf982f0768983bb95a06f"
+  IMAGE="quay.io/lucarval/single-nodejs-app:demo"
 endif
 
 fetch-att: clean-input ## Fetches attestation data for IMAGE, use `make fetch-att IMAGE=<ref>`. Note: This is compatible with the 'verify-enterprise-contract' task

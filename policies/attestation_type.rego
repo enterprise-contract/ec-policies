@@ -16,7 +16,7 @@ known_types := ["https://in-toto.io/Statement/v0.1"]
 #   failure_msg: Unknown attestation type '%s'
 #
 deny[result] {
-	att := input.attestations[_]
+	att := lib.pipelinerun_attestations[_]
 	att_type := att._type
 	not known_att_type(att_type)
 	result := lib.result_helper(rego.metadata.rule(), [att_type])

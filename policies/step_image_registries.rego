@@ -10,7 +10,7 @@ import data.lib
 #   prefixes in the list.
 # custom:
 #   short_name: disallowed_task_step_image
-#   failure_msg: Step %d has disallowed image ref '%s'
+#   failure_msg: Step %d in task '%s' has disallowed image ref '%s'
 #   allowed_registry_prefixes:
 #   - quay.io/buildah
 #   - quay.io/redhat-appstudio
@@ -21,13 +21,12 @@ import data.lib
 #   - registry.redhat.io/openshift-pipelines
 #
 deny[result] {
-	att := input.attestations[_]
-	step := att.predicate.buildConfig.steps[step_index]
+	att := lib.pipelinerun_attestations[_]
+	task := att.predicate.buildConfig.tasks[_]
+	step := task.steps[step_index]
 	image_ref := step.environment.image
 	not image_ref_permitted(image_ref, rego.metadata.rule().custom.allowed_registry_prefixes)
-
-	print(rego.metadata.rule().custom)
-	result := lib.result_helper(rego.metadata.rule(), [step_index, image_ref])
+	result := lib.result_helper(rego.metadata.rule(), [step_index, task.name, image_ref])
 }
 
 image_ref_permitted(image_ref, allowed_prefixes) {

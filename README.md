@@ -79,6 +79,11 @@ Todo:
 - Describe how to get realistic data for `conftest-clair`
   and `sanity-label-check` under `data/test`
 
+Documentation
+-------------
+
+There is some policy documentation at [docs/index.md](docs/index.md). You can
+also view it using GitHub pages [here](https://hacbs-contract.github.io/ec-policies/).
 
 See also
 --------

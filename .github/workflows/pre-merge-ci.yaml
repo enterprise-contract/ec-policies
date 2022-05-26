@@ -22,5 +22,8 @@ jobs:
     - name: Install opa
       run: make install-opa OPA_BIN=$HOME/.local/bin
 
+    - name: Install gomplate
+      run: make install-gomplate GOMPLATE_BIN=$HOME/.local/bin
+
     - name: Run checks
       run: make ci

@@ -2,17 +2,11 @@ package policies.not_useful
 
 import data.lib
 
-# This is demoing the concept of being able to conveniently exclude
-# pieces of the EC policy without modifying the rego files.
-#
-# It's expected this will be skipped due to
-# data.config.policy.non_blocking_checks being set to ["not_useful"].
-# See main.rego to understand how it works.
-#
-# Todo soon probably: Delete this.
-
 # METADATA
 # title: A dummy rule that always fails
+# description: |-
+#   It's expected this rule will be skipped by policy configuration.
+#   This rule is for demonstration and test purposes and should be deleted soon.
 # custom:
 #   short_name: bad_day
 #   failure_msg: It just feels like a bad day to do a release

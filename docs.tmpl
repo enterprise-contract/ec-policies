@@ -1,0 +1,62 @@
+
+HACBS Enterprise Contract Policies
+==================================
+
+About
+-----
+
+The HACBS Enterprise Contract is a Tekton task that can be used to verify the
+provenence of container images built in HACBS and validate them against a set of
+policies.
+
+Those policies are defined using
+[rego](https://www.openpolicyagent.org/docs/latest/policy-language/) and are
+described here.
+
+Policy Rules
+------------
+
+{{ $p2_stash := "" }}
+{{ range (datasource "input").annotations }}
+{{ $p1 := (index (index .path 1) "value") }}
+{{ $p2 := (index (index .path 2) "value") }}
+
+{{/* Skip rules that are not under data.policies */}}
+{{ if eq $p1 "policies" }}
+
+{{/* Show a heading for each separate package */}}
+{{ if ne $p2 $p2_stash }}
+### {{ $p2 | regexp.Replace "_" " " | strings.Title }} Rules
+{{ $p2_stash = $p2 }}
+{{ end }}
+
+#### `[{{ .annotations.custom.short_name }}]` {{ .annotations.title }}
+
+{{.annotations.description}}
+
+{{/* Special handling */}}
+{{ if has .annotations.custom "allowed_registry_prefixes" }}
+The permitted registry prefixes are:
+
+```
+{{- range .annotations.custom.allowed_registry_prefixes }}
+{{ . }}{{ end }}
+```
+
+{{ end }}
+
+* Path: `{{ range $i, $v := .path }}{{ if ne 0 $i }}.{{ end }}{{ $v.value }}{{ end }}`
+* Failure message: `{{ .annotations.custom.failure_msg }}`
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/{{ regexp.Find "[a-z_]+\\.rego$" .location.file }}#L{{ .location.row }})
+{{ if coll.Has .annotations.custom "effective_on" }}* Effective from: {{ .annotations.custom.effective_on }}{{ end }}
+
+{{ end }}{{/* if eq $p1 ... */}}
+{{ end }}{{/* range ... */}}
+
+See Also
+--------
+
+* ["Verify Enterprise Contract" task definition](https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml)
+* [github.com/hacbs-contract/ec-policies](https://github.com/hacbs-contract/ec-policies)
+* [github.com/hacbs-contract](https://github.com/hacbs-contract)
+* [github.com/redhat-appstudio](https://github.com/redhat-appstudio/)

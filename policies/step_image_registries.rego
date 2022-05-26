@@ -25,8 +25,6 @@ deny[result] {
 	step := att.predicate.buildConfig.steps[step_index]
 	image_ref := step.environment.image
 	not image_ref_permitted(image_ref, rego.metadata.rule().custom.allowed_registry_prefixes)
-
-	print(rego.metadata.rule().custom)
 	result := lib.result_helper(rego.metadata.rule(), [step_index, image_ref])
 }
 

@@ -18,10 +18,10 @@ Policy Rules
 
 ### Attestation Type Rules
 
-#### `[unknown_att_type]` An unknown attestation type was found
+#### `[unknown_att_type]` Unknown attestation type found
 
 A sanity check that the attestation found for the image has the expected
-attestation type. Currently there type is only one attestation type supported,
+attestation type. Currently there is only one attestation type supported,
 `https://in-toto.io/Statement/v0.1`.
 
 * Path: `data.policies.attestation_type.deny`
@@ -65,31 +65,24 @@ registry.redhat.io/openshift-pipelines
 
 ### Test Rules
 
-#### `[test_data_missing]` No test data was found
+#### `[test_data_missing]` No test data found
 
-No test data was found in the data directory.
-
-* Path: `data.policies.test.deny`
-* Failure message: `No test data provided`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L13)
-
-#### `[test_data_empty]` Test data is empty
-
-The top level key was found for test data but it contained no
-test results.
+None of the tasks in the pipeline included a HACBS_TEST_OUTPUT
+task result, which is where Enterprise Contract expects to find
+test result data.
 
 * Path: `data.policies.test.deny`
-* Failure message: `Empty test data provided`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L27)
+* Failure message: `No test data found`
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L15)
 
-#### `[test_results_missing]` Test data is missing results
+#### `[test_results_missing]` Test data is missing the results key
 
-Each test result is expected to have 'results' key. In
-at least one of the test results this key was missing.
+Each test result is expected to have a 'results' key. In at least
+one of the HACBS_TEST_OUTPUT task results this key was not present.
 
 * Path: `data.policies.test.deny`
 * Failure message: `Found tests without results`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L41)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L29)
 
 #### `[test_result_failures]` Some tests did not pass
 
@@ -99,8 +92,8 @@ of the tests failed and the failure message will list the names
 of the failing tests.
 
 * Path: `data.policies.test.deny`
-* Failure message: `The following tests failed: %s`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L58)
+* Failure message: `The following tests did not complete successfully: %s`
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L46)
 
 See Also
 --------

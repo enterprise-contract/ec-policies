@@ -35,7 +35,7 @@ test_bundle_not_exists_emtpy_string {
 test_bundle_reference_not_valid {
 	name := "my-task"
 	image := "hacker.io/bundle:evil"
-    prefix = split(image, ":")
+	prefix = split(image, ":")
 	d := mock_data({
 		"name": name,
 		"ref": {
@@ -51,7 +51,7 @@ test_bundle_reference_not_valid {
 test_bundle_reference_valid {
 	name := "my-task"
 	image := "quay.io/redhat-appstudio/hacbs-templates-bundle:latest"
-    prefix = split(image, ":")
+	prefix = split(image, ":")
 	d := mock_data({
 		"name": name,
 		"ref": {

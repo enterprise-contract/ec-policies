@@ -16,6 +16,26 @@ described here.
 Policy Rules
 ------------
 
+### Attestation Task Bundle Rules
+
+#### `[disallowed_task_reference]` Task bundle was not used or is not defined
+
+Check for existence of a task bundle. Enforcing this rule will
+fail the contract if the task is not called from a bundle.
+
+* Path: `data.policies.attestation_task_bundle.warn`
+* Failure message: `Task '%s' does not contain a bundle reference`
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/attestation_task_bundle.rego#L13)
+
+#### `[disallowed_task_bundle]` Task bundle was used that was disallowed
+
+Check for existence of a valid task bundle. Enforcing this rule will
+fail the contract if the task is not called using a valid bundle image.
+
+* Path: `data.policies.attestation_task_bundle.warn`
+* Failure message: `Task '%s' has disallowed bundle image '%s'`
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/attestation_task_bundle.rego#L32)
+
 ### Attestation Type Rules
 
 #### `[unknown_att_type]` Unknown attestation type found

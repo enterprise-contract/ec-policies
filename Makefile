@@ -105,7 +105,7 @@ docs-check: ## Check if docs/index.md is up to date
 	fi
 	@mv $(DOCS_CHECK_TMP) $(DOCS_MD)
 
-ci: fmt-check quiet-test opa-check docs-check ## Runs all checks and tests
+ci: quiet-test opa-check fmt-check docs-check ## Runs all checks and tests
 
 #--------------------------------------------------------------------
 

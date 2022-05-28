@@ -56,7 +56,19 @@ live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` ne
 	  git ls-files -c -o '*.rego' | entr -d -c $(MAKE) --no-print-directory quiet-test; \
 	done
 
-conftest-test: ## Run unit tests with conftest
+##
+## Fixme: Currently conftest verify produces a error:
+##   "rego_type_error: package annotation redeclared"
+## In these two files:
+##   policies/examples/time_based.rego
+##   policies/lib/time_test.rego:1
+## The error only appears when running the tests.
+##
+## Since the metadata support is a new feature in opa, it might be this
+## is a bug that will go away in a future release of conftest. So for now
+## we will ignore the error and not use conftest verify in the CI.
+##
+conftest-test: ## Run all tests with conftest instead of opa
 	@conftest verify \
 	  --policy $(POLICIES_DIR)
 
@@ -187,6 +199,30 @@ conftest-check: ## Run policy evaluation using conftest
 
 ##@ Utility
 
+CONFTEST_VER=0.32.0
+CONFTEST_SHA_Darwin_x86_64=a692cd676cbcdc318d16f261c353c69e0ef69aff5fb0442f3cb909df13beb895
+CONFTEST_SHA_Darwin_arm64=a52365dffe6a424a3e72517fb987a45accd736540e792625a44d9d10f4d527fe
+CONFTEST_SHA_Linux_x86_64=e368ef4fcb49885e9c89052ec0c29cf4d4587707a589fefcaa3dc9cc72065055
+CONFTEST_GOOS=$(shell go env GOOS | sed 's/./\u&/' )
+CONFTEST_GOARCH=$(shell go env GOARCH | sed 's/amd64/x86_64/' )
+CONFTEST_OS_ARCH=$(CONFTEST_GOOS)_$(CONFTEST_GOARCH)
+CONFTEST_FILE=conftest_$(CONFTEST_VER)_$(CONFTEST_OS_ARCH).tar.gz
+CONFTEST_URL=https://github.com/open-policy-agent/conftest/releases/download/v$(CONFTEST_VER)/$(CONFTEST_FILE)
+CONFTEST_SHA=$(CONFTEST_SHA_${CONFTEST_OS_ARCH})
+ifndef CONFTEST_BIN
+  CONFTEST_BIN=$(HOME)/bin
+endif
+CONFTEST_DEST=$(CONFTEST_BIN)/conftest
+
+install-conftest: ## Install `conftest` CLI from GitHub releases
+	curl -s -L -O $(CONFTEST_URL)
+	echo "$(CONFTEST_SHA) $(CONFTEST_FILE)" | sha256sum --check
+	tar xzf $(CONFTEST_FILE) conftest
+	@mkdir -p $(CONFTEST_BIN)
+	mv conftest $(CONFTEST_DEST)
+	chmod 755 $(CONFTEST_DEST)
+	rm $(CONFTEST_FILE)
+
 OPA_VER=v0.40.0
 OPA_SHA_darwin_amd64=bbd2b41ce8ce3f2cbe06e06a2d05c66185a5e099ff7ac0edcce30116e5cd7831
 OPA_SHA_darwin_arm64_static=4b3f54b8dd45e5cc0c2b4242b94516f400202aa84f9e91054145853cfbba4d5f
@@ -201,10 +237,11 @@ ifndef OPA_BIN
   OPA_BIN=$(HOME)/bin
 endif
 OPA_DEST=$(OPA_BIN)/opa
+
 install-opa: ## Install `opa` CLI from GitHub releases
 	curl -s -L -O $(OPA_URL)
 	echo "$(OPA_SHA) $(OPA_FILE)" | sha256sum --check
-	mkdir -p $(OPA_BIN)
+	@mkdir -p $(OPA_BIN)
 	cp $(OPA_FILE) $(OPA_DEST)
 	chmod 755 $(OPA_DEST)
 	rm $(OPA_FILE)
@@ -217,6 +254,7 @@ ifndef GOMPLATE_BIN
   GOMPLATE_BIN=$(HOME)/bin
 endif
 GOMPLATE_DEST=$(GOMPLATE_BIN)/gomplate
+
 install-gomplate: ## Install `gomplate` from GitHub releases
 	curl -s -L -O $(GOMPLATE_URL)
 	@mkdir -p $(GOMPLATE_BIN)
@@ -224,8 +262,10 @@ install-gomplate: ## Install `gomplate` from GitHub releases
 	chmod 755 $(GOMPLATE_DEST)
 	rm $(GOMPLATE_FILE)
 
+install-tools: install-conftest install-opa install-gomplate ## Install all three tools
+
 #--------------------------------------------------------------------
 
 .PHONY: help test coverage quiet-test live-test fmt fmt-check docs-check ci clean-data \
   dummy-config dummy-test-results fetch-att show-data fetch-data check install-opa \
-  install-gomplate conftest-check conftest-test build-docs
+  install-gomplate conftest-check conftest-test install-conftest install-tools build-docs

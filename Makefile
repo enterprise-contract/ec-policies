@@ -191,6 +191,7 @@ conftest-check: ## Run policy evaluation using conftest
 	@conftest test $(INPUT_FILE) \
 	  --policy $(POLICIES_DIR) \
 	  --data $(DATA_DIR) \
+	  --no-fail \
 	  --output json
 
 #--------------------------------------------------------------------

@@ -13,11 +13,10 @@ Those policies are defined using
 [rego](https://www.openpolicyagent.org/docs/latest/policy-language/) and are
 described here.
 
-Policy Rules
-------------
-
 {{ $p2_stash := "" }}
+{{ $p3_stash := "" }}
 {{ range (datasource "input").annotations }}
+
 {{ $p1 := (index (index .path 1) "value") }}
 {{ $p2 := (index (index .path 2) "value") }}
 
@@ -26,10 +25,21 @@ Policy Rules
 {{/* Skip rules that are not under data.policies */}}
 {{ if eq $p1 "policies" }}
 
-{{/* Show a heading for each separate package */}}
+{{/* Show a heading for either "Release" or "Pipeline" */}}
 {{ if ne $p2 $p2_stash }}
-### {{ $p2 | regexp.Replace "_" " " | strings.Title }} Rules
+
+{{ $p2 | strings.Title }} Policy
+---------------
+
 {{ $p2_stash = $p2 }}
+{{ end }}
+
+{{ $p3 := (index (index .path 3) "value") }}
+
+{{/* Show a heading for each separate package */}}
+{{ if ne $p3 $p3_stash }}
+### {{ $p3 | regexp.Replace "_" " " | strings.Title }} Rules
+{{ $p3_stash = $p3 }}
 {{ end }}
 
 #### `[{{ .annotations.custom.short_name }}]` {{ .annotations.title }}

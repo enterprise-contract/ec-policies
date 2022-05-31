@@ -168,6 +168,20 @@ fetch-att: clean-input ## Fetches attestation data for IMAGE, use `make fetch-at
 
 #--------------------------------------------------------------------
 
+# A convenient way to populate input/input.json with a pipeline definition
+#
+# Specify PIPELINE as an environment var to use something other than the default
+# which is 'java-builds'.
+#
+ifndef PIPELINE
+	PIPELINE=java-builds
+endif
+
+fetch-pipeline: clean-input ## Fetches pipeline data for PIPELINE from your local cluster, use `make fetch-pipeline PIPELINE=<name>`
+	oc get pipeline $(PIPELINE) -o json > $(INPUT_FILE)
+
+#--------------------------------------------------------------------
+
 ##@ Running
 
 DATA_DIR=./data
@@ -177,26 +191,46 @@ INPUT_DIR=./input
 INPUT_FILE=$(INPUT_DIR)/input.json
 
 RELEASE_NAMESPACE=release.main
+PIPELINE_NAMESPACE=pipeline.main
 
 POLICIES_DIR=./policies
 OPA_FORMAT=pretty
-OPA_QUERY=data.$(RELEASE_NAMESPACE).deny
 
-check: ## Run policy evaluation with currently fetched data in `./data` and policy rules in `./policies`
+check-release: ## Run policy evaluation for release
+	@conftest test $(INPUT_FILE) \
+	  --namespace $(RELEASE_NAMESPACE) \
+	  --policy $(POLICIES_DIR) \
+	  --data $(DATA_DIR) \
+	  --no-fail \
+	  --output json
+
+check-pipeline: ## Run policy evaluation for pipeline definition
+	@conftest test $(INPUT_FILE) \
+	  --namespace $(PIPELINE_NAMESPACE) \
+	  --policy $(POLICIES_DIR) \
+	  --data $(DATA_DIR) \
+	  --no-fail \
+	  --output json
+
+check: check-release
+
+#--------------------------------------------------------------------
+
+check-release-opa: ## Run policy evaluation for release using opa. Deprecated.
 	@opa eval \
 	  --input $(INPUT_FILE) \
 	  --data $(DATA_DIR) \
 	  --data $(POLICIES_DIR) \
 	  --format $(OPA_FORMAT) \
-	  $(OPA_QUERY)
+	  data.$(RELEASE_NAMESPACE).deny
 
-conftest-check: ## Run policy evaluation using conftest
-	@conftest test $(INPUT_FILE) \
-	  --policy $(POLICIES_DIR) \
-	  --namespace $(RELEASE_NAMESPACE) \
+check-pipeline-opa: ## Run policy evaluation for pipeline using opa. Deprecated.
+	@opa eval \
+	  --input $(INPUT_FILE) \
 	  --data $(DATA_DIR) \
-	  --no-fail \
-	  --output json
+	  --data $(POLICIES_DIR) \
+	  --format $(OPA_FORMAT) \
+	  data.$(PIPELINE_NAMESPACE).deny
 
 #--------------------------------------------------------------------
 
@@ -270,6 +304,6 @@ install-tools: install-conftest install-opa install-gomplate ## Install all thre
 #--------------------------------------------------------------------
 
 .PHONY: help test coverage quiet-test live-test fmt fmt-check docs-check ci clean-data \
-  dummy-config dummy-test-results fetch-att show-data fetch-data check install-opa \
-  install-gomplate conftest-check conftest-test install-conftest install-tools \
+  dummy-config fetch-att fetch-pipeline check-with-opa check-pipeline check-release \
+  install-opa install-gomplate conftest-test install-conftest install-tools \
   build-docs docs-build docs-amend amend-docs fmt-amend amend-fmt ready

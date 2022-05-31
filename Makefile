@@ -78,7 +78,7 @@ fmt: ## Apply default formatting to all rego files. Use before you commit
 opa-check: ## Check Rego files with strict mode (https://www.openpolicyagent.org/docs/latest/strict/)
 	@opa check . --strict
 
-DOCS_BUILD_DIR=$(THIS_DIR)/docs
+DOCS_BUILD_DIR=./docs
 DOCS_TMP_JSON=$(DOCS_BUILD_DIR)/annotations-data.json
 DOCS_MD=$(DOCS_BUILD_DIR)/index.md
 DOCS_TEMPLATE=docs.tmpl
@@ -105,7 +105,7 @@ docs-check: ## Check if docs/index.md is up to date
 	fi
 	@mv $(DOCS_CHECK_TMP) $(DOCS_MD)
 
-ci: fmt-check quiet-test opa-check docs-check ## Runs all checks and tests
+ci: quiet-test opa-check fmt-check docs-check ## Runs all checks and tests
 
 #--------------------------------------------------------------------
 
@@ -122,10 +122,6 @@ clean-data: ## Removes everything from the `./data` directory
 dummy-config: ## Changes the configuration to mark the `not_useful` check as non-blocking to avoid a "feels like a bad day.." violation
 	@mkdir -p $(DATA_DIR)
 	@echo '{"config":{"policy":{"non_blocking_checks":["not_useful"]}}}' | jq > $(CONFIG_DATA_FILE)
-
-dummy-test-results: ## Creates some fake test result data to avoid a "No test data..." violation
-	@mkdir -p $(DATA_DIR)
-	@echo '{"test":{"fake_test":{"result":"SUCCESS"}}}' | jq > $(TEST_DATA_FILE)
 
 # Set IMAGE as required like this:
 #   make fetch-att IMAGE=<someimage>
@@ -147,38 +143,15 @@ fetch-att: clean-input ## Fetches attestation data for IMAGE, use `make fetch-at
 
 #--------------------------------------------------------------------
 
-# Assume you have the build-definitions repo checked out close by
-#
-THIS_DIR=$(shell git rev-parse --show-toplevel)
-BUILD_DEFS=$(THIS_DIR)/../build-definitions
-BUILD_DEFS_SCRIPTS=$(BUILD_DEFS)/appstudio-utils/util-scripts
-
-DATA_DIR=$(THIS_DIR)/data
-TEST_DATA_FILE=$(DATA_DIR)/test.json
-CONFIG_DATA_FILE=$(DATA_DIR)/config.json
-
-INPUT_DIR=$(THIS_DIR)/input
-INPUT_FILE=$(INPUT_DIR)/input.json
-
-define BD_SCRIPT
-.PHONY: $(1)-$(2)
-$(1)-$(2):
-	@cd $(BUILD_DEFS_SCRIPTS) && env DATA_DIR=$(DATA_DIR) ./$(1)-ec-data.sh $(2) $(3)
-endef
-$(eval $(call BD_SCRIPT,fetch,,$(PR)))
-$(eval $(call BD_SCRIPT,show,files))
-$(eval $(call BD_SCRIPT,show,keys))
-$(eval $(call BD_SCRIPT,show,json))
-$(eval $(call BD_SCRIPT,show,yaml))
-
-show-data: show-yaml ## Dump available data in `./data` as YAML
-fetch-data: fetch- ## Fetch data for the most recent pipeline run. Add `PR=<prname>` to fetch a specific pipeline run. Note: This is compatible with the deprecated 'enterprise-contract' task and requires the build-definitions repo checked out in ../build-definitions
-
-#--------------------------------------------------------------------
-
 ##@ Running
 
-POLICIES_DIR=$(THIS_DIR)/policies
+DATA_DIR=./data
+CONFIG_DATA_FILE=$(DATA_DIR)/config.json
+
+INPUT_DIR=./input
+INPUT_FILE=$(INPUT_DIR)/input.json
+
+POLICIES_DIR=./policies
 OPA_FORMAT=pretty
 OPA_QUERY=data.main.deny
 check: ## Run policy evaluation with currently fetched data in `./data` and policy rules in `./policies`

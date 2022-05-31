@@ -75,6 +75,13 @@ conftest-test: ## Run all tests with conftest instead of opa
 fmt: ## Apply default formatting to all rego files. Use before you commit
 	@opa fmt . --write
 
+amend-fmt: fmt ## Apply default formatting to all rego files then amend the current commit
+	@git diff $$(git ls-files '*.rego')
+	@echo "Amend commit '$$(git log -n1 --oneline)' with the above diff?"
+	@read -p "Hit enter to continue, Ctrl-C to abort."
+	git add $$(git ls-files '*.rego')
+	git commit --amend --no-edit
+
 opa-check: ## Check Rego files with strict mode (https://www.openpolicyagent.org/docs/latest/strict/)
 	@opa check . --strict
 
@@ -87,6 +94,20 @@ build-docs: ## Generate documentation. Use this before commit if you modified an
 	@opa inspect --annotations --format json $(POLICIES_DIR) > $(DOCS_TMP_JSON)
 	@gomplate --datasource input=$(DOCS_TMP_JSON) --file $(DOCS_TEMPLATE) | cat --squeeze-blank > $(DOCS_MD)
 	@rm $(DOCS_TMP_JSON)
+
+amend-docs: build-docs ## Update the docs and amend the current commit
+	@git diff $(DOCS_MD)
+	@echo "Amend commit '$$(git log -n1 --oneline)' with the above diff?"
+	@read -p "Hit enter to continue, Ctrl-C to abort."
+	git add $(DOCS_MD)
+	git commit --amend --no-edit
+
+# I always forget which one it is...
+docs-build: build-docs
+docs-amend: amend-docs
+fmt-amend: amend-fmt
+
+ready: amend-fmt amend-docs ## Amend current commit with fmt and docs changes
 
 ##@ CI
 

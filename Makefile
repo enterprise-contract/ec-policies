@@ -262,4 +262,5 @@ install-tools: install-conftest install-opa install-gomplate ## Install all thre
 
 .PHONY: help test coverage quiet-test live-test fmt fmt-check docs-check ci clean-data \
   dummy-config dummy-test-results fetch-att show-data fetch-data check install-opa \
-  install-gomplate conftest-check conftest-test install-conftest install-tools build-docs
+  install-gomplate conftest-check conftest-test install-conftest install-tools \
+  build-docs docs-build docs-amend amend-docs fmt-amend amend-fmt ready

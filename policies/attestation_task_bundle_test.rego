@@ -17,7 +17,7 @@ test_bundle_not_exists {
 	})
 
 	expected_msg := "Task 'my-task' does not contain a bundle reference"
-	lib.assert_equal(deny, {{"code": "disallowed_task_reference", "msg": expected_msg}}) with input.attestations as d
+	lib.assert_equal(warn, {{"code": "disallowed_task_reference", "msg": expected_msg}}) with input.attestations as d
 }
 
 test_bundle_not_exists_emtpy_string {
@@ -29,7 +29,7 @@ test_bundle_not_exists_emtpy_string {
 	})
 
 	expected_msg := sprintf("Task '%s' has disallowed bundle image '%s'", [name, image])
-	lib.assert_equal(deny, {{"code": "disallowed_task_bundle", "msg": expected_msg}}) with input.attestations as d
+	lib.assert_equal(warn, {{"code": "disallowed_task_bundle", "msg": expected_msg}}) with input.attestations as d
 }
 
 test_bundle_reference_not_valid {
@@ -45,7 +45,7 @@ test_bundle_reference_not_valid {
 	})
 
 	expected_msg := sprintf("Task '%s' has disallowed bundle image '%s'", [name, prefix[0]])
-	lib.assert_equal(deny, {{"code": "disallowed_task_bundle", "msg": expected_msg}}) with input.attestations as d
+	lib.assert_equal(warn, {{"code": "disallowed_task_bundle", "msg": expected_msg}}) with input.attestations as d
 }
 
 test_bundle_reference_valid {
@@ -61,5 +61,5 @@ test_bundle_reference_valid {
 	})
 
 	expected_msg := sprintf("Task '%s' has disallowed bundle image '%s'", [name, prefix[0]])
-	not lib.assert_equal(deny, {{"code": "disallowed_task_bundle", "msg": expected_msg}}) with input.attestations as d
+	not lib.assert_equal(warn, {{"code": "disallowed_task_bundle", "msg": expected_msg}}) with input.attestations as d
 }

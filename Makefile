@@ -92,7 +92,7 @@ DOCS_TEMPLATE=docs.tmpl
 build-docs: ## Generate documentation. Use this before commit if you modified any rules or annotations
 	@mkdir -p $(DOCS_BUILD_DIR)
 	@opa inspect --annotations --format json $(POLICIES_DIR) > $(DOCS_TMP_JSON)
-	@gomplate --datasource input=$(DOCS_TMP_JSON) --file $(DOCS_TEMPLATE) | cat --squeeze-blank > $(DOCS_MD)
+	@gomplate --datasource input=$(DOCS_TMP_JSON) --file $(DOCS_TEMPLATE) | cat -s > $(DOCS_MD)
 	@rm $(DOCS_TMP_JSON)
 
 amend-docs: build-docs ## Update the docs and amend the current commit

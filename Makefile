@@ -176,9 +176,12 @@ CONFIG_DATA_FILE=$(DATA_DIR)/config.json
 INPUT_DIR=./input
 INPUT_FILE=$(INPUT_DIR)/input.json
 
+RELEASE_NAMESPACE=release.main
+
 POLICIES_DIR=./policies
 OPA_FORMAT=pretty
-OPA_QUERY=data.main.deny
+OPA_QUERY=data.$(RELEASE_NAMESPACE).deny
+
 check: ## Run policy evaluation with currently fetched data in `./data` and policy rules in `./policies`
 	@opa eval \
 	  --input $(INPUT_FILE) \
@@ -190,6 +193,7 @@ check: ## Run policy evaluation with currently fetched data in `./data` and poli
 conftest-check: ## Run policy evaluation using conftest
 	@conftest test $(INPUT_FILE) \
 	  --policy $(POLICIES_DIR) \
+	  --namespace $(RELEASE_NAMESPACE) \
 	  --data $(DATA_DIR) \
 	  --no-fail \
 	  --output json

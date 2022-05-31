@@ -1,9 +1,9 @@
-package main
+package release.main
 
 denials := {denial |
 	not skip(policy)
-	data.policies[policy].deny[_]
-	denial := data.policies[policy].deny[_]
+	data.policies.release[policy].deny[_]
+	denial := data.policies.release[policy].deny[_]
 }
 
 deny := {d | denials[d]; not in_future(d)}

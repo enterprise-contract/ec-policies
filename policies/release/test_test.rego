@@ -1,4 +1,4 @@
-package policies.test
+package policies.release.test
 
 import data.lib
 

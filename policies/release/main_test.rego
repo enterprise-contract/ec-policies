@@ -1,8 +1,8 @@
-package main
+package release.main
 
 import data.lib
 
-all_tests := {p | data.policies[policy]; p := policy}
+all_tests := {p | data.policies.release[policy]; p := policy}
 
 nonblocking_except(except_tests) = d {
 	d := {"non_blocking_checks": all_tests - except_tests}

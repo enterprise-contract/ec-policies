@@ -1,4 +1,4 @@
-package policies.attestation_type
+package policies.release.attestation_type
 
 import data.lib
 

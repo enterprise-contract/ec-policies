@@ -27,3 +27,14 @@ _assert_empty_fails(value) {
 	trace(debug_output)
 	print(debug_output)
 }
+
+assert_not_empty(value) {
+	not _assert_not_empty_fails(value)
+}
+
+_assert_not_empty_fails(value) {
+	count(value) == 0
+	debug_output := sprintf("Assert not empty failure:\n  Value:  %s\n", [value])
+	trace(debug_output)
+	print(debug_output)
+}

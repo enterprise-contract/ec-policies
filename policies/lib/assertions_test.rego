@@ -18,10 +18,16 @@ test_assert_empty {
 	assert_empty([])
 	assert_empty({})
 	assert_empty(set())
+	not assert_empty(["a"])
+	not assert_empty({"a"})
+	not assert_empty({"a": "b"})
 }
 
 test_assert_not_empty {
-	not assert_empty(["a"])
-	not assert_empty({"a": 10})
-	not assert_empty({"a"})
+	assert_not_empty(["a"])
+	assert_not_empty({"a"})
+	assert_not_empty({"a": "b"})
+	not assert_not_empty([])
+	not assert_not_empty({})
+	not assert_not_empty(set())
 }

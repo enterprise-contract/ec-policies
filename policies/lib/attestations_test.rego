@@ -23,6 +23,13 @@ att_mock_helper(result_map, task_name) = d {
 	}}
 }
 
+att_mock_task_helper(task) = d {
+	d := [{"predicate": {
+		"buildConfig": {"tasks": [task]},
+		"buildType": pipelinerun_att_build_type,
+	}}]
+}
+
 test_pr_attestations {
 	assert_equal([mock_pr_att], pipelinerun_attestations) with input.attestations as [mock_tr_att, mock_pr_att, garbage_att]
 	assert_equal([], pipelinerun_attestations) with input.attestations as [mock_tr_att, garbage_att]
@@ -48,4 +55,30 @@ test_att_mock_helper {
 test_results_from_tests {
 	expected := {"result": "SUCCESS", "foo": "bar", "__task_name": "mytask"}
 	assert_equal([expected], results_from_tests) with input.attestations as [att_mock_helper({"result": "SUCCESS", "foo": "bar"}, "mytask")]
+}
+
+test_invalid_check_param {
+	task_name := "source-image-verify"
+	d := att_mock_task_helper({
+		"name": task_name,
+		"params": {
+			"name": "IMAGE",
+			"value": "my-image:1234",
+		},
+	})
+
+	check_task_param("source-image-verify", "IMAGE", "bad-image:1234") with input.attestations as d
+}
+
+test_valid_check_param {
+	task_name := "source-image-verify"
+	d := att_mock_task_helper({
+		"name": task_name,
+		"params": {
+			"name": "IMAGE",
+			"value": "my-image:1234",
+		},
+	})
+
+	not check_task_param("source-image-verify", "IMAGE", "my-image:1234") with input.attestations as d
 }

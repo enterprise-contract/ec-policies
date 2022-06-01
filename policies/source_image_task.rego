@@ -13,9 +13,6 @@ import data.lib
 warn[result] {
 	image_sha = data.source_image_verify.input_image
 	task_name = data.source_image_verify.task_name
-	task := lib.tasks_from_pipelinerun[_]
-	task.name == task_name
-	task.params.name == "IMAGE"
-	task.params.value != image_sha
+	lib.check_task_param(task_name, "IMAGE", image_sha)
 	result := lib.result_helper(rego.metadata.rule(), [task_name, image_sha])
 }

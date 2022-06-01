@@ -33,3 +33,11 @@ results_from_tests := [r |
 	# Inject the task name so we can show it in failure messages
 	r := object.union(result_map, {"__task_name": task.name})
 ]
+
+# Check for the existance of a particular task param
+check_task_param(task_name, param_name, param_value) {
+	task := tasks_from_pipelinerun[_]
+	task.name == task_name
+	task.params.name == param_name
+	task.params.value != param_value
+}

@@ -22,9 +22,9 @@ Pipeline Policy
 
 A sanity check to confirm the input data has the expected kind.
 
-* Path: `data.policies.pipeline.basic.deny`
+* Path: `data.policy.pipeline.basic.deny`
 * Failure message: `Unexpected kind '%s'`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/basic.rego#L22)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/basic.rego#L22)
 
 Release Policy
 ---------------
@@ -36,18 +36,18 @@ Release Policy
 Check for existence of a task bundle. Enforcing this rule will
 fail the contract if the task is not called from a bundle.
 
-* Path: `data.policies.release.attestation_task_bundle.warn`
+* Path: `data.policy.release.attestation_task_bundle.warn`
 * Failure message: `Task '%s' does not contain a bundle reference`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/attestation_task_bundle.rego#L16)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/attestation_task_bundle.rego#L16)
 
 #### `[disallowed_task_bundle]` Task bundle was used that was disallowed
 
 Check for existence of a valid task bundle. Enforcing this rule will
 fail the contract if the task is not called using a valid bundle image.
 
-* Path: `data.policies.release.attestation_task_bundle.warn`
+* Path: `data.policy.release.attestation_task_bundle.warn`
 * Failure message: `Task '%s' has disallowed bundle image '%s'`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/attestation_task_bundle.rego#L35)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/attestation_task_bundle.rego#L35)
 
 ### Attestation Type Rules
 
@@ -57,9 +57,9 @@ A sanity check that the attestation found for the image has the expected
 attestation type. Currently there is only one attestation type supported,
 `https://in-toto.io/Statement/v0.1`.
 
-* Path: `data.policies.release.attestation_type.deny`
+* Path: `data.policy.release.attestation_type.deny`
 * Failure message: `Unknown attestation type '%s'`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/attestation_type.rego#L21)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/attestation_type.rego#L21)
 
 ### Not Useful Rules
 
@@ -68,9 +68,9 @@ attestation type. Currently there is only one attestation type supported,
 It's expected this rule will be skipped by policy configuration.
 This rule is for demonstration and test purposes and should be deleted soon.
 
-* Path: `data.policies.release.not_useful.deny`
+* Path: `data.policy.release.not_useful.deny`
 * Failure message: `It just feels like a bad day to do a release`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/not_useful.rego#L17)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/not_useful.rego#L17)
 
 ### Step Image Registries Rules
 
@@ -92,9 +92,9 @@ registry.redhat.io/openshift4
 registry.redhat.io/openshift-pipelines
 ```
 
-* Path: `data.policies.release.step_image_registries.deny`
+* Path: `data.policy.release.step_image_registries.deny`
 * Failure message: `Step %d in task '%s' has disallowed image ref '%s'`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/step_image_registries.rego#L26)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/step_image_registries.rego#L26)
 
 ### Test Rules
 
@@ -104,18 +104,18 @@ None of the tasks in the pipeline included a HACBS_TEST_OUTPUT
 task result, which is where Enterprise Contract expects to find
 test result data.
 
-* Path: `data.policies.release.test.deny`
+* Path: `data.policy.release.test.deny`
 * Failure message: `No test data found`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L18)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/test.rego#L18)
 
 #### `[test_results_missing]` Test data is missing the results key
 
 Each test result is expected to have a 'results' key. In at least
 one of the HACBS_TEST_OUTPUT task results this key was not present.
 
-* Path: `data.policies.release.test.deny`
+* Path: `data.policy.release.test.deny`
 * Failure message: `Found tests without results`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L32)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/test.rego#L32)
 
 #### `[test_result_failures]` Some tests did not pass
 
@@ -124,9 +124,9 @@ test results have a result of 'SUCCESS'. This will fail if any
 of the tests failed and the failure message will list the names
 of the failing tests.
 
-* Path: `data.policies.release.test.deny`
+* Path: `data.policy.release.test.deny`
 * Failure message: `The following tests did not complete successfully: %s`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L49)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/test.rego#L49)
 
 See Also
 --------

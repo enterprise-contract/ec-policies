@@ -18,7 +18,7 @@ test_not_effective_by_default {
 	# those with our example policy.
 	# time_based policy has effective_on far into the future, if you're reading
 	# this then bump it for another 100 years
-	lib.assert_equal({no_effective_date, in_the_past, y2k}, data.release.main.deny) with data.policies.release as {data.examples.release.time_based}
+	lib.assert_equal({no_effective_date, in_the_past, y2k}, data.release.main.deny) with data.policy.release as {data.examples.release.time_based}
 		with data.config.policy.non_blocking_checks as []
 }
 
@@ -28,7 +28,7 @@ test_effective_with_time_travel {
 
 	# The time based filtering happens automatically on the real polices. Replace
 	# those with our example policy.
-	lib.assert_equal({in_the_future, no_effective_date, in_the_past, y2k}, data.release.main.deny) with data.policies.release as {data.examples.release.time_based}
+	lib.assert_equal({in_the_future, no_effective_date, in_the_past, y2k}, data.release.main.deny) with data.policy.release as {data.examples.release.time_based}
 		with data.config.policy as policy_config
 }
 
@@ -38,6 +38,6 @@ test_y2k_not_failing_before_2000 {
 
 	# The time based filtering happens automatically on the real polices. Replace
 	# those with our example policy.
-	lib.assert_equal({no_effective_date, in_the_past}, data.release.main.deny) with data.policies.release as {data.examples.release.time_based}
+	lib.assert_equal({no_effective_date, in_the_past}, data.release.main.deny) with data.policy.release as {data.examples.release.time_based}
 		with data.config.policy as policy_config
 }

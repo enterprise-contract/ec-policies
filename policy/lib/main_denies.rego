@@ -1,11 +1,11 @@
 package lib
 
-# Collect all non-skipped deny rules under data.policies.<policy_namespace>
+# Collect all non-skipped deny rules under data.policy.<policy_namespace>
 # regardless of whether they are effective now or in the future
 #
 current_and_future_denies(policy_namespace) := deny_set {
 	deny_set := {d |
-		policy_packages := data.policies[policy_namespace]
+		policy_packages := data.policy[policy_namespace]
 		policy_package := policy_packages[package_name]
 		not skip_package(package_name)
 		d := policy_package.deny[_]

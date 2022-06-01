@@ -60,8 +60,8 @@ live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` ne
 ## Fixme: Currently conftest verify produces a error:
 ##   "rego_type_error: package annotation redeclared"
 ## In these two files:
-##   policies/examples/time_based.rego
-##   policies/lib/time_test.rego:1
+##   policy/release/examples/time_based.rego
+##   policy/lib/time_test.rego:1
 ## The error only appears when running the tests.
 ##
 ## Since the metadata support is a new feature in opa, it might be this
@@ -70,7 +70,7 @@ live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` ne
 ##
 conftest-test: ## Run all tests with conftest instead of opa
 	@conftest verify \
-	  --policy $(POLICIES_DIR)
+	  --policy $(POLICY_DIR)
 
 fmt: ## Apply default formatting to all rego files. Use before you commit
 	@opa fmt . --write
@@ -86,7 +86,7 @@ opa-check: ## Check Rego files with strict mode (https://www.openpolicyagent.org
 	@opa check . --strict
 
 conventions-check: ## Check Rego policy files for convention violations
-	@OUT=$$(opa eval --data checks --data policies/lib --input <(opa inspect . -a -f json) 'data.checks.violation[_]' --format raw); \
+	@OUT=$$(opa eval --data checks --data $(POLICY_DIR)/lib --input <(opa inspect . -a -f json) 'data.checks.violation[_]' --format raw); \
 	if [[ -n "$${OUT}" ]]; then echo $${OUT}; exit 1; fi
 
 DOCS_BUILD_DIR=./docs
@@ -95,7 +95,7 @@ DOCS_MD=$(DOCS_BUILD_DIR)/index.md
 DOCS_TEMPLATE=docs.tmpl
 build-docs: ## Generate documentation. Use this before commit if you modified any rules or annotations
 	@mkdir -p $(DOCS_BUILD_DIR)
-	@opa inspect --annotations --format json $(POLICIES_DIR) > $(DOCS_TMP_JSON)
+	@opa inspect --annotations --format json $(POLICY_DIR) > $(DOCS_TMP_JSON)
 	@gomplate --datasource input=$(DOCS_TMP_JSON) --file $(DOCS_TEMPLATE) | cat -s > $(DOCS_MD)
 	@rm $(DOCS_TMP_JSON)
 
@@ -193,13 +193,13 @@ INPUT_FILE=$(INPUT_DIR)/input.json
 RELEASE_NAMESPACE=release.main
 PIPELINE_NAMESPACE=pipeline.main
 
-POLICIES_DIR=./policies
+POLICY_DIR=./policy
 OPA_FORMAT=pretty
 
 check-release: ## Run policy evaluation for release
 	@conftest test $(INPUT_FILE) \
 	  --namespace $(RELEASE_NAMESPACE) \
-	  --policy $(POLICIES_DIR) \
+	  --policy $(POLICY_DIR) \
 	  --data $(DATA_DIR) \
 	  --no-fail \
 	  --output json
@@ -207,7 +207,7 @@ check-release: ## Run policy evaluation for release
 check-pipeline: ## Run policy evaluation for pipeline definition
 	@conftest test $(INPUT_FILE) \
 	  --namespace $(PIPELINE_NAMESPACE) \
-	  --policy $(POLICIES_DIR) \
+	  --policy $(POLICY_DIR) \
 	  --data $(DATA_DIR) \
 	  --no-fail \
 	  --output json
@@ -220,7 +220,7 @@ check-release-opa: ## Run policy evaluation for release using opa. Deprecated.
 	@opa eval \
 	  --input $(INPUT_FILE) \
 	  --data $(DATA_DIR) \
-	  --data $(POLICIES_DIR) \
+	  --data $(POLICY_DIR) \
 	  --format $(OPA_FORMAT) \
 	  data.$(RELEASE_NAMESPACE).deny
 
@@ -228,7 +228,7 @@ check-pipeline-opa: ## Run policy evaluation for pipeline using opa. Deprecated.
 	@opa eval \
 	  --input $(INPUT_FILE) \
 	  --data $(DATA_DIR) \
-	  --data $(POLICIES_DIR) \
+	  --data $(POLICY_DIR) \
 	  --format $(OPA_FORMAT) \
 	  data.$(PIPELINE_NAMESPACE).deny
 

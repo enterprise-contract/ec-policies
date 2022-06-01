@@ -1,4 +1,4 @@
-package policies.release.attestation_task_bundle
+package policy.release.attestation_task_bundle
 
 import data.lib
 

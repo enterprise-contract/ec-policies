@@ -2,9 +2,9 @@ package release.main
 
 import data.lib
 
-# Todo: Some of this might be better placed in policies/lib/main_denies_test
+# Todo: Some of this might be better placed in policy/lib/main_denies_test
 
-all_tests := {p | data.policies.release[policy]; p := policy}
+all_tests := {p | data.policy.release[policy]; p := policy}
 
 nonblocking_except(except_tests) = d {
 	d := {"non_blocking_checks": all_tests - except_tests}

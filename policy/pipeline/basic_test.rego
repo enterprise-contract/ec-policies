@@ -1,4 +1,4 @@
-package policies.pipeline.basic
+package policy.pipeline.basic
 
 import data.lib
 

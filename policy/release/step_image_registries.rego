@@ -1,7 +1,7 @@
 # METADATA
 # custom:
 #   effective_on: 2022-01-01T00:00:00Z
-package policies.release.step_image_registries
+package policy.release.step_image_registries
 
 import data.lib
 

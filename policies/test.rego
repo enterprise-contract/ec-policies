@@ -17,7 +17,7 @@ import data.lib
 #
 deny[result] {
 	count(lib.results_from_tests) == 0
-	result := lib.result_helper(rego.metadata.rule(), [])
+	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
 # METADATA
@@ -32,7 +32,7 @@ deny[result] {
 deny[result] {
 	with_results := [result | result := lib.results_from_tests[_].result]
 	count(with_results) != count(lib.results_from_tests)
-	result := lib.result_helper(rego.metadata.rule(), [])
+	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
 # METADATA
@@ -67,7 +67,7 @@ deny[result] {
 
 	short_failed_blocking := [f | f := split(failed_blocking[_], ":")[1]]
 	result := lib.result_helper(
-		rego.metadata.rule(),
+		rego.metadata.chain(),
 		[concat(", ", short_failed_blocking)],
 	)
 }

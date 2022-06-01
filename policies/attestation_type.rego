@@ -22,7 +22,7 @@ deny[result] {
 	att := lib.pipelinerun_attestations[_]
 	att_type := att._type
 	not known_att_type(att_type)
-	result := lib.result_helper(rego.metadata.rule(), [att_type])
+	result := lib.result_helper(rego.metadata.chain(), [att_type])
 }
 
 known_att_type(att_type) {

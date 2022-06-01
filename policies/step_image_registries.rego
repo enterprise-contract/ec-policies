@@ -29,7 +29,7 @@ deny[result] {
 	step := task.steps[step_index]
 	image_ref := step.environment.image
 	not image_ref_permitted(image_ref, rego.metadata.rule().custom.allowed_registry_prefixes)
-	result := lib.result_helper(rego.metadata.rule(), [step_index, task.name, image_ref])
+	result := lib.result_helper(rego.metadata.chain(), [step_index, task.name, image_ref])
 }
 
 image_ref_permitted(image_ref, allowed_prefixes) {

@@ -17,7 +17,7 @@ warn[result] {
 	task := lib.tasks_from_pipelinerun[_]
 	name := task.name
 	not task.ref.bundle
-	result := lib.result_helper(rego.metadata.rule(), [name])
+	result := lib.result_helper(rego.metadata.chain(), [name])
 }
 
 # METADATA
@@ -37,5 +37,5 @@ warn[result] {
 	name := task.name
 	bundle := split(task.ref.bundle, ":")
 	not lib.item_in_list(bundle[0], rego.metadata.rule().custom.allowed_bundles)
-	result := lib.result_helper(rego.metadata.rule(), [name, bundle[0]])
+	result := lib.result_helper(rego.metadata.chain(), [name, bundle[0]])
 }

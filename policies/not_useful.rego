@@ -16,5 +16,5 @@ import data.lib
 #
 deny[result] {
 	true
-	result := lib.result_helper(rego.metadata.rule(), [])
+	result := lib.result_helper(rego.metadata.chain(), [])
 }

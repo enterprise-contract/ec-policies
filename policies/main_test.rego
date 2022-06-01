@@ -22,7 +22,18 @@ test_failing_without_skipping {
 	# Let's make sure that the contract remains the same by checking what `deny` is set to
 	# this makes this test a bit more fragile, but the assertion is better as we know that
 	# the output hasn't changed it's shape
-	lib.assert_equal(deny, {{"code": "bad_day", "msg": "It just feels like a bad day to do a release"}, {"code": "test_data_missing", "msg": "No test data found"}}) with data.config.policy as nonblocking_only(set())
+	lib.assert_equal(deny, {
+		{
+			"code": "bad_day",
+			"msg": "It just feels like a bad day to do a release",
+			"effective_on": "2022-01-01T00:00:00Z",
+		},
+		{
+			"code": "test_data_missing",
+			"msg": "No test data found",
+			"effective_on": "2022-01-01T00:00:00Z",
+		},
+	}) with data.config.policy as nonblocking_only(set())
 }
 
 test_succeeding_when_skipping_all {
@@ -30,7 +41,11 @@ test_succeeding_when_skipping_all {
 }
 
 test_test_can_be_skipped {
-	lib.assert_equal(deny, {{"code": "test_data_missing", "msg": "No test data found"}}) with data.config.policy as nonblocking_except({"test"})
+	lib.assert_equal(deny, {{
+		"code": "test_data_missing",
+		"msg": "No test data found",
+		"effective_on": "2022-01-01T00:00:00Z",
+	}}) with data.config.policy as nonblocking_except({"test"})
 }
 
 test_test_succeeds {
@@ -38,7 +53,11 @@ test_test_succeeds {
 }
 
 test_test_fails {
-	lib.assert_equal(deny, {{"code": "test_result_failures", "msg": "The following tests did not complete successfully: test1"}}) with input.attestations as [lib.att_mock_helper({"result": "FAILURE"}, "test1")] with data.config.policy as nonblocking_except({"test"})
+	lib.assert_equal(deny, {{
+		"code": "test_result_failures",
+		"msg": "The following tests did not complete successfully: test1",
+		"effective_on": "2022-01-01T00:00:00Z",
+	}}) with input.attestations as [lib.att_mock_helper({"result": "FAILURE"}, "test1")] with data.config.policy as nonblocking_except({"test"})
 }
 
 test_policy_ignored_when_not_yet_effective {

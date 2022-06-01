@@ -59,6 +59,17 @@ This rule is for demonstration and test purposes and should be deleted soon.
 * Failure message: `It just feels like a bad day to do a release`
 * [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/not_useful.rego#L14)
 
+### Source Image Task Rules
+
+#### `[disallowed_input_image]` Verify the source-image-verify task accepts an image
+
+Verify the source-image-verify task accepts a particular image
+as an input param.
+
+* Path: `data.policies.source_image_task.warn`
+* Failure message: `Task '%s' does not contain '%s' as a param`
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/source_image_task.rego#L13)
+
 ### Step Image Registries Rules
 
 #### `[disallowed_task_step_image]` Task steps ran on container images that are disallowed

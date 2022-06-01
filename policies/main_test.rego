@@ -65,7 +65,7 @@ test_policy_ignored_when_not_yet_effective {
 	set() == deny with denials as {future_denial}
 		with data.config.policy as nonblocking_except({"test", "not_useful"})
 
-	{future_denial} == future_deny with denials as {future_denial}
+	{future_denial} == warn with denials as {future_denial}
 		with data.config.policy as nonblocking_except({"test", "not_useful"})
 }
 
@@ -85,7 +85,7 @@ test_policy_not_ignored_when_effective_with_time_travel {
 	{expected_error} == deny with denials as {expected_error}
 		with data.config.policy as policy_config
 
-	set() == future_deny with denials as {expected_error}
+	set() == warn with denials as {expected_error}
 		with data.config.policy as policy_config
 }
 
@@ -105,7 +105,7 @@ test_future_denial {
 	set() == deny with denials as {expected_error}
 		with data.config as {}
 
-	{expected_error} == future_deny with denials as {expected_error}
+	{expected_error} == warn with denials as {expected_error}
 		with data.config as {}
 }
 

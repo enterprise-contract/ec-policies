@@ -85,6 +85,10 @@ amend-fmt: fmt ## Apply default formatting to all rego files then amend the curr
 opa-check: ## Check Rego files with strict mode (https://www.openpolicyagent.org/docs/latest/strict/)
 	@opa check . --strict
 
+conventions-check: ## Check Rego policy files for convention violations
+	@OUT=$$(opa eval --data checks --data policies/lib --input <(opa inspect . -a -f json) 'data.checks.violation[_]' --format raw); \
+	if [[ -n "$${OUT}" ]]; then echo $${OUT}; exit 1; fi
+
 DOCS_BUILD_DIR=./docs
 DOCS_TMP_JSON=$(DOCS_BUILD_DIR)/annotations-data.json
 DOCS_MD=$(DOCS_BUILD_DIR)/index.md
@@ -126,7 +130,7 @@ docs-check: ## Check if docs/index.md is up to date
 	fi
 	@mv $(DOCS_CHECK_TMP) $(DOCS_MD)
 
-ci: quiet-test opa-check fmt-check docs-check ## Runs all checks and tests
+ci: conventions-check quiet-test opa-check fmt-check docs-check ## Runs all checks and tests
 
 #--------------------------------------------------------------------
 

@@ -57,6 +57,9 @@ violation[msg] {
 	# just examine Rego files that declare policies
 	annotation.location.file == file
 
+	# ... and ignore non-rule annotations, e.g. package, document.
+	annotation.annotations.scope == "rule"
+
 	# gather all annotations in a dotted format (e.g. "custom.short_name")
 	declared_annotations := union({a |
 		annotation.annotations[x]

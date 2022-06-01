@@ -25,7 +25,7 @@ fail the contract if the task is not called from a bundle.
 
 * Path: `data.policies.attestation_task_bundle.warn`
 * Failure message: `Task '%s' does not contain a bundle reference`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/attestation_task_bundle.rego#L13)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/attestation_task_bundle.rego#L16)
 
 #### `[disallowed_task_bundle]` Task bundle was used that was disallowed
 
@@ -34,7 +34,7 @@ fail the contract if the task is not called using a valid bundle image.
 
 * Path: `data.policies.attestation_task_bundle.warn`
 * Failure message: `Task '%s' has disallowed bundle image '%s'`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/attestation_task_bundle.rego#L32)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/attestation_task_bundle.rego#L35)
 
 ### Attestation Type Rules
 
@@ -46,7 +46,7 @@ attestation type. Currently there is only one attestation type supported,
 
 * Path: `data.policies.attestation_type.deny`
 * Failure message: `Unknown attestation type '%s'`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/attestation_type.rego#L18)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/attestation_type.rego#L21)
 
 ### Not Useful Rules
 
@@ -57,7 +57,7 @@ This rule is for demonstration and test purposes and should be deleted soon.
 
 * Path: `data.policies.not_useful.deny`
 * Failure message: `It just feels like a bad day to do a release`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/not_useful.rego#L14)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/not_useful.rego#L17)
 
 ### Step Image Registries Rules
 
@@ -81,7 +81,7 @@ registry.redhat.io/openshift-pipelines
 
 * Path: `data.policies.step_image_registries.deny`
 * Failure message: `Step %d in task '%s' has disallowed image ref '%s'`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/step_image_registries.rego#L23)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/step_image_registries.rego#L26)
 
 ### Test Rules
 
@@ -93,7 +93,7 @@ test result data.
 
 * Path: `data.policies.test.deny`
 * Failure message: `No test data found`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L15)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L18)
 
 #### `[test_results_missing]` Test data is missing the results key
 
@@ -102,7 +102,7 @@ one of the HACBS_TEST_OUTPUT task results this key was not present.
 
 * Path: `data.policies.test.deny`
 * Failure message: `Found tests without results`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L29)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L32)
 
 #### `[test_result_failures]` Some tests did not pass
 
@@ -113,7 +113,7 @@ of the failing tests.
 
 * Path: `data.policies.test.deny`
 * Failure message: `The following tests did not complete successfully: %s`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L46)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policies/test.rego#L49)
 
 See Also
 --------

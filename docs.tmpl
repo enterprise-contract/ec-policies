@@ -59,7 +59,7 @@ The permitted registry prefixes are:
 
 * Path: `{{ range $i, $v := .path }}{{ if ne 0 $i }}.{{ end }}{{ $v.value }}{{ end }}`
 * Failure message: `{{ .annotations.custom.failure_msg }}`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/{{ regexp.Find "[a-z_]+\\.rego$" .location.file }}#L{{ .location.row }})
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/{{ .location.file }}#L{{ .location.row }})
 {{ if coll.Has .annotations.custom "effective_on" }}* Effective from: {{ .annotations.custom.effective_on }}{{ end }}
 
 {{ end }}{{/* if eq $p1 ... */}}

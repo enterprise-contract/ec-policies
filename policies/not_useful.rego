@@ -1,3 +1,6 @@
+# METADATA
+# custom:
+#   effective_on: 2022-01-01T00:00:00Z
 package policies.not_useful
 
 import data.lib
@@ -13,5 +16,5 @@ import data.lib
 #
 deny[result] {
 	true
-	result := lib.result_helper(rego.metadata.rule(), [])
+	result := lib.result_helper(rego.metadata.chain(), [])
 }

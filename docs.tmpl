@@ -21,6 +21,8 @@ Policy Rules
 {{ $p1 := (index (index .path 1) "value") }}
 {{ $p2 := (index (index .path 2) "value") }}
 
+{{/* Skip annotations that are not rule annotations */}}
+{{ if eq .annotations.scope "rule" }}
 {{/* Skip rules that are not under data.policies */}}
 {{ if eq $p1 "policies" }}
 
@@ -51,6 +53,7 @@ The permitted registry prefixes are:
 {{ if coll.Has .annotations.custom "effective_on" }}* Effective from: {{ .annotations.custom.effective_on }}{{ end }}
 
 {{ end }}{{/* if eq $p1 ... */}}
+{{ end }}{{/* if eq .annotations ... */}}
 {{ end }}{{/* range ... */}}
 
 See Also

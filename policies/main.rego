@@ -8,7 +8,7 @@ denials := {denial |
 
 deny := {d | denials[d]; not in_future(d)}
 
-future_deny := {d | denials[d]; in_future(d)}
+warn := {d | denials[d]; in_future(d)}
 
 skip(test_name) {
 	data.config.policy.non_blocking_checks[_] == test_name

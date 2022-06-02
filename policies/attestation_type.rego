@@ -1,3 +1,6 @@
+# METADATA
+# custom:
+#   effective_on: 2022-01-01T00:00:00Z
 package policies.attestation_type
 
 import data.lib
@@ -19,7 +22,7 @@ deny[result] {
 	att := lib.pipelinerun_attestations[_]
 	att_type := att._type
 	not known_att_type(att_type)
-	result := lib.result_helper(rego.metadata.rule(), [att_type])
+	result := lib.result_helper(rego.metadata.chain(), [att_type])
 }
 
 known_att_type(att_type) {

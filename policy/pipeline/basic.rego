@@ -1,6 +1,3 @@
-# METADATA
-# custom:
-#   effective_on: 2022-01-01T00:00:00Z
 package policy.pipeline.basic
 
 import data.lib

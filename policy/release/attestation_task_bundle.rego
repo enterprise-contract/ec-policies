@@ -1,6 +1,3 @@
-# METADATA
-# custom:
-#   effective_on: 2022-01-01T00:00:00Z
 package policy.release.attestation_task_bundle
 
 import data.lib

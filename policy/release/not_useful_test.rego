@@ -1,7 +1,7 @@
 # METADATA
 # custom:
 #   effective_on: 2022-01-01T00:00:00Z
-package policies.not_useful
+package policy.release.not_useful
 
 import data.lib
 

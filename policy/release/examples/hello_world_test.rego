@@ -1,4 +1,4 @@
-package examples.hello_world
+package examples.release.hello_world
 
 test_hello_world {
 	allow with input as {"msg": "hello world"}

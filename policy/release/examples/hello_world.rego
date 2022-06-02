@@ -1,4 +1,4 @@
-package examples.hello_world
+package examples.release.hello_world
 
 default allow = false
 

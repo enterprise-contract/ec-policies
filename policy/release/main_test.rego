@@ -1,8 +1,10 @@
-package main
+package release.main
 
 import data.lib
 
-all_tests := {p | data.policies[policy]; p := policy}
+# Todo: Some of this might be better placed in policy/lib/main_denies_test
+
+all_tests := {p | data.policy.release[policy]; p := policy}
 
 nonblocking_except(except_tests) = d {
 	d := {"non_blocking_checks": all_tests - except_tests}
@@ -62,10 +64,10 @@ test_test_fails {
 
 test_policy_ignored_when_not_yet_effective {
 	future_denial := {"msg": "fails in the distant future", "effective_on": "2099-05-02T00:00:00Z"}
-	set() == deny with denials as {future_denial}
+	lib.assert_empty(deny) with all_denies as {future_denial}
 		with data.config.policy as nonblocking_except({"test", "not_useful"})
 
-	{future_denial} == warn with denials as {future_denial}
+	lib.assert_equal({future_denial}, warn) with all_denies as {future_denial}
 		with data.config.policy as nonblocking_except({"test", "not_useful"})
 }
 
@@ -78,14 +80,14 @@ format_rfc3339_ns(ns) = fmt {
 test_policy_not_ignored_when_effective_with_time_travel {
 	# On the policy, change effective_on date to tomorrow so it should become ignored, but
 	# also change the policy config to a future date (time travel) so it is no longer ignored
-	future := time.add_date(time.now_ns(), 0, 0, 1)
+	future := lib.time.future_timestamp
 	policy_config := {"when_ns": future}
 	expected_error := {{"msg": "should fail", "effective_on": format_rfc3339_ns(future)}}
 
-	{expected_error} == deny with denials as {expected_error}
+	lib.assert_equal({expected_error}, deny) with all_denies as {expected_error}
 		with data.config.policy as policy_config
 
-	set() == warn with denials as {expected_error}
+	lib.assert_empty(warn) with all_denies as {expected_error}
 		with data.config.policy as policy_config
 }
 
@@ -94,22 +96,22 @@ test_policy_not_ignored_when_effective_missing {
 	expected_error := {{"msg": "should fail"}}
 
 	# Verify that the policy is enforced by default
-	{expected_error} == deny with denials as {expected_error}
+	lib.assert_equal({expected_error}, deny) with all_denies as {expected_error}
 		with data.config.policy as policy_config
 }
 
 test_future_denial {
-	future := time.add_date(time.now_ns(), 0, 0, 1)
+	future := lib.time.future_timestamp
 	expected_error := {"msg": "should not fail", "effective_on": format_rfc3339_ns(future)}
 
-	set() == deny with denials as {expected_error}
+	lib.assert_empty(deny) with all_denies as {expected_error}
 		with data.config as {}
 
-	{expected_error} == warn with denials as {expected_error}
+	lib.assert_equal({expected_error}, warn) with all_denies as {expected_error}
 		with data.config as {}
 }
 
 test_in_future {
 	denial := {"msg": "should fail", "effective_on": "2099-05-02T00:00:00Z"}
-	true == in_future(denial) with data.config as {}
+	lib.assert_equal(true, lib.in_future(denial)) with data.config as {}
 }

@@ -3,13 +3,13 @@ package checks
 import data.lib
 
 opa_inspect_valid := {
-	"namespaces": {"data.policies.attestation_task_bundle": [
-		"policies/attestation_task_bundle.rego",
-		"policies/attestation_task_bundle_test.rego",
+	"namespaces": {"data.policy.release.attestation_task_bundle": [
+		"policy/release/attestation_task_bundle.rego",
+		"policy/release/attestation_task_bundle_test.rego",
 	]},
 	"annotations": [{
 		"location": {
-			"file": "policies/attestation_task_bundle.rego",
+			"file": "policy/release/attestation_task_bundle.rego",
 			"row": 13,
 			"col": 1,
 		},
@@ -30,13 +30,13 @@ test_required_annotations_valid {
 }
 
 opa_inspect_invalid := {
-	"namespaces": {"data.policies.attestation_task_bundle": [
-		"policies/attestation_task_bundle.rego",
-		"policies/attestation_task_bundle_test.rego",
+	"namespaces": {"data.policy.release.attestation_task_bundle": [
+		"policy/release/attestation_task_bundle.rego",
+		"policy/release/attestation_task_bundle_test.rego",
 	]},
 	"annotations": [{
 		"location": {
-			"file": "policies/attestation_task_bundle.rego",
+			"file": "policy/release/attestation_task_bundle.rego",
 			"row": 13,
 			"col": 1,
 		},
@@ -52,5 +52,5 @@ opa_inspect_invalid := {
 }
 
 test_required_annotations_invalid {
-	lib.assert_equal({"ERROR: Missing annotation(s) custom.failure_msg, title at policies/attestation_task_bundle.rego:13"}, violation) with input as opa_inspect_invalid
+	lib.assert_equal({"ERROR: Missing annotation(s) custom.failure_msg, title at policy/release/attestation_task_bundle.rego:13"}, violation) with input as opa_inspect_invalid
 }

@@ -2,7 +2,7 @@
 # scope: package
 # custom:
 #   effective_on: 2000-01-01T00:00:00Z
-package examples.time_based
+package examples.release.time_based
 
 import data.lib.time
 

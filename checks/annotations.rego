@@ -14,7 +14,7 @@ required_annotations := {
 policy_rule_files(namespaces) = result {
 	result := {rule |
 		namespaces[n]
-		startswith(n, "data.policies") # look only in the policies namespace
+		startswith(n, "data.policy") # look only in the policy namespace
 		rule := {"namespace": n, "files": {file |
 			file := namespaces[n][_]
 			not endswith(file, "_test.rego") # disregard test Rego files

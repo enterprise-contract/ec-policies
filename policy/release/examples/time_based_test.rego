@@ -1,7 +1,9 @@
 # The package name is different than the package under test, "_test" suffix.
 # This is to avoid the recursive rule error since the test must reference the
 # package under test by name in these particular tests.
-package examples.time_based_test
+package examples.release.time_based_test
+
+import data.lib
 
 in_the_future := {"msg": "Roads?", "effective_on": "2099-05-02T00:00:00Z"}
 
@@ -16,7 +18,7 @@ test_not_effective_by_default {
 	# those with our example policy.
 	# time_based policy has effective_on far into the future, if you're reading
 	# this then bump it for another 100 years
-	{no_effective_date, in_the_past, y2k} == data.main.deny with data.policies as {data.examples.time_based}
+	lib.assert_equal({no_effective_date, in_the_past, y2k}, data.release.main.deny) with data.policy.release as {data.examples.release.time_based}
 		with data.config.policy.non_blocking_checks as []
 }
 
@@ -26,7 +28,7 @@ test_effective_with_time_travel {
 
 	# The time based filtering happens automatically on the real polices. Replace
 	# those with our example policy.
-	{in_the_future, no_effective_date, in_the_past, y2k} == data.main.deny with data.policies as {data.examples.time_based}
+	lib.assert_equal({in_the_future, no_effective_date, in_the_past, y2k}, data.release.main.deny) with data.policy.release as {data.examples.release.time_based}
 		with data.config.policy as policy_config
 }
 
@@ -36,6 +38,6 @@ test_y2k_not_failing_before_2000 {
 
 	# The time based filtering happens automatically on the real polices. Replace
 	# those with our example policy.
-	{no_effective_date, in_the_past} == data.main.deny with data.policies as {data.examples.time_based}
+	lib.assert_equal({no_effective_date, in_the_past}, data.release.main.deny) with data.policy.release as {data.examples.release.time_based}
 		with data.config.policy as policy_config
 }

@@ -1,4 +1,4 @@
-package policies.attestation_task_bundle
+package policy.release.attestation_task_bundle
 
 import data.lib
 
@@ -63,7 +63,6 @@ test_bundle_reference_not_valid {
 test_bundle_reference_valid {
 	name := "my-task"
 	image := "quay.io/redhat-appstudio/hacbs-templates-bundle:latest"
-	prefix = split(image, ":")
 	d := mock_data({
 		"name": name,
 		"ref": {
@@ -72,10 +71,5 @@ test_bundle_reference_valid {
 		},
 	})
 
-	expected_msg := sprintf("Task '%s' has disallowed bundle image '%s'", [name, prefix[0]])
-	not lib.assert_equal(warn, {{
-		"code": "disallowed_task_bundle",
-		"msg": expected_msg,
-		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with input.attestations as d
+	lib.assert_empty(warn) with input.attestations as d
 }

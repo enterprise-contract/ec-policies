@@ -70,7 +70,8 @@ This rule is for demonstration and test purposes and should be deleted soon.
 
 * Path: `data.policy.release.not_useful.deny`
 * Failure message: `It just feels like a bad day to do a release`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/not_useful.rego#L14)
+* Effective from: `Sat, 01 Jan 2022 00:00:00 +0000`
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/not_useful.rego#L15)
 
 ### Step Image Registries Rules
 

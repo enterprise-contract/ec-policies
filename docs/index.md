@@ -84,18 +84,14 @@ prefixes in the list.
 The permitted registry prefixes are:
 
 ```
-quay.io/buildah
-quay.io/redhat-appstudio
-registry.access.redhat.com/ubi8
-registry.access.redhat.com/ubi8-minimal
-registry.redhat.io/ocp-tools-4-tech-preview
-registry.redhat.io/openshift4
-registry.redhat.io/openshift-pipelines
+quay.io/redhat-appstudio/
+registry.access.redhat.com/
+registry.redhat.io/
 ```
 
 * Path: `data.policy.release.step_image_registries.deny`
 * Failure message: `Step %d in task '%s' has disallowed image ref '%s'`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/step_image_registries.rego#L23)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/step_image_registries.rego#L19)
 
 ### Test Rules
 

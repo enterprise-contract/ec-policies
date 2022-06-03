@@ -12,13 +12,9 @@ import data.lib
 #   short_name: disallowed_task_step_image
 #   failure_msg: Step %d in task '%s' has disallowed image ref '%s'
 #   allowed_registry_prefixes:
-#   - quay.io/buildah
-#   - quay.io/redhat-appstudio
-#   - registry.access.redhat.com/ubi8
-#   - registry.access.redhat.com/ubi8-minimal
-#   - registry.redhat.io/ocp-tools-4-tech-preview
-#   - registry.redhat.io/openshift4
-#   - registry.redhat.io/openshift-pipelines
+#   - quay.io/redhat-appstudio/
+#   - registry.access.redhat.com/
+#   - registry.redhat.io/
 #
 deny[result] {
 	att := lib.pipelinerun_attestations[_]

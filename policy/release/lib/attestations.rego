@@ -33,3 +33,23 @@ results_from_tests := [r |
 	# Inject the task name so we can show it in failure messages
 	r := object.union(result_map, {"__task_name": task.name})
 ]
+
+# Check for a task by name. Return the task if found
+task_in_pipelinerun(name) = task {
+	task := tasks_from_pipelinerun[_]
+	task.name == name
+	task
+}
+
+# Check for a task result by name
+result_in_task(task_name, result_name) {
+	task := task_in_pipelinerun(task_name)
+	task_result := task.results[_]
+	task_result.name == result_name
+}
+
+# Check for a Succeeded status from a task
+task_succeeded(name) {
+	task := task_in_pipelinerun(name)
+	task.status == "Succeeded"
+}

@@ -1,0 +1,79 @@
+{{ $static := datasource "static" }}
+{{ $rules := datasource "rules" }}
+
+= HACBS Enterprise Contract Policies
+
+== About
+
+{{ range $static.about }}
++++<p>{{ . }}</p>+++
+{{ end }}
+
+{{ $p2_stash := "" }}
+{{ $p3_stash := "" }}
+{{ range $rules.annotations }}
+
+{{ $p1 := (index (index .path 1) "value") }}
+{{ $p2 := (index (index .path 2) "value") }}
+
+{{/* Skip annotations that are not rule annotations */}}
+{{ if eq .annotations.scope "rule" }}
+{{/* Skip rules that are not under data.policy */}}
+{{ if eq $p1 "policy" }}
+
+{{/* Show a heading for either "Release" or "Pipeline" */}}
+{{ if ne $p2 $p2_stash }}
+
+== {{ $p2 | strings.Title }} Policy
+
+{{ $p2_stash = $p2 }}
+{{ end }}
+
+{{ $p3 := (index (index .path 3) "value") }}
+
+{{/* Show a heading for each separate package */}}
+{{ if ne $p3 $p3_stash }}
+=== {{ $p3 | regexp.Replace "_" " " | strings.Title }} Rules
+{{ $p3_stash = $p3 }}
+{{ end }}
+
+==== `[{{ .annotations.custom.short_name }}]` {{ .annotations.title }}
+
+{{.annotations.description}}
+
+{{/* Special handling */}}
+{{ if has .annotations.custom "allowed_registry_prefixes" }}
+The permitted registry prefixes are:
+
+----
+{{- range .annotations.custom.allowed_registry_prefixes }}
+{{ . }}{{ end }}
+----
+
+{{ end }}
+
+{{/* Use html to avoid annoying extra p elements inside the list items */}}
+++++
+<ul>
+<li>Path: <code>{{ range $i, $v := .path }}{{ if ne 0 $i }}.{{ end }}{{ $v.value }}{{ end }}</code></li>
+<li>Failure message: <code>{{ .annotations.custom.failure_msg }}</code></li>
+{{- if coll.Has .annotations.custom "effective_on" }}
+<li>Effective from: <code>{{ (time.Parse time.RFC3339 .annotations.custom.effective_on).Format time.RFC1123Z }}</code></li>{{ end }}
+<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/{{ .location.file }}#L{{ .location.row }}">Source</a></li>
+</ul>
+++++
+
+{{ end }}{{/* if eq $p1 ... */}}
+{{ end }}{{/* if eq .annotations ... */}}
+{{ end }}{{/* range ... */}}
+
+See Also
+--------
+
+++++
+<ul>
+{{ range $static.links }}
+<li><a href="{{ .url }}">{{ .title }}</a></li>
+{{- end }}
+</ul>
+++++

@@ -1,0 +1,171 @@
+
+= HACBS Enterprise Contract Policies
+
+== About
+
++++<p>The HACBS Enterprise Contract is a Tekton task that can be used to verify the
+provenence of container images built in HACBS and validate them against a set of
+policies.</p>+++
+
++++<p>Those policies are defined using the
+<a href="https://www.openpolicyagent.org/docs/latest/policy-language/">rego policy language</a>
+and are described here.</p>+++
+
+== Pipeline Policy
+
+=== Basic Rules
+
+==== `[unexpected_kind]` Check the kind is "Pipeline"
+
+A sanity check to confirm the input data has the expected kind.
+
+++++
+<ul>
+<li>Path: <code>data.policy.pipeline.basic.deny</code></li>
+<li>Failure message: <code>Unexpected kind '%s'</code></li>
+<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/basic.rego#L19">Source</a></li>
+</ul>
+++++
+
+== Release Policy
+
+=== Attestation Task Bundle Rules
+
+==== `[disallowed_task_reference]` Task bundle was not used or is not defined
+
+Check for existence of a task bundle. Enforcing this rule will
+fail the contract if the task is not called from a bundle.
+
+++++
+<ul>
+<li>Path: <code>data.policy.release.attestation_task_bundle.warn</code></li>
+<li>Failure message: <code>Task '%s' does not contain a bundle reference</code></li>
+<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L13">Source</a></li>
+</ul>
+++++
+
+==== `[disallowed_task_bundle]` Task bundle was used that was disallowed
+
+Check for existence of a valid task bundle. Enforcing this rule will
+fail the contract if the task is not called using a valid bundle image.
+
+++++
+<ul>
+<li>Path: <code>data.policy.release.attestation_task_bundle.warn</code></li>
+<li>Failure message: <code>Task '%s' has disallowed bundle image '%s'</code></li>
+<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L32">Source</a></li>
+</ul>
+++++
+
+=== Attestation Type Rules
+
+==== `[unknown_att_type]` Unknown attestation type found
+
+A sanity check that the attestation found for the image has the expected
+attestation type. Currently there is only one attestation type supported,
+`https://in-toto.io/Statement/v0.1`.
+
+++++
+<ul>
+<li>Path: <code>data.policy.release.attestation_type.deny</code></li>
+<li>Failure message: <code>Unknown attestation type '%s'</code></li>
+<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_type.rego#L18">Source</a></li>
+</ul>
+++++
+
+=== Not Useful Rules
+
+==== `[bad_day]` A dummy rule that always fails
+
+It's expected this rule will be skipped by policy configuration.
+This rule is for demonstration and test purposes and should be deleted soon.
+
+++++
+<ul>
+<li>Path: <code>data.policy.release.not_useful.deny</code></li>
+<li>Failure message: <code>It just feels like a bad day to do a release</code></li>
+<li>Effective from: <code>Sat, 01 Jan 2022 00:00:00 +0000</code></li>
+<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/not_useful.rego#L15">Source</a></li>
+</ul>
+++++
+
+=== Step Image Registries Rules
+
+==== `[disallowed_task_step_image]` Task steps ran on container images that are disallowed
+
+Enterprise Contract has a list of allowed registry prefixes. Each step in each
+each TaskRun must run on a container image with a url that matches one of the
+prefixes in the list.
+
+The permitted registry prefixes are:
+
+----
+quay.io/redhat-appstudio/
+registry.access.redhat.com/
+registry.redhat.io/
+----
+
+++++
+<ul>
+<li>Path: <code>data.policy.release.step_image_registries.deny</code></li>
+<li>Failure message: <code>Step %d in task '%s' has disallowed image ref '%s'</code></li>
+<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/step_image_registries.rego#L19">Source</a></li>
+</ul>
+++++
+
+=== Test Rules
+
+==== `[test_data_missing]` No test data found
+
+None of the tasks in the pipeline included a HACBS_TEST_OUTPUT
+task result, which is where Enterprise Contract expects to find
+test result data.
+
+++++
+<ul>
+<li>Path: <code>data.policy.release.test.deny</code></li>
+<li>Failure message: <code>No test data found</code></li>
+<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L15">Source</a></li>
+</ul>
+++++
+
+==== `[test_results_missing]` Test data is missing the results key
+
+Each test result is expected to have a 'results' key. In at least
+one of the HACBS_TEST_OUTPUT task results this key was not present.
+
+++++
+<ul>
+<li>Path: <code>data.policy.release.test.deny</code></li>
+<li>Failure message: <code>Found tests without results</code></li>
+<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L29">Source</a></li>
+</ul>
+++++
+
+==== `[test_result_failures]` Some tests did not pass
+
+Enterprise Contract requires that all the tests in the
+test results have a result of 'SUCCESS'. This will fail if any
+of the tests failed and the failure message will list the names
+of the failing tests.
+
+++++
+<ul>
+<li>Path: <code>data.policy.release.test.deny</code></li>
+<li>Failure message: <code>The following tests did not complete successfully: %s</code></li>
+<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L46">Source</a></li>
+</ul>
+++++
+
+See Also
+--------
+
+++++
+<ul>
+
+<li><a href="https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml">"Verify Enterprise Contract" task definition</a></li>
+<li><a href="https://github.com/hacbs-contract/ec-policies">github.com/hacbs-contract/ec-policies</a></li>
+<li><a href="https://github.com/hacbs-contract">github.com/hacbs-contract</a></li>
+<li><a href="https://github.com/redhat-appstudio">github.com/redhat-appstudio</a></li>
+</ul>
+++++

@@ -9,9 +9,9 @@ expected_kind := "Pipeline"
 # Fixme: It doesn't fail if the kind key is entirely missing..
 
 # METADATA
-# title: Check the kind is "Pipeline"
+# title: Input data has unexpected kind
 # description: |-
-#   A sanity check to confirm the input data has the expected kind.
+#   A sanity check to confirm the input data has the kind "Pipeline"
 # custom:
 #   short_name: unexpected_kind
 #   failure_msg: Unexpected kind '%s'

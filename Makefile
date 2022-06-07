@@ -89,21 +89,25 @@ conventions-check: ## Check Rego policy files for convention violations
 	@OUT=$$(opa eval --data checks --data $(POLICY_DIR)/lib --input <(opa inspect . -a -f json) 'data.checks.violation[_]' --format raw); \
 	if [[ -n "$${OUT}" ]]; then echo $${OUT}; exit 1; fi
 
-DOCS_BUILD_DIR=./docs
-DOCS_TMP_JSON=$(DOCS_BUILD_DIR)/annotations-data.json
-DOCS_MD=$(DOCS_BUILD_DIR)/index.md
-DOCS_TEMPLATE=docs.tmpl
+DOCS=./docs
+DOCS_TMP_JSON=$(DOCS)/annotations-data.json
+DOCS_MD=$(DOCS)/index.md
+DOCS_ADOC=$(DOCS)/index.adoc
+DOCS_ALL=$(DOCS_MD) $(DOCS_ADOC)
+DOCSRC=./docsrc
+DOCS_STATIC=$(DOCSRC)/static.yaml
+
 build-docs: ## Generate documentation. Use this before commit if you modified any rules or annotations
-	@mkdir -p $(DOCS_BUILD_DIR)
 	@opa inspect --annotations --format json $(POLICY_DIR) > $(DOCS_TMP_JSON)
-	@gomplate --datasource input=$(DOCS_TMP_JSON) --file $(DOCS_TEMPLATE) | cat -s > $(DOCS_MD)
+	@gomplate -d rules=$(DOCS_TMP_JSON) -d static=$(DOCS_STATIC) -f $(DOCSRC)/$$( basename $(DOCS_MD) ).tmpl   | cat -s > $(DOCS_MD)
+	@gomplate -d rules=$(DOCS_TMP_JSON) -d static=$(DOCS_STATIC) -f $(DOCSRC)/$$( basename $(DOCS_ADOC) ).tmpl | cat -s > $(DOCS_ADOC)
 	@rm $(DOCS_TMP_JSON)
 
 amend-docs: build-docs ## Update the docs and amend the current commit
-	@git diff $(DOCS_MD)
+	@git diff $(DOCS_ALL)
 	@echo "Amend commit '$$(git log -n1 --oneline)' with the above diff?"
 	@read -p "Hit enter to continue, Ctrl-C to abort."
-	git add $(DOCS_MD)
+	git add $(DOCS_ALL)
 	git commit --amend --no-edit
 
 # I always forget which one it is...
@@ -119,16 +123,18 @@ fmt-check: ## Check formatting of Rego files
 	@opa fmt . --list | xargs -r -n1 echo 'FAIL: Incorrect formatting found in'
 	@opa fmt . --list --fail >/dev/null 2>&1
 
-DOCS_CHECK_TMP=$(DOCS_BUILD_DIR)/docs-check.md
 docs-check: ## Check if docs/index.md is up to date
-	@cp $(DOCS_MD) $(DOCS_CHECK_TMP)
+	@cp $(DOCS_MD) $(DOCS_MD).check
+	@cp $(DOCS_ADOC) $(DOCS_ADOC).check
 	@$(MAKE) --no-print-directory build-docs
-	@if [[ -n $$(git diff --name-only -- $(DOCS_MD)) ]]; then \
-	  mv $(DOCS_CHECK_TMP) $(DOCS_MD); \
+	@if [[ -n $$( git diff --name-only -- $(DOCS_ALL) ) ]]; then \
+	  mv $(DOCS_MD).check $(DOCS_MD); \
+	  mv $(DOCS_ADOC).check $(DOCS_ADOC); \
 	  echo "FAIL: A docs update is needed"; \
 	  exit 1; \
 	fi
-	@mv $(DOCS_CHECK_TMP) $(DOCS_MD)
+	@mv $(DOCS_MD).check $(DOCS_MD)
+	@mv $(DOCS_ADOC).check $(DOCS_ADOC)
 
 ci: conventions-check quiet-test opa-check fmt-check docs-check ## Runs all checks and tests
 

@@ -9,9 +9,9 @@ The HACBS Enterprise Contract is a Tekton task that can be used to verify the
 provenence of container images built in HACBS and validate them against a set of
 policies.
 
-Those policies are defined using
-[rego](https://www.openpolicyagent.org/docs/latest/policy-language/) and are
-described here.
+Those policies are defined using the
+<a href="https://www.openpolicyagent.org/docs/latest/policy-language/">rego policy language</a>
+and are described here.
 
 Pipeline Policy
 ---------------
@@ -131,4 +131,4 @@ See Also
 * ["Verify Enterprise Contract" task definition](https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml)
 * [github.com/hacbs-contract/ec-policies](https://github.com/hacbs-contract/ec-policies)
 * [github.com/hacbs-contract](https://github.com/hacbs-contract)
-* [github.com/redhat-appstudio](https://github.com/redhat-appstudio/)
+* [github.com/redhat-appstudio](https://github.com/redhat-appstudio)

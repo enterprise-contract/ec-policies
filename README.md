@@ -108,7 +108,8 @@ Documentation
 
 There is some documentation about the policy rules [available
 here][docs]. Its source is
-[docs/index.md](docs/index.md) in branch `main`.
+[docs/index.md](docs/index.md) in branch `main`. There is also an asciidoc
+version available at [docs/index.adoc](docs/index.adoc).
 
 See also
 --------

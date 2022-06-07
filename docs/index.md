@@ -18,13 +18,27 @@ Pipeline Policy
 
 ### Basic Rules
 
-#### `[unexpected_kind]` Check the kind is "Pipeline"
+#### `[unexpected_kind]` Input data has unexpected kind
 
-A sanity check to confirm the input data has the expected kind.
+A sanity check to confirm the input data has the kind "Pipeline"
 
 * Path: `data.policy.pipeline.basic.deny`
 * Failure message: `Unexpected kind '%s'`
 * [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/basic.rego#L19)
+
+### Required Tasks Rules
+
+#### `[required_tasks]` Pipeline does not include all required check tasks
+
+Every build pipeline is expected to contain a set of checks and tests that
+are required by the Enterprise Contract. This rule confirms that the pipeline
+definition includes all the expected tasks.
+
+The matching is done using the taskRef name rather than the pipeline task name.
+
+* Path: `data.policy.pipeline.required_tasks.deny`
+* Failure message: `Required tasks %s were not found in the pipeline's task list`
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/required_tasks.rego#L31)
 
 Release Policy
 ---------------

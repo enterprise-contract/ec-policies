@@ -15,15 +15,33 @@ and are described here.</p>+++
 
 === Basic Rules
 
-==== `[unexpected_kind]` Check the kind is "Pipeline"
+==== `[unexpected_kind]` Input data has unexpected kind
 
-A sanity check to confirm the input data has the expected kind.
+A sanity check to confirm the input data has the kind "Pipeline"
 
 ++++
 <ul>
 <li>Path: <code>data.policy.pipeline.basic.deny</code></li>
 <li>Failure message: <code>Unexpected kind '%s'</code></li>
 <li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/basic.rego#L19">Source</a></li>
+</ul>
+++++
+
+=== Required Tasks Rules
+
+==== `[required_tasks]` Pipeline does not include all required check tasks
+
+Every build pipeline is expected to contain a set of checks and tests that
+are required by the Enterprise Contract. This rule confirms that the pipeline
+definition includes all the expected tasks.
+
+The matching is done using the taskRef name rather than the pipeline task name.
+
+++++
+<ul>
+<li>Path: <code>data.policy.pipeline.required_tasks.deny</code></li>
+<li>Failure message: <code>Required tasks %s were not found in the pipeline's task list</code></li>
+<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/required_tasks.rego#L31">Source</a></li>
 </ul>
 ++++
 

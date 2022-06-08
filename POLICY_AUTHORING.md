@@ -1,0 +1,42 @@
+# Policy Authoring
+
+This document is meant to assist policy authors in creating and maintaining the policy rules
+defined in this repository.
+
+## Annotations
+
+Policy rules must contain certain [annotations] that describe additional information about the
+rule.
+
+* `title`: (required) short description of the policy rule.
+* `description`: (required) descriptive information about the policy rule, including possible
+    remediation steps.
+* `custom`: (required) object holding additional non-default rego annotations. `custom.foo` means
+    the `foo` annotation nested under this object.
+* `custom.short_name`: (required) unique name of the policy rule. This is used as the value of the
+    `code` attribute when reporting failures and warnings. It is also the value used for skipping
+    the policy rule via the [EnterpriseContractPolicy]. It must not contain spaces. Words must be
+    joined by `_`, e.g. `snake_case`.
+* `custom.failure_msg`: (required) message indicating the exact cause a policy rule did not pass.
+    It should be as informative as possible to guide users towards remediation. The message can be
+    in the form of a string template, allowing dynamic values to provide a more meaningful message.
+* `custom.effective_on`: (optional) time stamp string in the [RFC3339] format. Defaults to
+    `"2022-01-01T00:00:00Z"`. A non-passing policy rule is classified as a warning, instead of a
+    failure, if the date represented in the `custom.effective_on` annotation is in the future. This
+    is a helpful mechanism to allow the introduction of a new policy rule while allowing a certain
+    period of time for compliance.
+* `custom.rule_data`: (optional) specify additional data for the policy rule. The value must be an
+    object where each key maps to an array of strings. This is a convenient mechanism to specify
+    information that is used in the policy rule evaluation that may not be obvious to users. For
+    example, the policy rule `disallowed_task_step_image` only allows certain registries to be
+    used. The list of registries is defined in the annotations
+    `custom.rule_data.allowed_registry_prefixes`, allowing a single source of truth for policy rule
+    evaluation and documentation. For best results, each key in the `custom.rule_data` object
+    should be a noun.
+
+The annotations must be defined at the `rule` [scope].
+
+[EnterpriseContractPolicy]: https://github.com/hacbs-contract/enterprise-contract-controller
+[RFC3339]: https://datatracker.ietf.org/doc/html/rfc3339
+[annotations]: https://www.openpolicyagent.org/docs/latest/annotations
+[scope]: https://www.openpolicyagent.org/docs/latest/annotations/#scope

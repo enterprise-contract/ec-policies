@@ -11,17 +11,18 @@ import data.lib
 # custom:
 #   short_name: disallowed_task_step_image
 #   failure_msg: Step %d in task '%s' has disallowed image ref '%s'
-#   allowed_registry_prefixes:
-#   - quay.io/redhat-appstudio/
-#   - registry.access.redhat.com/
-#   - registry.redhat.io/
+#   rule_data:
+#     allowed_registry_prefixes:
+#     - quay.io/redhat-appstudio/
+#     - registry.access.redhat.com/
+#     - registry.redhat.io/
 #
 deny[result] {
 	att := lib.pipelinerun_attestations[_]
 	task := att.predicate.buildConfig.tasks[_]
 	step := task.steps[step_index]
 	image_ref := step.environment.image
-	not image_ref_permitted(image_ref, rego.metadata.rule().custom.allowed_registry_prefixes)
+	not image_ref_permitted(image_ref, rego.metadata.rule().custom.rule_data.allowed_registry_prefixes)
 	result := lib.result_helper(rego.metadata.chain(), [step_index, task.name, image_ref])
 }
 

@@ -19,18 +19,19 @@ import data.lib
 # custom:
 #   short_name: required_tasks
 #   failure_msg: Required tasks %s were not found in the pipeline's task list
-#   required_task_refs:
-#   - clamav-scan
-#   - conftest-clair
-#   - get-clair-scan
-#   - sanity-inspect-image
-#   - sanity-label-check
-#   - sast-go
-#   - sast-java-sec-check
+#   rule_data:
+#     required_task_refs:
+#     - clamav-scan
+#     - conftest-clair
+#     - get-clair-scan
+#     - sanity-inspect-image
+#     - sanity-label-check
+#     - sast-go
+#     - sast-java-sec-check
 #
 deny[result] {
 	# Find the data in the annotations
-	required_list := rego.metadata.rule().custom.required_task_refs
+	required_list := rego.metadata.rule().custom.rule_data.required_task_refs
 
 	# Convert it to a set
 	required := {t | t := required_list[_]}

@@ -15,7 +15,8 @@ and are described here.</p>+++
 
 === Basic Rules
 
-==== `[unexpected_kind]` Input data has unexpected kind
+[#unexpected_kind]
+==== link:#unexpected_kind[`unexpected_kind`] Input data has unexpected kind
 
 A sanity check to confirm the input data has the kind "Pipeline"
 
@@ -29,7 +30,8 @@ A sanity check to confirm the input data has the kind "Pipeline"
 
 === Required Tasks Rules
 
-==== `[required_tasks]` Pipeline does not include all required check tasks
+[#required_tasks]
+==== link:#required_tasks[`required_tasks`] Pipeline does not include all required check tasks
 
 Every build pipeline is expected to contain a set of checks and tests that
 are required by the Enterprise Contract. This rule confirms that the pipeline
@@ -61,7 +63,8 @@ sast-java-sec-check
 
 === Attestation Task Bundle Rules
 
-==== `[disallowed_task_reference]` Task bundle was not used or is not defined
+[#disallowed_task_reference]
+==== link:#disallowed_task_reference[`disallowed_task_reference`] Task bundle was not used or is not defined
 
 Check for existence of a task bundle. Enforcing this rule will
 fail the contract if the task is not called from a bundle.
@@ -74,7 +77,8 @@ fail the contract if the task is not called from a bundle.
 </ul>
 ++++
 
-==== `[disallowed_task_bundle]` Task bundle was used that was disallowed
+[#disallowed_task_bundle]
+==== link:#disallowed_task_bundle[`disallowed_task_bundle`] Task bundle was used that was disallowed
 
 Check for existence of a valid task bundle. Enforcing this rule will
 fail the contract if the task is not called using a valid bundle image.
@@ -89,7 +93,8 @@ fail the contract if the task is not called using a valid bundle image.
 
 === Attestation Type Rules
 
-==== `[unknown_att_type]` Unknown attestation type found
+[#unknown_att_type]
+==== link:#unknown_att_type[`unknown_att_type`] Unknown attestation type found
 
 A sanity check that the attestation found for the image has the expected
 attestation type. Currently there is only one attestation type supported,
@@ -105,7 +110,8 @@ attestation type. Currently there is only one attestation type supported,
 
 === Not Useful Rules
 
-==== `[bad_day]` A dummy rule that always fails
+[#bad_day]
+==== link:#bad_day[`bad_day`] A dummy rule that always fails
 
 It's expected this rule will be skipped by policy configuration.
 This rule is for demonstration and test purposes and should be deleted soon.
@@ -121,7 +127,8 @@ This rule is for demonstration and test purposes and should be deleted soon.
 
 === Step Image Registries Rules
 
-==== `[disallowed_task_step_image]` Task steps ran on container images that are disallowed
+[#disallowed_task_step_image]
+==== link:#disallowed_task_step_image[`disallowed_task_step_image`] Task steps ran on container images that are disallowed
 
 Enterprise Contract has a list of allowed registry prefixes. Each step in each
 each TaskRun must run on a container image with a url that matches one of the
@@ -145,7 +152,8 @@ registry.redhat.io/
 
 === Test Rules
 
-==== `[test_data_missing]` No test data found
+[#test_data_missing]
+==== link:#test_data_missing[`test_data_missing`] No test data found
 
 None of the tasks in the pipeline included a HACBS_TEST_OUTPUT
 task result, which is where Enterprise Contract expects to find
@@ -159,7 +167,8 @@ test result data.
 </ul>
 ++++
 
-==== `[test_results_missing]` Test data is missing the results key
+[#test_results_missing]
+==== link:#test_results_missing[`test_results_missing`] Test data is missing the results key
 
 Each test result is expected to have a 'results' key. In at least
 one of the HACBS_TEST_OUTPUT task results this key was not present.
@@ -172,7 +181,8 @@ one of the HACBS_TEST_OUTPUT task results this key was not present.
 </ul>
 ++++
 
-==== `[test_result_failures]` Some tests did not pass
+[#test_result_failures]
+==== link:#test_result_failures[`test_result_failures`] Some tests did not pass
 
 Enterprise Contract requires that all the tests in the
 test results have a result of 'SUCCESS'. This will fail if any

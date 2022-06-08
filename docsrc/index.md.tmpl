@@ -40,7 +40,8 @@ About
 {{ $p3_stash = $p3 }}
 {{ end }}
 
-#### `[{{ .annotations.custom.short_name }}]` {{ .annotations.title }}
+{{ $name := .annotations.custom.short_name }}
+#### <a name="{{ $name }}"></a>[`{{ $name }}`](#{{ $name }}) {{ .annotations.title }}
 
 {{.annotations.description}}
 

@@ -105,10 +105,8 @@ test_future_denial {
 	expected_error := {"msg": "should not fail", "effective_on": format_rfc3339_ns(future)}
 
 	lib.assert_empty(deny) with all_denies as {expected_error}
-		with data.config as {}
 
 	lib.assert_equal({expected_error}, warn) with all_denies as {expected_error}
-		with data.config as {}
 }
 
 test_warnings {
@@ -119,18 +117,10 @@ test_warnings {
 
 	# Future warnings are ignored entirely
 	lib.assert_empty(warn) with all_warns as {future_warn}
-		with data.config as {}
 
 	# Current warnings are not ignored
 	lib.assert_equal({current_warn}, warn) with all_warns as {current_warn}
-		with data.config as {}
 
 	# A current warning and a future deny becomes two warnings
 	lib.assert_equal({current_warn, future_deny}, warn) with all_warns as {current_warn} with all_denies as {future_deny}
-		with data.config as {}
-}
-
-test_in_future {
-	denial := {"msg": "should fail", "effective_on": "2099-05-02T00:00:00Z"}
-	lib.assert_equal(true, lib.in_future(denial)) with data.config as {}
 }

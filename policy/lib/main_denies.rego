@@ -47,7 +47,20 @@ in_future(rule) {
 	# The rule has effective_on set
 	rule.effective_on
 
-	# Use the nanosecond epoch defined in the policy config -- if present. Otherwise, use now.
-	when_ns := object.get(data.config, ["policy", "when_ns"], time.now_ns())
-	time.parse_rfc3339_ns(rule.effective_on) > when_ns
+	# The rule is effective in the future but not now
+	time.parse_rfc3339_ns(rule.effective_on) > effective_current_time_ns
+}
+
+# Use the nanosecond epoch defined in the policy config if it is
+# present, otherwise use the real current time
+effective_current_time_ns = now_ns {
+	data.config
+	now_ns := object.get(data.config, ["policy", "when_ns"], time.now_ns())
+}
+
+# Handle edge case where data.config is not present
+# (We can't do `object.get(data, ...)` for some reason)
+effective_current_time_ns = now_ns {
+	not data.config
+	now_ns := time.now_ns()
 }

@@ -36,9 +36,21 @@ definition includes all the expected tasks.
 
 The matching is done using the taskRef name rather than the pipeline task name.
 
+The required task refs are:
+
+```
+clamav-scan
+conftest-clair
+get-clair-scan
+sanity-inspect-image
+sanity-label-check
+sast-go
+sast-java-sec-check
+```
+
 * Path: `data.policy.pipeline.required_tasks.deny`
 * Failure message: `Required tasks %s were not found in the pipeline's task list`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/required_tasks.rego#L31)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/required_tasks.rego#L32)
 
 Release Policy
 ---------------
@@ -95,7 +107,7 @@ Enterprise Contract has a list of allowed registry prefixes. Each step in each
 each TaskRun must run on a container image with a url that matches one of the
 prefixes in the list.
 
-The permitted registry prefixes are:
+The allowed registry prefixes are:
 
 ```
 quay.io/redhat-appstudio/
@@ -105,7 +117,7 @@ registry.redhat.io/
 
 * Path: `data.policy.release.step_image_registries.deny`
 * Failure message: `Step %d in task '%s' has disallowed image ref '%s'`
-* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/step_image_registries.rego#L19)
+* [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/step_image_registries.rego#L20)
 
 ### Test Rules
 

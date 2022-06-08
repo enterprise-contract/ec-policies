@@ -41,15 +41,18 @@
 
 {{.annotations.description}}
 
-{{/* Special handling */}}
-{{ if has .annotations.custom "allowed_registry_prefixes" }}
-The permitted registry prefixes are:
+{{/* Show rule data if there is any */}}
+{{ if has .annotations.custom "rule_data" }}
+{{ range $key, $values := .annotations.custom.rule_data }}
+{{/* Assume the key name is descriptive enough for this sentence to make sense */}}
+The {{ $key | strings.ReplaceAll "_" " " }} are:
 
 ----
-{{- range .annotations.custom.allowed_registry_prefixes }}
+{{- range $values }}
 {{ . }}{{ end }}
 ----
 
+{{ end }}
 {{ end }}
 
 {{/* Use html to avoid annoying extra p elements inside the list items */}}

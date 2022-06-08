@@ -29,6 +29,12 @@ About
 {{ $p2 | strings.Title }} Policy
 ---------------
 
+{{ if has $static.section_intros $p2 }}
+{{ range (index $static.section_intros $p2) }}
+{{ . }}
+{{ end }}
+{{ end }}
+
 {{ $p2_stash = $p2 }}
 {{ end }}
 
@@ -40,7 +46,8 @@ About
 {{ $p3_stash = $p3 }}
 {{ end }}
 
-#### `[{{ .annotations.custom.short_name }}]` {{ .annotations.title }}
+{{ $name := .annotations.custom.short_name }}
+#### <a name="{{ $name }}"></a>[`{{ $name }}`](#{{ $name }}) {{ .annotations.title }}
 
 {{.annotations.description}}
 

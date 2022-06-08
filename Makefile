@@ -76,7 +76,7 @@ fmt: ## Apply default formatting to all rego files. Use before you commit
 	@opa fmt . --write
 
 amend-fmt: fmt ## Apply default formatting to all rego files then amend the current commit
-	@git diff $$(git ls-files '*.rego')
+	@git --no-pager diff $$(git ls-files '*.rego')
 	@echo "Amend commit '$$(git log -n1 --oneline)' with the above diff?"
 	@read -p "Hit enter to continue, Ctrl-C to abort."
 	git add $$(git ls-files '*.rego')
@@ -104,7 +104,7 @@ build-docs: ## Generate documentation. Use this before commit if you modified an
 	@rm $(DOCS_TMP_JSON)
 
 amend-docs: build-docs ## Update the docs and amend the current commit
-	@git diff $(DOCS_ALL)
+	@git --no-pager diff $(DOCS_ALL)
 	@echo "Amend commit '$$(git log -n1 --oneline)' with the above diff?"
 	@read -p "Hit enter to continue, Ctrl-C to abort."
 	git add $(DOCS_ALL)

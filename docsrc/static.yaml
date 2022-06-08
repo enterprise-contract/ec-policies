@@ -9,6 +9,16 @@ about:
     <a href="https://www.openpolicyagent.org/docs/latest/policy-language/">rego policy language</a>
     and are described here.
 
+section_intros:
+  release:
+  - |-
+    These rules are applied to pipeline run attestations associated with
+    container images built by HACBS.
+
+  pipeline:
+  - |-
+    These rules are applied to Tekton pipeline definitions.
+
 links:
   - title: '"Verify Enterprise Contract" task definition'
     url: https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml

@@ -16,9 +16,11 @@ and are described here.
 Pipeline Policy
 ---------------
 
+These rules are applied to Tekton pipeline definitions.
+
 ### Basic Rules
 
-#### `[unexpected_kind]` Input data has unexpected kind
+#### <a name="unexpected_kind"></a>[`unexpected_kind`](#unexpected_kind) Input data has unexpected kind
 
 A sanity check to confirm the input data has the kind "Pipeline"
 
@@ -28,7 +30,7 @@ A sanity check to confirm the input data has the kind "Pipeline"
 
 ### Required Tasks Rules
 
-#### `[required_tasks]` Pipeline does not include all required check tasks
+#### <a name="required_tasks"></a>[`required_tasks`](#required_tasks) Pipeline does not include all required check tasks
 
 Every build pipeline is expected to contain a set of checks and tests that
 are required by the Enterprise Contract. This rule confirms that the pipeline
@@ -55,9 +57,12 @@ sast-java-sec-check
 Release Policy
 ---------------
 
+These rules are applied to pipeline run attestations associated with
+container images built by HACBS.
+
 ### Attestation Task Bundle Rules
 
-#### `[disallowed_task_reference]` Task bundle was not used or is not defined
+#### <a name="disallowed_task_reference"></a>[`disallowed_task_reference`](#disallowed_task_reference) Task bundle was not used or is not defined
 
 Check for existence of a task bundle. Enforcing this rule will
 fail the contract if the task is not called from a bundle.
@@ -66,7 +71,7 @@ fail the contract if the task is not called from a bundle.
 * Failure message: `Task '%s' does not contain a bundle reference`
 * [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L13)
 
-#### `[disallowed_task_bundle]` Task bundle was used that was disallowed
+#### <a name="disallowed_task_bundle"></a>[`disallowed_task_bundle`](#disallowed_task_bundle) Task bundle was used that was disallowed
 
 Check for existence of a valid task bundle. Enforcing this rule will
 fail the contract if the task is not called using a valid bundle image.
@@ -77,7 +82,7 @@ fail the contract if the task is not called using a valid bundle image.
 
 ### Attestation Type Rules
 
-#### `[unknown_att_type]` Unknown attestation type found
+#### <a name="unknown_att_type"></a>[`unknown_att_type`](#unknown_att_type) Unknown attestation type found
 
 A sanity check that the attestation found for the image has the expected
 attestation type. Currently there is only one attestation type supported,
@@ -89,7 +94,7 @@ attestation type. Currently there is only one attestation type supported,
 
 ### Not Useful Rules
 
-#### `[bad_day]` A dummy rule that always fails
+#### <a name="bad_day"></a>[`bad_day`](#bad_day) A dummy rule that always fails
 
 It's expected this rule will be skipped by policy configuration.
 This rule is for demonstration and test purposes and should be deleted soon.
@@ -101,7 +106,7 @@ This rule is for demonstration and test purposes and should be deleted soon.
 
 ### Step Image Registries Rules
 
-#### `[disallowed_task_step_image]` Task steps ran on container images that are disallowed
+#### <a name="disallowed_task_step_image"></a>[`disallowed_task_step_image`](#disallowed_task_step_image) Task steps ran on container images that are disallowed
 
 Enterprise Contract has a list of allowed registry prefixes. Each step in each
 each TaskRun must run on a container image with a url that matches one of the
@@ -121,7 +126,7 @@ registry.redhat.io/
 
 ### Test Rules
 
-#### `[test_data_missing]` No test data found
+#### <a name="test_data_missing"></a>[`test_data_missing`](#test_data_missing) No test data found
 
 None of the tasks in the pipeline included a HACBS_TEST_OUTPUT
 task result, which is where Enterprise Contract expects to find
@@ -131,7 +136,7 @@ test result data.
 * Failure message: `No test data found`
 * [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L15)
 
-#### `[test_results_missing]` Test data is missing the results key
+#### <a name="test_results_missing"></a>[`test_results_missing`](#test_results_missing) Test data is missing the results key
 
 Each test result is expected to have a 'results' key. In at least
 one of the HACBS_TEST_OUTPUT task results this key was not present.
@@ -140,7 +145,7 @@ one of the HACBS_TEST_OUTPUT task results this key was not present.
 * Failure message: `Found tests without results`
 * [Source](https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L29)
 
-#### `[test_result_failures]` Some tests did not pass
+#### <a name="test_result_failures"></a>[`test_result_failures`](#test_result_failures) Some tests did not pass
 
 Enterprise Contract requires that all the tests in the
 test results have a result of 'SUCCESS'. This will fail if any

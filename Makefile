@@ -87,7 +87,7 @@ opa-check: ## Check Rego files with strict mode (https://www.openpolicyagent.org
 
 conventions-check: ## Check Rego policy files for convention violations
 	@OUT=$$(opa eval --data checks --data $(POLICY_DIR)/lib --input <(opa inspect . -a -f json) 'data.checks.violation[_]' --format raw); \
-	if [[ -n "$${OUT}" ]]; then echo $${OUT}; exit 1; fi
+	if [[ -n "$${OUT}" ]]; then echo "$${OUT}"; exit 1; fi
 
 DOCS=./docs
 DOCS_TMP_JSON=$(DOCS)/annotations-data.json

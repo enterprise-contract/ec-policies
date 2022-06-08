@@ -29,6 +29,12 @@ About
 {{ $p2 | strings.Title }} Policy
 ---------------
 
+{{ if has $static.section_intros $p2 }}
+{{ range (index $static.section_intros $p2) }}
+{{ . }}
+{{ end }}
+{{ end }}
+
 {{ $p2_stash = $p2 }}
 {{ end }}
 

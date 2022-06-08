@@ -16,6 +16,8 @@ and are described here.
 Pipeline Policy
 ---------------
 
+These rules are applied to Tekton pipeline definitions.
+
 ### Basic Rules
 
 #### <a name="unexpected_kind"></a>[`unexpected_kind`](#unexpected_kind) Input data has unexpected kind
@@ -54,6 +56,9 @@ sast-java-sec-check
 
 Release Policy
 ---------------
+
+These rules are applied to pipeline run attestations associated with
+container images built by HACBS.
 
 ### Attestation Task Bundle Rules
 

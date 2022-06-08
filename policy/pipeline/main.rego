@@ -4,6 +4,8 @@ import data.lib
 
 all_denies := lib.current_and_future_denies("pipeline")
 
-deny := lib.current_denies(all_denies)
+all_warns := lib.current_and_future_warns("pipeline")
 
-warn := lib.future_denies(all_denies)
+deny := lib.current_rules(all_denies)
+
+warn := lib.future_rules(all_denies) | lib.current_rules(all_warns)

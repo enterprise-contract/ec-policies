@@ -78,6 +78,13 @@ you can use this to show what lines of code are not covered:
 
     make coverage
 
+Getting started for policy authors
+----------------------------------
+
+See the [Policy Authoring](POLICY_AUTHORING.md) documentation for guidance on
+contributing to the definition of policy rules.
+
+
 Running the policies against real data
 --------------------------------------
 

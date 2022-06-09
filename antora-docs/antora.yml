@@ -1,0 +1,5 @@
+name: ec-policies
+title: Enterprise Contract Policies
+version: master
+nav:
+- modules/ROOT/nav.adoc

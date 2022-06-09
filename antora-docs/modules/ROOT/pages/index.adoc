@@ -1,6 +1,10 @@
 
 = HACBS Enterprise Contract Policies
 
+:toc: left
+:icons: font
+:numbered:
+
 == About
 
 +++<p>The HACBS Enterprise Contract is a Tekton task that can be used to verify the

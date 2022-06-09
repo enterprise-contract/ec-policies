@@ -10,7 +10,7 @@
 == About
 
 {{ range $static.about }}
-+++<p>{{ . }}</p>+++
++++{{ . }}+++
 {{ end }}
 
 {{ $p2_stash := "" }}
@@ -67,16 +67,11 @@ The {{ $key | strings.ReplaceAll "_" " " }} are:
 {{ end }}
 {{ end }}
 
-{{/* Use html to avoid annoying extra p elements inside the list items */}}
-++++
-<ul>
-<li>Path: <code>{{ range $i, $v := .path }}{{ if ne 0 $i }}.{{ end }}{{ $v.value }}{{ end }}</code></li>
-<li>Failure message: <code>{{ .annotations.custom.failure_msg }}</code></li>
+* Path: `{{ range $i, $v := .path }}{{ if ne 0 $i }}.{{ end }}{{ $v.value }}{{ end }}`
+* Failure message: `{{ .annotations.custom.failure_msg }}`
 {{- if coll.Has .annotations.custom "effective_on" }}
-<li>Effective from: <code>{{ (time.Parse time.RFC3339 .annotations.custom.effective_on).Format time.RFC1123Z }}</code></li>{{ end }}
-<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/{{ .location.file }}#L{{ .location.row }}">Source</a></li>
-</ul>
-++++
+* Effective from: `{{ (time.Parse time.RFC3339 .annotations.custom.effective_on).Format time.RFC1123Z }}`{{ end }}
+* https://github.com/hacbs-contract/ec-policies/blob/main/{{ .location.file }}#L{{ .location.row }}[Source]
 
 {{ end }}{{/* if eq $p1 ... */}}
 {{ end }}{{/* if eq .annotations ... */}}
@@ -85,10 +80,6 @@ The {{ $key | strings.ReplaceAll "_" " " }} are:
 See Also
 --------
 
-++++
-<ul>
 {{ range $static.links }}
-<li><a href="{{ .url }}">{{ .title }}</a></li>
+* {{ .url }}[{{ .title }}]
 {{- end }}
-</ul>
-++++

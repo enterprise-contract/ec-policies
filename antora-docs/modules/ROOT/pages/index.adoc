@@ -7,13 +7,13 @@
 
 == About
 
-+++<p>The HACBS Enterprise Contract is a Tekton task that can be used to verify the
++++The HACBS Enterprise Contract is a Tekton task that can be used to verify the
 provenence of container images built in HACBS and validate them against a set of
-policies.</p>+++
+policies.+++
 
-+++<p>Those policies are defined using the
++++Those policies are defined using the
 <a href="https://www.openpolicyagent.org/docs/latest/policy-language/">rego policy language</a>
-and are described here.</p>+++
+and are described here.+++
 
 == Pipeline Policy
 
@@ -26,13 +26,9 @@ and are described here.</p>+++
 
 A sanity check to confirm the input data has the kind "Pipeline"
 
-++++
-<ul>
-<li>Path: <code>data.policy.pipeline.basic.deny</code></li>
-<li>Failure message: <code>Unexpected kind '%s'</code></li>
-<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/basic.rego#L19">Source</a></li>
-</ul>
-++++
+* Path: `data.policy.pipeline.basic.deny`
+* Failure message: `Unexpected kind '%s'`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/basic.rego#L19[Source]
 
 === Required Tasks Rules
 
@@ -57,13 +53,9 @@ sast-go
 sast-java-sec-check
 ----
 
-++++
-<ul>
-<li>Path: <code>data.policy.pipeline.required_tasks.deny</code></li>
-<li>Failure message: <code>Required tasks %s were not found in the pipeline's task list</code></li>
-<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/required_tasks.rego#L32">Source</a></li>
-</ul>
-++++
+* Path: `data.policy.pipeline.required_tasks.deny`
+* Failure message: `Required tasks %s were not found in the pipeline's task list`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/required_tasks.rego#L32[Source]
 
 == Release Policy
 
@@ -78,13 +70,9 @@ container images built by HACBS.</p>+++
 Check for existence of a task bundle. Enforcing this rule will
 fail the contract if the task is not called from a bundle.
 
-++++
-<ul>
-<li>Path: <code>data.policy.release.attestation_task_bundle.warn</code></li>
-<li>Failure message: <code>Task '%s' does not contain a bundle reference</code></li>
-<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L13">Source</a></li>
-</ul>
-++++
+* Path: `data.policy.release.attestation_task_bundle.warn`
+* Failure message: `Task '%s' does not contain a bundle reference`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L13[Source]
 
 [#disallowed_task_bundle]
 ==== link:#disallowed_task_bundle[`disallowed_task_bundle`] Task bundle was used that was disallowed
@@ -92,13 +80,9 @@ fail the contract if the task is not called from a bundle.
 Check for existence of a valid task bundle. Enforcing this rule will
 fail the contract if the task is not called using a valid bundle image.
 
-++++
-<ul>
-<li>Path: <code>data.policy.release.attestation_task_bundle.warn</code></li>
-<li>Failure message: <code>Task '%s' has disallowed bundle image '%s'</code></li>
-<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L32">Source</a></li>
-</ul>
-++++
+* Path: `data.policy.release.attestation_task_bundle.warn`
+* Failure message: `Task '%s' has disallowed bundle image '%s'`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L32[Source]
 
 === Attestation Type Rules
 
@@ -109,13 +93,9 @@ A sanity check that the attestation found for the image has the expected
 attestation type. Currently there is only one attestation type supported,
 `https://in-toto.io/Statement/v0.1`.
 
-++++
-<ul>
-<li>Path: <code>data.policy.release.attestation_type.deny</code></li>
-<li>Failure message: <code>Unknown attestation type '%s'</code></li>
-<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_type.rego#L18">Source</a></li>
-</ul>
-++++
+* Path: `data.policy.release.attestation_type.deny`
+* Failure message: `Unknown attestation type '%s'`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_type.rego#L18[Source]
 
 === Not Useful Rules
 
@@ -125,14 +105,10 @@ attestation type. Currently there is only one attestation type supported,
 It's expected this rule will be skipped by policy configuration.
 This rule is for demonstration and test purposes and should be deleted soon.
 
-++++
-<ul>
-<li>Path: <code>data.policy.release.not_useful.deny</code></li>
-<li>Failure message: <code>It just feels like a bad day to do a release</code></li>
-<li>Effective from: <code>Sat, 01 Jan 2022 00:00:00 +0000</code></li>
-<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/not_useful.rego#L15">Source</a></li>
-</ul>
-++++
+* Path: `data.policy.release.not_useful.deny`
+* Failure message: `It just feels like a bad day to do a release`
+* Effective from: `Sat, 01 Jan 2022 00:00:00 +0000`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/not_useful.rego#L15[Source]
 
 === Step Image Registries Rules
 
@@ -151,13 +127,9 @@ registry.access.redhat.com/
 registry.redhat.io/
 ----
 
-++++
-<ul>
-<li>Path: <code>data.policy.release.step_image_registries.deny</code></li>
-<li>Failure message: <code>Step %d in task '%s' has disallowed image ref '%s'</code></li>
-<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/step_image_registries.rego#L20">Source</a></li>
-</ul>
-++++
+* Path: `data.policy.release.step_image_registries.deny`
+* Failure message: `Step %d in task '%s' has disallowed image ref '%s'`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/step_image_registries.rego#L20[Source]
 
 === Test Rules
 
@@ -168,13 +140,9 @@ None of the tasks in the pipeline included a HACBS_TEST_OUTPUT
 task result, which is where Enterprise Contract expects to find
 test result data.
 
-++++
-<ul>
-<li>Path: <code>data.policy.release.test.deny</code></li>
-<li>Failure message: <code>No test data found</code></li>
-<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L15">Source</a></li>
-</ul>
-++++
+* Path: `data.policy.release.test.deny`
+* Failure message: `No test data found`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L15[Source]
 
 [#test_results_missing]
 ==== link:#test_results_missing[`test_results_missing`] Test data is missing the results key
@@ -182,13 +150,9 @@ test result data.
 Each test result is expected to have a 'results' key. In at least
 one of the HACBS_TEST_OUTPUT task results this key was not present.
 
-++++
-<ul>
-<li>Path: <code>data.policy.release.test.deny</code></li>
-<li>Failure message: <code>Found tests without results</code></li>
-<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L29">Source</a></li>
-</ul>
-++++
+* Path: `data.policy.release.test.deny`
+* Failure message: `Found tests without results`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L29[Source]
 
 [#test_result_failures]
 ==== link:#test_result_failures[`test_result_failures`] Some tests did not pass
@@ -198,23 +162,14 @@ test results have a result of 'SUCCESS'. This will fail if any
 of the tests failed and the failure message will list the names
 of the failing tests.
 
-++++
-<ul>
-<li>Path: <code>data.policy.release.test.deny</code></li>
-<li>Failure message: <code>The following tests did not complete successfully: %s</code></li>
-<li><a href="https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L46">Source</a></li>
-</ul>
-++++
+* Path: `data.policy.release.test.deny`
+* Failure message: `The following tests did not complete successfully: %s`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L46[Source]
 
 See Also
 --------
 
-++++
-<ul>
-
-<li><a href="https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml">"Verify Enterprise Contract" task definition</a></li>
-<li><a href="https://github.com/hacbs-contract/ec-policies">github.com/hacbs-contract/ec-policies</a></li>
-<li><a href="https://github.com/hacbs-contract">github.com/hacbs-contract</a></li>
-<li><a href="https://github.com/redhat-appstudio">github.com/redhat-appstudio</a></li>
-</ul>
-++++
+* https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml["Verify Enterprise Contract" task definition]
+* https://github.com/hacbs-contract/ec-policies[github.com/hacbs-contract/ec-policies]
+* https://github.com/hacbs-contract[github.com/hacbs-contract]
+* https://github.com/redhat-appstudio[github.com/redhat-appstudio]

@@ -106,10 +106,10 @@ or:
 Documentation
 -------------
 
-There is some documentation about the policy rules [available
-here][docs]. Its source is
-[docs/index.md](docs/index.md) in branch `main`. There is also an asciidoc
-version available at [docs/index.adoc](docs/index.adoc).
+There is documentation about the policy rules [available here][pagesdocs]. (Its
+source is [docs/index.md](docs/index.md).)
+
+The same documentation is also available in the official [HACBS Documentation][hacbsdocs].
 
 See also
 --------
@@ -124,7 +124,8 @@ See also
 [gomplate]: https://docs.gomplate.ca/
 [entr]: https://github.com/eradman/entr
 [testing]: https://www.openpolicyagent.org/docs/latest/policy-testing/
-[docs]: https://hacbs-contract.github.io/ec-policies/
+[pagesdocs]: https://hacbs-contract.github.io/ec-policies/
+[hacbsdocs]: https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation/ec-policies/index.html
 [taskdef]: https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml
 [contract]: https://github.com/hacbs-contract
 [appstudio]: https://github.com/redhat-appstudio

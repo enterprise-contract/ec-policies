@@ -106,11 +106,12 @@ Create a dummy policy config file:
 
 Now run the policies against the attestation data:
 
-    make conftest-check
+    make check-release
 
-or:
+You can do something similar for pipeline policies, for example:
 
-    make check # uses opa
+    make fetch-pipeline
+    make check-pipeline
 
 
 See also

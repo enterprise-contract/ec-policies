@@ -170,12 +170,10 @@ fetch-att: clean-input ## Fetches attestation data for IMAGE, use `make fetch-at
 #--------------------------------------------------------------------
 
 # A convenient way to populate input/input.json with a pipeline definition
-#
-# Specify PIPELINE as an environment var to use something other than the default
-# which is 'java-builds'.
+# Specify PIPELINE as an environment var to use something other than the default.
 #
 ifndef PIPELINE
-	PIPELINE=java-builds
+  PIPELINE=s2i-nodejs -n openshift
 endif
 
 fetch-pipeline: clean-input ## Fetches pipeline data for PIPELINE from your local cluster, use `make fetch-pipeline PIPELINE=<name>`

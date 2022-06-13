@@ -31,3 +31,8 @@ links:
 
   - title: github.com/redhat-appstudio
     url: https://github.com/redhat-appstudio
+
+generated_content_warning: |-
+  This content is automatically generated from a template, see
+  https://github.com/hacbs-contract/ec-policies/tree/main/docsrc
+  Do not edit it manually.

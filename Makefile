@@ -89,13 +89,15 @@ conventions-check: ## Check Rego policy files for convention violations
 	@OUT=$$(opa eval --data checks --data $(POLICY_DIR)/lib --input <(opa inspect . -a -f json) 'data.checks.violation[_]' --format raw); \
 	if [[ -n "$${OUT}" ]]; then echo "$${OUT}"; exit 1; fi
 
-DOCS=./docs
-DOCS_TMP_JSON=$(DOCS)/annotations-data.json
-DOCS_MD=$(DOCS)/index.md
-DOCS_ADOC=$(DOCS)/index.adoc
-DOCS_ALL=$(DOCS_MD) $(DOCS_ADOC)
 DOCSRC=./docsrc
 DOCS_STATIC=$(DOCSRC)/static.yaml
+DOCS_TMP_JSON=$(DOCSRC)/annotations-data.json
+
+# Markdown format for GitHub pages
+DOCS_MD=./docs/index.md
+# Asciidoc format for Antora
+DOCS_ADOC=./antora-docs/modules/ROOT/pages/index.adoc
+DOCS_ALL=$(DOCS_MD) $(DOCS_ADOC)
 
 build-docs: ## Generate documentation. Use this before commit if you modified any rules or annotations
 	@opa inspect --annotations --format json $(POLICY_DIR) > $(DOCS_TMP_JSON)

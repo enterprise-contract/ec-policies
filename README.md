@@ -41,11 +41,13 @@ standard format run this before committing:
 
 ### Building the docs
 
-The documentation in [`docs/index.md`](docs/index.md) is generated from
-[`docs.tmpl`](docs.tmpl) and from the annotations in the rego files
+The documentation in [`index.adoc`](antora-docs/modules/ROOT/pages/index.adoc) is generated from
+[`index.adoc.tmpl`](docsrc/index.adoc.tmpl) and from the annotations in the rego files
 themselves. Update the docs like this:
 
     make build-docs
+
+Those docs are imported automatically into the official [HACBS Documentation][hacbsdocs].
 
 ### Running tests
 
@@ -110,17 +112,11 @@ or:
 
     make check # uses opa
 
-Documentation
--------------
-
-There is documentation about the policy rules [available here][pagesdocs]. (Its
-source is [docs/index.md](docs/index.md).)
-
-The same documentation is also available in the official [HACBS Documentation][hacbsdocs].
 
 See also
 --------
 
+* [Policy rule documentation][hacbsdocs].
 * ["Verify Enterprise Contract" task definition][taskdef]
 * [github.com/hacbs-contract][contract]
 * [github.com/redhat-appstudio][appstudio]
@@ -131,7 +127,6 @@ See also
 [gomplate]: https://docs.gomplate.ca/
 [entr]: https://github.com/eradman/entr
 [testing]: https://www.openpolicyagent.org/docs/latest/policy-testing/
-[pagesdocs]: https://hacbs-contract.github.io/ec-policies/
 [hacbsdocs]: https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation/ec-policies/index.html
 [taskdef]: https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml
 [contract]: https://github.com/hacbs-contract

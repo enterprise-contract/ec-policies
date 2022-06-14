@@ -90,19 +90,15 @@ conventions-check: ## Check Rego policy files for convention violations
 	if [[ -n "$${OUT}" ]]; then echo "$${OUT}"; exit 1; fi
 
 DOCSRC=./docsrc
-DOCS_STATIC=$(DOCSRC)/static.yaml
 DOCS_TMP_JSON=$(DOCSRC)/annotations-data.json
-
-# Markdown format for GitHub pages
-DOCS_MD=./docs/index.md
 # Asciidoc format for Antora
 DOCS_ADOC=./antora-docs/modules/ROOT/pages/index.adoc
-DOCS_ALL=$(DOCS_MD) $(DOCS_ADOC)
+# (Only one generated doc file currently)
+DOCS_ALL=$(DOCS_ADOC)
 
 build-docs: ## Generate documentation. Use this before commit if you modified any rules or annotations
 	@opa inspect --annotations --format json $(POLICY_DIR) > $(DOCS_TMP_JSON)
-	@gomplate -d rules=$(DOCS_TMP_JSON) -d static=$(DOCS_STATIC) -f $(DOCSRC)/$$( basename $(DOCS_MD) ).tmpl   | cat -s > $(DOCS_MD)
-	@gomplate -d rules=$(DOCS_TMP_JSON) -d static=$(DOCS_STATIC) -f $(DOCSRC)/$$( basename $(DOCS_ADOC) ).tmpl | cat -s > $(DOCS_ADOC)
+	@gomplate -d rules=$(DOCS_TMP_JSON) -f $(DOCSRC)/$$( basename $(DOCS_ADOC) ).tmpl | cat -s > $(DOCS_ADOC)
 	@rm $(DOCS_TMP_JSON)
 
 amend-docs: build-docs ## Update the docs and amend the current commit
@@ -125,17 +121,14 @@ fmt-check: ## Check formatting of Rego files
 	@opa fmt . --list | xargs -r -n1 echo 'FAIL: Incorrect formatting found in'
 	@opa fmt . --list --fail >/dev/null 2>&1
 
-docs-check: ## Check if docs/index.md is up to date
-	@cp $(DOCS_MD) $(DOCS_MD).check
+docs-check: ## Check if the generated docs are up to date
 	@cp $(DOCS_ADOC) $(DOCS_ADOC).check
 	@$(MAKE) --no-print-directory build-docs
 	@if [[ -n $$( git diff --name-only -- $(DOCS_ALL) ) ]]; then \
-	  mv $(DOCS_MD).check $(DOCS_MD); \
 	  mv $(DOCS_ADOC).check $(DOCS_ADOC); \
 	  echo "FAIL: A docs update is needed"; \
 	  exit 1; \
 	fi
-	@mv $(DOCS_MD).check $(DOCS_MD)
 	@mv $(DOCS_ADOC).check $(DOCS_ADOC)
 
 ci: conventions-check quiet-test opa-check fmt-check docs-check ## Runs all checks and tests
@@ -177,12 +170,10 @@ fetch-att: clean-input ## Fetches attestation data for IMAGE, use `make fetch-at
 #--------------------------------------------------------------------
 
 # A convenient way to populate input/input.json with a pipeline definition
-#
-# Specify PIPELINE as an environment var to use something other than the default
-# which is 'java-builds'.
+# Specify PIPELINE as an environment var to use something other than the default.
 #
 ifndef PIPELINE
-	PIPELINE=java-builds
+  PIPELINE=s2i-nodejs -n openshift
 endif
 
 fetch-pipeline: clean-input ## Fetches pipeline data for PIPELINE from your local cluster, use `make fetch-pipeline PIPELINE=<name>`

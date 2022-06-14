@@ -1,7 +1,7 @@
-{{ $static := datasource "static" }}
-{{ $rules := datasource "rules" }}
 ////
-{{ $static.generated_content_warning }}
+This content is automatically generated from a template, see
+https://github.com/hacbs-contract/ec-policies/tree/main/docsrc
+Do not edit it manually.
 ////
 
 = HACBS Enterprise Contract Policies
@@ -12,13 +12,17 @@
 
 == About
 
-{{ range $static.about }}
-+++{{ . }}+++
-{{ end }}
+The HACBS Enterprise Contract is a Tekton task that can be used to verify the
+provenence of container images built in HACBS and validate them against a set of
+policies.
+
+Those policies are defined using the
+https://www.openpolicyagent.org/docs/latest/policy-language/[rego policy language]
+and are described here.
 
 {{ $p2_stash := "" }}
 {{ $p3_stash := "" }}
-{{ range $rules.annotations }}
+{{ range (datasource "rules").annotations }}
 
 {{ $p1 := (index (index .path 1) "value") }}
 {{ $p2 := (index (index .path 2) "value") }}
@@ -28,23 +32,24 @@
 {{/* Skip rules that are not under data.policy */}}
 {{ if eq $p1 "policy" }}
 
-{{/* Show a heading for either "Release" or "Pipeline" */}}
+{{/* Show a heading for "Release" or "Pipeline" */}}
 {{ if ne $p2 $p2_stash }}
 
 == {{ $p2 | strings.Title }} Policy
 
-{{ if has $static.section_intros $p2 }}
-{{ range (index $static.section_intros $p2) }}
-+++<p>{{ . }}</p>+++
-{{ end }}
-{{ end }}
+{{/* Show an explanatory intro for "Release" or "Pipeline" */}}
+{{ if eq "release" $p2 }}
+These rules are applied to pipeline run attestations associated with
+container images built by HACBS.
+{{- else if eq "pipeline" $p2 }}
+These rules are applied to Tekton pipeline definitions.
+{{- end }}
 
 {{ $p2_stash = $p2 }}
 {{ end }}
 
-{{ $p3 := (index (index .path 3) "value") }}
-
 {{/* Show a heading for each separate package */}}
+{{ $p3 := (index (index .path 3) "value") }}
 {{ if ne $p3 $p3_stash }}
 === {{ $p3 | regexp.Replace "_" " " | strings.Title }} Rules
 {{ $p3_stash = $p3 }}
@@ -83,6 +88,8 @@ The {{ $key | strings.ReplaceAll "_" " " }} are:
 See Also
 --------
 
-{{ range $static.links }}
-* {{ .url }}[{{ .title }}]
-{{- end }}
+* https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation/[HACBS Documentation]
+* https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml["Verify Enterprise Contract" task definition]
+* https://github.com/hacbs-contract/ec-policies[github.com/hacbs-contract/ec-policies]
+* https://github.com/hacbs-contract[github.com/hacbs-contract]
+* https://github.com/redhat-appstudio[github.com/redhat-appstudio]

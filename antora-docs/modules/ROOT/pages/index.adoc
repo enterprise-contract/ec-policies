@@ -77,7 +77,7 @@ fail the contract if the task is not called from a bundle.
 
 * Path: `data.policy.release.attestation_task_bundle.warn`
 * Failure message: `Task '%s' does not contain a bundle reference`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L13[Source]
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L14[Source]
 
 [#disallowed_task_bundle]
 ==== link:#disallowed_task_bundle[`disallowed_task_bundle`] Task bundle was used that was disallowed
@@ -85,9 +85,17 @@ fail the contract if the task is not called from a bundle.
 Check for existence of a valid task bundle. Enforcing this rule will
 fail the contract if the task is not called using a valid bundle image.
 
+The allowed bundles are:
+
+----
+quay.io/redhat-appstudio/build-templates-bundle
+quay.io/redhat-appstudio/hacbs-templates-bundle
+quay.io/redhat-appstudio/appstudio-tasks
+----
+
 * Path: `data.policy.release.attestation_task_bundle.warn`
 * Failure message: `Task '%s' has disallowed bundle image '%s'`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L32[Source]
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L35[Source]
 
 === Attestation Type Rules
 

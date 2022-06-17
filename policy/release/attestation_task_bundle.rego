@@ -10,6 +10,7 @@ import data.lib
 # custom:
 #   short_name: disallowed_task_reference
 #   failure_msg: Task '%s' does not contain a bundle reference
+#
 warn[result] {
 	task := lib.tasks_from_pipelinerun[_]
 	name := task.name
@@ -25,14 +26,16 @@ warn[result] {
 # custom:
 #   short_name: disallowed_task_bundle
 #   failure_msg: Task '%s' has disallowed bundle image '%s'
-#   allowed_bundles:
-#   - quay.io/redhat-appstudio/build-templates-bundle
-#   - quay.io/redhat-appstudio/hacbs-templates-bundle
-
+#   rule_data:
+#     allowed_bundles:
+#     - quay.io/redhat-appstudio/build-templates-bundle
+#     - quay.io/redhat-appstudio/hacbs-templates-bundle
+#     - quay.io/redhat-appstudio/appstudio-tasks
+#
 warn[result] {
 	task := lib.tasks_from_pipelinerun[_]
 	name := task.name
 	bundle := split(task.ref.bundle, ":")
-	not lib.item_in_list(bundle[0], rego.metadata.rule().custom.allowed_bundles)
+	not lib.item_in_list(bundle[0], rego.metadata.rule().custom.rule_data.allowed_bundles)
 	result := lib.result_helper(rego.metadata.chain(), [name, bundle[0]])
 }

@@ -109,25 +109,40 @@ fail the contract if the task is not called from a bundle.
 
 * Path: `data.policy.release.attestation_task_bundle.warn`
 * Failure message: `Task '%s' does not contain a bundle reference`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L14[Source]
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L16[Source]
 
-[#disallowed_task_bundle]
-==== link:#disallowed_task_bundle[`disallowed_task_bundle`] Task bundle was used that was disallowed
+[#empty_task_bundle_reference]
+==== link:#empty_task_bundle_reference[`empty_task_bundle_reference`] Task bundle reference is empty
 
-Check for existence of a valid task bundle. Enforcing this rule will
-fail the contract if the task is not called using a valid bundle image.
-
-The allowed bundles are:
-
-----
-quay.io/redhat-appstudio/build-templates-bundle
-quay.io/redhat-appstudio/hacbs-templates-bundle
-quay.io/redhat-appstudio/appstudio-tasks
-----
+Check for a valid task bundle reference being used.
 
 * Path: `data.policy.release.attestation_task_bundle.warn`
-* Failure message: `Task '%s' has disallowed bundle image '%s'`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L35[Source]
+* Failure message: `Task '%s' uses an empty bundle image reference`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L31[Source]
+
+[#out_of_date_task_bundle]
+==== link:#out_of_date_task_bundle[`out_of_date_task_bundle`] Task bundle is out of date
+
+Check if the Tekton Bundle used for the Tasks in the attestation
+is the most recent acceptable one. See the file
+data/acceptable_tekton_bundles.yml in this git repository for a
+full list of acceptable Tekton Bundles.
+
+* Path: `data.policy.release.attestation_task_bundle.warn`
+* Failure message: `Task '%s' uses an out of date task bundle '%s'`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L49[Source]
+
+[#unacceptable_task_bundle]
+==== link:#unacceptable_task_bundle[`unacceptable_task_bundle`] Task bundle is not acceptable
+
+Check if the Tekton Bundle used for the Tasks in the attestation
+are acceptable given the tracked effective_on date. See the file
+data/acceptable_tekton_bundles.yml in this git repository for a
+full list of acceptable Tekton Bundles.
+
+* Path: `data.policy.release.attestation_task_bundle.warn`
+* Failure message: `Task '%s' uses an unacceptable task bundle '%s'`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L73[Source]
 
 === Attestation Type Rules
 

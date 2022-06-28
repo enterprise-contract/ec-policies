@@ -37,3 +37,38 @@ effective_current_time_ns = now_ns {
 	not data.config
 	now_ns := time.now_ns()
 }
+
+# most_current returns the first item in the given list of objects where
+# effective_on is NOT in the future (less than or equal to now). Items that do
+# not define the effective_on attribute are ignored. If the given list of
+# items is empty, or no items are current, most_current does not produce a
+# value.
+most_current(items) = item {
+	current := [i |
+		i := items[_]
+		i.effective_on
+		not time.parse_rfc3339_ns(i.effective_on) > effective_current_time_ns
+	]
+
+	item := current[0]
+}
+
+# future_items returns a filtered list of the given items where each item has
+# an effective_on value in the future (greater than now). Items that do not
+# define the effective_on attribute are ignored.
+future_items(items) = some_items {
+	some_items := [i |
+		i := items[_]
+		i.effective_on
+		time.parse_rfc3339_ns(i.effective_on) > effective_current_time_ns
+	]
+}
+
+# acceptable_items return a filtered list of the given items by only including
+# the future_items and the most_current item. If a most_current item is not
+# available, this function behaves just like future_items.
+acceptable_items(items) = some_items {
+	some_items := array.concat(future_items(items), [most_current(items)])
+} else = future_items(items) {
+	true
+}

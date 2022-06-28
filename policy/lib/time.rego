@@ -37,3 +37,18 @@ effective_current_time_ns = now_ns {
 	not data.config
 	now_ns := time.now_ns()
 }
+
+# most_current returns the first item in the list of objects that has an
+# effective_on timestamp greater than or equal to the current time. Items
+# that do not define the effective_on attribute are ignored. If the list
+# of items is empty, or no items are current, most_current does not produce
+# a value.
+most_current(items) = item {
+	current := [i |
+		i := items[_]
+		i.effective_on
+		not time.parse_rfc3339_ns(i.effective_on) > effective_current_time_ns
+	]
+
+	item := current[0]
+}

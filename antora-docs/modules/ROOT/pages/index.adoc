@@ -35,6 +35,52 @@ A sanity check to confirm the input data has the kind "Pipeline"
 * Failure message: `Unexpected kind '%s'`
 * https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/basic.rego#L19[Source]
 
+=== Pipeline Version Rules
+
+[#pipeline_version_exists]
+==== link:#pipeline_version_exists[`pipeline_version_exists`] Pipeline defines a version
+
+The Pipeline has an explicitly defined version value. The version is
+expected to be defined by the "app.kubernetes.io/version" resource label.
+
+* Path: `data.policy.pipeline.pipeline_version.deny`
+* Failure message: `Pipeline %q does not define a version`
+* Effective from: `Sun, 01 Jan 2023 00:00:00 +0000`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/pipeline_version.rego#L19[Source]
+
+[#pipeline_version_format]
+==== link:#pipeline_version_format[`pipeline_version_format`] Pipeline version must be in a specific format
+
+The Pipeline version is expected to be in one of the following formats:
+1
+1.2
+1.2.3
+
+Each part of the version must have 1 or more digits. All other characters are
+not allowed.
+
+* Path: `data.policy.pipeline.pipeline_version.deny`
+* Failure message: `Pipeline %q defines an invalid version format, %s. Use "." separated digits`
+* Effective from: `Sun, 01 Jan 2023 00:00:00 +0000`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/pipeline_version.rego#L43[Source]
+
+[#pipeline_version]
+==== link:#pipeline_version[`pipeline_version`] Pipeline version is outdated
+
+The Pipeline version is expected to meet a minimum required version.
+
+The minimum version are:
+
+----
+map[effective_on:2023-01-01T00:00:00Z version:0.5]
+map[effective_on:2022-01-01T00:00:00Z version:0.4]
+----
+
+* Path: `data.policy.pipeline.pipeline_version.deny`
+* Failure message: `Version of Pipeline %q is outdated, %s. Update to %s or newer`
+* Effective from: `Sun, 01 Jan 2023 00:00:00 +0000`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/pipeline_version.rego#L67[Source]
+
 === Required Tasks Rules
 
 [#required_tasks]

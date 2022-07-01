@@ -1,5 +1,7 @@
 package lib
 
+import data.lib
+
 # Collect all non-skipped deny or warn rules under data.policy.<policy_namespace>
 # regardless of whether they are effective now or in the future.
 #
@@ -48,19 +50,5 @@ in_future(rule) {
 	rule.effective_on
 
 	# The rule is effective in the future but not now
-	time.parse_rfc3339_ns(rule.effective_on) > effective_current_time_ns
-}
-
-# Use the nanosecond epoch defined in the policy config if it is
-# present, otherwise use the real current time
-effective_current_time_ns = now_ns {
-	data.config
-	now_ns := object.get(data.config, ["policy", "when_ns"], time.now_ns())
-}
-
-# Handle edge case where data.config is not present
-# (We can't do `object.get(data, ...)` for some reason)
-effective_current_time_ns = now_ns {
-	not data.config
-	now_ns := time.now_ns()
+	time.parse_rfc3339_ns(rule.effective_on) > lib.time.effective_current_time_ns
 }

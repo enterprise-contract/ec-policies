@@ -23,3 +23,17 @@ when(metadata_chain) = effective_on {
 	# value if effective_on was not found in annotations
 	effective_on := array.concat(all_effective_on, [default_effective_on])[0]
 }
+
+# Use the nanosecond epoch defined in the policy config if it is
+# present, otherwise use the real current time
+effective_current_time_ns = now_ns {
+	data.config
+	now_ns := object.get(data.config, ["policy", "when_ns"], time.now_ns())
+}
+
+# Handle edge case where data.config is not present
+# (We can't do `object.get(data, ...)` for some reason)
+effective_current_time_ns = now_ns {
+	not data.config
+	now_ns := time.now_ns()
+}

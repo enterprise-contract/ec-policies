@@ -8,13 +8,6 @@ test_current_and_future {
 	lib.assert_not_empty(current_and_future_denies("pipeline")) with input.kind as "Foo"
 }
 
-test_effective_current_time_ns {
-	lib.assert_equal(effective_current_time_ns, time.now_ns()) # with no config at all
-	lib.assert_equal(effective_current_time_ns, time.now_ns()) with data.config as {} # no config.policy
-	lib.assert_equal(effective_current_time_ns, time.now_ns()) with data.config.policy as {} # no config.policy.when_ns
-	lib.assert_equal(effective_current_time_ns, lib.time.future_timestamp) with data.config.policy.when_ns as lib.time.future_timestamp
-}
-
 test_future_handling {
 	future_denial := {"msg": "future", "effective_on": "2099-05-02T00:00:00Z"}
 	current_denial := {"msg": "current", "effective_on": "1999-05-02T00:00:00Z"}

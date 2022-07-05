@@ -191,6 +191,41 @@ registry.redhat.io/
 * Failure message: `Step %d in task '%s' has disallowed image ref '%s'`
 * https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/step_image_registries.rego#L20[Source]
 
+=== Tasks Rules
+
+[#tasks_missing]
+==== link:#tasks_missing[`tasks_missing`] No tasks run
+
+This policy enforces that at least one Task is present in the PipelineRun
+attestation.
+
+* Path: `data.policy.release.tasks.deny`
+* Failure message: `No tasks found in PipelineRun attestation`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/tasks.rego#L34[Source]
+
+[#tasks_required]
+==== link:#tasks_required[`tasks_required`] Required tasks not run
+
+This policy enforces that the required set of tasks is run in a
+PipelineRun.
+
+The required task refs are:
+
+----
+add-sbom-and-push
+clamav-scan
+deprecated-image-check
+get-clair-scan
+sanity-inspect-image
+sanity-label-check
+sanity-optional-label-check
+sast-go
+----
+
+* Path: `data.policy.release.tasks.deny`
+* Failure message: `Required task(s) '%s' not found in the PipelineRun attestation`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/tasks.rego#L50[Source]
+
 === Test Rules
 
 [#test_result_skipped]

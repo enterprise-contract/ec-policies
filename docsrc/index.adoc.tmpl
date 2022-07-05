@@ -22,6 +22,8 @@ and are described here.
 
 {{ $p2_stash := "" }}
 {{ $p3_stash := "" }}
+{{/* Empty by default, set to package annotations when encountered */}}
+{{ $package_annotations := dict }}
 {{ $data := slice }}
 {{- range (datasource "rules").annotations }}
   {{- $data = $data | append (dict "key" (printf "%s:%d" .location.file .location.row) "annotation" .) }}
@@ -32,6 +34,10 @@ and are described here.
 {{ $p1 := (index (index .path 1) "value") }}
 {{ $p2 := (index (index .path 2) "value") }}
 
+{{/* Capture any package annotations */}}
+{{ if eq .annotations.scope "package" }}
+{{ $package_annotations = .annotations }}
+{{ end }}
 {{/* Skip annotations that are not rule annotations */}}
 {{ if eq .annotations.scope "rule" }}
 {{/* Skip rules that are not under data.policy */}}
@@ -67,8 +73,16 @@ These rules are applied to Tekton pipeline definitions.
 {{.annotations.description}}
 
 {{/* Show rule data if there is any */}}
-{{ if has .annotations.custom "rule_data" }}
-{{ range $key, $values := .annotations.custom.rule_data }}
+{{ $has_package_rule_data := false }}
+{{ if has $package_annotations "custom" }}
+{{ $has_package_rule_data = and (has $package_annotations.custom $name) (has (index $package_annotations.custom $name) "rule_data") }}
+{{ end }}
+{{ if or (has .annotations.custom "rule_data") $has_package_rule_data }}
+{{ $rule_data := index .annotations.custom "rule_data" }}
+{{ if $has_package_rule_data }}
+{{ $rule_data = merge $rule_data (index $package_annotations.custom $name).rule_data }}
+{{ end }}
+{{ range $key, $values := $rule_data }}
 {{/* Assume the key name is descriptive enough for this sentence to make sense */}}
 The {{ $key | strings.ReplaceAll "_" " " }} are:
 

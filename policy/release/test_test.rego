@@ -92,3 +92,57 @@ test_can_skip_by_name {
 	}}) with input.attestations as mock_mixed_data
 		with data.config.policy as {"non_blocking_checks": ["test:failed_1"]}
 }
+
+test_skipped_is_not_deny {
+	skipped_test := [lib.att_mock_helper({"result": "SKIPPED"}, "skipped_1")]
+	lib.assert_empty(deny) with input.attestations as skipped_test
+}
+
+test_skipped_is_warning {
+	skipped_test := [lib.att_mock_helper({"result": "SKIPPED"}, "skipped_1")]
+	lib.assert_equal(warn, {{
+		"code": "test_result_skipped",
+		"msg": "The following tests were skipped: skipped_1",
+		"effective_on": "2022-01-01T00:00:00Z",
+	}}) with input.attestations as skipped_test
+}
+
+test_mixed_statuses {
+	test_results := [
+		lib.att_mock_helper({"result": "ERROR"}, "error_1"),
+		lib.att_mock_helper({"result": "SUCCESS"}, "success_1"),
+		lib.att_mock_helper({"result": "FAILURE"}, "failure_1"),
+		lib.att_mock_helper({"result": "SKIPPED"}, "skipped_1"),
+		lib.att_mock_helper({"result": "FAILURE"}, "failure_2"),
+		lib.att_mock_helper({"result": "SKIPPED"}, "skipped_2"),
+		lib.att_mock_helper({"result": "ERROR"}, "error_2"),
+	]
+
+	lib.assert_equal(deny, {{
+		"code": "test_result_failures",
+		"msg": "The following tests did not complete successfully: error_1, error_2, failure_1, failure_2",
+		"effective_on": "2022-01-01T00:00:00Z",
+	}}) with input.attestations as test_results
+
+	lib.assert_equal(warn, {{
+		"code": "test_result_skipped",
+		"msg": "The following tests were skipped: skipped_1, skipped_2",
+		"effective_on": "2022-01-01T00:00:00Z",
+	}}) with input.attestations as test_results
+}
+
+test_unsupported_test_result {
+	test_results := [
+		lib.att_mock_helper({"result": "EROR"}, "error_1"),
+		lib.att_mock_helper({"result": "SUCESS"}, "success_1"),
+		lib.att_mock_helper({"result": "FAIL"}, "failure_1"),
+		lib.att_mock_helper({"result": "SKIPED"}, "skipped_1"),
+	]
+
+	lib.assert_equal(deny, {
+		{"code": "test_result_unsupported", "msg": "Test 'error_1' has unsupported result 'EROR'", "effective_on": "2022-01-01T00:00:00Z"},
+		{"code": "test_result_unsupported", "msg": "Test 'failure_1' has unsupported result 'FAIL'", "effective_on": "2022-01-01T00:00:00Z"},
+		{"code": "test_result_unsupported", "msg": "Test 'skipped_1' has unsupported result 'SKIPED'", "effective_on": "2022-01-01T00:00:00Z"},
+		{"code": "test_result_unsupported", "msg": "Test 'success_1' has unsupported result 'SUCESS'", "effective_on": "2022-01-01T00:00:00Z"},
+	}) with input.attestations as test_results
+}

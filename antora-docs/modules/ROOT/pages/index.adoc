@@ -155,7 +155,7 @@ test result data.
 
 * Path: `data.policy.release.test.deny`
 * Failure message: `No test data found`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L15[Source]
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L16[Source]
 
 [#test_results_missing]
 ==== link:#test_results_missing[`test_results_missing`] Test data is missing the results key
@@ -165,19 +165,47 @@ one of the HACBS_TEST_OUTPUT task results this key was not present.
 
 * Path: `data.policy.release.test.deny`
 * Failure message: `Found tests without results`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L29[Source]
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L30[Source]
+
+[#test_result_unsupported]
+==== link:#test_result_unsupported[`test_result_unsupported`] Unsupported result in test data
+
+This policy expects a set of known/supported results in the test data
+It is a failure if we encounter a result that is not supported.
+
+The supported results are:
+
+----
+SUCCESS
+FAILURE
+ERROR
+SKIPPED
+----
+
+* Path: `data.policy.release.test.deny`
+* Failure message: `Test '%s' has unsupported result '%s'`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L51[Source]
 
 [#test_result_failures]
-==== link:#test_result_failures[`test_result_failures`] Some tests did not pass
+==== link:#test_result_failures[`test_result_failures`] Test result is FAILURE or ERROR
 
-Enterprise Contract requires that all the tests in the
-test results have a result of 'SUCCESS'. This will fail if any
-of the tests failed and the failure message will list the names
-of the failing tests.
+Enterprise Contract requires that all the tests in the test results
+have a successful result. A successful result is one that isn't a
+"FAILURE" or "ERROR". This will fail if any of the tests failed and
+the failure message will list the names of the failing tests.
 
 * Path: `data.policy.release.test.deny`
 * Failure message: `The following tests did not complete successfully: %s`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L46[Source]
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L74[Source]
+
+[#test_result_skipped]
+==== link:#test_result_skipped[`test_result_skipped`] Some tests were skipped
+
+Collects all tests that have their result set to "SKIPPED".
+
+* Path: `data.policy.release.test.warn`
+* Failure message: `The following tests were skipped: %s`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L103[Source]
 
 See Also
 --------

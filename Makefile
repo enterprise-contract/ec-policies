@@ -141,12 +141,10 @@ clean-input: ## Removes everything from the `./input` directory
 	@rm -rf $(INPUT_DIR)
 	@mkdir $(INPUT_DIR)
 
-clean-data: ## Removes everything from the `./data` directory
-	@rm -rf $(DATA_DIR)
-	@mkdir $(DATA_DIR)
+clean-data: ## Removes ephemeral files from the `./data` directory
+	@rm -rf $(CONFIG_DATA_FILE)
 
 dummy-config: ## Changes the configuration to mark the `not_useful` check as non-blocking to avoid a "feels like a bad day.." violation
-	@mkdir -p $(DATA_DIR)
 	@echo '{"config":{"policy":{"non_blocking_checks":["not_useful"]}}}' | jq > $(CONFIG_DATA_FILE)
 
 # Set IMAGE as required like this:

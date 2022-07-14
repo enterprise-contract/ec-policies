@@ -1,9 +1,23 @@
----
 pipeline-bundles:
+  quay.io/hacbs-contract-demo/build-templates-bundle:
+  - digest: sha256:975dee71323b60550cb2e04f59acfb7c121570e5b014208688ee46d075415670
+    effective_on: "2022-08-14T00:00:00Z"
+    tag: cf09ddbb089efe9ee561ade374ccd404973b80cf
   quay.io/redhat-appstudio/build-templates-bundle:
-    - digest: sha256:9afa62e7ed754d1d2b84dc812fbe312624526292675fb9ae3b2f589eaae4dda9
-      tag: ad4c34b71d468a991450b0091cd96765471ed82d
-      effective_on: 2022-08-06T00:00:00Z
-    - digest: sha256:68f217bbd97da67a113ca1440e42462d22a5f69ea51606836480cfdf6a7df26d
-      tag: 5003b8eae14c0b71d8c96419c38cf9a5c7788502
-      effective_on: 2022-07-22T00:00:00Z
+  - digest: sha256:9afa62e7ed754d1d2b84dc812fbe312624526292675fb9ae3b2f589eaae4dda9
+    effective_on: "2022-08-06T00:00:00Z"
+    tag: ad4c34b71d468a991450b0091cd96765471ed82d
+  - digest: sha256:68f217bbd97da67a113ca1440e42462d22a5f69ea51606836480cfdf6a7df26d
+    effective_on: "2022-07-22T00:00:00Z"
+    tag: 5003b8eae14c0b71d8c96419c38cf9a5c7788502
+task-bundles:
+  quay.io/hacbs-contract-demo/appstudio-tasks:
+  - digest: sha256:4c253b7d959d83924076f4b81c422b3919644f435c95ac68e4ebf1b4087636f4
+    effective_on: "2022-08-14T00:00:00Z"
+    tag: cf09ddbb089efe9ee561ade374ccd404973b80cf-3
+  - digest: sha256:b05f4b67b1815a7ce80015658967bf8921327be8df298b127ce9e01ff1b5152a
+    effective_on: "2022-08-14T00:00:00Z"
+    tag: cf09ddbb089efe9ee561ade374ccd404973b80cf-2
+  - digest: sha256:b691a8bb63b4bae08c93e54834cff058d336ae340b1e53de646c71fc1eb074a2
+    effective_on: "2022-08-14T00:00:00Z"
+    tag: cf09ddbb089efe9ee561ade374ccd404973b80cf-1

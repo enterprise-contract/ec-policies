@@ -14,6 +14,7 @@ import future.keywords.in
 #   failure_msg: No test data found
 #
 deny[result] {
+	count(lib.pipelinerun_attestations) > 0
 	count(lib.results_from_tests) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

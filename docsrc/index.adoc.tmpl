@@ -22,7 +22,12 @@ and are described here.
 
 {{ $p2_stash := "" }}
 {{ $p3_stash := "" }}
-{{ range (datasource "rules").annotations }}
+{{ $data := slice }}
+{{- range (datasource "rules").annotations }}
+  {{- $data = $data | append (dict "key" (printf "%s:%d" .location.file .location.row) "annotation" .) }}
+{{ end }}
+{{ range $data | sort "key" }}
+{{ with .annotation }}
 
 {{ $p1 := (index (index .path 1) "value") }}
 {{ $p2 := (index (index .path 2) "value") }}
@@ -83,6 +88,7 @@ The {{ $key | strings.ReplaceAll "_" " " }} are:
 
 {{ end }}{{/* if eq $p1 ... */}}
 {{ end }}{{/* if eq .annotations ... */}}
+{{ end }}{{/* with .annotation */}}
 {{ end }}{{/* range ... */}}
 
 See Also

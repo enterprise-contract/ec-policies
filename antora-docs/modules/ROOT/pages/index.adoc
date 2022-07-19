@@ -178,6 +178,15 @@ registry.redhat.io/
 
 === Test Rules
 
+[#test_result_skipped]
+==== link:#test_result_skipped[`test_result_skipped`] Some tests were skipped
+
+Collects all tests that have their result set to "SKIPPED".
+
+* Path: `data.policy.release.test.warn`
+* Failure message: `The following tests were skipped: %s`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L103[Source]
+
 [#test_data_missing]
 ==== link:#test_data_missing[`test_data_missing`] No test data found
 
@@ -229,15 +238,6 @@ the failure message will list the names of the failing tests.
 * Path: `data.policy.release.test.deny`
 * Failure message: `The following tests did not complete successfully: %s`
 * https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L74[Source]
-
-[#test_result_skipped]
-==== link:#test_result_skipped[`test_result_skipped`] Some tests were skipped
-
-Collects all tests that have their result set to "SKIPPED".
-
-* Path: `data.policy.release.test.warn`
-* Failure message: `The following tests were skipped: %s`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L103[Source]
 
 See Also
 --------

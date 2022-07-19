@@ -20,21 +20,18 @@ Those policies are defined using the
 https://www.openpolicyagent.org/docs/latest/policy-language/[rego policy language]
 and are described here.
 
-== Release Policy
+== Commit Policy
 
-These rules are applied to pipeline run attestations associated with
-container images built by HACBS.
-
-=== Commit Signature Rules
+=== Signature Rules
 
 [#disallowed_commit_signature_email]
 ==== link:#disallowed_commit_signature_email[`disallowed_commit_signature_email`] Signatures is a valid email address
 
 Enterprise Contract verifies if a valid email address was used to sign a commit 
 
-* Path: `data.policy.release.commit_signature.warn`
+* Path: `data.policy.commit.signature.warn`
 * Failure message: `Signature %s in commit %s is not a valid email address`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/commit/commit_signature.rego#L12[Source]
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/commit/signature.rego#L12[Source]
 
 [#disallowed_commit_signature_domain]
 ==== link:#disallowed_commit_signature_domain[`disallowed_commit_signature_domain`] Signatures in a commit that are disallowed
@@ -48,9 +45,9 @@ The allowed email domains are:
 redhat.com
 ----
 
-* Path: `data.policy.release.commit_signature.warn`
+* Path: `data.policy.commit.signature.warn`
 * Failure message: `Signature %s in commit %s has disallowed domain`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/commit/commit_signature.rego#L30[Source]
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/commit/signature.rego#L30[Source]
 
 == Pipeline Policy
 

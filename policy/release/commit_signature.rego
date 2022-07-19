@@ -1,4 +1,4 @@
-package policy.release.signature
+package policy.release.commit_signature
 
 import data.lib
 

@@ -13,7 +13,7 @@ warn[result] {
 	signature := input.signatures[_]
 	email := split(signature, "@")
 	count(email) != 2
-	result := lib.result_helper(rego.metadata.chain(), [signature, input.body.Hash])
+	result := lib.result_helper(rego.metadata.chain(), [signature, input.body.sha])
 }
 
 # METADATA
@@ -31,7 +31,7 @@ warn[result] {
 	signature := input.signatures[_]
 	domain := split(signature, "@")
 	not known_domains(domain[1], rego.metadata.rule().custom.rule_data.allowed_email_domains)
-	result := lib.result_helper(rego.metadata.chain(), [signature, input.body.Hash])
+	result := lib.result_helper(rego.metadata.chain(), [signature, input.body.sha])
 }
 
 known_domains(domain, allowed_email_domains) {

@@ -20,38 +20,6 @@ Those policies are defined using the
 https://www.openpolicyagent.org/docs/latest/policy-language/[rego policy language]
 and are described here.
 
-== Release Policy
-
-These rules are applied to pipeline run attestations associated with
-container images built by HACBS.
-
-=== Commit Signature Rules
-
-[#disallowed_commit_signature_email]
-==== link:#disallowed_commit_signature_email[`disallowed_commit_signature_email`] Signatures is a valid email address
-
-Enterprise Contract verifies if a valid email address was used to sign a commit 
-
-* Path: `data.policy.release.commit_signature.warn`
-* Failure message: `Signature %s in commit %s is not a valid email address`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/commit/commit_signature.rego#L12[Source]
-
-[#disallowed_commit_signature_domain]
-==== link:#disallowed_commit_signature_domain[`disallowed_commit_signature_domain`] Signatures in a commit that are disallowed
-
-Enterprise Contract has a list of allowed domains that a commit can be signed
-off with.
-
-The allowed email domains are:
-
-----
-redhat.com
-----
-
-* Path: `data.policy.release.commit_signature.warn`
-* Failure message: `Signature %s in commit %s has disallowed domain`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/commit/commit_signature.rego#L30[Source]
-
 == Pipeline Policy
 
 These rules are applied to Tekton pipeline definitions.
@@ -157,6 +125,33 @@ attestation type. Currently there is only one attestation type supported,
 * Failure message: `Unknown attestation type '%s'`
 * https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_type.rego#L18[Source]
 
+=== Commit Signature Rules
+
+[#disallowed_commit_signature_email]
+==== link:#disallowed_commit_signature_email[`disallowed_commit_signature_email`] Signatures is a valid email address
+
+Enterprise Contract verifies if a valid email address was used to sign a commit 
+
+* Path: `data.policy.release.commit_signature.warn`
+* Failure message: `Signature %s in commit %s is not a valid email address`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/commit_signature.rego#L12[Source]
+
+[#disallowed_commit_signature_domain]
+==== link:#disallowed_commit_signature_domain[`disallowed_commit_signature_domain`] Signatures in a commit that are disallowed
+
+Enterprise Contract has a list of allowed domains that a commit can be signed
+off with.
+
+The allowed email domains are:
+
+----
+redhat.com
+----
+
+* Path: `data.policy.release.commit_signature.warn`
+* Failure message: `Signature %s in commit %s has disallowed domain`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/commit_signature.rego#L30[Source]
+
 === Not Useful Rules
 
 [#bad_day]
@@ -202,7 +197,7 @@ test result data.
 
 * Path: `data.policy.release.test.deny`
 * Failure message: `No test data found`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L16[Source]
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/test.rego#L15[Source]
 
 [#test_results_missing]
 ==== link:#test_results_missing[`test_results_missing`] Test data is missing the results key

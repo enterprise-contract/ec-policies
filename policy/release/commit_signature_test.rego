@@ -3,11 +3,11 @@ package policy.release.commit_signature
 import data.lib
 
 mock_data(signatures) = d {
-	d := {"body": {"Hash": ["nm32n5235"]}, "signatures": signatures}
+	d := {"body": {"sha": "nm32n5235"}, "signatures": signatures}
 }
 
 test_bad_email_format {
-	expected_msg := "Signature ecredhat.com in commit [\"nm32n5235\"] is not a valid email address"
+	expected_msg := "Signature ecredhat.com in commit nm32n5235 is not a valid email address"
 	lib.assert_equal(warn, {{
 		"code": "disallowed_commit_signature_email",
 		"msg": expected_msg,
@@ -20,7 +20,7 @@ test_good_email_format {
 }
 
 test_bad_domain {
-	expected_msg := "Signature ec@evil.com in commit [\"nm32n5235\"] has disallowed domain"
+	expected_msg := "Signature ec@evil.com in commit nm32n5235 has disallowed domain"
 	lib.assert_equal(warn, {{
 		"code": "disallowed_commit_signature_domain",
 		"msg": expected_msg,

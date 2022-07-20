@@ -31,9 +31,9 @@ test_failing_without_skipping {
 			"effective_on": "2022-01-01T00:00:00Z",
 		},
 		{
-			"code": "disallowed_no_signature", 
-			"effective_on": "2022-01-01T00:00:00Z", 
-			"msg": "Commit does not contain a signature"
+			"code": "disallowed_no_signature",
+			"effective_on": "2022-01-01T00:00:00Z",
+			"msg": "Commit does not contain a signature",
 		},
 	}) with data.config.policy as nonblocking_only(set())
 }

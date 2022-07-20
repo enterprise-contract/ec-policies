@@ -69,6 +69,18 @@ container images built by HACBS.
 
 === Attestation Task Bundle Rules
 
+[#unacceptable_task_bundle]
+==== link:#unacceptable_task_bundle[`unacceptable_task_bundle`] Task bundle is not acceptable
+
+Check if the Tekton Bundle used for the Tasks in the attestation
+are acceptable given the tracked effective_on date. See the file
+data/acceptable_tekton_bundles.yml in this git repository for a
+full list of acceptable Tekton Bundles.
+
+* Path: `data.policy.release.attestation_task_bundle.deny`
+* Failure message: `Task '%s' uses an unacceptable task bundle '%s'`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L73[Source]
+
 [#disallowed_task_reference]
 ==== link:#disallowed_task_reference[`disallowed_task_reference`] Task bundle was not used or is not defined
 
@@ -100,18 +112,6 @@ full list of acceptable Tekton Bundles.
 * Failure message: `Task '%s' uses an out of date task bundle '%s'`
 * https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L49[Source]
 
-[#unacceptable_task_bundle]
-==== link:#unacceptable_task_bundle[`unacceptable_task_bundle`] Task bundle is not acceptable
-
-Check if the Tekton Bundle used for the Tasks in the attestation
-are acceptable given the tracked effective_on date. See the file
-data/acceptable_tekton_bundles.yml in this git repository for a
-full list of acceptable Tekton Bundles.
-
-* Path: `data.policy.release.attestation_task_bundle.warn`
-* Failure message: `Task '%s' uses an unacceptable task bundle '%s'`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L73[Source]
-
 === Attestation Type Rules
 
 [#unknown_att_type]
@@ -127,14 +127,23 @@ attestation type. Currently there is only one attestation type supported,
 
 === Commit Signature Rules
 
+[#disallowed_no_signature]
+==== link:#disallowed_no_signature[`disallowed_no_signature`] Signatures does not exist
+
+Enterprise Contract verifies if a valid email address was used to sign a commit 
+
+* Path: `data.policy.release.commit_signature.deny`
+* Failure message: `Commit does not contain a signature`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/commit_signature.rego#L12[Source]
+
 [#disallowed_commit_signature_email]
 ==== link:#disallowed_commit_signature_email[`disallowed_commit_signature_email`] Signatures is a valid email address
 
 Enterprise Contract verifies if a valid email address was used to sign a commit 
 
-* Path: `data.policy.release.commit_signature.warn`
+* Path: `data.policy.release.commit_signature.deny`
 * Failure message: `Signature %s in commit %s is not a valid email address`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/commit_signature.rego#L12[Source]
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/commit_signature.rego#L25[Source]
 
 [#disallowed_commit_signature_domain]
 ==== link:#disallowed_commit_signature_domain[`disallowed_commit_signature_domain`] Signatures in a commit that are disallowed
@@ -148,9 +157,9 @@ The allowed email domains are:
 redhat.com
 ----
 
-* Path: `data.policy.release.commit_signature.warn`
+* Path: `data.policy.release.commit_signature.deny`
 * Failure message: `Signature %s in commit %s has disallowed domain`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/commit_signature.rego#L30[Source]
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/commit_signature.rego#L43[Source]
 
 === Not Useful Rules
 

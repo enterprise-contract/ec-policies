@@ -70,7 +70,7 @@ warn[result] {
 #   short_name: unacceptable_task_bundle
 #   failure_msg: Task '%s' uses an unacceptable task bundle '%s'
 #
-warn[result] {
+deny[result] {
 	att := input.attestations[_]
 	task := att.predicate.buildConfig.tasks[_]
 	bundle := task.ref.bundle

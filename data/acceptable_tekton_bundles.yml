@@ -1,8 +1,5 @@
 pipeline-bundles:
   quay.io/redhat-appstudio/build-templates-bundle:
-  - digest: sha256:8b95ac43a9d194d97212cb67067ad6b0ea8f7abcdaf7a684f313cdfafcd2faa9
-    effective_on: "2022-08-19T00:00:00Z"
-    tag: 7151d2167bbb7a73af9f45049bba4e0e477f73f0
   - digest: sha256:aa896b510f25a71cbd41e1a051e109e8f918851213045934f998e39f75c50f6e
     effective_on: "2022-08-19T00:00:00Z"
     tag: 8213b2a36cbb64604491db3f4e72325c4bbb7cc3

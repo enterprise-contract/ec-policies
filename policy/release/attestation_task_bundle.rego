@@ -13,7 +13,7 @@ import data.lib.time as time_lib
 #   short_name: disallowed_task_reference
 #   failure_msg: Task '%s' does not contain a bundle reference
 #
-warn[result] {
+deny[result] {
 	task := lib.tasks_from_pipelinerun[_]
 	name := task.name
 	not task.ref.bundle
@@ -28,7 +28,7 @@ warn[result] {
 #   short_name: empty_task_bundle_reference
 #   failure_msg: Task '%s' uses an empty bundle image reference
 #
-warn[result] {
+deny[result] {
 	task := lib.tasks_from_pipelinerun[_]
 	name := task.name
 	task.ref.bundle == ""
@@ -46,7 +46,7 @@ warn[result] {
 #   short_name: out_of_date_task_bundle
 #   failure_msg: Task '%s' uses an out of date task bundle '%s'
 #
-warn[result] {
+deny[result] {
 	att := input.attestations[_]
 	task := att.predicate.buildConfig.tasks[_]
 	bundle := task.ref.bundle

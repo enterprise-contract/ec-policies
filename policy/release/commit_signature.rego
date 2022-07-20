@@ -2,7 +2,6 @@ package policy.release.commit_signature
 
 import data.lib
 
-
 # METADATA
 # title: Signatures does not exist
 # description: |-
@@ -11,6 +10,7 @@ import data.lib
 #   short_name: disallowed_no_signature
 #   failure_msg: Commit does not contain a signature
 deny[result] {
+	not count(lib.pipelinerun_attestations) > 0
 	not input.signatures
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
@@ -22,7 +22,7 @@ deny[result] {
 # custom:
 #   short_name: disallowed_commit_signature_email
 #   failure_msg: Signature %s in commit %s is not a valid email address
-warn[result] {
+deny[result] {
 	signature := input.signatures[_]
 	email := split(signature, "@")
 	count(email) != 2

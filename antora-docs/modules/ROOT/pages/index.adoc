@@ -107,7 +107,7 @@ container images built by HACBS.
 Check for existence of a task bundle. Enforcing this rule will
 fail the contract if the task is not called from a bundle.
 
-* Path: `data.policy.release.attestation_task_bundle.warn`
+* Path: `data.policy.release.attestation_task_bundle.deny`
 * Failure message: `Task '%s' does not contain a bundle reference`
 * https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L16[Source]
 
@@ -116,7 +116,7 @@ fail the contract if the task is not called from a bundle.
 
 Check for a valid task bundle reference being used.
 
-* Path: `data.policy.release.attestation_task_bundle.warn`
+* Path: `data.policy.release.attestation_task_bundle.deny`
 * Failure message: `Task '%s' uses an empty bundle image reference`
 * https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L31[Source]
 
@@ -140,7 +140,7 @@ are acceptable given the tracked effective_on date. See the file
 data/acceptable_tekton_bundles.yml in this git repository for a
 full list of acceptable Tekton Bundles.
 
-* Path: `data.policy.release.attestation_task_bundle.warn`
+* Path: `data.policy.release.attestation_task_bundle.deny`
 * Failure message: `Task '%s' uses an unacceptable task bundle '%s'`
 * https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_task_bundle.rego#L73[Source]
 

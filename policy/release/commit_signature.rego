@@ -10,7 +10,7 @@ import data.lib
 # custom:
 #   short_name: disallowed_no_signature
 #   failure_msg: Commit does not contain a signature
-warn[result] {
+deny[result] {
 	not input.signatures
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
@@ -40,7 +40,7 @@ warn[result] {
 #   rule_data:
 #     allowed_email_domains:
 #     - redhat.com
-warn[result] {
+deny[result] {
 	signature := input.signatures[_]
 	domain := split(signature, "@")
 	not known_domains(domain[1], rego.metadata.rule().custom.rule_data.allowed_email_domains)

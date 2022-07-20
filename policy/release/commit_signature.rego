@@ -2,6 +2,19 @@ package policy.release.commit_signature
 
 import data.lib
 
+
+# METADATA
+# title: Signatures does not exist
+# description: |-
+#   Enterprise Contract verifies if a valid email address was used to sign a commit 
+# custom:
+#   short_name: disallowed_no_signature
+#   failure_msg: Commit does not contain a signature
+warn[result] {
+	not input.signatures
+	result := lib.result_helper(rego.metadata.chain(), [])
+}
+
 # METADATA
 # title: Signatures is a valid email address
 # description: |-

@@ -17,7 +17,7 @@ test_bundle_not_exists {
 	})
 
 	expected_msg := "Task 'my-task' does not contain a bundle reference"
-	lib.assert_equal(warn, {{
+	lib.assert_equal(deny, {{
 		"code": "disallowed_task_reference",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -33,7 +33,7 @@ test_bundle_not_exists_emtpy_string {
 	})
 
 	expected_msg := sprintf("Task '%s' has disallowed bundle image '%s'", [name, image])
-	lib.assert_equal(warn, {{
+	lib.assert_equal(deny, {{
 		"code": "disallowed_task_bundle",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -53,7 +53,7 @@ test_bundle_reference_not_valid {
 	})
 
 	expected_msg := sprintf("Task '%s' has disallowed bundle image '%s'", [name, prefix[0]])
-	lib.assert_equal(warn, {{
+	lib.assert_equal(deny, {{
 		"code": "disallowed_task_bundle",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -71,5 +71,5 @@ test_bundle_reference_valid {
 		},
 	})
 
-	lib.assert_empty(warn) with input.attestations as d
+	lib.assert_empty(deny) with input.attestations as d
 }

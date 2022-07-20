@@ -11,7 +11,7 @@ import data.lib
 #   short_name: disallowed_task_reference
 #   failure_msg: Task '%s' does not contain a bundle reference
 #
-warn[result] {
+deny[result] {
 	task := lib.tasks_from_pipelinerun[_]
 	name := task.name
 	not task.ref.bundle
@@ -32,7 +32,7 @@ warn[result] {
 #     - quay.io/redhat-appstudio/hacbs-templates-bundle
 #     - quay.io/redhat-appstudio/appstudio-tasks
 #
-warn[result] {
+deny[result] {
 	task := lib.tasks_from_pipelinerun[_]
 	name := task.name
 	bundle := split(task.ref.bundle, ":")

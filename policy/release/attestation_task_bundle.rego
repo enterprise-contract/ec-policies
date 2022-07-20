@@ -13,7 +13,7 @@ import data.lib.time as time_lib
 #   short_name: disallowed_task_reference
 #   failure_msg: Task '%s' does not contain a bundle reference
 #
-warn[result] {
+deny[result] {
 	task := lib.tasks_from_pipelinerun[_]
 	name := task.name
 	not task.ref.bundle
@@ -28,7 +28,7 @@ warn[result] {
 #   short_name: empty_task_bundle_reference
 #   failure_msg: Task '%s' uses an empty bundle image reference
 #
-warn[result] {
+deny[result] {
 	task := lib.tasks_from_pipelinerun[_]
 	name := task.name
 	task.ref.bundle == ""
@@ -51,7 +51,7 @@ warn[result] {
 	task := att.predicate.buildConfig.tasks[_]
 	bundle := task.ref.bundle
 	ref := image.parse(bundle)
-	collection := _collection("task-bundles", ref)
+	collection := _collection(ref)
 
 	collection[match_index].digest == ref.digest
 	match_index > 0
@@ -70,12 +70,12 @@ warn[result] {
 #   short_name: unacceptable_task_bundle
 #   failure_msg: Task '%s' uses an unacceptable task bundle '%s'
 #
-warn[result] {
+deny[result] {
 	att := input.attestations[_]
 	task := att.predicate.buildConfig.tasks[_]
 	bundle := task.ref.bundle
 	ref := image.parse(bundle)
-	collection := _collection("task-bundles", ref)
+	collection := _collection(ref)
 
 	matches := [record |
 		record := collection[_]
@@ -90,8 +90,8 @@ warn[result] {
 # _collection returns an array representing the full list of records to
 # be taken into consideration when evaluating policy rules for bundle
 # references. Any irrelevant records are filtered out from the array.
-_collection(type, ref) = items {
-	full_collection := data.acceptable_tekton_bundles[type][ref.repo]
+_collection(ref) = items {
+	full_collection := data["task-bundles"][ref.repo]
 	stream_collection := _collection_by_stream(full_collection, ref)
 	items := time_lib.acceptable_items(stream_collection)
 }

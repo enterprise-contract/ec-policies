@@ -8,7 +8,7 @@ mock_data(signatures) = d {
 
 test_bad_email_format {
 	expected_msg := "Signature ecredhat.com in commit nm32n5235 is not a valid email address"
-	lib.assert_equal(warn, {{
+	lib.assert_equal(deny, {{
 		"code": "disallowed_commit_signature_email",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -16,12 +16,12 @@ test_bad_email_format {
 }
 
 test_good_email_format {
-	lib.assert_equal(warn, set()) with input as mock_data(["ec@redhat.com"])
+	lib.assert_equal(deny, set()) with input as mock_data(["ec@redhat.com"])
 }
 
 test_bad_domain {
 	expected_msg := "Signature ec@evil.com in commit nm32n5235 has disallowed domain"
-	lib.assert_equal(warn, {{
+	lib.assert_equal(deny, {{
 		"code": "disallowed_commit_signature_domain",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -29,10 +29,10 @@ test_bad_domain {
 }
 
 test_good_domain {
-	lib.assert_equal(warn, set()) with input as mock_data(["ec@redhat.com"])
+	lib.assert_equal(deny, set()) with input as mock_data(["ec@redhat.com"])
 }
 
 test_domain_case {
-	lib.assert_equal(warn, set()) with input as mock_data(["ec@REDHAT.com"])
-	lib.assert_equal(warn, set()) with input as mock_data(["ec@redhat.com"])
+	lib.assert_equal(deny, set()) with input as mock_data(["ec@REDHAT.com"])
+	lib.assert_equal(deny, set()) with input as mock_data(["ec@redhat.com"])
 }

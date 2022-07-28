@@ -1,0 +1,43 @@
+---
+name: docs
+
+'on':
+  push:
+    branches:
+      - main
+
+jobs:
+  antora:
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: .cache
+          key: ${{ runner.os }}-antora-cache
+
+      - name: Run Antora
+        uses: kameshsampath/antora-site-action@3fcb79815255c9d39edf9013aae94c401b536df6
+        with:
+          antora_playbook: antora-playbook.yml
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v1
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: 'public'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1

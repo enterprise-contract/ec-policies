@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-COVERAGE = @opa test . --threshold 100 2>&1 | sed -e '/^Code coverage/!d' -e 's/^/ERROR: /'; exit $${PIPESTATUS[0]}
+COVERAGE = @opa test . --ignore '.*' --threshold 100 2>&1 | sed -e '/^Code coverage/!d' -e 's/^/ERROR: /'; exit $${PIPESTATUS[0]}
 
 ##@ General
 
@@ -39,14 +39,14 @@ help: ## Display this help.
 ##@ Development
 
 test: ## Run all tests in verbose mode and check coverage
-	@opa test . -v
+	@opa test . -v --ignore '.*'
 	$(COVERAGE)
 
 coverage: ## Show which lines of rego are not covered by tests
-	@opa test . --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null"
+	@opa test . --ignore '.*' --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null"
 
 quiet-test: ## Run all tests in quiet mode and check coverage
-	@opa test .
+	@opa test . --ignore '.*'
 	$(COVERAGE)
 
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
@@ -83,7 +83,7 @@ amend-fmt: fmt ## Apply default formatting to all rego files then amend the curr
 	git commit --amend --no-edit
 
 opa-check: ## Check Rego files with strict mode (https://www.openpolicyagent.org/docs/latest/strict/)
-	@opa check . --strict
+	@opa check . --strict --ignore '.*'
 
 conventions-check: ## Check Rego policy files for convention violations
 	@OUT=$$(opa eval --data checks --data $(POLICY_DIR)/lib --input <(opa inspect . -a -f json) 'data.checks.violation[_]' --format raw); \

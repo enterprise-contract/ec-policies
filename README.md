@@ -47,7 +47,8 @@ themselves. Update the docs like this:
 
     make build-docs
 
-Those docs are imported automatically into the official [HACBS Documentation][hacbsdocs].
+Those docs are published [here][docs] and imported automatically into the
+official [HACBS Documentation][hacbsdocs].
 
 ### Running tests
 
@@ -140,6 +141,7 @@ See also
 [gomplate]: https://docs.gomplate.ca/
 [entr]: https://github.com/eradman/entr
 [testing]: https://www.openpolicyagent.org/docs/latest/policy-testing/
+[docs]: https://hacbs-contract.github.io/ec-policies/
 [hacbsdocs]: https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation/ec-policies/index.html
 [taskdef]: https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml
 [contract]: https://github.com/hacbs-contract

@@ -89,6 +89,10 @@ conventions-check: ## Check Rego policy files for convention violations
 	@OUT=$$(opa eval --data checks --data $(POLICY_DIR)/lib --input <(opa inspect . -a -f json) 'data.checks.violation[_]' --format raw); \
 	if [[ -n "$${OUT}" ]]; then echo "$${OUT}"; exit 1; fi
 
+ready: amend-fmt amend-docs ## Amend current commit with fmt and docs changes
+
+##@ Documentation
+
 DOCSRC=./docsrc
 DOCS_TMP_JSON=$(DOCSRC)/annotations-data.json
 # Asciidoc format for Antora
@@ -113,7 +117,28 @@ docs-build: build-docs
 docs-amend: amend-docs
 fmt-amend: amend-fmt
 
-ready: amend-fmt amend-docs ## Amend current commit with fmt and docs changes
+.ONESHELL:
+.SHELLFLAGS=-e -c
+docs-build-local: ## Builds the Antora documentation with the local changes
+	@local_playbook=$$(mktemp --suffix=.yaml --tmpdir=.)
+	@function cleanup() {
+		rm "$${local_playbook}"
+	}
+	@trap cleanup EXIT
+# Replaces the source to point to local files and builds the HTML files to the `public` directory
+	@yq -e '.content.sources[0].url="." | .content.sources[0].branches="HEAD"' antora-playbook.yml > "$${local_playbook}"
+	@npm exec -y --quiet antora generate "$${local_playbook}"
+
+# Do `dnf install entr` then run this a separate terminal or split window while hacking
+.ONESHELL:
+.SHELLFLAGS=-e -c
+docs-preview: ## Run the preview of the website, reload to see the changes
+	@$(MAKE) docs-build-local
+	@xdg-open public/index.html || true
+	@trap exit SIGINT
+	while true; do
+	  git ls-files --exclude-standard -c -o 'antora-*' | entr -d -c $(MAKE) --no-print-directory docs-build-local
+	done
 
 ##@ CI
 
@@ -303,4 +328,4 @@ install-tools: install-conftest install-opa install-gomplate ## Install all thre
 .PHONY: help test coverage quiet-test live-test fmt fmt-check docs-check ci clean-data \
   dummy-config fetch-att fetch-pipeline check-with-opa check-pipeline check-release \
   install-opa install-gomplate conftest-test install-conftest install-tools \
-  build-docs docs-build docs-amend amend-docs fmt-amend amend-fmt ready
+  build-docs docs-build docs-amend amend-docs docs-build-local docs-preview fmt-amend amend-fmt ready

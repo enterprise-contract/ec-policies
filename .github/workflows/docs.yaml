@@ -26,9 +26,7 @@ jobs:
           key: ${{ runner.os }}-antora-cache
 
       - name: Run Antora
-        uses: kameshsampath/antora-site-action@3fcb79815255c9d39edf9013aae94c401b536df6
-        with:
-          antora_playbook: antora-playbook.yml
+        run: make docs-render
 
       - name: Setup Pages
         uses: actions/configure-pages@v1

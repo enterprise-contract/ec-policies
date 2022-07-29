@@ -10,9 +10,9 @@ site:
   robots: allow
 content:
   sources:
-    - url: https://github.com/hacbs-contract/ec-policies.git
+    - url: .
       start_path: antora-docs
-      branches: main
+      branches: HEAD
 ui:
   bundle:
     url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable

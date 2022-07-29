@@ -117,17 +117,8 @@ docs-build: build-docs
 docs-amend: amend-docs
 fmt-amend: amend-fmt
 
-.ONESHELL:
-.SHELLFLAGS=-e -c
-docs-build-local: ## Builds the Antora documentation with the local changes
-	@local_playbook=$$(mktemp --suffix=.yaml --tmpdir=.)
-	@function cleanup() {
-		rm "$${local_playbook}"
-	}
-	@trap cleanup EXIT
-# Replaces the source to point to local files and builds the HTML files to the `public` directory
-	@yq -e '.content.sources[0].url="." | .content.sources[0].branches="HEAD"' antora-playbook.yml > "$${local_playbook}"
-	@npm exec -y --quiet antora generate "$${local_playbook}"
+docs-render: ## Builds the Antora documentation with the local changes
+	@npm exec -y --quiet antora generate --clean --fetch antora-playbook.yml
 
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
 .ONESHELL:

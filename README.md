@@ -123,7 +123,7 @@ Then to verify the pipeline definition using the defined policies:
 Getting started for policy authors
 ----------------------------------
 
-See the [Policy Authoring](POLICY_AUTHORING.md) documentation for guidance on
+See the [Policy Authoring][authoring] documentation for guidance on
 contributing to the definition of policy rules.
 
 
@@ -147,3 +147,4 @@ See also
 [contract]: https://github.com/hacbs-contract
 [appstudio]: https://github.com/redhat-appstudio
 [builddefs]: https://github.com/redhat-appstudio/build-definitions
+[authoring]: https://hacbs-contract.github.io/ec-policies/ec-policies/authoring.html

@@ -1,1 +1,2 @@
-* xref:index.adoc[Main]
+* xref:index.adoc[Policies]
+* xref:authoring.adoc[Policy authoring]

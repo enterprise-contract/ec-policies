@@ -1,0 +1,22 @@
+---
+runtime:
+  cache_dir: ./.cache/antora
+  log:
+    failure_level: warn
+site:
+  title: Rego policies related to HACBS Enterprise Contract
+  url: https://hacbs-contract.github.io/ec-policies/
+  start_page: ec-policies::index.adoc
+  robots: allow
+content:
+  sources:
+    - url: https://github.com/hacbs-contract/ec-policies.git
+      start_path: antora-docs
+      branches: main
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+  supplemental_files: ./supplemental-ui
+output:
+  dir: ./public

@@ -1,2 +1,4 @@
 data/config.json
 input/
+public/
+.cache/

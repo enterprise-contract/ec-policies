@@ -1,2 +1,3 @@
 * xref:index.adoc[Policies]
+* xref:acceptable_bundles.adoc[Acceptable Bundles]
 * xref:authoring.adoc[Policy authoring]

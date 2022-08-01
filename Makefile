@@ -105,14 +105,29 @@ ready: fmt-amend docs-amend ## Amend current commit with fmt and docs changes
 
 DOCSRC=./docsrc
 DOCS_TMP_JSON=$(DOCSRC)/annotations-data.json
-# Asciidoc format for Antora
-DOCS_ADOC=./antora-docs/modules/ROOT/pages/index.adoc
-# (Only one generated doc file currently)
-DOCS_ALL=$(DOCS_ADOC)
+ACCEPTABLE_BUNDLES_YAML=$(DATA_DIR)/acceptable_tekton_bundles.yml
 
-build-docs: ## Generate documentation. Use this before commit if you modified any rules or annotations
-	@opa inspect --annotations --format json $(POLICY_DIR) > $(DOCS_TMP_JSON)
-	@gomplate -d rules=$(DOCS_TMP_JSON) -f $(DOCSRC)/$$( basename $(DOCS_ADOC) ).tmpl | cat -s > $(DOCS_ADOC)
+# Use gomplate to generate Asciidoc files as input for Antora
+# (For preview and to produce our local Github pages doc only.
+# The official HACBS Antora does its own import and docs build.)
+#
+DOCS_PAGES_DIR=./antora-docs/modules/ROOT/pages
+DOCS_ALL=\
+  $(DOCS_PAGES_DIR)/index.adoc\
+  $(DOCS_PAGES_DIR)/acceptable_bundles.adoc
+
+$(DOCS_TMP_JSON):
+	@opa inspect --annotations --format json $(POLICY_DIR) > $@
+
+$(DOCS_PAGES_DIR)/%.adoc: $(DOCSRC)/%.adoc.tmpl
+	@gomplate -d rules=$(DOCS_TMP_JSON) -d bundles=$(ACCEPTABLE_BUNDLES_YAML) -f $< | cat -s > $@
+
+.PHONY: docs-clean
+docs-clean:
+	@rm -rf $(DOCS_ALL) $(DOCS_TMP_JSON)
+
+.PHONY: docs-build
+docs-build: docs-clean $(DOCS_TMP_JSON) $(DOCS_ALL) ## Generate documentation. Use this before commit if you modified any rules or annotations
 	@rm $(DOCS_TMP_JSON)
 
 .PHONY: docs-amend
@@ -123,6 +138,8 @@ docs-amend: docs-build ## Update the docs and amend the current commit
 	git add $(DOCS_ALL)
 	git commit --amend --no-edit
 
+# Use Antora to build html from the Asciidoc files under antora-docs
+#
 .PHONY: docs-render
 docs-render: ## Builds the Antora documentation with the local changes
 	@npm exec -y --quiet antora generate --clean --fetch antora-playbook.yml
@@ -145,14 +162,14 @@ fmt-check: ## Check formatting of Rego files
 	@opa fmt . --list --fail >/dev/null 2>&1
 
 docs-check: ## Check if the generated docs are up to date
-	@cp $(DOCS_ADOC) $(DOCS_ADOC).check
+	@for f in $(DOCS_ALL); do cp $$f $$f.check; done
 	@$(MAKE) --no-print-directory docs-build
 	@if [[ -n $$( git diff --name-only -- $(DOCS_ALL) ) ]]; then \
-	  mv $(DOCS_ADOC).check $(DOCS_ADOC); \
+	  for f in $(DOCS_ALL); do mv $$f.check $$f; done; \
 	  echo "FAIL: A docs update is needed"; \
 	  exit 1; \
 	fi
-	@mv $(DOCS_ADOC).check $(DOCS_ADOC)
+	@for f in $(DOCS_ALL); do mv $$f.check $$f; done
 
 ci: conventions-check quiet-test opa-check fmt-check docs-check ## Runs all checks and tests
 

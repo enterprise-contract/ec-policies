@@ -39,9 +39,10 @@ deny[result] {
 # title: Task bundle is out of date
 # description: |-
 #   Check if the Tekton Bundle used for the Tasks in the attestation
-#   is the most recent acceptable one. See the file
-#   data/acceptable_tekton_bundles.yml in this git repository for a
-#   full list of acceptable Tekton Bundles.
+#   is the most recent acceptable one. See the list of acceptable
+#   task bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at
+#   link:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
+#   in this git repository.
 # custom:
 #   short_name: out_of_date_task_bundle
 #   failure_msg: Task '%s' uses an out of date task bundle '%s'
@@ -63,9 +64,10 @@ warn[result] {
 # title: Task bundle is not acceptable
 # description: |-
 #   Check if the Tekton Bundle used for the Tasks in the attestation
-#   are acceptable given the tracked effective_on date. See the file
-#   data/acceptable_tekton_bundles.yml in this git repository for a
-#   full list of acceptable Tekton Bundles.
+#   are acceptable given the tracked effective_on date. See the list of acceptable
+#   task bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at
+#   link:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
+#   in this git repository.
 # custom:
 #   short_name: unacceptable_task_bundle
 #   failure_msg: Task '%s' uses an unacceptable task bundle '%s'

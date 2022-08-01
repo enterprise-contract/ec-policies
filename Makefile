@@ -131,11 +131,11 @@ docs-render: ## Builds the Antora documentation with the local changes
 .ONESHELL:
 .SHELLFLAGS=-e -c
 docs-preview: ## Run the preview of the website, reload to see the changes
-	@$(MAKE) docs-build-local
+	@$(MAKE) --no-print-directory docs-build docs-render
 	@xdg-open public/index.html || true
 	@trap exit SIGINT
 	while true; do
-	  git ls-files --exclude-standard -c -o 'antora-*' | entr -d -c $(MAKE) --no-print-directory docs-build-local
+	  git ls-files --exclude-standard -c -o 'antora-*' 'policy/*.rego' | entr -d -c $(MAKE) --no-print-directory docs-build docs-render
 	done
 
 ##@ CI

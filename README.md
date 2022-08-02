@@ -45,7 +45,7 @@ The documentation in [`index.adoc`](antora-docs/modules/ROOT/pages/index.adoc) i
 [`index.adoc.tmpl`](docsrc/index.adoc.tmpl) and from the annotations in the rego files
 themselves. Update the docs like this:
 
-    make build-docs
+    make docs-build
 
 Those docs are published [here][docs] and imported automatically into the
 official [HACBS Documentation][hacbsdocs].

@@ -38,18 +38,22 @@ help: ## Display this help.
 
 ##@ Development
 
+.PHONY: test
 test: ## Run all tests in verbose mode and check coverage
 	@opa test . -v --ignore '.*'
 	$(COVERAGE)
 
+.PHONY: coverage
 coverage: ## Show which lines of rego are not covered by tests
 	@opa test . --ignore '.*' --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null"
 
+.PHONY: quiet-test
 quiet-test: ## Run all tests in quiet mode and check coverage
 	@opa test . --ignore '.*'
 	$(COVERAGE)
 
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
+.PHONY: live-test
 live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` needs to be installed
 	@trap exit SIGINT; \
 	while true; do \
@@ -68,55 +72,75 @@ live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` ne
 ## is a bug that will go away in a future release of conftest. So for now
 ## we will ignore the error and not use conftest verify in the CI.
 ##
+.PHONY: conftest-test
 conftest-test: ## Run all tests with conftest instead of opa
 	@conftest verify \
 	  --policy $(POLICY_DIR)
 
+.PHONY: fmt
 fmt: ## Apply default formatting to all rego files. Use before you commit
 	@opa fmt . --write
 
-amend-fmt: fmt ## Apply default formatting to all rego files then amend the current commit
+.PHONY: fmt-amend
+fmt-amend: fmt ## Apply default formatting to all rego files then amend the current commit
 	@git --no-pager diff $$(git ls-files '*.rego')
 	@echo "Amend commit '$$(git log -n1 --oneline)' with the above diff?"
 	@read -p "Hit enter to continue, Ctrl-C to abort."
 	git add $$(git ls-files '*.rego')
 	git commit --amend --no-edit
 
+.PHONY: opa-check
 opa-check: ## Check Rego files with strict mode (https://www.openpolicyagent.org/docs/latest/strict/)
 	@opa check . --strict --ignore '.*'
 
+.PHONY: conventions-check
 conventions-check: ## Check Rego policy files for convention violations
 	@OUT=$$(opa eval --data checks --data $(POLICY_DIR)/lib --input <(opa inspect . -a -f json) 'data.checks.violation[_]' --format raw); \
 	if [[ -n "$${OUT}" ]]; then echo "$${OUT}"; exit 1; fi
 
-ready: amend-fmt amend-docs ## Amend current commit with fmt and docs changes
+.PHONY: ready
+ready: fmt-amend docs-amend ## Amend current commit with fmt and docs changes
 
 ##@ Documentation
 
 DOCSRC=./docsrc
 DOCS_TMP_JSON=$(DOCSRC)/annotations-data.json
-# Asciidoc format for Antora
-DOCS_ADOC=./antora-docs/modules/ROOT/pages/index.adoc
-# (Only one generated doc file currently)
-DOCS_ALL=$(DOCS_ADOC)
+ACCEPTABLE_BUNDLES_YAML=$(DATA_DIR)/acceptable_tekton_bundles.yml
 
-build-docs: ## Generate documentation. Use this before commit if you modified any rules or annotations
-	@opa inspect --annotations --format json $(POLICY_DIR) > $(DOCS_TMP_JSON)
-	@gomplate -d rules=$(DOCS_TMP_JSON) -f $(DOCSRC)/$$( basename $(DOCS_ADOC) ).tmpl | cat -s > $(DOCS_ADOC)
+# Use gomplate to generate Asciidoc files as input for Antora
+# (For preview and to produce our local Github pages doc only.
+# The official HACBS Antora does its own import and docs build.)
+#
+DOCS_PAGES_DIR=./antora-docs/modules/ROOT/pages
+DOCS_ALL=\
+  $(DOCS_PAGES_DIR)/index.adoc\
+  $(DOCS_PAGES_DIR)/acceptable_bundles.adoc
+
+$(DOCS_TMP_JSON):
+	@opa inspect --annotations --format json $(POLICY_DIR) > $@
+
+$(DOCS_PAGES_DIR)/%.adoc: $(DOCSRC)/%.adoc.tmpl
+	@gomplate -d rules=$(DOCS_TMP_JSON) -d bundles=$(ACCEPTABLE_BUNDLES_YAML) -f $< | cat -s > $@
+
+.PHONY: docs-clean
+docs-clean:
+	@rm -rf $(DOCS_ALL) $(DOCS_TMP_JSON)
+
+.PHONY: docs-build
+docs-build: docs-clean $(DOCS_TMP_JSON) $(DOCS_ALL) ## Generate documentation. Use this before commit if you modified any rules or annotations
 	@rm $(DOCS_TMP_JSON)
 
-amend-docs: build-docs ## Update the docs and amend the current commit
+.PHONY: docs-amend
+docs-amend: docs-build ## Update the docs and amend the current commit
 	@git --no-pager diff $(DOCS_ALL)
 	@echo "Amend commit '$$(git log -n1 --oneline)' with the above diff?"
 	@read -p "Hit enter to continue, Ctrl-C to abort."
 	git add $(DOCS_ALL)
 	git commit --amend --no-edit
 
-# I always forget which one it is...
-docs-build: build-docs
-docs-amend: amend-docs
-fmt-amend: amend-fmt
-
+# Use Antora to build html from the Asciidoc files under antora-docs
+#
+.PHONY: docs-render
 docs-render: ## Builds the Antora documentation with the local changes
 	@npm exec -y --quiet antora generate --clean --fetch antora-playbook.yml
 
@@ -124,11 +148,11 @@ docs-render: ## Builds the Antora documentation with the local changes
 .ONESHELL:
 .SHELLFLAGS=-e -c
 docs-preview: ## Run the preview of the website, reload to see the changes
-	@$(MAKE) docs-build-local
+	@$(MAKE) --no-print-directory docs-build docs-render
 	@xdg-open public/index.html || true
 	@trap exit SIGINT
 	while true; do
-	  git ls-files --exclude-standard -c -o 'antora-*' | entr -d -c $(MAKE) --no-print-directory docs-build-local
+	  git ls-files --exclude-standard -c -o 'antora-*' 'policy/*.rego' | entr -d -c $(MAKE) --no-print-directory docs-build docs-render
 	done
 
 ##@ CI
@@ -138,14 +162,14 @@ fmt-check: ## Check formatting of Rego files
 	@opa fmt . --list --fail >/dev/null 2>&1
 
 docs-check: ## Check if the generated docs are up to date
-	@cp $(DOCS_ADOC) $(DOCS_ADOC).check
-	@$(MAKE) --no-print-directory build-docs
+	@for f in $(DOCS_ALL); do cp $$f $$f.check; done
+	@$(MAKE) --no-print-directory docs-build
 	@if [[ -n $$( git diff --name-only -- $(DOCS_ALL) ) ]]; then \
-	  mv $(DOCS_ADOC).check $(DOCS_ADOC); \
+	  for f in $(DOCS_ALL); do mv $$f.check $$f; done; \
 	  echo "FAIL: A docs update is needed"; \
 	  exit 1; \
 	fi
-	@mv $(DOCS_ADOC).check $(DOCS_ADOC)
+	@for f in $(DOCS_ALL); do mv $$f.check $$f; done
 
 ci: conventions-check quiet-test opa-check fmt-check docs-check ## Runs all checks and tests
 
@@ -153,13 +177,16 @@ ci: conventions-check quiet-test opa-check fmt-check docs-check ## Runs all chec
 
 ##@ Data helpers
 
+.PHONY: clean-input
 clean-input: ## Removes everything from the `./input` directory
 	@rm -rf $(INPUT_DIR)
 	@mkdir $(INPUT_DIR)
 
+.PHONY: clean-data
 clean-data: ## Removes ephemeral files from the `./data` directory
 	@rm -rf $(CONFIG_DATA_FILE)
 
+.PHONY: dummy-config
 dummy-config: ## Changes the configuration to mark the `not_useful` check as non-blocking to avoid a "feels like a bad day.." violation
 	@echo '{"config":{"policy":{"non_blocking_checks":["not_useful"]}}}' | jq > $(CONFIG_DATA_FILE)
 
@@ -177,6 +204,7 @@ ifndef IMAGE
   IMAGE="quay.io/lucarval/single-nodejs-app:demo"
 endif
 
+.PHONY: fetch-att
 fetch-att: clean-input ## Fetches attestation data for IMAGE, use `make fetch-att IMAGE=<ref>`. Note: This is compatible with the 'verify-enterprise-contract' task
 	cosign download attestation $(IMAGE) | \
 	  jq -s '{ "attestations": [.[].payload | @base64d | fromjson] }' > $(INPUT_FILE)
@@ -190,6 +218,7 @@ ifndef PIPELINE
   PIPELINE=s2i-nodejs -n openshift
 endif
 
+.PHONY: fetch-pipeline
 fetch-pipeline: clean-input ## Fetches pipeline data for PIPELINE from your local cluster, use `make fetch-pipeline PIPELINE=<name>`
 	oc get pipeline $(PIPELINE) -o json > $(INPUT_FILE)
 
@@ -209,6 +238,7 @@ PIPELINE_NAMESPACE=pipeline.main
 POLICY_DIR=./policy
 OPA_FORMAT=pretty
 
+.PHONY: check-release
 check-release: ## Run policy evaluation for release
 	@conftest test $(INPUT_FILE) \
 	  --namespace $(RELEASE_NAMESPACE) \
@@ -217,6 +247,7 @@ check-release: ## Run policy evaluation for release
 	  --no-fail \
 	  --output json
 
+.PHONY: check-pipeline
 check-pipeline: ## Run policy evaluation for pipeline definition
 	@conftest test $(INPUT_FILE) \
 	  --namespace $(PIPELINE_NAMESPACE) \
@@ -225,10 +256,12 @@ check-pipeline: ## Run policy evaluation for pipeline definition
 	  --no-fail \
 	  --output json
 
+.PHONY: check
 check: check-release
 
 #--------------------------------------------------------------------
 
+.PHONY: check-release-opa
 check-release-opa: ## Run policy evaluation for release using opa. Deprecated.
 	@opa eval \
 	  --input $(INPUT_FILE) \
@@ -237,6 +270,7 @@ check-release-opa: ## Run policy evaluation for release using opa. Deprecated.
 	  --format $(OPA_FORMAT) \
 	  data.$(RELEASE_NAMESPACE).deny
 
+.PHONY: check-pipeline-opa
 check-pipeline-opa: ## Run policy evaluation for pipeline using opa. Deprecated.
 	@opa eval \
 	  --input $(INPUT_FILE) \
@@ -264,6 +298,7 @@ ifndef CONFTEST_BIN
 endif
 CONFTEST_DEST=$(CONFTEST_BIN)/conftest
 
+.PHONY: install-conftest
 install-conftest: ## Install `conftest` CLI from GitHub releases
 	curl -s -L -O $(CONFTEST_URL)
 	echo "$(CONFTEST_SHA) $(CONFTEST_FILE)" | sha256sum --check
@@ -288,6 +323,7 @@ ifndef OPA_BIN
 endif
 OPA_DEST=$(OPA_BIN)/opa
 
+.PHONY: install-opa
 install-opa: ## Install `opa` CLI from GitHub releases
 	curl -s -L -O $(OPA_URL)
 	echo "$(OPA_SHA) $(OPA_FILE)" | sha256sum --check
@@ -305,6 +341,7 @@ ifndef GOMPLATE_BIN
 endif
 GOMPLATE_DEST=$(GOMPLATE_BIN)/gomplate
 
+.PHONY: install-gomplate
 install-gomplate: ## Install `gomplate` from GitHub releases
 	curl -s -L -O $(GOMPLATE_URL)
 	@mkdir -p $(GOMPLATE_BIN)
@@ -312,11 +349,5 @@ install-gomplate: ## Install `gomplate` from GitHub releases
 	chmod 755 $(GOMPLATE_DEST)
 	rm $(GOMPLATE_FILE)
 
+.PHONY: install-tools
 install-tools: install-conftest install-opa install-gomplate ## Install all three tools
-
-#--------------------------------------------------------------------
-
-.PHONY: help test coverage quiet-test live-test fmt fmt-check docs-check ci clean-data \
-  dummy-config fetch-att fetch-pipeline check-with-opa check-pipeline check-release \
-  install-opa install-gomplate conftest-test install-conftest install-tools \
-  build-docs docs-build docs-amend amend-docs docs-build-local docs-preview fmt-amend amend-fmt ready

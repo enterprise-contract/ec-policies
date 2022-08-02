@@ -1,0 +1,58 @@
+////
+This content is automatically generated from a template, see
+https://github.com/hacbs-contract/ec-policies/tree/main/docsrc
+Do not edit it manually.
+////
+
+= Acceptable Bundles
+
+{{/* Currently only the task-bundles are relevant for EC policies so pick out those only */}}
+{{ range $bundle_type, $repos := (datasource "bundles") | coll.Pick "task-bundles" }}
+
+{{/* Either "Pipeline Bundles" or "Task Bundles" */}}
+== {{ $bundle_type | regexp.Replace "-" " " | strings.Title }}
+
+{{ if eq $bundle_type "task-bundles" }}
+The Enterprise Contract requires that all HACBS pipelines use only tasks
+defined in these specific task bundles.
+
+{{ else if eq $bundle_type "pipeline-bundles" }}
+{{/* Add an explanation here if we decide to show them some day */}}
+
+{{ end }}
+
+{{ range $repo, $bundle_list := $repos }}
+{{ $is_quay := regexp.Match "^quay\\.io/" $repo }}
+{{ $quay_repo_url := $repo | regexp.Replace "^quay\\.io/" "quay.io/repository/" }}
+
+{{ if $is_quay -}}
+=== link:{{ $quay_repo_url }}[{{ $repo }}]
+{{ else }}
+=== link:{{ $repo }}[{{ $repo }}]
+{{ end }}
+
+[cols="2,5,2"]
+|===
+|*Digest*
+|*Tag*
+|*Effective*
+
+{{ range $bundle_list }}
+{{ $short_digest := (index (.digest | strings.Split ":") 1) | strings.Trunc 12 }}
+
+{{ if $is_quay -}}
+|link:https://{{ $quay_repo_url }}/manifest/{{ .digest }}[{{ $short_digest }}]
+{{- else -}}
+|{{ .digest }}
+{{- end }}
+{{ if $is_quay -}}
+|link:https://{{ $quay_repo_url }}?tab=tags&tag={{ .tag }}[{{ .tag }}]
+{{- else -}}
+|{{ .tag }}
+{{- end }}
+|{{ (time.Parse time.RFC3339 .effective_on).Format "2-Jan-2006"}}
+
+{{ end }}
+|===
+{{ end }}
+{{ end }}

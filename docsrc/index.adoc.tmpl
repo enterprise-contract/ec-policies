@@ -31,8 +31,8 @@ and are described here.
 {{ range $data | sort "key" }}
 {{ with .annotation }}
 
-{{ $p1 := (index (index .path 1) "value") }}
-{{ $p2 := (index (index .path 2) "value") }}
+{{ $p1 := (index .path 1).value }}
+{{ $p2 := (index .path 2).value }}
 
 {{/* Capture any package annotations */}}
 {{ if eq .annotations.scope "package" }}
@@ -60,7 +60,7 @@ These rules are applied to Tekton pipeline definitions.
 {{ end }}
 
 {{/* Show a heading for each separate package */}}
-{{ $p3 := (index (index .path 3) "value") }}
+{{ $p3 := (index .path 3).value }}
 {{ if ne $p3 $p3_stash }}
 === {{ $p3 | regexp.Replace "_" " " | strings.Title }} Rules
 {{ $p3_stash = $p3 }}

@@ -130,6 +130,9 @@ docs-clean:
 docs-build: docs-clean $(DOCS_TMP_JSON) $(DOCS_ALL) ## Generate documentation. Use this before commit if you modified any rules or annotations
 	@rm $(DOCS_TMP_JSON)
 
+.PHONY: docs-refresh
+docs-refresh: docs-build docs-render
+
 .PHONY: docs-amend
 docs-amend: docs-build ## Update the docs and amend the current commit
 	@git --no-pager diff $(DOCS_ALL)
@@ -148,11 +151,11 @@ docs-render: ## Builds the Antora documentation with the local changes
 .ONESHELL:
 .SHELLFLAGS=-e -c
 docs-preview: ## Run the preview of the website, reload to see the changes
-	@$(MAKE) --no-print-directory docs-build docs-render
+	@$(MAKE) --no-print-directory docs-refresh
 	@xdg-open public/index.html || true
 	@trap exit SIGINT
 	while true; do
-	  git ls-files --exclude-standard -c -o 'antora-*' 'policy/*.rego' | entr -d -c $(MAKE) --no-print-directory docs-build docs-render
+	  git ls-files --exclude-standard -c -o 'antora-*' 'policy/*.rego' 'docsrc/*' | entr -d -c $(MAKE) --no-print-directory docs-refresh
 	done
 
 ##@ CI

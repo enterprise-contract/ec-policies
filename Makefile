@@ -148,6 +148,7 @@ docs-render: ## Builds the Antora documentation with the local changes
 	@npm exec -y --quiet antora generate --clean --fetch antora-playbook.yml
 
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
+.PHONY: docs-preview
 .ONESHELL:
 .SHELLFLAGS=-e -c
 docs-preview: ## Run the preview of the website, reload to see the changes
@@ -160,10 +161,12 @@ docs-preview: ## Run the preview of the website, reload to see the changes
 
 ##@ CI
 
+.PHONY: fmt-check
 fmt-check: ## Check formatting of Rego files
 	@opa fmt . --list | xargs -r -n1 echo 'FAIL: Incorrect formatting found in'
 	@opa fmt . --list --fail >/dev/null 2>&1
 
+.PHONY: docs-check
 docs-check: ## Check if the generated docs are up to date
 	@for f in $(DOCS_ALL); do cp $$f $$f.check; done
 	@$(MAKE) --no-print-directory docs-build
@@ -174,6 +177,7 @@ docs-check: ## Check if the generated docs are up to date
 	fi
 	@for f in $(DOCS_ALL); do mv $$f.check $$f; done
 
+.PHONY: ci
 ci: conventions-check quiet-test opa-check fmt-check docs-check ## Runs all checks and tests
 
 #--------------------------------------------------------------------

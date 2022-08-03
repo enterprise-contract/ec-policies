@@ -11,8 +11,11 @@
 == {{ $bundle_type | regexp.Replace "-" " " | strings.Title }}
 
 {{ if eq $bundle_type "task-bundles" }}
+
 The Enterprise Contract requires that all HACBS pipelines use only tasks
-defined in these specific task bundles.
+defined in these specific task bundles. See also the
+xref:release_policy#unacceptable_task_bundle["Task bundle is not acceptable"] rule
+where this list is used.
 
 {{ else if eq $bundle_type "pipeline-bundles" }}
 {{/* Add an explanation here if we decide to show them some day */}}

@@ -11,7 +11,9 @@ Do not edit it manually.
 == Task Bundles
 
 The Enterprise Contract requires that all HACBS pipelines use only tasks
-defined in these specific task bundles.
+defined in these specific task bundles. See also the
+xref:release_policy#unacceptable_task_bundle["Task bundle is not acceptable"] rule
+where this list is used.
 
 === link:https://quay.io/repository/redhat-appstudio/appstudio-tasks[quay.io/redhat-appstudio/appstudio-tasks]
 

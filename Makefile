@@ -114,6 +114,8 @@ ACCEPTABLE_BUNDLES_YAML=$(DATA_DIR)/acceptable_tekton_bundles.yml
 DOCS_PAGES_DIR=./antora-docs/modules/ROOT/pages
 DOCS_ALL=\
   $(DOCS_PAGES_DIR)/index.adoc\
+  $(DOCS_PAGES_DIR)/release_policy.adoc\
+  $(DOCS_PAGES_DIR)/pipeline_policy.adoc\
   $(DOCS_PAGES_DIR)/acceptable_bundles.adoc
 
 $(DOCS_TMP_JSON):

@@ -2,27 +2,28 @@
 
 {{ template "templates/adoc_conf.adoc.tmpl" }}
 
-= HACBS Enterprise Contract Policies
+= About Enterprise Contract
 
-== About
+The HACBS Enterprise Contract is a set of tools for verifing the provenence of
+container images built in HACBS and validating them against a clearly defined
+policy.
 
-The HACBS Enterprise Contract is a Tekton task that can be used to verify the
-provenence of container images built in HACBS and validate them against a set of
-policies.
+The Enterprise Contract policy is defined using the
+https://www.openpolicyagent.org/docs/latest/policy-language/[rego policy
+language] and is described here in xref:release_policy.adoc[Release Policy] and
+xref:pipeline_policy.adoc[Pipeline Policy].
 
-Those policies are defined using the
-https://www.openpolicyagent.org/docs/latest/policy-language/[rego policy language]
-and are described here.
+== See Also
 
-{{ template "templates/rules.adoc.tmpl" "release" }}
-
-{{ template "templates/rules.adoc.tmpl" "pipeline" }}
-
-See Also
---------
+=== Additional Documentation
 
 * https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation/[HACBS Documentation]
-* https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml["Verify Enterprise Contract" task definition]
+* https://hacbs-contract.github.io/ec-cli/docs/ec/[EC CLI Documentation]
+
+=== Code
+
+* https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract-v2.yaml["Verify Enterprise Contract" task definition]
 * https://github.com/hacbs-contract/ec-policies[github.com/hacbs-contract/ec-policies]
+* https://github.com/hacbs-contract/ec-cli[github.com/hacbs-contract/ec-cli]
 * https://github.com/hacbs-contract[github.com/hacbs-contract]
 * https://github.com/redhat-appstudio[github.com/redhat-appstudio]

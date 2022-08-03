@@ -2,7 +2,6 @@
 called. Its value should be either "release" or "pipeline" */}}
 {{ $policy_type := . }}
 
-{{ $p2_stash := "" }}
 {{ $p3_stash := "" }}
 {{/* Empty by default, set to package annotations when encountered */}}
 {{ $package_annotations := dict }}
@@ -31,34 +30,16 @@ called. Its value should be either "release" or "pipeline" */}}
 the desired policy type, "release" or "pipeline" */}}
 {{ if or (not $policy_type) (eq $p2 $policy_type) }}
 
-{{/* Show a heading for "Release" or "Pipeline" */}}
-{{ if ne $p2 $p2_stash }}
-
-{{/* Skip if it's not the specified $p2 value */}}
-
-== {{ $p2 | strings.Title }} Policy
-
-{{/* Show an explanatory intro for "Release" or "Pipeline" */}}
-{{ if eq "release" $p2 }}
-These rules are applied to pipeline run attestations associated with
-container images built by HACBS.
-{{- else if eq "pipeline" $p2 }}
-These rules are applied to Tekton pipeline definitions.
-{{- end }}
-
-{{ $p2_stash = $p2 }}
-{{ end }}
-
 {{/* Show a heading for each separate package */}}
 {{ $p3 := (index .path 3).value }}
 {{ if ne $p3 $p3_stash }}
-=== {{ $p3 | regexp.Replace "_" " " | strings.Title }} Rules
+== {{ $p3 | regexp.Replace "_" " " | strings.Title }} Rules
 {{ $p3_stash = $p3 }}
 {{ end }}
 
 {{ $name := .annotations.custom.short_name }}
 [#{{ $name }}]
-==== link:#{{ $name }}[`{{ $name }}`] {{ .annotations.title }}
+=== link:#{{ $name }}[`{{ $name }}`] {{ .annotations.title }}
 
 {{.annotations.description}}
 

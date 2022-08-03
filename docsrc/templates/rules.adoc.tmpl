@@ -37,11 +37,15 @@ the desired policy type, "release" or "pipeline" */}}
 {{ $p3_stash = $p3 }}
 {{ end }}
 
+{{/* Detect if it's a warn or a deny based on the final item in .path */}}
+{{ $warn_or_deny := "" }}
+{{ range .path }}{{ $warn_or_deny = .value }}{{ end }}
+
 {{ $name := .annotations.custom.short_name }}
 [#{{ $name }}]
-=== link:#{{ $name }}[`{{ $name }}`] {{ .annotations.title }}
+=== link:#{{ $name }}[{{ .annotations.title }}]
 
-{{.annotations.description}}
+{{ .annotations.description }}
 
 {{/* Show rule data if there is any */}}
 {{ $has_package_rule_data := false }}
@@ -65,11 +69,12 @@ The {{ $key | strings.ReplaceAll "_" " " }} are:
 {{ end }}
 {{ end }}
 
-* Path: `{{ range $i, $v := .path }}{{ if ne 0 $i }}.{{ end }}{{ $v.value }}{{ end }}`
-* Failure message: `{{ .annotations.custom.failure_msg }}`
+* Rule type: [rule-type-indicator {{ $warn_or_deny }}]#{{ if eq $warn_or_deny "warn" }}WARNING{{ else }}FAILURE{{ end }}#
+* {{ if eq $warn_or_deny "warn" }}Warning{{ else }}Failure{{ end }} message: `{{ .annotations.custom.failure_msg }}`
+* Short name: `{{ $name }}`
 {{- if coll.Has .annotations.custom "effective_on" }}
 * Effective from: `{{ (time.Parse time.RFC3339 .annotations.custom.effective_on).Format time.RFC1123Z }}`{{ end }}
-* https://github.com/hacbs-contract/ec-policies/blob/main/{{ .location.file }}#L{{ .location.row }}[Source]
+* https://github.com/hacbs-contract/ec-policies/blob/main/{{ .location.file }}#L{{ .location.row }}[Source, window="_blank"]
 
 {{ end }}{{/* if and (eq $p2 $selected_policy_type) ... */}}
 {{ end }}{{/* if eq $p1 ... */}}

@@ -13,18 +13,19 @@ These rules are applied to Tekton pipeline definitions.
 == Basic Rules
 
 [#unexpected_kind]
-=== link:#unexpected_kind[`unexpected_kind`] Input data has unexpected kind
+=== link:#unexpected_kind[Input data has unexpected kind]
 
 A sanity check to confirm the input data has the kind "Pipeline"
 
-* Path: `data.policy.pipeline.basic.deny`
+* Rule type: [rule-type-indicator deny]#FAILURE#
 * Failure message: `Unexpected kind '%s'`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/basic.rego#L19[Source]
+* Short name: `unexpected_kind`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/basic.rego#L19[Source, window="_blank"]
 
 == Required Tasks Rules
 
 [#required_tasks]
-=== link:#required_tasks[`required_tasks`] Pipeline does not include all required check tasks
+=== link:#required_tasks[Pipeline does not include all required check tasks]
 
 Every build pipeline is expected to contain a set of checks and tests that
 are required by the Enterprise Contract. This rule confirms that the pipeline
@@ -44,7 +45,8 @@ sast-go
 sast-java-sec-check
 ----
 
-* Path: `data.policy.pipeline.required_tasks.deny`
+* Rule type: [rule-type-indicator deny]#FAILURE#
 * Failure message: `Required tasks %s were not found in the pipeline's task list`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/required_tasks.rego#L32[Source]
+* Short name: `required_tasks`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/pipeline/required_tasks.rego#L32[Source, window="_blank"]
 

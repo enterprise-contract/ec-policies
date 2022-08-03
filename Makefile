@@ -119,8 +119,14 @@ DOCS_ALL=\
 $(DOCS_TMP_JSON):
 	@opa inspect --annotations --format json $(POLICY_DIR) > $@
 
+# Beware vim .swp files in the templates directory will break this
 $(DOCS_PAGES_DIR)/%.adoc: $(DOCSRC)/%.adoc.tmpl
-	@gomplate -d rules=$(DOCS_TMP_JSON) -d bundles=$(ACCEPTABLE_BUNDLES_YAML) -f $< | cat -s > $@
+	@gomplate \
+	  --template templates=$(DOCSRC)/templates/ \
+	  --datasource rules=$(DOCS_TMP_JSON) \
+	  --datasource bundles=$(ACCEPTABLE_BUNDLES_YAML) \
+	  --file $< |
+	  cat -s > $@
 
 .PHONY: docs-clean
 docs-clean:

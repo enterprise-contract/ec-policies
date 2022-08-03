@@ -1,14 +1,8 @@
-////
-This content is automatically generated from a template, see
-https://github.com/hacbs-contract/ec-policies/tree/main/docsrc
-Do not edit it manually.
-////
+{{ template "templates/edit_warning.adoc.tmpl" }}
+
+{{ template "templates/adoc_conf.adoc.tmpl" }}
 
 = HACBS Enterprise Contract Policies
-
-:toc: left
-:icons: font
-:numbered:
 
 == About
 
@@ -20,90 +14,9 @@ Those policies are defined using the
 https://www.openpolicyagent.org/docs/latest/policy-language/[rego policy language]
 and are described here.
 
-{{ $p2_stash := "" }}
-{{ $p3_stash := "" }}
-{{/* Empty by default, set to package annotations when encountered */}}
-{{ $package_annotations := dict }}
-{{ $data := slice }}
-{{- range (datasource "rules").annotations }}
-  {{- $data = $data | append (dict "key" (printf "%s:%d" .location.file .location.row) "annotation" .) }}
-{{ end }}
-{{ range $data | sort "key" }}
-{{ with .annotation }}
+{{ template "templates/rules.adoc.tmpl" "release" }}
 
-{{ $p1 := (index .path 1).value }}
-{{ $p2 := (index .path 2).value }}
-
-{{/* Capture any package annotations */}}
-{{ if eq .annotations.scope "package" }}
-{{ $package_annotations = .annotations }}
-{{ end }}
-{{/* Skip annotations that are not rule annotations */}}
-{{ if eq .annotations.scope "rule" }}
-{{/* Skip rules that are not under data.policy */}}
-{{ if eq $p1 "policy" }}
-
-{{/* Show a heading for "Release" or "Pipeline" */}}
-{{ if ne $p2 $p2_stash }}
-
-== {{ $p2 | strings.Title }} Policy
-
-{{/* Show an explanatory intro for "Release" or "Pipeline" */}}
-{{ if eq "release" $p2 }}
-These rules are applied to pipeline run attestations associated with
-container images built by HACBS.
-{{- else if eq "pipeline" $p2 }}
-These rules are applied to Tekton pipeline definitions.
-{{- end }}
-
-{{ $p2_stash = $p2 }}
-{{ end }}
-
-{{/* Show a heading for each separate package */}}
-{{ $p3 := (index .path 3).value }}
-{{ if ne $p3 $p3_stash }}
-=== {{ $p3 | regexp.Replace "_" " " | strings.Title }} Rules
-{{ $p3_stash = $p3 }}
-{{ end }}
-
-{{ $name := .annotations.custom.short_name }}
-[#{{ $name }}]
-==== link:#{{ $name }}[`{{ $name }}`] {{ .annotations.title }}
-
-{{.annotations.description}}
-
-{{/* Show rule data if there is any */}}
-{{ $has_package_rule_data := false }}
-{{ if has $package_annotations "custom" }}
-{{ $has_package_rule_data = and (has $package_annotations.custom $name) (has (index $package_annotations.custom $name) "rule_data") }}
-{{ end }}
-{{ if or (has .annotations.custom "rule_data") $has_package_rule_data }}
-{{ $rule_data := index .annotations.custom "rule_data" }}
-{{ if $has_package_rule_data }}
-{{ $rule_data = merge $rule_data (index $package_annotations.custom $name).rule_data }}
-{{ end }}
-{{ range $key, $values := $rule_data }}
-{{/* Assume the key name is descriptive enough for this sentence to make sense */}}
-The {{ $key | strings.ReplaceAll "_" " " }} are:
-
-----
-{{- range $values }}
-{{ . }}{{ end }}
-----
-
-{{ end }}
-{{ end }}
-
-* Path: `{{ range $i, $v := .path }}{{ if ne 0 $i }}.{{ end }}{{ $v.value }}{{ end }}`
-* Failure message: `{{ .annotations.custom.failure_msg }}`
-{{- if coll.Has .annotations.custom "effective_on" }}
-* Effective from: `{{ (time.Parse time.RFC3339 .annotations.custom.effective_on).Format time.RFC1123Z }}`{{ end }}
-* https://github.com/hacbs-contract/ec-policies/blob/main/{{ .location.file }}#L{{ .location.row }}[Source]
-
-{{ end }}{{/* if eq $p1 ... */}}
-{{ end }}{{/* if eq .annotations ... */}}
-{{ end }}{{/* with .annotation */}}
-{{ end }}{{/* range ... */}}
+{{ template "templates/rules.adoc.tmpl" "pipeline" }}
 
 See Also
 --------

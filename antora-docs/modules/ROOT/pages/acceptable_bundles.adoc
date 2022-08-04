@@ -4,20 +4,36 @@ https://github.com/hacbs-contract/ec-policies/tree/main/docsrc
 Do not edit it manually.
 ////
 
+:numbered:
+
 = Acceptable Bundles
 
 == Task Bundles
 
 The Enterprise Contract requires that all HACBS pipelines use only tasks
-defined in these specific task bundles.
+defined in these specific task bundles. See also the
+xref:release_policy#unacceptable_task_bundle["Task bundle is not acceptable"] rule
+where this list is used.
 
-=== link:quay.io/repository/redhat-appstudio/appstudio-tasks[quay.io/redhat-appstudio/appstudio-tasks]
+=== link:https://quay.io/repository/redhat-appstudio/appstudio-tasks[quay.io/redhat-appstudio/appstudio-tasks]
 
 [cols="2,5,2"]
 |===
 |*Digest*
 |*Tag*
 |*Effective*
+
+|link:https://quay.io/repository/redhat-appstudio/appstudio-tasks/manifest/sha256:f88103ae4bfec1115fb62bbc0a62d0db0bfd96caff342c9105b7e2514e0c500e[f88103ae4bfe]
+|link:https://quay.io/repository/redhat-appstudio/appstudio-tasks?tab=tags&tag=982ed370e257a888d3ae5dbc3ce26a347ef85d39-3[982ed370e257a888d3ae5dbc3ce26a347ef85d39-3]
+|3-Sep-2022
+
+|link:https://quay.io/repository/redhat-appstudio/appstudio-tasks/manifest/sha256:1c6a1118c52b40c6e870ba22d221e4c56588e376d04cc1debbd5bbed4fe20989[1c6a1118c52b]
+|link:https://quay.io/repository/redhat-appstudio/appstudio-tasks?tab=tags&tag=982ed370e257a888d3ae5dbc3ce26a347ef85d39-2[982ed370e257a888d3ae5dbc3ce26a347ef85d39-2]
+|3-Sep-2022
+
+|link:https://quay.io/repository/redhat-appstudio/appstudio-tasks/manifest/sha256:2e154f5614acc9d4305434a9f3a590e0a29a793c804ee6d53abc72d9b3ecd9c4[2e154f5614ac]
+|link:https://quay.io/repository/redhat-appstudio/appstudio-tasks?tab=tags&tag=982ed370e257a888d3ae5dbc3ce26a347ef85d39-1[982ed370e257a888d3ae5dbc3ce26a347ef85d39-1]
+|3-Sep-2022
 
 |link:https://quay.io/repository/redhat-appstudio/appstudio-tasks/manifest/sha256:f62b56df1807b017768d4a4595688d796fff0c86383f23cf42cbc8d71121b990[f62b56df1807]
 |link:https://quay.io/repository/redhat-appstudio/appstudio-tasks?tab=tags&tag=8e1bdea59a9cbf2a3d8199af74ed4cc1939eebf2-3[8e1bdea59a9cbf2a3d8199af74ed4cc1939eebf2-3]

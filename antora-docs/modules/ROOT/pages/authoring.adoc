@@ -1,5 +1,7 @@
 = Policy Authoring
 
+:numbered:
+
 This document is meant to assist policy authors in creating and maintaining the policy rules
 defined in this repository.
 

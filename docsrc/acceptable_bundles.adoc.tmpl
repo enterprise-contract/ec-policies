@@ -1,8 +1,6 @@
-////
-This content is automatically generated from a template, see
-https://github.com/hacbs-contract/ec-policies/tree/main/docsrc
-Do not edit it manually.
-////
+{{ template "templates/edit_warning.adoc.tmpl" }}
+
+{{ template "templates/adoc_conf.adoc.tmpl" }}
 
 = Acceptable Bundles
 
@@ -13,8 +11,11 @@ Do not edit it manually.
 == {{ $bundle_type | regexp.Replace "-" " " | strings.Title }}
 
 {{ if eq $bundle_type "task-bundles" }}
+
 The Enterprise Contract requires that all HACBS pipelines use only tasks
-defined in these specific task bundles.
+defined in these specific task bundles. See also the
+xref:release_policy#unacceptable_task_bundle["Task bundle is not acceptable"] rule
+where this list is used.
 
 {{ else if eq $bundle_type "pipeline-bundles" }}
 {{/* Add an explanation here if we decide to show them some day */}}
@@ -26,9 +27,9 @@ defined in these specific task bundles.
 {{ $quay_repo_url := $repo | regexp.Replace "^quay\\.io/" "quay.io/repository/" }}
 
 {{ if $is_quay -}}
-=== link:{{ $quay_repo_url }}[{{ $repo }}]
+=== link:https://{{ $quay_repo_url }}[{{ $repo }}]
 {{ else }}
-=== link:{{ $repo }}[{{ $repo }}]
+=== link:https://{{ $repo }}[{{ $repo }}]
 {{ end }}
 
 [cols="2,5,2"]

@@ -114,13 +114,21 @@ ACCEPTABLE_BUNDLES_YAML=$(DATA_DIR)/acceptable_tekton_bundles.yml
 DOCS_PAGES_DIR=./antora-docs/modules/ROOT/pages
 DOCS_ALL=\
   $(DOCS_PAGES_DIR)/index.adoc\
+  $(DOCS_PAGES_DIR)/release_policy.adoc\
+  $(DOCS_PAGES_DIR)/pipeline_policy.adoc\
   $(DOCS_PAGES_DIR)/acceptable_bundles.adoc
 
 $(DOCS_TMP_JSON):
 	@opa inspect --annotations --format json $(POLICY_DIR) > $@
 
+# Beware vim .swp files in the templates directory will break this
 $(DOCS_PAGES_DIR)/%.adoc: $(DOCSRC)/%.adoc.tmpl
-	@gomplate -d rules=$(DOCS_TMP_JSON) -d bundles=$(ACCEPTABLE_BUNDLES_YAML) -f $< | cat -s > $@
+	@gomplate \
+	  --template templates=$(DOCSRC)/templates/ \
+	  --datasource rules=$(DOCS_TMP_JSON) \
+	  --datasource bundles=$(ACCEPTABLE_BUNDLES_YAML) \
+	  --file $< |
+	  cat -s > $@
 
 .PHONY: docs-clean
 docs-clean:
@@ -129,6 +137,9 @@ docs-clean:
 .PHONY: docs-build
 docs-build: docs-clean $(DOCS_TMP_JSON) $(DOCS_ALL) ## Generate documentation. Use this before commit if you modified any rules or annotations
 	@rm $(DOCS_TMP_JSON)
+
+.PHONY: docs-refresh
+docs-refresh: docs-build docs-render
 
 .PHONY: docs-amend
 docs-amend: docs-build ## Update the docs and amend the current commit
@@ -145,22 +156,25 @@ docs-render: ## Builds the Antora documentation with the local changes
 	@npm exec -y --quiet antora generate --clean --fetch antora-playbook.yml
 
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
+.PHONY: docs-preview
 .ONESHELL:
 .SHELLFLAGS=-e -c
 docs-preview: ## Run the preview of the website, reload to see the changes
-	@$(MAKE) --no-print-directory docs-build docs-render
+	@$(MAKE) --no-print-directory docs-refresh
 	@xdg-open public/index.html || true
 	@trap exit SIGINT
 	while true; do
-	  git ls-files --exclude-standard -c -o 'antora-*' 'policy/*.rego' | entr -d -c $(MAKE) --no-print-directory docs-build docs-render
+	  git ls-files --exclude-standard -c -o 'antora-*' 'policy/*.rego' 'docsrc/*' | entr -d -c $(MAKE) --no-print-directory docs-refresh
 	done
 
 ##@ CI
 
+.PHONY: fmt-check
 fmt-check: ## Check formatting of Rego files
 	@opa fmt . --list | xargs -r -n1 echo 'FAIL: Incorrect formatting found in'
 	@opa fmt . --list --fail >/dev/null 2>&1
 
+.PHONY: docs-check
 docs-check: ## Check if the generated docs are up to date
 	@for f in $(DOCS_ALL); do cp $$f $$f.check; done
 	@$(MAKE) --no-print-directory docs-build
@@ -171,6 +185,7 @@ docs-check: ## Check if the generated docs are up to date
 	fi
 	@for f in $(DOCS_ALL); do mv $$f.check $$f; done
 
+.PHONY: ci
 ci: conventions-check quiet-test opa-check fmt-check docs-check ## Runs all checks and tests
 
 #--------------------------------------------------------------------

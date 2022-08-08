@@ -119,7 +119,8 @@ DOCS_ALL=\
   $(DOCS_PAGES_DIR)/acceptable_bundles.adoc
 
 $(DOCS_TMP_JSON):
-	@opa inspect --annotations --format json $(POLICY_DIR) > $@
+# Use jq sort_by here because otherwise the order is different every time
+	@opa inspect --annotations --format json $(POLICY_DIR) | jq -S '.annotations |= sort_by(.location.file, .location.row)' > $@
 
 # Beware vim .swp files in the templates directory will break this
 $(DOCS_PAGES_DIR)/%.adoc: $(DOCSRC)/%.adoc.tmpl

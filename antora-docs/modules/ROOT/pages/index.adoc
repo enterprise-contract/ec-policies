@@ -1,12 +1,6 @@
-////
-This content is automatically generated from a template, see
-https://github.com/hacbs-contract/ec-policies/tree/main/docsrc
-Do not edit it manually.
-////
+= About Enterprise Contract
 
 :numbered:
-
-= About Enterprise Contract
 
 The HACBS Enterprise Contract is a set of tools for verifing the provenence of
 container images built in HACBS and validating them against a clearly defined

@@ -20,3 +20,6 @@ ui:
   supplemental_files: ./supplemental-ui
 output:
   dir: ./public
+antora:
+  extensions:
+  - require: ./docsrc/antora-extension/index.js

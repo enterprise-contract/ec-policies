@@ -41,11 +41,11 @@ standard format run this before committing:
 
 ### Building the docs
 
-The documentation in [`index.adoc`](antora-docs/modules/ROOT/pages/index.adoc) is generated from
-[`index.adoc.tmpl`](docsrc/index.adoc.tmpl) and from the annotations in the rego files
-themselves. Update the docs like this:
+The documentation is built using Antora. Install Antora as per [the
+instructions][antora] and then you should be able to build the docs like
+this:
 
-    make docs-build
+    make docs-refresh
 
 Those docs are published [here][docs] and imported automatically into the
 official [HACBS Documentation][hacbsdocs].
@@ -148,3 +148,4 @@ See also
 [appstudio]: https://github.com/redhat-appstudio
 [builddefs]: https://github.com/redhat-appstudio/build-definitions
 [authoring]: https://hacbs-contract.github.io/ec-policies/ec-policies/authoring.html
+[antora]: https://docs.antora.org/antora/latest/install-and-run-quickstart/

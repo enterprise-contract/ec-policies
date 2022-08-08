@@ -1,0 +1,30 @@
+= Acceptable Bundles
+
+:numbered:
+
+== Task Bundles
+
+The Enterprise Contract requires that all HACBS pipelines use only tasks
+defined in these specific task bundles. See also the
+xref:release_policy#unacceptable_task_bundle["Task bundle is not acceptable"] rule
+where this list is used.
+
+{{#each acceptableBundles}}
+
+=== link:{{ repoUrl @key }}[{{ @key }}, window="_blank"]
+
+[cols="2,5,2"]
+|===
+|*Digest*
+|*Tag*
+|*Effective*
+
+{{#each .}}
+|link:{{ digestUrl }}[{{ shortDigest }}, window="_blank"]
+|link:{{ tagUrl }}[{{ tag }}, window="_blank"]
+|{{ effective_on }}
+
+{{/each}}
+|===
+
+{{/each}}

@@ -1,0 +1,1149 @@
+{
+  "annotations": [
+    {
+      "annotations": {
+        "custom": {
+          "effective_on": "2001-02-03T00:00:00Z",
+          "scope": "package"
+        },
+        "scope": "package"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/lib/time_test.rego",
+        "row": 5
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "lib"
+        },
+        {
+          "type": "string",
+          "value": "time"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "effective_on": "2004-05-06T00:00:00Z"
+        },
+        "scope": "rule"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/lib/time_test.rego",
+        "row": 14
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "lib"
+        },
+        {
+          "type": "string",
+          "value": "time"
+        },
+        {
+          "type": "string",
+          "value": "test_when_rule_precedence"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Unexpected kind '%s'",
+          "short_name": "unexpected_kind"
+        },
+        "description": "A sanity check to confirm the input data has the kind \"Pipeline\"",
+        "scope": "rule",
+        "title": "Input data has unexpected kind"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/pipeline/basic.rego",
+        "row": 19
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "pipeline"
+        },
+        {
+          "type": "string",
+          "value": "basic"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Required tasks %s were not found in the pipeline's task list",
+          "rule_data": {
+            "required_task_refs": [
+              "clamav-scan",
+              "conftest-clair",
+              "get-clair-scan",
+              "sanity-inspect-image",
+              "sanity-label-check",
+              "sast-go",
+              "sast-java-sec-check"
+            ]
+          },
+          "short_name": "required_tasks"
+        },
+        "description": "Every build pipeline is expected to contain a set of checks and tests that\nare required by the Enterprise Contract. This rule confirms that the pipeline\ndefinition includes all the expected tasks.\n\nThe matching is done using the taskRef name rather than the pipeline task name.",
+        "scope": "rule",
+        "title": "Pipeline does not include all required check tasks"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/pipeline/required_tasks.rego",
+        "row": 32
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "pipeline"
+        },
+        {
+          "type": "string",
+          "value": "required_tasks"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Task '%s' does not contain a bundle reference",
+          "short_name": "disallowed_task_reference"
+        },
+        "description": "Check for existence of a task bundle. Enforcing this rule will\nfail the contract if the task is not called from a bundle.",
+        "scope": "rule",
+        "title": "Task bundle was not used or is not defined"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/attestation_task_bundle.rego",
+        "row": 16
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "attestation_task_bundle"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Task '%s' uses an empty bundle image reference",
+          "short_name": "empty_task_bundle_reference"
+        },
+        "description": "Check for a valid task bundle reference being used.",
+        "scope": "rule",
+        "title": "Task bundle reference is empty"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/attestation_task_bundle.rego",
+        "row": 31
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "attestation_task_bundle"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Task '%s' uses an out of date task bundle '%s'",
+          "short_name": "out_of_date_task_bundle"
+        },
+        "description": "Check if the Tekton Bundle used for the Tasks in the attestation\nis the most recent acceptable one. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.",
+        "scope": "rule",
+        "title": "Task bundle is out of date"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/attestation_task_bundle.rego",
+        "row": 50
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "attestation_task_bundle"
+        },
+        {
+          "type": "string",
+          "value": "warn"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Task '%s' uses an unacceptable task bundle '%s'",
+          "short_name": "unacceptable_task_bundle"
+        },
+        "description": "Check if the Tekton Bundle used for the Tasks in the attestation\nare acceptable given the tracked effective_on date. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.",
+        "scope": "rule",
+        "title": "Task bundle is not acceptable"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/attestation_task_bundle.rego",
+        "row": 75
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "attestation_task_bundle"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Unknown attestation type '%s'",
+          "short_name": "unknown_att_type"
+        },
+        "description": "A sanity check that the attestation found for the image has the expected\nattestation type. Currently there is only one attestation type supported,\n`https://in-toto.io/Statement/v0.1`.",
+        "scope": "rule",
+        "title": "Unknown attestation type found"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/attestation_type.rego",
+        "row": 18
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "attestation_type"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Commit does not contain authorization",
+          "short_name": "disallowed_no_authorization"
+        },
+        "description": "Enterprise Contract verifies if the build was authorized",
+        "scope": "rule",
+        "title": "Authorization does not exist"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/authorization.rego",
+        "row": 12
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "authorization"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Commit %s does not match authorized commit %s",
+          "short_name": "disallowed_commit_does_not_match"
+        },
+        "description": "Enterprise Contract verifies if an authorized commit was used as the source of a build",
+        "scope": "rule",
+        "title": "Authorized commit does not match"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/authorization.rego",
+        "row": 25
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "authorization"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Repo url %s does not match authorized repo url %s",
+          "short_name": "disallowed_repo_url_does_not_match"
+        },
+        "description": "Enterprise Contract verifies if an authorized repo url was used to build an image",
+        "scope": "rule",
+        "title": "Authorized repo url does not match"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/authorization.rego",
+        "row": 40
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "authorization"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "effective_on": "2000-01-01T00:00:00Z"
+        },
+        "scope": "package"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/examples/time_based.rego",
+        "row": 5
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "examples"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "time_based"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "effective_on": "2099-05-02T00:00:00Z"
+        },
+        "scope": "rule"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/examples/time_based.rego",
+        "row": 17
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "examples"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "time_based"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "scope": "rule"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/examples/time_based.rego",
+        "row": 26
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "examples"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "time_based"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "effective_on": "1970-01-01T01:00:00Z"
+        },
+        "scope": "rule"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/examples/time_based.rego",
+        "row": 35
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "examples"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "time_based"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Found Java dependencies from '%s', expecting to find only from '%s'",
+          "rule_data": {
+            "allowed_component_sources": [
+              "redhat",
+              "rebuilt"
+            ]
+          },
+          "short_name": "java_foreign_dependencies"
+        },
+        "description": "The SBOM_JAVA_COMPONENTS_COUNT TaskResult finds dependencies that have\noriginated from foreign repositories, i.e. ones that are not rebuilt or\nredhat.",
+        "scope": "rule",
+        "title": "Prevent Java builds from depending on foreign dependencies"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/java.rego",
+        "row": 19
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "java"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "effective_on": "2022-01-01T00:00:00Z",
+          "failure_msg": "It just feels like a bad day to do a release",
+          "short_name": "bad_day"
+        },
+        "description": "It's expected this rule will be skipped by policy configuration.\nThis rule is for demonstration and test purposes and should be deleted soon.",
+        "scope": "rule",
+        "title": "A dummy rule that always fails"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/not_useful.rego",
+        "row": 15
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "not_useful"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "effective_on": "2022-01-01T00:00:00Z"
+        },
+        "scope": "package"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/not_useful_test.rego",
+        "row": 4
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "not_useful"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Step %d in task '%s' has disallowed image ref '%s'",
+          "rule_data": {
+            "allowed_registry_prefixes": [
+              "quay.io/redhat-appstudio/",
+              "registry.access.redhat.com/",
+              "registry.redhat.io/"
+            ]
+          },
+          "short_name": "disallowed_task_step_image"
+        },
+        "description": "Enterprise Contract has a list of allowed registry prefixes. Each step in each\neach TaskRun must run on a container image with a url that matches one of the\nprefixes in the list.",
+        "scope": "rule",
+        "title": "Task steps ran on container images that are disallowed"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/step_image_registries.rego",
+        "row": 20
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "step_image_registries"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "tasks_required": {
+            "rule_data": {
+              "required_task_refs": [
+                "add-sbom-and-push",
+                "clamav-scan",
+                "deprecated-image-check",
+                "get-clair-scan",
+                "sanity-inspect-image",
+                "sanity-label-check",
+                "sanity-optional-label-check",
+                "sast-go"
+              ]
+            }
+          }
+        },
+        "scope": "package"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/tasks.rego",
+        "row": 14
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "tasks"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "No tasks found in PipelineRun attestation",
+          "short_name": "tasks_missing"
+        },
+        "description": "This policy enforces that at least one Task is present in the PipelineRun\nattestation.",
+        "scope": "rule",
+        "title": "No tasks run"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/tasks.rego",
+        "row": 34
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "tasks"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Required task(s) '%s' not found in the PipelineRun attestation",
+          "short_name": "tasks_required"
+        },
+        "description": "This policy enforces that the required set of tasks is run in a\nPipelineRun.",
+        "scope": "rule",
+        "title": "Required tasks not run"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/tasks.rego",
+        "row": 50
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "tasks"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "No test data found",
+          "short_name": "test_data_missing"
+        },
+        "description": "None of the tasks in the pipeline included a HACBS_TEST_OUTPUT\ntask result, which is where Enterprise Contract expects to find\ntest result data.",
+        "scope": "rule",
+        "title": "No test data found"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/test.rego",
+        "row": 16
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "test"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Found tests without results",
+          "short_name": "test_results_missing"
+        },
+        "description": "Each test result is expected to have a 'results' key. In at least\none of the HACBS_TEST_OUTPUT task results this key was not present.",
+        "scope": "rule",
+        "title": "Test data is missing the results key"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/test.rego",
+        "row": 30
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "test"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Test '%s' has unsupported result '%s'",
+          "rule_data": {
+            "supported_results": [
+              "SUCCESS",
+              "FAILURE",
+              "ERROR",
+              "SKIPPED"
+            ]
+          },
+          "short_name": "test_result_unsupported"
+        },
+        "description": "This policy expects a set of known/supported results in the test data\nIt is a failure if we encounter a result that is not supported.",
+        "scope": "rule",
+        "title": "Unsupported result in test data"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/test.rego",
+        "row": 51
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "test"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "The following tests did not complete successfully: %s",
+          "short_name": "test_result_failures"
+        },
+        "description": "Enterprise Contract requires that all the tests in the test results\nhave a successful result. A successful result is one that isn't a\n\"FAILURE\" or \"ERROR\". This will fail if any of the tests failed and\nthe failure message will list the names of the failing tests.",
+        "scope": "rule",
+        "title": "Test result is FAILURE or ERROR"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/test.rego",
+        "row": 74
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "test"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "The following tests were skipped: %s",
+          "short_name": "test_result_skipped"
+        },
+        "description": "Collects all tests that have their result set to \"SKIPPED\".",
+        "scope": "rule",
+        "title": "Some tests were skipped"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/test.rego",
+        "row": 103
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "test"
+        },
+        {
+          "type": "string",
+          "value": "warn"
+        }
+      ]
+    }
+  ],
+  "manifest": {
+    "revision": "",
+    "roots": [
+      ""
+    ]
+  },
+  "namespaces": {
+    "data.examples.release.hello_world": [
+      "policy/release/examples/hello_world.rego",
+      "policy/release/examples/hello_world_test.rego"
+    ],
+    "data.examples.release.time_based": [
+      "policy/release/examples/time_based.rego"
+    ],
+    "data.examples.release.time_based_test": [
+      "policy/release/examples/time_based_test.rego"
+    ],
+    "data.lib": [
+      "policy/lib/assertions.rego",
+      "policy/lib/assertions_test.rego",
+      "policy/lib/main_denies.rego",
+      "policy/lib/main_denies_test.rego",
+      "policy/lib/string_utils.rego",
+      "policy/lib/string_utils_test.rego",
+      "policy/release/lib/attestations.rego",
+      "policy/release/lib/attestations_test.rego"
+    ],
+    "data.lib.image": [
+      "policy/lib/image.rego",
+      "policy/lib/image_test.rego"
+    ],
+    "data.lib.time": [
+      "policy/lib/time.rego",
+      "policy/lib/time_test.rego"
+    ],
+    "data.pipeline.main": [
+      "policy/pipeline/main.rego",
+      "policy/pipeline/main_test.rego"
+    ],
+    "data.policy.pipeline.basic": [
+      "policy/pipeline/basic.rego",
+      "policy/pipeline/basic_test.rego"
+    ],
+    "data.policy.pipeline.required_tasks": [
+      "policy/pipeline/required_tasks.rego",
+      "policy/pipeline/required_tasks_test.rego"
+    ],
+    "data.policy.release.attestation_task_bundle": [
+      "policy/release/attestation_task_bundle.rego",
+      "policy/release/attestation_task_bundle_test.rego"
+    ],
+    "data.policy.release.attestation_type": [
+      "policy/release/attestation_type.rego",
+      "policy/release/attestation_type_test.rego"
+    ],
+    "data.policy.release.authorization": [
+      "policy/release/authorization.rego",
+      "policy/release/authorization_test.rego"
+    ],
+    "data.policy.release.java": [
+      "policy/release/java.rego",
+      "policy/release/java_test.rego"
+    ],
+    "data.policy.release.not_useful": [
+      "policy/release/not_useful.rego",
+      "policy/release/not_useful_test.rego"
+    ],
+    "data.policy.release.step_image_registries": [
+      "policy/release/step_image_registries.rego",
+      "policy/release/step_image_registries_test.rego"
+    ],
+    "data.policy.release.tasks": [
+      "policy/release/tasks.rego",
+      "policy/release/tasks_test.rego"
+    ],
+    "data.policy.release.test": [
+      "policy/release/test.rego",
+      "policy/release/test_test.rego"
+    ],
+    "data.release.main": [
+      "policy/release/main.rego",
+      "policy/release/main_test.rego"
+    ]
+  },
+  "signatures_config": {}
+}

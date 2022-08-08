@@ -99,62 +99,32 @@ conventions-check: ## Check Rego policy files for convention violations
 	if [[ -n "$${OUT}" ]]; then echo "$${OUT}"; exit 1; fi
 
 .PHONY: ready
-ready: fmt-amend docs-amend ## Amend current commit with fmt and docs changes
+ready: fmt-amend ## Amend current commit with fmt changes
 
 ##@ Documentation
 
-DOCSRC=./docsrc
-DOCS_TMP_JSON=$(DOCSRC)/annotations-data.json
-ACCEPTABLE_BUNDLES_YAML=$(DATA_DIR)/acceptable_tekton_bundles.yml
+ANTORA_DOCS=./antora-docs
+ANNOTATIONS_JSON=$(ANTORA_DOCS)/rule_annotations.json
 
-# Use gomplate to generate Asciidoc files as input for Antora
-# (For preview and to produce our local Github pages doc only.
-# The official HACBS Antora does its own import and docs build.)
-#
-DOCS_PAGES_DIR=./antora-docs/modules/ROOT/pages
-DOCS_ALL=\
-  $(DOCS_PAGES_DIR)/index.adoc\
-  $(DOCS_PAGES_DIR)/release_policy.adoc\
-  $(DOCS_PAGES_DIR)/pipeline_policy.adoc\
-  $(DOCS_PAGES_DIR)/acceptable_bundles.adoc
-
-$(DOCS_TMP_JSON):
+$(ANNOTATIONS_JSON):
 # Use jq sort_by here because otherwise the order is different every time
 	@opa inspect --annotations --format json $(POLICY_DIR) | jq -S '.annotations |= sort_by(.location.file, .location.row)' > $@
 
-# Beware vim .swp files in the templates directory will break this
-$(DOCS_PAGES_DIR)/%.adoc: $(DOCSRC)/%.adoc.tmpl
-	@gomplate \
-	  --template templates=$(DOCSRC)/templates/ \
-	  --datasource rules=$(DOCS_TMP_JSON) \
-	  --datasource bundles=$(ACCEPTABLE_BUNDLES_YAML) \
-	  --file $< |
-	  cat -s > $@
+.PHONY: clean-annotations
+clean-annotations:
+	@rm -f $(ANNOTATIONS_JSON)
 
-.PHONY: docs-clean
-docs-clean:
-	@rm -rf $(DOCS_ALL) $(DOCS_TMP_JSON)
-
-.PHONY: docs-build
-docs-build: docs-clean $(DOCS_TMP_JSON) $(DOCS_ALL) ## Generate documentation. Use this before commit if you modified any rules or annotations
-	@rm $(DOCS_TMP_JSON)
-
-.PHONY: docs-refresh
-docs-refresh: docs-build docs-render
-
-.PHONY: docs-amend
-docs-amend: docs-build ## Update the docs and amend the current commit
-	@git --no-pager diff $(DOCS_ALL)
-	@echo "Amend commit '$$(git log -n1 --oneline)' with the above diff?"
-	@read -p "Hit enter to continue, Ctrl-C to abort."
-	git add $(DOCS_ALL)
-	git commit --amend --no-edit
+.PHONY: annotations
+annotations: clean-annotations $(ANNOTATIONS_JSON) ## Refresh the rego annotations file
 
 # Use Antora to build html from the Asciidoc files under antora-docs
 #
 .PHONY: docs-render
 docs-render: ## Builds the Antora documentation with the local changes
-	@npm exec -y --quiet antora generate --clean --fetch antora-playbook.yml
+	@npm exec -y --quiet -- antora --stacktrace generate --clean --fetch antora-playbook.yml
+
+.PHONY: docs-refresh
+docs-refresh: annotations docs-render ## Refresh the annotations file and build the Antora docs
 
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
 .PHONY: docs-preview
@@ -175,19 +145,8 @@ fmt-check: ## Check formatting of Rego files
 	@opa fmt . --list | xargs -r -n1 echo 'FAIL: Incorrect formatting found in'
 	@opa fmt . --list --fail >/dev/null 2>&1
 
-.PHONY: docs-check
-docs-check: ## Check if the generated docs are up to date
-	@for f in $(DOCS_ALL); do cp $$f $$f.check; done
-	@$(MAKE) --no-print-directory docs-build
-	@if [[ -n $$( git diff --name-only -- $(DOCS_ALL) ) ]]; then \
-	  for f in $(DOCS_ALL); do mv $$f.check $$f; done; \
-	  echo "FAIL: A docs update is needed"; \
-	  exit 1; \
-	fi
-	@for f in $(DOCS_ALL); do mv $$f.check $$f; done
-
 .PHONY: ci
-ci: conventions-check quiet-test opa-check fmt-check docs-check ## Runs all checks and tests
+ci: conventions-check quiet-test opa-check fmt-check ## Runs all checks and tests
 
 #--------------------------------------------------------------------
 
@@ -348,22 +307,5 @@ install-opa: ## Install `opa` CLI from GitHub releases
 	chmod 755 $(OPA_DEST)
 	rm $(OPA_FILE)
 
-GOMPLATE_VER=3.10.0
-GOMPLATE_OS_ARCH=$(shell go env GOOS)-$(shell go env GOARCH)
-GOMPLATE_FILE=gomplate_$(GOMPLATE_OS_ARCH)
-GOMPLATE_URL=https://github.com/hairyhenderson/gomplate/releases/download/v$(GOMPLATE_VER)/$(GOMPLATE_FILE)
-ifndef GOMPLATE_BIN
-  GOMPLATE_BIN=$(HOME)/bin
-endif
-GOMPLATE_DEST=$(GOMPLATE_BIN)/gomplate
-
-.PHONY: install-gomplate
-install-gomplate: ## Install `gomplate` from GitHub releases
-	curl -s -L -O $(GOMPLATE_URL)
-	@mkdir -p $(GOMPLATE_BIN)
-	cp $(GOMPLATE_FILE) $(GOMPLATE_DEST)
-	chmod 755 $(GOMPLATE_DEST)
-	rm $(GOMPLATE_FILE)
-
 .PHONY: install-tools
-install-tools: install-conftest install-opa install-gomplate ## Install all three tools
+install-tools: install-conftest install-opa ## Install all tools

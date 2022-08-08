@@ -2,7 +2,6 @@ package policy.release.authorization
 
 import data.lib
 
-
 # METADATA
 # title: Authorization does not exist
 # description: |-

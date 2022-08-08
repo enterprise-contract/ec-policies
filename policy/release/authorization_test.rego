@@ -11,6 +11,7 @@ mock_empty_data = d {
 }
 
 git_repo := "https://github.com/hacbs-contract/ec-policies.git"
+
 commit_sha := "1234"
 
 test_no_authorization {

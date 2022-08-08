@@ -32,15 +32,12 @@ att_mock_task_helper(task) = d {
 
 att_mock_materials(uri, sha1) = d {
 	d := [{"predicate": {
-		    "buildType": pipelinerun_att_build_type,
-			"materials": [
-          		{
-            		"uri": uri,
-            		"digest": {
-              			"sha1": sha1
-            		}
-          		}
-        	]}}]
+		"buildType": pipelinerun_att_build_type,
+		"materials": [{
+			"uri": uri,
+			"digest": {"sha1": sha1},
+		}],
+	}}]
 }
 
 test_pr_attestations {

@@ -13,11 +13,11 @@ mock_tr_att := {"predicate": {"buildType": tr_build_type}}
 garbage_att := {"predicate": {"buildType": "garbage"}}
 
 # Used also in main_test and test_test
-att_mock_helper(result_map, task_name) = d {
+att_mock_helper(name, result_map, task_name) = d {
 	d := {"predicate": {
 		"buildType": pipelinerun_att_build_type,
 		"buildConfig": {"tasks": [{"name": task_name, "results": [{
-			"name": hacbs_test_task_result_name,
+			"name": name,
 			"value": json.marshal(result_map),
 		}]}]},
 	}}
@@ -54,17 +54,17 @@ test_att_mock_helper {
 	expected := {"predicate": {
 		"buildType": pipelinerun_att_build_type,
 		"buildConfig": {"tasks": [{"name": "mytask", "results": [{
-			"name": hacbs_test_task_result_name,
+			"name": "result-name",
 			"value": "{\"foo\":\"bar\"}",
 		}]}]},
 	}}
 
-	assert_equal(expected, lib.att_mock_helper({"foo": "bar"}, "mytask"))
+	assert_equal(expected, lib.att_mock_helper("result-name", {"foo": "bar"}, "mytask"))
 }
 
 test_results_from_tests {
-	expected := {"result": "SUCCESS", "foo": "bar", "__task_name": "mytask"}
-	assert_equal([expected], results_from_tests) with input.attestations as [att_mock_helper({"result": "SUCCESS", "foo": "bar"}, "mytask")]
+	expected := {"result": "SUCCESS", "foo": "bar", lib.task_name: "mytask"}
+	assert_equal([expected], results_from_tests) with input.attestations as [att_mock_helper(lib.hacbs_test_task_result_name, {"result": "SUCCESS", "foo": "bar"}, "mytask")]
 }
 
 test_task_in_pipelinerun {

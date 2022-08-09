@@ -51,7 +51,7 @@ test_test_can_be_skipped {
 }
 
 test_test_succeeds {
-	lib.assert_empty(deny) with input.attestations as [lib.att_mock_helper({"result": "SUCCESS"}, "mytask")] with data.config.policy as nonblocking_except({"test"})
+	lib.assert_empty(deny) with input.attestations as [lib.att_mock_helper(lib.hacbs_test_task_result_name, {"result": "SUCCESS"}, "mytask")] with data.config.policy as nonblocking_except({"test"})
 }
 
 test_test_fails {
@@ -59,7 +59,7 @@ test_test_fails {
 		"code": "test_result_failures",
 		"msg": "The following tests did not complete successfully: test1",
 		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with input.attestations as [lib.att_mock_helper({"result": "FAILURE"}, "test1")] with data.config.policy as nonblocking_except({"test"})
+	}}) with input.attestations as [lib.att_mock_helper(lib.hacbs_test_task_result_name, {"result": "FAILURE"}, "test1")] with data.config.policy as nonblocking_except({"test"})
 }
 
 test_policy_ignored_when_not_yet_effective {

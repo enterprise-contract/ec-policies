@@ -4,6 +4,12 @@ pipelinerun_att_build_type := "https://tekton.dev/attestations/chains/pipelineru
 
 taskrun_att_build_type := "https://tekton.dev/attestations/chains@v2"
 
+hacbs_test_task_result_name := "HACBS_TEST_OUTPUT"
+
+java_sbom_component_count_result_name := "SBOM_JAVA_COMPONENTS_COUNT"
+
+task_name := "__task_name"
+
 # These are the ones we're interested in
 pipelinerun_attestations := [att |
 	att := input.attestations[_]
@@ -21,18 +27,24 @@ tasks_from_pipelinerun := [task |
 	task := att.predicate.buildConfig.tasks[_]
 ]
 
-hacbs_test_task_result_name := "HACBS_TEST_OUTPUT"
+# All results from the attested PipelineRun with the provided name. Results are
+# expected to contain a JSON value. The JSON value will be augmented with a key
+# "__task_name" that will hold the name of the TaskRun where the named result
+# was found.
+results_named(name) = results {
+	results := [r |
+		task := tasks_from_pipelinerun[_]
+		result := task.results[_]
+		result.name == name
+		result_map := json.unmarshal(result.value)
+
+		# Inject the task name so we can show it in failure messages
+		r := object.union(result_map, {task_name: task.name})
+	]
+}
 
 # (Don't call it test_results since test_ means a unit test)
-results_from_tests := [r |
-	task := tasks_from_pipelinerun[_]
-	result := task.results[_]
-	result.name == hacbs_test_task_result_name
-	result_map := json.unmarshal(result.value)
-
-	# Inject the task name so we can show it in failure messages
-	r := object.union(result_map, {"__task_name": task.name})
-]
+results_from_tests := results_named(hacbs_test_task_result_name)
 
 # Check for a task by name. Return the task if found
 task_in_pipelinerun(name) = task {

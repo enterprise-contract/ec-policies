@@ -103,7 +103,7 @@ ready: fmt-amend ## Amend current commit with fmt changes
 
 ##@ Documentation
 
-ANTORA_DOCS=./antora-docs
+ANTORA_DOCS=./antora/docs
 ANNOTATIONS_JSON=$(ANTORA_DOCS)/rule_annotations.json
 
 $(ANNOTATIONS_JSON):

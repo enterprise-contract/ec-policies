@@ -11,35 +11,6 @@ Do not edit it manually.
 These rules are applied to pipeline run attestations associated with
 container images built by HACBS.
 
-== Commit Signature Rules
-
-[#disallowed_commit_signature_email]
-=== link:#disallowed_commit_signature_email[Signatures is a valid email address]
-
-Enterprise Contract verifies if a valid email address was used to sign a commit 
-
-* Rule type: [rule-type-indicator warn]#WARNING#
-* Warning message: `Signature %s in commit %s is not a valid email address`
-* Short name: `disallowed_commit_signature_email`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/commit/commit_signature.rego#L12[Source, window="_blank"]
-
-[#disallowed_commit_signature_domain]
-=== link:#disallowed_commit_signature_domain[Signatures in a commit that are disallowed]
-
-Enterprise Contract has a list of allowed domains that a commit can be signed
-off with.
-
-The allowed email domains are:
-
-----
-redhat.com
-----
-
-* Rule type: [rule-type-indicator warn]#WARNING#
-* Warning message: `Signature %s in commit %s has disallowed domain`
-* Short name: `disallowed_commit_signature_domain`
-* https://github.com/hacbs-contract/ec-policies/blob/main/policy/commit/commit_signature.rego#L30[Source, window="_blank"]
-
 == Attestation Task Bundle Rules
 
 [#disallowed_task_reference]
@@ -104,6 +75,38 @@ attestation type. Currently there is only one attestation type supported,
 * Failure message: `Unknown attestation type '%s'`
 * Short name: `unknown_att_type`
 * https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/attestation_type.rego#L18[Source, window="_blank"]
+
+== Authorization Rules
+
+[#disallowed_no_authorization]
+=== link:#disallowed_no_authorization[Authorization does not exist]
+
+Enterprise Contract verifies if the build was authorized
+
+* Rule type: [rule-type-indicator deny]#FAILURE#
+* Failure message: `Commit does not contain authorization`
+* Short name: `disallowed_no_authorization`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/authorization.rego#L12[Source, window="_blank"]
+
+[#disallowed_commit_does_not_match]
+=== link:#disallowed_commit_does_not_match[Authorized commit does not match]
+
+Enterprise Contract verifies if an authorized commit was used as the source of a build
+
+* Rule type: [rule-type-indicator deny]#FAILURE#
+* Failure message: `Commit %s does not match authorized commit %s`
+* Short name: `disallowed_commit_does_not_match`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/authorization.rego#L25[Source, window="_blank"]
+
+[#disallowed_repo_url_does_not_match]
+=== link:#disallowed_repo_url_does_not_match[Authorized repo url does not match]
+
+Enterprise Contract verifies if an authorized repo url was used to build an image
+
+* Rule type: [rule-type-indicator deny]#FAILURE#
+* Failure message: `Repo url %s does not match authorized repo url %s`
+* Short name: `disallowed_repo_url_does_not_match`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/authorization.rego#L40[Source, window="_blank"]
 
 == Not Useful Rules
 

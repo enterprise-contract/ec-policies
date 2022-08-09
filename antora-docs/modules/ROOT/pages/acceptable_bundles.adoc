@@ -23,6 +23,18 @@ where this list is used.
 |*Tag*
 |*Effective*
 
+|link:https://quay.io/repository/redhat-appstudio/appstudio-tasks/manifest/sha256:232dad26ae42f3bbb5f69a51493dd20d87ecf4f76ef8fcba3fe540f5f8cfb4bd[232dad26ae42]
+|link:https://quay.io/repository/redhat-appstudio/appstudio-tasks?tab=tags&tag=50f736328e1e426af7c7751cae2326be7857685b-3[50f736328e1e426af7c7751cae2326be7857685b-3]
+|4-Sep-2022
+
+|link:https://quay.io/repository/redhat-appstudio/appstudio-tasks/manifest/sha256:7faefd1804679d51323030ada00e59883b75711261e8a0fb2b0cf82b2d1c8f90[7faefd180467]
+|link:https://quay.io/repository/redhat-appstudio/appstudio-tasks?tab=tags&tag=50f736328e1e426af7c7751cae2326be7857685b-2[50f736328e1e426af7c7751cae2326be7857685b-2]
+|4-Sep-2022
+
+|link:https://quay.io/repository/redhat-appstudio/appstudio-tasks/manifest/sha256:fc397569b9264cb2044dd0f33eea79fad5f93de3f0f64ae329874948c67743f9[fc397569b926]
+|link:https://quay.io/repository/redhat-appstudio/appstudio-tasks?tab=tags&tag=50f736328e1e426af7c7751cae2326be7857685b-1[50f736328e1e426af7c7751cae2326be7857685b-1]
+|4-Sep-2022
+
 |link:https://quay.io/repository/redhat-appstudio/appstudio-tasks/manifest/sha256:f88103ae4bfec1115fb62bbc0a62d0db0bfd96caff342c9105b7e2514e0c500e[f88103ae4bfe]
 |link:https://quay.io/repository/redhat-appstudio/appstudio-tasks?tab=tags&tag=982ed370e257a888d3ae5dbc3ce26a347ef85d39-3[982ed370e257a888d3ae5dbc3ce26a347ef85d39-3]
 |3-Sep-2022

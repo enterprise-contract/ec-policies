@@ -41,11 +41,10 @@ standard format run this before committing:
 
 ### Building the docs
 
-The documentation is built using Antora. Install Antora as per [the
-instructions][antora] and then you should be able to build the docs like
-this:
+The documentation is built using [Antora][antora]. You should be able to build
+the docs like this:
 
-    make docs-refresh
+    make docs-render
 
 Those docs are published [here][docs] and imported automatically into the
 official [HACBS Documentation][hacbsdocs].

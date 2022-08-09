@@ -1,5 +1,6 @@
 data/config.json
 input/
 public/
+node_modules/
 .cache/
 *.swp

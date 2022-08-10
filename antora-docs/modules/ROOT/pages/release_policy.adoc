@@ -108,6 +108,27 @@ Enterprise Contract verifies if an authorized repo url was used to build an imag
 * Short name: `disallowed_repo_url_does_not_match`
 * https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/authorization.rego#L40[Source, window="_blank"]
 
+== Java Rules
+
+[#java_foreign_dependencies]
+=== link:#java_foreign_dependencies[Prevent Java builds from depending on foreign dependencies]
+
+The SBOM_JAVA_COMPONENTS_COUNT TaskResult finds dependencies that have
+originated from foreign repositories, i.e. ones that are not rebuilt or
+redhat.
+
+The allowed component sources are:
+
+----
+redhat
+rebuilt
+----
+
+* Rule type: [rule-type-indicator deny]#FAILURE#
+* Failure message: `Found Java dependencies from '%s', expecting to find only from '%s'`
+* Short name: `java_foreign_dependencies`
+* https://github.com/hacbs-contract/ec-policies/blob/main/policy/release/java.rego#L19[Source, window="_blank"]
+
 == Not Useful Rules
 
 [#bad_day]

@@ -302,16 +302,21 @@
       "annotations": {
         "custom": {
           "failure_msg": "Unknown attestation type '%s'",
+          "rule_data": {
+            "known_attestation_types": [
+              "https://in-toto.io/Statement/v0.1"
+            ]
+          },
           "short_name": "unknown_att_type"
         },
-        "description": "A sanity check that the attestation found for the image has the expected\nattestation type. Currently there is only one attestation type supported,\n`https://in-toto.io/Statement/v0.1`.",
+        "description": "A sanity check to confirm the attestation found for the image has a known\nattestation type.",
         "scope": "rule",
         "title": "Unknown attestation type found"
       },
       "location": {
         "col": 1,
         "file": "policy/release/attestation_type.rego",
-        "row": 18
+        "row": 17
       },
       "path": [
         {

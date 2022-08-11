@@ -3,6 +3,9 @@
     "@hacbs-contract/ec-policies-antora-extension": "latest",
     "antora": "^3.0.3"
   },
+  "overrides": {
+    "glob-parent": "^6.0.2"
+  },
   "scripts": {
     "docs-render": "antora --stacktrace generate --clean --fetch antora-playbook.yml"
   }

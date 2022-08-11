@@ -1,0 +1,18 @@
+{
+  "name": "@hacbs-contract/ec-policies-antora-extension",
+  "version": "0.0.0",
+  "description": "Antora extension used to build documentation for the HACBS Enterprise Contract policy rules",
+  "main": "index.js",
+  "repository": "https://github.com/hacbs-contract/ec-policies",
+  "keywords": [
+    "antora",
+    "docs",
+    "rego",
+    "opa"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://issues.redhat.com/browse/HACBS"
+  },
+  "homepage": "https://github.com/hacbs-contract/ec-policies/tree/main/antora/ec-policies-antora-extension#readme"
+}

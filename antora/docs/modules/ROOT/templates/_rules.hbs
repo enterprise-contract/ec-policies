@@ -1,0 +1,28 @@
+== {{ toTitle @key }} rules
+
+{{#each .}}
+
+[#{{ shortName }}]
+=== link:#{{ shortName }}[{{ title }}]
+
+{{{ description }}}
+
+{{#each ruleData}}
+The {{ toWords @key }} are:
+
+----
+{{#each .}}
+{{ . }}
+{{/each}}
+----
+
+{{/each}}
+
+* Rule type: [rule-type-indicator {{ warningOrFailure }}]#{{ toUpper warningOrFailure }}#
+* {{ toTitle warningOrFailure }} message: `{{ failureMsg }}`
+* Short name: `{{ shortName }}`
+{{#if effectiveOn}}
+* Effective from: `{{ effectiveOn }}`{{/if}}
+* https://github.com/hacbs-contract/ec-policies/blob/main/{{ file }}#L{{ row }}[Source, window="_blank"]
+
+{{/each}}

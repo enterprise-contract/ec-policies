@@ -10,12 +10,6 @@ mock_data(att_type) = d {
 	d := [{"_type": att_type, "predicate": {"buildType": lib.pipelinerun_att_build_type}}]
 }
 
-test_known_att_type {
-	known_att_type(good_type)
-	not known_att_type(bad_type)
-	not known_att_type("asdf")
-}
-
 test_allow_when_permitted {
 	lib.assert_empty(deny) with input.attestations as mock_data(good_type)
 }

@@ -11,12 +11,17 @@ site:
 content:
   sources:
     - url: .
-      start_path: antora-docs
+      start_path: ./antora/docs
       branches: HEAD
 ui:
   bundle:
     url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
     snapshot: true
-  supplemental_files: ./supplemental-ui
+  supplemental_files: ./antora/supplemental-ui
 output:
   dir: ./public
+antora:
+  extensions:
+  - require: '@hacbs-contract/ec-policies-antora-extension'
+  # Uncomment for for local hacking, or use `npm link`
+  #- require: './antora/ec-policies-antora-extension/index.js'

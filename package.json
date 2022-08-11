@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@hacbs-contract/ec-policies-antora-extension": "latest",
+    "antora": "^3.0.3"
+  },
+  "scripts": {
+    "docs-render": "antora --stacktrace generate --clean --fetch antora-playbook.yml"
+  }
+}

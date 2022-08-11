@@ -1,8 +1,6 @@
-{{ template "templates/edit_warning.adoc.tmpl" }}
-
-{{ template "templates/adoc_conf.adoc.tmpl" }}
-
 = About Enterprise Contract
+
+:numbered:
 
 The HACBS Enterprise Contract is a set of tools for verifing the provenence of
 container images built in HACBS and validating them against a clearly defined
@@ -18,7 +16,7 @@ xref:pipeline_policy.adoc[Pipeline Policy].
 === Additional Documentation
 
 * https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation/[HACBS Documentation]
-* https://hacbs-contract.github.io/ec-cli/docs/ec/[EC CLI Documentation]
+* https://hacbs-contract.github.io/ec-cli/ec-cli/main/ec.html[EC CLI Documentation]
 
 === Code
 

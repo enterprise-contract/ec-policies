@@ -103,19 +103,17 @@ ready: fmt-amend ## Amend current commit with fmt changes
 
 ##@ Documentation
 
-ANTORA_DOCS=./antora/docs
-ANNOTATIONS_JSON=$(ANTORA_DOCS)/rule_annotations.json
+# `make annotations-js` and `make annotations-opa` should produce identical output.
+# (These are for debugging purposes only.)
+#
+.PHONY: annotations-js
+# opa-inspect-js produces some duplicate records hence the unique_by
+annotations-js:
+	@node antora/hack/inspect-annotations.js | jq 'unique_by(.) | sort_by(.location.file, .location.row)'
 
-$(ANNOTATIONS_JSON):
-# Use jq sort_by here because otherwise the order is different every time
-	@opa inspect --annotations --format json $(POLICY_DIR) | jq -S '.annotations |= sort_by(.location.file, .location.row)' > $@
-
-.PHONY: clean-annotations
-clean-annotations:
-	@rm -f $(ANNOTATIONS_JSON)
-
-.PHONY: annotations
-annotations: clean-annotations $(ANNOTATIONS_JSON) ## Refresh the rego annotations file
+.PHONY: annotations-opa
+annotations-opa:
+	@opa inspect --annotations --format json ./policy | jq '.annotations | sort_by(.location.file, .location.row)'
 
 # Use Antora to build html from the Asciidoc files under antora-docs
 #
@@ -133,19 +131,16 @@ npm-publish: ## Publish the antora extension npm package. Requires a suitable NP
 	  npm publish --access=public && \
 	  git checkout package.json
 
-.PHONY: docs-refresh
-docs-refresh: annotations docs-render ## Refresh the annotations file and build the Antora docs
-
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
 .PHONY: docs-preview
 .ONESHELL:
 .SHELLFLAGS=-e -c
 docs-preview: ## Run the preview of the website, reload to see the changes
-	@$(MAKE) --no-print-directory docs-refresh
+	@$(MAKE) --no-print-directory docs-render
 	@xdg-open public/index.html || true
 	@trap exit SIGINT
 	while true; do
-	  git ls-files --exclude-standard -c -o 'antora-*' 'policy/*.rego' 'docsrc/*' | entr -d -c $(MAKE) --no-print-directory docs-refresh
+	  git ls-files --exclude-standard -c -o 'antora-*' 'policy/*.rego' 'docsrc/*' | entr -d -c $(MAKE) --no-print-directory docs-render
 	done
 
 ##@ CI

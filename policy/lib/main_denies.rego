@@ -40,6 +40,13 @@ skip_package(package_name) {
 	data.config.policy.non_blocking_checks[_] == package_name
 }
 
+# New and different way a package could be skipped
+# (See include_exclude_rules.rego)
+#
+skip_package(package_name) {
+	lib.package_excluded(package_name)
+}
+
 # Todo maybe: Skip a rule based on package_name and rule short_name
 
 # Return true if a particular rule is effective in the future

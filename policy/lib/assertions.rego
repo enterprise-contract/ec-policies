@@ -1,6 +1,10 @@
 package lib
 
 # Produce more useful output when a test fails
+#
+# Beware that `lib.assert_equal(false|true, ...)` can
+# behave unexpectedly so it's better not to do that
+#
 
 assert_equal(left_value, right_value) {
 	not _assert_equal_fails(left_value, right_value)

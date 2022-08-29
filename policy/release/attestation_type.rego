@@ -17,6 +17,6 @@ import data.lib
 deny[result] {
 	att := lib.pipelinerun_attestations[_]
 	att_type := att._type
-	not lib.item_in_list(att_type, rego.metadata.rule().custom.rule_data.known_attestation_types)
+	not lib.included_in(att_type, rego.metadata.rule().custom.rule_data.known_attestation_types)
 	result := lib.result_helper(rego.metadata.chain(), [att_type])
 }

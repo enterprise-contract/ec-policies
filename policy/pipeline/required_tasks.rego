@@ -31,10 +31,7 @@ import data.lib
 #
 deny[result] {
 	# Find the data in the annotations
-	required_list := rego.metadata.rule().custom.rule_data.required_task_refs
-
-	# Convert it to a set
-	required := {t | t := required_list[_]}
+	required := lib.to_set(rego.metadata.rule().custom.rule_data.required_task_refs)
 
 	# The set of tasks that we did find
 	found := {t | t := input.spec.tasks[_].taskRef.name}

@@ -1318,6 +1318,8 @@
       "policy/lib/main_denies_test.rego",
       "policy/lib/result_helper.rego",
       "policy/lib/result_helper_test.rego",
+      "policy/lib/set_helpers.rego",
+      "policy/lib/set_helpers_test.rego",
       "policy/lib/string_utils.rego",
       "policy/lib/string_utils_test.rego",
       "policy/release/lib/attestations.rego",

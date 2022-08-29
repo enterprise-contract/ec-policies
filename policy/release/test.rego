@@ -84,13 +84,9 @@ deny[result] {
 deny[result] {
 	all_failed = resulted_in({"FAILURE", "ERROR"})
 
-	# For the complement operation below (subtraction) we need
-	# non_blocking_checks as set and this creates that from the array
-	non_blocking_set = {x | x := data.config.policy.non_blocking_checks[_]}
-
-	# Failed tests are those contained within all_failed that
-	# are not on the list of non_blocking_checks
-	failed_blocking := all_failed - non_blocking_set
+	# Failed tests are those contained within all_failed that are not
+	# listed in the exclude_rules list
+	failed_blocking := all_failed - lib.exclude_rules
 
 	# Fail if there are any
 	count(failed_blocking) > 0

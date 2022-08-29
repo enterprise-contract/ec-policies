@@ -2,6 +2,9 @@ package lib
 
 # Produce more useful output when a test fails
 
+# Beware: `lib.assert_equal(<boolean>, ...)` does not work like
+# you would expect, so it's better not to use this for booleans
+#
 assert_equal(left_value, right_value) {
 	not _assert_equal_fails(left_value, right_value)
 }

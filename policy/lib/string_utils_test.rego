@@ -1,5 +1,7 @@
 package lib
 
+import data.lib
+
 my_list := ["a", "b", "c"]
 
 my_set := {"a", "b", "c"}
@@ -17,6 +19,6 @@ test_item_in_list {
 }
 
 test_quoted_values_string {
-	"'a', 'b', 'c'" == quoted_values_string(my_list)
-	"'a', 'b', 'c'" == quoted_values_string(my_set)
+	lib.assert_equal("'a', 'b', 'c'", quoted_values_string(["a", "b", "c"]))
+	lib.assert_equal("'a', 'b', 'c'", quoted_values_string({"a", "b", "c"}))
 }

@@ -1316,6 +1316,8 @@
       "policy/lib/assertions_test.rego",
       "policy/lib/main_denies.rego",
       "policy/lib/main_denies_test.rego",
+      "policy/lib/result_helper.rego",
+      "policy/lib/result_helper_test.rego",
       "policy/lib/string_utils.rego",
       "policy/lib/string_utils_test.rego",
       "policy/release/lib/attestations.rego",

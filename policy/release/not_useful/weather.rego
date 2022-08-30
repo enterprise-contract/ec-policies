@@ -1,3 +1,15 @@
+# METADATA
+# title: Weather related checks
+# description: |-
+#   This package is just for test purposes. Note that
+#   it has a custom title and a descripion. Note also
+#   that it is the only package so far with an extra "level"
+#   in it, i.e. it's `not_useful.weather`. This is to test
+#   the idea of arbitrarily deep package namespaces. And
+#   later I'd like to check wildcards for that, e.g. can we
+#   specify via configuration that `not_useful.*` packages
+#   are included or skipped.
+#
 package policy.release.not_useful.weather
 
 import data.lib

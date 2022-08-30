@@ -58,13 +58,17 @@ const helpers = {
     return yaml.load(moduleFile._contents.toString())
   },
 
+  toDottedPath: (path) => {
+    return path.map(i => i.value).join(".")
+  },
+
   // Extract useful fields and derived values from the raw data and collect
   // them for easy use in the template
   processAnnotationsData: (rawData, namespace) => {
     const output = []
     var pkgAnnotation = {}
     rawData.annotations.forEach((a) => {
-      const dottedPath = a.path.map(i => i.value).join(".")
+      const dottedPath = helpers.toDottedPath(a.path)
       const inNamespace = dottedPath.startsWith(namespace)
 
       if (inNamespace) {
@@ -89,25 +93,38 @@ const helpers = {
           const file = a.location.file
           const row = a.location.row
 
-          // The package name, will be used for grouping rules
-          const pkgHeading = a.path.slice(3, -1).map(i => i.value).join(" - ")
-
           // If there is some package-scoped rule data then merge it in to the rule-scoped rule data
           var ruleData = a.annotations.custom.rule_data
           if (pkgAnnotation.custom && pkgAnnotation.custom[shortName] && pkgAnnotation.custom[shortName].rule_data) {
             ruleData = {...ruleData, ...pkgAnnotation.custom[shortName].rule_data}
           }
 
+          // Collect other package related info and place it in an object.
+          // Actually it should be identical for all rules in the same package,
+          // so it is efficient to create it every time like this, but it won't matter
+          // very much.
+          const pkgShortPath = helpers.toDottedPath(a.path.slice(3, -1))
+          const pkgInfo = {
+            shortPath: pkgShortPath, // e.g. "foo.bar"
+            path: helpers.toDottedPath(a.path.slice(1,-1)), // e.g. "policy.release.foo.bar"
+
+            // Use the title from annotations if it's defined otherwise fall back to a derived title
+            title: (pkgAnnotation.title || hbsHelpers.toTitle(pkgShortPath.replace(".", ": "))), // e.g. "Foo: bar"
+
+            // Use the description from annotations if it's defined
+            description: pkgAnnotation.description || "",
+          }
+
           output.push({
-            dottedPath, pkgHeading, shortName, title, description, ruleData, warningOrFailure,
+            pkgInfo, dottedPath, shortName, title, description, ruleData, warningOrFailure,
             failureMsg, effectiveOn, file, row
           })
         }
       }
     })
 
-    // Group the rules by their package heading
-    return helpers.groupBy(output, a => a.pkgHeading)
+    // Group the rules by package
+    return helpers.groupBy(output, a => a.pkgInfo.shortPath)
   },
 
   processBundlesData: (rawData) => {

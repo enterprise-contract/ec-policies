@@ -1,9 +1,20 @@
-== {{ toTitle @key }} rules
+{{! We can do this because the pkgInfo should be the same for every rule }}
+{{#with this.[0].pkgInfo}}
+== link:#{{ shortPath }}[{{ title }}]
+
+{{#if summary }}{{ summary }}.{{/if}}
+
+{{{ description }}}
+
+* Subject type: `{{ subjectType }}`
+* Short name: `{{ shortPath }}`
+* Full package name: `{{ path }}`
+{{/with}}
 
 {{#each .}}
 
 [#{{ shortName }}]
-=== link:#{{ shortName }}[{{ title }}]
+=== link:#{{ shortName }}[{{ title }} rule]
 
 {{{ description }}}
 

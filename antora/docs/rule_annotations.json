@@ -673,6 +673,40 @@
     },
     {
       "annotations": {
+        "description": "This package is just for test purposes. Note that\nit has a custom title and a descripion. Note also\nthat it is the only package so far with an extra \"level\"\nin it, i.e. it's `not_useful.weather`. This is to test\nthe idea of arbitrarily deep package namespaces. And\nlater I'd like to check wildcards for that, e.g. can we\nspecify via configuration that `not_useful.*` packages\nare included or skipped.",
+        "scope": "package",
+        "title": "Weather related checks"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/not_useful/weather.rego",
+        "row": 13
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "not_useful"
+        },
+        {
+          "type": "string",
+          "value": "weather"
+        }
+      ]
+    },
+    {
+      "annotations": {
         "custom": {
           "failure_msg": "It's snowing, no releases today",
           "short_name": "snow"
@@ -684,7 +718,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/not_useful/weather.rego",
-        "row": 14
+        "row": 26
       },
       "path": [
         {
@@ -726,7 +760,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/not_useful/weather.rego",
-        "row": 28
+        "row": 40
       },
       "path": [
         {

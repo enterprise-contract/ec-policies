@@ -156,7 +156,7 @@ fmt-check: ## Check formatting of Rego files
 	@opa fmt . --list --fail >/dev/null 2>&1
 
 .PHONY: ci
-ci: conventions-check quiet-test opa-check fmt-check ## Runs all checks and tests
+ci: quiet-test opa-check conventions-check fmt-check ## Runs all checks and tests
 
 #--------------------------------------------------------------------
 

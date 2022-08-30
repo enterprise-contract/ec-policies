@@ -90,7 +90,7 @@ const helpers = {
           const row = a.location.row
 
           // The package name, will be used for grouping rules
-          const pkgHeading = a.path[3].value
+          const pkgHeading = a.path.slice(3, -1).map(i => i.value).join(" - ")
 
           // If there is some package-scoped rule data then merge it in to the rule-scoped rule data
           var ruleData = a.annotations.custom.rule_data

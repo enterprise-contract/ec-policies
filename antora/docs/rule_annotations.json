@@ -674,6 +674,90 @@
     {
       "annotations": {
         "custom": {
+          "failure_msg": "It's snowing, no releases today",
+          "short_name": "snow"
+        },
+        "description": "It's expected this rule will be skipped by policy configuration.\nThis rule is for demonstration and test purposes.",
+        "scope": "rule",
+        "title": "Snow day"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/not_useful/weather.rego",
+        "row": 14
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "not_useful"
+        },
+        {
+          "type": "string",
+          "value": "weather"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "It's too hot, no releases today",
+          "short_name": "heatwave"
+        },
+        "description": "It's expected this rule will be skipped by policy configuration.\nThis rule is for demonstration and test purposes.",
+        "scope": "rule",
+        "title": "Too hot to release"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/not_useful/weather.rego",
+        "row": 28
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "not_useful"
+        },
+        {
+          "type": "string",
+          "value": "weather"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
           "effective_on": "2022-01-01T00:00:00Z"
         },
         "scope": "package"
@@ -1086,8 +1170,14 @@
     "data.lib": [
       "policy/lib/assertions.rego",
       "policy/lib/assertions_test.rego",
+      "policy/lib/include_exclude_rules.rego",
+      "policy/lib/include_exclude_rules_test.rego",
       "policy/lib/main_denies.rego",
       "policy/lib/main_denies_test.rego",
+      "policy/lib/result_helper.rego",
+      "policy/lib/result_helper_test.rego",
+      "policy/lib/set_helpers.rego",
+      "policy/lib/set_helpers_test.rego",
       "policy/lib/string_utils.rego",
       "policy/lib/string_utils_test.rego",
       "policy/release/lib/attestations.rego",
@@ -1132,6 +1222,9 @@
     "data.policy.release.not_useful": [
       "policy/release/not_useful.rego",
       "policy/release/not_useful_test.rego"
+    ],
+    "data.policy.release.not_useful.weather": [
+      "policy/release/not_useful/weather.rego"
     ],
     "data.policy.release.step_image_registries": [
       "policy/release/step_image_registries.rego",

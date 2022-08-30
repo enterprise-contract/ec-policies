@@ -1,15 +1,17 @@
 {{! We can do this because the pkgInfo should be the same for every rule }}
 {{#with this.[0].pkgInfo}}
-== link:#{{ shortPath }}[{{ title }}]
+= link:#{{ shortPath }}[{{ title }}]
 
 {{#if summary }}{{ summary }}.{{/if}}
 
 {{{ description }}}
 
 * Subject type: `{{ subjectType }}`
-* Short name: `{{ shortPath }}`
+* Package name: `{{ shortPath }}`
 * Full package name: `{{ path }}`
 {{/with}}
+
+== Rules
 
 {{#each .}}
 
@@ -31,7 +33,7 @@ The {{ toWords @key }} are:
 
 * Rule type: [rule-type-indicator {{ warningOrFailure }}]#{{ toUpper warningOrFailure }}#
 * {{ toTitle warningOrFailure }} message: `{{ failureMsg }}`
-* Short name: `{{ shortName }}`
+* Code: `{{ shortName }}`
 {{#if effectiveOn}}
 * Effective from: `{{ effectiveOn }}`{{/if}}
 * https://github.com/hacbs-contract/ec-policies/blob/main/{{ file }}#L{{ row }}[Source, window="_blank"]

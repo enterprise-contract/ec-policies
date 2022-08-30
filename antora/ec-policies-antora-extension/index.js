@@ -107,12 +107,16 @@ const helpers = {
           const pkgInfo = {
             shortPath: pkgShortPath, // e.g. "foo.bar"
             path: helpers.toDottedPath(a.path.slice(1,-1)), // e.g. "policy.release.foo.bar"
+            subjectType: a.path[2].value, // e.g. "release"
 
             // Use the title from annotations if it's defined otherwise fall back to a derived title
             title: (pkgAnnotation.title || hbsHelpers.toTitle(pkgShortPath.replace(".", ": "))), // e.g. "Foo: bar"
 
             // Use the description from annotations if it's defined
             description: pkgAnnotation.description || "",
+
+            // Use the summary from annotations if it's defined
+            summary: pkgAnnotation.custom && pkgAnnotation.custom.summary || null,
           }
 
           output.push({
@@ -223,6 +227,45 @@ module.exports.register = function() {
         const generatedContent = hbsTemplate({ pipelineAnnotations, releaseAnnotations, acceptableBundles})
         content.files.push(helpers.prepDynamicPage(f.src, generatedContent))
       })
+
+      const navLists = {}
+
+      // Todo: explain this or make it less janky
+      const template = Handlebars.compile("{{> rules}}")
+
+      for (const source of [releaseAnnotations, pipelineAnnotations]) {
+
+        Object.keys(source).forEach(k => {
+          const pkgInfo = source[k][0].pkgInfo
+
+          const stem = `${pkgInfo.subjectType}_${pkgInfo.shortPath}`
+          const extname = '.adoc'
+          const basename = `${stem}${extname}`
+          const path = `modules/ROOT/pages/${basename}`
+
+          content.files.push({
+            contents: Buffer.from(template(source[k])),
+            path,
+            src: {
+              path,
+              abspath: "/tmp/asdf", // FIXME
+              basename,
+              stem,
+              extname,
+              // Related to the "Edit this page" link created by Antora
+              origin: 'dynamic',
+            }
+          })
+
+          navLists[pkgInfo.subjectType] ||= []
+          navLists[pkgInfo.subjectType].push({file: basename, title: pkgInfo.title})
+        })
+      }
+
+      // Now update nav.adoc
+      const nav = content.files.find(f => f.path.endsWith('nav.adoc'))
+      const navTemplate = Handlebars.compile(nav.contents.toString());
+      nav.contents = Buffer.from(navTemplate({ navLists }))
     })
   })
 }

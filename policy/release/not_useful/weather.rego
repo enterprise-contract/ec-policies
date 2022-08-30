@@ -9,6 +9,8 @@
 #   later I'd like to check wildcards for that, e.g. can we
 #   specify via configuration that `not_useful.*` packages
 #   are included or skipped.
+# custom:
+#   summary: Dummy rules for snow days and heatwaves
 #
 package policy.release.not_useful.weather
 

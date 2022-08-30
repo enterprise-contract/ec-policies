@@ -673,6 +673,9 @@
     },
     {
       "annotations": {
+        "custom": {
+          "summary": "Dummy rules for snow days and heatwaves"
+        },
         "description": "This package is just for test purposes. Note that\nit has a custom title and a descripion. Note also\nthat it is the only package so far with an extra \"level\"\nin it, i.e. it's `not_useful.weather`. This is to test\nthe idea of arbitrarily deep package namespaces. And\nlater I'd like to check wildcards for that, e.g. can we\nspecify via configuration that `not_useful.*` packages\nare included or skipped.",
         "scope": "package",
         "title": "Weather related checks"
@@ -680,7 +683,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/not_useful/weather.rego",
-        "row": 13
+        "row": 15
       },
       "path": [
         {
@@ -718,7 +721,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/not_useful/weather.rego",
-        "row": 26
+        "row": 28
       },
       "path": [
         {
@@ -760,7 +763,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/not_useful/weather.rego",
-        "row": 40
+        "row": 42
       },
       "path": [
         {

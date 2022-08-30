@@ -148,6 +148,12 @@ docs-preview: ## Run the preview of the website, reload to see the changes
 	  git ls-files --exclude-standard -c -o 'antora-*' 'policy/*.rego' 'docsrc/*' | entr -d -c $(MAKE) --no-print-directory docs-refresh
 	done
 
+.PHONY: docs-publish-wip
+docs-publish-wip: docs-refresh ## Copy docs somewhere they can be previewed by others while hacking
+	@ssh file.bos.redhat.com 'mkdir -p ~/public_html/ec-policies-docs'
+	rsync -r public file.bos.redhat.com:public_html/ec-policies-docs/
+	@echo http://file.bos.redhat.com/~$$USER/ec-policies-docs/public/
+
 ##@ CI
 
 .PHONY: fmt-check

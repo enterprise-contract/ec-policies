@@ -147,6 +147,7 @@ const helpers = {
   prepDynamicPage: (fileSrc, pageContent) => {
     const path = helpers.templateToPage(fileSrc.path)
     const basename = helpers.templateToPage(fileSrc.basename)
+    const abspath = helpers.templateToPage(fileSrc.abspath)
     const contents = Buffer.from(pageContent)
     const stem = fileSrc.stem
 
@@ -155,6 +156,7 @@ const helpers = {
       path,
       src: {
         path,
+        abspath,
         basename,
         stem,
         extname: '.adoc',

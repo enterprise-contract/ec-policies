@@ -186,7 +186,8 @@ dummy-config: ## Changes the configuration to mark the `not_useful` check as non
 ifndef IMAGE
   # Default value for convenience/laziness. You're encouraged to specify your own IMAGE.
   # (The default has no special significance other than it's known to have an attestation.)
-  IMAGE="quay.io/lucarval/single-nodejs-app:demo"
+  # TODO: Find a more stable and newer default image
+  IMAGE="quay.io/lucarval/single-nodejs-app:2857d44"
 endif
 
 .PHONY: fetch-att

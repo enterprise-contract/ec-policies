@@ -69,8 +69,8 @@ const helpers = {
     var pkgAnnotation = {}
     rawData.annotations.forEach((a) => {
       const ruleName = a.path[a.path.length-1].value
-      const dottedPath = helpers.toDottedPath(a.path)
-      const inNamespace = dottedPath.startsWith(namespace)
+      const fullName = helpers.toDottedPath(a.path.slice(1))
+      const inNamespace = fullName.startsWith(namespace)
 
       if (inNamespace) {
         const isPackageScope = a.annotations.scope == "package"
@@ -121,7 +121,7 @@ const helpers = {
           }
 
           output.push({
-            pkgInfo, dottedPath, shortName, title, description, ruleData, warningOrFailure,
+            pkgInfo, fullName, shortName, title, description, ruleData, warningOrFailure,
             failureMsg, effectiveOn, file, row
           })
         }
@@ -202,8 +202,8 @@ module.exports.register = function() {
       const rawBundlesData = helpers.dataFromAntoraFile(yaml, content, 'acceptable_tekton_bundles.yml')
 
       // Massage the data so the templates can be clean and tidy
-      const pipelineAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "data.policy.pipeline")
-      const releaseAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "data.policy.release")
+      const pipelineAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.pipeline")
+      const releaseAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.release")
       const acceptableBundles = helpers.processBundlesData(rawBundlesData)
 
       // Import Handlebars and register helpers and partials

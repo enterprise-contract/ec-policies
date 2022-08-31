@@ -22,6 +22,6 @@ output:
   dir: ./public
 antora:
   extensions:
-  - require: '@hacbs-contract/ec-policies-antora-extension'
+  #- require: '@hacbs-contract/ec-policies-antora-extension'
   # Uncomment for for local hacking, or use `npm link`
-  #- require: './antora/ec-policies-antora-extension/index.js'
+  - require: './antora/ec-policies-antora-extension/index.js'

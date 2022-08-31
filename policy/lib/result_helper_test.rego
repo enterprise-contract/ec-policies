@@ -3,7 +3,6 @@ package lib
 import data.lib
 
 mock_annotations := {"custom": {
-	"short_name": "Hey",
 	"failure_msg": "Bad thing %s",
 }}
 

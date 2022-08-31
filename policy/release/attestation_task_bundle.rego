@@ -10,10 +10,9 @@ import data.lib.time as time_lib
 #   Check for existence of a task bundle. Enforcing this rule will
 #   fail the contract if the task is not called from a bundle.
 # custom:
-#   short_name: disallowed_task_reference
 #   failure_msg: Task '%s' does not contain a bundle reference
 #
-deny[result] {
+deny_disallowed_task_reference[result] {
 	task := lib.tasks_from_pipelinerun[_]
 	name := task.name
 	not task.ref.bundle
@@ -25,10 +24,9 @@ deny[result] {
 # description: |-
 #   Check for a valid task bundle reference being used.
 # custom:
-#   short_name: empty_task_bundle_reference
 #   failure_msg: Task '%s' uses an empty bundle image reference
 #
-deny[result] {
+deny_empty_task_bundle_reference[result] {
 	task := lib.tasks_from_pipelinerun[_]
 	name := task.name
 	task.ref.bundle == ""
@@ -44,10 +42,9 @@ deny[result] {
 #   link:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
 #   in this git repository.
 # custom:
-#   short_name: out_of_date_task_bundle
 #   failure_msg: Task '%s' uses an out of date task bundle '%s'
 #
-warn[result] {
+warn_out_of_date_task_bundle[result] {
 	att := input.attestations[_]
 	task := att.predicate.buildConfig.tasks[_]
 	bundle := task.ref.bundle
@@ -69,10 +66,9 @@ warn[result] {
 #   link:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
 #   in this git repository.
 # custom:
-#   short_name: unacceptable_task_bundle
 #   failure_msg: Task '%s' uses an unacceptable task bundle '%s'
 #
-deny[result] {
+deny_unacceptable_task_bundle[result] {
 	att := input.attestations[_]
 	task := att.predicate.buildConfig.tasks[_]
 	bundle := task.ref.bundle

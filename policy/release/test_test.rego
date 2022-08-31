@@ -6,7 +6,7 @@ import data.lib
 mock_empty_data := [lib.att_mock_helper("NOT_HACBS_TEST_OUTPUT", {}, "task1")]
 
 test_needs_non_empty_data {
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_test_data_missing, {{
 		"code": "test_data_missing",
 		"msg": "No test data found",
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -17,7 +17,7 @@ test_needs_non_empty_data {
 mock_without_results_data := [lib.att_mock_helper(lib.hacbs_test_task_result_name, {"rezult": "SUCCESS"}, "task1")]
 
 test_needs_tests_with_results {
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_test_results_missing, {{
 		"code": "test_results_missing",
 		"msg": "Found tests without results",
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -30,7 +30,7 @@ mock_without_results_data_mixed := [
 ]
 
 test_needs_tests_with_results_mixed {
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_test_results_missing, {{
 		"code": "test_results_missing",
 		"msg": "Found tests without results",
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -40,14 +40,14 @@ test_needs_tests_with_results_mixed {
 mock_a_passing_test := [lib.att_mock_helper(lib.hacbs_test_task_result_name, {"result": "SUCCESS"}, "task1")]
 
 test_success_data {
-	lib.assert_empty(deny) with input.attestations as mock_a_passing_test
+	lib.assert_empty(((deny_test_results_missing | deny_test_data_missing) | deny_test_result_failures) | deny_test_result_unsupported) with input.attestations as mock_a_passing_test
 		with data.config.policy as {"non_blocking_checks": []}
 }
 
 mock_a_failing_test := [lib.att_mock_helper(lib.hacbs_test_task_result_name, {"result": "FAILURE"}, "failed_1")]
 
 test_failure_data {
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_test_result_failures, {{
 		"code": "test_result_failures",
 		"msg": "The following tests did not complete successfully: failed_1",
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -58,7 +58,7 @@ test_failure_data {
 mock_an_errored_test := [lib.att_mock_helper(lib.hacbs_test_task_result_name, {"result": "ERROR"}, "errored_1")]
 
 test_error_data {
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_test_result_failures, {{
 		"code": "test_result_failures",
 		"msg": "The following tests did not complete successfully: errored_1",
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -69,7 +69,7 @@ test_error_data {
 mock_mixed_data := array.concat(mock_a_failing_test, mock_an_errored_test)
 
 test_mix_data {
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_test_result_failures, {{
 		"code": "test_result_failures",
 		"msg": "The following tests did not complete successfully: errored_1, failed_1",
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -78,10 +78,10 @@ test_mix_data {
 }
 
 test_can_skip_by_name {
-	lib.assert_empty(deny) with input.attestations as mock_mixed_data
+	lib.assert_empty(deny_test_result_failures) with input.attestations as mock_mixed_data
 		with data.config.policy as {"non_blocking_checks": ["test:errored_1", "test:failed_1"]}
 
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_test_result_failures, {{
 		"code": "test_result_failures",
 		"msg": "The following tests did not complete successfully: errored_1",
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -91,12 +91,12 @@ test_can_skip_by_name {
 
 test_skipped_is_not_deny {
 	skipped_test := [lib.att_mock_helper(lib.hacbs_test_task_result_name, {"result": "SKIPPED"}, "skipped_1")]
-	lib.assert_empty(deny) with input.attestations as skipped_test
+	lib.assert_empty(deny_test_result_failures) with input.attestations as skipped_test
 }
 
 test_skipped_is_warning {
 	skipped_test := [lib.att_mock_helper(lib.hacbs_test_task_result_name, {"result": "SKIPPED"}, "skipped_1")]
-	lib.assert_equal(warn, {{
+	lib.assert_equal(warn_test_result_skipped, {{
 		"code": "test_result_skipped",
 		"msg": "The following tests were skipped: skipped_1",
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -114,13 +114,13 @@ test_mixed_statuses {
 		lib.att_mock_helper(lib.hacbs_test_task_result_name, {"result": "ERROR"}, "error_2"),
 	]
 
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_test_result_failures, {{
 		"code": "test_result_failures",
 		"msg": "The following tests did not complete successfully: error_1, error_2, failure_1, failure_2",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as test_results
 
-	lib.assert_equal(warn, {{
+	lib.assert_equal(warn_test_result_skipped, {{
 		"code": "test_result_skipped",
 		"msg": "The following tests were skipped: skipped_1, skipped_2",
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -135,7 +135,7 @@ test_unsupported_test_result {
 		lib.att_mock_helper(lib.hacbs_test_task_result_name, {"result": "SKIPED"}, "skipped_1"),
 	]
 
-	lib.assert_equal(deny, {
+	lib.assert_equal(deny_test_result_unsupported, {
 		{"code": "test_result_unsupported", "msg": "Test 'error_1' has unsupported result 'EROR'", "effective_on": "2022-01-01T00:00:00Z"},
 		{"code": "test_result_unsupported", "msg": "Test 'failure_1' has unsupported result 'FAIL'", "effective_on": "2022-01-01T00:00:00Z"},
 		{"code": "test_result_unsupported", "msg": "Test 'skipped_1' has unsupported result 'SKIPED'", "effective_on": "2022-01-01T00:00:00Z"},

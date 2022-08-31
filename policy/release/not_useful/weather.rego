@@ -22,10 +22,9 @@ import data.lib
 #   It's expected this rule will be skipped by policy configuration.
 #   This rule is for demonstration and test purposes.
 # custom:
-#   short_name: snow
 #   failure_msg: It's snowing, no releases today
 #
-deny[result] {
+deny_snow[result] {
 	true
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
@@ -36,10 +35,9 @@ deny[result] {
 #   It's expected this rule will be skipped by policy configuration.
 #   This rule is for demonstration and test purposes.
 # custom:
-#   short_name: heatwave
 #   failure_msg: It's too hot, no releases today
 #
-deny[result] {
+deny_heatwave[result] {
 	true
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

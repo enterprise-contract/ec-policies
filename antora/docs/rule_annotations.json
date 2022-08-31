@@ -62,8 +62,7 @@
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Unexpected kind '%s'",
-          "short_name": "unexpected_kind"
+          "failure_msg": "Unexpected kind '%s'"
         },
         "description": "A sanity check to confirm the input data has the kind \"Pipeline\"",
         "scope": "rule",
@@ -72,7 +71,7 @@
       "location": {
         "col": 1,
         "file": "policy/pipeline/basic.rego",
-        "row": 19
+        "row": 18
       },
       "path": [
         {
@@ -93,7 +92,7 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_unexpected_kind"
         }
       ]
     },
@@ -111,8 +110,7 @@
               "sast-go",
               "sast-java-sec-check"
             ]
-          },
-          "short_name": "required_tasks"
+          }
         },
         "description": "Every build pipeline is expected to contain a set of checks and tests that\nare required by the Enterprise Contract. This rule confirms that the pipeline\ndefinition includes all the expected tasks.\n\nThe matching is done using the taskRef name rather than the pipeline task name.",
         "scope": "rule",
@@ -121,7 +119,7 @@
       "location": {
         "col": 1,
         "file": "policy/pipeline/required_tasks.rego",
-        "row": 32
+        "row": 31
       },
       "path": [
         {
@@ -142,15 +140,14 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_required_tasks"
         }
       ]
     },
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Task '%s' does not contain a bundle reference",
-          "short_name": "disallowed_task_reference"
+          "failure_msg": "Task '%s' does not contain a bundle reference"
         },
         "description": "Check for existence of a task bundle. Enforcing this rule will\nfail the contract if the task is not called from a bundle.",
         "scope": "rule",
@@ -159,7 +156,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/attestation_task_bundle.rego",
-        "row": 16
+        "row": 15
       },
       "path": [
         {
@@ -180,15 +177,14 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_disallowed_task_reference"
         }
       ]
     },
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Task '%s' uses an empty bundle image reference",
-          "short_name": "empty_task_bundle_reference"
+          "failure_msg": "Task '%s' uses an empty bundle image reference"
         },
         "description": "Check for a valid task bundle reference being used.",
         "scope": "rule",
@@ -197,7 +193,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/attestation_task_bundle.rego",
-        "row": 31
+        "row": 29
       },
       "path": [
         {
@@ -218,15 +214,14 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_empty_task_bundle_reference"
         }
       ]
     },
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Task '%s' uses an out of date task bundle '%s'",
-          "short_name": "out_of_date_task_bundle"
+          "failure_msg": "Task '%s' uses an out of date task bundle '%s'"
         },
         "description": "Check if the Tekton Bundle used for the Tasks in the attestation\nis the most recent acceptable one. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.",
         "scope": "rule",
@@ -235,7 +230,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/attestation_task_bundle.rego",
-        "row": 50
+        "row": 47
       },
       "path": [
         {
@@ -256,15 +251,14 @@
         },
         {
           "type": "string",
-          "value": "warn"
+          "value": "warn_out_of_date_task_bundle"
         }
       ]
     },
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Task '%s' uses an unacceptable task bundle '%s'",
-          "short_name": "unacceptable_task_bundle"
+          "failure_msg": "Task '%s' uses an unacceptable task bundle '%s'"
         },
         "description": "Check if the Tekton Bundle used for the Tasks in the attestation\nare acceptable given the tracked effective_on date. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.",
         "scope": "rule",
@@ -273,7 +267,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/attestation_task_bundle.rego",
-        "row": 75
+        "row": 71
       },
       "path": [
         {
@@ -294,7 +288,7 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_unacceptable_task_bundle"
         }
       ]
     },
@@ -306,8 +300,7 @@
             "known_attestation_types": [
               "https://in-toto.io/Statement/v0.1"
             ]
-          },
-          "short_name": "unknown_att_type"
+          }
         },
         "description": "A sanity check to confirm the attestation found for the image has a known\nattestation type.",
         "scope": "rule",
@@ -316,7 +309,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/attestation_type.rego",
-        "row": 17
+        "row": 16
       },
       "path": [
         {
@@ -337,15 +330,14 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_unknown_att_type"
         }
       ]
     },
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Commit does not contain authorization",
-          "short_name": "disallowed_no_authorization"
+          "failure_msg": "Commit does not contain authorization"
         },
         "description": "Enterprise Contract verifies if the build was authorized",
         "scope": "rule",
@@ -354,7 +346,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/authorization.rego",
-        "row": 12
+        "row": 11
       },
       "path": [
         {
@@ -375,15 +367,14 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_disallowed_no_authorization"
         }
       ]
     },
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Commit %s does not match authorized commit %s",
-          "short_name": "disallowed_commit_does_not_match"
+          "failure_msg": "Commit %s does not match authorized commit %s"
         },
         "description": "Enterprise Contract verifies if an authorized commit was used as the source of a build",
         "scope": "rule",
@@ -392,7 +383,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/authorization.rego",
-        "row": 25
+        "row": 23
       },
       "path": [
         {
@@ -413,15 +404,14 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_disallowed_commit_does_not_match"
         }
       ]
     },
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Repo url %s does not match authorized repo url %s",
-          "short_name": "disallowed_repo_url_does_not_match"
+          "failure_msg": "Repo url %s does not match authorized repo url %s"
         },
         "description": "Enterprise Contract verifies if an authorized repo url was used to build an image",
         "scope": "rule",
@@ -430,7 +420,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/authorization.rego",
-        "row": 40
+        "row": 37
       },
       "path": [
         {
@@ -451,7 +441,7 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_disallowed_repo_url_does_not_match"
         }
       ]
     },
@@ -517,7 +507,7 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_future"
         }
       ]
     },
@@ -549,7 +539,7 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_not_specified"
         }
       ]
     },
@@ -584,7 +574,7 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_past"
         }
       ]
     },
@@ -597,8 +587,7 @@
               "redhat",
               "rebuilt"
             ]
-          },
-          "short_name": "java_foreign_dependencies"
+          }
         },
         "description": "The SBOM_JAVA_COMPONENTS_COUNT TaskResult finds dependencies that have\noriginated from foreign repositories, i.e. ones that are not rebuilt or\nredhat.",
         "scope": "rule",
@@ -607,7 +596,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/java.rego",
-        "row": 19
+        "row": 18
       },
       "path": [
         {
@@ -628,7 +617,7 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_java_foreign_dependencies"
         }
       ]
     },
@@ -636,8 +625,7 @@
       "annotations": {
         "custom": {
           "effective_on": "2022-01-01T00:00:00Z",
-          "failure_msg": "It just feels like a bad day to do a release",
-          "short_name": "bad_day"
+          "failure_msg": "It just feels like a bad day to do a release"
         },
         "description": "It's expected this rule will be skipped by policy configuration.\nThis rule is for demonstration and test purposes and should be deleted soon.",
         "scope": "rule",
@@ -646,7 +634,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/not_useful.rego",
-        "row": 15
+        "row": 14
       },
       "path": [
         {
@@ -667,7 +655,7 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_bad_day"
         }
       ]
     },
@@ -711,8 +699,7 @@
     {
       "annotations": {
         "custom": {
-          "failure_msg": "It's snowing, no releases today",
-          "short_name": "snow"
+          "failure_msg": "It's snowing, no releases today"
         },
         "description": "It's expected this rule will be skipped by policy configuration.\nThis rule is for demonstration and test purposes.",
         "scope": "rule",
@@ -721,7 +708,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/not_useful/weather.rego",
-        "row": 28
+        "row": 27
       },
       "path": [
         {
@@ -746,15 +733,14 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_snow"
         }
       ]
     },
     {
       "annotations": {
         "custom": {
-          "failure_msg": "It's too hot, no releases today",
-          "short_name": "heatwave"
+          "failure_msg": "It's too hot, no releases today"
         },
         "description": "It's expected this rule will be skipped by policy configuration.\nThis rule is for demonstration and test purposes.",
         "scope": "rule",
@@ -763,7 +749,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/not_useful/weather.rego",
-        "row": 42
+        "row": 40
       },
       "path": [
         {
@@ -788,7 +774,7 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_heatwave"
         }
       ]
     },
@@ -833,8 +819,7 @@
               "registry.access.redhat.com/",
               "registry.redhat.io/"
             ]
-          },
-          "short_name": "disallowed_task_step_image"
+          }
         },
         "description": "Enterprise Contract has a list of allowed registry prefixes. Each step in each\neach TaskRun must run on a container image with a url that matches one of the\nprefixes in the list.",
         "scope": "rule",
@@ -843,7 +828,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/step_image_registries.rego",
-        "row": 20
+        "row": 19
       },
       "path": [
         {
@@ -864,7 +849,7 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_disallowed_task_step_image"
         }
       ]
     },
@@ -915,8 +900,7 @@
     {
       "annotations": {
         "custom": {
-          "failure_msg": "No tasks found in PipelineRun attestation",
-          "short_name": "tasks_missing"
+          "failure_msg": "No tasks found in PipelineRun attestation"
         },
         "description": "This policy enforces that at least one Task is present in the PipelineRun\nattestation.",
         "scope": "rule",
@@ -925,7 +909,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/tasks.rego",
-        "row": 34
+        "row": 33
       },
       "path": [
         {
@@ -946,15 +930,14 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_tasks_missing"
         }
       ]
     },
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Required task(s) '%s' not found in the PipelineRun attestation",
-          "short_name": "tasks_required"
+          "failure_msg": "Required task(s) '%s' not found in the PipelineRun attestation"
         },
         "description": "This policy enforces that the required set of tasks is run in a\nPipelineRun.",
         "scope": "rule",
@@ -963,7 +946,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/tasks.rego",
-        "row": 50
+        "row": 48
       },
       "path": [
         {
@@ -984,15 +967,14 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_tasks_required"
         }
       ]
     },
     {
       "annotations": {
         "custom": {
-          "failure_msg": "No test data found",
-          "short_name": "test_data_missing"
+          "failure_msg": "No test data found"
         },
         "description": "None of the tasks in the pipeline included a HACBS_TEST_OUTPUT\ntask result, which is where Enterprise Contract expects to find\ntest result data.",
         "scope": "rule",
@@ -1001,7 +983,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/test.rego",
-        "row": 16
+        "row": 15
       },
       "path": [
         {
@@ -1022,15 +1004,14 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_test_data_missing"
         }
       ]
     },
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Found tests without results",
-          "short_name": "test_results_missing"
+          "failure_msg": "Found tests without results"
         },
         "description": "Each test result is expected to have a 'results' key. In at least\none of the HACBS_TEST_OUTPUT task results this key was not present.",
         "scope": "rule",
@@ -1039,7 +1020,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/test.rego",
-        "row": 30
+        "row": 28
       },
       "path": [
         {
@@ -1060,7 +1041,7 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_test_results_missing"
         }
       ]
     },
@@ -1075,8 +1056,7 @@
               "ERROR",
               "SKIPPED"
             ]
-          },
-          "short_name": "test_result_unsupported"
+          }
         },
         "description": "This policy expects a set of known/supported results in the test data\nIt is a failure if we encounter a result that is not supported.",
         "scope": "rule",
@@ -1085,7 +1065,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/test.rego",
-        "row": 51
+        "row": 48
       },
       "path": [
         {
@@ -1106,15 +1086,14 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_test_result_unsupported"
         }
       ]
     },
     {
       "annotations": {
         "custom": {
-          "failure_msg": "The following tests did not complete successfully: %s",
-          "short_name": "test_result_failures"
+          "failure_msg": "The following tests did not complete successfully: %s"
         },
         "description": "Enterprise Contract requires that all the tests in the test results\nhave a successful result. A successful result is one that isn't a\n\"FAILURE\" or \"ERROR\". This will fail if any of the tests failed and\nthe failure message will list the names of the failing tests.",
         "scope": "rule",
@@ -1123,7 +1102,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/test.rego",
-        "row": 74
+        "row": 70
       },
       "path": [
         {
@@ -1144,15 +1123,14 @@
         },
         {
           "type": "string",
-          "value": "deny"
+          "value": "deny_test_result_failures"
         }
       ]
     },
     {
       "annotations": {
         "custom": {
-          "failure_msg": "The following tests were skipped: %s",
-          "short_name": "test_result_skipped"
+          "failure_msg": "The following tests were skipped: %s"
         },
         "description": "Collects all tests that have their result set to \"SKIPPED\".",
         "scope": "rule",
@@ -1161,7 +1139,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/test.rego",
-        "row": 103
+        "row": 98
       },
       "path": [
         {
@@ -1182,7 +1160,7 @@
         },
         {
           "type": "string",
-          "value": "warn"
+          "value": "warn_test_result_skipped"
         }
       ]
     }

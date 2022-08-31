@@ -22,12 +22,12 @@ all_required_task_refs := [
 all_bar_two := array.slice(all_required_task_refs, 2, count(all_required_task_refs))
 
 test_passing {
-	lib.assert_empty(deny) with input.spec.tasks as mock_taskref_data(all_required_task_refs)
+	lib.assert_empty(deny_required_tasks) with input.spec.tasks as mock_taskref_data(all_required_task_refs)
 		with input.kind as "Pipeline"
 }
 
 test_failing {
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_required_tasks, {{
 		"code": "required_tasks",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Required tasks 'clamav-scan', 'conftest-clair' were not found in the pipeline's task list",
@@ -38,14 +38,14 @@ test_edge_cases {
 	failure_msg_end := "not found in the pipeline's task list"
 
 	# No tasks at all
-	endswith(deny[_].msg, failure_msg_end) with input.kind as "Pipeline"
+	endswith(deny_required_tasks[_].msg, failure_msg_end) with input.kind as "Pipeline"
 
 	# Task list is empty
-	endswith(deny[_].msg, failure_msg_end) with input.kind as "Pipeline" with input.spec.tasks as []
+	endswith(deny_required_tasks[_].msg, failure_msg_end) with input.kind as "Pipeline" with input.spec.tasks as []
 
 	# A task without a taskRef
-	endswith(deny[_].msg, failure_msg_end) with input.kind as "Pipeline" with input.spec.tasks as [{"foo": "bar"}]
+	endswith(deny_required_tasks[_].msg, failure_msg_end) with input.kind as "Pipeline" with input.spec.tasks as [{"foo": "bar"}]
 
 	# A task without a taskRef name
-	endswith(deny[_].msg, failure_msg_end) with input.kind as "Pipeline" with input.spec.tasks as [{"taskRef": {"foo": "bar"}}]
+	endswith(deny_required_tasks[_].msg, failure_msg_end) with input.kind as "Pipeline" with input.spec.tasks as [{"taskRef": {"foo": "bar"}}]
 }

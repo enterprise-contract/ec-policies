@@ -9,7 +9,6 @@ import data.lib
 #   each TaskRun must run on a container image with a url that matches one of the
 #   prefixes in the list.
 # custom:
-#   short_name: disallowed_task_step_image
 #   failure_msg: Step %d in task '%s' has disallowed image ref '%s'
 #   rule_data:
 #     allowed_registry_prefixes:
@@ -17,7 +16,7 @@ import data.lib
 #     - registry.access.redhat.com/
 #     - registry.redhat.io/
 #
-deny[result] {
+deny_disallowed_task_step_image[result] {
 	att := lib.pipelinerun_attestations[_]
 	task := att.predicate.buildConfig.tasks[_]
 	step := task.steps[step_index]

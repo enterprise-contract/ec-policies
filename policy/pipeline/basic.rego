@@ -13,10 +13,9 @@ expected_kind := "Pipeline"
 # description: |-
 #   A sanity check to confirm the input data has the kind "Pipeline"
 # custom:
-#   short_name: unexpected_kind
 #   failure_msg: Unexpected kind '%s'
 #
-deny[result] {
+deny_unexpected_kind[result] {
 	expected_kind != input.kind
 	result := lib.result_helper(rego.metadata.chain(), [input.kind])
 }

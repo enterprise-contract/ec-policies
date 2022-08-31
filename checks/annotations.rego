@@ -6,7 +6,6 @@ import future.keywords.in
 required_annotations := {
 	"title",
 	"description",
-	"custom.short_name",
 	"custom.failure_msg",
 }
 
@@ -60,7 +59,7 @@ violation[msg] {
 	# ... and ignore non-rule annotations, e.g. package, document.
 	annotation.annotations.scope == "rule"
 
-	# gather all annotations in a dotted format (e.g. "custom.short_name")
+	# gather all annotations in a dotted format (e.g. "custom.failure_msg")
 	declared_annotations := union({a |
 		annotation.annotations[x]
 		a := flat(x, annotation.annotations[x])

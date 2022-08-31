@@ -29,9 +29,8 @@ all_required_tasks := {t | t := rego.metadata.chain()[_].annotations.custom.task
 #   This policy enforces that at least one Task is present in the PipelineRun
 #   attestation.
 # custom:
-#   short_name: tasks_missing
 #   failure_msg: No tasks found in PipelineRun attestation
-deny[result] {
+deny_tasks_missing[result] {
 	att := lib.pipelinerun_attestations[_]
 
 	count(att.predicate.buildConfig.tasks) == 0
@@ -45,9 +44,8 @@ deny[result] {
 #   This policy enforces that the required set of tasks is run in a
 #   PipelineRun.
 # custom:
-#   short_name: tasks_required
 #   failure_msg: Required task(s) '%s' not found in the PipelineRun attestation
-deny[result] {
+deny_tasks_required[result] {
 	att := lib.pipelinerun_attestations[_]
 
 	# reported by tasks_missing above

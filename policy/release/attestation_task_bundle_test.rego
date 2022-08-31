@@ -17,13 +17,13 @@ test_bundle_not_exists {
 	})
 
 	expected_msg := "Task 'my-task' does not contain a bundle reference"
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_disallowed_task_reference, {{
 		"code": "disallowed_task_reference",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as d
 
-	lib.assert_empty(warn) with input.attestations as d
+	lib.assert_empty(warn_out_of_date_task_bundle) with input.attestations as d
 }
 
 test_bundle_not_exists_empty_string {
@@ -35,13 +35,13 @@ test_bundle_not_exists_empty_string {
 	})
 
 	expected_msg := sprintf("Task '%s' uses an empty bundle image reference", [name])
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_empty_task_bundle_reference, {{
 		"code": "empty_task_bundle_reference",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as d
 
-	lib.assert_empty(warn) with input.attestations as d
+	lib.assert_empty(warn_out_of_date_task_bundle) with input.attestations as d
 }
 
 test_bundle_reference_valid {
@@ -55,28 +55,28 @@ test_bundle_reference_valid {
 		},
 	})
 
-	lib.assert_empty(warn) with input.attestations as d
-	lib.assert_empty(deny) with input.attestations as d
+	lib.assert_empty(warn_out_of_date_task_bundle) with input.attestations as d
+	lib.assert_empty(deny_empty_task_bundle_reference) with input.attestations as d
 }
 
 # All good when the most recent bundle is used.
 test_acceptable_bundle_up_to_date {
 	attestations := mock_attestation(["reg.com/repo@sha256:abc"])
 
-	lib.assert_empty(warn) with input.attestations as attestations
+	lib.assert_empty(warn_out_of_date_task_bundle) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 
-	lib.assert_empty(deny) with input.attestations as attestations
+	lib.assert_empty(deny_unacceptable_task_bundle) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 }
 
 # All good when the most recent bundle is used when streams are used.
 test_acceptable_bundle_up_to_date_with_streams {
 	attestations := mock_attestation(["reg.com/repo:903d49a833d22f359bce3d67b15b006e1197bae5-2@sha256:abc"])
-	lib.assert_empty(warn) with input.attestations as attestations
+	lib.assert_empty(warn_out_of_date_task_bundle) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 
-	lib.assert_empty(deny) with input.attestations as attestations
+	lib.assert_empty(deny_unacceptable_task_bundle) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 }
 
@@ -84,7 +84,7 @@ test_acceptable_bundle_up_to_date_with_streams {
 test_acceptable_bundle_out_of_date_past {
 	attestations := mock_attestation(["reg.com/repo@sha256:bcd", "reg.com/repo@sha256:cde"])
 
-	lib.assert_equal(warn, {
+	lib.assert_equal(warn_out_of_date_task_bundle, {
 		{
 			"code": "out_of_date_task_bundle",
 			"effective_on": "2022-01-01T00:00:00Z",
@@ -98,7 +98,7 @@ test_acceptable_bundle_out_of_date_past {
 	}) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 
-	lib.assert_empty(deny) with input.attestations as attestations
+	lib.assert_empty(deny_unacceptable_task_bundle) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 }
 
@@ -110,7 +110,7 @@ test_acceptable_bundle_out_of_date_past_with_streams {
 		"reg.com/repo:120dda49a6cc3b89516b491e19fe1f3a07f1427f-2@sha256:cde",
 	])
 
-	lib.assert_equal(warn, {
+	lib.assert_equal(warn_out_of_date_task_bundle, {
 		{
 			"code": "out_of_date_task_bundle",
 			"effective_on": "2022-01-01T00:00:00Z",
@@ -124,17 +124,17 @@ test_acceptable_bundle_out_of_date_past_with_streams {
 	}) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 
-	lib.assert_empty(deny) with input.attestations as attestations
+	lib.assert_empty(deny_unacceptable_task_bundle) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 }
 
 # Warn about bundles that are no longer active.
 test_acceptable_bundle_expired {
 	attestations := mock_attestation(["reg.com/repo@sha256:def"])
-	lib.assert_empty(warn) with input.attestations as attestations
+	lib.assert_empty(warn_out_of_date_task_bundle) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_unacceptable_task_bundle, {{
 		"code": "unacceptable_task_bundle",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Task 'task-run-0' uses an unacceptable task bundle 'reg.com/repo@sha256:def'",
@@ -145,10 +145,10 @@ test_acceptable_bundle_expired {
 # Warn about bundles that are no longer active when streams are used.
 test_acceptable_bundle_expired_with_streams {
 	attestations := mock_attestation(["reg.com/repo:903d49a833d22f359bce3d67b15b006e1197bae5-1@sha256:def"])
-	lib.assert_empty(warn) with input.attestations as attestations
+	lib.assert_empty(warn_out_of_date_task_bundle) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_unacceptable_task_bundle, {{
 		"code": "unacceptable_task_bundle",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Task 'task-run-0' uses an unacceptable task bundle 'reg.com/repo:903d49a833d22f359bce3d67b15b006e1197bae5-1@sha256:def'",

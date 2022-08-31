@@ -68,14 +68,15 @@ const helpers = {
     const output = []
     var pkgAnnotation = {}
     rawData.annotations.forEach((a) => {
+      const ruleName = a.path[a.path.length-1].value
       const dottedPath = helpers.toDottedPath(a.path)
       const inNamespace = dottedPath.startsWith(namespace)
 
       if (inNamespace) {
         const isPackageScope = a.annotations.scope == "package"
         const isRuleScope = a.annotations.scope == "rule"
-        const isDeny = dottedPath.endsWith(".deny")
-        const isWarn = dottedPath.endsWith(".warn")
+        const isDeny = ruleName.startsWith("deny_")
+        const isWarn = ruleName.startsWith("warn_")
 
         // If we see a package scoped annotation then save it
         if (isPackageScope) {
@@ -86,7 +87,7 @@ const helpers = {
         if (isRuleScope && (isDeny || isWarn)) {
           const title = a.annotations.title
           const description = a.annotations.description
-          const shortName = a.annotations.custom.short_name
+          const shortName = ruleName.replace(/^(deny_|warn_)/, '')
           const warningOrFailure = isWarn ? "warning" : "failure"
           const failureMsg = a.annotations.custom.failure_msg
           const effectiveOn = a.annotations.custom.effective_on

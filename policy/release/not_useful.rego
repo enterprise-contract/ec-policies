@@ -8,11 +8,10 @@ import data.lib
 #   It's expected this rule will be skipped by policy configuration.
 #   This rule is for demonstration and test purposes and should be deleted soon.
 # custom:
-#   short_name: bad_day
 #   failure_msg: It just feels like a bad day to do a release
 #   effective_on: 2022-01-01T00:00:00Z
 #
-deny[result] {
+deny_bad_day[result] {
 	true
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

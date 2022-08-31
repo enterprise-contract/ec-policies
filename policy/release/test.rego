@@ -10,10 +10,9 @@ import future.keywords.in
 #   task result, which is where Enterprise Contract expects to find
 #   test result data.
 # custom:
-#   short_name: test_data_missing
 #   failure_msg: No test data found
 #
-deny[result] {
+deny_test_data_missing[result] {
 	count(lib.results_from_tests) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
@@ -24,10 +23,9 @@ deny[result] {
 #   Each test result is expected to have a 'results' key. In at least
 #   one of the HACBS_TEST_OUTPUT task results this key was not present.
 # custom:
-#   short_name: test_results_missing
 #   failure_msg: Found tests without results
 #
-deny[result] {
+deny_test_results_missing[result] {
 	with_results := [result | result := lib.results_from_tests[_].result]
 	count(with_results) != count(lib.results_from_tests)
 	result := lib.result_helper(rego.metadata.chain(), [])
@@ -39,7 +37,6 @@ deny[result] {
 #   This policy expects a set of known/supported results in the test data
 #   It is a failure if we encounter a result that is not supported.
 # custom:
-#   short_name: test_result_unsupported
 #   failure_msg: Test '%s' has unsupported result '%s'
 #   rule_data:
 #     supported_results:
@@ -48,7 +45,7 @@ deny[result] {
 #     - ERROR
 #     - SKIPPED
 #
-deny[result] {
+deny_test_result_unsupported[result] {
 	all_unsupported := [u |
 		test := lib.results_from_tests[_]
 		not test.result in rego.metadata.rule().custom.rule_data.supported_results
@@ -68,10 +65,9 @@ deny[result] {
 #   "FAILURE" or "ERROR". This will fail if any of the tests failed and
 #   the failure message will list the names of the failing tests.
 # custom:
-#   short_name: test_result_failures
 #   failure_msg: "The following tests did not complete successfully: %s"
 #
-deny[result] {
+deny_test_result_failures[result] {
 	all_failed = resulted_in({"FAILURE", "ERROR"})
 
 	# For the complement operation below (subtraction) we need
@@ -97,10 +93,9 @@ deny[result] {
 # description: |-
 #   Collects all tests that have their result set to "SKIPPED".
 # custom:
-#   short_name: test_result_skipped
 #   failure_msg: "The following tests were skipped: %s"
 #
-warn[result] {
+warn_test_result_skipped[result] {
 	all_skipped = resulted_in({"SKIPPED"})
 
 	# Don't report if there aren't any

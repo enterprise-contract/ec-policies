@@ -17,7 +17,6 @@ import data.lib
 #   The matching is done using the taskRef name rather than the pipeline task name.
 #
 # custom:
-#   short_name: required_tasks
 #   failure_msg: Required tasks %s were not found in the pipeline's task list
 #   rule_data:
 #     required_task_refs:
@@ -29,7 +28,7 @@ import data.lib
 #     - sast-go
 #     - sast-java-sec-check
 #
-deny[result] {
+deny_required_tasks[result] {
 	# Find the data in the annotations
 	required_list := rego.metadata.rule().custom.rule_data.required_task_refs
 

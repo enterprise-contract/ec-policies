@@ -10,13 +10,12 @@ import future.keywords.in
 #   originated from foreign repositories, i.e. ones that are not rebuilt or
 #   redhat.
 # custom:
-#   short_name: java_foreign_dependencies
 #   failure_msg: Found Java dependencies from '%s', expecting to find only from '%s'
 #   rule_data:
 #     allowed_component_sources:
 #       - redhat
 #       - rebuilt
-deny[result] {
+deny_java_foreign_dependencies[result] {
 	results := lib.results_named(lib.java_sbom_component_count_result_name)
 
 	# convert to set

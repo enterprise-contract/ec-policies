@@ -9,7 +9,7 @@ test_no_tasks_present {
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}
 
-	lib.assert_equal(deny, expected) with input.attestations as [{"predicate": {
+	lib.assert_equal(deny_tasks_missing, expected) with input.attestations as [{"predicate": {
 		"buildType": lib.pipelinerun_att_build_type,
 		"buildConfig": {"tasks": []},
 	}}]
@@ -18,7 +18,7 @@ test_no_tasks_present {
 test_empty_task_attested {
 	expected := missing_tasks_error(all_required_tasks)
 
-	lib.assert_equal(deny, expected) with input.attestations as [{"predicate": {
+	lib.assert_equal(deny_tasks_required, expected) with input.attestations as [{"predicate": {
 		"buildType": lib.pipelinerun_att_build_type,
 		"buildConfig": {"tasks": [{}]},
 	}}]
@@ -27,7 +27,7 @@ test_empty_task_attested {
 test_all_required_tasks_not_present {
 	expected := missing_tasks_error(all_required_tasks)
 
-	lib.assert_equal(deny, expected) with input.attestations as [{"predicate": {
+	lib.assert_equal(deny_tasks_required, expected) with input.attestations as [{"predicate": {
 		"buildType": lib.pipelinerun_att_build_type,
 		"buildConfig": {"tasks": [{"ref": {"name": "custom", "kind": "Task"}}]},
 	}}]
@@ -36,7 +36,7 @@ test_all_required_tasks_not_present {
 test_all_but_one_required_task_not_present {
 	expected := missing_tasks_error(all_required_tasks - {"sanity-inspect-image"})
 
-	lib.assert_equal(deny, expected) with input.attestations as [{"predicate": {
+	lib.assert_equal(deny_tasks_required, expected) with input.attestations as [{"predicate": {
 		"buildType": lib.pipelinerun_att_build_type,
 		"buildConfig": {"tasks": [{"ref": {"name": "sanity-inspect-image", "kind": "Task"}}]},
 	}}]
@@ -45,7 +45,7 @@ test_all_but_one_required_task_not_present {
 test_several_tasks_not_present {
 	expected := missing_tasks_error(all_required_tasks - {"sanity-inspect-image", "clamav-scan", "add-sbom-and-push"})
 
-	lib.assert_equal(deny, expected) with input.attestations as [{"predicate": {
+	lib.assert_equal(deny_tasks_required, expected) with input.attestations as [{"predicate": {
 		"buildType": lib.pipelinerun_att_build_type,
 		"buildConfig": {"tasks": [
 			{"ref": {"name": "sanity-inspect-image", "kind": "Task"}},
@@ -58,7 +58,7 @@ test_several_tasks_not_present {
 test_tricks {
 	expected := missing_tasks_error(all_required_tasks)
 
-	lib.assert_equal(deny, expected) with input.attestations as [{"predicate": {
+	lib.assert_equal(deny_tasks_required, expected) with input.attestations as [{"predicate": {
 		"buildType": lib.pipelinerun_att_build_type,
 		"buildConfig": {"tasks": [
 			{"name": "sanity-inspect-image"},

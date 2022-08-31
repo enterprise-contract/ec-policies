@@ -13,7 +13,9 @@ _current_and_future_denies_or_warns(policy_namespace, deny_or_warn) := rule_set 
 		policy_packages := data.policy[policy_namespace]
 		policy_package := policy_packages[package_name]
 		not skip_package(package_name)
-		r := policy_package[deny_or_warn][_]
+		rule := policy_package[rule_name]
+		startswith(rule_name, deny_or_warn)
+		r := rule[_]
 	}
 }
 

@@ -7,9 +7,8 @@ import data.lib
 # description: |-
 #   Enterprise Contract verifies if the build was authorized
 # custom:
-#   short_name: disallowed_no_authorization
 #   failure_msg: Commit does not contain authorization
-deny[result] {
+deny_disallowed_no_authorization[result] {
 	data.authorization
 	not data.authorization.authorizers
 	result := lib.result_helper(rego.metadata.chain(), [])
@@ -20,9 +19,8 @@ deny[result] {
 # description: |-
 #   Enterprise Contract verifies if an authorized commit was used as the source of a build
 # custom:
-#   short_name: disallowed_commit_does_not_match
 #   failure_msg: Commit %s does not match authorized commit %s
-deny[result] {
+deny_disallowed_commit_does_not_match[result] {
 	data.authorization
 	att := lib.pipelinerun_attestations[_]
 	material := att.predicate.materials[_]
@@ -35,9 +33,8 @@ deny[result] {
 # description: |-
 #   Enterprise Contract verifies if an authorized repo url was used to build an image
 # custom:
-#   short_name: disallowed_repo_url_does_not_match
 #   failure_msg: Repo url %s does not match authorized repo url %s
-deny[result] {
+deny_disallowed_repo_url_does_not_match[result] {
 	data.authorization
 	att := lib.pipelinerun_attestations[_]
 	material := att.predicate.materials[_]

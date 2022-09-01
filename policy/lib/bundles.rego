@@ -19,6 +19,15 @@ empty_task_bundle_reference(tasks) = matches {
 	}
 }
 
+# Returns a subset of tasks that use bundle references not pinned to a digest.
+unpinned_task_bundle(tasks) = matches {
+	matches := {task |
+		task := tasks[_]
+		ref := image.parse(bundle(task))
+		ref.digest == ""
+	}
+}
+
 # Returns a subset of tasks that use an acceptable bundle reference, but
 # an updated bundle reference exists.
 out_of_date_task_bundle(tasks) = matches {
@@ -27,7 +36,7 @@ out_of_date_task_bundle(tasks) = matches {
 		ref := image.parse(bundle(task))
 		collection := _collection(ref)
 
-		collection[match_index].digest == ref.digest
+		is_equal(collection[match_index], ref)
 		match_index > 0
 	}
 }
@@ -41,11 +50,26 @@ unacceptable_task_bundle(tasks) = matches {
 
 		matches := [record |
 			record := collection[_]
-			record.digest == ref.digest
+			is_equal(record, ref)
 		]
 
 		count(matches) == 0
 	}
+}
+
+# Returns whether or not the ref matches the digest of the record.
+is_equal(record, ref) = match {
+	ref.digest != ""
+	match := record.digest == ref.digest
+}
+
+# Returns whether or not the ref matches the tag of the record as a fallback
+# in case the digest is blank for the ref. This is a weaker comparison as,
+# unlike digests, tags are not immutable entities. It is expected that a
+# missing digest results in a warning whenever possible.
+is_equal(record, ref) = match {
+	ref.digest == ""
+	match := record.tag == ref.tag
 }
 
 # Extract the bundle reference value from a Task that is found

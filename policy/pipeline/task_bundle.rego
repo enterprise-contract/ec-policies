@@ -31,6 +31,20 @@ deny[result] {
 }
 
 # METADATA
+# title: Unpinned task bundle reference
+# description: |-
+#   Check if the Tekton Bundle used for the Tasks in the Pipeline definition
+#   is pinned to a digest.
+# custom:
+#   short_name: unpinned_task_bundle
+#   failure_msg: Pipeline task '%s' uses an unpinned task bundle reference '%s'
+#
+warn[result] {
+	task := bundles.unpinned_task_bundle(input.spec.tasks)[_]
+	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
+}
+
+# METADATA
 # title: Task bundle is out of date
 # description: |-
 #   Check if the Tekton Bundle used for the Tasks in the Pipeline definition

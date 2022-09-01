@@ -22,6 +22,22 @@ test_empty_task_bundle_reference {
 	lib.assert_equal(empty_task_bundle_reference(tasks), expected)
 }
 
+test_unpinned_task_bundle {
+	tasks := [
+		{
+			"name": "my-task-1",
+			"taskRef": {"bundle": "reg.com/repo:903d49a833d22f359bce3d67b15b006e1197bae5-2"},
+		},
+		{
+			"name": "my-task-2",
+			"ref": {"bundle": "reg.com/repo:903d49a833d22f359bce3d67b15b006e1197bae5-2"},
+		},
+	]
+
+	expected := {task | task := tasks[_]}
+	lib.assert_equal(unpinned_task_bundle(tasks), expected)
+}
+
 # All good when the most recent bundle is used.
 test_acceptable_bundle {
 	tasks := [
@@ -31,6 +47,7 @@ test_acceptable_bundle {
 
 	lib.assert_empty(disallowed_task_reference(tasks)) with data["task-bundles"] as task_bundles
 	lib.assert_empty(empty_task_bundle_reference(tasks)) with data["task-bundles"] as task_bundles
+	lib.assert_empty(unpinned_task_bundle(tasks)) with data["task-bundles"] as task_bundles
 	lib.assert_empty(out_of_date_task_bundle(tasks)) with data["task-bundles"] as task_bundles
 	lib.assert_empty(unacceptable_task_bundle(tasks)) with data["task-bundles"] as task_bundles
 }
@@ -50,6 +67,7 @@ test_acceptable_bundle_up_to_date_with_streams {
 
 	lib.assert_empty(disallowed_task_reference(tasks)) with data["task-bundles"] as task_bundles
 	lib.assert_empty(empty_task_bundle_reference(tasks)) with data["task-bundles"] as task_bundles
+	lib.assert_empty(unpinned_task_bundle(tasks)) with data["task-bundles"] as task_bundles
 	lib.assert_empty(out_of_date_task_bundle(tasks)) with data["task-bundles"] as task_bundles
 	lib.assert_empty(unacceptable_task_bundle(tasks)) with data["task-bundles"] as task_bundles
 }
@@ -115,6 +133,28 @@ test_unacceptable_task_bundles_with_streams {
 
 	expected := {task | task := tasks[_]}
 	lib.assert_equal(unacceptable_task_bundle(tasks), expected) with data["task-bundles"] as task_bundles
+}
+
+test_is_equal {
+	record := {"digest": "sha256:abc", "tag": "spam"}
+
+	# Exact match
+	lib.assert_equal(is_equal(record, {"digest": "sha256:abc", "tag": "spam"}), true)
+
+	# Tag is ignored if digest matches
+	lib.assert_equal(is_equal(record, {"digest": "sha256:abc", "tag": "not-spam"}), true)
+
+	# Tag is not required
+	lib.assert_equal(is_equal(record, {"digest": "sha256:abc", "tag": ""}), true)
+
+	# When digest is missing on ref, compare tag
+	lib.assert_equal(is_equal(record, {"digest": "", "tag": "spam"}), true)
+
+	# If digest does not match, tag is still ignored
+	lib.assert_equal(is_equal(record, {"digest": "sha256:bcd", "tag": "spam"}), false)
+
+	# No match is honored when digest is missing
+	lib.assert_equal(is_equal(record, {"digest": "", "tag": "not-spam"}), false)
 }
 
 test_stream {

@@ -28,10 +28,24 @@ test_bundle_not_exists_empty_string {
 	lib.assert_empty(warn) with input.spec.tasks as tasks
 }
 
+test_bundle_unpinned {
+	tasks := [{
+		"name": "my-task",
+		"taskRef": {"bundle": "reg.com/repo:latest"},
+	}]
+
+	lib.assert_empty(deny) with input.spec.tasks as tasks
+	lib.assert_equal(warn, {{
+		"code": "unpinned_task_bundle",
+		"msg": "Pipeline task 'my-task' uses an unpinned task bundle reference 'reg.com/repo:latest'",
+		"effective_on": "2022-01-01T00:00:00Z",
+	}}) with input.spec.tasks as tasks
+}
+
 test_bundle_reference_valid {
 	tasks := [{
 		"name": "my-task",
-		"taskRef": {"bundle": "quay.io/redhat-appstudio/hacbs-templates-bundle:latest"},
+		"taskRef": {"bundle": "quay.io/redhat-appstudio/hacbs-templates-bundle:latest@sha256:abc"},
 	}]
 
 	lib.assert_empty(deny) with input.spec.tasks as tasks

@@ -44,9 +44,29 @@ test_bundle_not_exists_empty_string {
 	lib.assert_empty(warn) with input.attestations as d
 }
 
+test_bundle_unpinned {
+	name := "my-task"
+	image := "reg.com/repo:latest"
+	d := mock_data({
+		"name": name,
+		"ref": {
+			"name": "good-task",
+			"bundle": image,
+		},
+	})
+
+	lib.assert_empty(deny) with input.attestations as d
+	expected_msg := sprintf("Pipeline task '%s' uses an unpinned task bundle reference '%s'", [name, image])
+	lib.assert_equal(warn, {{
+		"code": "unpinned_task_bundle",
+		"msg": expected_msg,
+		"effective_on": "2022-01-01T00:00:00Z",
+	}}) with input.attestations as d
+}
+
 test_bundle_reference_valid {
 	name := "my-task"
-	image := "quay.io/redhat-appstudio/hacbs-templates-bundle:latest"
+	image := "quay.io/redhat-appstudio/hacbs-templates-bundle:latest@sha256:abc"
 	d := mock_data({
 		"name": name,
 		"ref": {

@@ -1,5 +1,8 @@
 pipeline-bundles:
   quay.io/redhat-appstudio/build-templates-bundle:
+  - digest: sha256:39b690b974784e2c5c7aeb01635d4cdfcc5a67b02a306d83b0c6f65ea1fbd485
+    effective_on: "2022-10-03T00:00:00Z"
+    tag: 35ff4b48be4fc6bdac97dc8ccae82487aef4bd30
   - digest: sha256:860db87b85ba502ede2d75e8d729d0105e31a49e45823824ca5af9d6a6d22e6e
     effective_on: "2022-10-02T00:00:00Z"
     tag: 13f5d9c921b3f727684a00084037f673a0dc4273
@@ -74,6 +77,15 @@ pipeline-bundles:
     tag: 5003b8eae14c0b71d8c96419c38cf9a5c7788502
 task-bundles:
   quay.io/redhat-appstudio/appstudio-tasks:
+  - digest: sha256:a728a012918c7483ce0108296cb11d9a8de7d98b9521901325fd09b062af259d
+    effective_on: "2022-10-03T00:00:00Z"
+    tag: 35ff4b48be4fc6bdac97dc8ccae82487aef4bd30-3
+  - digest: sha256:0edc7531bba6456c64fbb548b6a0bc91d473fb069937f009b47f98d4330f3bc1
+    effective_on: "2022-10-03T00:00:00Z"
+    tag: 35ff4b48be4fc6bdac97dc8ccae82487aef4bd30-2
+  - digest: sha256:3a54022d00757bfd362ebbc5b2447914eee5457707399fe1150bf739d1a36abf
+    effective_on: "2022-10-03T00:00:00Z"
+    tag: 35ff4b48be4fc6bdac97dc8ccae82487aef4bd30-1
   - digest: sha256:17af3235c7e61d1700c07bb63d95775166a40e1d8ccbd20bbd2a90e5453a574a
     effective_on: "2022-10-02T00:00:00Z"
     tag: 13f5d9c921b3f727684a00084037f673a0dc4273-3

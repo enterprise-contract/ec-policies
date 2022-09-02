@@ -1,3 +1,10 @@
+#
+# METADATA
+# description: |-
+#   HACBS expects that certain tests are going to be run during image builds.
+#   This package includes some rules to confirm that the pipeline definition
+#   includes the Tekton tasks to run those required tests.
+#
 package policy.pipeline.required_tasks
 
 import data.lib

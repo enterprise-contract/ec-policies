@@ -1,3 +1,8 @@
+#
+# METADATA
+# description: |-
+#   Sanity checks related to the format of the image build's attestation.
+#
 package policy.release.attestation_type
 
 import data.lib

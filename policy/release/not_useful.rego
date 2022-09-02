@@ -1,3 +1,13 @@
+#
+# METADATA
+# description: |-
+#   A package containing a bogus test useful for early testing and demos.
+#
+#   TODO: Delete me
+#
+# custom:
+#   effective_on: 2022-01-01T00:00:00Z
+#
 package policy.release.not_useful
 
 import data.lib

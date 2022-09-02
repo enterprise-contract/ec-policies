@@ -1,3 +1,13 @@
+#
+# METADATA
+# description: |-
+#   Enterprise Contract requires that each build was subjected
+#   to a set of tests and that those tests all passed. This package
+#   includes a set of rules to verify that.
+#
+#   TODO: Document how you can skip the requirement for individual
+#   tests if needed using the `non_blocking_rule` configuration.
+#
 package policy.release.test
 
 import data.lib

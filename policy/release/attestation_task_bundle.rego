@@ -1,3 +1,15 @@
+#
+# METADATA
+# title: Task bundle checks
+# description: |-
+#   To be able to reproduce and audit builds accurately it's important
+#   to know exactly what happened during the build. To do this
+#   Enterprise Contract requires that all tasks are defined in a set of
+#   known and trusted task bundles. This package includes rules to
+#   confirm that the tasks that built the image were defined in task
+#   bundles, and that the task bundles used are from the list of known
+#   and trusted bundles.
+#
 package policy.release.attestation_task_bundle
 
 import data.lib

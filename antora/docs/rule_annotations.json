@@ -149,7 +149,197 @@
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Task '%s' does not contain a bundle reference",
+          "failure_msg": "Pipeline task '%s' does not contain a bundle reference",
+          "short_name": "disallowed_task_reference"
+        },
+        "description": "Check for existence of a task bundle. Enforcing this rule will\nfail the contract if the task is not called from a bundle.",
+        "scope": "rule",
+        "title": "Task bundle was not used or is not defined"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/pipeline/task_bundle.rego",
+        "row": 15
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "pipeline"
+        },
+        {
+          "type": "string",
+          "value": "task_bundle"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Pipeline task '%s' uses an empty bundle image reference",
+          "short_name": "empty_task_bundle_reference"
+        },
+        "description": "Check for a valid task bundle reference being used.",
+        "scope": "rule",
+        "title": "Task bundle reference is empty"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/pipeline/task_bundle.rego",
+        "row": 28
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "pipeline"
+        },
+        {
+          "type": "string",
+          "value": "task_bundle"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Pipeline task '%s' uses an unpinned task bundle reference '%s'",
+          "short_name": "unpinned_task_bundle"
+        },
+        "description": "Check if the Tekton Bundle used for the Tasks in the Pipeline definition\nis pinned to a digest.",
+        "scope": "rule",
+        "title": "Unpinned task bundle reference"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/pipeline/task_bundle.rego",
+        "row": 42
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "pipeline"
+        },
+        {
+          "type": "string",
+          "value": "task_bundle"
+        },
+        {
+          "type": "string",
+          "value": "warn"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Pipeline task '%s' uses an out of date task bundle '%s'",
+          "short_name": "out_of_date_task_bundle"
+        },
+        "description": "Check if the Tekton Bundle used for the Tasks in the Pipeline definition\nis the most recent acceptable one. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.",
+        "scope": "rule",
+        "title": "Task bundle is out of date"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/pipeline/task_bundle.rego",
+        "row": 59
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "pipeline"
+        },
+        {
+          "type": "string",
+          "value": "task_bundle"
+        },
+        {
+          "type": "string",
+          "value": "warn"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Pipeline task '%s' uses an unacceptable task bundle '%s'",
+          "short_name": "unacceptable_task_bundle"
+        },
+        "description": "Check if the Tekton Bundle used for the Tasks in the Pipeline definition\nare acceptable given the tracked effective_on date. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.",
+        "scope": "rule",
+        "title": "Task bundle is not acceptable"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/pipeline/task_bundle.rego",
+        "row": 76
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "pipeline"
+        },
+        {
+          "type": "string",
+          "value": "task_bundle"
+        },
+        {
+          "type": "string",
+          "value": "deny"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Pipeline task '%s' does not contain a bundle reference",
           "short_name": "disallowed_task_reference"
         },
         "description": "Check for existence of a task bundle. Enforcing this rule will\nfail the contract if the task is not called from a bundle.",
@@ -159,7 +349,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/attestation_task_bundle.rego",
-        "row": 16
+        "row": 15
       },
       "path": [
         {
@@ -187,7 +377,7 @@
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Task '%s' uses an empty bundle image reference",
+          "failure_msg": "Pipeline task '%s' uses an empty bundle image reference",
           "short_name": "empty_task_bundle_reference"
         },
         "description": "Check for a valid task bundle reference being used.",
@@ -197,7 +387,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/attestation_task_bundle.rego",
-        "row": 31
+        "row": 28
       },
       "path": [
         {
@@ -225,17 +415,17 @@
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Task '%s' uses an out of date task bundle '%s'",
-          "short_name": "out_of_date_task_bundle"
+          "failure_msg": "Pipeline task '%s' uses an unpinned task bundle reference '%s'",
+          "short_name": "unpinned_task_bundle"
         },
-        "description": "Check if the Tekton Bundle used for the Tasks in the attestation\nis the most recent acceptable one. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.",
+        "description": "Check if the Tekton Bundle used for the Tasks in the Pipeline definition\nis pinned to a digest.",
         "scope": "rule",
-        "title": "Task bundle is out of date"
+        "title": "Unpinned task bundle reference"
       },
       "location": {
         "col": 1,
         "file": "policy/release/attestation_task_bundle.rego",
-        "row": 50
+        "row": 42
       },
       "path": [
         {
@@ -263,7 +453,45 @@
     {
       "annotations": {
         "custom": {
-          "failure_msg": "Task '%s' uses an unacceptable task bundle '%s'",
+          "failure_msg": "Pipeline task '%s' uses an out of date task bundle '%s'",
+          "short_name": "out_of_date_task_bundle"
+        },
+        "description": "Check if the Tekton Bundle used for the Tasks in the attestation\nis the most recent acceptable one. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.",
+        "scope": "rule",
+        "title": "Task bundle is out of date"
+      },
+      "location": {
+        "col": 1,
+        "file": "policy/release/attestation_task_bundle.rego",
+        "row": 59
+      },
+      "path": [
+        {
+          "type": "var",
+          "value": "data"
+        },
+        {
+          "type": "string",
+          "value": "policy"
+        },
+        {
+          "type": "string",
+          "value": "release"
+        },
+        {
+          "type": "string",
+          "value": "attestation_task_bundle"
+        },
+        {
+          "type": "string",
+          "value": "warn"
+        }
+      ]
+    },
+    {
+      "annotations": {
+        "custom": {
+          "failure_msg": "Pipeline task '%s' uses an unacceptable task bundle '%s'",
           "short_name": "unacceptable_task_bundle"
         },
         "description": "Check if the Tekton Bundle used for the Tasks in the attestation\nare acceptable given the tracked effective_on date. See the list of acceptable\ntask bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at\nlink:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]\nin this git repository.",
@@ -273,7 +501,7 @@
       "location": {
         "col": 1,
         "file": "policy/release/attestation_task_bundle.rego",
-        "row": 75
+        "row": 76
       },
       "path": [
         {
@@ -1093,6 +1321,10 @@
       "policy/release/lib/attestations.rego",
       "policy/release/lib/attestations_test.rego"
     ],
+    "data.lib.bundles": [
+      "policy/lib/bundles.rego",
+      "policy/lib/bundles_test.rego"
+    ],
     "data.lib.image": [
       "policy/lib/image.rego",
       "policy/lib/image_test.rego"
@@ -1112,6 +1344,10 @@
     "data.policy.pipeline.required_tasks": [
       "policy/pipeline/required_tasks.rego",
       "policy/pipeline/required_tasks_test.rego"
+    ],
+    "data.policy.pipeline.task_bundle": [
+      "policy/pipeline/task_bundle.rego",
+      "policy/pipeline/task_bundle_test.rego"
     ],
     "data.policy.release.attestation_task_bundle": [
       "policy/release/attestation_task_bundle.rego",

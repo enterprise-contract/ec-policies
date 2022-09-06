@@ -1,4 +1,10 @@
+#
 # METADATA
+# description: |-
+#   Enterprise Contract expects that a set of tasks were included
+#   in the pipeline build for each image to be released.
+#   This package includes a set of rules to verify that the expected
+#   tasks ran in the pipeline when the image was built.
 # custom:
 #   tasks_required:
 #     rule_data:
@@ -11,6 +17,7 @@
 #       - sanity-label-check
 #       - sanity-optional-label-check
 #       - sast-go
+#
 package policy.release.tasks
 
 import data.lib

@@ -1,3 +1,10 @@
+#
+# METADATA
+# description: |-
+#   This package contains a rule to ensure that each task in the image's
+#   build pipeline ran using a container image from a known and presumably
+#   trusted source.
+#
 package policy.release.step_image_registries
 
 import data.lib

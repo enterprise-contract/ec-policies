@@ -1,3 +1,12 @@
+#
+# METADATA
+# description: |-
+#   This package contains rules to check that the image is signed-off
+#   for release. There are different ways of providing that sign-off
+#   authorization.
+#
+#   TODO: Document the ways that release authorization can be provided.
+#
 package policy.release.authorization
 
 import data.lib

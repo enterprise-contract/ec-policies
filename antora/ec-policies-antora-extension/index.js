@@ -58,28 +58,41 @@ const helpers = {
     return yaml.load(moduleFile._contents.toString())
   },
 
+  toDottedPath: (path) => {
+    return path.map(i => i.value).join(".")
+  },
+
   // Extract useful fields and derived values from the raw data and collect
   // them for easy use in the template
   processAnnotationsData: (rawData, namespace) => {
     const output = []
-    var pkgAnnotation = {}
+    const packageAnnotations = {}
+
+    // First pass to collect all the package annotations
     rawData.annotations.forEach((a) => {
-      const dottedPath = a.path.map(i => i.value).join(".")
-      const inNamespace = dottedPath.startsWith(namespace)
+      const fullPath = helpers.toDottedPath(a.path.slice(1))
+      const inNamespace = fullPath.startsWith(namespace)
+      const isPackageScope = a.annotations.scope == "package"
 
-      if (inNamespace) {
-        const isPackageScope = a.annotations.scope == "package"
-        const isRuleScope = a.annotations.scope == "rule"
-        const isDeny = dottedPath.endsWith(".deny")
-        const isWarn = dottedPath.endsWith(".warn")
+      if (inNamespace && isPackageScope) {
+        // This doesn't handle the case where there are multiple entries
+        // for the same package, so let's try to avoid that situation
+        packageAnnotations[fullPath] = a.annotations
+      }
+    })
 
-        // If we see a package scoped annotation then save it
-        if (isPackageScope) {
-          pkgAnnotation = a.annotations
-        }
+    // Now handle the rule annotations
+    rawData.annotations.forEach((a) => {
+      const fullPath = helpers.toDottedPath(a.path.slice(1))
+      const inNamespace = fullPath.startsWith(namespace)
+      const isRuleScope = a.annotations.scope == "rule"
+
+      if (inNamespace && isRuleScope) {
+        const isDeny = fullPath.endsWith(".deny")
+        const isWarn = fullPath.endsWith(".warn")
 
         // Anything that isn't a top level rule doesn't get documented
-        if (isRuleScope && (isDeny || isWarn)) {
+        if (isDeny || isWarn) {
           const title = a.annotations.title
           const description = a.annotations.description
           const shortName = a.annotations.custom.short_name
@@ -89,8 +102,9 @@ const helpers = {
           const file = a.location.file
           const row = a.location.row
 
-          // The package name, will be used for grouping rules
-          const pkgHeading = a.path[3].value
+          const packageShortName = a.path[3].value
+          const packagePath = helpers.toDottedPath(a.path.slice(1, a.path.length-1))
+          const pkgAnnotation = packageAnnotations[packagePath] || {}
 
           // If there is some package-scoped rule data then merge it in to the rule-scoped rule data
           var ruleData = a.annotations.custom.rule_data
@@ -98,16 +112,27 @@ const helpers = {
             ruleData = {...ruleData, ...pkgAnnotation.custom[shortName].rule_data}
           }
 
+          // Also prepare some info about the package
+          // (It's the same for every rule in a package, so it's not efficient to
+          // redo this for every rule, but I don't think it will matter.)
+          const packageInfo = {
+            shortName: packageShortName,
+            fullName: packagePath,
+            title: pkgAnnotation.title || hbsHelpers.toTitle(packageShortName),
+            description: pkgAnnotation.description || ""
+          }
+
           output.push({
-            dottedPath, pkgHeading, shortName, title, description, ruleData, warningOrFailure,
+            fullPath, packagePath, packageInfo,
+            shortName, title, description, ruleData, warningOrFailure,
             failureMsg, effectiveOn, file, row
           })
         }
       }
     })
 
-    // Group the rules by their package heading
-    return helpers.groupBy(output, a => a.pkgHeading)
+    // Group the rules by their package
+    return helpers.groupBy(output, a => a.packagePath)
   },
 
   processBundlesData: (rawData) => {
@@ -146,6 +171,7 @@ const helpers = {
   // Prepare data for adding a dynamic page to the pages list
   prepDynamicPage: (fileSrc, pageContent) => {
     const path = helpers.templateToPage(fileSrc.path)
+    const abspath = helpers.templateToPage(fileSrc.abspath)
     const basename = helpers.templateToPage(fileSrc.basename)
     const contents = Buffer.from(pageContent)
     const stem = fileSrc.stem
@@ -155,6 +181,7 @@ const helpers = {
       path,
       src: {
         path,
+        abspath,
         basename,
         stem,
         extname: '.adoc',
@@ -178,8 +205,8 @@ module.exports.register = function() {
       const rawBundlesData = helpers.dataFromAntoraFile(yaml, content, 'acceptable_tekton_bundles.yml')
 
       // Massage the data so the templates can be clean and tidy
-      const pipelineAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "data.policy.pipeline")
-      const releaseAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "data.policy.release")
+      const pipelineAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.pipeline")
+      const releaseAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.release")
       const acceptableBundles = helpers.processBundlesData(rawBundlesData)
 
       // Import Handlebars and register helpers and partials

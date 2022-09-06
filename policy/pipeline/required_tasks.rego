@@ -1,3 +1,10 @@
+#
+# METADATA
+# description: |-
+#   HACBS expects that certain tests are going to be run during image builds.
+#   This package includes some rules to confirm that the pipeline definition
+#   includes the Tekton tasks to run those required tests.
+#
 package policy.pipeline.required_tasks
 
 import data.lib
@@ -31,10 +38,7 @@ import data.lib
 #
 deny[result] {
 	# Find the data in the annotations
-	required_list := rego.metadata.rule().custom.rule_data.required_task_refs
-
-	# Convert it to a set
-	required := {t | t := required_list[_]}
+	required := lib.to_set(rego.metadata.rule().custom.rule_data.required_task_refs)
 
 	# The set of tasks that we did find
 	found := {t | t := input.spec.tasks[_].taskRef.name}

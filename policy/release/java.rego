@@ -1,3 +1,11 @@
+#
+# METADATA
+# title: Java dependency checks
+# description: |-
+#   This package contains a rule to confirm that all Java dependencies
+#   were rebuilt in house rather than imported directly from potentially
+#   untrusted respositories.
+#
 package policy.release.java
 
 import data.lib

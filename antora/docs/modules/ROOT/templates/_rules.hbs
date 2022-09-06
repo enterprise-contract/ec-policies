@@ -1,5 +1,15 @@
-== {{ toTitle @key }} rules
+{{! We can do this because packageInfo should be the same for every rule }}
+{{#with this.0.packageInfo}}
+[#{{ shortName }}_package]
+== link:#{{ shortName }}_package[{{ title }}]
 
+{{{ description }}}
+
+* Package name: `{{ shortName }}`
+* Package full path: `{{ fullName }}`
+{{/with}}
+
+{{! Loop over each rule in this package }}
 {{#each .}}
 
 [#{{ shortName }}]
@@ -20,7 +30,7 @@ The {{ toWords @key }} are:
 
 * Rule type: [rule-type-indicator {{ warningOrFailure }}]#{{ toUpper warningOrFailure }}#
 * {{ toTitle warningOrFailure }} message: `{{ failureMsg }}`
-* Short name: `{{ shortName }}`
+* Code: `{{ shortName }}`
 {{#if effectiveOn}}
 * Effective from: `{{ effectiveOn }}`{{/if}}
 * https://github.com/hacbs-contract/ec-policies/blob/main/{{ file }}#L{{ row }}[Source, window="_blank"]

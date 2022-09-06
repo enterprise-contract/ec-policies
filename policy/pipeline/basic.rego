@@ -1,3 +1,11 @@
+#
+# METADATA
+# title: Pipeline definition sanity checks
+# description: |-
+#   Currently there is just a check to confirm the input
+#   appears to be a Pipeline definition. We may add additional
+#   sanity checks in future.
+#
 package policy.pipeline.basic
 
 import data.lib

@@ -22,6 +22,11 @@ output:
   dir: ./public
 antora:
   extensions:
-  - require: '@hacbs-contract/ec-policies-antora-extension'
-  # Uncomment for for local hacking, or use `npm link`
-  #- require: './antora/ec-policies-antora-extension/index.js'
+  #
+  # Uncomment to use the package from npm. If this doesn't
+  # work then the downstream build will be broken.
+  #- require: '@hacbs-contract/ec-policies-antora-extension'
+  #
+  # For our own builds and for hacking it's convenient to use the
+  # extension directly from its local directory.
+  - require: './antora/ec-policies-antora-extension/index.js'

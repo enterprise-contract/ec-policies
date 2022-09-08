@@ -1,6 +1,6 @@
 {
   "name": "@hacbs-contract/ec-policies-antora-extension",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Antora extension used to build documentation for the HACBS Enterprise Contract policy rules",
   "main": "index.js",
   "repository": "https://github.com/hacbs-contract/ec-policies",

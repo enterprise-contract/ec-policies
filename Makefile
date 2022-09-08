@@ -1,5 +1,6 @@
 SHELL := /bin/bash
-COVERAGE = @opa test . --ignore '.*' --ignore node_modules --threshold 100 2>&1 | sed -e '/^Code coverage/!d' -e 's/^/ERROR: /'; exit $${PIPESTATUS[0]}
+REGO_IGNORES = --ignore '.*' --ignore node_modules --ignore antora
+COVERAGE = @opa test . $(REGO_IGNORES) --threshold 100 2>&1 | sed -e '/^Code coverage/!d' -e 's/^/ERROR: /'; exit $${PIPESTATUS[0]}
 
 ##@ General
 
@@ -40,16 +41,17 @@ help: ## Display this help.
 
 .PHONY: test
 test: ## Run all tests in verbose mode and check coverage
-	@opa test . -v --ignore '.*' --ignore node_modules
+	@opa test . -v $(REGO_IGNORES)
 	$(COVERAGE)
 
 .PHONY: coverage
+# The cat does nothing but avoids a non-zero exit code from grep -v
 coverage: ## Show which lines of rego are not covered by tests
-	@opa test . --ignore '.*' --ignore node_modules --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null"
+	@opa test . $(REGO_IGNORES) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
 
 .PHONY: quiet-test
 quiet-test: ## Run all tests in quiet mode and check coverage
-	@opa test . --ignore '.*' --ignore node_modules
+	@opa test . $(REGO_IGNORES)
 	$(COVERAGE)
 
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
@@ -91,7 +93,7 @@ fmt-amend: fmt ## Apply default formatting to all rego files then amend the curr
 
 .PHONY: opa-check
 opa-check: ## Check Rego files with strict mode (https://www.openpolicyagent.org/docs/latest/strict/)
-	@opa check . --strict --ignore '.*' --ignore node_modules
+	@opa check . --strict $(REGO_IGNORES)
 
 .PHONY: conventions-check
 conventions-check: ## Check Rego policy files for convention violations

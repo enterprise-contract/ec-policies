@@ -53,26 +53,16 @@ const helpers = {
     return xs.reduce((r, v, _i, _a, k = f(v)) => ((r[k] || (r[k] = [])).push(v), r), {})
   },
 
-  // Find a data file and load its data
-  dataFromAntoraFile: (yaml, moduleContent, fileName) => {
-    // Assume there aren't multiple files with the same name
-    const moduleFile = moduleContent.files.find(f => f.src.basename == fileName)
-    if (!moduleFile) throw `Unable to find ${fileName} file in module: (${__filename})`
-    // This works fine for both yaml and json
-    return yaml.load(moduleFile._contents.toString())
+  filesMatching: (content, regex) => {
+    return content.files.filter(f => f.path.match(regex))
+  },
+
+  firstFileMatching: (content, regex) => {
+    return helpers.filesMatching(content, regex)[0]
   },
 
   toDottedPath: (path) => {
     return path.map(i => i.value).join(".")
-  },
-
-  inspectAllRego: (globPattern) => {
-    return glob.sync(globPattern).map(opa.inspect)
-  },
-
-  readRegoAnnotations: () => {
-    // Flatten because otherwise we get a separate list for each file
-    return Promise.all(helpers.inspectAllRego("policy/**/*.rego")).then(a => a.flat())
   },
 
   annotationSort: (a, b) => {
@@ -204,7 +194,7 @@ const helpers = {
   // Prepare data for adding a dynamic page to the pages list
   prepDynamicPage: (fileSrc, pageContent) => {
     const path = helpers.templateToPage(fileSrc.path)
-    const abspath = helpers.templateToPage(fileSrc.abspath)
+    const abspath = fileSrc.abspath ? helpers.templateToPage(fileSrc.abspath) : null
     const basename = helpers.templateToPage(fileSrc.basename)
     const contents = Buffer.from(pageContent)
     const stem = fileSrc.stem
@@ -229,41 +219,55 @@ const helpers = {
 module.exports.register = function() {
   this.on('contentAggregated', async ({ contentAggregate }) => {
 
-    const rawAnnotationsData = await helpers.readRegoAnnotations()
+    // Only operate on the ec-policies docs
+    const content = contentAggregate.find(c => c.name == 'ec-policies')
+
+    //------------------------------------------------------------------
+    // Extract annotations from the rego files
+    //
+    const regoFiles = helpers.filesMatching(content, /^policy\/.*(?!_test)\.rego$/)
+    const opaInspectPromises = regoFiles.map(f => opa.inspect(f.path, f._contents.toString()))
+    const rawAnnotationsData = await Promise.all(opaInspectPromises).then(a => a.flat())
+
+    // Prepare annotation data for use in the templates
     const pipelineAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.pipeline")
     const releaseAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.release")
 
-    // Skip modules other than the the ec-policies module
-    contentAggregate.filter(c => c.name == 'ec-policies').forEach(content => {
-      // Import yaml
-      const yaml = this.require('js-yaml')
+    //------------------------------------------------------------------
+    // Find and load the acceptable bundle data
+    //
+    const yaml = this.require('js-yaml')
+    const bundlesFile = helpers.firstFileMatching(content, /^acceptable_tekton_bundles.yml$/)
+    if (!bundlesFile) throw `Unable to find acceptable bundles file: (${__filename})`
+    const rawBundlesData = yaml.load(bundlesFile._contents.toString())
+    const acceptableBundles = helpers.processBundlesData(rawBundlesData)
 
-      // Find and load the acceptable bundle data
-      const rawBundlesData = helpers.dataFromAntoraFile(yaml, content, 'acceptable_tekton_bundles.yml')
-      const acceptableBundles = helpers.processBundlesData(rawBundlesData)
-
-      // Import Handlebars and register helpers and partials
-      const Handlebars = this.require('handlebars')
-      Object.keys(hbsHelpers).forEach((k) => {
-        Handlebars.registerHelper(k, hbsHelpers[k])
-      })
-
-      // Templates are in the templates directory
-      // If they start with '_' they are treated as partials instead of pages
-      const pageTemplatesMatch = /\/templates\/[a-z][a-z_]*\.hbs$/
-      const partialTemplatesMatch = /\/templates\/_[a-z_]*\.hbs$/
-
-      content.files.filter(f => f.path.match(partialTemplatesMatch)).forEach(f => {
-        Handlebars.registerPartial(f.src.stem.replace(/^_/, ''), f._contents.toString())
-      })
-
-      // Dynamically generate pages/foo.adoc for any templates/foo.hbs file found
-      // Note that every template gets all the data whether it wants it or not
-      content.files.filter(f => f.path.match(pageTemplatesMatch)).forEach(f => {
-        const hbsTemplate = Handlebars.compile(f._contents.toString())
-        const generatedContent = hbsTemplate({ pipelineAnnotations, releaseAnnotations, acceptableBundles})
-        content.files.push(helpers.prepDynamicPage(f.src, generatedContent))
-      })
+    //------------------------------------------------------------------
+    // Setup Handlebars helpers and partials
+    //
+    const Handlebars = this.require('handlebars')
+    Object.keys(hbsHelpers).forEach((k) => {
+      Handlebars.registerHelper(k, hbsHelpers[k])
     })
+
+    // Templates starting with '_' are treated as partials instead of pages
+    const partialTemplates = helpers.filesMatching(content, /\/templates\/_[a-z_]*\.hbs$/)
+    partialTemplates.forEach(f => {
+      Handlebars.registerPartial(f.src.stem.replace(/^_/, ''), f._contents.toString())
+    })
+
+    //------------------------------------------------------------------
+    // Generate a page for each page templates
+    //
+    const pageTemplates = helpers.filesMatching(content, /\/templates\/[a-z][a-z_]*\.hbs$/)
+
+    // Dynamically create pages/foo.adoc for any templates/foo.hbs file found
+    // Note that every template gets all the data whether it wants it or not
+    pageTemplates.forEach(f => {
+      const hbsTemplate = Handlebars.compile(f._contents.toString())
+      const generatedContent = hbsTemplate({ pipelineAnnotations, releaseAnnotations, acceptableBundles})
+      content.files.push(helpers.prepDynamicPage(f.src, generatedContent))
+    })
+
   })
 }

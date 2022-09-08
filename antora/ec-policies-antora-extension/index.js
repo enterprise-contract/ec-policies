@@ -1,5 +1,9 @@
 'use strict'
 
+const glob = require("glob")
+const opa = require("@zregvart/opa-inspect")
+//const opa = require("../../../opa-inspect-js/index.js")
+
 // Helpers for handlebars templates
 const hbsHelpers = {
 
@@ -62,14 +66,39 @@ const helpers = {
     return path.map(i => i.value).join(".")
   },
 
+  inspectAllRego: (globPattern) => {
+    return glob.sync(globPattern).map(opa.inspect)
+  },
+
+  readRegoAnnotations: () => {
+    // Flatten because otherwise we get a separate list for each file
+    return Promise.all(helpers.inspectAllRego("policy/**/*.rego")).then(a => a.flat())
+  },
+
+  annotationSort: (a, b) => {
+    if (a.packageInfo.title > b.packageInfo.title) return 1
+    if (a.packageInfo.title < b.packageInfo.title) return -1
+
+    if (a.file > b.file) return 1
+    if (a.file < b.file) return -1
+
+    if (a.row > b.row) return 1
+    if (a.row < b.row) return -1
+
+    return 0
+  },
+
   // Extract useful fields and derived values from the raw data and collect
   // them for easy use in the template
   processAnnotationsData: (rawData, namespace) => {
+    // Skip all rules without annotations
+    rawData = rawData.filter(a => a.annotations)
+
     const output = []
     const packageAnnotations = {}
 
     // First pass to collect all the package annotations
-    rawData.annotations.forEach((a) => {
+    rawData.forEach((a) => {
       const fullPath = helpers.toDottedPath(a.path.slice(1))
       const inNamespace = fullPath.startsWith(namespace)
       const isPackageScope = a.annotations.scope == "package"
@@ -82,7 +111,7 @@ const helpers = {
     })
 
     // Now handle the rule annotations
-    rawData.annotations.forEach((a) => {
+    rawData.forEach((a) => {
       const fullPath = helpers.toDottedPath(a.path.slice(1))
       const inNamespace = fullPath.startsWith(namespace)
       const isRuleScope = a.annotations.scope == "rule"
@@ -131,8 +160,12 @@ const helpers = {
       }
     })
 
+    // Sort the rules
+    const sortedOutput = output.sort(helpers.annotationSort)
+
     // Group the rules by their package
-    return helpers.groupBy(output, a => a.packagePath)
+    return helpers.groupBy(sortedOutput, a => a.packagePath)
+
   },
 
   processBundlesData: (rawData) => {
@@ -194,19 +227,19 @@ const helpers = {
 }
 
 module.exports.register = function() {
-  this.on('contentAggregated', ({ contentAggregate }) => {
+  this.on('contentAggregated', async ({ contentAggregate }) => {
+
+    const rawAnnotationsData = await helpers.readRegoAnnotations()
+    const pipelineAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.pipeline")
+    const releaseAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.release")
+
     // Skip modules other than the the ec-policies module
     contentAggregate.filter(c => c.name == 'ec-policies').forEach(content => {
       // Import yaml
       const yaml = this.require('js-yaml')
 
-      // Find and load the two data files
-      const rawAnnotationsData = helpers.dataFromAntoraFile(yaml, content, 'rule_annotations.json')
+      // Find and load the acceptable bundle data
       const rawBundlesData = helpers.dataFromAntoraFile(yaml, content, 'acceptable_tekton_bundles.yml')
-
-      // Massage the data so the templates can be clean and tidy
-      const pipelineAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.pipeline")
-      const releaseAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.release")
       const acceptableBundles = helpers.processBundlesData(rawBundlesData)
 
       // Import Handlebars and register helpers and partials

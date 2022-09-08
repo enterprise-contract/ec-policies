@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "@hacbs-contract/ec-policies-antora-extension": "latest",
+    "@zregvart/opa-inspect": "^0.43.0-648603c",
     "antora": "^3.0.3"
   },
   "overrides": {

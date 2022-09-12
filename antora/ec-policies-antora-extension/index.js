@@ -217,6 +217,8 @@ const helpers = {
 }
 
 module.exports.register = function() {
+  var allData = {}
+
   this.on('contentAggregated', async ({ contentAggregate }) => {
 
     // Only operate on the ec-policies docs
@@ -242,6 +244,9 @@ module.exports.register = function() {
     const rawBundlesData = yaml.load(bundlesFile._contents.toString())
     const acceptableBundles = helpers.processBundlesData(rawBundlesData)
 
+    // Make the data available at higher scope
+    allData = { pipelineAnnotations, releaseAnnotations, acceptableBundles }
+
     //------------------------------------------------------------------
     // Setup Handlebars helpers and partials
     //
@@ -265,9 +270,32 @@ module.exports.register = function() {
     // Note that every template gets all the data whether it wants it or not
     pageTemplates.forEach(f => {
       const hbsTemplate = Handlebars.compile(f._contents.toString())
-      const generatedContent = hbsTemplate({ pipelineAnnotations, releaseAnnotations, acceptableBundles})
+      const generatedContent = hbsTemplate(allData)
       content.files.push(helpers.prepDynamicPage(f.src, generatedContent))
     })
 
+
+  })
+
+  // Generate some "raw" JSON that could be used by the UI team
+  this.on('beforePublish', ({ siteCatalog }) => {
+
+    // Make it less annoying to extract the package information
+    // Todo maybe: Rework the output format of processAnnotationsData
+    // so this becomes less needed
+    ['pipeline', 'release'].forEach(t => {
+      const annKey = `${t}Annotations`
+      const pkgKey = `${t}Packages`
+      allData[pkgKey] = {}
+      Object.keys(allData[annKey]).forEach(k => {
+        allData[pkgKey][k] = allData[annKey][k][0].packageInfo
+      })
+    })
+
+    // No special need to pretty print, but let's do it anyhow
+    const allDataJson = JSON.stringify(allData, null, 2)
+
+    // Inject an extra file in the docs output
+    siteCatalog.addFile({ contents: Buffer.from(allDataJson), out: { path: 'ec-policies/data.json' } })
   })
 }

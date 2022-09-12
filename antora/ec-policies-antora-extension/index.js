@@ -171,7 +171,7 @@ const helpers = {
         // other popular container registries.
         const repoUrl = hbsHelpers.repoUrl(k)
         const digestUrl = `${repoUrl}/manifest/${d.digest}`
-        const tagUrl = `$(repoUrl)?tab=tags&tag=${d.tag}`
+        const tagUrl = `${repoUrl}?tab=tags&tag=${d.tag}`
         const shortDigest = d.digest.split(":")[1].slice(0,12)
 
         return {

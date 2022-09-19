@@ -38,6 +38,22 @@ test_failing_without_skipping {
 	}) with data.config.policy as nonblocking_only(set())
 }
 
+test_skipping_individual_rules {
+	lib.assert_equal(deny, {{
+		"code": "test_data_missing",
+		"msg": "No test data found",
+		"effective_on": "2022-01-01T00:00:00Z",
+	}}) with data.config.policy.exclude_rules as ["not_useful.bad_day"]
+
+	lib.assert_equal(deny, {{
+		"code": "bad_day",
+		"msg": "It just feels like a bad day to do a release",
+		"effective_on": "2022-01-01T00:00:00Z",
+	}}) with data.config.policy.exclude_rules as ["test.test_data_missing"]
+
+	lib.assert_empty(deny) with data.config.policy.exclude_rules as ["test.test_data_missing", "not_useful.bad_day"]
+}
+
 test_succeeding_when_skipping_all {
 	lib.assert_empty(deny) with data.config.policy as nonblocking_except(set())
 }

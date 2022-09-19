@@ -1,0 +1,19 @@
+#
+# If `data.config.policy.collection` is set then the include/exclude
+# lists defined here will be used to determine which rules are applied
+# and which are skipped.
+#
+rule_collections:
+
+  default:
+    description: Includes everything except the not useful demos
+    include:
+    - "*"
+    exclude:
+    - not_useful
+
+  everything:
+    description: Includes every rule
+    include:
+    - "*"
+    exclude: []

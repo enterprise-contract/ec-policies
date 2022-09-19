@@ -12,8 +12,17 @@ _current_and_future_denies_or_warns(policy_namespace, deny_or_warn) := rule_set 
 	rule_set := {r |
 		policy_packages := data.policy[policy_namespace]
 		policy_package := policy_packages[package_name]
-		not skip_package(package_name)
-		r := policy_package[deny_or_warn][_]
+
+		r := policy_package[deny_or_warn][rule_result]
+
+		# The object.get here is so we correctly handle rules without
+		# a code in their result, which currently is needed for the tests
+		# in policy/release/examples/time_based_test. Todo: clean that up
+		# or maybe just delete the examples
+		rule_code := object.get(rule_result, ["code"], "")
+
+		# Filter out any rules that are not included
+		lib.rule_included(package_name, rule_code)
 	}
 }
 
@@ -32,15 +41,6 @@ current_rules(all_rules) := rule_set {
 future_rules(all_rules) := rule_set {
 	rule_set := {r | all_rules[r]; in_future(r)}
 }
-
-# Used to ignore rules for a package if package_name is present
-# in the non_blocking_checks list
-#
-skip_package(package_name) {
-	data.config.policy.non_blocking_checks[_] == package_name
-}
-
-# Todo maybe: Skip a rule based on package_name and rule short_name
 
 # Return true if a particular rule is effective in the future
 # but not effective right now

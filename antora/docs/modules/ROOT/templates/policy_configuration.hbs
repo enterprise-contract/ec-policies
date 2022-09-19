@@ -1,0 +1,213 @@
+= Policy Configuration
+
+:numbered:
+
+It's possible to configure which rules should be included and which should be
+skipped when the Enterprise Contract check runs. The way this is configured
+is using fields in the policy configuration as described here.
+
+Note that it's expected that the policy configuration will be created
+automatically by the Enterprise Contract Task, based on data from the
+applicable Enterprise Contract Policy CRD, so it's likely you won't need to
+create or manage this configuration manually.
+
+The Enterprise Contract Task and the Enterprise Contract Policy CRD are
+documented elsewhere. _TODO: Where?_
+
+== Configuration Source
+
+When the Enterprise Contract runs it will look for policy configuration in
+`data.config.policy`. The easiest way to populate that data is by adding a JSON
+formatted file in the `data` directory such as `data/config.json`.
+
+Here's an example of how that file might look.
+
+[source,json]
+----
+{
+  "config": {
+    "policy": {
+      "include_rules": ["*"],
+      "exclude_rules": ["not_useful"],
+    }
+  }
+}
+----
+
+If the policy is not defined, sensible defaults will be used. In fact the above
+example shows what the defaults are if the configuration is not specified.
+
+== Including and excluding rules
+
+By default, all rules are included, except for the rules in the `not_useful`
+package.
+
+You can modify the defaults by setting `config.policy.include_rules` and
+`config.policy.exclude_rules`. Each of those values should be a list of
+strings.
+
+The strings in the list should be one of the the following:
+
+A "package name"::
+
+Package names can be found in the policy documentation, for example the
+xref::release_policy.adoc#attestation_type_package[Attestation Type] package
+name is `attestation_type`. Specifing a package name by itself in the include
+or exclude list means every rule from that package should be included or
+excluded.
+
+A "rule name"::
+
+A rule name consists of the rule's package name and the rule's "code" separated
+by a dot. Rule codes can be see in the documentation also. For example the
+xref::release_policy.adoc#unknown_att_type[Unknown attestation type found] rule
+name is `attestation_type.unknown_att_type`.
+
+"*"::
+
+The `"\*"` acts as a wildcard to match any package. Note that it does not match
+partial names, so you can't specify `"s*"` to match every package starting with
+"s" for example.
+
+You can also specify `"<packagename>.*"` and it works the same as just
+`"<packagename>"` to represent every rule in a package.
+
+== Specifying that individual tests are non-blocking
+
+Distinct from skipping rules, there is a way to indicate that particular tests
+are not strictly required by the Enterprise Contract.
+
+This is handled as a special case for the
+xref:release_policy.adoc#test_result_failures["test.test_result_failures" rule]
+only.
+
+The syntax for skipping a particular test is `"test:<testname>"` and it only
+works with the exclude_rules field. You can't use it with the `include_rules`
+option.
+
+
+== Examples
+
+The examples here are shown as the contents of `config.policy` formatted as
+YAML for brevity and readability.
+
+Note that you can omit fields where the default value is what you need.
+
+=== Excluding rules from particular packages
+
+This would include all rules except for rules from the two specified packages.
+All other rules would be included.
+
+[source,yaml]
+----
+exclude_rules:
+- attestation_task_bundle
+- not_useful
+----
+
+=== Including only rules from a particular package
+
+This would include just the rules from the specified packages and exclude all
+other rules.
+
+[source,yaml]
+----
+include_rules:
+- test
+- java
+----
+
+=== Excluding just one rule
+
+This would include all rules except for the `unacceptable_task_bundle` rule in
+the `attestation_task_bundle` package. The other rules in the
+`attestation_task_bundle` would be included.
+
+[source,yaml]
+----
+exclude_rules:
+- attestation_task_bundle.unacceptable_task_bundle
+----
+
+=== Specifying that certain tests should be non-blocking
+
+This example shows how to specify that the Enterprise Contract is allowed to
+pass even if certain tests failed or didn't complete. Additionally the
+`not_useful` package is excluded.
+
+[source,yaml]
+----
+exclude_rules:
+- test:get-clair-scan
+- test:clamav-scan
+- not_useful
+----
+
+=== Including only some rules from a package
+
+You can specify both `include_rules` and `exclude_rules` to pick out just the
+rules you want.
+
+This example specifies that only the `unacceptable_task_bundle` rule from the
+`attestation_task_bundle` package should be included. The other rules in the
+`attestation_task_bundle` would be excluded.
+
+Notice the higher specificity include rule takes precedence over the exclude
+rule in this example.
+
+[source,yaml]
+----
+include_rules:
+- "*"
+- attestation_task_bundle.unacceptable_task_bundle
+exclude_rules:
+- attestation_task_bundle.*
+----
+
+== Specifying a predefined set of rules with `collection`
+
+Rather than specifying the values of `include_rules` and `exclude_rules`
+explicitly, you can also select from a set of predefined configurations by
+setting `"data.config.policy.collection"`. For example, in a `data/config.json`
+file:
+
+[source,json]
+----
+{
+  "config": {
+    "policy": {
+      "collection": "everything"
+    }
+  }
+}
+----
+
+Currently there are not many "collections" defined, but in future there may be more.
+
+The predefined collections are:
+
+[cols="2,6"]
+|===
+|*Name*
+|*Description*
+
+{{#each collectionsData.rule_collections}}
+|`{{@key}}`
+|{{description}}
+
+{{/each}}
+|===
+
+The collections are defined in
+link:https://github.com/hacbs-contract/ec-policies/blob/main/data/rule_collections.yml[data/rule_collections.yml]
+in this git repo.
+
+== The `non_blocking_checks` field
+
+The `non_blocking_checks` configuration option, previously used to skip rules
+is now deprecated. It's functionality is replaced with the new `exclude_rules`
+option as described above. While it's deprecated it can still be used
+interchangeably with the `exclude_rules` field.
+
+Please make the required tooling changes soon to prevent breakages when the
+`non_blocking_checks` field is removed in the future.

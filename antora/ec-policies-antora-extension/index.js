@@ -236,16 +236,21 @@ module.exports.register = function() {
     const releaseAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.release")
 
     //------------------------------------------------------------------
-    // Find and load the acceptable bundle data
+    // Find and load the acceptable bundle and rule collection data
     //
     const yaml = this.require('js-yaml')
+
     const bundlesFile = helpers.firstFileMatching(content, /^acceptable_tekton_bundles.yml$/)
     if (!bundlesFile) throw `Unable to find acceptable bundles file: (${__filename})`
     const rawBundlesData = yaml.load(bundlesFile._contents.toString())
     const acceptableBundles = helpers.processBundlesData(rawBundlesData)
 
+    const collectionsFile = helpers.firstFileMatching(content, /^rule_collections.yml$/)
+    if (!collectionsFile) throw `Unable to find rule collections file: (${__filename})`
+    const collectionsData = yaml.load(collectionsFile._contents.toString())
+
     // Make the data available at higher scope
-    allData = { pipelineAnnotations, releaseAnnotations, acceptableBundles }
+    allData = { pipelineAnnotations, releaseAnnotations, acceptableBundles, collectionsData }
 
     //------------------------------------------------------------------
     // Setup Handlebars helpers and partials

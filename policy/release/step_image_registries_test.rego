@@ -8,7 +8,7 @@ bad_image := "hackz.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:af7dd
 
 mock_data(image_ref) = d {
 	d := [{"predicate": {
-		"buildType": lib.pipelinerun_att_build_type,
+		"buildType": lib.pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": [{"name": "mytask", "steps": [{"environment": {"image": image_ref}}]}]},
 	}}]
 }

@@ -5,7 +5,7 @@ import data.lib
 mock_data(task) = d {
 	d := [{"predicate": {
 		"buildConfig": {"tasks": [task]},
-		"buildType": lib.pipelinerun_att_build_type,
+		"buildType": lib.pipelinerun_att_build_types[0],
 	}}]
 }
 
@@ -140,7 +140,7 @@ mock_attestation(bundles) = a {
 
 	a := [{"predicate": {
 		"buildConfig": {"tasks": tasks},
-		"buildType": lib.pipelinerun_att_build_type,
+		"buildType": lib.pipelinerun_att_build_types[0],
 	}}]
 }
 

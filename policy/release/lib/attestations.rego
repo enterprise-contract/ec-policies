@@ -1,8 +1,16 @@
 package lib
 
-pipelinerun_att_build_type := "https://tekton.dev/attestations/chains/pipelinerun@v2"
+pipelinerun_att_build_types := [
+	"tekton.dev/v1beta1/PipelineRun",
+	# Legacy build type
+	"https://tekton.dev/attestations/chains/pipelinerun@v2",
+]
 
-taskrun_att_build_type := "https://tekton.dev/attestations/chains@v2"
+taskrun_att_build_types := [
+	"tekton.dev/v1beta1/TaskRun",
+	# Legacy build type
+	"https://tekton.dev/attestations/chains@v2",
+]
 
 hacbs_test_task_result_name := "HACBS_TEST_OUTPUT"
 
@@ -13,13 +21,13 @@ task_name := "__task_name"
 # These are the ones we're interested in
 pipelinerun_attestations := [att |
 	att := input.attestations[_]
-	att.predicate.buildType == pipelinerun_att_build_type
+	att.predicate.buildType == pipelinerun_att_build_types[_]
 ]
 
 # These ones we don't care about any more
 taskrun_attestations := [att |
 	att := input.attestations[_]
-	att.predicate.buildType == taskrun_att_build_type
+	att.predicate.buildType == taskrun_att_build_types[_]
 ]
 
 tasks_from_pipelinerun := [task |

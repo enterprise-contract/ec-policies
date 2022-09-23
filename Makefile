@@ -215,7 +215,7 @@ CONFIG_DATA_FILE=$(DATA_DIR)/config.json
 INPUT_DIR=./input
 INPUT_FILE=$(INPUT_DIR)/input.json
 
-RELEASE_NAMESPACE=release.main
+RELEASE_NAMESPACE=release
 PIPELINE_NAMESPACE=pipeline.main
 
 POLICY_DIR=./policy

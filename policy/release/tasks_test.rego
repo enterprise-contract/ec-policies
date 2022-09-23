@@ -1,4 +1,4 @@
-package policy.release.tasks
+package release
 
 import data.lib
 

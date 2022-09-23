@@ -5,7 +5,7 @@
 #   build pipeline ran using a container image from a known and presumably
 #   trusted source.
 #
-package policy.release.step_image_registries
+package release
 
 import data.lib
 
@@ -24,7 +24,7 @@ import data.lib
 #     - registry.access.redhat.com/
 #     - registry.redhat.io/
 #
-deny[result] {
+deny_disallowed_task_step_image[result] {
 	att := lib.pipelinerun_attestations[_]
 	task := att.predicate.buildConfig.tasks[_]
 	step := task.steps[step_index]

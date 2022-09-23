@@ -8,7 +8,7 @@
 # custom:
 #   effective_on: 2022-01-01T00:00:00Z
 #
-package policy.release.not_useful
+package release
 
 import data.lib
 
@@ -20,9 +20,10 @@ import data.lib
 # custom:
 #   short_name: bad_day
 #   failure_msg: It just feels like a bad day to do a release
-#   effective_on: 2022-01-01T00:00:00Z
+#   # TODO: Move this to the future to test time-based policy
+#   effective_on: 2023-01-01T00:00:00Z
 #
-deny[result] {
+deny_bad_day[result] {
 	true
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

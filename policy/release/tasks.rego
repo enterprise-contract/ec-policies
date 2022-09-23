@@ -18,7 +18,7 @@
 #       - sanity-optional-label-check
 #       - sast-go
 #
-package policy.release.tasks
+package release
 
 import data.lib
 import future.keywords.in

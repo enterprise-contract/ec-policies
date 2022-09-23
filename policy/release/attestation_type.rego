@@ -3,7 +3,7 @@
 # description: |-
 #   Sanity checks related to the format of the image build's attestation.
 #
-package policy.release.attestation_type
+package release
 
 import data.lib
 
@@ -19,7 +19,7 @@ import data.lib
 #     known_attestation_types:
 #     - https://in-toto.io/Statement/v0.1
 #
-deny[result] {
+deny_unknown_att_type[result] {
 	att := lib.pipelinerun_attestations[_]
 	att_type := att._type
 	not lib.included_in(att_type, rego.metadata.rule().custom.rule_data.known_attestation_types)

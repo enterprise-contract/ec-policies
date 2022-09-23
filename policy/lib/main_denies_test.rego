@@ -4,7 +4,6 @@ import data.lib
 
 test_current_and_future {
 	lib.assert_empty(current_and_future_denies("bogus"))
-	lib.assert_not_empty(current_and_future_denies("release"))
 	lib.assert_not_empty(current_and_future_denies("pipeline")) with input.kind as "Foo"
 }
 
@@ -25,9 +24,6 @@ test_future_handling {
 }
 
 test_include_exclude_rules {
-	# Rules excluded by wildcard
-	lib.assert_empty(current_and_future_denies("release")) with data.config.policy.exclude_rules as ["*"]
-
 	# Rules excluded by name
 	lib.assert_empty(current_and_future_denies("pipeline")) with data.config.policy.exclude_rules as ["required_tasks"]
 

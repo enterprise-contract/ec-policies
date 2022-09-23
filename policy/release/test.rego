@@ -8,7 +8,7 @@
 #   TODO: Document how you can skip the requirement for individual
 #   tests if needed using the `non_blocking_rule` configuration.
 #
-package policy.release.test
+package release
 
 import data.lib
 import future.keywords.in
@@ -23,7 +23,7 @@ import future.keywords.in
 #   short_name: test_data_missing
 #   failure_msg: No test data found
 #
-deny[result] {
+deny_test_data_missing[result] {
 	count(lib.results_from_tests) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
@@ -37,7 +37,7 @@ deny[result] {
 #   short_name: test_results_missing
 #   failure_msg: Found tests without results
 #
-deny[result] {
+deny_test_results_missing[result] {
 	with_results := [result | result := lib.results_from_tests[_].result]
 	count(with_results) != count(lib.results_from_tests)
 	result := lib.result_helper(rego.metadata.chain(), [])
@@ -58,7 +58,7 @@ deny[result] {
 #     - ERROR
 #     - SKIPPED
 #
-deny[result] {
+deny_test_result_unsupported[result] {
 	all_unsupported := [u |
 		test := lib.results_from_tests[_]
 		not test.result in rego.metadata.rule().custom.rule_data.supported_results
@@ -81,7 +81,7 @@ deny[result] {
 #   short_name: test_result_failures
 #   failure_msg: "The following tests did not complete successfully: %s"
 #
-deny[result] {
+deny_test_result_failures[result] {
 	all_failed = resulted_in({"FAILURE", "ERROR"})
 
 	# Failed tests are those contained within all_failed that are not
@@ -106,7 +106,7 @@ deny[result] {
 #   short_name: test_result_skipped
 #   failure_msg: "The following tests were skipped: %s"
 #
-warn[result] {
+warn_test_result_skipped[result] {
 	all_skipped = resulted_in({"SKIPPED"})
 
 	# Don't report if there aren't any

@@ -6,7 +6,7 @@
 #   were rebuilt in house rather than imported directly from potentially
 #   untrusted respositories.
 #
-package policy.release.java
+package release
 
 import data.lib
 import future.keywords.in
@@ -24,7 +24,7 @@ import future.keywords.in
 #     allowed_component_sources:
 #       - redhat
 #       - rebuilt
-deny[result] {
+deny_java_foreign_dependencies[result] {
 	results := lib.results_named(lib.java_sbom_component_count_result_name)
 
 	# convert to set

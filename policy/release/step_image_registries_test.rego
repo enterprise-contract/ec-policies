@@ -1,4 +1,4 @@
-package policy.release.step_image_registries
+package release
 
 import data.lib
 
@@ -6,7 +6,7 @@ good_image := "registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@s
 
 bad_image := "hackz.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:af7dd5b3b"
 
-mock_data(image_ref) = d {
+one_mock_data(image_ref) = d {
 	d := [{"predicate": {
 		"buildType": lib.pipelinerun_att_build_type,
 		"buildConfig": {"tasks": [{"name": "mytask", "steps": [{"environment": {"image": image_ref}}]}]},
@@ -14,14 +14,14 @@ mock_data(image_ref) = d {
 }
 
 test_image_registry_valid {
-	lib.assert_empty(deny) with input.attestations as mock_data(good_image)
+	lib.assert_empty(deny_disallowed_task_step_image) with input.attestations as one_mock_data(good_image)
 }
 
 test_attestation_type_invalid {
 	expected_msg := sprintf("Step 0 in task 'mytask' has disallowed image ref '%s'", [bad_image])
-	lib.assert_equal(deny, {{
+	lib.assert_equal(deny_disallowed_task_step_image, {{
 		"code": "disallowed_task_step_image",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with input.attestations as mock_data(bad_image)
+	}}) with input.attestations as one_mock_data(bad_image)
 }

@@ -7,7 +7,7 @@
 #
 #   TODO: Document the ways that release authorization can be provided.
 #
-package policy.release.authorization
+package release
 
 import data.lib
 
@@ -18,7 +18,7 @@ import data.lib
 # custom:
 #   short_name: disallowed_no_authorization
 #   failure_msg: Commit does not contain authorization
-deny[result] {
+deny_disallowed_no_authorization[result] {
 	data.authorization
 	not data.authorization.authorizers
 	result := lib.result_helper(rego.metadata.chain(), [])
@@ -31,7 +31,7 @@ deny[result] {
 # custom:
 #   short_name: disallowed_commit_does_not_match
 #   failure_msg: Commit %s does not match authorized commit %s
-deny[result] {
+deny_disallowed_commit_does_not_match[result] {
 	data.authorization
 	att := lib.pipelinerun_attestations[_]
 	material := att.predicate.materials[_]
@@ -46,7 +46,7 @@ deny[result] {
 # custom:
 #   short_name: disallowed_repo_url_does_not_match
 #   failure_msg: Repo url %s does not match authorized repo url %s
-deny[result] {
+deny_disallowed_repo_url_does_not_match[result] {
 	data.authorization
 	att := lib.pipelinerun_attestations[_]
 	material := att.predicate.materials[_]

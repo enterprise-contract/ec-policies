@@ -10,7 +10,7 @@ test_no_tasks_present {
 	}}
 
 	lib.assert_equal(deny, expected) with input.attestations as [{"predicate": {
-		"buildType": lib.pipelinerun_att_build_type,
+		"buildType": lib.pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": []},
 	}}]
 }
@@ -19,7 +19,7 @@ test_empty_task_attested {
 	expected := missing_tasks_error(all_required_tasks)
 
 	lib.assert_equal(deny, expected) with input.attestations as [{"predicate": {
-		"buildType": lib.pipelinerun_att_build_type,
+		"buildType": lib.pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": [{}]},
 	}}]
 }
@@ -28,7 +28,7 @@ test_all_required_tasks_not_present {
 	expected := missing_tasks_error(all_required_tasks)
 
 	lib.assert_equal(deny, expected) with input.attestations as [{"predicate": {
-		"buildType": lib.pipelinerun_att_build_type,
+		"buildType": lib.pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": [{"ref": {"name": "custom", "kind": "Task"}}]},
 	}}]
 }
@@ -37,7 +37,7 @@ test_all_but_one_required_task_not_present {
 	expected := missing_tasks_error(all_required_tasks - {"sanity-inspect-image"})
 
 	lib.assert_equal(deny, expected) with input.attestations as [{"predicate": {
-		"buildType": lib.pipelinerun_att_build_type,
+		"buildType": lib.pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": [{"ref": {"name": "sanity-inspect-image", "kind": "Task"}}]},
 	}}]
 }
@@ -46,7 +46,7 @@ test_several_tasks_not_present {
 	expected := missing_tasks_error(all_required_tasks - {"sanity-inspect-image", "clamav-scan", "add-sbom-and-push"})
 
 	lib.assert_equal(deny, expected) with input.attestations as [{"predicate": {
-		"buildType": lib.pipelinerun_att_build_type,
+		"buildType": lib.pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": [
 			{"ref": {"name": "sanity-inspect-image", "kind": "Task"}},
 			{"ref": {"name": "clamav-scan", "kind": "Task"}},
@@ -59,7 +59,7 @@ test_tricks {
 	expected := missing_tasks_error(all_required_tasks)
 
 	lib.assert_equal(deny, expected) with input.attestations as [{"predicate": {
-		"buildType": lib.pipelinerun_att_build_type,
+		"buildType": lib.pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": [
 			{"name": "sanity-inspect-image"},
 			{"ref": {"name": "sanity-inspect-image", "kind": "NotTask"}},

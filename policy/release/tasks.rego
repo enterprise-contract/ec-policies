@@ -5,6 +5,12 @@
 #   in the pipeline build for each image to be released.
 #   This package includes a set of rules to verify that the expected
 #   tasks ran in the pipeline when the image was built.
+#   Required tasks are listed by the names given to them within the Tekton
+#   Bundle image. Optionally invocation parameter of a Task can be also
+#   mandated by including the name and the value in square brackets following
+#   the name of the task. For example: ``name[PARAM=val]``. Only single parameter
+#   is supported, to assert multiple parameters repeat the required task
+#   definition for each parameter seperately.
 #   The Tasks must be loaded from an acceptable Tekton Bundle.
 #   See xref:release_policy.adoc#attestation_task_bundle_package[Task bundle checks].
 # custom:
@@ -16,8 +22,8 @@
 #       - deprecated-image-check
 #       - get-clair-scan
 #       - sanity-inspect-image
-#       - sanity-label-check
-#       - sanity-optional-label-check
+#       - sanity-label-check[POLICY_NAMESPACE=required_checks]
+#       - sanity-label-check[POLICY_NAMESPACE=optional_checks]
 #       - sast-go
 #
 package policy.release.tasks
@@ -65,11 +71,11 @@ deny[result] {
 
 	# collects names of tasks that are present in the attestation
 	attested_tasks := {t |
-		task_ref := att.predicate.buildConfig.tasks[_].ref
-		task_ref.kind == "Task"
-		bundle_ref := task_ref.bundle
+		task := att.predicate.buildConfig.tasks[_]
+		task.ref.kind == "Task"
+		bundle_ref := task.ref.bundle
 		bundles.is_acceptable(bundle_ref)
-		t := task_ref.name
+		t := _task_names(task)[_]
 	}
 
 	# if all attested_tasks equal all_required_tasks this set is empty,
@@ -78,4 +84,15 @@ deny[result] {
 	all_missing := all_required_tasks - attested_tasks
 
 	result := lib.result_helper(rego.metadata.chain(), [concat("', '", all_missing)])
+}
+
+_task_names(task) = names {
+	name := split(task.ref.name, "[")[0] # don't allow smuggling task name with paramters
+	params := {n |
+		task.invocation
+		v := task.invocation.parameters[k]
+		n := sprintf("%s[%s=%s]", [name, k, v])
+	}
+
+	names := {name} | params
 }

@@ -181,7 +181,7 @@ test_unacceptable_bundle_results {
 		"code": "test_data_missing",
 		"msg": "No test data found",
 		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with input.attestations as [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SUCCESS"}, "task1", "registry.img/unaccepable@sha256:digest")]
+	}}) with input.attestations as [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SUCCESS"}, "task1", "registry.img/unacceptable@sha256:digest")]
 		with data["task-bundles"] as bundles.bundle_data
 		with data.config.policy as {"non_blocking_checks": []}
 }

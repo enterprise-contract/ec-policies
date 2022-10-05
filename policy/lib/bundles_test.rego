@@ -2,6 +2,16 @@ package lib.bundles
 
 import data.lib
 
+# used as reference bundle data in tests
+bundle_data := {"registry.img/acceptable": [{
+	"digest": "sha256:digest",
+	"tag": "",
+	"effective_on": "2000-01-01T00:00:00Z",
+}]}
+
+# used as reference bundle data in tests
+acceptable_bundle_ref := "registry.img/acceptable@sha256:digest"
+
 test_disallowed_task_reference {
 	tasks := [
 		{"name": "my-task-1", "taskRef": {}},
@@ -236,3 +246,11 @@ task_bundles = {"reg.com/repo": [
 		"effective_on": "2021-01-01T00:00:00Z",
 	},
 ]}
+
+test_acceptable_bundle_is_acceptable {
+	is_acceptable(acceptable_bundle_ref) with data["task-bundles"] as bundle_data
+}
+
+test_unacceptable_bundle_is_unacceptable {
+	not is_acceptable("registry.img/unacceptable@sha256:digest") with data["task-bundles"] as bundle_data
+}

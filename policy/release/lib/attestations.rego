@@ -1,5 +1,7 @@
 package lib
 
+import data.lib.bundles
+
 pipelinerun_att_build_types := [
 	"tekton.dev/v1beta1/PipelineRun",
 	# Legacy build type
@@ -16,7 +18,9 @@ hacbs_test_task_result_name := "HACBS_TEST_OUTPUT"
 
 java_sbom_component_count_result_name := "SBOM_JAVA_COMPONENTS_COUNT"
 
-task_name := "__task_name"
+key_task_name := "__task_name"
+
+key_bundle := "__bundle_name"
 
 # These are the ones we're interested in
 pipelinerun_attestations := [att |
@@ -46,13 +50,38 @@ results_named(name) = results {
 		result.name == name
 		result_map := json.unmarshal(result.value)
 
-		# Inject the task name so we can show it in failure messages
-		r := object.union(result_map, {task_name: task.name})
+		# Inject the task data, currently task name and task bundle image
+		# reference so we can show it in failure messages
+		r := object.union(result_map, task_data(task))
 	]
 }
 
+# Returns the data relating to the task if the task is referenced from a bundle
+task_data(task) = info {
+	task.ref
+	task.ref.kind == "Task"
+	info := {key_task_name: task.ref.name, key_bundle: task.ref.bundle}
+}
+
+# Returns the data relating to the task if the task is not referenced from a
+# bundle
+task_data(task) = info {
+	not task.ref
+	not task.ref.kind == "Task"
+	info := {key_task_name: task.name}
+}
+
 # (Don't call it test_results since test_ means a unit test)
-results_from_tests := results_named(hacbs_test_task_result_name)
+results_from_tests = results {
+	all_results := results_named(hacbs_test_task_result_name)
+
+	results := [result |
+		result := all_results[_]
+		result[key_bundle]
+		bundle := result[key_bundle]
+		bundles.is_acceptable(bundle)
+	]
+}
 
 # Check for a task by name. Return the task if found
 task_in_pipelinerun(name) = task {

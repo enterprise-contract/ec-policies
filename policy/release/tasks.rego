@@ -5,6 +5,8 @@
 #   in the pipeline build for each image to be released.
 #   This package includes a set of rules to verify that the expected
 #   tasks ran in the pipeline when the image was built.
+#   The Tasks must be loaded from an acceptable Tekton Bundle.
+#   See xref:release_policy.adoc#attestation_task_bundle_package[Task bundle checks].
 # custom:
 #   tasks_required:
 #     rule_data:
@@ -21,6 +23,7 @@
 package policy.release.tasks
 
 import data.lib
+import data.lib.bundles
 import future.keywords.in
 
 # This generates all errors that can be omitted from the `tasks_required`
@@ -61,7 +64,13 @@ deny[result] {
 	count(att.predicate.buildConfig.tasks) > 0
 
 	# collects names of tasks that are present in the attestation
-	attested_tasks := {t | att.predicate.buildConfig.tasks[_].ref.kind == "Task"; t := att.predicate.buildConfig.tasks[_].ref.name}
+	attested_tasks := {t |
+		task_ref := att.predicate.buildConfig.tasks[_].ref
+		task_ref.kind == "Task"
+		bundle_ref := task_ref.bundle
+		bundles.is_acceptable(bundle_ref)
+		t := task_ref.name
+	}
 
 	# if all attested_tasks equal all_required_tasks this set is empty,
 	# otherwise it contains the tasks that are required but are not

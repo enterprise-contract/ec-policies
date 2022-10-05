@@ -5,10 +5,16 @@
 #   This package contains a rule to confirm that all Java dependencies
 #   were rebuilt in house rather than imported directly from potentially
 #   untrusted respositories.
+#   The result must be reported by a Task that has been loaded from an
+#   acceptable Tekton Bundle.
+#   See xref:release_policy.adoc#attestation_task_bundle_package[Task bundle checks].
+#   If the result is missing or provided via a task loaded from unacceptable no
+#   issue is reported.
 #
 package policy.release.java
 
 import data.lib
+import data.lib.bundles
 import future.keywords.in
 
 # METADATA
@@ -25,7 +31,13 @@ import future.keywords.in
 #       - redhat
 #       - rebuilt
 deny[result] {
-	results := lib.results_named(lib.java_sbom_component_count_result_name)
+	java_results := lib.results_named(lib.java_sbom_component_count_result_name)
+
+	results := [result |
+		result := java_results[_]
+		bundle := result[lib.key_bundle]
+		bundles.is_acceptable(bundle)
+	]
 
 	# convert to set
 	allowed := {a | a := rego.metadata.rule().custom.rule_data.allowed_component_sources[_]}
@@ -34,7 +46,7 @@ deny[result] {
 	# allowed_component_sources
 	foreign := [name |
 		results[_][name]
-		not name in (allowed | {lib.task_name})
+		not name in (allowed | {lib.key_task_name, lib.key_bundle})
 	]
 
 	count(foreign) > 0

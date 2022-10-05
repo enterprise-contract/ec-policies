@@ -57,6 +57,18 @@ unacceptable_task_bundle(tasks) = matches {
 	}
 }
 
+# Returns true if the provided bundle reference is acceptable
+is_acceptable(bundle_ref) {
+	ref := image.parse(bundle_ref)
+	collection := _collection(ref)
+	matches := [r |
+		r := collection[_]
+		is_equal(r, ref)
+	]
+
+	count(matches) > 0
+}
+
 # Returns whether or not the ref matches the digest of the record.
 is_equal(record, ref) = match {
 	ref.digest != ""

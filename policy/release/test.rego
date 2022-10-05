@@ -5,6 +5,10 @@
 #   to a set of tests and that those tests all passed. This package
 #   includes a set of rules to verify that.
 #
+#   The rest result data must be reported by a Tekton Task that has been loaded
+#   from an acceptable Tekton Bundle.
+#   See xref:release_policy.adoc#attestation_task_bundle_package[Task bundle checks].
+#
 #   TODO: Document how you can skip the requirement for individual
 #   tests if needed using the `non_blocking_rule` configuration.
 #
@@ -24,7 +28,9 @@ import future.keywords.in
 #   failure_msg: No test data found
 #
 deny[result] {
-	count(lib.results_from_tests) == 0
+	results := lib.results_from_tests
+	count(results) == 0 # there are none at all
+
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 

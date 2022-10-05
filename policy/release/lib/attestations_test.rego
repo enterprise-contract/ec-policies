@@ -1,6 +1,7 @@
 package lib
 
 import data.lib
+import data.lib.bundles
 
 pr_build_type := "tekton.dev/v1beta1/PipelineRun"
 
@@ -20,14 +21,49 @@ mock_tr_att_legacy := {"predicate": {"buildType": tr_build_type_legacy}}
 
 garbage_att := {"predicate": {"buildType": "garbage"}}
 
-# Used also in main_test and test_test
+# This is used through the tests to generate an attestation of a PipelineRun
+# with an inline Task definition, look at using att_mock_helper_ref to generate
+# an attestation with a Task referenced from a Tekton Bundle image
 att_mock_helper(name, result_map, task_name) = d {
+	d := att_mock_helper_ref(name, result_map, task_name, "")
+}
+
+_task_ref(task_name, bundle_ref) = r {
+	bundle_ref != ""
+	ref_data := {"kind": "Task", "name": task_name, "bundle": bundle_ref}
+	r := {"ref": ref_data}
+}
+
+_task_ref(task_name, bundle_ref) = r {
+	bundle_ref == ""
+	r := {}
+}
+
+# This is used through the tests to generate an attestation of a PipelineRun
+# with an Task definition loaded from a Tekton Bundle image provided via
+# `bundle_ref`.
+# Use:
+# att_mock_helper_ref("result_name", {"value1": 1, "value2", "b"}, "task_name", "registry.io/name:tag...")
+# Make note of `bundle_data` and `acceptable_bundle_ref` in the data.lib.bundles
+# package that helps setup the acceptable bundle, for example:
+#
+# import data.lib
+# import data.lib.bundles
+# attestations := [lib.att_mock_helper_ref("RESULT_NAME", {...}, "task-name", bundles.acceptable_bundle_ref)]
+# {...} == deny
+#	with data["task-bundles"] as bundles.bundle_data
+#	with input.attestations as attestations
+#
+att_mock_helper_ref(name, result_map, task_name, bundle_ref) = d {
 	d := {"predicate": {
 		"buildType": pipelinerun_att_build_types[0],
-		"buildConfig": {"tasks": [{"name": task_name, "results": [{
-			"name": name,
-			"value": json.marshal(result_map),
-		}]}]},
+		"buildConfig": {"tasks": [object.union(
+			{"name": task_name, "results": [{
+				"name": name,
+				"value": json.marshal(result_map),
+			}]},
+			_task_ref(task_name, bundle_ref),
+		)]},
 	}}
 }
 
@@ -86,9 +122,30 @@ test_att_mock_helper {
 	assert_equal(expected, lib.att_mock_helper("result-name", {"foo": "bar"}, "mytask"))
 }
 
+test_att_mock_helper_ref {
+	expected := {"predicate": {
+		"buildType": pipelinerun_att_build_types[0],
+		"buildConfig": {"tasks": [{
+			"name": "mytask",
+			"ref": {
+				"name": "mytask",
+				"kind": "Task",
+				"bundle": "registry.img/name:tag@sha256:digest",
+			},
+			"results": [{
+				"name": "result-name",
+				"value": "{\"foo\":\"bar\"}",
+			}],
+		}]},
+	}}
+
+	assert_equal(expected, lib.att_mock_helper_ref("result-name", {"foo": "bar"}, "mytask", "registry.img/name:tag@sha256:digest"))
+}
+
 test_results_from_tests {
-	expected := {"result": "SUCCESS", "foo": "bar", lib.task_name: "mytask"}
-	assert_equal([expected], results_from_tests) with input.attestations as [att_mock_helper(lib.hacbs_test_task_result_name, {"result": "SUCCESS", "foo": "bar"}, "mytask")]
+	expected := {"result": "SUCCESS", "foo": "bar", lib.key_task_name: "mytask", lib.key_bundle: "registry.img/acceptable@sha256:digest"}
+	assert_equal([expected], results_from_tests) with data["task-bundles"] as bundles.bundle_data
+		with input.attestations as [att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SUCCESS", "foo": "bar"}, "mytask", bundles.acceptable_bundle_ref)]
 }
 
 test_task_in_pipelinerun {
@@ -151,4 +208,25 @@ test_task_not_succeeded {
 	})
 
 	not task_succeeded(task_name) with input.attestations as d
+}
+
+test_task_data_bundle_ref {
+	assert_equal(
+		{
+			"__bundle_name": "bundle",
+			"__task_name": "ref-name",
+		},
+		task_data({
+			"name": "name",
+			"ref": {
+				"name": "ref-name",
+				"kind": "Task",
+				"bundle": "bundle",
+			},
+		}),
+	)
+}
+
+test_task_data_no_bundle_Ref {
+	assert_equal({"__task_name": "name"}, task_data({"name": "name"}))
 }

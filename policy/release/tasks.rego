@@ -17,7 +17,6 @@
 #   tasks_required:
 #     rule_data:
 #       required_task_refs:
-#       - add-sbom-and-push
 #       - clamav-scan
 #       - deprecated-image-check
 #       - get-clair-scan

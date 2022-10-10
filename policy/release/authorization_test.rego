@@ -3,7 +3,7 @@ package policy.release.authorization
 import data.lib
 
 mock_data(changeId, repo, authorizers) = d {
-	d := [{"repoUrl":repo,"changeId":changeId,"authorizers":[authorizers]}]
+	d := [{"repoUrl": repo, "changeId": changeId, "authorizers": [authorizers]}]
 }
 
 mock_empty_data = d {

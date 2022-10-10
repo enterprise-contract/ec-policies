@@ -36,7 +36,6 @@ deny[result] {
 	count(data.authorization) > 0
 	att := lib.pipelinerun_attestations[_]
 	material := att.predicate.materials[_]
-	auths := data.authorization[_]
 	not sha_in_auth(material.digest.sha1, data.authorization)
 	result := lib.result_helper(rego.metadata.chain(), [material.digest.sha1])
 }

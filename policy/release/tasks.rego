@@ -30,6 +30,7 @@ package policy.release.tasks
 
 import data.lib
 import data.lib.bundles
+import data.lib.refs
 import future.keywords.in
 
 # This generates all errors that can be omitted from the `tasks_required`
@@ -72,10 +73,11 @@ deny[result] {
 	# collects names of tasks that are present in the attestation
 	attested_tasks := {t |
 		task := att.predicate.buildConfig.tasks[_]
-		task.ref.kind == "Task"
-		bundle_ref := task.ref.bundle
+		task_ref := refs.task_ref(task)
+		task_ref.kind == "task"
+		bundle_ref := task_ref.bundle
 		bundles.is_acceptable(bundle_ref)
-		t := _task_names(task)[_]
+		t := _task_names(task, task_ref.name)[_]
 	}
 
 	# if all attested_tasks equal all_required_tasks this set is empty,
@@ -86,8 +88,8 @@ deny[result] {
 	result := lib.result_helper(rego.metadata.chain(), [concat("', '", all_missing)])
 }
 
-_task_names(task) = names {
-	name := split(task.ref.name, "[")[0] # don't allow smuggling task name with paramters
+_task_names(task, raw_name) = names {
+	name := split(raw_name, "[")[0] # don't allow smuggling task name with paramters
 	params := {n |
 		task.invocation
 		v := task.invocation.parameters[k]

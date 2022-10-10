@@ -1,6 +1,9 @@
 package lib.bundles
 
+import future.keywords.in
+
 import data.lib.image
+import data.lib.refs
 import data.lib.time as time_lib
 
 # Returns a subset of tasks that do not use a bundle reference.
@@ -84,16 +87,8 @@ is_equal(record, ref) = match {
 	match := record.tag == ref.tag
 }
 
-# Extract the bundle reference value from a Task that is found
-# within a PipelineRun attestations.
 bundle(task) = b {
-	b := task.ref.bundle
-}
-
-# Extract the bundle reference value from a Task that is found
-# within a Pipeline definition.
-bundle(task) = b {
-	b := task.taskRef.bundle
+	b := refs.task_ref(task).bundle
 }
 
 # _collection returns an array representing the full list of records to

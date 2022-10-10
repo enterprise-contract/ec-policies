@@ -8,6 +8,7 @@
 package policy.pipeline.required_tasks
 
 import data.lib
+import data.lib.refs
 
 # Note: I created the required_task_refs list by plucking out the testing
 # related tasks from the build pipeline definitions in the build-definitions
@@ -41,7 +42,7 @@ deny[result] {
 	required := lib.to_set(rego.metadata.rule().custom.rule_data.required_task_refs)
 
 	# The set of tasks that we did find
-	found := {t | t := input.spec.tasks[_].taskRef.name}
+	found := {t | t := refs.task_ref(input.spec.tasks[_]).name}
 
 	# The set difference is the set of missing tasks
 	missing := required - found

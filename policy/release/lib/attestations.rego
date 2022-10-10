@@ -1,6 +1,7 @@
 package lib
 
 import data.lib.bundles
+import data.lib.refs
 
 pipelinerun_att_build_types := [
 	"tekton.dev/v1beta1/PipelineRun",
@@ -58,16 +59,14 @@ results_named(name) = results {
 
 # Returns the data relating to the task if the task is referenced from a bundle
 task_data(task) = info {
-	task.ref
-	task.ref.kind == "Task"
-	info := {key_task_name: task.ref.name, key_bundle: task.ref.bundle}
+	r := refs.task_ref(task)
+	info := {key_task_name: r.name, key_bundle: r.bundle}
 }
 
 # Returns the data relating to the task if the task is not referenced from a
 # bundle
 task_data(task) = info {
-	not task.ref
-	not task.ref.kind == "Task"
+	not refs.task_ref(task)
 	info := {key_task_name: task.name}
 }
 

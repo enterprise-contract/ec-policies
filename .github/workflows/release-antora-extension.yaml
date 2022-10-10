@@ -20,7 +20,8 @@ jobs:
     - name: Setup node
       uses: actions/setup-node@v3
       with:
-        node-version: 18
+        cache: 'npm'
+        node-version-file: 'antora/ec-policies-antora-extension/package.json'
 
     - name: Publish npm package
       run: make npm-publish

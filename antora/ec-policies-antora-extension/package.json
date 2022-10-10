@@ -17,5 +17,8 @@
   "homepage": "https://github.com/hacbs-contract/ec-policies/tree/main/antora/ec-policies-antora-extension#readme",
   "dependencies": {
     "@zregvart/opa-inspect": "latest"
+  },
+  "engines": {
+    "node": "18"
   }
 }

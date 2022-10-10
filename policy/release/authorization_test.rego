@@ -3,11 +3,11 @@ package policy.release.authorization
 import data.lib
 
 mock_data(changeId, repo, authorizers) = d {
-	d := {"changeId": changeId, "repository": repo, "authorizers": [authorizers]}
+	d := [{"repoUrl":repo,"changeId":changeId,"authorizers":[authorizers]}]
 }
 
 mock_empty_data = d {
-	d := {"authorization": {}}
+	d := []
 }
 
 git_repo := "https://github.com/hacbs-contract/ec-policies.git"
@@ -24,7 +24,7 @@ test_no_authorization {
 }
 
 test_commit_does_not_match {
-	expected_msg := sprintf("Commit %s does not match authorized commit %s", [commit_sha, "2468"])
+	expected_msg := sprintf("Commit %s does not match authorized commits", [commit_sha])
 	lib.assert_equal(deny, {{
 		"code": "disallowed_commit_does_not_match",
 		"msg": expected_msg,
@@ -33,7 +33,7 @@ test_commit_does_not_match {
 }
 
 test_repo_does_not_match {
-	expected_msg := sprintf("Repo url %s does not match authorized repo url %s", [git_repo, "https://github.com/hacbs-contract/authorized.git"])
+	expected_msg := sprintf("Repo url %s does not match authorized repo urls", [git_repo])
 	lib.assert_equal(deny, {{
 		"code": "disallowed_repo_url_does_not_match",
 		"msg": expected_msg,

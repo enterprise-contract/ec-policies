@@ -6,10 +6,6 @@ updates:
     schedule:
       interval: "daily"
   - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "npm"
     directory: "/antora/ec-policies-antora-extension"
     schedule:
       interval: "daily"

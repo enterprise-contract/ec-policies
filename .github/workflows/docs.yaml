@@ -7,35 +7,21 @@ name: docs
       - main
 
 jobs:
-  antora:
+  website_update:
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Trigger website update
+        env:
+          EC_AUTOMATION_KEY: ${{ secrets.EC_AUTOMATION_KEY }}
+        run: |
+          function createJWT() {
+            local header=$(echo -n '{"alg":"RS256","typ":"JWT"}' | base64 | sed s/\+/-/ | sed -E s/=+$//)
+            local now_utc=$(date --utc +%s)
+            local payload=$(echo -n '{"iat":'$((now_utc - 60))',"exp":'$((now_utc + 120))',"iss":245286}' | base64 | sed s/\+/-/ | sed -E s/=+$//)
+            local signature=$(echo -n "${header}.${payload}" | openssl dgst -sha256 -binary -sign <(echo "${EC_AUTOMATION_KEY}")| base64 | tr -d '\n=' | tr -- '+/' '-_')
+            echo "${header}.${payload}.${signature}"
+          }
 
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: .cache
-          key: ${{ runner.os }}-antora-cache
-
-      - name: Run Antora
-        run: make docs-render
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v2
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: 'public'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
+          GITHUB_TOKEN=$(curl -s -X POST -H "Authorization: Bearer $(createJWT)" -H "Accept: application/vnd.github+json" https://api.github.com/app/installations/29980719/access_tokens | jq -r .token) \
+          gh api repos/hacbs-contract/hacbs-contract.github.io/dispatches -X
+          POST --input <(echo '{"event_type":"update","client_payload":{}}')

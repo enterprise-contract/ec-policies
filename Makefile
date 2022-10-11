@@ -105,25 +105,9 @@ ready: fmt-amend ## Amend current commit with fmt changes
 
 ##@ Documentation
 
-# `make annotations-js` and `make annotations-opa` should produce identical output.
-# (These are for debugging purposes only.)
-#
-.PHONY: annotations-js
-# opa-inspect-js produces some duplicate records hence the unique_by
-annotations-js:
-	@node antora/hack/inspect-annotations.js | jq 'unique_by(.) | sort_by(.location.file, .location.row)'
-
 .PHONY: annotations-opa
 annotations-opa:
 	@opa inspect --annotations --format json ./policy | jq '.annotations | sort_by(.location.file, .location.row)'
-
-# Use Antora to build html from the Asciidoc files under antora-docs
-#
-.PHONY: docs-render
-docs-render: ## Builds the Antora documentation with the local changes
-# See also packages.json
-	@npm clean-install --no-progress --no-audit --no-fund && \
-	  npm run docs-render
 
 SHORT_SHA=$(shell git rev-parse --short HEAD)
 # (The git checkout is so we don't leave the preid diff in package.json)
@@ -132,18 +116,6 @@ npm-publish: ## Publish the antora extension npm package. Requires a suitable NP
 	  npm version prerelease --preid $(SHORT_SHA) && \
 	  npm publish --access=public && \
 	  git checkout package.json
-
-# Do `dnf install entr` then run this a separate terminal or split window while hacking
-.PHONY: docs-preview
-.ONESHELL:
-.SHELLFLAGS=-e -c
-docs-preview: ## Run the preview of the website, reload to see the changes
-	@$(MAKE) --no-print-directory docs-render
-	@xdg-open public/index.html || true
-	@trap exit SIGINT
-	while true; do
-	  git ls-files --exclude-standard -c -o 'antora-*' 'policy/*.rego' 'docsrc/*' | entr -d -c $(MAKE) --no-print-directory docs-render
-	done
 
 ##@ CI
 

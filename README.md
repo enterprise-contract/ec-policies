@@ -39,12 +39,9 @@ standard format run this before committing:
 
     make fmt
 
-### Building the docs
+### Documentation
 
-The documentation is built using [Antora][antora]. You should be able to build
-the docs like this:
-
-    make docs-render
+The documentation is built using [Antora][antora].
 
 Those docs are published [here][docs] and imported automatically into the
 official [HACBS Documentation][hacbsdocs].
@@ -140,7 +137,7 @@ See also
 [gomplate]: https://docs.gomplate.ca/
 [entr]: https://github.com/eradman/entr
 [testing]: https://www.openpolicyagent.org/docs/latest/policy-testing/
-[docs]: https://hacbs-contract.github.io/ec-policies/
+[docs]: https://hacbs-contract.github.io/
 [hacbsdocs]: https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation/ec-policies/index.html
 [taskdef]: https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml
 [contract]: https://github.com/hacbs-contract

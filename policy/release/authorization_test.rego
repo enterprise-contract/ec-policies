@@ -15,7 +15,7 @@ git_repo := "https://github.com/hacbs-contract/ec-policies.git"
 commit_sha := "1234"
 
 test_no_authorization {
-	expected_msg := "Commit does not contain authorization"
+	expected_msg := "No authorization data found"
 	lib.assert_equal(deny, {{
 		"code": "disallowed_no_authorization",
 		"msg": expected_msg,
@@ -24,7 +24,7 @@ test_no_authorization {
 }
 
 test_commit_does_not_match {
-	expected_msg := sprintf("Commit %s does not match authorized commits", [commit_sha])
+	expected_msg := sprintf("Commit %s does not match authorized commit %s", [commit_sha, "2468"])
 	lib.assert_equal(deny, {{
 		"code": "disallowed_commit_does_not_match",
 		"msg": expected_msg,
@@ -33,7 +33,7 @@ test_commit_does_not_match {
 }
 
 test_repo_does_not_match {
-	expected_msg := sprintf("Repo url %s does not match authorized repo urls", [git_repo])
+	expected_msg := sprintf("Repo url %s does not match authorized repo url %s", [git_repo, "https://github.com/hacbs-contract/authorized.git"])
 	lib.assert_equal(deny, {{
 		"code": "disallowed_repo_url_does_not_match",
 		"msg": expected_msg,

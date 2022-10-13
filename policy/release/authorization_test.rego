@@ -3,11 +3,11 @@ package policy.release.authorization
 import data.lib
 
 mock_data(changeId, repo, authorizers) = d {
-	d := {"changeId": changeId, "repository": repo, "authorizers": [authorizers]}
+	d := [{"repoUrl": repo, "changeId": changeId, "authorizers": [authorizers]}]
 }
 
 mock_empty_data = d {
-	d := {"authorization": {}}
+	d := []
 }
 
 git_repo := "https://github.com/hacbs-contract/ec-policies.git"
@@ -15,7 +15,7 @@ git_repo := "https://github.com/hacbs-contract/ec-policies.git"
 commit_sha := "1234"
 
 test_no_authorization {
-	expected_msg := "Commit does not contain authorization"
+	expected_msg := "No authorization data found"
 	lib.assert_equal(deny, {{
 		"code": "disallowed_no_authorization",
 		"msg": expected_msg,

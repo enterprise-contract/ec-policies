@@ -17,10 +17,10 @@ import data.lib
 #   Enterprise Contract verifies if the build was authorized
 # custom:
 #   short_name: disallowed_no_authorization
-#   failure_msg: Commit does not contain authorization
+#   failure_msg: No authorization data found
 deny[result] {
 	data.authorization
-	not data.authorization.authorizers
+	count(data.authorization) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -33,10 +33,11 @@ deny[result] {
 #   failure_msg: Commit %s does not match authorized commit %s
 deny[result] {
 	data.authorization
+	count(data.authorization) > 0
 	att := lib.pipelinerun_attestations[_]
 	material := att.predicate.materials[_]
-	data.authorization.changeId != material.digest.sha1
-	result := lib.result_helper(rego.metadata.chain(), [material.digest.sha1, data.authorization.changeId])
+	not sha_in_auth(material.digest.sha1, data.authorization)
+	result := lib.result_helper(rego.metadata.chain(), [material.digest.sha1, data.authorization[_].changeId])
 }
 
 # METADATA
@@ -48,8 +49,19 @@ deny[result] {
 #   failure_msg: Repo url %s does not match authorized repo url %s
 deny[result] {
 	data.authorization
+	count(data.authorization) > 0
 	att := lib.pipelinerun_attestations[_]
 	material := att.predicate.materials[_]
-	data.authorization.repository != material.uri
-	result := lib.result_helper(rego.metadata.chain(), [material.uri, data.authorization.repository])
+	not repo_in_auth(material.uri, data.authorization)
+	result := lib.result_helper(rego.metadata.chain(), [material.uri, data.authorization[_].repoUrl])
+}
+
+sha_in_auth(changeid, authorizations) {
+	auths := authorizations[_]
+	auths.changeId == changeid
+}
+
+repo_in_auth(repo, authorizations) {
+	auths := authorizations[_]
+	auths.repoUrl == repo
 }

@@ -23,7 +23,6 @@
 #       - sanity-inspect-image
 #       - sanity-label-check[POLICY_NAMESPACE=required_checks]
 #       - sanity-label-check[POLICY_NAMESPACE=optional_checks]
-#       - sast-go
 #
 package policy.release.tasks
 

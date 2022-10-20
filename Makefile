@@ -238,10 +238,10 @@ check-pipeline-opa: ## Run policy evaluation for pipeline using opa. Deprecated.
 
 ##@ Utility
 
-CONFTEST_VER=0.32.0
-CONFTEST_SHA_Darwin_x86_64=a692cd676cbcdc318d16f261c353c69e0ef69aff5fb0442f3cb909df13beb895
-CONFTEST_SHA_Darwin_arm64=a52365dffe6a424a3e72517fb987a45accd736540e792625a44d9d10f4d527fe
-CONFTEST_SHA_Linux_x86_64=e368ef4fcb49885e9c89052ec0c29cf4d4587707a589fefcaa3dc9cc72065055
+CONFTEST_VER=0.35.0
+CONFTEST_SHA_Darwin_x86_64=bb407e9da8478dd4b84fc0dbe9121d67266a6023da376a5d81073a8b1b7b0794
+CONFTEST_SHA_Darwin_arm64=a1dccd2118243f660fb244e62d3855ba68f476fc5928111422c406ad1ce65bae
+CONFTEST_SHA_Linux_x86_64=f24414d7791db69c2c4937f29e7e6a1b057eebb1e8ecf69a47ea86901f9d9e71
 CONFTEST_GOOS=$(shell go env GOOS | sed 's/./\u&/' )
 CONFTEST_GOARCH=$(shell go env GOARCH | sed 's/amd64/x86_64/' )
 CONFTEST_OS_ARCH=$(CONFTEST_GOOS)_$(CONFTEST_GOARCH)
@@ -263,11 +263,11 @@ install-conftest: ## Install `conftest` CLI from GitHub releases
 	chmod 755 $(CONFTEST_DEST)
 	rm $(CONFTEST_FILE)
 
-OPA_VER=v0.40.0
-OPA_SHA_darwin_amd64=bbd2b41ce8ce3f2cbe06e06a2d05c66185a5e099ff7ac0edcce30116e5cd7831
-OPA_SHA_darwin_arm64_static=4b3f54b8dd45e5cc0c2b4242b94516f400202aa84f9e91054145853cfbba4d5f
-OPA_SHA_linux_amd64_static=73e96d8071c6d71b4a9878d7f55bcb889173c40c91bbe599f9b7b06d3a472c5f
-OPA_SHA_windows_amd64=120ac24bde96cb022028357045edb5680b983c7cfb253b81b4270aedcf9bdf59
+OPA_VER=v0.45.0
+OPA_SHA_darwin_amd64=1d76713a65c11771bd86fe44d8ace17d79f1660e5bb00219d4f3c9b0f966f6e5
+OPA_SHA_darwin_arm64_static=83d975213adbfe5721a4abf5b121ca1a66b6351bd569049282370a1a7393cbcb
+OPA_SHA_linux_amd64_static=fb17d142d05c371e668440b414e41ccffc90c1e3d8f4984cf0c08e64fdd99a03
+OPA_SHA_windows_amd64=31b12b954900584e8aa9103235adf192dd4c92e0039416eaec7d84e2f66fcf3e
 OPA_OS_ARCH=$(shell go env GOOS)_$(shell go env GOARCH)
 OPA_STATIC=$(if $(OPA_SHA_${OPA_OS_ARCH}_static),_static)
 OPA_FILE=opa_$(OPA_OS_ARCH)$(OPA_STATIC)

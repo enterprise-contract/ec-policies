@@ -5,6 +5,10 @@
 #
 package policy.release.attestation_type
 
+import future.keywords.contains
+import future.keywords.if
+import future.keywords.in
+
 import data.lib
 
 # METADATA
@@ -19,9 +23,10 @@ import data.lib
 #     known_attestation_types:
 #     - https://in-toto.io/Statement/v0.1
 #
-deny[result] {
-	att := lib.pipelinerun_attestations[_]
+deny contains result if {
+	some att in lib.pipelinerun_attestations
+	known_attestation_types := lib.rule_data(rego.metadata.rule(), "known_attestation_types")
 	att_type := att._type
-	not lib.included_in(att_type, rego.metadata.rule().custom.rule_data.known_attestation_types)
+	not att_type in known_attestation_types
 	result := lib.result_helper(rego.metadata.chain(), [att_type])
 }

@@ -7,6 +7,9 @@
 #
 package policy.pipeline.required_tasks
 
+import future.keywords.contains
+import future.keywords.if
+
 import data.lib
 import data.lib.refs
 
@@ -37,7 +40,7 @@ import data.lib.refs
 #     - sast-go
 #     - sast-java-sec-check
 #
-deny[result] {
+deny contains result if {
 	# Find the data in the annotations
 	required := lib.to_set(lib.rule_data(rego.metadata.rule(), "required_task_refs"))
 

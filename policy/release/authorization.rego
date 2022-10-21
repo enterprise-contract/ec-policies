@@ -9,6 +9,9 @@
 #
 package policy.release.authorization
 
+import future.keywords.contains
+import future.keywords.if
+
 import data.lib
 
 # METADATA
@@ -18,7 +21,7 @@ import data.lib
 # custom:
 #   short_name: disallowed_no_authorization
 #   failure_msg: No authorization data found
-deny[result] {
+deny contains result if {
 	data.authorization
 	count(data.authorization) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
@@ -31,7 +34,7 @@ deny[result] {
 # custom:
 #   short_name: disallowed_commit_does_not_match
 #   failure_msg: Commit %s does not match authorized commit %s
-deny[result] {
+deny contains result if {
 	data.authorization
 	count(data.authorization) > 0
 	att := lib.pipelinerun_attestations[_]
@@ -47,7 +50,7 @@ deny[result] {
 # custom:
 #   short_name: disallowed_repo_url_does_not_match
 #   failure_msg: Repo url %s does not match authorized repo url %s
-deny[result] {
+deny contains result if {
 	data.authorization
 	count(data.authorization) > 0
 	att := lib.pipelinerun_attestations[_]
@@ -56,12 +59,12 @@ deny[result] {
 	result := lib.result_helper(rego.metadata.chain(), [material.uri, data.authorization[_].repoUrl])
 }
 
-sha_in_auth(changeid, authorizations) {
+sha_in_auth(changeid, authorizations) if {
 	auths := authorizations[_]
 	auths.changeId == changeid
 }
 
-repo_in_auth(repo, authorizations) {
+repo_in_auth(repo, authorizations) if {
 	auths := authorizations[_]
 	auths.repoUrl == repo
 }

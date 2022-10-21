@@ -13,9 +13,12 @@
 #
 package policy.release.java
 
+import future.keywords.contains
+import future.keywords.if
+import future.keywords.in
+
 import data.lib
 import data.lib.bundles
-import future.keywords.in
 
 # METADATA
 # title: Prevent Java builds from depending on foreign dependencies
@@ -30,7 +33,7 @@ import future.keywords.in
 #     allowed_component_sources:
 #       - redhat
 #       - rebuilt
-deny[result] {
+deny contains result if {
 	java_results := lib.results_named(lib.java_sbom_component_count_result_name)
 
 	results := [result |

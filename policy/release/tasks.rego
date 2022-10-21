@@ -26,10 +26,13 @@
 #
 package policy.release.tasks
 
+import future.keywords.contains
+import future.keywords.if
+import future.keywords.in
+
 import data.lib
 import data.lib.bundles
 import data.lib.refs
-import future.keywords.in
 
 # This generates all errors that can be omitted from the `tasks_required`
 # rule. Since required tasks can change over time, we need this so we
@@ -46,7 +49,7 @@ all_required_tasks := {t | t := rego.metadata.chain()[_].annotations.custom.task
 # custom:
 #   short_name: tasks_missing
 #   failure_msg: No tasks found in PipelineRun attestation
-deny[result] {
+deny contains result if {
 	att := lib.pipelinerun_attestations[_]
 
 	count(att.predicate.buildConfig.tasks) == 0
@@ -62,7 +65,7 @@ deny[result] {
 # custom:
 #   short_name: tasks_required
 #   failure_msg: Required task(s) '%s' not found in the PipelineRun attestation
-deny[result] {
+deny contains result if {
 	att := lib.pipelinerun_attestations[_]
 
 	# reported by tasks_missing above
@@ -86,7 +89,7 @@ deny[result] {
 	result := lib.result_helper(rego.metadata.chain(), [concat("', '", all_missing)])
 }
 
-_task_names(task, raw_name) = names {
+_task_names(task, raw_name) = names if {
 	name := split(raw_name, "[")[0] # don't allow smuggling task name with paramters
 	params := {n |
 		task.invocation

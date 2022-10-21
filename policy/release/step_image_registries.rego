@@ -9,6 +9,7 @@ package policy.release.step_image_registries
 
 import future.keywords.contains
 import future.keywords.if
+import future.keywords.in
 
 import data.lib
 
@@ -28,8 +29,7 @@ import data.lib
 #     - registry.redhat.io/
 #
 deny contains result if {
-	att := lib.pipelinerun_attestations[_]
-	task := att.predicate.buildConfig.tasks[_]
+	some task in lib.pipelinerun_attestations[_].predicate.buildConfig.tasks
 	step := task.steps[step_index]
 	image_ref := step.environment.image
 	not image_ref_permitted(image_ref, lib.rule_data(rego.metadata.rule(), "allowed_registry_prefixes"))

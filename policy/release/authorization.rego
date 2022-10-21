@@ -11,6 +11,7 @@ package policy.release.authorization
 
 import future.keywords.contains
 import future.keywords.if
+import future.keywords.in
 
 import data.lib
 
@@ -35,8 +36,7 @@ deny contains result if {
 #   failure_msg: Commit %s does not match authorized commit %s
 deny contains result if {
 	count(data.authorization) > 0
-	att := lib.pipelinerun_attestations[_]
-	material := att.predicate.materials[_]
+	some material in lib.pipelinerun_attestations[_].predicate.materials
 	not sha_in_auth(material.digest.sha1, data.authorization)
 	result := lib.result_helper(rego.metadata.chain(), [material.digest.sha1, data.authorization[_].changeId])
 }
@@ -50,18 +50,17 @@ deny contains result if {
 #   failure_msg: Repo url %s does not match authorized repo url %s
 deny contains result if {
 	count(data.authorization) > 0
-	att := lib.pipelinerun_attestations[_]
-	material := att.predicate.materials[_]
+	some material in lib.pipelinerun_attestations[_].predicate.materials
 	not repo_in_auth(material.uri, data.authorization)
 	result := lib.result_helper(rego.metadata.chain(), [material.uri, data.authorization[_].repoUrl])
 }
 
 sha_in_auth(changeid, authorizations) if {
-	auths := authorizations[_]
+	some auths in authorizations
 	auths.changeId == changeid
 }
 
 repo_in_auth(repo, authorizations) if {
-	auths := authorizations[_]
+	some auths in authorizations
 	auths.repoUrl == repo
 }

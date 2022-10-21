@@ -13,6 +13,7 @@ package policy.pipeline.task_bundle
 
 import future.keywords.contains
 import future.keywords.if
+import future.keywords.in
 
 import data.lib
 import data.lib.bundles
@@ -27,8 +28,8 @@ import data.lib.bundles
 #   failure_msg: Pipeline task '%s' does not contain a bundle reference
 #
 deny contains result if {
-	name := bundles.disallowed_task_reference(input.spec.tasks)[_].name
-	result := lib.result_helper(rego.metadata.chain(), [name])
+	some task in bundles.disallowed_task_reference(input.spec.tasks)
+	result := lib.result_helper(rego.metadata.chain(), [task.name])
 }
 
 # METADATA
@@ -40,8 +41,8 @@ deny contains result if {
 #   failure_msg: Pipeline task '%s' uses an empty bundle image reference
 #
 deny contains result if {
-	name := bundles.empty_task_bundle_reference(input.spec.tasks)[_].name
-	result := lib.result_helper(rego.metadata.chain(), [name])
+	some task in bundles.empty_task_bundle_reference(input.spec.tasks)
+	result := lib.result_helper(rego.metadata.chain(), [task.name])
 }
 
 # METADATA
@@ -54,7 +55,7 @@ deny contains result if {
 #   failure_msg: Pipeline task '%s' uses an unpinned task bundle reference '%s'
 #
 warn contains result if {
-	task := bundles.unpinned_task_bundle(input.spec.tasks)[_]
+	some task in bundles.unpinned_task_bundle(input.spec.tasks)
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
 }
 
@@ -71,7 +72,7 @@ warn contains result if {
 #   failure_msg: Pipeline task '%s' uses an out of date task bundle '%s'
 #
 warn contains result if {
-	task := bundles.out_of_date_task_bundle(input.spec.tasks)[_]
+	some task in bundles.out_of_date_task_bundle(input.spec.tasks)
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
 }
 
@@ -88,6 +89,6 @@ warn contains result if {
 #   failure_msg: Pipeline task '%s' uses an unacceptable task bundle '%s'
 #
 deny contains result if {
-	task := bundles.unacceptable_task_bundle(input.spec.tasks)[_]
+	some task in bundles.unacceptable_task_bundle(input.spec.tasks)
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
 }

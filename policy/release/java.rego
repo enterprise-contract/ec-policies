@@ -37,12 +37,12 @@ deny contains result if {
 	java_results := lib.results_named(lib.java_sbom_component_count_result_name)
 
 	results := [result |
-		result := java_results[_]
+		some result in java_results
 		bundle := result[lib.key_bundle]
 		bundles.is_acceptable(bundle)
 	]
 
-	allowed := {a | a := lib.rule_data(rego.metadata.rule(), "allowed_component_sources")[_]}
+	allowed := {a | some a in lib.rule_data(rego.metadata.rule(), "allowed_component_sources")}
 
 	# contains names of dependency sources that are foreign, i.e. not one of
 	# allowed_component_sources

@@ -39,8 +39,7 @@ deny[result] {
 		bundles.is_acceptable(bundle)
 	]
 
-	# convert to set
-	allowed := {a | a := rego.metadata.rule().custom.rule_data.allowed_component_sources[_]}
+	allowed := {a | a := lib.rule_data(rego.metadata.rule(), "allowed_component_sources")[_]}
 
 	# contains names of dependency sources that are foreign, i.e. not one of
 	# allowed_component_sources

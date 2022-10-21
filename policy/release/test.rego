@@ -67,7 +67,7 @@ deny[result] {
 deny[result] {
 	all_unsupported := [u |
 		test := lib.results_from_tests[_]
-		not test.result in rego.metadata.rule().custom.rule_data.supported_results
+		not test.result in lib.rule_data(rego.metadata.rule(), "supported_results")
 		u := {"task": test.__task_name, "result": test.result}
 	]
 

@@ -29,7 +29,7 @@ deny[result] {
 	task := att.predicate.buildConfig.tasks[_]
 	step := task.steps[step_index]
 	image_ref := step.environment.image
-	not image_ref_permitted(image_ref, rego.metadata.rule().custom.rule_data.allowed_registry_prefixes)
+	not image_ref_permitted(image_ref, lib.rule_data(rego.metadata.rule(), "allowed_registry_prefixes"))
 	result := lib.result_helper(rego.metadata.chain(), [step_index, task.name, image_ref])
 }
 

@@ -22,7 +22,6 @@ import data.lib
 #   short_name: disallowed_no_authorization
 #   failure_msg: No authorization data found
 deny contains result if {
-	data.authorization
 	count(data.authorization) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
@@ -35,7 +34,6 @@ deny contains result if {
 #   short_name: disallowed_commit_does_not_match
 #   failure_msg: Commit %s does not match authorized commit %s
 deny contains result if {
-	data.authorization
 	count(data.authorization) > 0
 	att := lib.pipelinerun_attestations[_]
 	material := att.predicate.materials[_]
@@ -51,7 +49,6 @@ deny contains result if {
 #   short_name: disallowed_repo_url_does_not_match
 #   failure_msg: Repo url %s does not match authorized repo url %s
 deny contains result if {
-	data.authorization
 	count(data.authorization) > 0
 	att := lib.pipelinerun_attestations[_]
 	material := att.predicate.materials[_]

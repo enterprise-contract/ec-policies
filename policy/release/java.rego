@@ -34,24 +34,18 @@ import data.lib.bundles
 #       - redhat
 #       - rebuilt
 deny contains result if {
-	java_results := lib.results_named(lib.java_sbom_component_count_result_name)
-
-	results := [result |
-		some result in java_results
-		bundle := result[lib.key_bundle]
-		bundles.is_acceptable(bundle)
-	]
-
 	allowed := {a | some a in lib.rule_data(rego.metadata.rule(), "allowed_component_sources")}
-
-	# contains names of dependency sources that are foreign, i.e. not one of
-	# allowed_component_sources
-	foreign := [name |
-		results[_][name]
-		not name in (allowed | {lib.key_task_name, lib.key_bundle})
-	]
-
+	foreign := _java_component_sources - allowed
 	count(foreign) > 0
-
 	result := lib.result_helper(rego.metadata.chain(), [concat(",", foreign), concat(",", allowed)])
+}
+
+_java_component_sources contains name if {
+	some result in lib.results_named(lib.java_sbom_component_count_result_name)
+	bundle := result[lib.key_bundle]
+	bundles.is_acceptable(bundle)
+	some name, _ in result
+
+	# Exclude metadata attributes
+	not name in {lib.key_task_name, lib.key_bundle}
 }

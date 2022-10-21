@@ -39,7 +39,7 @@ import data.lib.refs
 # don't need to repeat the list of tasks in the test where this list of
 # errors is also used. It needs to be placed here to be able to access
 # the package level metadata/annotations above.
-all_required_tasks := {task |
+all_required_tasks contains task if {
 	some link in rego.metadata.chain()
 	some task in link.annotations.custom.tasks_required.rule_data.required_task_refs
 }
@@ -54,9 +54,7 @@ all_required_tasks := {task |
 #   failure_msg: No tasks found in PipelineRun attestation
 deny contains result if {
 	some att in lib.pipelinerun_attestations
-
-	count(att.predicate.buildConfig.tasks) == 0
-
+	not _has_tasks(att)
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -70,26 +68,24 @@ deny contains result if {
 #   failure_msg: Required task(s) '%s' not found in the PipelineRun attestation
 deny contains result if {
 	some att in lib.pipelinerun_attestations
+	_has_tasks(att)
+	missing_tasks := all_required_tasks - _attested_tasks(att)
+	result := lib.result_helper(rego.metadata.chain(), [concat("', '", missing_tasks)])
+}
 
-	# reported by tasks_missing above
-	count(att.predicate.buildConfig.tasks) > 0
-
-	# collects names of tasks that are present in the attestation
-	attested_tasks := {name |
+_attested_tasks(att) = names if {
+	names := {name |
 		some task in att.predicate.buildConfig.tasks
 		task_ref := refs.task_ref(task)
 		task_ref.kind == "task"
 		bundle_ref := task_ref.bundle
 		bundles.is_acceptable(bundle_ref)
-		some name in  _task_names(task, task_ref.name)
+		some name in _task_names(task, task_ref.name)
 	}
+}
 
-	# if all attested_tasks equal all_required_tasks this set is empty,
-	# otherwise it contains the tasks that are required but are not
-	# present in the attestation
-	all_missing := all_required_tasks - attested_tasks
-
-	result := lib.result_helper(rego.metadata.chain(), [concat("', '", all_missing)])
+_has_tasks(att) = result if {
+	result = count(att.predicate.buildConfig.tasks) > 0
 }
 
 _task_names(task, raw_name) = names if {

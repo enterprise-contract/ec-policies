@@ -32,7 +32,8 @@ deny contains result if {
 	some task in lib.pipelinerun_attestations[_].predicate.buildConfig.tasks
 	step := task.steps[step_index]
 	image_ref := step.environment.image
-	not image_ref_permitted(image_ref, lib.rule_data(rego.metadata.rule(), "allowed_registry_prefixes"))
+	allowed_registry_prefixes := lib.rule_data(rego.metadata.rule(), "allowed_registry_prefixes")
+	not image_ref_permitted(image_ref, allowed_registry_prefixes)
 	result := lib.result_helper(rego.metadata.chain(), [step_index, task.name, image_ref])
 }
 

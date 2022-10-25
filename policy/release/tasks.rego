@@ -26,17 +26,23 @@
 #
 package policy.release.tasks
 
+import future.keywords.contains
+import future.keywords.if
+import future.keywords.in
+
 import data.lib
 import data.lib.bundles
 import data.lib.refs
-import future.keywords.in
 
 # This generates all errors that can be omitted from the `tasks_required`
 # rule. Since required tasks can change over time, we need this so we
 # don't need to repeat the list of tasks in the test where this list of
 # errors is also used. It needs to be placed here to be able to access
 # the package level metadata/annotations above.
-all_required_tasks := {t | t := rego.metadata.chain()[_].annotations.custom.tasks_required.rule_data.required_task_refs[_]}
+all_required_tasks contains task if {
+	some link in rego.metadata.chain()
+	some task in link.annotations.custom.tasks_required.rule_data.required_task_refs
+}
 
 # METADATA
 # title: No tasks run
@@ -46,11 +52,9 @@ all_required_tasks := {t | t := rego.metadata.chain()[_].annotations.custom.task
 # custom:
 #   short_name: tasks_missing
 #   failure_msg: No tasks found in PipelineRun attestation
-deny[result] {
-	att := lib.pipelinerun_attestations[_]
-
-	count(att.predicate.buildConfig.tasks) == 0
-
+deny contains result if {
+	some att in lib.pipelinerun_attestations
+	not _has_tasks(att)
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -62,31 +66,29 @@ deny[result] {
 # custom:
 #   short_name: tasks_required
 #   failure_msg: Required task(s) '%s' not found in the PipelineRun attestation
-deny[result] {
-	att := lib.pipelinerun_attestations[_]
+deny contains result if {
+	some att in lib.pipelinerun_attestations
+	_has_tasks(att)
+	missing_tasks := all_required_tasks - _attested_tasks(att)
+	result := lib.result_helper(rego.metadata.chain(), [concat("', '", missing_tasks)])
+}
 
-	# reported by tasks_missing above
-	count(att.predicate.buildConfig.tasks) > 0
-
-	# collects names of tasks that are present in the attestation
-	attested_tasks := {t |
-		task := att.predicate.buildConfig.tasks[_]
+_attested_tasks(att) = names if {
+	names := {name |
+		some task in att.predicate.buildConfig.tasks
 		task_ref := refs.task_ref(task)
 		task_ref.kind == "task"
 		bundle_ref := task_ref.bundle
 		bundles.is_acceptable(bundle_ref)
-		t := _task_names(task, task_ref.name)[_]
+		some name in _task_names(task, task_ref.name)
 	}
-
-	# if all attested_tasks equal all_required_tasks this set is empty,
-	# otherwise it contains the tasks that are required but are not
-	# present in the attestation
-	all_missing := all_required_tasks - attested_tasks
-
-	result := lib.result_helper(rego.metadata.chain(), [concat("', '", all_missing)])
 }
 
-_task_names(task, raw_name) = names {
+_has_tasks(att) = result if {
+	result = count(att.predicate.buildConfig.tasks) > 0
+}
+
+_task_names(task, raw_name) = names if {
 	name := split(raw_name, "[")[0] # don't allow smuggling task name with paramters
 	params := {n |
 		task.invocation

@@ -11,6 +11,10 @@
 #
 package policy.pipeline.task_bundle
 
+import future.keywords.contains
+import future.keywords.if
+import future.keywords.in
+
 import data.lib
 import data.lib.bundles
 
@@ -23,9 +27,9 @@ import data.lib.bundles
 #   short_name: disallowed_task_reference
 #   failure_msg: Pipeline task '%s' does not contain a bundle reference
 #
-deny[result] {
-	name := bundles.disallowed_task_reference(input.spec.tasks)[_].name
-	result := lib.result_helper(rego.metadata.chain(), [name])
+deny contains result if {
+	some task in bundles.disallowed_task_reference(input.spec.tasks)
+	result := lib.result_helper(rego.metadata.chain(), [task.name])
 }
 
 # METADATA
@@ -36,9 +40,9 @@ deny[result] {
 #   short_name: empty_task_bundle_reference
 #   failure_msg: Pipeline task '%s' uses an empty bundle image reference
 #
-deny[result] {
-	name := bundles.empty_task_bundle_reference(input.spec.tasks)[_].name
-	result := lib.result_helper(rego.metadata.chain(), [name])
+deny contains result if {
+	some task in bundles.empty_task_bundle_reference(input.spec.tasks)
+	result := lib.result_helper(rego.metadata.chain(), [task.name])
 }
 
 # METADATA
@@ -50,8 +54,8 @@ deny[result] {
 #   short_name: unpinned_task_bundle
 #   failure_msg: Pipeline task '%s' uses an unpinned task bundle reference '%s'
 #
-warn[result] {
-	task := bundles.unpinned_task_bundle(input.spec.tasks)[_]
+warn contains result if {
+	some task in bundles.unpinned_task_bundle(input.spec.tasks)
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
 }
 
@@ -67,8 +71,8 @@ warn[result] {
 #   short_name: out_of_date_task_bundle
 #   failure_msg: Pipeline task '%s' uses an out of date task bundle '%s'
 #
-warn[result] {
-	task := bundles.out_of_date_task_bundle(input.spec.tasks)[_]
+warn contains result if {
+	some task in bundles.out_of_date_task_bundle(input.spec.tasks)
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
 }
 
@@ -84,7 +88,7 @@ warn[result] {
 #   short_name: unacceptable_task_bundle
 #   failure_msg: Pipeline task '%s' uses an unacceptable task bundle '%s'
 #
-deny[result] {
-	task := bundles.unacceptable_task_bundle(input.spec.tasks)[_]
+deny contains result if {
+	some task in bundles.unacceptable_task_bundle(input.spec.tasks)
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
 }

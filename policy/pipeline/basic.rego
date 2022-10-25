@@ -8,6 +8,9 @@
 #
 package policy.pipeline.basic
 
+import future.keywords.contains
+import future.keywords.if
+
 import data.lib
 
 expected_kind := "Pipeline"
@@ -24,7 +27,7 @@ expected_kind := "Pipeline"
 #   short_name: unexpected_kind
 #   failure_msg: Unexpected kind '%s'
 #
-deny[result] {
+deny contains result if {
 	expected_kind != input.kind
 	result := lib.result_helper(rego.metadata.chain(), [input.kind])
 }

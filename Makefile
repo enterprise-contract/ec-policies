@@ -110,6 +110,7 @@ annotations-opa:
 	@opa inspect --annotations --format json ./policy | jq '.annotations | sort_by(.location.file, .location.row)'
 
 SHORT_SHA=$(shell git rev-parse --short HEAD)
+
 # (The git checkout is so we don't leave the preid diff in package.json)
 npm-publish: ## Publish the antora extension npm package. Requires a suitable NPM_TOKEN env var
 	cd antora/ec-policies-antora-extension && \
@@ -233,6 +234,57 @@ check-pipeline-opa: ## Run policy evaluation for pipeline using opa. Deprecated.
 	  --data $(POLICY_DIR) \
 	  --format $(OPA_FORMAT) \
 	  data.$(PIPELINE_NAMESPACE).deny
+
+#--------------------------------------------------------------------
+
+##@ Bundles
+
+# Pushes two bundles, one for release and one for policy.
+# Each bundle includes policy/lib and its contents,
+# which is why we need the temp dir and the extra copying.
+# $(*) is expected to be either "release" or "pipeline".
+#
+.PHONY: push-bundles
+
+BUNDLE_REPO=quay.io/hacbs-contract
+BUNDLE_TAG=git-$(SHORT_SHA)
+
+push-bundle-%:
+	@export \
+	  TMP_DIR="$$( mktemp -d -t ec-push.XXXXXXXXXX )" \
+	  TARGET="$(BUNDLE_REPO)/ec-$(*)-policy:$(BUNDLE_TAG)" && \
+	\
+	mkdir $${TMP_DIR}/$(POLICY_DIR) && \
+	\
+	for d in lib $(*); do \
+	  [[ -n $$( git status --porcelain $(POLICY_DIR)/$${d} ) ]] && \
+	    echo "Aborting due to uncommitted changes in $(POLICY_DIR)/$${d}!" && \
+	      exit 1; \
+	  cp -r $(POLICY_DIR)/$${d} $${TMP_DIR}/$(POLICY_DIR)/$${d}; \
+	done && \
+	\
+	echo "Pushing $(*) policies to $${TARGET}" && \
+	conftest push $${TARGET} $${TMP_DIR} -p $(POLICY_DIR) && \
+	\
+	rm -rf $${TMP_DIR}
+
+# Add the "latest" tag to policy bundles just pushed using the
+# above. (Is there a better way to do that other than using
+# skopeo copy..?)
+#
+bump-latest-%:
+	@export \
+	  TARGET="$(BUNDLE_REPO)/ec-$(*)-policy:$(BUNDLE_TAG)" \
+	  LATEST="$(BUNDLE_REPO)/ec-$(*)-policy:latest" && \
+	\
+	echo "Copying $${TARGET} to $${LATEST}" && \
+	skopeo copy --quiet docker://$${TARGET} docker://$${LATEST}
+
+
+push-bundles: push-bundle-release push-bundle-pipeline ## Create and push policy bundles
+bump-latest: bump-latest-release bump-latest-pipeline ## Update latest tag on pushed bundles
+
+push-bump: push-bundles bump-latest ## Push policy bundles and update latest tag
 
 #--------------------------------------------------------------------
 

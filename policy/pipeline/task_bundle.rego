@@ -66,7 +66,8 @@ warn contains result if {
 #   is the most recent acceptable one. See the list of acceptable
 #   task bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at
 #   link:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
-#   in this git repository.
+#   in this git repository. The meaning of an acceptable bundle is explained in
+#   xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles]
 # custom:
 #   short_name: out_of_date_task_bundle
 #   failure_msg: Pipeline task '%s' uses an out of date task bundle '%s'

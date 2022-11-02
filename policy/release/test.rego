@@ -44,7 +44,7 @@ deny[result] {
 #   failure_msg: Found tests without results
 #
 deny[result] {
-	with_results := [result | result := lib.results_from_tests[_].result]
+	with_results := [result | result := lib.results_from_tests[_][lib.key_value].result]
 	count(with_results) != count(lib.results_from_tests)
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
@@ -66,9 +66,10 @@ deny[result] {
 #
 deny[result] {
 	all_unsupported := [u |
-		test := lib.results_from_tests[_]
+		result := lib.results_from_tests[_]
+		test := result[lib.key_value]
 		not test.result in lib.rule_data(rego.metadata.rule(), "supported_results")
-		u := {"task": test.__task_name, "result": test.result}
+		u := {"task": result[lib.key_task_name], "result": test.result}
 	]
 
 	count(all_unsupported) > 0
@@ -129,8 +130,9 @@ resulted_in(results) = filtered_by_result {
 	# Collect all tests that have resulted with one of the given
 	# results and convert their name to "test:<name>" format
 	filtered_by_result := {r |
-		test := lib.results_from_tests[_]
+		result := lib.results_from_tests[_]
+		test := result[lib.key_value]
 		test.result in results
-		r := sprintf("test:%s", [test.__task_name])
+		r := sprintf("test:%s", [result[lib.key_task_name]])
 	}
 }

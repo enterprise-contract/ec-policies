@@ -44,8 +44,5 @@ _java_component_sources contains name if {
 	some result in lib.results_named(lib.java_sbom_component_count_result_name)
 	bundle := result[lib.key_bundle]
 	bundles.is_acceptable(bundle)
-	some name, _ in result
-
-	# Exclude metadata attributes
-	not name in {lib.key_task_name, lib.key_bundle}
+	some name, _ in result[lib.key_value]
 }

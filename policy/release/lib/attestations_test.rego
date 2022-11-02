@@ -143,7 +143,11 @@ test_att_mock_helper_ref {
 }
 
 test_results_from_tests {
-	expected := {"result": "SUCCESS", "foo": "bar", lib.key_task_name: "mytask", lib.key_bundle: "registry.img/acceptable@sha256:digest"}
+	expected := {
+		lib.key_value: {"result": "SUCCESS", "foo": "bar"},
+		lib.key_task_name: "mytask",
+		lib.key_bundle: "registry.img/acceptable@sha256:digest",
+	}
 	assert_equal([expected], results_from_tests) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as [att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SUCCESS", "foo": "bar"}, "mytask", bundles.acceptable_bundle_ref)]
 }

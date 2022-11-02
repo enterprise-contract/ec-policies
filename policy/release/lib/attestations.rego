@@ -23,6 +23,8 @@ key_task_name := "__task_name"
 
 key_bundle := "__bundle_name"
 
+key_value := "__value"
+
 # These are the ones we're interested in
 pipelinerun_attestations := [att |
 	att := input.attestations[_]
@@ -41,9 +43,11 @@ tasks_from_pipelinerun := [task |
 ]
 
 # All results from the attested PipelineRun with the provided name. Results are
-# expected to contain a JSON value. The JSON value will be augmented with a key
-# "__task_name" that will hold the name of the TaskRun where the named result
-# was found.
+# expected to contain a JSON value. The return object contains the following
+# keys:
+#   __task_name: name of the task in which the result appears.
+#   __bundle_name: Tekton bundle image reference for the corresponding task.
+#   __value: unmarshalled task result.
 results_named(name) = results {
 	results := [r |
 		task := tasks_from_pipelinerun[_]
@@ -53,7 +57,7 @@ results_named(name) = results {
 
 		# Inject the task data, currently task name and task bundle image
 		# reference so we can show it in failure messages
-		r := object.union(result_map, task_data(task))
+		r := object.union({key_value: result_map}, task_data(task))
 	]
 }
 

@@ -61,8 +61,15 @@ _non_blocking_checks := result {
 
 # Look in various places to find the include_rules/exclude_rules lists
 _include_exclude_rules(include_exclude, fallback_default) := result {
-	# A collection was specified in the policy config
-	result := data.rule_collections[data.config.policy.collection][include_exclude]
+	# A collection was specified in the policy config and we try to to concat the rules from the speicifed
+	# collections with specified include/exclude rules
+	result := array.concat(
+		merge_collection_config(data.config.policy.collections, include_exclude),
+		data.config.policy[sprintf("%s_rules", [include_exclude])],
+	)
+} else := result {
+	# No specified include/exclude rules were found, so return include/exclude rules from any specified collections
+	result := merge_collection_config(data.config.policy.collections, include_exclude)
 } else := result {
 	# The list was specified explicitly in the policy config
 	result := data.config.policy[sprintf("%s_rules", [include_exclude])]
@@ -72,4 +79,12 @@ _include_exclude_rules(include_exclude, fallback_default) := result {
 } else := result {
 	# Just in case none of the above exist
 	result := fallback_default
+}
+
+# This takes a list of rule collections, iterates over them and unions the rules
+# found in the include or exclude key of each collection in the existing rules as appropriate
+merge_collection_config(collection_list, include_exclude) := result {
+	result := [r |
+		r := data.rule_collections[collection_list[_]][include_exclude][_]
+	]
 }

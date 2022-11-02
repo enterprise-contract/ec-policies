@@ -19,6 +19,8 @@ hacbs_test_task_result_name := "HACBS_TEST_OUTPUT"
 
 java_sbom_component_count_result_name := "SBOM_JAVA_COMPONENTS_COUNT"
 
+build_base_images_digests_result_name := "BASE_IMAGES_DIGESTS"
+
 key_task_name := "__task_name"
 
 key_bundle := "__bundle_name"
@@ -53,12 +55,21 @@ results_named(name) = results {
 		task := tasks_from_pipelinerun[_]
 		result := task.results[_]
 		result.name == name
-		result_map := json.unmarshal(result.value)
+		result_map := unmarshal(result.value)
 
 		# Inject the task data, currently task name and task bundle image
 		# reference so we can show it in failure messages
 		r := object.union({key_value: result_map}, task_data(task))
 	]
+}
+
+# Attempts to json.unmarshal the given value. If not possible, the given
+# value is returned as is. This is helpful when interpreting certain values
+# in attestations created by Tekton Chains.
+unmarshal(raw) = value {
+	value = json.unmarshal(raw)
+} else = raw {
+	true
 }
 
 # Returns the data relating to the task if the task is referenced from a bundle

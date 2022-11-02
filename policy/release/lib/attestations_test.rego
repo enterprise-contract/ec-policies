@@ -43,28 +43,57 @@ _task_ref(task_name, bundle_ref) = r {
 # with an Task definition loaded from a Tekton Bundle image provided via
 # `bundle_ref`.
 # Use:
-# att_mock_helper_ref("result_name", {"value1": 1, "value2", "b"}, "task_name", "registry.io/name:tag...")
+# att_mock_helper_ref_plain_result(
+#	"result_name", "result_value", "task_name", "registry.io/name:tag...")
 # Make note of `bundle_data` and `acceptable_bundle_ref` in the data.lib.bundles
 # package that helps setup the acceptable bundle, for example:
 #
 # import data.lib
 # import data.lib.bundles
-# attestations := [lib.att_mock_helper_ref("RESULT_NAME", {...}, "task-name", bundles.acceptable_bundle_ref)]
+# attestations := [lib.att_mock_helper_ref_plain_result(
+#	"RESULT_NAME", "result_value", "task-name", bundles.acceptable_bundle_ref
+# )]
 # {...} == deny
 #	with data["task-bundles"] as bundles.bundle_data
 #	with input.attestations as attestations
 #
-att_mock_helper_ref(name, result_map, task_name, bundle_ref) = d {
+# NOTE: In most cases, a task produces a result that is JSON encoded. When mocking results
+# from such tasks, prefer the att_mock_helper_ref function instead.
+att_mock_helper_ref_plain_result(name, result, task_name, bundle_ref) = d {
 	d := {"predicate": {
 		"buildType": pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": [object.union(
 			{"name": task_name, "results": [{
 				"name": name,
-				"value": json.marshal(result_map),
+				"value": result,
 			}]},
 			_task_ref(task_name, bundle_ref),
 		)]},
 	}}
+}
+
+# This is used through the tests to generate an attestation of a PipelineRun
+# with an Task definition loaded from a Tekton Bundle image provided via
+# `bundle_ref`.
+# Use:
+# att_mock_helper_ref(
+# 	"result_name", {"value1": 1, "value2", "b"}, "task_name", "registry.io/name:tag...")
+# Make note of `bundle_data` and `acceptable_bundle_ref` in the data.lib.bundles
+# package that helps setup the acceptable bundle, for example:
+#
+# import data.lib
+# import data.lib.bundles
+# attestations := [lib.att_mock_helper_ref(
+#	"RESULT_NAME", {...}, "task-name", bundles.acceptable_bundle_ref
+# )]
+# {...} == deny
+#	with data["task-bundles"] as bundles.bundle_data
+#	with input.attestations as attestations
+#
+# NOTE: If the task being mocked does not produced a JSON encoded result, use
+# att_mock_helper_ref_plain_result instead.
+att_mock_helper_ref(name, result, task_name, bundle_ref) = d {
+	d := att_mock_helper_ref_plain_result(name, json.marshal(result), task_name, bundle_ref)
 }
 
 att_mock_task_helper(task) = d {

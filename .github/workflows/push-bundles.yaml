@@ -6,7 +6,7 @@ on:
     branches:
     - main
     paths:
-    - policy
+    - policy/**
 
 jobs:
   push-policy-bundles:

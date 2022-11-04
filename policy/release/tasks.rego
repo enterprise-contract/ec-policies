@@ -70,6 +70,7 @@ deny contains result if {
 	some att in lib.pipelinerun_attestations
 	_has_tasks(att)
 	missing_tasks := all_required_tasks - _attested_tasks(att)
+	count(missing_tasks) > 0
 	result := lib.result_helper(rego.metadata.chain(), [concat("', '", missing_tasks)])
 }
 

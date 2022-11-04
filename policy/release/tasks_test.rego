@@ -21,6 +21,7 @@ test_all_tasks_present {
 					"ref": {"name": "sanity-label-check", "kind": "Task", "bundle": bundles.acceptable_bundle_ref},
 					"invocation": {"parameters": {"POLICY_NAMESPACE": "optional_checks"}},
 				},
+				{"ref": {"name": "sbom-json-check", "kind": "Task", "bundle": bundles.acceptable_bundle_ref}},
 			]},
 		}}]
 }

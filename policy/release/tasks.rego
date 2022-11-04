@@ -21,8 +21,9 @@
 #       - deprecated-image-check
 #       - get-clair-scan
 #       - sanity-inspect-image
-#       - sanity-label-check[POLICY_NAMESPACE=required_checks]
 #       - sanity-label-check[POLICY_NAMESPACE=optional_checks]
+#       - sanity-label-check[POLICY_NAMESPACE=required_checks]
+#       - sbom-json-check
 #
 package policy.release.tasks
 

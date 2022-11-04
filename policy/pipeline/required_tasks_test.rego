@@ -17,6 +17,7 @@ all_required_task_refs := [
 	"sanity-label-check",
 	"sast-go",
 	"sast-java-sec-check",
+	"sbom-json-check",
 ]
 
 all_bar_two := array.slice(all_required_task_refs, 2, count(all_required_task_refs))

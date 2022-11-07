@@ -3,6 +3,11 @@ package policy.release.tasks
 import data.lib
 import data.lib.bundles
 
+test_all_tasks_present {
+	lib.assert_empty(deny) with data["task-bundles"] as bundles.bundle_data
+		with input.attestations as _attestations_with_tasks(all_required_tasks, [])
+}
+
 test_no_tasks_present {
 	expected := {{
 		"code": "tasks_missing",

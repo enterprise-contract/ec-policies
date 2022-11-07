@@ -39,6 +39,7 @@ import data.lib.refs
 #     - sanity-label-check
 #     - sast-go
 #     - sast-java-sec-check
+#     - sbom-json-check
 #
 deny contains result if {
 	# Find the data in the annotations

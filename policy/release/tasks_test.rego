@@ -5,25 +5,7 @@ import data.lib.bundles
 
 test_all_tasks_present {
 	lib.assert_empty(deny) with data["task-bundles"] as bundles.bundle_data
-		with input.attestations as [{"predicate": {
-			"buildType": lib.pipelinerun_att_build_types[0],
-			"buildConfig": {"tasks": [
-				{"ref": {"name": "sanity-inspect-image", "kind": "Task", "bundle": bundles.acceptable_bundle_ref}},
-				{"ref": {"name": "clamav-scan", "kind": "Task", "bundle": bundles.acceptable_bundle_ref}},
-				{"ref": {"name": "add-sbom-and-push", "kind": "Task", "bundle": bundles.acceptable_bundle_ref}},
-				{"ref": {"name": "get-clair-scan", "kind": "Task", "bundle": bundles.acceptable_bundle_ref}},
-				{"ref": {"name": "deprecated-image-check", "kind": "Task", "bundle": bundles.acceptable_bundle_ref}},
-				{
-					"ref": {"name": "sanity-label-check", "kind": "Task", "bundle": bundles.acceptable_bundle_ref},
-					"invocation": {"parameters": {"POLICY_NAMESPACE": "required_checks"}},
-				},
-				{
-					"ref": {"name": "sanity-label-check", "kind": "Task", "bundle": bundles.acceptable_bundle_ref},
-					"invocation": {"parameters": {"POLICY_NAMESPACE": "optional_checks"}},
-				},
-				{"ref": {"name": "sbom-json-check", "kind": "Task", "bundle": bundles.acceptable_bundle_ref}},
-			]},
-		}}]
+		with input.attestations as _attestations_with_tasks(all_required_tasks, [])
 }
 
 test_no_tasks_present {

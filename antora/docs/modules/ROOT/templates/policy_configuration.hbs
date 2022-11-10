@@ -29,6 +29,7 @@ Here's an example of how that file might look.
     "policy": {
       "include_rules": ["*"],
       "exclude_rules": ["not_useful"],
+      "collections": []
     }
   }
 }
@@ -164,11 +165,11 @@ exclude_rules:
 - attestation_task_bundle.*
 ----
 
-== Specifying a predefined set of rules with `collection`
+== Specifying a predefined set of rules with `collections`
 
 Rather than specifying the values of `include_rules` and `exclude_rules`
 explicitly, you can also select from a set of predefined configurations by
-setting `"data.config.policy.collection"`. For example, in a `data/config.json`
+setting `"data.config.policy.collections"`. For example, in a `data/config.json`
 file:
 
 [source,json]
@@ -176,7 +177,7 @@ file:
 {
   "config": {
     "policy": {
-      "collection": "everything"
+      "collections": ["some_things", "some_other_things"]
     }
   }
 }

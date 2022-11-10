@@ -21,6 +21,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         cache: 'npm'
+        cache-dependency-path: 'antora/ec-policies-antora-extension/package-lock.json'
         node-version-file: 'antora/ec-policies-antora-extension/package.json'
 
     - name: Publish npm package

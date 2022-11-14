@@ -24,15 +24,10 @@ import data.lib.bundles
 # custom:
 #   short_name: disallowed_base_image
 #   failure_msg: Base image %q is from a disallowed registry
-#   rule_data:
-#     allowed_registry_prefixes:
-#     - registry.access.redhat.com/
-#     - registry.redhat.io/
 #
 deny contains result if {
-	allowed_registry_prefixes := lib.rule_data(rego.metadata.rule(), "allowed_registry_prefixes")
 	some image_ref in _base_images
-	not _image_ref_permitted(image_ref, allowed_registry_prefixes)
+	not _image_ref_permitted(image_ref, data.rule_data.allowed_registry_prefixes)
 	result := lib.result_helper(rego.metadata.chain(), [image_ref])
 }
 

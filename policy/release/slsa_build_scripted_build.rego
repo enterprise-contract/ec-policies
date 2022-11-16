@@ -1,6 +1,6 @@
 #
 # METADATA
-# title: SLSA - Build Requirements - Scripted Build
+# title: SLSA - Build - Scripted Build
 # description: |-
 #   The SLSA requirement states the following:
 #

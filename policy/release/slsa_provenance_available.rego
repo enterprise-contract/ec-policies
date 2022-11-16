@@ -1,8 +1,8 @@
 #
 # METADATA
-# title: SLSA - Available
+# title: SLSA - Provenance - Available
 # description: |-
-#   The SLSA Available requirement states the following:
+#   The SLSA Provenance Available requirement states the following:
 #
 #   "The provenance is available to the consumer in a format that the consumer accepts. The
 #   format SHOULD be in-toto SLSA Provenance, but another format MAY be used if both producer
@@ -10,7 +10,7 @@
 #
 #   This package only accepts the in-toto SLSA Provenance format.
 #
-package policy.release.slsa_available
+package policy.release.slsa_provenance_available
 
 import future.keywords.contains
 import future.keywords.if

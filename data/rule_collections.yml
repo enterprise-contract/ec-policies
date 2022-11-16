@@ -22,6 +22,6 @@ rule_collections:
   slsa1:
     description: Includes policy rules required to meet SLSA Level 1
     include:
-    - slsa_available
+    - slsa_provenance_available
     - slsa_build_scripted_build
     exclude: []

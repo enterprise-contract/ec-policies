@@ -1,4 +1,4 @@
-package policy.release.slsa_available
+package policy.release.slsa_provenance_available
 
 import future.keywords.in
 

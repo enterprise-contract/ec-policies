@@ -17,3 +17,11 @@ rule_collections:
     include:
     - "*"
     exclude: []
+
+  # List of requirements: https://slsa.dev/spec/v0.1/requirements
+  slsa1:
+    description: Includes policy rules required to meet SLSA Level 1
+    include:
+    - slsa_available
+    - slsa_build_scripted_build
+    exclude: []

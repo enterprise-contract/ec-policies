@@ -45,7 +45,7 @@ mock_a_passing_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name,
 test_success_data {
 	lib.assert_empty(deny) with input.attestations as mock_a_passing_test
 		with data["task-bundles"] as bundles.bundle_data
-		with data.config.policy as {"non_blocking_checks": []}
+		with data.config.policy as {"exclude": []}
 }
 
 mock_a_failing_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "FAILURE"}, "failed_1", bundles.acceptable_bundle_ref)]
@@ -57,7 +57,7 @@ test_failure_data {
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as mock_a_failing_test
-		with data.config.policy as {"non_blocking_checks": []}
+		with data.config.policy as {"exclude": []}
 }
 
 mock_an_errored_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "ERROR"}, "errored_1", bundles.acceptable_bundle_ref)]
@@ -69,7 +69,7 @@ test_error_data {
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as mock_an_errored_test
-		with data.config.policy as {"non_blocking_checks": []}
+		with data.config.policy as {"exclude": []}
 }
 
 mock_mixed_data := array.concat(mock_a_failing_test, mock_an_errored_test)
@@ -81,7 +81,7 @@ test_mix_data {
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as mock_mixed_data
-		with data.config.policy as {"non_blocking_checks": []}
+		with data.config.policy as {"exclude": []}
 }
 
 test_can_skip_by_name {
@@ -89,15 +89,15 @@ test_can_skip_by_name {
 		with input.attestations as mock_mixed_data
 		with data.config.policy as {"non_blocking_checks": ["test:errored_1", "test:failed_1"]}
 
-	# Exclude_rules works the same as non_blocking_checks
+	# exclude works the same as non_blocking_checks
 	lib.assert_empty(deny) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as mock_mixed_data
-		with data.config.policy as {"exclude_rules": ["test:errored_1", "test:failed_1"]}
+		with data.config.policy as {"exclude": ["test:errored_1", "test:failed_1"]}
 
 	# It's an unlikely edge case, but you can use them both if you want
 	lib.assert_empty(deny) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as mock_mixed_data
-		with data.config.policy as {"exclude_rules": ["test:errored_1"], "non_blocking_checks": ["test:failed_1"]}
+		with data.config.policy as {"exclude": ["test:errored_1"], "non_blocking_checks": ["test:failed_1"]}
 
 	lib.assert_equal(deny, {{
 		"code": "test_result_failures",
@@ -107,14 +107,14 @@ test_can_skip_by_name {
 		with input.attestations as mock_mixed_data
 		with data.config.policy as {"non_blocking_checks": ["test:failed_1"]}
 
-	# Exclude_rules works the same as non_blocking_checks
+	# exclude works the same as non_blocking_checks
 	lib.assert_equal(deny, {{
 		"code": "test_result_failures",
 		"msg": "The following tests did not complete successfully: errored_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as mock_mixed_data
-		with data.config.policy as {"exclude_rules": ["test:failed_1"]}
+		with data.config.policy as {"exclude": ["test:failed_1"]}
 }
 
 test_skipped_is_not_deny {
@@ -183,5 +183,5 @@ test_unacceptable_bundle_results {
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SUCCESS"}, "task1", "registry.img/unacceptable@sha256:digest")]
 		with data["task-bundles"] as bundles.bundle_data
-		with data.config.policy as {"non_blocking_checks": []}
+		with data.config.policy as {"exclude": []}
 }

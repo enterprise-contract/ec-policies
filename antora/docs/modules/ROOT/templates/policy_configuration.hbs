@@ -27,8 +27,8 @@ Here's an example of how that file might look.
 {
   "config": {
     "policy": {
-      "include_rules": ["*"],
-      "exclude_rules": ["not_useful"],
+      "include": ["*"],
+      "exclude": ["not_useful"],
       "collections": []
     }
   }
@@ -43,8 +43,8 @@ example shows what the defaults are if the configuration is not specified.
 By default, all rules are included, except for the rules in the `not_useful`
 package.
 
-You can modify the defaults by setting `config.policy.include_rules` and
-`config.policy.exclude_rules`. Each of those values should be a list of
+You can modify the defaults by setting `config.policy.include` and
+`config.policy.exclude`. Each of those values should be a list of
 strings.
 
 The strings in the list should be one of the the following:
@@ -83,7 +83,7 @@ xref:release_policy.adoc#test_result_failures["test.test_result_failures" rule]
 only.
 
 The syntax for skipping a particular test is `"test:<testname>"` and it only
-works with the exclude_rules field. You can't use it with the `include_rules`
+works with the exclude field. You can't use it with the `include`
 option.
 
 
@@ -101,7 +101,7 @@ All other rules would be included.
 
 [source,yaml]
 ----
-exclude_rules:
+exclude:
 - attestation_task_bundle
 - not_useful
 ----
@@ -113,7 +113,7 @@ other rules.
 
 [source,yaml]
 ----
-include_rules:
+include:
 - test
 - java
 ----
@@ -126,7 +126,7 @@ the `attestation_task_bundle` package. The other rules in the
 
 [source,yaml]
 ----
-exclude_rules:
+exclude:
 - attestation_task_bundle.unacceptable_task_bundle
 ----
 
@@ -138,7 +138,7 @@ pass even if certain tests failed or didn't complete. Additionally the
 
 [source,yaml]
 ----
-exclude_rules:
+exclude:
 - test:get-clair-scan
 - test:clamav-scan
 - not_useful
@@ -146,7 +146,7 @@ exclude_rules:
 
 === Including only some rules from a package
 
-You can specify both `include_rules` and `exclude_rules` to pick out just the
+You can specify both `include` and `exclude` to pick out just the
 rules you want.
 
 This example specifies that only the `unacceptable_task_bundle` rule from the
@@ -158,16 +158,16 @@ rule in this example.
 
 [source,yaml]
 ----
-include_rules:
+include:
 - "*"
 - attestation_task_bundle.unacceptable_task_bundle
-exclude_rules:
+exclude:
 - attestation_task_bundle.*
 ----
 
 == Specifying a predefined set of rules with `collections`
 
-Rather than specifying the values of `include_rules` and `exclude_rules`
+Rather than specifying the values of `include` and `exclude`
 explicitly, you can also select from a set of predefined configurations by
 setting `"data.config.policy.collections"`. For example, in a `data/config.json`
 file:
@@ -206,9 +206,9 @@ in this git repo.
 == The `non_blocking_checks` field
 
 The `non_blocking_checks` configuration option, previously used to skip rules
-is now deprecated. It's functionality is replaced with the new `exclude_rules`
+is now deprecated. It's functionality is replaced with the new `exclude`
 option as described above. While it's deprecated it can still be used
-interchangeably with the `exclude_rules` field.
+interchangeably with the `exclude` field.
 
 Please make the required tooling changes soon to prevent breakages when the
 `non_blocking_checks` field is removed in the future.

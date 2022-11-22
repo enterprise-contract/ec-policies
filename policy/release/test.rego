@@ -92,8 +92,8 @@ deny[result] {
 	all_failed = resulted_in({"FAILURE", "ERROR"})
 
 	# Failed tests are those contained within all_failed that are not
-	# listed in the exclude_rules list
-	failed_blocking := all_failed - lib.exclude_rules
+	# listed in the exclude list
+	failed_blocking := all_failed - lib.exclude
 
 	# Fail if there are any
 	count(failed_blocking) > 0

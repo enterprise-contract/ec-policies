@@ -24,13 +24,13 @@ test_future_handling {
 	lib.assert_equal({future_denial}, lib.future_rules({future_denial, current_denial}))
 }
 
-test_include_exclude_rules {
+test_include_exclude {
 	# Rules excluded by wildcard
-	lib.assert_empty(current_and_future_denies("release")) with data.config.policy.exclude_rules as ["*"]
+	lib.assert_empty(current_and_future_denies("release")) with data.config.policy.exclude as ["*"]
 
 	# Rules excluded by name
-	lib.assert_empty(current_and_future_denies("pipeline")) with data.config.policy.exclude_rules as ["required_tasks"]
+	lib.assert_empty(current_and_future_denies("pipeline")) with data.config.policy.exclude as ["required_tasks"]
 
 	# Rules included by name
-	lib.assert_equal(1, count(current_and_future_denies("pipeline"))) with data.config.policy.include_rules as ["required_tasks"]
+	lib.assert_equal(1, count(current_and_future_denies("pipeline"))) with data.config.policy.include as ["required_tasks"]
 }

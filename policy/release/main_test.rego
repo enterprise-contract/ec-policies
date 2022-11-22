@@ -8,11 +8,11 @@ import data.lib.bundles
 all_tests := {p | data.policy.release[policy]; p := policy}
 
 nonblocking_except(except_tests) = d {
-	d := {"non_blocking_checks": all_tests - except_tests}
+	d := {"exclude": all_tests - except_tests}
 }
 
 nonblocking_only(only_tests) = d {
-	d := {"non_blocking_checks": only_tests}
+	d := {"exclude": only_tests}
 }
 
 test_main {
@@ -44,15 +44,15 @@ test_skipping_individual_rules {
 		"code": "test_data_missing",
 		"msg": "No test data found",
 		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with data.config.policy.exclude_rules as ["not_useful.bad_day"]
+	}}) with data.config.policy.exclude as ["not_useful.bad_day"]
 
 	lib.assert_equal(deny, {{
 		"code": "bad_day",
 		"msg": "It just feels like a bad day to do a release",
 		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with data.config.policy.exclude_rules as ["test.test_data_missing"]
+	}}) with data.config.policy.exclude as ["test.test_data_missing"]
 
-	lib.assert_empty(deny) with data.config.policy.exclude_rules as ["test.test_data_missing", "not_useful.bad_day"]
+	lib.assert_empty(deny) with data.config.policy.exclude as ["test.test_data_missing", "not_useful.bad_day"]
 }
 
 test_succeeding_when_skipping_all {

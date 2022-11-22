@@ -4,7 +4,7 @@ import data.lib
 
 test_passing {
 	lib.assert_empty(deny) with input.kind as "Pipeline"
-		with data.config.policy.non_blocking_checks as ["required_tasks"]
+		with data.config.policy.exclude as ["required_tasks"]
 }
 
 test_failing {
@@ -13,7 +13,7 @@ test_failing {
 		"msg": "Unexpected kind 'Zipline'",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.kind as "Zipline"
-		with data.config.policy.non_blocking_checks as ["required_tasks"]
+		with data.config.policy.exclude as ["required_tasks"]
 }
 
 test_in_future {

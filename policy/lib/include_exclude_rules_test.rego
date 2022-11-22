@@ -3,23 +3,23 @@ package lib
 import data.lib
 
 test_include_defaults {
-	lib.assert_equal(include_rules, {"*"})
-	lib.assert_equal(exclude_rules, set())
+	lib.assert_equal(include, {"*"})
+	lib.assert_equal(exclude, set())
 
-	lib.assert_equal(include_rules, {"zip"}) with data.rule_collections as {"default": {"include": ["zip"]}}
-	lib.assert_equal(exclude_rules, {"zap"}) with data.rule_collections as {"default": {"exclude": ["zap"]}}
+	lib.assert_equal(include, {"zip"}) with data.rule_collections as {"default": {"include": ["zip"]}}
+	lib.assert_equal(exclude, {"zap"}) with data.rule_collections as {"default": {"exclude": ["zap"]}}
 
 	rule_included("foo", "whatever_code")
 }
 
 test_include_config {
 	mock_config := {"policy": {
-		"include_rules": {"foo"},
-		"exclude_rules": {"bar"},
+		"include": {"foo"},
+		"exclude": {"bar"},
 	}}
 
-	lib.assert_equal({"foo"}, include_rules) with data.config as mock_config
-	lib.assert_equal({"bar"}, exclude_rules) with data.config as mock_config
+	lib.assert_equal({"foo"}, include) with data.config as mock_config
+	lib.assert_equal({"bar"}, exclude) with data.config as mock_config
 
 	rule_included("foo", "whatever_code") with data.config as mock_config
 	not rule_included("bar", "whatever_code") with data.config as mock_config
@@ -27,8 +27,8 @@ test_include_config {
 
 test_include_fully_qualified_rules {
 	mock_config_to_include := {"policy": {
-		"exclude_rules": ["*"],
-		"include_rules": ["foo.particular_code"],
+		"exclude": ["*"],
+		"include": ["foo.particular_code"],
 	}}
 
 	rule_included("foo", "particular_code") with data.config as mock_config_to_include
@@ -36,8 +36,8 @@ test_include_fully_qualified_rules {
 	not rule_included("bar", "whatever_code") with data.config as mock_config_to_include
 
 	mock_config_to_exclude := {"policy": {
-		"include_rules": ["*"],
-		"exclude_rules": ["foo.particular_code"],
+		"include": ["*"],
+		"exclude": ["foo.particular_code"],
 	}}
 
 	not rule_included("foo", "particular_code") with data.config as mock_config_to_exclude
@@ -64,16 +64,16 @@ test_merge_collection_config {
 	) with data.config as mock_config_to_include with data.rule_collections as mock_rule_collections
 }
 
-test_include_exclude_rules {
+test_include_exclude {
 	mock_config_with_collections := {"policy": {"collections": ["c1", "c2"]}}
 	mock_config_complete := {"policy": {
 		"collections": ["c1", "c2"],
-		"include_rules": ["eggs", "bacon", "sausage"],
-		"exclude_rules": ["oatmeal", "porridge"],
+		"include": ["eggs", "bacon", "sausage"],
+		"exclude": ["oatmeal", "porridge"],
 	}}
 	mock_config_without_collections := {"policy": {
-		"include_rules": ["eggs", "bacon", "sausage"],
-		"exclude_rules": ["oatmeal", "porridge"],
+		"include": ["eggs", "bacon", "sausage"],
+		"exclude": ["oatmeal", "porridge"],
 	}}
 	mock_config_empty := {"policy": {}}
 
@@ -97,61 +97,61 @@ test_include_exclude_rules {
 	# Test that we get the "include" rules from the collections in the "collections"
 	lib.assert_equal(
 		["toast", "jam", "biscuit", "gravy"],
-		_include_exclude_rules("include", "flugelhorn"),
+		_include_exclude("include", "flugelhorn"),
 	) with data.config as mock_config_with_collections with data.rule_collections as mock_rule_collection
 
-	# Test that we get the "include" rules from the collections in the "collections" key and the rules in "include_rules"
+	# Test that we get the "include" rules from the collections in the "collections" key and the rules in "include"
 	lib.assert_equal(
 		["toast", "jam", "biscuit", "gravy", "eggs", "bacon", "sausage"],
-		_include_exclude_rules("include", "flugelhorn"),
+		_include_exclude("include", "flugelhorn"),
 	) with data.config as mock_config_complete with data.rule_collections as mock_rule_collection
 
-	# Test that we get the "include" rules from the "include_rules" key
+	# Test that we get the "include" rules from the "include" key
 	lib.assert_equal(
 		["eggs", "bacon", "sausage"],
-		_include_exclude_rules("include", "flugelhorn"),
+		_include_exclude("include", "flugelhorn"),
 	) with data.config as mock_config_without_collections with data.rule_collections as mock_rule_collection
 
 	# Test that we get the default "include" rule when we have an empty policy
 	lib.assert_equal(
 		["*"],
-		_include_exclude_rules("include", "flugelhorn"),
+		_include_exclude("include", "flugelhorn"),
 	) with data.config as mock_config_empty with data.rule_collections as mock_rule_collection
 
 	# Test that we get the fallback_rule when we have an empty config and an empty ruleset
 	lib.assert_equal(
 		["flugelhorn"],
-		_include_exclude_rules("include", ["flugelhorn"]),
+		_include_exclude("include", ["flugelhorn"]),
 	) with data.config as mock_config_empty with data.rule_collections as mock_rule_collection_empty
 
 	## Exclude Tests
 	# Test that we get the "exclude" rules from the collections in the "collections"
 	lib.assert_equal(
 		["scone", "muffin"],
-		_include_exclude_rules("exclude", "flugelhorn"),
+		_include_exclude("exclude", "flugelhorn"),
 	) with data.config as mock_config_with_collections with data.rule_collections as mock_rule_collection
 
-	# Test that we get the "exclude" rules from the collections in the "collections" key and the rules in "exclude_rules"
+	# Test that we get the "exclude" rules from the collections in the "collections" key and the rules in "exclude"
 	lib.assert_equal(
 		["scone", "muffin", "oatmeal", "porridge"],
-		_include_exclude_rules("exclude", "flugelhorn"),
+		_include_exclude("exclude", "flugelhorn"),
 	) with data.config as mock_config_complete with data.rule_collections as mock_rule_collection
 
-	# Test that we get the "exclude" rules from the "exclude_rules" key
+	# Test that we get the "exclude" rules from the "exclude" key
 	lib.assert_equal(
 		["oatmeal", "porridge"],
-		_include_exclude_rules("exclude", "flugelhorn"),
+		_include_exclude("exclude", "flugelhorn"),
 	) with data.config as mock_config_without_collections with data.rule_collections as mock_rule_collection
 
 	# Test that we get the default "include" rule when we have an empty policy
 	lib.assert_equal(
 		["not_useful"],
-		_include_exclude_rules("exclude", "flugelhorn"),
+		_include_exclude("exclude", "flugelhorn"),
 	) with data.config as mock_config_empty with data.rule_collections as mock_rule_collection
 
 	# Test that we get the fallback_rule when we have an empty config and an empty ruleset
 	lib.assert_equal(
 		["flugelhorn"],
-		_include_exclude_rules("exclude", ["flugelhorn"]),
+		_include_exclude("exclude", ["flugelhorn"]),
 	) with data.config as mock_config_empty with data.rule_collections as mock_rule_collection_empty
 }

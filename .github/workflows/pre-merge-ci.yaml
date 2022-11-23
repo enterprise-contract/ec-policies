@@ -18,6 +18,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        submodules: true
 
     - name: Install opa
       run: make install-opa OPA_BIN=$HOME/.local/bin

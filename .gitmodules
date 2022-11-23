@@ -1,0 +1,3 @@
+[submodule "ec-policies-lib"]
+	path = ec-policies-lib
+	url = https://github.com/lcarva/ec-policies-lib

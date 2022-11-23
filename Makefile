@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 REGO_IGNORES = --ignore '.*' --ignore node_modules --ignore antora
-COVERAGE = @opa test . $(REGO_IGNORES) --threshold 100 2>&1 | sed -e '/^Code coverage/!d' -e 's/^/ERROR: /'; exit $${PIPESTATUS[0]}
+COVERAGE = @opa test policy $(REGO_IGNORES) --threshold 100 2>&1 | sed -e '/^Code coverage/!d' -e 's/^/ERROR: /'; exit $${PIPESTATUS[0]}
 
 ##@ General
 
@@ -41,17 +41,17 @@ help: ## Display this help.
 
 .PHONY: test
 test: ## Run all tests in verbose mode and check coverage
-	@opa test . -v $(REGO_IGNORES)
+	@opa test policy -v $(REGO_IGNORES)
 	$(COVERAGE)
 
 .PHONY: coverage
 # The cat does nothing but avoids a non-zero exit code from grep -v
 coverage: ## Show which lines of rego are not covered by tests
-	@opa test . $(REGO_IGNORES) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
+	@opa test policy $(REGO_IGNORES) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
 
 .PHONY: quiet-test
 quiet-test: ## Run all tests in quiet mode and check coverage
-	@opa test . $(REGO_IGNORES)
+	@opa test policy $(REGO_IGNORES)
 	$(COVERAGE)
 
 # Do `dnf install entr` then run this a separate terminal or split window while hacking

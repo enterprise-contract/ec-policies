@@ -2,6 +2,6 @@ package pipeline.main
 
 import data.lib
 
-deny := lib.current_and_future_denies("pipeline")
+deny := lib.namespace_denies("pipeline")
 
-warn := lib.current_and_future_warns("pipeline")
+warn := lib.namespace_warns("pipeline")

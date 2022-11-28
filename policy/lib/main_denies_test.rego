@@ -2,37 +2,37 @@ package lib
 
 import data.lib
 
-test_current_and_future {
-	lib.assert_empty(current_and_future_denies("bogus"))
-	lib.assert_not_empty(current_and_future_denies("release")) with data.policy as mock_policies
+test_namespace {
+	lib.assert_empty(namespace_denies("bogus"))
+	lib.assert_not_empty(namespace_denies("release")) with data.policy as mock_policies
 
-	lib.assert_empty(current_and_future_warns("bogus"))
-	lib.assert_not_empty(current_and_future_warns("release")) with data.policy as mock_policies
+	lib.assert_empty(namespace_warns("bogus"))
+	lib.assert_not_empty(namespace_warns("release")) with data.policy as mock_policies
 }
 
 test_include_exclude {
 	# Rules excluded by wildcard
-	lib.assert_empty(current_and_future_denies("release")) with data.config.policy.exclude as ["*"]
+	lib.assert_empty(namespace_denies("release")) with data.config.policy.exclude as ["*"]
 		with data.policy as mock_policies
 
 	# Rules excluded by name
-	lib.assert_empty(current_and_future_denies("release")) with data.config.policy.exclude as ["mock_package"]
+	lib.assert_empty(namespace_denies("release")) with data.config.policy.exclude as ["mock_package"]
 		with data.policy as mock_policies
 
 	# Rules included by name
-	lib.assert_equal(1, count(current_and_future_denies("release"))) with data.config.policy.include as ["mock_package"]
+	lib.assert_equal(1, count(namespace_denies("release"))) with data.config.policy.include as ["mock_package"]
 		with data.policy as mock_policies
 
 	# Rules excluded by wildcard
-	lib.assert_empty(current_and_future_warns("release")) with data.config.policy.exclude as ["*"]
+	lib.assert_empty(namespace_warns("release")) with data.config.policy.exclude as ["*"]
 		with data.policy as mock_policies
 
 	# Rules excluded by name
-	lib.assert_empty(current_and_future_warns("release")) with data.config.policy.exclude as ["mock_package"]
+	lib.assert_empty(namespace_warns("release")) with data.config.policy.exclude as ["mock_package"]
 		with data.policy as mock_policies
 
 	# Rules included by name
-	lib.assert_equal(1, count(current_and_future_warns("release"))) with data.config.policy.include as ["mock_package"]
+	lib.assert_equal(1, count(namespace_warns("release"))) with data.config.policy.include as ["mock_package"]
 		with data.policy as mock_policies
 }
 

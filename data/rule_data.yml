@@ -5,3 +5,7 @@ rule_data:
   - registry.redhat.io/
   allowed_builder_ids:
   - "https://tekton.dev/chains/v2"
+  allowed_step_image_registry_prefixes:
+  - quay.io/redhat-appstudio/
+  - registry.access.redhat.com/
+  - registry.redhat.io/

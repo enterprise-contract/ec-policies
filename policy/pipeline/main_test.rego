@@ -3,21 +3,19 @@ package pipeline.main
 import data.lib
 
 test_passing {
-	lib.assert_empty(deny) with input.kind as "Pipeline"
-		with data.config.policy.exclude as ["required_tasks"]
+	lib.assert_empty(deny | warn) with data.config.policy.exclude as ["mock_package"]
+		with data.policy as mock_policies
 }
 
-test_failing {
-	lib.assert_equal(deny, {{
-		"code": "unexpected_kind",
-		"msg": "Unexpected kind 'Zipline'",
-		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with input.kind as "Zipline"
-		with data.config.policy.exclude as ["required_tasks"]
+test_deny {
+	lib.assert_equal(deny, {{"code": "test_failure"}}) with data.policy as mock_policies
 }
 
-test_in_future {
-	denial := {"msg": "should fail", "effective_on": "2099-05-02T00:00:00Z"}
-	lib.assert_equal(warn, {denial}) with all_denies as {denial}
-		with data.config.policy.when_ns as lib.time.future_timestamp
+test_warn {
+	lib.assert_equal(warn, {{"code": "test_warning"}}) with data.policy as mock_policies
 }
+
+mock_policies := {"pipeline": {"mock_package": {
+	"deny": {{"code": "test_failure"}},
+	"warn": {{"code": "test_warning"}},
+}}}

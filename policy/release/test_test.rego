@@ -185,3 +185,19 @@ test_unacceptable_bundle_results {
 		with data["task-bundles"] as bundles.bundle_data
 		with data.config.policy as {"exclude": []}
 }
+
+test_missing_wrong_attestation_type {
+	pr := lib.att_mock_helper_ref("some-result", {"result": "value"}, "task1", bundles.acceptable_bundle_ref)
+	tr := object.union(pr, {"predicate": {"buildType": lib.taskrun_att_build_types[0]}})
+	lib.assert_empty(deny) with input.attestations as [tr]
+		with data["task-bundles"] as bundles.bundle_data
+		with data.config.policy as {"exclude": []}
+}
+
+test_wrong_attestation_type {
+	pr := lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "ERROR"}, "errored_1", bundles.acceptable_bundle_ref)
+	tr := object.union(pr, {"predicate": {"buildType": lib.taskrun_att_build_types[0]}})
+	lib.assert_empty(deny) with input.attestations as [tr]
+		with data["task-bundles"] as bundles.bundle_data
+		with data.config.policy as {"exclude": []}
+}

@@ -28,6 +28,7 @@ import future.keywords.in
 #   failure_msg: No test data found
 #
 deny[result] {
+	count(lib.pipelinerun_attestations) > 0 # make sure we're looking at a PipelineRun attestation
 	results := lib.results_from_tests
 	count(results) == 0 # there are none at all
 

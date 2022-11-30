@@ -66,7 +66,12 @@ deny contains result if {
 		task_result(build_task, "IMAGE_URL").value,
 		task_result(build_task, "IMAGE_DIGEST").value,
 	])
-	subject_image_ref != result_image_ref
+	subject_image_ref_no_tag := regex.replace(subject_image_ref, ":[^@]+@", "@")
+	result_image_ref_no_tag := regex.replace(result_image_ref, ":[^@]+@", "@")
+
+	subject_image_ref != result_image_ref # the subjects differ
+	subject_image_ref_no_tag != result_image_ref_no_tag # and the subjects differ without tags, NOTE: digest is always present (in IMAGE_DIGEST result)
+
 	result := lib.result_helper(rego.metadata.chain(), [subject_image_ref, result_image_ref])
 }
 
@@ -82,8 +87,15 @@ build_task := task if {
 	bundle := lib.task_data(task)[lib.key_bundle]
 	bundles.is_acceptable(bundle)
 
-	task_result(task, "IMAGE_URL")
-	task_result(task, "IMAGE_DIGEST")
+	image_url := task_result(task, "IMAGE_URL")
+	image_url
+	image_url.value
+	count(trim_space(image_url.value)) > 0
+
+	image_digest := task_result(task, "IMAGE_DIGEST")
+	image_digest
+	image_digest.value
+	count(trim_space(image_digest.value)) > 0
 }
 
 task_result(task, name) := result if {

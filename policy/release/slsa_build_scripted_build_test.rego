@@ -107,6 +107,86 @@ test_unacceptable_bundle if {
 		with input.attestations as [_mock_attestation(tasks)]
 }
 
+test_results_missing_value_url if {
+	tasks := [{
+		"results": [
+			{"name": "IMAGE_URL"},
+			{"name": "IMAGE_DIGEST", "value": "digest"},
+		],
+		"ref": {"bundle": bundles.acceptable_bundle_ref},
+		"steps": [],
+	}]
+
+	expected := {{
+		"code": "missing_build_task",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "Build task not found",
+	}}
+
+	lib.assert_equal(expected, deny) with data["task-bundles"] as bundles.bundle_data
+		with input.attestations as [_mock_attestation(tasks)]
+}
+
+test_results_missing_value_digest if {
+	tasks := [{
+		"results": [
+			{"name": "IMAGE_URL", "value": "url"},
+			{"name": "IMAGE_DIGEST"},
+		],
+		"ref": {"bundle": bundles.acceptable_bundle_ref},
+		"steps": [],
+	}]
+
+	expected := {{
+		"code": "missing_build_task",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "Build task not found",
+	}}
+
+	lib.assert_equal(expected, deny) with data["task-bundles"] as bundles.bundle_data
+		with input.attestations as [_mock_attestation(tasks)]
+}
+
+test_results_empty_value_url if {
+	tasks := [{
+		"results": [
+			{"name": "IMAGE_URL", "value": ""},
+			{"name": "IMAGE_DIGEST", "value": "digest"},
+		],
+		"ref": {"bundle": bundles.acceptable_bundle_ref},
+		"steps": [],
+	}]
+
+	expected := {{
+		"code": "missing_build_task",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "Build task not found",
+	}}
+
+	lib.assert_equal(expected, deny) with data["task-bundles"] as bundles.bundle_data
+		with input.attestations as [_mock_attestation(tasks)]
+}
+
+test_results_empty_value_digest if {
+	tasks := [{
+		"results": [
+			{"name": "IMAGE_URL", "value": "url"},
+			{"name": "IMAGE_DIGEST", "value": ""},
+		],
+		"ref": {"bundle": bundles.acceptable_bundle_ref},
+		"steps": [],
+	}]
+
+	expected := {{
+		"code": "missing_build_task",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "Build task not found",
+	}}
+
+	lib.assert_equal(expected, deny) with data["task-bundles"] as bundles.bundle_data
+		with input.attestations as [_mock_attestation(tasks)]
+}
+
 test_subject_mismatch if {
 	tasks := [{
 		"results": [
@@ -125,6 +205,81 @@ test_subject_mismatch if {
 
 	lib.assert_equal(expected, deny) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as [_mock_attestation(tasks)]
+}
+
+test_subject_with_tag_and_digest_is_good if {
+	tasks := [{
+		"results": [
+			{"name": "IMAGE_URL", "value": "registry.io/repository/image:tag"},
+			{"name": "IMAGE_DIGEST", "value": "sha256:digest"},
+		],
+		"ref": {"bundle": bundles.acceptable_bundle_ref},
+		"steps": [{"entrypoint": "/bin/bash"}],
+	}]
+
+	lib.assert_empty(deny) with data["task-bundles"] as bundles.bundle_data
+		with input.attestations as [{
+			"subject": [{
+				"name": "registry.io/repository/image",
+				"digest": {"sha256": "digest"},
+			}],
+			"predicate": {
+				"buildType": lib.pipelinerun_att_build_types[0],
+				"buildConfig": {"tasks": tasks},
+			},
+		}]
+}
+
+test_subject_with_tag_and_digest_mismatch_tag_is_good if {
+	tasks := [{
+		"results": [
+			{"name": "IMAGE_URL", "value": "registry.io/repository/image:tag"},
+			{"name": "IMAGE_DIGEST", "value": "sha256:digest"},
+		],
+		"ref": {"bundle": bundles.acceptable_bundle_ref},
+		"steps": [{"entrypoint": "/bin/bash"}],
+	}]
+
+	lib.assert_empty(deny) with data["task-bundles"] as bundles.bundle_data
+		with input.attestations as [{
+			"subject": [{
+				"name": "registry.io/repository/image:different",
+				"digest": {"sha256": "digest"},
+			}],
+			"predicate": {
+				"buildType": lib.pipelinerun_att_build_types[0],
+				"buildConfig": {"tasks": tasks},
+			},
+		}]
+}
+
+test_subject_with_tag_and_digest_mismatch_digest_fails if {
+	tasks := [{
+		"results": [
+			{"name": "IMAGE_URL", "value": "registry.io/repository/image:tag"},
+			{"name": "IMAGE_DIGEST", "value": "sha256:digest"},
+		],
+		"ref": {"bundle": bundles.acceptable_bundle_ref},
+		"steps": [{"entrypoint": "/bin/bash"}],
+	}]
+
+	expected := {{
+		"code": "subject_build_task_mismatch",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "The attestation subject, \"registry.io/repository/image@sha256:unexpected\", does not match the build task image, \"registry.io/repository/image:tag@sha256:digest\"",
+	}}
+
+	lib.assert_equal(expected, deny) with data["task-bundles"] as bundles.bundle_data
+		with input.attestations as [{
+			"subject": [{
+				"name": "registry.io/repository/image",
+				"digest": {"sha256": "unexpected"},
+			}],
+			"predicate": {
+				"buildType": lib.pipelinerun_att_build_types[0],
+				"buildConfig": {"tasks": tasks},
+			},
+		}]
 }
 
 _image_url := "some.image/foo:bar"

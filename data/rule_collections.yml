@@ -48,3 +48,16 @@ rule_collections:
     - slsa_build_build_service
     - slsa_provenance_available
     exclude: []
+
+  # List of requirements: https://slsa.dev/spec/v0.1/requirements
+  slsa3:
+    description: >-
+      Includes policy rules required to meet SLSA Level 3. This is
+      currently a work in progress and functionally the same as the
+      slsa2 collection.
+    include:
+    - slsa_source_version_controlled
+    - slsa_build_scripted_build
+    - slsa_build_build_service
+    - slsa_provenance_available
+    exclude: []

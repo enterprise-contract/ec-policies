@@ -67,13 +67,8 @@ deny contains result if {
 		task_result(build_task, "IMAGE_URL").value,
 		task_result(build_task, "IMAGE_DIGEST").value,
 	])
-	subject_image := image.parse(subject_image_ref)
-	subject_image_ref_no_tag := sprintf("%s@%s", [subject_image.repo, subject_image.digest])
-	result_image := image.parse(result_image_ref)
-	result_image_ref_no_tag := sprintf("%s@%s", [result_image.repo, result_image.digest])
 
-	subject_image_ref != result_image_ref # the subjects differ
-	subject_image_ref_no_tag != result_image_ref_no_tag # and the subjects differ without tags, NOTE: digest is always present (in IMAGE_DIGEST result)
+	not image.equal_ref(subject_image_ref, result_image_ref)
 
 	result := lib.result_helper(rego.metadata.chain(), [subject_image_ref, result_image_ref])
 }

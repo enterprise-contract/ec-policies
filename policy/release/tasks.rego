@@ -13,17 +13,6 @@
 #   definition for each parameter seperately.
 #   The Tasks must be loaded from an acceptable Tekton Bundle.
 #   See xref:release_policy.adoc#attestation_task_bundle_package[Task bundle checks].
-# custom:
-#   tasks_required:
-#     rule_data:
-#       required_task_refs:
-#       - clamav-scan
-#       - deprecated-image-check
-#       - get-clair-scan
-#       - sanity-inspect-image
-#       - sanity-label-check[POLICY_NAMESPACE=optional_checks]
-#       - sanity-label-check[POLICY_NAMESPACE=required_checks]
-#       - sbom-json-check
 #
 package policy.release.tasks
 
@@ -34,16 +23,7 @@ import future.keywords.in
 import data.lib
 import data.lib.bundles
 import data.lib.refs
-
-# This generates all errors that can be omitted from the `tasks_required`
-# rule. Since required tasks can change over time, we need this so we
-# don't need to repeat the list of tasks in the test where this list of
-# errors is also used. It needs to be placed here to be able to access
-# the package level metadata/annotations above.
-all_required_tasks contains task if {
-	some link in rego.metadata.chain()
-	some task in link.annotations.custom.tasks_required.rule_data.required_task_refs
-}
+import data.lib.time
 
 # METADATA
 # title: No tasks run
@@ -60,19 +40,36 @@ deny contains result if {
 }
 
 # METADATA
-# title: Required tasks not run
+# title: Missing required task
 # description: |-
-#   This policy enforces that the required set of tasks is run in a
-#   PipelineRun.
+#   This policy enforces that the required set of tasks are included
+#   in the PipelineRun attestation.
 # custom:
-#   short_name: tasks_required
-#   failure_msg: Required task(s) '%s' not found in the PipelineRun attestation
+#   short_name: missing_required_task
+#   failure_msg: Required task %q is missing
 deny contains result if {
-	some att in lib.pipelinerun_attestations
-	_has_tasks(att)
-	missing_tasks := all_required_tasks - _attested_tasks(att)
-	count(missing_tasks) > 0
-	result := lib.result_helper(rego.metadata.chain(), [concat("', '", missing_tasks)])
+	some required_task in _missing_tasks(_current_required_tasks)
+
+	# Don't report an error if a task is required now, but not in the future
+	required_task in _latest_required_tasks
+	result := lib.result_helper(rego.metadata.chain(), [required_task])
+}
+
+# METADATA
+# title: Missing future required task
+# description: |-
+#   This policy warns when a task that will be required in the future
+#   was not included in the PipelineRun attestation.
+# custom:
+#   short_name: missing_future_required_task
+#   failure_msg: Task %q is missing and will be required in the future
+warn contains result if {
+	some required_task in _missing_tasks(_latest_required_tasks)
+
+	# If the required_task is also part of the _current_required_tasks, do
+	# not proceed with a warning since that's clearly a violation.
+	not required_task in _current_required_tasks
+	result := lib.result_helper(rego.metadata.chain(), [required_task])
 }
 
 _attested_tasks(att) = names if {
@@ -91,7 +88,7 @@ _has_tasks(att) = result if {
 }
 
 _task_names(task, raw_name) = names if {
-	name := split(raw_name, "[")[0] # don't allow smuggling task name with paramters
+	name := split(raw_name, "[")[0] # don't allow smuggling task name with parameters
 	params := {n |
 		task.invocation
 		v := task.invocation.parameters[k]
@@ -99,4 +96,27 @@ _task_names(task, raw_name) = names if {
 	}
 
 	names := {name} | params
+}
+
+# The latest set of required tasks. Tasks here are not required right now
+# but will be required in the future.
+_latest_required_tasks contains task if {
+	some task in data["required-tasks"][0].tasks
+}
+
+# The set of required tasks that are required right now.
+_current_required_tasks contains task if {
+	some task in time.most_current(data["required-tasks"]).tasks
+}
+
+# _missing_tasks returns a set of task names that are in the given
+# required_tasks, but not in the PipelineRun attestation.
+_missing_tasks(required_tasks) := tasks if {
+	tasks := {task |
+		some att in lib.pipelinerun_attestations
+		_has_tasks(att)
+
+		some task in required_tasks
+		not task in _attested_tasks(att)
+	}
 }

@@ -28,6 +28,31 @@ parse(ref) = d {
 	}
 }
 
+# equal_ref returns true if two image references point to the same image. The
+# algorithm first checks if the constituent parts repository, tag and digest are
+# all equal
+equal_ref(ref1, ref2) {
+	img1 := parse(ref1)
+	img2 := parse(ref2)
+
+	img1 == img2
+}
+
+# equal_ref returns true if two image references point to the same image,
+# ignoring the tag. This complements the case where all parts of the reference
+# need to be equal.
+equal_ref(ref1, ref2) {
+	img1 := parse(ref1)
+	img2 := parse(ref2)
+
+	# need to make sure that the digest of one reference is present, otherwise we
+	# might end up comparing image references without tags and digests. equal_ref is
+	# commutative, so we can check that the digest exists for one of the references,
+	# in this case img1
+	img1.digest != ""
+	object.remove(img1, ["tag"]) == object.remove(img2, ["tag"])
+}
+
 _get(array, index, default_value) = value {
 	value := array[index]
 } else = default_value {

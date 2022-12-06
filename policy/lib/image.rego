@@ -55,6 +55,4 @@ equal_ref(ref1, ref2) {
 
 _get(array, index, default_value) = value {
 	value := array[index]
-} else = default_value {
-	true
-}
+} else = default_value

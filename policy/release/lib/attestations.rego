@@ -68,9 +68,7 @@ results_named(name) = results {
 # in attestations created by Tekton Chains.
 unmarshal(raw) = value {
 	value = json.unmarshal(raw)
-} else = raw {
-	true
-}
+} else = raw
 
 # Returns the data relating to the task if the task is referenced from a bundle
 task_data(task) = info {

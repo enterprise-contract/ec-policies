@@ -42,9 +42,7 @@ _param(taskRef, name, fallback) = value {
 	some param in taskRef.params
 	param.name == name
 	value := param.value
-} else = fallback {
-	true
-}
+} else = fallback
 
 _ref(task) = r {
 	# Reference from within a PipelineRun attestation

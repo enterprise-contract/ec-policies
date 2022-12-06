@@ -69,6 +69,4 @@ future_items(items) = some_items {
 # available, this function behaves just like future_items.
 acceptable_items(items) = some_items {
 	some_items := array.concat(future_items(items), [most_current(items)])
-} else = future_items(items) {
-	true
-}
+} else = future_items(items)

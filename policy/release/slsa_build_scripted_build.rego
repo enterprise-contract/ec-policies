@@ -75,9 +75,7 @@ deny contains result if {
 
 task_steps(task) := steps if {
 	steps := build_task.steps
-} else := [] if {
-	true
-}
+} else := []
 
 build_task := task if {
 	some task in lib.tasks_from_pipelinerun

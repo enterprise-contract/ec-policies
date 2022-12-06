@@ -89,22 +89,6 @@ test_no_tasks_present if {
 		with data["task-bundles"] as bundles.bundle_data
 }
 
-test_tricks if {
-	attestations := [{"predicate": {
-		"buildType": lib.pipelinerun_att_build_types[0],
-		"buildConfig": {"tasks": [
-			{},
-			{"name": "sanity-inspect-image"},
-			{"ref": {"name": "sanity-inspect-image", "kind": "NotTask", "bundle": bundles.acceptable_bundle_ref}},
-		]},
-	}}]
-
-	expected := _missing_tasks_violation(_expected_required_tasks)
-	lib.assert_equal(deny, expected) with data["required-tasks"] as _time_based_required_tasks
-		with input.attestations as attestations
-		with data["task-bundles"] as bundles.bundle_data
-}
-
 test_task_present_from_unacceptable_bundle if {
 	bad_task := "git-clone"
 	task_from_unacceptable := [{"ref": {

@@ -126,9 +126,7 @@ _stream(tag) = stream {
 	regex.match(_stream_regex, tag)
 	parts := split(tag, "-")
 	stream := parts[count(parts) - 1]
-} else = "default" {
-	true
-}
+} else = "default"
 
 # _tag_by_digest determines the tag of the image reference based on the
 # possiblities in the given collection. This is useful to ensure streams
@@ -143,6 +141,4 @@ _tag_by_digest(collection, ref) = new_tag {
 	]
 
 	new_tag := selected[0].tag
-} else = ref.tag {
-	true
-}
+} else = ref.tag

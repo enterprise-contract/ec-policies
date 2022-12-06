@@ -101,26 +101,6 @@ test_no_tasks_present if {
 		with data["task-bundles"] as bundles.bundle_data
 }
 
-test_tricks if {
-	pipeline := {
-		"kind": "Pipeline",
-		"spec": {"tasks": [
-			{},
-			{"name": "sanity-inspect-image"},
-			{"taskRef": {
-				"name": "sanity-inspect-image",
-				"kind": "NotTask",
-				"bundle": bundles.acceptable_bundle_ref,
-			}},
-		]},
-	}
-
-	expected := _missing_tasks_violation(_expected_required_tasks)
-	lib.assert_equal(deny, expected) with data["required-tasks"] as _time_based_required_tasks
-		with input as pipeline
-		with data["task-bundles"] as bundles.bundle_data
-}
-
 test_task_present_from_unacceptable_bundle if {
 	bad_task := "git-clone"
 	task_from_unacceptable := [{"taskRef": {

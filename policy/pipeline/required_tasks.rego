@@ -68,6 +68,6 @@ warn contains result if {
 _missing_tasks(required_tasks) := tasks if {
 	tasks := {task |
 		some task in required_tasks
-		not task in tkn.trusted_tasks(input)
+		not task in tkn.trusted_tasks_names(input)
 	}
 }

@@ -1,7 +1,7 @@
 package lib
 
 import data.lib.bundles
-import data.lib.refs
+import data.lib.tkn
 
 pipelinerun_att_build_types := [
 	"tekton.dev/v1beta1/PipelineRun",
@@ -20,12 +20,6 @@ hacbs_test_task_result_name := "HACBS_TEST_OUTPUT"
 java_sbom_component_count_result_name := "SBOM_JAVA_COMPONENTS_COUNT"
 
 build_base_images_digests_result_name := "BASE_IMAGES_DIGESTS"
-
-key_task_name := "__task_name"
-
-key_bundle := "__bundle_name"
-
-key_value := "__value"
 
 # These are the ones we're interested in
 pipelinerun_attestations := [att |
@@ -47,9 +41,9 @@ tasks_from_pipelinerun := [task |
 # All results from the attested PipelineRun with the provided name. Results are
 # expected to contain a JSON value. The return object contains the following
 # keys:
-#   __task_name: name of the task in which the result appears.
-#   __bundle_name: Tekton bundle image reference for the corresponding task.
-#   __value: unmarshalled task result.
+#   name: name of the task in which the result appears.
+#   name: Tekton bundle image reference for the corresponding task.
+#   value: unmarshalled task result.
 results_named(name) = results {
 	results := [r |
 		task := tasks_from_pipelinerun[_]
@@ -59,7 +53,7 @@ results_named(name) = results {
 
 		# Inject the task data, currently task name and task bundle image
 		# reference so we can show it in failure messages
-		r := object.union({key_value: result_map}, task_data(task))
+		r := object.union({"value": result_map}, tkn.task_data(task))
 	]
 }
 
@@ -69,19 +63,6 @@ results_named(name) = results {
 unmarshal(raw) = value {
 	value = json.unmarshal(raw)
 } else = raw
-
-# Returns the data relating to the task if the task is referenced from a bundle
-task_data(task) = info {
-	r := refs.task_ref(task)
-	info := {key_task_name: r.name, key_bundle: r.bundle}
-}
-
-# Returns the data relating to the task if the task is not referenced from a
-# bundle
-task_data(task) = info {
-	not refs.task_ref(task)
-	info := {key_task_name: task.name}
-}
 
 # (Don't call it test_results since test_ means a unit test)
 results_from_tests = results {

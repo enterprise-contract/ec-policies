@@ -55,11 +55,11 @@ _image_ref_permitted(image_ref, allowed_prefixes) if {
 }
 
 _base_images contains name if {
-	some name in split(_base_images_results[_][lib.key_value], "\n")
+	some name in split(_base_images_results[_].value, "\n")
 	count(name) > 0
 }
 
 _base_images_results contains result if {
 	some result in lib.results_named(lib.build_base_images_digests_result_name)
-	bundles.is_acceptable(result[lib.key_bundle])
+	bundles.is_acceptable(result.bundle)
 }

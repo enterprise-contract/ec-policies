@@ -17,8 +17,8 @@ import future.keywords.if
 import future.keywords.in
 
 import data.lib
-import data.lib.bundles
 import data.lib.image
+import data.lib.tkn
 
 # METADATA
 # title: Build task contains steps
@@ -30,6 +30,8 @@ import data.lib.image
 #   failure_msg: Build task %q does not contain any steps
 #
 deny contains result if {
+	some attestation in lib.pipelinerun_attestations
+	build_task := tkn.trusted_build_task(attestation)
 	count(task_steps(build_task)) == 0
 	result := lib.result_helper(rego.metadata.chain(), [build_task.name])
 }
@@ -44,8 +46,8 @@ deny contains result if {
 #   failure_msg: Build task not found
 #
 deny contains result if {
-	count(lib.pipelinerun_attestations) > 0
-	not build_task
+	some attestation in lib.pipelinerun_attestations
+	not tkn.trusted_build_task(attestation)
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -60,12 +62,14 @@ deny contains result if {
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
+	build_task := tkn.trusted_build_task(attestation)
+
 	some subject in attestation.subject
 
 	subject_image_ref := concat("@", [subject.name, subject_digest(subject)])
 	result_image_ref := concat("@", [
-		task_result(build_task, "IMAGE_URL").value,
-		task_result(build_task, "IMAGE_DIGEST").value,
+		tkn.task_result(build_task, "IMAGE_URL"),
+		tkn.task_result(build_task, "IMAGE_DIGEST"),
 	])
 
 	not image.equal_ref(subject_image_ref, result_image_ref)
@@ -74,30 +78,8 @@ deny contains result if {
 }
 
 task_steps(task) := steps if {
-	steps := build_task.steps
+	steps := task.steps
 } else := []
-
-build_task := task if {
-	some task in lib.tasks_from_pipelinerun
-
-	bundle := lib.task_data(task)[lib.key_bundle]
-	bundles.is_acceptable(bundle)
-
-	image_url := task_result(task, "IMAGE_URL")
-	image_url
-	image_url.value
-	count(trim_space(image_url.value)) > 0
-
-	image_digest := task_result(task, "IMAGE_DIGEST")
-	image_digest
-	image_digest.value
-	count(trim_space(image_digest.value)) > 0
-}
-
-task_result(task, name) := result if {
-	some result in task.results
-	result.name == name
-}
 
 subject_digest(subject) := digest if {
 	some algorithm, value in subject.digest

@@ -19,14 +19,10 @@ import data.lib
 # custom:
 #   short_name: unknown_att_type
 #   failure_msg: Unknown attestation type '%s'
-#   rule_data:
-#     known_attestation_types:
-#     - https://in-toto.io/Statement/v0.1
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations
-	known_attestation_types := lib.rule_data(rego.metadata.rule(), "known_attestation_types")
 	att_type := att._type
-	not att_type in known_attestation_types
+	not att_type in data.rule_data.known_attestation_types
 	result := lib.result_helper(rego.metadata.chain(), [att_type])
 }

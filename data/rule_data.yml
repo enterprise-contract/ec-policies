@@ -9,3 +9,16 @@ rule_data:
   - quay.io/redhat-appstudio/
   - registry.access.redhat.com/
   - registry.redhat.io/
+  # TODO: Should this be hard-coded in the policy rule?
+  supported_tests_results:
+  - SUCCESS
+  - FAILURE
+  - ERROR
+  - SKIPPED
+  allowed_predicate_types:
+  - https://slsa.dev/provenance/v0.2
+  allowed_java_component_sources:
+  - redhat
+  - rebuilt
+  known_attestation_types:
+  - https://in-toto.io/Statement/v0.1

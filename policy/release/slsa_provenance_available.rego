@@ -26,12 +26,9 @@ import data.lib
 # custom:
 #   short_name: unexpected_predicate_type
 #   failure_msg: Attestation predicate type %q is not an expected type (%s)
-#   rule_data:
-#     allowed_predicate_types:
-#     - https://slsa.dev/provenance/v0.2
 deny contains result if {
 	some att in lib.pipelinerun_attestations
-	allowed_predicate_types := lib.rule_data(rego.metadata.rule(), "allowed_predicate_types")
+	allowed_predicate_types := data.rule_data.allowed_predicate_types
 	not att.predicateType in allowed_predicate_types
 	result := lib.result_helper(rego.metadata.chain(), [att.predicateType, concat(", ", allowed_predicate_types)])
 }

@@ -58,18 +58,12 @@ deny[result] {
 # custom:
 #   short_name: test_result_unsupported
 #   failure_msg: Test '%s' has unsupported result '%s'
-#   rule_data:
-#     supported_results:
-#     - SUCCESS
-#     - FAILURE
-#     - ERROR
-#     - SKIPPED
 #
 deny[result] {
 	all_unsupported := [u |
 		result := lib.results_from_tests[_]
 		test := result.value
-		not test.result in lib.rule_data(rego.metadata.rule(), "supported_results")
+		not test.result in data.rule_data.supported_tests_results
 		u := {"task": result.name, "result": test.result}
 	]
 

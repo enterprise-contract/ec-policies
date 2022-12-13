@@ -173,6 +173,7 @@ test_unsupported_test_result {
 		{"code": "test_result_unsupported", "msg": "Test 'skipped_1' has unsupported result 'SKIPED'", "effective_on": "2022-01-01T00:00:00Z"},
 		{"code": "test_result_unsupported", "msg": "Test 'success_1' has unsupported result 'SUCESS'", "effective_on": "2022-01-01T00:00:00Z"},
 	}) with data["task-bundles"] as bundles.bundle_data
+		with data.rule_data.supported_tests_results as ["ERROR", "FAILURE", "SUCCESS", "SKIPPED"]
 		with input.attestations as test_results
 }
 

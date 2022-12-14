@@ -1,0 +1,14 @@
+# Artifact Hub repository metadata file
+#
+repositoryID: bb41e51a-769a-4202-b41a-5f48ca20335b
+owners: # (optional, used to claim repository ownership)
+  - name: sbaird
+    email: sbaird@redhat.com
+  - name: lcarva
+    email: lcarva@redhat.com
+  - name: zregvart
+    email: zregvart@redhat.com
+  - name: robnester-rh
+    email: rnester@redhat.com
+  - name: cuipinghuo
+    email: chuo@redhat.com

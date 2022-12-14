@@ -15,7 +15,6 @@ mock_data(image_ref) = d {
 
 test_image_registry_valid {
 	lib.assert_empty(deny) with input.attestations as mock_data(good_image)
-		with data.rule_data.allowed_step_image_registry_prefixes as ["registry.redhat.io/"]
 }
 
 test_attestation_type_invalid {
@@ -25,5 +24,4 @@ test_attestation_type_invalid {
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_data(bad_image)
-		with data.rule_data.allowed_step_image_registry_prefixes as ["registry.redhat.io/"]
 }

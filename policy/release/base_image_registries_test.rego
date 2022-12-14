@@ -15,7 +15,6 @@ test_acceptable_base_images {
 		bundles.acceptable_bundle_ref,
 	)]
 	lib.assert_empty(deny) with data["task-bundles"] as bundles.bundle_data
-		with data.rule_data.allowed_registry_prefixes as ["registry.redhat.io/", "registry.access.redhat.com/"]
 		with input.attestations as attestations
 }
 
@@ -27,7 +26,6 @@ test_empty_base_images {
 		bundles.acceptable_bundle_ref,
 	)]
 	lib.assert_empty(deny) with data["task-bundles"] as bundles.bundle_data
-		with data.rule_data.allowed_registry_prefixes as ["registry.redhat.io/", "registry.access.redhat.com/"]
 		with input.attestations as attestations
 }
 
@@ -56,7 +54,6 @@ test_unacceptable_base_images {
 		},
 	}
 	lib.assert_equal(deny, expected) with data["task-bundles"] as bundles.bundle_data
-		with data.rule_data.allowed_registry_prefixes as ["registry.redhat.io/", "registry.access.redhat.com/"]
 		with input.attestations as attestations
 }
 
@@ -73,6 +70,5 @@ test_unacceptable_bundle {
 		"msg": "Base images result is missing",
 	}}
 	lib.assert_equal(deny, expected) with data["task-bundles"] as bundles.bundle_data
-		with data.rule_data.allowed_registry_prefixes as ["registry.redhat.io/", "registry.access.redhat.com/"]
 		with input.attestations as attestations
 }

@@ -1,6 +1,12 @@
 SHELL := /bin/bash
-REGO_IGNORES = --ignore '.*' --ignore node_modules --ignore antora
-COVERAGE = @opa test . $(REGO_IGNORES) --threshold 100 2>&1 | sed -e '/^Code coverage/!d' -e 's/^/ERROR: /'; exit $${PIPESTATUS[0]}
+
+DATA_DIR=./data
+CONFIG_DATA_FILE=$(DATA_DIR)/config.json
+
+POLICY_DIR=./policy
+
+TEST_FILES = $(DATA_DIR)/rule_data.yml $(POLICY_DIR) checks
+COVERAGE = @opa test $(TEST_FILES) --threshold 100 2>&1 | sed -e '/^Code coverage/!d' -e 's/^/ERROR: /'; exit $${PIPESTATUS[0]}
 
 ##@ General
 
@@ -41,17 +47,17 @@ help: ## Display this help.
 
 .PHONY: test
 test: ## Run all tests in verbose mode and check coverage
-	@opa test . -v $(REGO_IGNORES)
+	@opa test $(TEST_FILES) -v
 	$(COVERAGE)
 
 .PHONY: coverage
 # The cat does nothing but avoids a non-zero exit code from grep -v
 coverage: ## Show which lines of rego are not covered by tests
-	@opa test . $(REGO_IGNORES) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
+	@opa test $(TEST_FILES) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
 
 .PHONY: quiet-test
 quiet-test: ## Run all tests in quiet mode and check coverage
-	@opa test . $(REGO_IGNORES)
+	@opa test $(TEST_FILES)
 	$(COVERAGE)
 
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
@@ -93,7 +99,7 @@ fmt-amend: fmt ## Apply default formatting to all rego files then amend the curr
 
 .PHONY: opa-check
 opa-check: ## Check Rego files with strict mode (https://www.openpolicyagent.org/docs/latest/strict/)
-	@opa check . --strict $(REGO_IGNORES)
+	@opa check $(TEST_FILES) --strict
 
 .PHONY: conventions-check
 conventions-check: ## Check Rego policy files for convention violations
@@ -182,16 +188,12 @@ fetch-pipeline: clean-input ## Fetches pipeline data for PIPELINE from your loca
 
 ##@ Running
 
-DATA_DIR=./data
-CONFIG_DATA_FILE=$(DATA_DIR)/config.json
-
 INPUT_DIR=./input
 INPUT_FILE=$(INPUT_DIR)/input.json
 
 RELEASE_NAMESPACE=release.main
 PIPELINE_NAMESPACE=pipeline.main
 
-POLICY_DIR=./policy
 OPA_FORMAT=pretty
 
 .PHONY: check-release

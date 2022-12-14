@@ -12,7 +12,6 @@ mock_data(att_type) = d {
 
 test_allow_when_permitted {
 	lib.assert_empty(deny) with input.attestations as mock_data(good_type)
-		with data.rule_data.known_attestation_types as _test_attestation_types
 }
 
 test_deny_when_not_permitted {
@@ -22,7 +21,4 @@ test_deny_when_not_permitted {
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_data(bad_type)
-		with data.rule_data.known_attestation_types as _test_attestation_types
 }
-
-_test_attestation_types := ["https://in-toto.io/Statement/v0.1"]

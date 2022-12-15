@@ -52,11 +52,11 @@ trusted_tasks(obj) := result if {
 
 # trusted_tasks_names returns the set of task names that use an
 # acceptable Tekton bundle. It expands names to include the
-# parameterized form, see _task_names.
+# parameterized form, see task_names.
 trusted_tasks_names(obj) := names if {
 	names := {name |
 		some task in trusted_tasks(obj)
-		some name in _task_names(task)
+		some name in task_names(task)
 	}
 }
 
@@ -65,7 +65,7 @@ trusted_tasks_names(obj) := names if {
 # example, {"my-task", "my-task[spam=maps]" is produced for a
 # task named "my-task" which takes the parameter "spam" with
 # value "maps".
-_task_names(task) := names if {
+task_names(task) := names if {
 	raw_name := refs.task_ref(task).name
 	name := split(raw_name, "[")[0] # don't allow smuggling task name with parameters
 	params := {n |

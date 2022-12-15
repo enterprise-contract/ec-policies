@@ -32,7 +32,6 @@ deny contains result if {
 #   short_name: dockerfile_param_external_source
 #   failure_msg: DOCKERFILE param value (%s) is an external source
 deny contains result if {
-	dockerfile_param
 	_not_allowed_prefix(dockerfile_param)
 	result := lib.result_helper(rego.metadata.chain(), [dockerfile_param])
 }
@@ -43,8 +42,9 @@ _not_allowed_prefix(search) if {
 }
 
 buildah_task := task if {
-	some task in lib.tasks_from_pipelinerun
-	task.name == "buildah"
+	some att in lib.pipelinerun_attestations
+	some task in lib.tkn.trusted_tasks(att)
+	"buildah" in lib.tkn.task_names(task)
 }
 
 dockerfile_param := param if {

@@ -1,6 +1,6 @@
 #
 # METADATA
-# title: Builah build task
+# title: Buildah build task
 # description: |-
 #   This package is responsible for verifying the buildah build task
 #

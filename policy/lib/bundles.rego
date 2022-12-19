@@ -96,49 +96,5 @@ bundle(task) = b {
 # references. Any irrelevant records are filtered out from the array.
 _collection(ref) = items {
 	full_collection := data["task-bundles"][ref.repo]
-	stream_collection := _collection_by_stream(full_collection, ref)
-	items := time_lib.acceptable_items(stream_collection)
+	items := time_lib.acceptable_items(full_collection)
 }
-
-# _collection_by_stream returns a filtered array where each item has
-# the same stream value as the given ref.
-#
-# Some OCI repositories may contain multiple sets of images that are
-# actively updated. Each of these sets is called a stream. In such
-# cases, it is necessary to split the collection into multiple stream
-# collections so the policy can be properly applied. See the _stream
-# docs for an explanation of the stream identification process.
-_collection_by_stream(items, ref) = some_items {
-	tag := _tag_by_digest(items, ref)
-	stream := _stream(tag)
-	some_items := [item |
-		item := items[_]
-		_stream(item.tag) == stream
-	]
-}
-
-_stream_regex := `^[a-f0-9]{40}(-\d+)$`
-
-# _stream computes the stream of the given image tag. If the tag matches
-# the _stream_regex, then the stream is the last matched group. Otherwise
-# the stream is "default".
-_stream(tag) = stream {
-	regex.match(_stream_regex, tag)
-	parts := split(tag, "-")
-	stream := parts[count(parts) - 1]
-} else = "default"
-
-# _tag_by_digest determines the tag of the image reference based on the
-# possiblities in the given collection. This is useful to ensure streams
-# can be properly computed for image references where only the digest is
-# provided. If the image reference already has a tag, that value is
-# always returned.
-_tag_by_digest(collection, ref) = new_tag {
-	ref.tag == ""
-	selected := [item |
-		item := collection[_]
-		item.digest == ref.digest
-	]
-
-	new_tag := selected[0].tag
-} else = ref.tag

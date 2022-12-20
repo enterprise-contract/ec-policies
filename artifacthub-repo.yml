@@ -12,3 +12,5 @@ owners: # (optional, used to claim repository ownership)
     email: rnester@redhat.com
   - name: cuipinghuo
     email: chuo@redhat.com
+  - name: jstuart
+    email: jstuart@redhat.com

@@ -1,6 +1,9 @@
 ---
 pipeline-bundles:
   quay.io/redhat-appstudio-tekton-catalog/pipeline-docker-build:
+    - digest: sha256:37089d9b723f5ef7d3db8a98ee728a9ecd8c51a39c33b788feb14da94aa57684
+      effective_on: "2023-01-22T00:00:00Z"
+      tag: 3809d7784aa17aed2426c8f440008e83f62d64c6
     - digest: sha256:309349cfd338ea683e2cebd604e8c70bd694f795e15d62abf58f527a60658e80
       effective_on: "2023-01-19T00:00:00Z"
       tag: 96ab9d418f2e4e1b580e3d3a96d178272dae0487
@@ -25,9 +28,6 @@ pipeline-bundles:
     - digest: sha256:3cb54086bc84c4cc40a88d5332175bd565e4f175e25bd0c316332d42687664e4
       effective_on: "2022-12-22T00:00:00Z"
       tag: 089db2cad4222c2c2195b5de41ccdcee840e703d
-    - digest: sha256:52edbe5c5906e93fca42901cf48baf7fcd460d098e493f138ab41ce377bd8155
-      effective_on: "2022-12-09T00:00:00Z"
-      tag: be6b481ac69c4cb16fe633ad2ded9df60e58625d
   quay.io/redhat-appstudio-tekton-catalog/pipeline-e2e-ec:
     - digest: sha256:572e306d1b023c871f041897f305ea5f70335c6b3bb0c522d6d4169cd2b76242
       effective_on: "2022-12-17T00:00:00Z"
@@ -40,6 +40,9 @@ pipeline-bundles:
       effective_on: "2022-12-17T00:00:00Z"
       tag: b5020a8b61e6766f4ec1b4f13b05eca0e99925d6
   quay.io/redhat-appstudio-tekton-catalog/pipeline-hacbs-docker-build:
+    - digest: sha256:10b1c33463359eab59de01f10828a2342cde96697ab25ce2253575e51b0dd081
+      effective_on: "2023-01-22T00:00:00Z"
+      tag: 3809d7784aa17aed2426c8f440008e83f62d64c6
     - digest: sha256:718754e3db3b6d02ad77d085e9886996bd6d22c3bf39cd6fe125cd12563135d1
       effective_on: "2023-01-19T00:00:00Z"
       tag: 96ab9d418f2e4e1b580e3d3a96d178272dae0487
@@ -64,10 +67,10 @@ pipeline-bundles:
     - digest: sha256:7ae6ef50e80d5bfa13b711cebe778ee7672977a1cdb40bc1dc5b59bdb3b70d62
       effective_on: "2022-12-22T00:00:00Z"
       tag: 089db2cad4222c2c2195b5de41ccdcee840e703d
-    - digest: sha256:628ffd21fa2fd4317ec376c23f00d9bf9d0b41005d834483d55d5516f35623a1
-      effective_on: "2022-12-09T00:00:00Z"
-      tag: be6b481ac69c4cb16fe633ad2ded9df60e58625d
   quay.io/redhat-appstudio-tekton-catalog/pipeline-java-builder:
+    - digest: sha256:bdc340e3623269bd65dfa39c7f42a217a5e620060646b123aae78ba5280a10dd
+      effective_on: "2023-01-22T00:00:00Z"
+      tag: 3809d7784aa17aed2426c8f440008e83f62d64c6
     - digest: sha256:cc85b5563e6dd9afe28ba04e19cd2b6617bcc8328218d43b7e95144afbeed3d9
       effective_on: "2023-01-19T00:00:00Z"
       tag: 96ab9d418f2e4e1b580e3d3a96d178272dae0487
@@ -92,10 +95,10 @@ pipeline-bundles:
     - digest: sha256:9b02d5db1685446aa2426dfd4acadabddb4639b62dc488fdc0852325bf4ccdf6
       effective_on: "2022-12-22T00:00:00Z"
       tag: 089db2cad4222c2c2195b5de41ccdcee840e703d
-    - digest: sha256:cf0cffdc0babbd52ffb4c305679084c99057c644ef0b0c4468b14cb4d2ac0344
-      effective_on: "2022-12-09T00:00:00Z"
-      tag: be6b481ac69c4cb16fe633ad2ded9df60e58625d
   quay.io/redhat-appstudio-tekton-catalog/pipeline-nodejs-builder:
+    - digest: sha256:e5f3e7c5bd6c225c6ebcab5984c8568a222b5ef27ff328a2fab9a2d15889a16d
+      effective_on: "2023-01-22T00:00:00Z"
+      tag: 3809d7784aa17aed2426c8f440008e83f62d64c6
     - digest: sha256:60df0e62ee037776e39cb6b1e2c1db330a859e06eb7dc67cab46780a22e91b9d
       effective_on: "2023-01-19T00:00:00Z"
       tag: 96ab9d418f2e4e1b580e3d3a96d178272dae0487
@@ -120,9 +123,6 @@ pipeline-bundles:
     - digest: sha256:04ff6e5584cb9fe5fa75551a7f5da82820e5ef1b9064b623dd53f40bfe8c75e3
       effective_on: "2022-12-22T00:00:00Z"
       tag: 089db2cad4222c2c2195b5de41ccdcee840e703d
-    - digest: sha256:97e7a0fd7e0503d086d4c8b58e86069161c834a57360fd779cd43e101c614ec3
-      effective_on: "2022-12-09T00:00:00Z"
-      tag: be6b481ac69c4cb16fe633ad2ded9df60e58625d
 required-tasks:
   - effective_on: "2023-01-14T00:00:00Z"
     tasks:
@@ -167,21 +167,6 @@ required-tasks:
       - sast-snyk-check
       - sbom-json-check
       - summary
-  - effective_on: "2022-12-04T00:00:00Z"
-    tasks:
-      - clamav-scan
-      - configure-build
-      - conftest-clair
-      - deprecated-image-check
-      - get-clair-scan
-      - git-clone
-      - init
-      - s2i-nodejs
-      - sanity-inspect-image
-      - sanity-label-check
-      - sast-snyk-check
-      - sbom-json-check
-      - summary
 task-bundles:
   quay.io/redhat-appstudio-tekton-catalog/task-buildah:
     - digest: sha256:0310f911d5686e2906514f56a16ff29e4bdc4c2775ea5473e3d920fd96fdd0ed
@@ -190,14 +175,14 @@ task-bundles:
     - digest: sha256:7c34fb1f3564c32e38c165e65720762b41a68d125b53215651c95296d584d162
       effective_on: "2022-12-22T00:00:00Z"
       tag: "0.1"
-    - digest: sha256:bfa887fd777c26b6fc279c742fbe1e9270961b66bc2ad467321c7090c4d9f8e7
-      effective_on: "2022-12-07T00:00:00Z"
-      tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:
     - digest: sha256:22dabf890ff9d59cfc3b3997d99709f986c4ba090451a4582ebb0a5fb2e26c3e
       effective_on: "2023-01-14T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-clamav-scan:
+    - digest: sha256:64b52d3e33cdb539f1d3759f432782eaed5c812bea04296f509cfa2d81247c8d
+      effective_on: "2023-01-22T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:641d749124ff7d80a67e0890198b211db08be77da074deb0e8f206ebfade19db
       effective_on: "2022-12-31T00:00:00Z"
       tag: "0.1"
@@ -216,9 +201,6 @@ task-bundles:
       tag: "0.1"
     - digest: sha256:838340fb57785b85baef1b6f8454dff42c485ed353952bc6a7e1360be76e55cd
       effective_on: "2022-12-22T00:00:00Z"
-      tag: "0.1"
-    - digest: sha256:279e4d69051fb32462f4eb3a8e3014158c27b5406c07423da68cc11a8617eea9
-      effective_on: "2022-12-17T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-configure-build:
     - digest: sha256:9f8b5438fda511507e51a0372b4d85892d6f695bd4f54ce067e1c1a1fbc70b30
@@ -362,7 +344,4 @@ task-bundles:
       tag: "0.1"
     - digest: sha256:b733514861e8696f2d9a5c3311c94f4acb77275277874a704e5a2f70746d02e8
       effective_on: "2022-12-22T00:00:00Z"
-      tag: "0.1"
-    - digest: sha256:d3813dde7fd4bdc631688d58da752b75736999a680b2b69cbc613c701289450a
-      effective_on: "2022-12-17T00:00:00Z"
       tag: "0.1"

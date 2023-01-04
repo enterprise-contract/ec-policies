@@ -7,7 +7,9 @@ import future.keywords.in
 import data.lib
 
 test_good_dockerfile_param if {
-	lib.assert_equal(set(), deny) with input.attestations as [_attestation("buildah", {"parameters": {"DOCKERFILE": "./Dockerfile"}})] with data["task-bundles"] as lib.bundles.bundle_data
+	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "./Dockerfile"}})
+	lib.assert_equal(set(), deny) with input.attestations as [attestation]
+		with data["task-bundles"] as lib.bundles.bundle_data
 }
 
 test_dockerfile_param_https_source if {
@@ -16,7 +18,9 @@ test_dockerfile_param_https_source if {
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "DOCKERFILE param value (https://Dockerfile) is an external source",
 	}}
-	lib.assert_equal(expected, deny) with input.attestations as [_attestation("buildah", {"parameters": {"DOCKERFILE": "https://Dockerfile"}})] with data["task-bundles"] as lib.bundles.bundle_data
+	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "https://Dockerfile"}})
+	lib.assert_equal(expected, deny) with input.attestations as [attestation]
+		with data["task-bundles"] as lib.bundles.bundle_data
 }
 
 test_dockerfile_param_http_source if {
@@ -25,7 +29,9 @@ test_dockerfile_param_http_source if {
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "DOCKERFILE param value (http://Dockerfile) is an external source",
 	}}
-	lib.assert_equal(expected, deny) with input.attestations as [_attestation("buildah", {"parameters": {"DOCKERFILE": "http://Dockerfile"}})] with data["task-bundles"] as lib.bundles.bundle_data
+	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "http://Dockerfile"}})
+	lib.assert_equal(expected, deny) with input.attestations as [attestation]
+		with data["task-bundles"] as lib.bundles.bundle_data
 }
 
 test_dockerfile_param_not_included if {

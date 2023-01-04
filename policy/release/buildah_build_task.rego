@@ -20,6 +20,8 @@ import data.lib
 #   short_name: dockerfile_param_not_included
 #   failure_msg: DOCKERFILE param is not included in the task
 deny contains result if {
+	# Skip this rule if the buildah task is not present
+	buildah_task
 	not dockerfile_param
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

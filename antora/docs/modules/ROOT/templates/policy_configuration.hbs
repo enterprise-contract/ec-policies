@@ -212,3 +212,66 @@ interchangeably with the `exclude` field.
 
 Please make the required tooling changes soon to prevent breakages when the
 `non_blocking_checks` field is removed in the future.
+
+== Data Sources
+
+Some of the Enterprise Contract policy rules, defined in the ec-policies git
+repository, rely on certain data values when evaluated. For example, a policy
+rule exists to ensure all the parent container images used during the build
+process have been retrieved from an acceptable registry. The list of acceptable
+registries is a data value. This type of data is called Rule Data.
+
+In addition to policy rules, the ec-policies git repository also defines values
+for Rule Data, see
+link:https://github.com/hacbs-contract/ec-policies/blob/main/data/rule_data.yml[data/rule_data.yml]
+. As a user, you can provide a custom data source with modified Rule Data
+allowing the same policy rules to be used to best fit your use cases.
+
+There are different ways to create a custom data source. The simplest form is to
+fork the ec-policies git repository and change the values of
+`data/rule_data.yml` in your fork. Then, simply provide your fork as a data
+source. For example:
+
+[source,json]
+----
+{
+  "sources": [
+    {
+      "policy": [
+        "git::https://github.com/hacbs-contract/ec-policies.git//policy"
+      ],
+      "data": [
+        "git::https://github.com/lcarva/ec-policies.git//data"
+      ]
+    }
+  ]
+}
+----
+
+It is also possible to provide an link:https://www.conftest.dev/sharing/[OPA bundle]
+as a data source, for example:
+
+[source,json]
+----
+{
+  "sources": [
+    {
+      "policy": [
+        "git::https://github.com/hacbs-contract/ec-policies.git//policy"
+      ],
+      "data": [
+        "oci::quay.io/lucarval/policy-data:latest"
+      ]
+    }
+  ]
+}
+----
+
+NOTE: If the data source contains policy rules, those will be ignored.
+
+NOTE: The data source must provide the full set of required data values. These
+are all the values defined in
+link:https://github.com/hacbs-contract/ec-policies/blob/main/data/rule_data.yml[data/rule_data.yml]
+and
+link:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
+.

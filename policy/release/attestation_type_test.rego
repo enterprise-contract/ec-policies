@@ -17,7 +17,7 @@ test_allow_when_permitted {
 test_deny_when_not_permitted {
 	expected_msg := sprintf("Unknown attestation type '%s'", [bad_type])
 	lib.assert_equal(deny, {{
-		"code": "unknown_att_type",
+		"code": "attestation_type.unknown_att_type",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_data(bad_type)

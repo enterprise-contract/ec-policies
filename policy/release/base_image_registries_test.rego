@@ -43,12 +43,12 @@ test_unacceptable_base_images {
 	)]
 	expected := {
 		{
-			"code": "disallowed_base_image",
+			"code": "base_image_registries.disallowed_base_image",
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Base image \"docker.io/busybox:latest@sha256:bcd\" is from a disallowed registry",
 		},
 		{
-			"code": "disallowed_base_image",
+			"code": "base_image_registries.disallowed_base_image",
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Base image \"registry.redhat.ioo/spam:latest@sha256:def\" is from a disallowed registry",
 		},
@@ -65,7 +65,7 @@ test_unacceptable_bundle {
 		"registry.img/unacceptable@sha256:012",
 	)]
 	expected := {{
-		"code": "base_images_missing",
+		"code": "base_image_registries.base_images_missing",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Base images result is missing",
 	}}

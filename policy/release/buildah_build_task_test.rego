@@ -14,7 +14,7 @@ test_good_dockerfile_param if {
 
 test_dockerfile_param_https_source if {
 	expected := {{
-		"code": "dockerfile_param_external_source",
+		"code": "buildah_build_task.dockerfile_param_external_source",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "DOCKERFILE param value (https://Dockerfile) is an external source",
 	}}
@@ -25,7 +25,7 @@ test_dockerfile_param_https_source if {
 
 test_dockerfile_param_http_source if {
 	expected := {{
-		"code": "dockerfile_param_external_source",
+		"code": "buildah_build_task.dockerfile_param_external_source",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "DOCKERFILE param value (http://Dockerfile) is an external source",
 	}}
@@ -36,7 +36,7 @@ test_dockerfile_param_http_source if {
 
 test_dockerfile_param_not_included if {
 	expected := {{
-		"code": "dockerfile_param_not_included",
+		"code": "buildah_build_task.dockerfile_param_not_included",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "DOCKERFILE param is not included in the task",
 	}}

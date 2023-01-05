@@ -21,7 +21,7 @@ test_missing_builder_id if {
 	]
 
 	expected := {{
-		"code": "missing_builder_id",
+		"code": "slsa_build_build_service.missing_builder_id",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Builder ID not set in attestation",
 	}}
@@ -32,7 +32,7 @@ test_missing_builder_id if {
 test_unexpected_builder_id if {
 	builder_id := "https://notket.ved/sniahc/2v"
 	expected := {{
-		"code": "unexpected_builder_id",
+		"code": "slsa_build_build_service.unexpected_builder_id",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Builder ID \"https://notket.ved/sniahc/2v\" is unexpected",
 	}}

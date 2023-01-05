@@ -76,7 +76,7 @@ test_current_equal_latest_also if {
 
 test_no_tasks_present if {
 	expected := {{
-		"code": "tasks_missing",
+		"code": "tasks.tasks_missing",
 		"msg": "No tasks found in PipelineRun attestation",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}
@@ -158,7 +158,7 @@ _missing_tasks_violation(tasks) = errors if {
 	errors := {error |
 		some task in tasks
 		error := {
-			"code": "missing_required_task",
+			"code": "tasks.missing_required_task",
 			"msg": sprintf("Required task %q is missing", [task]),
 			"effective_on": "2022-01-01T00:00:00Z",
 		}
@@ -169,7 +169,7 @@ _missing_tasks_warning(tasks) = warnings if {
 	warnings := {warning |
 		some task in tasks
 		warning := {
-			"code": "missing_future_required_task",
+			"code": "tasks.missing_future_required_task",
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": sprintf("Task %q is missing and will be required in the future", [task]),
 		}

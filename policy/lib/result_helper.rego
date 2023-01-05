@@ -8,8 +8,13 @@ result_helper(chain, failure_sprintf_params) := result {
 	# Thus, result_helper assumes every rule defines annotations.
 	rule_annotations := chain[0].annotations
 	result := {
-		"code": rule_annotations.custom.short_name,
+		"code": concat(".", [_pkg_name(chain), rule_annotations.custom.short_name]),
 		"msg": sprintf(rule_annotations.custom.failure_msg, failure_sprintf_params),
 		"effective_on": time_lib.when(chain),
 	}
+}
+
+_pkg_name(chain) := name {
+	path := chain[count(chain) - 1].path
+	name := path[count(path) - 1]
 }

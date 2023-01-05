@@ -7,7 +7,7 @@ test_bundle_not_exists {
 
 	expected_msg := "Pipeline task 'my-task' does not contain a bundle reference"
 	lib.assert_equal(deny, {{
-		"code": "disallowed_task_reference",
+		"code": "task_bundle.disallowed_task_reference",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.spec.tasks as tasks
@@ -20,7 +20,7 @@ test_bundle_not_exists_empty_string {
 
 	expected_msg := "Pipeline task 'my-task' uses an empty bundle image reference"
 	lib.assert_equal(deny, {{
-		"code": "empty_task_bundle_reference",
+		"code": "task_bundle.empty_task_bundle_reference",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.spec.tasks as tasks
@@ -36,7 +36,7 @@ test_bundle_unpinned {
 
 	lib.assert_empty(deny) with input.spec.tasks as tasks
 	lib.assert_equal(warn, {{
-		"code": "unpinned_task_bundle",
+		"code": "task_bundle.unpinned_task_bundle",
 		"msg": "Pipeline task 'my-task' uses an unpinned task bundle reference 'reg.com/repo:latest'",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.spec.tasks as tasks
@@ -72,12 +72,12 @@ test_acceptable_bundle_out_of_date_past {
 
 	lib.assert_equal(warn, {
 		{
-			"code": "out_of_date_task_bundle",
+			"code": "task_bundle.out_of_date_task_bundle",
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Pipeline task 'my-task-1' uses an out of date task bundle 'reg.com/repo@sha256:bcd'",
 		},
 		{
-			"code": "out_of_date_task_bundle",
+			"code": "task_bundle.out_of_date_task_bundle",
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Pipeline task 'my-task-2' uses an out of date task bundle 'reg.com/repo@sha256:cde'",
 		},
@@ -96,7 +96,7 @@ test_acceptable_bundle_expired {
 		with data["task-bundles"] as task_bundles
 
 	lib.assert_equal(deny, {{
-		"code": "unacceptable_task_bundle",
+		"code": "task_bundle.unacceptable_task_bundle",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Pipeline task 'my-task' uses an unacceptable task bundle 'reg.com/repo@sha256:def'",
 	}}) with input.spec.tasks as tasks

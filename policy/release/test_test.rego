@@ -8,7 +8,7 @@ mock_empty_data := [lib.att_mock_helper_ref("NOT_HACBS_TEST_OUTPUT", {}, "task1"
 
 test_needs_non_empty_data {
 	lib.assert_equal(deny, {{
-		"code": "test_data_missing",
+		"code": "test.test_data_missing",
 		"msg": "No test data found",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_empty_data
@@ -19,7 +19,7 @@ mock_without_results_data := [lib.att_mock_helper_ref(lib.hacbs_test_task_result
 
 test_needs_tests_with_results {
 	lib.assert_equal(deny, {{
-		"code": "test_results_missing",
+		"code": "test.test_results_missing",
 		"msg": "Found tests without results",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
@@ -33,7 +33,7 @@ mock_without_results_data_mixed := [
 
 test_needs_tests_with_results_mixed {
 	lib.assert_equal(deny, {{
-		"code": "test_results_missing",
+		"code": "test.test_results_missing",
 		"msg": "Found tests without results",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
@@ -52,7 +52,7 @@ mock_a_failing_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name,
 
 test_failure_data {
 	lib.assert_equal(deny, {{
-		"code": "test_result_failures",
+		"code": "test.test_result_failures",
 		"msg": "The following tests did not complete successfully: failed_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
@@ -64,7 +64,7 @@ mock_an_errored_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name
 
 test_error_data {
 	lib.assert_equal(deny, {{
-		"code": "test_result_failures",
+		"code": "test.test_result_failures",
 		"msg": "The following tests did not complete successfully: errored_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
@@ -76,7 +76,7 @@ mock_mixed_data := array.concat(mock_a_failing_test, mock_an_errored_test)
 
 test_mix_data {
 	lib.assert_equal(deny, {{
-		"code": "test_result_failures",
+		"code": "test.test_result_failures",
 		"msg": "The following tests did not complete successfully: errored_1, failed_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
@@ -100,7 +100,7 @@ test_can_skip_by_name {
 		with data.config.policy as {"exclude": ["test:errored_1"], "non_blocking_checks": ["test:failed_1"]}
 
 	lib.assert_equal(deny, {{
-		"code": "test_result_failures",
+		"code": "test.test_result_failures",
 		"msg": "The following tests did not complete successfully: errored_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
@@ -109,7 +109,7 @@ test_can_skip_by_name {
 
 	# exclude works the same as non_blocking_checks
 	lib.assert_equal(deny, {{
-		"code": "test_result_failures",
+		"code": "test.test_result_failures",
 		"msg": "The following tests did not complete successfully: errored_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
@@ -126,7 +126,7 @@ test_skipped_is_not_deny {
 test_skipped_is_warning {
 	skipped_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SKIPPED"}, "skipped_1", bundles.acceptable_bundle_ref)]
 	lib.assert_equal(warn, {{
-		"code": "test_result_skipped",
+		"code": "test.test_result_skipped",
 		"msg": "The following tests were skipped: skipped_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
@@ -145,14 +145,14 @@ test_mixed_statuses {
 	]
 
 	lib.assert_equal(deny, {{
-		"code": "test_result_failures",
+		"code": "test.test_result_failures",
 		"msg": "The following tests did not complete successfully: error_1, error_2, failure_1, failure_2",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as test_results
 
 	lib.assert_equal(warn, {{
-		"code": "test_result_skipped",
+		"code": "test.test_result_skipped",
 		"msg": "The following tests were skipped: skipped_1, skipped_2",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
@@ -168,17 +168,17 @@ test_unsupported_test_result {
 	]
 
 	lib.assert_equal(deny, {
-		{"code": "test_result_unsupported", "msg": "Test 'error_1' has unsupported result 'EROR'", "effective_on": "2022-01-01T00:00:00Z"},
-		{"code": "test_result_unsupported", "msg": "Test 'failure_1' has unsupported result 'FAIL'", "effective_on": "2022-01-01T00:00:00Z"},
-		{"code": "test_result_unsupported", "msg": "Test 'skipped_1' has unsupported result 'SKIPED'", "effective_on": "2022-01-01T00:00:00Z"},
-		{"code": "test_result_unsupported", "msg": "Test 'success_1' has unsupported result 'SUCESS'", "effective_on": "2022-01-01T00:00:00Z"},
+		{"code": "test.test_result_unsupported", "msg": "Test 'error_1' has unsupported result 'EROR'", "effective_on": "2022-01-01T00:00:00Z"},
+		{"code": "test.test_result_unsupported", "msg": "Test 'failure_1' has unsupported result 'FAIL'", "effective_on": "2022-01-01T00:00:00Z"},
+		{"code": "test.test_result_unsupported", "msg": "Test 'skipped_1' has unsupported result 'SKIPED'", "effective_on": "2022-01-01T00:00:00Z"},
+		{"code": "test.test_result_unsupported", "msg": "Test 'success_1' has unsupported result 'SUCESS'", "effective_on": "2022-01-01T00:00:00Z"},
 	}) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as test_results
 }
 
 test_unacceptable_bundle_results {
 	lib.assert_equal(deny, {{
-		"code": "test_data_missing",
+		"code": "test.test_data_missing",
 		"msg": "No test data found",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SUCCESS"}, "task1", "registry.img/unacceptable@sha256:digest")]

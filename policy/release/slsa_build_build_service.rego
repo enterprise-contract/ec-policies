@@ -25,6 +25,9 @@ import data.lib
 # custom:
 #   short_name: missing_builder_id
 #   failure_msg: Builder ID not set in attestation
+#   collections:
+#   - slsa2
+#   - slsa3
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations
@@ -41,6 +44,9 @@ deny contains result if {
 # custom:
 #   short_name: unexpected_builder_id
 #   failure_msg: Builder ID %q is unexpected
+#   collections:
+#   - slsa2
+#   - slsa3
 #
 deny contains result if {
 	allowed_builder_ids := data.rule_data.allowed_builder_ids

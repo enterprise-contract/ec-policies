@@ -40,6 +40,9 @@ import data.lib
 # custom:
 #   short_name: missing_materials
 #   failure_msg: No materials match expected format
+#   collections:
+#   - slsa2
+#   - slsa3
 #
 deny contains result if {
 	count(lib.pipelinerun_attestations) > 0
@@ -55,6 +58,9 @@ deny contains result if {
 # custom:
 #   short_name: material_non_git_uri
 #   failure_msg: Material URI %q is not a git URI
+#   collections:
+#   - slsa2
+#   - slsa3
 #
 deny contains result if {
 	some material in materials
@@ -70,6 +76,9 @@ deny contains result if {
 # custom:
 #   short_name: material_without_git_commit
 #   failure_msg: Material digest %q is not a git commit
+#   collections:
+#   - slsa2
+#   - slsa3
 #
 deny contains result if {
 	some material in materials

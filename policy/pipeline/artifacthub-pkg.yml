@@ -1,15 +1,14 @@
 # from https://github.com/artifacthub/hub/blob/master/docs/metadata/artifacthub-pkg.yml
 version: 0.0.1
 name: OPA Pipeline Policies
-displayName: OPA pipeline Policies
+displayName: OPA Pipeline Policies
 createdAt: 2023-01-05T21:27:55.549418+00:00
 description: OPA policies enforcing standards on a tekton pipeline definition
 readme: |
-  OPA policies enforcing standards on a tekton pipeline definition
+  OPA policies enforcing standards on a tekton pipeline definition. These policies
+  are a work in progress and not yet production ready.
 install: |
-  `conftest pull git::https://github.com/hacbs-contract/ec-policies.git//policy`
-  Configure your org-specific `--data` as necessary from [data/](https://github.com/hacbs-contract/ec-policies/tree/main/data)
-  Run your conftest command: `conftest verify --data data/
+  `conftest pull oci::https://quay.io/hacbs-contract/ec-pipeline-policy:latest`
 homeURL: https://hacbs-contract.github.io/ec-policies/
 keywords:
   - opa

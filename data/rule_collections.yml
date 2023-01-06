@@ -6,13 +6,6 @@
 rule_collections:
 
   default:
-    description: Includes everything except the not useful demos
-    include:
-    - "*"
-    exclude:
-    - not_useful
-
-  everything:
     description: Includes every rule
     include:
     - "*"

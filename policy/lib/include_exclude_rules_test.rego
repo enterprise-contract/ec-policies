@@ -88,7 +88,7 @@ test_include_exclude {
 		},
 		"default": {
 			"include": ["*"],
-			"exclude": ["not_useful"],
+			"exclude": ["spam"],
 		},
 	}
 	mock_rule_collection_empty := {}
@@ -145,7 +145,7 @@ test_include_exclude {
 
 	# Test that we get the default "include" rule when we have an empty policy
 	lib.assert_equal(
-		["not_useful"],
+		["spam"],
 		_include_exclude("exclude", "flugelhorn"),
 	) with data.config as mock_config_empty with data.rule_collections as mock_rule_collection
 

@@ -148,8 +148,8 @@ clean-data: ## Removes ephemeral files from the `./data` directory
 	@rm -rf $(CONFIG_DATA_FILE)
 
 .PHONY: dummy-config
-dummy-config: ## Changes the configuration to mark the `not_useful` check as non-blocking to avoid a "feels like a bad day.." violation
-	@echo '{"config":{"policy":{"exclude":["not_useful"]}}}' | jq > $(CONFIG_DATA_FILE)
+dummy-config: ## Create an empty configuration
+	@echo '{"config":{"policy":{}}}' | jq > $(CONFIG_DATA_FILE)
 
 # Set IMAGE as required like this:
 #   make fetch-att IMAGE=<someimage>

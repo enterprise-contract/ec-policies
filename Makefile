@@ -246,12 +246,12 @@ check-pipeline-opa: ## Run policy evaluation for pipeline using opa. Deprecated.
 # which is why we need the temp dir and the extra copying.
 # $(*) is expected to be either "release" or "pipeline".
 #
-.PHONY: push-bundles
+.PHONY: push-policy-bundles
 
 BUNDLE_REPO=quay.io/hacbs-contract
 BUNDLE_TAG=git-$(SHORT_SHA)
 
-push-bundle-%:
+push-policy-bundle-%:
 	@export \
 	  TMP_DIR="$$( mktemp -d -t ec-push.XXXXXXXXXX )" \
 	  TARGET="$(BUNDLE_REPO)/ec-$(*)-policy:$(BUNDLE_TAG)" && \
@@ -271,23 +271,48 @@ push-bundle-%:
 	\
 	rm -rf $${TMP_DIR}
 
+# Pushes just one bundle for the data
+# Once again use a tmp dir to prepare the content. This time it is
+# to make sure we avoid adding the data/config.json if it is there.
+#
+.PHONY: push-data-bundle
+push-data-bundle: ## Create and push data bundle
+	@export \
+	  TMP_DIR="$$( mktemp -d -t ec-push.XXXXXXXXXX )" \
+	  TARGET="$(BUNDLE_REPO)/ec-policy-data:$(BUNDLE_TAG)" \
+	  DATA_FILES=$$( find $(DATA_DIR) -type f ! -name config.json ) && \
+	\
+	mkdir $${TMP_DIR}/$(DATA_DIR) && \
+	\
+	for f in $${DATA_FILES}; do \
+	  [[ -n $$( git status --porcelain $${f} ) ]] && \
+	    echo "Aborting due to uncommitted changes in $${f}!" && \
+	      exit 1; \
+	  cp $${f} $${TMP_DIR}/$(DATA_DIR); \
+	done && \
+	\
+	echo "Pushing policy data to $${TARGET}" && \
+	cd "$${TMP_DIR}" && conftest push $${TARGET} --policy '' --data $(DATA_DIR) && \
+	\
+	rm -rf $${TMP_DIR}
+
 # Add the "latest" tag to policy bundles just pushed using the
 # above. (Is there a better way to do that other than using
 # skopeo copy..?)
 #
 bump-latest-%:
 	@export \
-	  TARGET="$(BUNDLE_REPO)/ec-$(*)-policy:$(BUNDLE_TAG)" \
-	  LATEST="$(BUNDLE_REPO)/ec-$(*)-policy:latest" && \
+	  TARGET="$(BUNDLE_REPO)/ec-$(*):$(BUNDLE_TAG)" \
+	  LATEST="$(BUNDLE_REPO)/ec-$(*):latest" && \
 	\
 	echo "Copying $${TARGET} to $${LATEST}" && \
 	skopeo copy --quiet docker://$${TARGET} docker://$${LATEST}
 
 
-push-bundles: push-bundle-release push-bundle-pipeline ## Create and push policy bundles
-bump-latest: bump-latest-release bump-latest-pipeline ## Update latest tag on pushed bundles
+push-policy-bundles: push-policy-bundle-release push-policy-bundle-pipeline ## Create and push policy bundles
+bump-latest: bump-latest-release-policy bump-latest-pipeline-policy bump-latest-policy-data ## Update latest tag on pushed bundles
 
-push-bump: push-bundles bump-latest ## Push policy bundles and update latest tag
+push-bump: push-policy-bundles push-data-bundle bump-latest ## Push all bundles and update the latest tag
 
 #--------------------------------------------------------------------
 

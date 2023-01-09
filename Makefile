@@ -264,9 +264,10 @@ push-bundle-%:
 	      exit 1; \
 	  cp -r $(POLICY_DIR)/$${d} $${TMP_DIR}/$(POLICY_DIR)/$${d}; \
 	done && \
+	find "$${TMP_DIR}" -name artifacthub-pkg.yml -delete && \
 	\
 	echo "Pushing $(*) policies to $${TARGET}" && \
-	conftest push $${TARGET} $${TMP_DIR} -p $(POLICY_DIR) && \
+	cd "$${TMP_DIR}" && conftest push $${TARGET} && \
 	\
 	rm -rf $${TMP_DIR}
 

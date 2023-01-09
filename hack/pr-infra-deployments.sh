@@ -22,10 +22,13 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-RELEASE_BUNDLE_TAG="git-$(git rev-parse --short HEAD)"
-RELEASE_BUNDLE_TAG="git-d47b70d"
-RELEASE_BUNDLE_DIGEST="$(skopeo manifest-digest <(skopeo inspect --raw "docker://quay.io/hacbs-contract/ec-release-policy:${RELEASE_BUNDLE_TAG}"))"
-RELEASE_BUNDLE_REF="quay.io/hacbs-contract/ec-release-policy:${RELEASE_BUNDLE_TAG}@${RELEASE_BUNDLE_DIGEST}"
+BUNDLE_TAG="git-$(git rev-parse --short HEAD)"
+
+RELEASE_BUNDLE_DIGEST="$(skopeo manifest-digest <(skopeo inspect --raw "docker://quay.io/hacbs-contract/ec-release-policy:${BUNDLE_TAG}"))"
+RELEASE_BUNDLE_REF="quay.io/hacbs-contract/ec-release-policy:${BUNDLE_TAG}@${RELEASE_BUNDLE_DIGEST}"
+
+DATA_BUNDLE_DIGEST="$(skopeo manifest-digest <(skopeo inspect --raw "docker://quay.io/hacbs-contract/ec-policy-data:${BUNDLE_TAG}"))"
+DATA_BUNDLE_REF="quay.io/hacbs-contract/ec-policy-data:${BUNDLE_TAG}@${DATA_BUNDLE_DIGEST}"
 
 GIT_REF="$(git rev-parse HEAD)"
 
@@ -48,9 +51,15 @@ if [ -n "${GITHUB_ACTIONS:-}" ]; then
 fi
 git checkout -b ec-policy-update --track upstream/main
 
+POLICY_SOURCE_URL=oci::https://${RELEASE_BUNDLE_REF}
+DATA_SOURCE_URL=oci::https://${DATA_BUNDLE_REF}
+# These would work too but we prefer the oci conftest bundle sources over direct github urls
+#POLICY_SOURCE_URL=git::https://github.com/hacbs-contract/ec-policies.git//policy?ref=${GIT_REF}
+#DATA_SOURCE_URL=git::https://github.com/hacbs-contract/ec-policies.git//data?ref=${GIT_REF}
+
 # replacements
-yq e -i '.configMapGenerator[] |= select(.name == "ec-defaults").literals[] |= select(. == "ec_policy_source=*") = "ec_policy_source='"oci::https://${RELEASE_BUNDLE_REF}"'"' components/enterprise-contract/kustomization.yaml
-yq e -i '.configMapGenerator[] |= select(.name == "ec_data_source").literals[] |= select(. == "ec_data_source=*") = "ec_data_source='"git::https://github.com/hacbs-contract/ec-policies.git//data?ref=${GIT_REF}"'"' components/enterprise-contract/kustomization.yaml
+yq e -i '.configMapGenerator[] |= select(.name == "ec-defaults").literals[] |= select(. == "ec_policy_source=*") = "ec_policy_source='"${POLICY_SOURCE_URL}"'"' components/enterprise-contract/kustomization.yaml
+yq e -i '.configMapGenerator[] |= select(.name == "ec-defaults").literals[] |= select(. == "ec_data_source=*"  ) = "ec_data_source='"${DATA_SOURCE_URL}"'"'     components/enterprise-contract/kustomization.yaml
 
 # commit & push
 git commit -a -m "enterprise contract policy update"

@@ -275,6 +275,9 @@ push-policy-bundle-%:
 # Once again use a tmp dir to prepare the content. This time it is
 # to make sure we avoid adding the data/config.json if it is there.
 #
+# The _ec_bundle.yml file is a way to avoid a problem where conftest
+# pushing the same image digest with a different tag causes an error.
+#
 .PHONY: push-data-bundle
 push-data-bundle: ## Create and push data bundle
 	@export \
@@ -290,6 +293,9 @@ push-data-bundle: ## Create and push data bundle
 	      exit 1; \
 	  cp $${f} $${TMP_DIR}/$(DATA_DIR); \
 	done && \
+	\
+	echo -e "_ec_policy_git_sha: $$(git rev-parse HEAD)\n_ec_policy_build_time: $$(date --iso-8601=seconds)" > \
+	  $${TMP_DIR}/$(DATA_DIR)/_ec_bundle.yml && \
 	\
 	echo "Pushing policy data to $${TARGET}" && \
 	cd "$${TMP_DIR}" && conftest push $${TARGET} --policy '' --data $(DATA_DIR) && \

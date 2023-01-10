@@ -28,6 +28,10 @@ import data.lib.tkn
 # custom:
 #   short_name: empty_build_task
 #   failure_msg: Build task %q does not contain any steps
+#   collections:
+#   - slsa1
+#   - slsa2
+#   - slsa3
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
@@ -44,6 +48,10 @@ deny contains result if {
 # custom:
 #   short_name: missing_build_task
 #   failure_msg: Build task not found
+#   collections:
+#   - slsa1
+#   - slsa2
+#   - slsa3
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
@@ -59,6 +67,10 @@ deny contains result if {
 # custom:
 #   short_name: subject_build_task_mismatch
 #   failure_msg: The attestation subject, %q, does not match the build task image, %q
+#   collections:
+#   - slsa1
+#   - slsa2
+#   - slsa3
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations

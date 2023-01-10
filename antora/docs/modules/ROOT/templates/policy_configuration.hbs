@@ -189,16 +189,28 @@ The predefined collections are:
 |*Name*
 |*Description*
 
-{{#each collectionsData.rule_collections}}
-|`{{@key}}`
-|{{description}}
+| `slsa_1`
+| Includes policy rules required to meet SLSA Level 1
 
-{{/each}}
+| `slsa_2`
+| Includes policy rules required to meet SLSA Level 2. Special attention must
+be given to two requirements which are not covered by the policy rules in this
+collection. The first is "Provenance - Authenticated" which is expected to be
+performed when fetching the attestation via cosign or ec-cli. The second
+requirement is "Provenace - Service Generated" which is a little more complex
+to verify. By meeting both the "Provenance - Authenticated" AND "Build - Build
+Service" requirements, we can have some confidence that this requirement is met
+since Chains is a service that generates signed attestations with data obtained
+from the build service (Tekton Pipelines).
+
+| `slsa_3`
+| Includes policy rules required to meet SLSA Level 3. This is currently a
+work in progress and functionally the same as the slsa2 collection.
+
 |===
 
-The collections are defined in
-link:https://github.com/hacbs-contract/ec-policies/blob/main/data/rule_collections.yml[data/rule_collections.yml]
-in this git repo.
+Policy rules may specify a `custom.collections` metadata attribute as a list of
+strings. Each string represents a collection the policy rule is included in.
 
 == The `non_blocking_checks` field
 

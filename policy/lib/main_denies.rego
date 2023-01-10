@@ -1,7 +1,5 @@
 package lib
 
-import data.lib
-
 # Collect all non-skipped deny or warn rules under data.policy.<policy_namespace>.
 #
 # Remember that passing (i.e. untriggered) denies or warns will not be included
@@ -13,9 +11,6 @@ _namespace_denies_or_warns(policy_namespace, deny_or_warn) := rule_set {
 		policy_package := policy_packages[package_name]
 
 		r := policy_package[deny_or_warn][rule_result]
-
-		# Filter out any rules that are not included
-		lib.rule_included(package_name, rule_result.code)
 	}
 }
 

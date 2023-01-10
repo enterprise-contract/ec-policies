@@ -6,7 +6,10 @@ on:
     branches:
     - main
     paths:
+    # Todo: We could probably trigger each of the three different
+    # bundle pushes separately to avoid needless rebuild and PR churn
     - policy/**
+    - data/**
 
 jobs:
   push-policy-bundles:

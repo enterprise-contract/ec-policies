@@ -120,6 +120,21 @@ Then to verify the pipeline definition using the defined policies:
     make check-pipeline
 
 
+Policy bundles
+--------------
+
+The policies defined here are bundled and pushed as OCI artifacts using
+`conftest`. There are three bundles, one for each of the release and pipeline
+policies, and one for the data which is used by both.
+
+The [push-bundles](.github/workflows/push-bundles.yml) automates creating and
+pushing these bundles to [quay.io][quay], and generating a related PR in the
+[infra-deployments repo][infradeployments] so the
+latest bundles are used.
+
+See also the [policy bundle documentation](./antora/docs/modules/ROOT/pages/policy_bundles.adoc).
+
+
 Getting started for policy authors
 ----------------------------------
 
@@ -149,3 +164,5 @@ See also
 [builddefs]: https://github.com/redhat-appstudio/build-definitions
 [authoring]: https://hacbs-contract.github.io/ec-policies/ec-policies/authoring.html
 [antora]: https://docs.antora.org/antora/latest/install-and-run-quickstart/
+[quay]: https://quay.io/
+[infradeployments]: https://github.com/redhat-appstudio/infra-deployments

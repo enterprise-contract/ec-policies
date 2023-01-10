@@ -46,6 +46,10 @@ The documentation is built using [Antora][antora].
 Those docs are published [here][docs] and imported automatically into the
 official [HACBS Documentation][hacbsdocs].
 
+To build the documentation locally:
+
+    make docs-preview
+
 ### Running tests
 
 From the top level directory you can run all tests and formatting checks, as

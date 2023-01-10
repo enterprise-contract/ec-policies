@@ -124,6 +124,20 @@ npm-publish: ## Publish the antora extension npm package. Requires a suitable NP
 	  npm publish --access=public && \
 	  git checkout package.json
 
+HACBS_DOCS_DIR=../hacbs-contract.github.io
+HACBS_DOCS_REPO=git@github.com:hacbs-contract/hacbs-contract.github.io.git
+$(HACBS_DOCS_DIR):
+	mkdir $(HACBS_DOCS_DIR) && cd $(HACBS_DOCS_DIR) && git clone $(HACBS_DOCS_REPO) .
+
+# Beware: This will build from your local main branch, which might not be what
+# you're expecting. Change the branch in antora-playbook.yml manually if needed.
+# (The second sed won't always be needed, but it should be okay to do it anyway.)
+docs-preview: $(HACBS_DOCS_DIR) ## Build a preview of the documentation
+	cd $(HACBS_DOCS_DIR) && \
+	  sed -i 's|url: https://github.com/hacbs-contract/ec-policies.git|url: ../ec-policies|' antora-playbook.yml && \
+	  sed -i "s|require: '@hacbs-contract/ec-policies-antora-extension'|require: ../ec-policies/antora/ec-policies-antora-extension|" antora-playbook.yml && \
+	  npm ci && npm run build
+
 ##@ CI
 
 .PHONY: fmt-check

@@ -1,0 +1,121 @@
+#!/bin/env bash
+# Copyright 2022 Red Hat, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Pushes policy bundles to quay.io, but only if anything changed since
+# the last bundle was pushed.
+#
+set -o errexit
+set -o pipefail
+set -o nounset
+
+REPO_ORG=hacbs-contract
+QUAY_API_URL=https://quay.io/api/v1/repository/$REPO_ORG
+ROOT_DIR=$( git rev-parse --show-toplevel )
+BUNDLES="release pipeline data"
+
+# The data bundle is a little different to the other two.
+# Encapsulate the differences these little functions.
+#
+function bundle_src_dirs() {
+  [ $1 == "data" ] && echo "data" || echo "policy/lib policy/$1"
+}
+
+function bundle_subdir() {
+  [ $1 == "data" ] && echo "data" || echo "policy"
+}
+
+function exclusions() {
+  [ $1 == "data" ] && echo "config.json" || echo "artifacthub-pkg.yml"
+}
+
+function repo_name() {
+  [ $1 == "data" ] && echo "ec-policy-data" || echo "ec-$1-policy"
+}
+
+function conftest_push() {
+  if [ $1 == "data" ]; then
+    conftest push --policy '' --data data $2
+  else
+    conftest push --policy policy $2
+  fi
+}
+
+function cm_key_name() {
+  [ $1 == "data" ] && echo "ec_data_source" || echo "ec_policy_source"
+}
+
+pr_params=""
+for b in $BUNDLES; do
+  # Find the git sha where the source files were last updated
+  src_dirs=$(bundle_src_dirs $b)
+  last_update_sha=$(git log -n 1 --pretty=format:%h -- $src_dirs)
+
+  # Check if the bundle for that git sha exists already
+  repo=$(repo_name $b)
+  tag=git-$last_update_sha
+  found_count=$(curl -s $QUAY_API_URL/$repo/tag/?specificTag=$tag | jq '.tags | length')
+  push_repo=quay.io/$REPO_ORG/$repo
+
+  if [ $found_count == "1" ]; then
+    # No push needed
+    echo "Policy bundle $push_repo:$tag exists already, no push needed"
+
+  else
+    # Push needed
+    echo "Pushing policy bundle $push_repo:$tag now"
+
+    # Prepare a temp dir with the bundle's content
+    tmp_dir=$(mktemp -d -t ec-bundle-$b.XXXXXXXXXX)
+    trap 'rm -rf "${tmp_dir}"' EXIT
+    content_dir=$tmp_dir/$(bundle_subdir $b)
+    mkdir $content_dir
+    for d in $src_dirs; do
+      cp -r $d $content_dir
+    done
+
+    # Remove some files
+    exclude_files=$(exclusions $b)
+    for f in $exclude_files; do
+      find $content_dir -name $f -delete
+    done
+
+    # Show the content
+    cd $tmp_dir || exit 1
+    find . -type f
+
+    # Now push
+    conftest_push $b "$push_repo:$tag"
+
+    # Set the 'latest' tag
+    skopeo copy --quiet docker://$push_repo:$tag docker://$push_repo:latest
+
+    # Record some details that we can pass to pr-infra-deployments.sh later
+    [ $b != "pipeline" ] && pr_params="$pr_params $(cm_key_name $b) $push_repo:$tag"
+
+    cd $ROOT_DIR
+  fi
+
+done
+
+# If any new bundles where pushed
+if [ -n "$pr_params" ]; then
+  # If we have a token, try to make a pr for infra-deployments
+  if [ -n "$GITHUB_TOKEN" ]; then
+    echo Creating PRs with params: $pr_params
+    hack/pr-infra-deployments.sh $pr_params
+  fi
+fi

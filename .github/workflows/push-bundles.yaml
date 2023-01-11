@@ -30,10 +30,7 @@ jobs:
     - name: Install conftest
       run: make install-conftest CONFTEST_BIN=$HOME/.local/bin
 
-    - name: Push bundles
-      run: make push-bump
-
-    - name: Update infra-deployments
+    - name: Push bundles and update infra-deployments
       env:
         EC_AUTOMATION_KEY: ${{ secrets.EC_AUTOMATION_KEY }}
         DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
@@ -52,4 +49,4 @@ jobs:
         }
 
         GITHUB_TOKEN=$(curl -s -X POST -H "Authorization: Bearer $(createJWT)" -H "Accept: application/vnd.github+json" "https://api.github.com/app/installations/${APP_INSTALL_ID}/access_tokens" | jq -r .token) \
-        hack/pr-infra-deployments.sh
+        hack/update-bundles.sh

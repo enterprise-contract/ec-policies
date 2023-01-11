@@ -15,6 +15,7 @@ rule_data:
   - FAILURE
   - ERROR
   - SKIPPED
+  - WARNING
   allowed_predicate_types:
   - https://slsa.dev/provenance/v0.2
   allowed_java_component_sources:

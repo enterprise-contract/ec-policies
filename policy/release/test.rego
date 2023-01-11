@@ -121,6 +121,27 @@ warn[result] {
 	)
 }
 
+# METADATA
+# title: Some tests returned a warning
+# description: |-
+#   Collects all tests that have their result set to "WARNING".
+# custom:
+#   short_name: test_result_warning
+#   failure_msg: "The following tests returned a warning: %s"
+#
+warn[result] {
+	all_warned = resulted_in({"WARNING"})
+
+	# Don't report if there aren't any
+	count(all_warned) > 0
+
+	short_warned := [f | f := split(all_warned[_], ":")[1]]
+	result := lib.result_helper(
+		rego.metadata.chain(),
+		[concat(", ", short_warned)],
+	)
+}
+
 resulted_in(results) = filtered_by_result {
 	# Collect all tests that have resulted with one of the given
 	# results and convert their name to "test:<name>" format

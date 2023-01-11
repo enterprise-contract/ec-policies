@@ -55,6 +55,10 @@ test: ## Run all tests in verbose mode and check coverage
 coverage: ## Show which lines of rego are not covered by tests
 	@opa test $(TEST_FILES) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
 
+.PHONY: coverage-report ## Generates coverage.json in SimpleCov format
+coverage-report: ## Show which lines of rego are not covered by tests
+	@opa test $(TEST_FILES) --coverage --format json | opa eval --format pretty --stdin-input --data hack/simplecov.rego data.simplecov.from_opa > coverage.json
+
 .PHONY: quiet-test
 quiet-test: ## Run all tests in quiet mode and check coverage
 	@opa test $(TEST_FILES)
@@ -146,7 +150,7 @@ fmt-check: ## Check formatting of Rego files
 	@opa fmt . --list --fail >/dev/null 2>&1
 
 .PHONY: ci
-ci: quiet-test opa-check conventions-check fmt-check ## Runs all checks and tests
+ci: coverage-report quiet-test opa-check conventions-check fmt-check ## Runs all checks and tests
 
 #--------------------------------------------------------------------
 

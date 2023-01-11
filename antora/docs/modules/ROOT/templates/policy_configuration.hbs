@@ -278,9 +278,23 @@ as a data source, for example:
 
 NOTE: If the data source contains policy rules, those will be ignored.
 
-NOTE: The data source must provide the full set of required data values. These
-are all the values defined in
+NOTE: If you replace the default data source entirely, you must provide the full set of required data values.
+These are all the values defined in
 link:https://github.com/hacbs-contract/ec-policies/blob/main/data/rule_data.yml[data/rule_data.yml]
 and
 link:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
-.
+
+NOTE: It's also possible to add an additional data source containing rule data
+defined under the `rule_data_custom` top level key. Data under this key will
+take precedence over data defined under the `rule_data` top level key. So, for
+example you could use the default data source and still define your own values
+for `allowed_registry_prefixes` by adding a second data source that includes
+a file such as:
+
+[source,yaml]
+----
+rule_data_custom:
+  allowed_registry_prefixes:
+    - trusted-registry.io/trusted-images/
+    - docker.io/acme-company/
+----

@@ -49,7 +49,7 @@ deny contains result if {
 #   - slsa3
 #
 deny contains result if {
-	allowed_builder_ids := data.rule_data.allowed_builder_ids
+	allowed_builder_ids := lib.rule_data("allowed_builder_ids")
 	some att in lib.pipelinerun_attestations
 	builder_id := att.predicate.builder.id
 	not builder_id in allowed_builder_ids

@@ -23,5 +23,5 @@ test_rule_data {
 
 # Need this for 100% coverage
 test_rule_data_defaults {
-	lib.assert_empty(lib.rule_data_defaults)
+	lib.assert_not_empty(lib.rule_data_defaults)
 }

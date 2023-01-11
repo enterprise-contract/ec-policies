@@ -5,7 +5,7 @@ import future.keywords.if
 import data.lib
 
 test_all_good if {
-	builder_id := data.rule_data.allowed_builder_ids[0]
+	builder_id := lib.rule_data("allowed_builder_ids")[0]
 	lib.assert_empty(deny) with input.attestations as [_mock_attestation(builder_id)]
 }
 

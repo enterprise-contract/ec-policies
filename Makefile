@@ -46,17 +46,17 @@ help: ## Display this help.
 ##@ Development
 
 .PHONY: test
-test: ## Run all tests in verbose mode and check coverage
+test: soft-install-tools ## Run all tests in verbose mode and check coverage
 	@opa test $(TEST_FILES) -v
 	$(COVERAGE)
 
 .PHONY: coverage
 # The cat does nothing but avoids a non-zero exit code from grep -v
-coverage: ## Show which lines of rego are not covered by tests
+coverage: soft-install-tools ## Show which lines of rego are not covered by tests
 	@opa test $(TEST_FILES) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
 
 .PHONY: quiet-test
-quiet-test: ## Run all tests in quiet mode and check coverage
+quiet-test: soft-install-tools ## Run all tests in quiet mode and check coverage
 	@opa test $(TEST_FILES)
 	$(COVERAGE)
 
@@ -81,12 +81,12 @@ live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` ne
 ## we will ignore the error and not use conftest verify in the CI.
 ##
 .PHONY: conftest-test
-conftest-test: ## Run all tests with conftest instead of opa
+conftest-test: soft-install-tools ## Run all tests with conftest instead of opa
 	@conftest verify \
 	  --policy $(POLICY_DIR)
 
 .PHONY: fmt
-fmt: ## Apply default formatting to all rego files. Use before you commit
+fmt: soft-install-tools ## Apply default formatting to all rego files. Use before you commit
 	@opa fmt . --write
 
 .PHONY: fmt-amend
@@ -98,11 +98,11 @@ fmt-amend: fmt ## Apply default formatting to all rego files then amend the curr
 	git commit --amend --no-edit
 
 .PHONY: opa-check
-opa-check: ## Check Rego files with strict mode (https://www.openpolicyagent.org/docs/latest/strict/)
+opa-check: soft-install-tools ## Check Rego files with strict mode (https://www.openpolicyagent.org/docs/latest/strict/)
 	@opa check $(TEST_FILES) --strict
 
 .PHONY: conventions-check
-conventions-check: ## Check Rego policy files for convention violations
+conventions-check: soft-install-tools ## Check Rego policy files for convention violations
 	@OUT=$$(opa eval --data checks --data $(POLICY_DIR)/lib --data data --input <(opa inspect . -a -f json) 'data.checks.violation[_]' --format raw); \
 	if [[ -n "$${OUT}" ]]; then echo "$${OUT}"; exit 1; fi
 
@@ -112,7 +112,7 @@ ready: fmt-amend ## Amend current commit with fmt changes
 ##@ Documentation
 
 .PHONY: annotations-opa
-annotations-opa:
+annotations-opa: soft-install-tools
 	@opa inspect --annotations --format json ./policy | jq '.annotations | sort_by(.location.file, .location.row)'
 
 SHORT_SHA=$(shell git rev-parse --short HEAD)
@@ -141,7 +141,7 @@ docs-preview: $(HACBS_DOCS_DIR) ## Build a preview of the documentation
 ##@ CI
 
 .PHONY: fmt-check
-fmt-check: ## Check formatting of Rego files
+fmt-check: soft-install-tools ## Check formatting of Rego files
 	@opa fmt . --list | xargs -r -n1 echo 'FAIL: Incorrect formatting found in'
 	@opa fmt . --list --fail >/dev/null 2>&1
 
@@ -211,7 +211,7 @@ PIPELINE_NAMESPACE=pipeline.main
 OPA_FORMAT=pretty
 
 .PHONY: check-release
-check-release: ## Run policy evaluation for release
+check-release: soft-install-tools ## Run policy evaluation for release
 	@conftest test $(INPUT_FILE) \
 	  --namespace $(RELEASE_NAMESPACE) \
 	  --policy $(POLICY_DIR) \
@@ -220,7 +220,7 @@ check-release: ## Run policy evaluation for release
 	  --output json
 
 .PHONY: check-pipeline
-check-pipeline: ## Run policy evaluation for pipeline definition
+check-pipeline: soft-install-tools ## Run policy evaluation for pipeline definition
 	@conftest test $(INPUT_FILE) \
 	  --namespace $(PIPELINE_NAMESPACE) \
 	  --policy $(POLICY_DIR) \
@@ -234,7 +234,7 @@ check: check-release
 #--------------------------------------------------------------------
 
 .PHONY: check-release-opa
-check-release-opa: ## Run policy evaluation for release using opa. Deprecated.
+check-release-opa: soft-install-tools ## Run policy evaluation for release using opa. Deprecated.
 	@opa eval \
 	  --input $(INPUT_FILE) \
 	  --data $(DATA_DIR) \
@@ -243,7 +243,7 @@ check-release-opa: ## Run policy evaluation for release using opa. Deprecated.
 	  data.$(RELEASE_NAMESPACE).deny
 
 .PHONY: check-pipeline-opa
-check-pipeline-opa: ## Run policy evaluation for pipeline using opa. Deprecated.
+check-pipeline-opa: soft-install-tools ## Run policy evaluation for pipeline using opa. Deprecated.
 	@opa eval \
 	  --input $(INPUT_FILE) \
 	  --data $(DATA_DIR) \
@@ -265,7 +265,7 @@ check-pipeline-opa: ## Run policy evaluation for pipeline using opa. Deprecated.
 BUNDLE_REPO=quay.io/hacbs-contract
 BUNDLE_TAG=git-$(SHORT_SHA)
 
-push-policy-bundle-%:
+push-policy-bundle-%: soft-install-tools
 	@export \
 	  TMP_DIR="$$( mktemp -d -t ec-push.XXXXXXXXXX )" \
 	  TARGET="$(BUNDLE_REPO)/ec-$(*)-policy:$(BUNDLE_TAG)" && \
@@ -293,7 +293,7 @@ push-policy-bundle-%:
 # pushing the same image digest with a different tag causes an error.
 #
 .PHONY: push-data-bundle
-push-data-bundle: ## Create and push data bundle
+push-data-bundle: soft-install-tools ## Create and push data bundle
 	@export \
 	  TMP_DIR="$$( mktemp -d -t ec-push.XXXXXXXXXX )" \
 	  TARGET="$(BUNDLE_REPO)/ec-policy-data:$(BUNDLE_TAG)" \
@@ -342,7 +342,7 @@ CONFTEST_VER=0.37.0
 CONFTEST_SHA_Darwin_x86_64=8cbac190f519fff0acbf70e2fa5cdbec0fd1a6e2a03cf6e5eecdca89f470b678
 CONFTEST_SHA_Darwin_arm64=9646567f3b9978efa2c34ffdba1edee2b44a7e2760ed4a605742a26fe668eb18
 CONFTEST_SHA_Linux_x86_64=3a3d56163b27c4641b0fab112171d76176bd084331825e5da549dd881f0bd4f0
-CONFTEST_GOOS=$(shell go env GOOS | sed 's/./\u&/' )
+CONFTEST_GOOS=$(shell go env GOOS | awk '{ print toupper( substr( $$0, 1, 1 ) ) substr( $$0, 2 ); }')
 CONFTEST_GOARCH=$(shell go env GOARCH | sed 's/amd64/x86_64/' )
 CONFTEST_OS_ARCH=$(CONFTEST_GOOS)_$(CONFTEST_GOARCH)
 CONFTEST_FILE=conftest_$(CONFTEST_VER)_$(CONFTEST_OS_ARCH).tar.gz
@@ -386,5 +386,12 @@ install-opa: ## Install `opa` CLI from GitHub releases
 	chmod 755 $(OPA_DEST)
 	rm $(OPA_FILE)
 
-.PHONY: install-tools
-install-tools: install-conftest install-opa ## Install all tools
+.PHONY: install-tools soft-install-tools
+install-tools: install-conftest install-opa ## Force a reinstall of all tools
+soft-install-tools: ## Install all tools if not installed
+ifeq ("$(wildcard $(OPA_DEST))","")
+	@$(MAKE) -s install-opa
+endif
+ifeq ("$(wildcard $(CONFTEST_DEST))","")
+	@$(MAKE) -s install-conftest
+endif

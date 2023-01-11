@@ -163,16 +163,18 @@ test_mixed_statuses {
 	}}) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as test_results
 
-	lib.assert_equal(warn, {{
-		"code": "test.test_result_skipped",
-		"msg": "The following tests were skipped: skipped_1, skipped_2",
-		"effective_on": "2022-01-01T00:00:00Z",
-	}, {
-		"code": "test.test_result_warning",
-		"msg": "The following tests returned a warning: warning_1, warning_2",
-		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with data["task-bundles"] as bundles.bundle_data
-		with input.attestations as test_results
+    lib.assert_equal(warn, {
+			{
+				"code": "test.test_result_skipped",
+				"msg": "The following tests were skipped: skipped_1, skipped_2",
+				"effective_on": "2022-01-01T00:00:00Z",
+			},
+			{
+				"code": "test.test_result_warning",
+				"msg": "The following tests returned a warning: warning_1, warning_2",
+				"effective_on": "2022-01-01T00:00:00Z",
+			},
+	}) with data["task-bundles"] as bundles.bundle_data
 }
 
 test_unsupported_test_result {

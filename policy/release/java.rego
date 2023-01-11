@@ -30,7 +30,7 @@ import data.lib.bundles
 #   short_name: java_foreign_dependencies
 #   failure_msg: Found Java dependencies from '%s', expecting to find only from '%s'
 deny contains result if {
-	allowed := {a | some a in data.rule_data.allowed_java_component_sources}
+	allowed := {a | some a in lib.rule_data("allowed_java_component_sources")}
 	foreign := _java_component_sources - allowed
 	count(foreign) > 0
 	result := lib.result_helper(rego.metadata.chain(), [concat(",", foreign), concat(",", allowed)])

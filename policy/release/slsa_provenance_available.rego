@@ -32,7 +32,7 @@ import data.lib
 #   - slsa3
 deny contains result if {
 	some att in lib.pipelinerun_attestations
-	allowed_predicate_types := data.rule_data.allowed_predicate_types
+	allowed_predicate_types := lib.rule_data("allowed_predicate_types")
 	not att.predicateType in allowed_predicate_types
 	result := lib.result_helper(rego.metadata.chain(), [att.predicateType, concat(", ", allowed_predicate_types)])
 }

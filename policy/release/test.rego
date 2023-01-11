@@ -63,7 +63,7 @@ deny[result] {
 	all_unsupported := [u |
 		result := lib.results_from_tests[_]
 		test := result.value
-		not test.result in data.rule_data.supported_tests_results
+		not test.result in lib.rule_data("supported_tests_results")
 		u := {"task": result.name, "result": test.result}
 	]
 

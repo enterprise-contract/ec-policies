@@ -27,7 +27,7 @@ import data.lib.bundles
 #
 deny contains result if {
 	some image_ref in _base_images
-	not _image_ref_permitted(image_ref, data.rule_data.allowed_registry_prefixes)
+	not _image_ref_permitted(image_ref, lib.rule_data("allowed_registry_prefixes"))
 	result := lib.result_helper(rego.metadata.chain(), [image_ref])
 }
 

@@ -245,12 +245,8 @@ module.exports.register = function() {
     const rawBundlesData = yaml.load(bundlesFile._contents.toString())
     const acceptableBundles = helpers.processBundlesData(rawBundlesData)
 
-    const collectionsFile = helpers.firstFileMatching(content, /^rule_collections.yml$/)
-    if (!collectionsFile) throw `Unable to find rule collections file: (${__filename})`
-    const collectionsData = yaml.load(collectionsFile._contents.toString())
-
     // Make the data available at higher scope
-    allData = { pipelineAnnotations, releaseAnnotations, acceptableBundles, collectionsData }
+    allData = { pipelineAnnotations, releaseAnnotations, acceptableBundles }
 
     //------------------------------------------------------------------
     // Setup Handlebars helpers and partials

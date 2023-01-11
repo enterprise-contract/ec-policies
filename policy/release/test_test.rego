@@ -167,7 +167,7 @@ test_mixed_statuses {
 		"code": "test.test_result_skipped",
 		"msg": "The following tests were skipped: skipped_1, skipped_2",
 		"effective_on": "2022-01-01T00:00:00Z",
-	}}, {{
+	}, {
 		"code": "test.test_result_warning",
 		"msg": "The following tests returned a warning: warning_1, warning_2",
 		"effective_on": "2022-01-01T00:00:00Z",

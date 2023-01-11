@@ -22,3 +22,22 @@ test_deny_when_not_permitted {
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_data(bad_type)
 }
+
+test_deny_when_missing_pipelinerun_attestations {
+	expected := {{
+		"code": "attestation_type.missing_pipelinerun_attestation",
+		"msg": "Missing pipelinerun attestation",
+		"effective_on": "2022-01-01T00:00:00Z",
+	}}
+	attestations := [
+		{
+			"_type": good_type,
+			"predicate": {"buildType": "tekton.dev/v1beta1/TaskRun"},
+		},
+		{
+			"_type": good_type,
+			"predicate": {"buildType": "spam/spam/eggs/spam"},
+		},
+	]
+	lib.assert_equal(deny, expected) with input.attestations as attestations
+}

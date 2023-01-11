@@ -26,3 +26,16 @@ deny contains result if {
 	not att_type in lib.rule_data("known_attestation_types")
 	result := lib.result_helper(rego.metadata.chain(), [att_type])
 }
+
+# METADATA
+# title: Missing pipelinerun attestation
+# description: >
+#   At least one PipelineRun attestation must be present.
+# custom:
+#   short_name: missing_pipelinerun_attestation
+#   failure_msg: Missing pipelinerun attestation
+#
+deny contains result if {
+	count(lib.pipelinerun_attestations) == 0
+	result := lib.result_helper(rego.metadata.chain(), [])
+}

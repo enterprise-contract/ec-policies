@@ -133,6 +133,16 @@ test_skipped_is_warning {
 		with input.attestations as skipped_test
 }
 
+test_warning_is_warning {
+	warning_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "WARNING"}, "warning_1", bundles.acceptable_bundle_ref)]
+	lib.assert_equal(warn, {{
+		"code": "test.test_result_warning",
+		"msg": "The following tests returned a warning: warning_1",
+		"effective_on": "2022-01-01T00:00:00Z",
+	}}) with data["task-bundles"] as bundles.bundle_data
+		with input.attestations as warning_test
+}
+
 test_mixed_statuses {
 	test_results := [
 		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "ERROR"}, "error_1", bundles.acceptable_bundle_ref),
@@ -141,7 +151,9 @@ test_mixed_statuses {
 		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SKIPPED"}, "skipped_1", bundles.acceptable_bundle_ref),
 		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "FAILURE"}, "failure_2", bundles.acceptable_bundle_ref),
 		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SKIPPED"}, "skipped_2", bundles.acceptable_bundle_ref),
+		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "WARNING"}, "warning_1", bundles.acceptable_bundle_ref),
 		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "ERROR"}, "error_2", bundles.acceptable_bundle_ref),
+		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "WARNING"}, "warning_2", bundles.acceptable_bundle_ref),
 	]
 
 	lib.assert_equal(deny, {{
@@ -154,6 +166,10 @@ test_mixed_statuses {
 	lib.assert_equal(warn, {{
 		"code": "test.test_result_skipped",
 		"msg": "The following tests were skipped: skipped_1, skipped_2",
+		"effective_on": "2022-01-01T00:00:00Z",
+	}}, {{
+		"code": "test.test_result_warning",
+		"msg": "The following tests returned a warning: warning_1, warning_2",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as test_results

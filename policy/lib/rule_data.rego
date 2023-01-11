@@ -22,6 +22,12 @@ rule_data_defaults := {
 		"SKIPPED",
 		"WARNING",
 	],
+	"failed_tests_results": [
+		"FAILURE",
+		"ERROR",
+	],
+	"skipped_tests_results": ["SKIPPED"],
+	"warned_tests_results": ["WARNING"],
 }
 
 # Returns the "first found" of the following:

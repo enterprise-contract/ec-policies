@@ -84,7 +84,7 @@ deny[result] {
 #   failure_msg: "The following tests did not complete successfully: %s"
 #
 deny[result] {
-	all_failed = resulted_in({"FAILURE", "ERROR"})
+	all_failed = resulted_in(lib.rule_data("failed_tests_results"))
 
 	# Failed tests are those contained within all_failed that are not
 	# listed in the exclude list
@@ -109,7 +109,7 @@ deny[result] {
 #   failure_msg: "The following tests were skipped: %s"
 #
 warn[result] {
-	all_skipped = resulted_in({"SKIPPED"})
+	all_skipped = resulted_in(lib.rule_data("skipped_tests_results"))
 
 	# Don't report if there aren't any
 	count(all_skipped) > 0
@@ -130,7 +130,7 @@ warn[result] {
 #   failure_msg: "The following tests returned a warning: %s"
 #
 warn[result] {
-	all_warned = resulted_in({"WARNING"})
+	all_warned = resulted_in(lib.rule_data("warned_tests_results"))
 
 	# Don't report if there aren't any
 	count(all_warned) > 0

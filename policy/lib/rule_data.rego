@@ -1,7 +1,7 @@
 package lib
 
-# Will define built-in default values here.
-# They can be overridden if required.
+# Values in data.rule_data_custom or data.rule_data
+# will take precedence over these defaults.
 #
 rule_data_defaults := {
 	#

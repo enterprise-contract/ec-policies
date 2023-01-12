@@ -1,12 +1,15 @@
 ---
+
 rule_data:
   allowed_registry_prefixes:
   - registry.access.redhat.com/
   - registry.redhat.io/
+
   allowed_step_image_registry_prefixes:
   - quay.io/redhat-appstudio/
   - registry.access.redhat.com/
   - registry.redhat.io/
+
   allowed_java_component_sources:
   - redhat
   - rebuilt

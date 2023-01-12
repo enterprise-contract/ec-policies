@@ -22,25 +22,20 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-BUNDLE_TAG="git-$(git rev-parse --short HEAD)"
+GIT_REPO_NAME=infra-deployments
+GIT_ORIGIN=hacbs-contract/${GIT_REPO_NAME}
+GIT_UPSTREAM=redhat-appstudio/${GIT_REPO_NAME}
 
-RELEASE_BUNDLE_DIGEST="$(skopeo manifest-digest <(skopeo inspect --raw "docker://quay.io/hacbs-contract/ec-release-policy:${BUNDLE_TAG}"))"
-RELEASE_BUNDLE_REF="quay.io/hacbs-contract/ec-release-policy:${BUNDLE_TAG}@${RELEASE_BUNDLE_DIGEST}"
-
-DATA_BUNDLE_DIGEST="$(skopeo manifest-digest <(skopeo inspect --raw "docker://quay.io/hacbs-contract/ec-policy-data:${BUNDLE_TAG}"))"
-DATA_BUNDLE_REF="quay.io/hacbs-contract/ec-policy-data:${BUNDLE_TAG}@${DATA_BUNDLE_DIGEST}"
-
-GIT_REF="$(git rev-parse HEAD)"
-
-# setup
+# Clone repo to a temp dir
 WORKDIR=$(mktemp -d)
 trap 'rm -rf "${WORKDIR}"' EXIT
 cd "${WORKDIR}" || exit 1
-
-gh repo clone hacbs-contract/infra-deployments
+gh repo clone "$GIT_ORIGIN"
 cd infra-deployments || exit 1
+
+# Setup key for access in the GH workflow
 if [ -n "${GITHUB_ACTIONS:-}" ]; then
-  git remote set-url origin git@github.com:hacbs-contract/infra-deployments.git
+  git remote set-url origin git@github.com:${GIT_ORIGIN}.git
   git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
   git config --global user.name "${GITHUB_ACTOR}"
   mkdir -p "${HOME}/.ssh"
@@ -49,21 +44,31 @@ if [ -n "${GITHUB_ACTIONS:-}" ]; then
   trap 'rm -rf "${WORKDIR}" "${HOME}/.ssh/id_rsa"' EXIT
   export GITHUB_USER="$GITHUB_ACTOR"
 fi
-git checkout -b ec-policy-update --track upstream/main
 
-POLICY_SOURCE_URL=oci::https://${RELEASE_BUNDLE_REF}
-DATA_SOURCE_URL=oci::https://${DATA_BUNDLE_REF}
-# These would work too but we prefer the oci conftest bundle sources over direct github urls
-#POLICY_SOURCE_URL=git::https://github.com/hacbs-contract/ec-policies.git//policy?ref=${GIT_REF}
-#DATA_SOURCE_URL=git::https://github.com/hacbs-contract/ec-policies.git//data?ref=${GIT_REF}
+# Create the branch
+BRANCH_NAME=ec-policy-bundle-update
+git checkout -b ${BRANCH_NAME} --track upstream/main
 
-# replacements
-yq e -i '.configMapGenerator[] |= select(.name == "ec-defaults").literals[] |= select(. == "ec_policy_source=*") = "ec_policy_source='"${POLICY_SOURCE_URL}"'"' components/enterprise-contract/kustomization.yaml
-yq e -i '.configMapGenerator[] |= select(.name == "ec-defaults").literals[] |= select(. == "ec_data_source=*"  ) = "ec_data_source='"${DATA_SOURCE_URL}"'"'     components/enterprise-contract/kustomization.yaml
+# Loop over params in pairs
+while [ $# -gt 0 ]; do
+  CM_KEY=$1
+  NEW_BUNDLE=$2
+  shift
+  shift
+
+  # Find the digest
+  NEW_DIGEST="$(skopeo manifest-digest <(skopeo inspect --raw "docker://${NEW_BUNDLE}"))"
+  SOURCE_URL="oci::https://${NEW_BUNDLE}@${NEW_DIGEST}"
+
+  # Update the yaml file with the new source url
+  yq e -i \
+    '.configMapGenerator[] |= select(.name == "ec-defaults").literals[] |= select(. == "'${CM_KEY}'=*") = "ec_policy_source='${SOURCE_URL}'"' \
+    components/enterprise-contract/kustomization.yaml
+done
 
 # commit & push
 git commit -a -m "enterprise contract policy update"
-git push --force -u origin ec-policy-update
+git push --force -u origin ${BRANCH_NAME}
 
 # create pull request, don't fail if it already exists
-gh pr create --fill --no-maintainer-edit --repo redhat-appstudio/infra-deployments || true
+gh pr create --fill --no-maintainer-edit --repo ${GIT_UPSTREAM} || true

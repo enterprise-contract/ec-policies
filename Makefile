@@ -6,7 +6,16 @@ CONFIG_DATA_FILE=$(DATA_DIR)/config.json
 POLICY_DIR=./policy
 
 TEST_FILES = $(DATA_DIR)/rule_data.yml $(POLICY_DIR) checks
-COVERAGE = @opa test $(TEST_FILES) --threshold 100 2>&1 | sed -e '/^Code coverage/!d' -e 's/^/ERROR: /'; exit $${PIPESTATUS[0]}
+define COVERAGE
+@opa test --coverage --format json $(TEST_FILES) | { \
+	T=$$(mktemp); tee "$${T}"; opa eval --format pretty \
+	--input "$${T}" \
+	--data hack/simplecov.rego \
+	data.simplecov.from_opa > coverage.json; \
+	rm -f "$${T}" || true ;\
+} \
+| jq -j -r 'if .coverage < 100 then "ERROR: Code coverage threshold not met: got \(.coverage) instead of 100.00\n" | halt_error(1) else "" end'
+endef
 
 ##@ General
 
@@ -54,10 +63,6 @@ test: soft-install-tools ## Run all tests in verbose mode and check coverage
 # The cat does nothing but avoids a non-zero exit code from grep -v
 coverage: soft-install-tools ## Show which lines of rego are not covered by tests
 	@opa test $(TEST_FILES) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
-
-.PHONY: coverage-report ## Generates coverage.json in SimpleCov format
-coverage-report: ## Show which lines of rego are not covered by tests
-	@opa test $(TEST_FILES) --coverage --format json | opa eval --format pretty --stdin-input --data hack/simplecov.rego data.simplecov.from_opa > coverage.json
 
 .PHONY: quiet-test
 quiet-test: soft-install-tools ## Run all tests in quiet mode and check coverage
@@ -150,7 +155,7 @@ fmt-check: soft-install-tools ## Check formatting of Rego files
 	@opa fmt . --list --fail >/dev/null 2>&1
 
 .PHONY: ci
-ci: coverage-report quiet-test opa-check conventions-check fmt-check ## Runs all checks and tests
+ci: quiet-test opa-check conventions-check fmt-check ## Runs all checks and tests
 
 #--------------------------------------------------------------------
 

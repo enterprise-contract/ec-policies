@@ -62,7 +62,7 @@ while [ $# -gt 0 ]; do
 
   # Update the yaml file with the new source url
   yq e -i \
-    '.configMapGenerator[] |= select(.name == "ec-defaults").literals[] |= select(. == "'${CM_KEY}'=*") = "ec_policy_source='${SOURCE_URL}'"' \
+    '.configMapGenerator[] |= select(.name == "ec-defaults").literals[] |= select(. == "'"${CM_KEY}"'=*") = "'"${CM_KEY}"'"='"${SOURCE_URL}"'"' \
     components/enterprise-contract/kustomization.yaml
 done
 

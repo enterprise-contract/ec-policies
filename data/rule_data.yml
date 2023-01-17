@@ -13,3 +13,5 @@ rule_data:
   allowed_java_component_sources:
   - redhat
   - rebuilt
+
+# 1

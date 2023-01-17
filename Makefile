@@ -177,16 +177,8 @@ dummy-config: ## Create an empty configuration
 # Set IMAGE as required like this:
 #   make fetch-att IMAGE=<someimage>
 #
-# The format and file path is intended to match what is used in the
-# verify-attestation-with-policy script in the build-definitions repo
-# so you can test your rules as they would be applied by the
-# verify-enterprise-contract task.
-#
 ifndef IMAGE
-  # Default value for convenience/laziness. You're encouraged to specify your own IMAGE.
-  # (The default has no special significance other than it's known to have an attestation.)
-  # TODO: Find a more stable and newer default image
-  IMAGE="quay.io/lucarval/single-nodejs-app:2857d44"
+  IMAGE="quay.io/redhat-appstudio/ec-golden-image:latest"
 endif
 
 .PHONY: fetch-att

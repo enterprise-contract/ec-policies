@@ -209,8 +209,6 @@ INPUT_FILE=$(INPUT_DIR)/input.json
 RELEASE_NAMESPACE=release.main
 PIPELINE_NAMESPACE=pipeline.main
 
-OPA_FORMAT=pretty
-
 .PHONY: check-release
 check-release: soft-install-tools ## Run policy evaluation for release
 	@conftest test $(INPUT_FILE) \
@@ -231,26 +229,6 @@ check-pipeline: soft-install-tools ## Run policy evaluation for pipeline definit
 
 .PHONY: check
 check: check-release
-
-#--------------------------------------------------------------------
-
-.PHONY: check-release-opa
-check-release-opa: soft-install-tools ## Run policy evaluation for release using opa. Deprecated.
-	@opa eval \
-	  --input $(INPUT_FILE) \
-	  --data $(DATA_DIR) \
-	  --data $(POLICY_DIR) \
-	  --format $(OPA_FORMAT) \
-	  data.$(RELEASE_NAMESPACE).deny
-
-.PHONY: check-pipeline-opa
-check-pipeline-opa: soft-install-tools ## Run policy evaluation for pipeline using opa. Deprecated.
-	@opa eval \
-	  --input $(INPUT_FILE) \
-	  --data $(DATA_DIR) \
-	  --data $(POLICY_DIR) \
-	  --format $(OPA_FORMAT) \
-	  data.$(PIPELINE_NAMESPACE).deny
 
 #--------------------------------------------------------------------
 

@@ -65,7 +65,7 @@ warn contains result if {
 #   Check if the Tekton Bundle used for the Tasks in the Pipeline definition
 #   is the most recent acceptable one. See the list of acceptable
 #   task bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at
-#   link:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
+#   xref:attachment$acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
 #   in this git repository. The meaning of an acceptable bundle is explained in
 #   xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles]
 # custom:
@@ -83,7 +83,7 @@ warn contains result if {
 #   Check if the Tekton Bundle used for the Tasks in the Pipeline definition
 #   are acceptable given the tracked effective_on date. See the list of acceptable
 #   task bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at
-#   link:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
+#   xref:attachment$acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
 #   in this git repository. The meaning of an acceptable bundle is explained in
 #   xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles]
 # custom:

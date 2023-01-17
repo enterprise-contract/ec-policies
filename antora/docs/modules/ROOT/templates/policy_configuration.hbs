@@ -232,7 +232,7 @@ registries is a data value. This type of data is called Rule Data.
 
 In addition to policy rules, the ec-policies git repository also defines values
 for Rule Data, see
-link:https://github.com/hacbs-contract/ec-policies/blob/main/data/rule_data.yml[data/rule_data.yml]
+xref:attachment$rule_data.yml[rule_data.yml]
 . As a user, you can provide a custom data source with modified Rule Data
 allowing the same policy rules to be used to best fit your use cases.
 
@@ -280,9 +280,7 @@ NOTE: If the data source contains policy rules, those will be ignored.
 
 NOTE: If you replace the default data source entirely, you must provide the full set of required data values.
 These are all the values defined in
-link:https://github.com/hacbs-contract/ec-policies/blob/main/data/rule_data.yml[data/rule_data.yml]
-and
-link:https://github.com/hacbs-contract/ec-policies/blob/main/data/acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
+xref:attachment$rule_data.yml[data/rule_data.yml] and xref:attachment$acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml].
 
 NOTE: It's also possible to add an additional data source containing rule data
 defined under the `rule_data_custom` top level key. Data under this key will

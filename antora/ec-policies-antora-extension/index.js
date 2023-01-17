@@ -240,7 +240,7 @@ module.exports.register = function() {
     //
     const yaml = this.require('js-yaml')
 
-    const bundlesFile = helpers.firstFileMatching(content, /^acceptable_tekton_bundles.yml$/)
+    const bundlesFile = helpers.firstFileMatching(content, /\/acceptable_tekton_bundles.yml$/)
     if (!bundlesFile) throw `Unable to find acceptable bundles file: (${__filename})`
     const rawBundlesData = yaml.load(bundlesFile._contents.toString())
     const acceptableBundles = helpers.processBundlesData(rawBundlesData)

@@ -50,5 +50,6 @@ jobs:
           echo "${header}.${payload}.${signature}"
         }
 
+        ENSURE_UNIQUE=1 \
         GITHUB_TOKEN=$(curl -s -X POST -H "Authorization: Bearer $(createJWT)" -H "Accept: application/vnd.github+json" "https://api.github.com/app/installations/${APP_INSTALL_ID}/access_tokens" | jq -r .token) \
         hack/update-bundles.sh

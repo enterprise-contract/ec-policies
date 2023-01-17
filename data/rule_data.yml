@@ -1,5 +1,4 @@
 ---
-
 rule_data:
   allowed_registry_prefixes:
   - registry.access.redhat.com/
@@ -13,5 +12,3 @@ rule_data:
   allowed_java_component_sources:
   - redhat
   - rebuilt
-
-# 2

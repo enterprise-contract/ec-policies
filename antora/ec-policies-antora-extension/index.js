@@ -1,6 +1,5 @@
 'use strict'
 
-const glob = require("glob")
 const opa = require("@zregvart/opa-inspect")
 //const opa = require("../../../opa-inspect-js/index.js")
 

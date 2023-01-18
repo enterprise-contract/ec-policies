@@ -192,12 +192,12 @@ fetch-att: clean-input ## Fetches attestation data for IMAGE, use `make fetch-at
 # Specify PIPELINE as an environment var to use something other than the default.
 #
 ifndef PIPELINE
-  PIPELINE=s2i-nodejs -n openshift
+  PIPELINE=quay.io/redhat-appstudio-tekton-catalog/pipeline-docker-build:devel
 endif
 
 .PHONY: fetch-pipeline
 fetch-pipeline: clean-input ## Fetches pipeline data for PIPELINE from your local cluster, use `make fetch-pipeline PIPELINE=<name>`
-	oc get pipeline $(PIPELINE) -o json > $(INPUT_FILE)
+	tkn bundle list $(PIPELINE) -o json > $(INPUT_FILE)
 
 #--------------------------------------------------------------------
 
@@ -206,15 +206,10 @@ fetch-pipeline: clean-input ## Fetches pipeline data for PIPELINE from your loca
 INPUT_DIR=./input
 INPUT_FILE=$(INPUT_DIR)/input.json
 
-RELEASE_NAMESPACE=release.main
-PIPELINE_NAMESPACE=pipeline.main
-
-OPA_FORMAT=pretty
-
 .PHONY: check-release
 check-release: soft-install-tools ## Run policy evaluation for release
 	@conftest test $(INPUT_FILE) \
-	  --namespace $(RELEASE_NAMESPACE) \
+	  --all-namespaces \
 	  --policy $(POLICY_DIR) \
 	  --data $(DATA_DIR) \
 	  --no-fail \
@@ -223,7 +218,7 @@ check-release: soft-install-tools ## Run policy evaluation for release
 .PHONY: check-pipeline
 check-pipeline: soft-install-tools ## Run policy evaluation for pipeline definition
 	@conftest test $(INPUT_FILE) \
-	  --namespace $(PIPELINE_NAMESPACE) \
+	  --all-namespaces \
 	  --policy $(POLICY_DIR) \
 	  --data $(DATA_DIR) \
 	  --no-fail \
@@ -231,26 +226,6 @@ check-pipeline: soft-install-tools ## Run policy evaluation for pipeline definit
 
 .PHONY: check
 check: check-release
-
-#--------------------------------------------------------------------
-
-.PHONY: check-release-opa
-check-release-opa: soft-install-tools ## Run policy evaluation for release using opa. Deprecated.
-	@opa eval \
-	  --input $(INPUT_FILE) \
-	  --data $(DATA_DIR) \
-	  --data $(POLICY_DIR) \
-	  --format $(OPA_FORMAT) \
-	  data.$(RELEASE_NAMESPACE).deny
-
-.PHONY: check-pipeline-opa
-check-pipeline-opa: soft-install-tools ## Run policy evaluation for pipeline using opa. Deprecated.
-	@opa eval \
-	  --input $(INPUT_FILE) \
-	  --data $(DATA_DIR) \
-	  --data $(POLICY_DIR) \
-	  --format $(OPA_FORMAT) \
-	  data.$(PIPELINE_NAMESPACE).deny
 
 #--------------------------------------------------------------------
 

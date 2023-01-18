@@ -39,5 +39,5 @@ attestations for the image being validated. For example:
 ```
 cosign download attestation quay.io/redhat-appstudio/ec-golden-image:latest | jq --slurp '{"attestations":[.[].payload|@base64d|fromjson]}' > input.json
 conftest pull -p . quay.io/hacbs-contract/ec-release-policy quay.io/hacbs-contract/ec-policy-data
-conftest test input.json -d data -p policy -n release.main -o json | yq -P
+conftest test input.json -d data -p policy --all-namespaces -o json | yq -P
 ```

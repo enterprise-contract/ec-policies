@@ -27,6 +27,14 @@ QUAY_API_URL=https://quay.io/api/v1/repository/$REPO_ORG
 ROOT_DIR=$( git rev-parse --show-toplevel )
 BUNDLES="release pipeline data"
 
+# For example:
+#   ENSURE_UNIQUE=1 DRY_RUN=1 hack/update-bundles.sh
+#
+ENSURE_UNIQUE=${ENSURE_UNIQUE:-""}
+DRY_RUN=${DRY_RUN:-""}
+DRY_RUN_ECHO=""
+[ "$DRY_RUN" == "1" ] && DRY_RUN_ECHO="echo #"
+
 # The data bundle is a little different to the other two.
 # Encapsulate the differences these little functions.
 #
@@ -48,14 +56,22 @@ function repo_name() {
 
 function conftest_push() {
   if [ $1 == "data" ]; then
-    conftest push --policy '' --data data $2
+    $DRY_RUN_ECHO conftest push --policy '' --data data $2
   else
-    conftest push --policy policy $2
+    $DRY_RUN_ECHO conftest push --policy policy $2
   fi
 }
 
 function cm_key_name() {
   [ $1 == "data" ] && echo "ec_data_source" || echo "ec_policy_source"
+}
+
+function ensure_unique_file() {
+  if [ $1 == "data" ]; then
+    echo "data/rule_data.yml"
+  else
+    echo "policy/lib/rule_data.rego"
+  fi
 }
 
 pr_params=""
@@ -70,7 +86,7 @@ for b in $BUNDLES; do
   found_count=$(curl -s $QUAY_API_URL/$repo/tag/?specificTag=$tag | jq '.tags | length')
   push_repo=quay.io/$REPO_ORG/$repo
 
-  if [ $found_count == "1" ]; then
+  if [ "$found_count" == "1" -a "$ENSURE_UNIQUE" == "1" ]; then
     # No push needed
     echo "Policy bundle $push_repo:$tag exists already, no push needed"
 
@@ -93,6 +109,14 @@ for b in $BUNDLES; do
       find $content_dir -name $f -delete
     done
 
+    if [ "$ENSURE_UNIQUE" == "1" ]; then
+      # Ensure the bundle has a brand new unique digest
+      unique_timestamp=$(date +%s%N)
+      timestamp_file=$(ensure_unique_file $b)
+      echo Adding timestamp ${unique_timestamp} to ${timestamp_file}
+      echo -e "\n# ${unique_timestamp}" >> $tmp_dir/$timestamp_file
+    fi
+
     # Show the content
     cd $tmp_dir || exit 1
     find . -type f
@@ -101,7 +125,7 @@ for b in $BUNDLES; do
     conftest_push $b "$push_repo:$tag"
 
     # Set the 'latest' tag
-    skopeo copy --quiet docker://$push_repo:$tag docker://$push_repo:latest
+    $DRY_RUN_ECHO skopeo copy --quiet docker://$push_repo:$tag docker://$push_repo:latest
 
     # Record some details that we can pass to pr-infra-deployments.sh later
     [ $b != "pipeline" ] && pr_params="$pr_params $(cm_key_name $b) $push_repo:$tag"
@@ -116,6 +140,6 @@ if [ -n "$pr_params" ]; then
   # If we have a token, try to make a pr for infra-deployments
   if [ -n "$GITHUB_TOKEN" ]; then
     echo Creating PRs with params: $pr_params
-    hack/pr-infra-deployments.sh $pr_params
+    $DRY_RUN_ECHO hack/pr-infra-deployments.sh $pr_params
   fi
 fi

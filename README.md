@@ -157,7 +157,7 @@ See also
 [entr]: https://github.com/eradman/entr
 [testing]: https://www.openpolicyagent.org/docs/latest/policy-testing/
 [docs]: https://hacbs-contract.github.io/
-[hacbsdocs]: https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation/ec-policies/index.html
+[hacbsdocs]: https://red-hat-stone-soup.pages.redhat.com/stonesoup-documentation/ec-policies/index.html
 [taskdef]: https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml
 [contract]: https://github.com/hacbs-contract
 [appstudio]: https://github.com/redhat-appstudio

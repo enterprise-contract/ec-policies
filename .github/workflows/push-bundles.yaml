@@ -9,6 +9,8 @@ on:
     - policy/**
     - data/**
 
+  workflow_dispatch:
+
 jobs:
   push-policy-bundles:
     runs-on: ubuntu-latest

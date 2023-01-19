@@ -68,7 +68,8 @@ function cm_key_name() {
 
 function ensure_unique_file() {
   if [ $1 == "data" ]; then
-    echo "data/rule_data.yml"
+    # It really is data/data here...
+    echo "data/data/rule_data.yml"
   else
     echo "policy/lib/rule_data.rego"
   fi

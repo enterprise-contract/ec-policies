@@ -184,6 +184,11 @@ test_task_data_no_bundle_Ref if {
 	lib.assert_equal({"name": "name"}, task_data({"name": "name"}))
 }
 
+test_missing_required_tasks_data if {
+	lib.assert_equal(missing_required_tasks_data, true) with data["required-tasks"] as []
+	lib.assert_equal(missing_required_tasks_data, false) with data["required-tasks"] as _time_based_required_tasks
+}
+
 _expected_latest := {
 	"effective_on": "2099-01-02T00:00:00Z",
 	"tasks": [

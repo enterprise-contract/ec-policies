@@ -136,3 +136,8 @@ test_acceptable_bundle_is_acceptable {
 test_unacceptable_bundle_is_unacceptable {
 	not is_acceptable("registry.img/unacceptable@sha256:digest") with data["task-bundles"] as bundle_data
 }
+
+test_missing_required_data {
+	lib.assert_equal(missing_task_bundles_data, false) with data["task-bundles"] as task_bundles
+	lib.assert_equal(missing_task_bundles_data, true) with data["task-bundles"] as []
+}

@@ -36,6 +36,19 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [concat(",", foreign), concat(",", allowed)])
 }
 
+# METADATA
+# title: Missing rule data
+# description: |-
+#   The policy rules in this package require the allowed_java_component_sources
+#   rule data to be provided.
+# custom:
+#   short_name: missing_rule_data
+#   failure_msg: Missing required allowed_java_component_sources rule data
+deny contains result if {
+	count(lib.rule_data("allowed_java_component_sources")) == 0
+	result := lib.result_helper(rego.metadata.chain(), [])
+}
+
 _java_component_sources contains name if {
 	some result in lib.results_named(lib.java_sbom_component_count_result_name)
 	bundle := result.bundle

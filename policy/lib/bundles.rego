@@ -60,6 +60,11 @@ unacceptable_task_bundle(tasks) = matches {
 	}
 }
 
+# Returns if the required task-bundles data is missing
+missing_task_bundles_data {
+	count(data["task-bundles"]) == 0
+} else := false
+
 # Returns true if the provided bundle reference is acceptable
 is_acceptable(bundle_ref) {
 	ref := image.parse(bundle_ref)

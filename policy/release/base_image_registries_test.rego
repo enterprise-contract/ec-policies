@@ -72,3 +72,12 @@ test_unacceptable_bundle {
 	lib.assert_equal(deny, expected) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as attestations
 }
+
+test_missing_rule_data {
+	expected := {{
+		"code": "base_image_registries.missing_rule_data",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "Missing required allowed_registry_prefixes rule data",
+	}}
+	lib.assert_equal(expected, deny) with data.rule_data as {}
+}

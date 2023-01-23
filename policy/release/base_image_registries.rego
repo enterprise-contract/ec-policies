@@ -50,6 +50,19 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
+# METADATA
+# title: Missing rule data
+# description: |-
+#   The policy rules in this package require the allowed_registry_prefixes
+#   rule data to be provided.
+# custom:
+#   short_name: missing_rule_data
+#   failure_msg: Missing required allowed_registry_prefixes rule data
+deny contains result if {
+	count(lib.rule_data("allowed_registry_prefixes")) == 0
+	result := lib.result_helper(rego.metadata.chain(), [])
+}
+
 _image_ref_permitted(image_ref, allowed_prefixes) if {
 	startswith(image_ref, allowed_prefixes[_])
 }

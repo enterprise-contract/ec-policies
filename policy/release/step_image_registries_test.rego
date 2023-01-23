@@ -25,3 +25,12 @@ test_attestation_type_invalid {
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_data(bad_image)
 }
+
+test_missing_rule_data {
+	expected := {{
+		"code": "step_image_registries.missing_rule_data",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "Missing required allowed_step_image_registry_prefixes rule data",
+	}}
+	lib.assert_equal(expected, deny) with data.rule_data as {}
+}

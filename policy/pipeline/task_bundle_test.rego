@@ -10,7 +10,7 @@ test_bundle_not_exists {
 		"code": "task_bundle.disallowed_task_reference",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with input.spec.tasks as tasks
+	}}) with input.spec.tasks as tasks with data["task-bundles"] as task_bundles
 
 	lib.assert_empty(warn) with input.spec.tasks as tasks
 }
@@ -23,7 +23,7 @@ test_bundle_not_exists_empty_string {
 		"code": "task_bundle.empty_task_bundle_reference",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with input.spec.tasks as tasks
+	}}) with input.spec.tasks as tasks with data["task-bundles"] as task_bundles
 
 	lib.assert_empty(warn) with input.spec.tasks as tasks
 }
@@ -34,7 +34,6 @@ test_bundle_unpinned {
 		"taskRef": {"bundle": "reg.com/repo:latest"},
 	}]
 
-	lib.assert_empty(deny) with input.spec.tasks as tasks
 	lib.assert_equal(warn, {{
 		"code": "task_bundle.unpinned_task_bundle",
 		"msg": "Pipeline task 'my-task' uses an unpinned task bundle reference 'reg.com/repo:latest'",
@@ -48,8 +47,8 @@ test_bundle_reference_valid {
 		"taskRef": {"bundle": "quay.io/redhat-appstudio/hacbs-templates-bundle:latest@sha256:abc"},
 	}]
 
-	lib.assert_empty(deny) with input.spec.tasks as tasks
-	lib.assert_empty(warn) with input.spec.tasks as tasks
+	lib.assert_empty(deny) with input.spec.tasks as tasks with data["task-bundles"] as task_bundles
+	lib.assert_empty(warn) with input.spec.tasks as tasks with data["task-bundles"] as task_bundles
 }
 
 # All good when the most recent bundle is used.
@@ -101,6 +100,15 @@ test_acceptable_bundle_expired {
 		"msg": "Pipeline task 'my-task' uses an unacceptable task bundle 'reg.com/repo@sha256:def'",
 	}}) with input.spec.tasks as tasks
 		with data["task-bundles"] as task_bundles
+}
+
+test_missing_required_data {
+	expected := {{
+		"code": "task_bundle.missing_required_data",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "Missing required task-bundles data",
+	}}
+	lib.assert_equal(expected, deny) with data["task-bundles"] as []
 }
 
 task_bundles = {"reg.com/repo": [

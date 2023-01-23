@@ -91,3 +91,15 @@ deny[result] {
 	task := bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)[_]
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
 }
+
+# METADATA
+# title: Missing required data
+# description: |-
+#   The policy rules in this package require the task-bundles data to be provided.
+# custom:
+#   short_name: missing_required_data
+#   failure_msg: Missing required task-bundles data
+deny[result] {
+	bundles.missing_task_bundles_data
+	result := lib.result_helper(rego.metadata.chain(), [])
+}

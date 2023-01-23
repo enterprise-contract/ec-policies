@@ -20,3 +20,12 @@ test_unacceptable_bundle {
 	lib.assert_empty(deny) with data["task-bundles"] as bundles.bundle_data
 		with input.attestations as attestations
 }
+
+test_missing_rule_data {
+	expected := {{
+		"code": "java.missing_rule_data",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "Missing required allowed_java_component_sources rule data",
+	}}
+	lib.assert_equal(expected, deny) with data.rule_data as {}
+}

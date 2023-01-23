@@ -2,6 +2,8 @@ package lib.time
 
 import future.keywords.in
 
+import data.lib.arrays
+
 # A default value in the past. Could be whatever but beware you'll have to
 # update a bunch of tests if you change it.
 #
@@ -70,3 +72,11 @@ future_items(items) = some_items {
 acceptable_items(items) = some_items {
 	some_items := array.concat(future_items(items), [most_current(items)])
 } else = future_items(items)
+
+# newest returns the newest item by `effective_on`. Assumes same date format and
+# time-zone for `effective_on` field.
+newest(items) = item {
+	ordered := arrays.sort_by("effective_on", items)
+
+	item := ordered[count(ordered) - 1]
+}

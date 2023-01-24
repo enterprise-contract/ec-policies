@@ -63,6 +63,18 @@ warn contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [required_task])
 }
 
+# METADATA
+# title: Missing required tasks data
+# description: |-
+#   The policy rules in this package require the required-tasks data to be provided.
+# custom:
+#   short_name: missing_required_data
+#   failure_msg: Missing required task-bundles data
+deny contains result if {
+	tkn.missing_required_tasks_data
+	result := lib.result_helper(rego.metadata.chain(), [])
+}
+
 # _missing_tasks returns a set of task names that are in the given
 # required_tasks, but not in the PipelineRun attestation.
 _missing_tasks(required_tasks) := tasks if {

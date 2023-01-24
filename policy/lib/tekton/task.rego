@@ -8,6 +8,10 @@ import data.lib.bundles
 import data.lib.refs
 import data.lib.time
 
+missing_required_tasks_data if {
+	count(data["required-tasks"]) == 0
+} else := false
+
 # The latest set of required tasks. Tasks here are not required right now
 # but will be required in the future.
 latest_required_tasks contains task if {

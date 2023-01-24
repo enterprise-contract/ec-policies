@@ -21,7 +21,7 @@ test_bundle_not_exists {
 		"code": "attestation_task_bundle.disallowed_task_reference",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with input.attestations as d
+	}}) with input.attestations as d with data["task-bundles"] as task_bundles
 
 	lib.assert_empty(warn) with input.attestations as d
 }
@@ -39,7 +39,7 @@ test_bundle_not_exists_empty_string {
 		"code": "attestation_task_bundle.empty_task_bundle_reference",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with input.attestations as d
+	}}) with input.attestations as d with data["task-bundles"] as task_bundles
 
 	lib.assert_empty(warn) with input.attestations as d
 }
@@ -55,7 +55,6 @@ test_bundle_unpinned {
 		},
 	})
 
-	lib.assert_empty(deny) with input.attestations as d
 	expected_msg := sprintf("Pipeline task '%s' uses an unpinned task bundle reference '%s'", [name, image])
 	lib.assert_equal(warn, {{
 		"code": "attestation_task_bundle.unpinned_task_bundle",
@@ -76,7 +75,7 @@ test_bundle_reference_valid {
 	})
 
 	lib.assert_empty(warn) with input.attestations as d
-	lib.assert_empty(deny) with input.attestations as d
+	lib.assert_empty(deny) with input.attestations as d with data["task-bundles"] as task_bundles
 }
 
 # All good when the most recent bundle is used.
@@ -124,6 +123,15 @@ test_acceptable_bundle_expired {
 		"msg": "Pipeline task 'task-run-0' uses an unacceptable task bundle 'reg.com/repo@sha256:def'",
 	}}) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
+}
+
+test_missing_required_data {
+	expected := {{
+		"code": "attestation_task_bundle.missing_required_data",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "Missing required task-bundles data",
+	}}
+	lib.assert_equal(expected, deny) with data["task-bundles"] as []
 }
 
 mock_attestation(bundles) = a {

@@ -1,4 +1,6 @@
 ---
+# IMPORTANT: Policy rule packages that utilize data from this document should have an explicit
+# policy rule which defines the expected behavior when the data is not provided.
 rule_data:
   allowed_registry_prefixes:
   - registry.access.redhat.com/

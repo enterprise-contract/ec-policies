@@ -143,6 +143,15 @@ test_parameterized if {
 		with data["task-bundles"] as bundles.bundle_data
 }
 
+test_missing_required_tasks_data if {
+	expected := {{
+		"code": "required_tasks.missing_required_data",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "Missing required task-bundles data",
+	}}
+	lib.assert_equal(expected, deny) with data["required-tasks"] as []
+}
+
 _pipeline_with_tasks(names, finally_names, add_tasks) = pipeline if {
 	tasks := array.concat([t | t := _task(names[_])], add_tasks)
 	finally_tasks := [t | t := _task(finally_names[_])]

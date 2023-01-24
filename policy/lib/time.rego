@@ -52,7 +52,7 @@ most_current(items) = item {
 		not time.parse_rfc3339_ns(i.effective_on) > effective_current_time_ns
 	]
 
-	item := current[0]
+	item := newest(current)
 }
 
 # future_items returns a filtered list of the given items where each item has

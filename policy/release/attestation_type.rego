@@ -19,6 +19,8 @@ import data.lib
 # custom:
 #   short_name: unknown_att_type
 #   failure_msg: Unknown attestation type '%s'
+#   collections:
+#   - minimal
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations
@@ -34,6 +36,8 @@ deny contains result if {
 # custom:
 #   short_name: missing_pipelinerun_attestation
 #   failure_msg: Missing pipelinerun attestation
+#   collections:
+#   - minimal
 #
 deny contains result if {
 	count(lib.pipelinerun_attestations) == 0

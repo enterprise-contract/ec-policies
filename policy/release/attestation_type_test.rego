@@ -18,6 +18,7 @@ test_deny_when_not_permitted {
 	expected_msg := sprintf("Unknown attestation type '%s'", [bad_type])
 	lib.assert_equal(deny, {{
 		"code": "attestation_type.unknown_att_type",
+		"collections": ["minimal"],
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_data(bad_type)
@@ -26,6 +27,7 @@ test_deny_when_not_permitted {
 test_deny_when_missing_pipelinerun_attestations {
 	expected := {{
 		"code": "attestation_type.missing_pipelinerun_attestation",
+		"collections": ["minimal"],
 		"msg": "Missing pipelinerun attestation",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}

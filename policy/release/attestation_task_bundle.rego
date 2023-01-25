@@ -23,6 +23,8 @@ import data.lib.bundles
 # custom:
 #   short_name: disallowed_task_reference
 #   failure_msg: Pipeline task '%s' does not contain a bundle reference
+#   collections:
+#   - minimal
 #
 deny[result] {
 	name := bundles.disallowed_task_reference(lib.tasks_from_pipelinerun)[_].name
@@ -36,6 +38,8 @@ deny[result] {
 # custom:
 #   short_name: empty_task_bundle_reference
 #   failure_msg: Pipeline task '%s' uses an empty bundle image reference
+#   collections:
+#   - minimal
 #
 deny[result] {
 	name := bundles.empty_task_bundle_reference(lib.tasks_from_pipelinerun)[_].name

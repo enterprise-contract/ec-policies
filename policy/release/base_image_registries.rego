@@ -23,6 +23,8 @@ import data.lib
 # custom:
 #   short_name: disallowed_base_image
 #   failure_msg: Base image %q is from a disallowed registry
+#   collections:
+#   - minimal
 #
 deny contains result if {
 	some image_ref in _base_images
@@ -36,8 +38,10 @@ deny contains result if {
 #   The attestation must provide the expected information about which base images
 #   were used during the build process.
 # custom:
-#  short_name: base_images_missing
-#  failure_msg: Base images result is missing
+#   short_name: base_images_missing
+#   failure_msg: Base images result is missing
+#   collections:
+#   - minimal
 #
 deny contains result if {
 	count(lib.pipelinerun_attestations) > 0
@@ -57,6 +61,9 @@ deny contains result if {
 # custom:
 #   short_name: missing_rule_data
 #   failure_msg: Missing required allowed_registry_prefixes rule data
+#   collections:
+#   - minimal
+#
 deny contains result if {
 	count(lib.rule_data("allowed_registry_prefixes")) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])

@@ -22,6 +22,8 @@ import data.lib
 # custom:
 #   short_name: disallowed_task_step_image
 #   failure_msg: Step %d in task '%s' has disallowed image ref '%s'
+#   collections:
+#   - minimal
 #
 deny contains result if {
 	some task in lib.pipelinerun_attestations[_].predicate.buildConfig.tasks
@@ -40,6 +42,9 @@ deny contains result if {
 # custom:
 #   short_name: missing_rule_data
 #   failure_msg: Missing required allowed_step_image_registry_prefixes rule data
+#   collections:
+#   - minimal
+#
 deny contains result if {
 	count(lib.rule_data("allowed_step_image_registry_prefixes")) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])

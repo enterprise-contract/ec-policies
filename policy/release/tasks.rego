@@ -31,6 +31,9 @@ import data.lib.tkn
 # custom:
 #   short_name: tasks_missing
 #   failure_msg: No tasks found in PipelineRun attestation
+#   collections:
+#   - minimal
+#
 deny contains result if {
 	some att in lib.pipelinerun_attestations
 	count(tkn.tasks(att)) == 0

@@ -27,9 +27,11 @@ import data.lib
 #   short_name: unexpected_predicate_type
 #   failure_msg: Attestation predicate type %q is not an expected type (%s)
 #   collections:
+#   - minimal
 #   - slsa1
 #   - slsa2
 #   - slsa3
+#
 deny contains result if {
 	some att in lib.pipelinerun_attestations
 	allowed_predicate_types := lib.rule_data("allowed_predicate_types")

@@ -142,6 +142,8 @@ $(HACBS_DOCS_DIR):
 # you're expecting. Change the branch in antora-playbook.yml manually if needed.
 # (The second sed won't always be needed, but it should be okay to do it anyway.)
 docs-preview: $(HACBS_DOCS_DIR) ## Build a preview of the documentation
+	cd antora/ec-policies-antora-extension && \
+	  npm ci
 	cd $(HACBS_DOCS_DIR) && \
 	  sed -i 's|url: https://github.com/hacbs-contract/ec-policies.git|url: ../ec-policies|' antora-playbook.yml && \
 	  sed -i "s|require: '@hacbs-contract/ec-policies-antora-extension'|require: ../ec-policies/antora/ec-policies-antora-extension|" antora-playbook.yml && \

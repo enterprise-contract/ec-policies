@@ -138,15 +138,16 @@ HACBS_DOCS_REPO=git@github.com:hacbs-contract/hacbs-contract.github.io.git
 $(HACBS_DOCS_DIR):
 	mkdir $(HACBS_DOCS_DIR) && cd $(HACBS_DOCS_DIR) && git clone $(HACBS_DOCS_REPO) .
 
-# Beware: This will build from your local main branch, which might not be what
-# you're expecting. Change the branch in antora-playbook.yml manually if needed.
-# (The second sed won't always be needed, but it should be okay to do it anyway.)
+# See also the hack/local-build.sh script in the
+# hacbs-contract.github.io repo which does something similar
+CURRENT_BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 docs-preview: $(HACBS_DOCS_DIR) ## Build a preview of the documentation
 	cd antora/ec-policies-antora-extension && \
 	  npm ci
 	cd $(HACBS_DOCS_DIR) && \
-	  sed -i 's|url: https://github.com/hacbs-contract/ec-policies.git|url: ../ec-policies|' antora-playbook.yml && \
-	  sed -i "s|require: '@hacbs-contract/ec-policies-antora-extension'|require: ../ec-policies/antora/ec-policies-antora-extension|" antora-playbook.yml && \
+	  yq e -i '.content.sources[] |= select(.url == "*ec-policies*").url |= "../ec-policies"' antora-playbook.yml && \
+	  yq e -i '.content.sources[] |= select(.url == "*ec-policies*").branches |= "$(CURRENT_BRANCH)"' antora-playbook.yml && \
+	  yq e -i '.antora.extensions[] |= select(.require == "*ec-policies-antora-extension").require |= "../ec-policies/antora/ec-policies-antora-extension"' antora-playbook.yml && \
 	  npm ci && npm run build
 
 ##@ CI

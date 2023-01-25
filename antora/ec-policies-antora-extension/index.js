@@ -225,8 +225,7 @@ module.exports.register = function() {
     // Extract annotations from the rego files
     //
     const regoFiles = helpers.filesMatching(content, /^policy\/.*(?!_test)\.rego$/)
-    const opaInspectPromises = regoFiles.map(f => opa.inspect(f.path, f._contents.toString()))
-    const rawAnnotationsData = await Promise.all(opaInspectPromises).then(a => a.flat())
+    const rawAnnotationsData = await opa.inspect(regoFiles)
 
     // Prepare annotation data for use in the templates
     const pipelineAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.pipeline")

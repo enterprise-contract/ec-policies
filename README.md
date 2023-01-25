@@ -158,7 +158,7 @@ See also
 [testing]: https://www.openpolicyagent.org/docs/latest/policy-testing/
 [docs]: https://hacbs-contract.github.io/
 [hacbsdocs]: https://red-hat-stone-soup.pages.redhat.com/stonesoup-documentation/ec-policies/index.html
-[taskdef]: https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract.yaml
+[taskdef]: https://github.com/hacbs-contract/ec-cli/blob/main/task/0.1/verify-enterprise-contract.yaml
 [contract]: https://github.com/hacbs-contract
 [appstudio]: https://github.com/redhat-appstudio
 [builddefs]: https://github.com/redhat-appstudio/build-definitions

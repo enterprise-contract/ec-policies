@@ -75,7 +75,7 @@ test_unacceptable_bundle {
 
 test_missing_rule_data {
 	expected := {{
-		"code": "base_image_registries.missing_rule_data",
+		"code": "base_image_registries.missing_base_image_registry_rule_data",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required allowed_registry_prefixes rule data",
 	}}

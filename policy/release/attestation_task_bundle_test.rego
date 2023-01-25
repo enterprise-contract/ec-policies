@@ -127,7 +127,7 @@ test_acceptable_bundle_expired {
 
 test_missing_required_data {
 	expected := {{
-		"code": "attestation_task_bundle.missing_required_data",
+		"code": "attestation_task_bundle.missing_required_attestation_bundle_data",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required task-bundles data",
 	}}

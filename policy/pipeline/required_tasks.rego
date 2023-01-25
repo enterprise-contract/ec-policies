@@ -68,7 +68,7 @@ warn contains result if {
 # description: |-
 #   The policy rules in this package require the required-tasks data to be provided.
 # custom:
-#   short_name: missing_required_data
+#   short_name: missing_required_task_data
 #   failure_msg: Missing required task-bundles data
 deny contains result if {
 	tkn.missing_required_tasks_data

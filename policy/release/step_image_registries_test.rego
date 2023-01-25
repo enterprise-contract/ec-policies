@@ -28,7 +28,7 @@ test_attestation_type_invalid {
 
 test_missing_rule_data {
 	expected := {{
-		"code": "step_image_registries.missing_rule_data",
+		"code": "step_image_registries.missing_allowed_registry_rule_data",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required allowed_step_image_registry_prefixes rule data",
 	}}

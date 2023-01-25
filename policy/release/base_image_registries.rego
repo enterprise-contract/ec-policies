@@ -56,7 +56,7 @@ deny contains result if {
 #   The policy rules in this package require the allowed_registry_prefixes
 #   rule data to be provided.
 # custom:
-#   short_name: missing_rule_data
+#   short_name: missing_base_image_registry_rule_data
 #   failure_msg: Missing required allowed_registry_prefixes rule data
 deny contains result if {
 	count(lib.rule_data("allowed_registry_prefixes")) == 0

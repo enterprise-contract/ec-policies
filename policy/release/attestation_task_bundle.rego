@@ -97,7 +97,7 @@ deny[result] {
 # description: |-
 #   The policy rules in this package require the task-bundles data to be provided.
 # custom:
-#   short_name: missing_required_data
+#   short_name: missing_required_attestation_bundle_data
 #   failure_msg: Missing required task-bundles data
 deny[result] {
 	bundles.missing_task_bundles_data

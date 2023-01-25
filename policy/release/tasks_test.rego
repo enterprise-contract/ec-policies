@@ -133,7 +133,7 @@ test_parameterized if {
 
 test_missing_required_tasks_data if {
 	expected := {{
-		"code": "tasks.missing_required_data",
+		"code": "tasks.missing_required_task_data",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required task-bundles data",
 	}}

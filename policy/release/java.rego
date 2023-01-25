@@ -42,7 +42,7 @@ deny contains result if {
 #   The policy rules in this package require the allowed_java_component_sources
 #   rule data to be provided.
 # custom:
-#   short_name: missing_rule_data
+#   short_name: missing_java_component_sources_rule_data
 #   failure_msg: Missing required allowed_java_component_sources rule data
 deny contains result if {
 	count(lib.rule_data("allowed_java_component_sources")) == 0

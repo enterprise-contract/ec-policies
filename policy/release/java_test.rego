@@ -23,7 +23,7 @@ test_unacceptable_bundle {
 
 test_missing_rule_data {
 	expected := {{
-		"code": "java.missing_rule_data",
+		"code": "java.missing_java_component_sources_rule_data",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required allowed_java_component_sources rule data",
 	}}

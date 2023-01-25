@@ -206,9 +206,7 @@ const helpers = {
         abspath,
         basename,
         stem,
-        extname: '.adoc',
-        // Related to the "Edit this page" link created by Antora
-        origin: 'dynamic',
+        extname: '.adoc'
       }
     }
   },

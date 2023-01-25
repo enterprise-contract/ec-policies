@@ -1,0 +1,17 @@
+---
+name: Enable auto-merge
+"on":
+  pull_request:
+    types:
+      - opened
+      - reopened
+    branches:
+      - main
+jobs:
+  enable-auto-merge:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'appstudio-staging-ci[bot]'
+    steps:
+      - uses: alexwilson/enable-github-automerge-action@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

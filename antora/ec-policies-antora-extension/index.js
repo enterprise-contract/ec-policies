@@ -114,6 +114,7 @@ const helpers = {
           const title = a.annotations.title
           const description = a.annotations.description
           const shortName = a.annotations.custom.short_name
+          const anchor = `${a.path.slice(1).map(e => e.value).join('_')}_${shortName}`
           const warningOrFailure = isWarn ? "warning" : "failure"
           const failureMsg = a.annotations.custom.failure_msg
           const effectiveOn = a.annotations.custom.effective_on
@@ -137,12 +138,12 @@ const helpers = {
             shortName: packageShortName,
             fullName: packagePath,
             title: pkgAnnotation.title || hbsHelpers.toTitle(packageShortName),
-            description: pkgAnnotation.description || ""
+            description: pkgAnnotation.description || "",
           }
 
           output.push({
             fullPath, packagePath, packageInfo,
-            shortName, title, description, ruleData, warningOrFailure,
+            shortName, title, description, anchor, ruleData, warningOrFailure,
             failureMsg, effectiveOn, file, row
           })
         }

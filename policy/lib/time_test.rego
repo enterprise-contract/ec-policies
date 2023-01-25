@@ -134,3 +134,11 @@ test_acceptable_items {
 	# Return empty list when input is an empty list
 	lib.assert_equal(future_items([]), [])
 }
+
+test_newest {
+	lib.assert_equal({"effective_on": "2262-04-11T00:00:00Z"}, newest([
+		{"effective_on": "2199-01-01T00:00:00Z"},
+		{"effective_on": "2262-04-11T00:00:00Z"},
+		{"effective_on": "2099-01-01T00:00:00Z"},
+	]))
+}

@@ -15,7 +15,7 @@ missing_required_tasks_data if {
 # The latest set of required tasks. Tasks here are not required right now
 # but will be required in the future.
 latest_required_tasks contains task if {
-	some task in data["required-tasks"][0].tasks
+	some task in time.newest(data["required-tasks"]).tasks
 }
 
 # The set of required tasks that are required right now.

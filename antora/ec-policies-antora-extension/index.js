@@ -60,8 +60,12 @@ const helpers = {
     return helpers.filesMatching(content, regex)[0]
   },
 
+  toJoinedPath: (path, joiner) => {
+    return path.map(i => i.value).join(joiner)
+  },
+
   toDottedPath: (path) => {
-    return path.map(i => i.value).join(".")
+    return helpers.toJoinedPath(path, ".")
   },
 
   annotationSort: (a, b) => {
@@ -114,7 +118,7 @@ const helpers = {
           const title = a.annotations.title
           const description = a.annotations.description
           const shortName = a.annotations.custom.short_name
-          const anchor = `${a.path.slice(1).map(e => e.value).join('_')}_${shortName}`
+          const anchor = `${ helpers.toJoinedPath(a.path.slice(1), "_") }_${ shortName }`
           const warningOrFailure = isWarn ? "warning" : "failure"
           const failureMsg = a.annotations.custom.failure_msg
           const effectiveOn = a.annotations.custom.effective_on

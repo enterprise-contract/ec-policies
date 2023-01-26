@@ -301,6 +301,13 @@ task-bundles:
     - digest: sha256:f95f72700fe06ea9a285687827199944b1d4a44b83757beb4073569c5beaf3cf
       effective_on: "2023-01-15T00:00:00Z"
       tag: "0.1"
+  quay.io/redhat-appstudio-tekton-catalog/task-fbc-validation:
+    - digest: sha256:dbb010ce35c2e3dac94639fd77491e0be670a18372d4e6459aed49b401156fd4
+      effective_on: "2023-02-26T00:00:00Z"
+      tag: "0.1"
+    - digest: sha256:ad0700f8508a1dbda8e2aa59bf6dcd9d714d14145faf0451f90c41d3cb6c84a5
+      effective_on: "2023-02-02T00:00:00Z"
+      tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-get-clair-scan:
     - digest: sha256:f5259b6194f73e43f8f1d8ec8f7cd7466209fbf8aaf8b8ac4cf653fc54fc6b3b
       effective_on: "2022-12-31T00:00:00Z"

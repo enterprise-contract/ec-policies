@@ -17,17 +17,6 @@
 
 {{{ description }}}
 
-{{#each ruleData}}
-The {{ toWords @key }} are:
-
-----
-{{#each .}}
-{{ . }}
-{{/each}}
-----
-
-{{/each}}
-
 * Rule type: [rule-type-indicator {{ warningOrFailure }}]#{{ toUpper warningOrFailure }}#
 * {{ toTitle warningOrFailure }} message: `{{ failureMsg }}`
 * Code: `{{ shortName }}`

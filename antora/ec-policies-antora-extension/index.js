@@ -129,12 +129,6 @@ const helpers = {
           const packagePath = helpers.toDottedPath(a.path.slice(1, a.path.length-1))
           const pkgAnnotation = packageAnnotations[packagePath] || {}
 
-          // If there is some package-scoped rule data then merge it in to the rule-scoped rule data
-          var ruleData = a.annotations.custom.rule_data
-          if (pkgAnnotation.custom && pkgAnnotation.custom[shortName] && pkgAnnotation.custom[shortName].rule_data) {
-            ruleData = {...ruleData, ...pkgAnnotation.custom[shortName].rule_data}
-          }
-
           // Also prepare some info about the package
           // (It's the same for every rule in a package, so it's not efficient to
           // redo this for every rule, but I don't think it will matter.)
@@ -147,7 +141,7 @@ const helpers = {
 
           output.push({
             fullPath, packagePath, packageInfo,
-            shortName, title, description, anchor, ruleData, warningOrFailure,
+            shortName, title, description, anchor, warningOrFailure,
             failureMsg, effectiveOn, file, row
           })
         }

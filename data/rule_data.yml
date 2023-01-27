@@ -5,6 +5,7 @@ rule_data:
   allowed_registry_prefixes:
   - registry.access.redhat.com/
   - registry.redhat.io/
+  - quay.io/operator-framework/opm
 
   allowed_step_image_registry_prefixes:
   - quay.io/redhat-appstudio/

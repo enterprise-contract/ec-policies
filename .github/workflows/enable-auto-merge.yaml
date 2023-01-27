@@ -1,7 +1,14 @@
 ---
 name: Enable auto-merge
 "on":
-  pull_request:
+  # The pull_request event always runs with read-only permission, see:
+  # https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions/
+  # However, this workflow needs write permisson so it can set the auto-merge flag on the PR.
+  # For this reason, the pull_request_target event is used which causes the worfklow to be
+  # run with read and write access.
+  # IMPORTANT: This workflow should never clone, build, etc, based on user provided input, see:
+  # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+  pull_request_target:
     types:
       - opened
       - reopened

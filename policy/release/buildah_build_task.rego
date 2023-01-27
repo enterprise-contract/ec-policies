@@ -45,7 +45,7 @@ _not_allowed_prefix(search) if {
 
 buildah_task := task if {
 	some att in lib.pipelinerun_attestations
-	some task in lib.tkn.trusted_tasks(att)
+	some task in lib.tkn.tasks(att)
 	"buildah" in lib.tkn.task_names(task)
 }
 

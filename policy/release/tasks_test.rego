@@ -1,7 +1,6 @@
 package policy.release.tasks
 
 import data.lib
-import data.lib.bundles
 
 import future.keywords.contains
 import future.keywords.if
@@ -11,7 +10,6 @@ test_required_tasks_met if {
 	attestations := _attestations_with_tasks(_expected_required_tasks, [])
 	lib.assert_empty(deny) with data["required-tasks"] as _time_based_required_tasks
 		with input.attestations as attestations
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_required_tasks_not_met if {
@@ -21,14 +19,12 @@ test_required_tasks_not_met if {
 	expected := _missing_tasks_violation(missing_tasks)
 	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
 		with input.attestations as attestations
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_future_required_tasks_met if {
 	attestations := _attestations_with_tasks(_expected_future_required_tasks, [])
 	lib.assert_empty(warn) with data["required-tasks"] as _time_based_required_tasks
 		with input.attestations as attestations
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_future_required_tasks_not_met if {
@@ -38,17 +34,14 @@ test_future_required_tasks_not_met if {
 	expected := _missing_tasks_warning(missing_tasks)
 	lib.assert_equal(expected, warn) with data["required-tasks"] as _time_based_required_tasks
 		with input.attestations as attestations
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_extra_tasks_ignored if {
 	attestations := _attestations_with_tasks(_expected_future_required_tasks | {"spam"}, [])
 	lib.assert_empty(deny) with data["required-tasks"] as _time_based_required_tasks
 		with input.attestations as attestations
-		with data["task-bundles"] as bundles.bundle_data
 	lib.assert_empty(warn) with data["required-tasks"] as _time_based_required_tasks
 		with input.attestations as attestations
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_current_equal_latest if {
@@ -57,7 +50,6 @@ test_current_equal_latest if {
 
 	lib.assert_empty(deny | warn) with data["required-tasks"] as required_tasks
 		with input.attestations as attestations
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_current_equal_latest_also if {
@@ -66,12 +58,10 @@ test_current_equal_latest_also if {
 
 	lib.assert_empty(warn) with data["required-tasks"] as required_tasks
 		with input.attestations as attestations
-		with data["task-bundles"] as bundles.bundle_data
 
 	expected_denies := _missing_tasks_violation(_expected_future_required_tasks - _expected_required_tasks)
 	lib.assert_equal(expected_denies, deny) with data["required-tasks"] as required_tasks
 		with input.attestations as attestations
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_no_tasks_present if {
@@ -86,22 +76,6 @@ test_no_tasks_present if {
 			"buildType": lib.pipelinerun_att_build_types[0],
 			"buildConfig": {"tasks": []},
 		}}]
-		with data["task-bundles"] as bundles.bundle_data
-}
-
-test_task_present_from_unacceptable_bundle if {
-	bad_task := "git-clone"
-	task_from_unacceptable := [{"ref": {
-		"name": bad_task,
-		"kind": "Task",
-		"bundle": "registry.img/unacceptable@sha256:digest",
-	}}]
-	attestations := _attestations_with_tasks(_expected_required_tasks - {bad_task}, task_from_unacceptable)
-
-	expected := _missing_tasks_violation({bad_task})
-	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
-		with input.attestations as attestations
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_parameterized if {
@@ -110,7 +84,7 @@ test_parameterized if {
 			"ref": {
 				"name": "sanity-label-check",
 				"kind": "Task",
-				"bundle": bundles.acceptable_bundle_ref,
+				"bundle": _bundle,
 			},
 			"invocation": {"parameters": {"POLICY_NAMESPACE": "something-else"}},
 		},
@@ -118,7 +92,7 @@ test_parameterized if {
 			"ref": {
 				"name": "sanity-label-check",
 				"kind": "Task",
-				"bundle": bundles.acceptable_bundle_ref,
+				"bundle": _bundle,
 			},
 			"invocation": {"parameters": {"POLICY_NAMESPACE": "optional_checks"}},
 		},
@@ -128,7 +102,6 @@ test_parameterized if {
 	expected := _missing_tasks_violation({"sanity-label-check[POLICY_NAMESPACE=required_checks]"})
 	lib.assert_equal(deny, expected) with data["required-tasks"] as _time_based_required_tasks
 		with input.attestations as attestations
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_missing_required_tasks_data if {
@@ -154,13 +127,13 @@ _task(name) = task if {
 	parts[1]
 	task_name := parts[0]
 
-	task := {"ref": {"name": task_name, "kind": "Task", "bundle": bundles.acceptable_bundle_ref}, "invocation": {"parameters": {parts[1]: parts[2]}}}
+	task := {"ref": {"name": task_name, "kind": "Task", "bundle": _bundle}, "invocation": {"parameters": {parts[1]: parts[2]}}}
 }
 
 _task(name) = task if {
 	parts := regex.split("[\\[\\]=]", name)
 	not parts[1]
-	task := {"ref": {"name": name, "kind": "Task", "bundle": bundles.acceptable_bundle_ref}}
+	task := {"ref": {"name": name, "kind": "Task", "bundle": _bundle}}
 }
 
 _missing_tasks_violation(tasks) = errors if {
@@ -230,3 +203,5 @@ _time_based_required_tasks := [
 		"tasks": ["ignored"],
 	},
 ]
+
+_bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"

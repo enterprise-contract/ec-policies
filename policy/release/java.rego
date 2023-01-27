@@ -18,7 +18,6 @@ import future.keywords.if
 import future.keywords.in
 
 import data.lib
-import data.lib.bundles
 
 # METADATA
 # title: Prevent Java builds from depending on foreign dependencies
@@ -51,7 +50,5 @@ deny contains result if {
 
 _java_component_sources contains name if {
 	some result in lib.results_named(lib.java_sbom_component_count_result_name)
-	bundle := result.bundle
-	bundles.is_acceptable(bundle)
 	some name, _ in result.value
 }

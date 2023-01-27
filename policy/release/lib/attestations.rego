@@ -1,6 +1,5 @@
 package lib
 
-import data.lib.bundles
 import data.lib.tkn
 
 pipelinerun_att_build_types := [
@@ -66,14 +65,7 @@ unmarshal(raw) = value {
 
 # (Don't call it test_results since test_ means a unit test)
 results_from_tests = results {
-	all_results := results_named(hacbs_test_task_result_name)
-
-	results := [result |
-		result := all_results[_]
-		result[key_bundle]
-		bundle := result[key_bundle]
-		bundles.is_acceptable(bundle)
-	]
+	results := results_named(hacbs_test_task_result_name)
 }
 
 # Check for a task by name. Return the task if found

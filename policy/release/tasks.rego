@@ -90,6 +90,6 @@ _missing_tasks(required_tasks) := tasks if {
 		count(tkn.tasks(att)) > 0
 
 		some task in required_tasks
-		not task in tkn.trusted_tasks_names(att)
+		not task in tkn.tasks_names(att)
 	}
 }

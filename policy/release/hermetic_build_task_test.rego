@@ -3,11 +3,9 @@ package policy.release.hermetic_build_task
 import future.keywords.if
 
 import data.lib
-import data.lib.bundles
 
 test_hermetic_build if {
-	lib.assert_empty(deny) with data["task-bundles"] as bundles.bundle_data
-		with input.attestations as [_good_attestation]
+	lib.assert_empty(deny) with input.attestations as [_good_attestation]
 }
 
 test_not_hermetic_build if {
@@ -17,21 +15,15 @@ test_not_hermetic_build if {
 		"msg": "Build task was not invoked with hermetic parameter",
 	}}
 
-	untrusted_bundle := json.patch(_good_attestation, [{
-		"op": "add",
-		"path": "/predicate/buildConfig/tasks/0/ref/bundle",
-		"value": "untrusted.registry.com/bundle",
-	}])
-	lib.assert_equal(expected, deny) with data["task-bundles"] as bundles.bundle_data
-		with input.attestations as [untrusted_bundle]
-
 	hermetic_not_true := json.patch(_good_attestation, [{
 		"op": "add",
 		"path": "/predicate/buildConfig/tasks/0/invocation/parameters/HERMETIC_BUILD",
 		"value": "false",
 	}])
-	lib.assert_equal(expected, deny) with data["task-bundles"] as bundles.bundle_data
-		with input.attestations as [hermetic_not_true]
+	lib.assert_equal(expected, deny) with input.attestations as [hermetic_not_true]
+
+	hermetic_missing := json.remove(_good_attestation, ["/predicate/buildConfig/tasks/0/invocation/parameters/HERMETIC_BUILD"])
+	lib.assert_equal(expected, deny) with input.attestations as [hermetic_missing]
 }
 
 _good_attestation := {"predicate": {
@@ -41,7 +33,7 @@ _good_attestation := {"predicate": {
 			{"name": "IMAGE_URL", "value": "registry/repo"},
 			{"name": "IMAGE_DIGEST", "value": "digest"},
 		],
-		"ref": {"kind": "Task", "name": "any-task", "bundle": bundles.acceptable_bundle_ref},
+		"ref": {"kind": "Task", "name": "any-task", "bundle": "reg.img/spam@sha256:abc"},
 		"invocation": {"parameters": {"HERMETIC_BUILD": "true"}},
 	}]},
 }}

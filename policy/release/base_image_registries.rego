@@ -12,7 +12,6 @@ import future.keywords.if
 import future.keywords.in
 
 import data.lib
-import data.lib.bundles
 
 # METADATA
 # title: Restrict registry of base images
@@ -74,5 +73,4 @@ _base_images contains name if {
 
 _base_images_results contains result if {
 	some result in lib.results_named(lib.build_base_images_digests_result_name)
-	bundles.is_acceptable(result.bundle)
 }

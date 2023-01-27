@@ -8,8 +8,7 @@ import data.lib
 
 test_good_dockerfile_param if {
 	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "./Dockerfile"}})
-	lib.assert_equal(set(), deny) with input.attestations as [attestation]
-		with data["task-bundles"] as lib.bundles.bundle_data
+	lib.assert_empty(deny) with input.attestations as [attestation]
 }
 
 test_dockerfile_param_https_source if {
@@ -20,7 +19,6 @@ test_dockerfile_param_https_source if {
 	}}
 	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "https://Dockerfile"}})
 	lib.assert_equal(expected, deny) with input.attestations as [attestation]
-		with data["task-bundles"] as lib.bundles.bundle_data
 }
 
 test_dockerfile_param_http_source if {
@@ -31,7 +29,6 @@ test_dockerfile_param_http_source if {
 	}}
 	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "http://Dockerfile"}})
 	lib.assert_equal(expected, deny) with input.attestations as [attestation]
-		with data["task-bundles"] as lib.bundles.bundle_data
 }
 
 test_dockerfile_param_not_included if {
@@ -41,12 +38,10 @@ test_dockerfile_param_not_included if {
 		"msg": "DOCKERFILE param is not included in the task",
 	}}
 	lib.assert_equal(expected, deny) with input.attestations as [_attestation("buildah", {})]
-		with data["task-bundles"] as lib.bundles.bundle_data
 }
 
 test_task_not_named_buildah if {
 	lib.assert_empty(deny) with input.attestations as [_attestation("java", {})]
-		with data["task-bundles"] as lib.bundles.bundle_data
 }
 
 test_missing_pipeline_run_attestations if {
@@ -59,8 +54,10 @@ _attestation(task_name, params) = attestation if {
 		"buildType": lib.pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": [{
 			"name": "ignored",
-			"ref": {"kind": "Task", "name": task_name, "bundle": lib.bundles.acceptable_bundle_ref},
+			"ref": {"kind": "Task", "name": task_name, "bundle": _bundle},
 			"invocation": params,
 		}]},
 	}}
 }
+
+_bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"

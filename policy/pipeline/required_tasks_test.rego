@@ -5,18 +5,15 @@ import future.keywords.if
 import future.keywords.in
 
 import data.lib
-import data.lib.bundles
 
 test_required_tasks_met if {
 	pipeline := _pipeline_with_tasks(_expected_required_tasks, [], [])
 	lib.assert_empty(deny) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline
-		with data["task-bundles"] as bundles.bundle_data
 
 	pipeline_finally := _pipeline_with_tasks([], _expected_required_tasks, [])
 	lib.assert_empty(deny) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline_finally
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_required_tasks_not_met if {
@@ -26,19 +23,16 @@ test_required_tasks_not_met if {
 	expected := _missing_tasks_violation(missing_tasks)
 	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_future_required_tasks_met if {
 	pipeline := _pipeline_with_tasks(_expected_future_required_tasks, [], [])
 	lib.assert_empty(warn) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline
-		with data["task-bundles"] as bundles.bundle_data
 
 	pipeline_finally := _pipeline_with_tasks([], _expected_future_required_tasks, [])
 	lib.assert_empty(warn) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline_finally
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_future_required_tasks_not_met if {
@@ -48,14 +42,12 @@ test_future_required_tasks_not_met if {
 	expected := _missing_tasks_warning(missing_tasks)
 	lib.assert_equal(expected, warn) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_extra_tasks_ignored if {
 	pipeline := _pipeline_with_tasks(_expected_future_required_tasks | {"spam"}, [], [])
 	lib.assert_empty(deny | warn) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_current_equal_latest if {
@@ -64,7 +56,6 @@ test_current_equal_latest if {
 
 	lib.assert_empty(deny | warn) with data["required-tasks"] as required_tasks
 		with input as pipeline
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_current_equal_latest_also if {
@@ -73,12 +64,10 @@ test_current_equal_latest_also if {
 
 	lib.assert_empty(warn) with data["required-tasks"] as required_tasks
 		with input as pipeline
-		with data["task-bundles"] as bundles.bundle_data
 
 	expected_denies := _missing_tasks_violation(_expected_future_required_tasks - _expected_required_tasks)
 	lib.assert_equal(expected_denies, deny) with data["required-tasks"] as required_tasks
 		with input as pipeline
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_no_tasks_present if {
@@ -90,30 +79,12 @@ test_no_tasks_present if {
 
 	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
 		with input as {"kind": "Pipeline"}
-		with data["task-bundles"] as bundles.bundle_data
 
 	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
 		with input as {"kind": "Pipeline", "spec": {}}
-		with data["task-bundles"] as bundles.bundle_data
 
 	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
 		with input as {"kind": "Pipeline", "spec": {"tasks": [], "finally": []}}
-		with data["task-bundles"] as bundles.bundle_data
-}
-
-test_task_present_from_unacceptable_bundle if {
-	bad_task := "git-clone"
-	task_from_unacceptable := [{"taskRef": {
-		"name": bad_task,
-		"kind": "Task",
-		"bundle": "registry.img/unacceptable@sha256:digest",
-	}}]
-	pipeline := _pipeline_with_tasks(_expected_required_tasks - {bad_task}, [], task_from_unacceptable)
-
-	expected := _missing_tasks_violation({bad_task})
-	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
-		with input as pipeline
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_parameterized if {
@@ -122,7 +93,7 @@ test_parameterized if {
 			"taskRef": {
 				"name": "sanity-label-check",
 				"kind": "Task",
-				"bundle": bundles.acceptable_bundle_ref,
+				"bundle": _bundle,
 			},
 			"params": [{"name": "POLICY_NAMESPACE", "value": "something-else"}],
 		},
@@ -130,7 +101,7 @@ test_parameterized if {
 			"taskRef": {
 				"name": "sanity-label-check",
 				"kind": "Task",
-				"bundle": bundles.acceptable_bundle_ref,
+				"bundle": _bundle,
 			},
 			"params": [{"name": "POLICY_NAMESPACE", "value": "optional_checks"}],
 		},
@@ -140,7 +111,6 @@ test_parameterized if {
 	expected := _missing_tasks_violation({"sanity-label-check[POLICY_NAMESPACE=required_checks]"})
 	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline
-		with data["task-bundles"] as bundles.bundle_data
 }
 
 test_missing_required_tasks_data if {
@@ -168,7 +138,7 @@ _task(name) = task if {
 	task_name := parts[0]
 
 	task := {
-		"taskRef": {"name": task_name, "kind": "Task", "bundle": bundles.acceptable_bundle_ref},
+		"taskRef": {"name": task_name, "kind": "Task", "bundle": _bundle},
 		"params": [{"name": parts[1], "value": parts[2]}],
 	}
 }
@@ -176,7 +146,7 @@ _task(name) = task if {
 _task(name) = task if {
 	parts := regex.split("[\\[\\]=]", name)
 	not parts[1]
-	task := {"taskRef": {"name": name, "kind": "Task", "bundle": bundles.acceptable_bundle_ref}}
+	task := {"taskRef": {"name": name, "kind": "Task", "bundle": _bundle}}
 }
 
 _missing_tasks_violation(tasks) = errors if {
@@ -246,3 +216,5 @@ _time_based_required_tasks := [
 		"tasks": ["ignored"],
 	},
 ]
+
+_bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"

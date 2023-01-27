@@ -4,7 +4,6 @@ import future.keywords.contains
 import future.keywords.if
 import future.keywords.in
 
-import data.lib.bundles
 import data.lib.refs
 import data.lib.time
 
@@ -23,17 +22,24 @@ current_required_tasks contains task if {
 	some task in time.most_current(data["required-tasks"]).tasks
 }
 
-# tasks returns a list of tasks.
+# tasks returns the set of tasks found in the object.
+tasks(obj) := _tasks if {
+	_tasks := {task |
+		some task in _maybe_tasks(obj)
+		task_ref := refs.task_ref(task)
+		task_ref.kind == "task"
+	}
+}
+
+# _maybe_tasks returns a set of potential tasks.
 # Handle tasks from a PipelineRun attestation.
-tasks(attestation) := _tasks if {
+_maybe_tasks(attestation) := _tasks if {
 	attestation.predicate.buildConfig
-	_tasks := [task |
-		some task in attestation.predicate.buildConfig.tasks
-	]
+	_tasks := attestation.predicate.buildConfig.tasks
 }
 
 # Handle tasks from a Pipeline defintion.
-tasks(pipeline) := _tasks if {
+_maybe_tasks(pipeline) := _tasks if {
 	not pipeline.predicate.buildConfig
 	spec := object.get(pipeline, "spec", {})
 	_tasks := array.concat(
@@ -42,24 +48,12 @@ tasks(pipeline) := _tasks if {
 	)
 }
 
-# trusted_tasks returns the tasks found in the given obj
-# that use an acceptable Tekton bundle.
-trusted_tasks(obj) := result if {
-	result := {task |
-		some task in tasks(obj)
-		task_ref := refs.task_ref(task)
-		task_ref.kind == "task"
-		bundle_ref := task_ref.bundle
-		bundles.is_acceptable(bundle_ref)
-	}
-}
-
-# trusted_tasks_names returns the set of task names that use an
-# acceptable Tekton bundle. It expands names to include the
-# parameterized form, see task_names.
-trusted_tasks_names(obj) := names if {
+# tasks_names returns the set of task names extracted from the
+# given object. It expands names to include the parameterized
+# form, see task_names.
+tasks_names(obj) := names if {
 	names := {name |
-		some task in trusted_tasks(obj)
+		some task in tasks(obj)
 		some name in task_names(task)
 	}
 }
@@ -109,13 +103,9 @@ task_result(task, name) := value if {
 	value := _key_value(result, "value")
 }
 
-# trusted_build_task returns the build task found in the attestation
-# that uses an acceptable Tekton bundle.
-trusted_build_task(attestation) := task if {
-	some task in trusted_tasks(attestation)
-
-	bundle := task_data(task).bundle
-	bundles.is_acceptable(bundle)
+# build_task returns the build task found in the attestation
+build_task(attestation) := task if {
+	some task in tasks(attestation)
 
 	image_url := task_result(task, "IMAGE_URL")
 	count(trim_space(image_url)) > 0

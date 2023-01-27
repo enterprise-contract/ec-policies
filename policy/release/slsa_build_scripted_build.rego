@@ -35,7 +35,7 @@ import data.lib.tkn
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	build_task := tkn.trusted_build_task(attestation)
+	build_task := tkn.build_task(attestation)
 	count(task_steps(build_task)) == 0
 	result := lib.result_helper(rego.metadata.chain(), [build_task.name])
 }
@@ -55,7 +55,7 @@ deny contains result if {
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	not tkn.trusted_build_task(attestation)
+	not tkn.build_task(attestation)
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -74,7 +74,7 @@ deny contains result if {
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	build_task := tkn.trusted_build_task(attestation)
+	build_task := tkn.build_task(attestation)
 
 	some subject in attestation.subject
 

@@ -180,20 +180,20 @@ file:
 }
 ----
 
-Currently there are not many "collections" defined, but in future there may be more.
-
-The predefined collections are:
+=== Available collections
 
 [cols="2,6"]
 |===
 |*Name*
 |*Description*
 
-| `slsa_1`
-| Includes policy rules required to meet SLSA Level 1
+| `slsa1`
+a| Includes policy rules required to meet SLSA Level 1.
 
-| `slsa_2`
-| Includes policy rules required to meet SLSA Level 2. Special attention must
+{{> rule_links releaseCollections.slsa1}}
+
+| `slsa2`
+a| Includes policy rules required to meet SLSA Level 2. Special attention must
 be given to two requirements which are not covered by the policy rules in this
 collection. The first is "Provenance - Authenticated" which is expected to be
 performed when fetching the attestation via cosign or ec-cli. The second
@@ -203,9 +203,13 @@ Service" requirements, we can have some confidence that this requirement is met
 since Chains is a service that generates signed attestations with data obtained
 from the build service (Tekton Pipelines).
 
-| `slsa_3`
-| Includes policy rules required to meet SLSA Level 3. This is currently a
+{{> rule_links releaseCollections.slsa2}}
+
+| `slsa3`
+a| Includes policy rules required to meet SLSA Level 3. This is currently a
 work in progress and functionally the same as the slsa2 collection.
+
+{{> rule_links releaseCollections.slsa3}}
 
 |===
 

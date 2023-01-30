@@ -122,10 +122,12 @@ const helpers = {
           const warningOrFailure = isWarn ? "warning" : "failure"
           const failureMsg = a.annotations.custom.failure_msg
           const effectiveOn = a.annotations.custom.effective_on
+          const collections = a.annotations.custom.collections
           const file = a.location.file
           const row = a.location.row
 
           const packageShortName = a.path[3].value
+          const packageShortNamespace = a.path[2].value
           const packagePath = helpers.toDottedPath(a.path.slice(1, a.path.length-1))
           const pkgAnnotation = packageAnnotations[packagePath] || {}
 
@@ -135,6 +137,7 @@ const helpers = {
           const packageInfo = {
             shortName: packageShortName,
             fullName: packagePath,
+            shortNamespace: packageShortNamespace,
             title: pkgAnnotation.title || hbsHelpers.toTitle(packageShortName),
             description: pkgAnnotation.description || "",
           }
@@ -142,7 +145,7 @@ const helpers = {
           output.push({
             fullPath, packagePath, packageInfo,
             shortName, title, description, anchor, warningOrFailure,
-            failureMsg, effectiveOn, file, row
+            failureMsg, effectiveOn, collections, file, row
           })
         }
       }
@@ -154,6 +157,25 @@ const helpers = {
     // Group the rules by their package
     return helpers.groupBy(sortedOutput, a => a.packagePath)
 
+  },
+
+  processCollectionLists: (annotationsData) => {
+    const collectionLists = {}
+
+    Object.keys(annotationsData).forEach(packagePath => {
+      annotationsData[packagePath].forEach(a => {
+        (a.collections || []).forEach(c => {
+          (collectionLists[c] ||= []).push({
+            anchor: a.anchor,
+            title: a.title,
+            pkgTitle: a.packageInfo.title,
+            pkgNamespace: a.packageInfo.shortNamespace,
+          })
+        })
+      })
+    })
+
+    return collectionLists
   },
 
   processBundlesData: (rawData) => {
@@ -230,6 +252,10 @@ module.exports.register = function() {
     const pipelineAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.pipeline")
     const releaseAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.release")
 
+    // Prepare some collection lists
+    const pipelineCollections = helpers.processCollectionLists(pipelineAnnotations)
+    const releaseCollections = helpers.processCollectionLists(releaseAnnotations)
+
     //------------------------------------------------------------------
     // Find and load the acceptable bundle and rule collection data
     //
@@ -241,7 +267,7 @@ module.exports.register = function() {
     const acceptableBundles = helpers.processBundlesData(rawBundlesData)
 
     // Make the data available at higher scope
-    allData = { pipelineAnnotations, releaseAnnotations, acceptableBundles }
+    allData = { pipelineAnnotations, pipelineCollections, releaseAnnotations, releaseCollections, acceptableBundles }
 
     //------------------------------------------------------------------
     // Setup Handlebars helpers and partials

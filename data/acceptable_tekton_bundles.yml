@@ -64,6 +64,9 @@ pipeline-bundles:
       effective_on: "2023-01-16T00:00:00Z"
       tag: a8cf15a2b082bc97bbce863195305c9bb2ddc6c6
   quay.io/redhat-appstudio-tekton-catalog/pipeline-fbc-builder:
+    - digest: sha256:2d0345dfecef844932ee1b3393a73770ddb3024fc582516f8c4d05dedb644def
+      effective_on: "2023-03-03T00:00:00Z"
+      tag: ed24da8681d1ae1863153241c6e8334507922d70
     - digest: sha256:877a321e483f66eda565ae58f97945a5ccecaf86d18517aecba1ee233e66d3de
       effective_on: "2023-03-03T00:00:00Z"
       tag: f7bd8a2ae933f1493f510895721ff11d2062e15b
@@ -337,7 +340,14 @@ task-bundles:
     - digest: sha256:f95f72700fe06ea9a285687827199944b1d4a44b83757beb4073569c5beaf3cf
       effective_on: "2023-01-15T00:00:00Z"
       tag: "0.1"
+  quay.io/redhat-appstudio-tekton-catalog/task-fbc-related-image-check:
+    - digest: sha256:dcb28113631b9f48c900d452594c447a7800713f6a33417e34e70a51e8310611
+      effective_on: "2023-03-03T00:00:00Z"
+      tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-fbc-validation:
+    - digest: sha256:8233bac403fa0fc0df14197063e50f5ae3be75078c40253daccd38bbf9e5f833
+      effective_on: "2023-03-03T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:dbb010ce35c2e3dac94639fd77491e0be670a18372d4e6459aed49b401156fd4
       effective_on: "2023-02-26T00:00:00Z"
       tag: "0.1"

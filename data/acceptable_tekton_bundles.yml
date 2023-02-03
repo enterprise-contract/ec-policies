@@ -251,6 +251,9 @@ pipeline-bundles:
       effective_on: "2023-02-03T00:00:00Z"
       tag: 1cb5c18143af9c8d7a36244e1cd052e57814bc6b
   quay.io/redhat-appstudio-tekton-catalog/pipeline-tekton-bundle-builder:
+    - digest: sha256:405b92043f65f0df81a86f41f5d63d8ac86f58442dedeaff959381c0ecb7bdee
+      effective_on: "2023-03-05T00:00:00Z"
+      tag: e051ad5066a7d6bcdb26a00a00b51daf58d40652
     - digest: sha256:ee1275bb30f93b2a06fa913b64472f5d35cb2e47c212457da6fb659946807a0b
       effective_on: "2023-03-05T00:00:00Z"
       tag: c2115846b1f6bc1f253bfee1f58034c5154d678f
@@ -275,6 +278,18 @@ pipeline-required-tasks:
       - sbom-json-check
       - summary
 required-tasks:
+  - effective_on: "2023-03-05T00:00:00Z"
+    tasks:
+      - clair-scan
+      - clamav-scan
+      - configure-build
+      - git-clone
+      - init
+      - prefetch-dependencies
+      - sanity-inspect-image
+      - sanity-label-check
+      - sast-snyk-check
+      - summary
   - effective_on: "2023-01-14T00:00:00Z"
     tasks:
       - clair-scan
@@ -495,6 +510,9 @@ task-bundles:
       effective_on: "2022-12-31T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-tkn-bundle:
+    - digest: sha256:55bbfc354ce402476542c8195db2c45a2be311b9b76a7ab47f1a2c2ec1de33a9
+      effective_on: "2023-03-05T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:05876b87df2280bec9be4db936df9a44c57768537ed5db4d92cd1da7895219b0
       effective_on: "2023-03-05T00:00:00Z"
       tag: "0.1"

@@ -19,6 +19,7 @@ test_bundle_not_exists {
 	expected_msg := "Pipeline task 'my-task' does not contain a bundle reference"
 	lib.assert_equal(deny, {{
 		"code": "attestation_task_bundle.disallowed_task_reference",
+		"collections": ["minimal"],
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as d with data["task-bundles"] as task_bundles
@@ -37,6 +38,7 @@ test_bundle_not_exists_empty_string {
 	expected_msg := sprintf("Pipeline task '%s' uses an empty bundle image reference", [name])
 	lib.assert_equal(deny, {{
 		"code": "attestation_task_bundle.empty_task_bundle_reference",
+		"collections": ["minimal"],
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as d with data["task-bundles"] as task_bundles

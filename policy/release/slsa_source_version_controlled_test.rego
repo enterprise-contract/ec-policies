@@ -34,13 +34,13 @@ test_non_git_uri if {
 	expected := {
 		{
 			"code": "slsa_source_version_controlled.material_non_git_uri",
-			"collections": ["slsa2", "slsa3"],
+			"collections": ["minimal", "slsa2", "slsa3"],
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Material URI \"ggit+https://example/repo\" is not a git URI",
 		},
 		{
 			"code": "slsa_source_version_controlled.material_non_git_uri",
-			"collections": ["slsa2", "slsa3"],
+			"collections": ["minimal", "slsa2", "slsa3"],
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Material URI \"svn+https://exmaple/other-repo.git\" is not a git URI",
 		},
@@ -71,19 +71,19 @@ test_non_git_commit if {
 	expected := {
 		{
 			"code": "slsa_source_version_controlled.material_without_git_commit",
-			"collections": ["slsa2", "slsa3"],
+			"collections": ["minimal", "slsa2", "slsa3"],
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Material digest \"g9ef4c1f9273718b2421b2c076f09786ede5982c\" is not a git commit",
 		},
 		{
 			"code": "slsa_source_version_controlled.material_without_git_commit",
-			"collections": ["slsa2", "slsa3"],
+			"collections": ["minimal", "slsa2", "slsa3"],
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Material digest \"1d2d2f924e986ac86fdf7b36c94bcdf32beec15\" is not a git commit",
 		},
 		{
 			"code": "slsa_source_version_controlled.material_without_git_commit",
-			"collections": ["slsa2", "slsa3"],
+			"collections": ["minimal", "slsa2", "slsa3"],
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Material digest \"36d89a3cadcdf269110757df1074b4ef45fe641ee\" is not a git commit",
 		},
@@ -104,7 +104,7 @@ test_invalid_materials if {
 
 	expected := {{
 		"code": "slsa_source_version_controlled.missing_materials",
-		"collections": ["slsa2", "slsa3"],
+		"collections": ["minimal", "slsa2", "slsa3"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "No materials match expected format",
 	}}

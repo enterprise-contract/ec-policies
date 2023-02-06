@@ -21,6 +21,7 @@ test_attestation_type_invalid {
 	expected_msg := sprintf("Step 0 in task 'mytask' has disallowed image ref '%s'", [bad_image])
 	lib.assert_equal(deny, {{
 		"code": "step_image_registries.disallowed_task_step_image",
+		"collections": ["minimal"],
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_data(bad_image)
@@ -29,6 +30,7 @@ test_attestation_type_invalid {
 test_missing_rule_data {
 	expected := {{
 		"code": "step_image_registries.missing_rule_data",
+		"collections": ["minimal"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required allowed_step_image_registry_prefixes rule data",
 	}}

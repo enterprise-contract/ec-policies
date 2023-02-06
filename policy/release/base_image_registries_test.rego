@@ -43,11 +43,13 @@ test_unacceptable_base_images {
 	expected := {
 		{
 			"code": "base_image_registries.disallowed_base_image",
+			"collections": ["minimal"],
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Base image \"docker.io/busybox:latest@sha256:bcd\" is from a disallowed registry",
 		},
 		{
 			"code": "base_image_registries.disallowed_base_image",
+			"collections": ["minimal"],
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Base image \"registry.redhat.ioo/spam:latest@sha256:def\" is from a disallowed registry",
 		},
@@ -64,6 +66,7 @@ test_missing_result {
 	)]
 	expected := {{
 		"code": "base_image_registries.base_images_missing",
+		"collections": ["minimal"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Base images result is missing",
 	}}
@@ -73,6 +76,7 @@ test_missing_result {
 test_missing_rule_data {
 	expected := {{
 		"code": "base_image_registries.missing_rule_data",
+		"collections": ["minimal"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required allowed_registry_prefixes rule data",
 	}}

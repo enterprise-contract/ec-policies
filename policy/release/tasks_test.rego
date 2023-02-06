@@ -67,6 +67,7 @@ test_current_equal_latest_also if {
 test_no_tasks_present if {
 	expected := {{
 		"code": "tasks.tasks_missing",
+		"collections": ["minimal"],
 		"msg": "No tasks found in PipelineRun attestation",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}

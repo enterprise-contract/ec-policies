@@ -41,6 +41,7 @@ import data.lib
 #   short_name: missing_materials
 #   failure_msg: No materials match expected format
 #   collections:
+#   - minimal
 #   - slsa2
 #   - slsa3
 #
@@ -59,6 +60,7 @@ deny contains result if {
 #   short_name: material_non_git_uri
 #   failure_msg: Material URI %q is not a git URI
 #   collections:
+#   - minimal
 #   - slsa2
 #   - slsa3
 #
@@ -77,6 +79,7 @@ deny contains result if {
 #   short_name: material_without_git_commit
 #   failure_msg: Material digest %q is not a git commit
 #   collections:
+#   - minimal
 #   - slsa2
 #   - slsa3
 #

@@ -155,6 +155,7 @@ _missing_tasks_violation(tasks) = errors if {
 		error := {
 			"code": "required_tasks.missing_required_task",
 			"msg": sprintf("Required task %q is missing", [task]),
+			"term": task,
 			"effective_on": "2022-01-01T00:00:00Z",
 		}
 	}
@@ -167,6 +168,7 @@ _missing_tasks_warning(tasks) = warnings if {
 			"code": "required_tasks.missing_future_required_task",
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": sprintf("Task %q is missing and will be required in the future", [task]),
+			"term": task,
 		}
 	}
 }

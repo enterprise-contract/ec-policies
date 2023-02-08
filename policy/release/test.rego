@@ -69,7 +69,11 @@ deny[result] {
 
 	count(all_unsupported) > 0
 	unsupported = all_unsupported[_]
-	result := lib.result_helper(rego.metadata.chain(), [unsupported.task, unsupported.result])
+	result := lib.result_helper_with_term(
+		rego.metadata.chain(),
+		[unsupported.task, unsupported.result],
+		unsupported.task,
+	)
 }
 
 # METADATA
@@ -81,64 +85,62 @@ deny[result] {
 #   the failure message will list the names of the failing tests.
 # custom:
 #   short_name: test_result_failures
-#   failure_msg: "The following tests did not complete successfully: %s"
+#   failure_msg: "Test %q did not complete successfully"
 #
 deny[result] {
 	all_failed = resulted_in(lib.rule_data("failed_tests_results"))
 
 	# Failed tests are those contained within all_failed that are not
 	# listed in the exclude list
-	failed_blocking := all_failed - lib.exclude
+	all_failed_blocking := all_failed - lib.exclude
 
-	# Fail if there are any
-	count(failed_blocking) > 0
+	some failed_blocking in all_failed_blocking
 
-	short_failed_blocking := [f | f := split(failed_blocking[_], ":")[1]]
-	result := lib.result_helper(
+	short_failed_blocking := split(failed_blocking, ":")[1]
+	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
-		[concat(", ", short_failed_blocking)],
+		[short_failed_blocking],
+		short_failed_blocking,
 	)
 }
 
 # METADATA
-# title: Some tests were skipped
+# title: Test was skipped
 # description: |-
-#   Collects all tests that have their result set to "SKIPPED".
+#   Reports any test that has its result set to "SKIPPED".
 # custom:
 #   short_name: test_result_skipped
-#   failure_msg: "The following tests were skipped: %s"
+#   failure_msg: "Test %q was skipped"
 #
 warn[result] {
 	all_skipped = resulted_in(lib.rule_data("skipped_tests_results"))
+	some skipped in all_skipped
 
-	# Don't report if there aren't any
-	count(all_skipped) > 0
-
-	short_skipped := [f | f := split(all_skipped[_], ":")[1]]
-	result := lib.result_helper(
+	short_skipped := split(skipped, ":")[1]
+	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
-		[concat(", ", short_skipped)],
+		[short_skipped],
+		short_skipped,
 	)
 }
 
 # METADATA
-# title: Some tests returned a warning
+# title: Test returned a warning
 # description: |-
-#   Collects all tests that have their result set to "WARNING".
+#   Reports any test that has its result set to "WARNING".
 # custom:
 #   short_name: test_result_warning
-#   failure_msg: "The following tests returned a warning: %s"
+#   failure_msg: "Test %q returned a warning"
 #
 warn[result] {
 	all_warned = resulted_in(lib.rule_data("warned_tests_results"))
+	some warned in all_warned
 
-	# Don't report if there aren't any
-	count(all_warned) > 0
-
-	short_warned := [f | f := split(all_warned[_], ":")[1]]
-	result := lib.result_helper(
+	short_warned := split(all_warned[_], ":")[1]
+	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
-		[concat(", ", short_warned)],
+		[short_warned],
+		short_warned,
 	)
 }
 

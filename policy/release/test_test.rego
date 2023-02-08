@@ -49,7 +49,8 @@ mock_a_failing_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name,
 test_failure_data {
 	lib.assert_equal(deny, {{
 		"code": "test.test_result_failures",
-		"msg": "The following tests did not complete successfully: failed_1",
+		"msg": "Test \"failed_1\" did not complete successfully",
+		"term": "failed_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_a_failing_test
 		with data.config.policy as {"exclude": []}
@@ -60,7 +61,8 @@ mock_an_errored_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name
 test_error_data {
 	lib.assert_equal(deny, {{
 		"code": "test.test_result_failures",
-		"msg": "The following tests did not complete successfully: errored_1",
+		"msg": "Test \"errored_1\" did not complete successfully",
+		"term": "errored_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_an_errored_test
 		with data.config.policy as {"exclude": []}
@@ -69,11 +71,20 @@ test_error_data {
 mock_mixed_data := array.concat(mock_a_failing_test, mock_an_errored_test)
 
 test_mix_data {
-	lib.assert_equal(deny, {{
-		"code": "test.test_result_failures",
-		"msg": "The following tests did not complete successfully: errored_1, failed_1",
-		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with input.attestations as mock_mixed_data
+	lib.assert_equal(deny, {
+		{
+			"code": "test.test_result_failures",
+			"msg": "Test \"failed_1\" did not complete successfully",
+			"term": "failed_1",
+			"effective_on": "2022-01-01T00:00:00Z",
+		},
+		{
+			"code": "test.test_result_failures",
+			"msg": "Test \"errored_1\" did not complete successfully",
+			"term": "errored_1",
+			"effective_on": "2022-01-01T00:00:00Z",
+		},
+	}) with input.attestations as mock_mixed_data
 		with data.config.policy as {"exclude": []}
 }
 
@@ -91,7 +102,8 @@ test_can_skip_by_name {
 
 	lib.assert_equal(deny, {{
 		"code": "test.test_result_failures",
-		"msg": "The following tests did not complete successfully: errored_1",
+		"msg": "Test \"errored_1\" did not complete successfully",
+		"term": "errored_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_mixed_data
 		with data.config.policy as {"non_blocking_checks": ["test:failed_1"]}
@@ -99,7 +111,8 @@ test_can_skip_by_name {
 	# exclude works the same as non_blocking_checks
 	lib.assert_equal(deny, {{
 		"code": "test.test_result_failures",
-		"msg": "The following tests did not complete successfully: errored_1",
+		"msg": "Test \"errored_1\" did not complete successfully",
+		"term": "errored_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_mixed_data
 		with data.config.policy as {"exclude": ["test:failed_1"]}
@@ -114,7 +127,8 @@ test_skipped_is_warning {
 	skipped_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SKIPPED"}, "skipped_1", _bundle)]
 	lib.assert_equal(warn, {{
 		"code": "test.test_result_skipped",
-		"msg": "The following tests were skipped: skipped_1",
+		"msg": "Test \"skipped_1\" was skipped",
+		"term": "skipped_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as skipped_test
 }
@@ -123,7 +137,8 @@ test_warning_is_warning {
 	warning_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "WARNING"}, "warning_1", _bundle)]
 	lib.assert_equal(warn, {{
 		"code": "test.test_result_warning",
-		"msg": "The following tests returned a warning: warning_1",
+		"msg": "Test \"warning_1\" returned a warning",
+		"term": "warning_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as warning_test
 }
@@ -141,21 +156,56 @@ test_mixed_statuses {
 		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "WARNING"}, "warning_2", _bundle),
 	]
 
-	lib.assert_equal(deny, {{
-		"code": "test.test_result_failures",
-		"msg": "The following tests did not complete successfully: error_1, error_2, failure_1, failure_2",
-		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with input.attestations as test_results
+	lib.assert_equal(deny, {
+		{
+			"code": "test.test_result_failures",
+			"msg": "Test \"error_1\" did not complete successfully",
+			"term": "error_1",
+			"effective_on": "2022-01-01T00:00:00Z",
+		},
+		{
+			"code": "test.test_result_failures",
+			"msg": "Test \"error_2\" did not complete successfully",
+			"term": "error_2",
+			"effective_on": "2022-01-01T00:00:00Z",
+		},
+		{
+			"code": "test.test_result_failures",
+			"msg": "Test \"failure_1\" did not complete successfully",
+			"term": "failure_1",
+			"effective_on": "2022-01-01T00:00:00Z",
+		},
+		{
+			"code": "test.test_result_failures",
+			"msg": "Test \"failure_2\" did not complete successfully",
+			"term": "failure_2",
+			"effective_on": "2022-01-01T00:00:00Z",
+		},
+	}) with input.attestations as test_results
 
 	lib.assert_equal(warn, {
 		{
 			"code": "test.test_result_skipped",
-			"msg": "The following tests were skipped: skipped_1, skipped_2",
+			"msg": "Test \"skipped_1\" was skipped",
+			"term": "skipped_1",
+			"effective_on": "2022-01-01T00:00:00Z",
+		},
+		{
+			"code": "test.test_result_skipped",
+			"msg": "Test \"skipped_2\" was skipped",
+			"term": "skipped_2",
 			"effective_on": "2022-01-01T00:00:00Z",
 		},
 		{
 			"code": "test.test_result_warning",
-			"msg": "The following tests returned a warning: warning_1, warning_2",
+			"msg": "Test \"warning_1\" returned a warning",
+			"term": "warning_1",
+			"effective_on": "2022-01-01T00:00:00Z",
+		},
+		{
+			"code": "test.test_result_warning",
+			"msg": "Test \"warning_2\" returned a warning",
+			"term": "warning_2",
 			"effective_on": "2022-01-01T00:00:00Z",
 		},
 	}) with input.attestations as test_results
@@ -170,10 +220,10 @@ test_unsupported_test_result {
 	]
 
 	lib.assert_equal(deny, {
-		{"code": "test.test_result_unsupported", "msg": "Test 'error_1' has unsupported result 'EROR'", "effective_on": "2022-01-01T00:00:00Z"},
-		{"code": "test.test_result_unsupported", "msg": "Test 'failure_1' has unsupported result 'FAIL'", "effective_on": "2022-01-01T00:00:00Z"},
-		{"code": "test.test_result_unsupported", "msg": "Test 'skipped_1' has unsupported result 'SKIPED'", "effective_on": "2022-01-01T00:00:00Z"},
-		{"code": "test.test_result_unsupported", "msg": "Test 'success_1' has unsupported result 'SUCESS'", "effective_on": "2022-01-01T00:00:00Z"},
+		{"code": "test.test_result_unsupported", "msg": "Test 'error_1' has unsupported result 'EROR'", "effective_on": "2022-01-01T00:00:00Z", "term": "error_1"},
+		{"code": "test.test_result_unsupported", "msg": "Test 'failure_1' has unsupported result 'FAIL'", "effective_on": "2022-01-01T00:00:00Z", "term": "failure_1"},
+		{"code": "test.test_result_unsupported", "msg": "Test 'skipped_1' has unsupported result 'SKIPED'", "effective_on": "2022-01-01T00:00:00Z", "term": "skipped_1"},
+		{"code": "test.test_result_unsupported", "msg": "Test 'success_1' has unsupported result 'SUCESS'", "effective_on": "2022-01-01T00:00:00Z", "term": "success_1"},
 	}) with input.attestations as test_results
 }
 

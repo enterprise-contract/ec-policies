@@ -7,12 +7,12 @@ import data.lib
 
 test_latest_required_tasks if {
 	expected := {t | some t in _expected_latest.tasks}
-	lib.assert_equal(expected, latest_required_tasks) with data["required-tasks"] as _time_based_required_tasks
+	lib.assert_equal(expected, latest_required_default_tasks) with data["required-tasks"] as _time_based_required_tasks
 }
 
 test_current_required_tasks if {
 	expected := {t | some t in _expected_current.tasks}
-	lib.assert_equal(expected, current_required_tasks) with data["required-tasks"] as _time_based_required_tasks
+	lib.assert_equal(expected, current_required_default_tasks) with data["required-tasks"] as _time_based_required_tasks
 }
 
 test_tasks_from_attestation if {

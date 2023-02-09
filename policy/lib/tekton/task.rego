@@ -22,22 +22,6 @@ current_required_default_tasks contains task if {
 	some task in time.most_current(data["required-tasks"]).tasks
 }
 
-# get the future tasks that are pipeline specific. If none exists
-# get the default list
-latest_required_tasks := task_data if {
-	task_data := latest_required_pipeline_tasks(input)
-} else := task_data if {
-	task_data := latest_required_default_tasks
-}
-
-# get the current tasks that are pipeline specific. If none exists
-# get the default list
-current_required_tasks := task_data if {
-	task_data := current_required_pipeline_tasks(input)
-} else := task_data if {
-	task_data := current_required_default_tasks
-}
-
 # tasks returns the set of tasks found in the object.
 tasks(obj) := _tasks if {
 	_tasks := {task |

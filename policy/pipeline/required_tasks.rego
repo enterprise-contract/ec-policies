@@ -53,10 +53,10 @@ deny contains result if {
 	count(tkn.tasks(input)) > 0
 
 	# Get missing tasks by comparing with the default required task list
-	some required_task in _missing_tasks(tkn.current_required_tasks)
+	some required_task in _missing_tasks(current_required_tasks)
 
 	# Don't report an error if a task is required now, but not in the future
-	required_task in tkn.latest_required_tasks
+	required_task in latest_required_tasks
 	result := lib.result_helper_with_term(rego.metadata.chain(), [required_task], required_task)
 }
 
@@ -72,11 +72,11 @@ warn contains result if {
 	count(tkn.tasks(input)) > 0
 
 	# Get missing tasks by comparing with the default required task list
-	some required_task in _missing_tasks(tkn.latest_required_tasks)
+	some required_task in _missing_tasks(latest_required_tasks)
 
 	# If the required_task is also part of the current_required_tasks, do
 	# not proceed with a warning since that's clearly a violation.
-	not required_task in tkn.current_required_tasks
+	not required_task in current_required_tasks
 	result := lib.result_helper_with_term(rego.metadata.chain(), [required_task], required_task)
 }
 
@@ -100,4 +100,20 @@ _missing_tasks(required_tasks) := tasks if {
 		some task in required_tasks
 		not task in tkn.tasks_names(input)
 	}
+}
+
+# get the future tasks that are pipeline specific. If none exists
+# get the default list
+latest_required_tasks := task_data if {
+	task_data := tkn.latest_required_pipeline_tasks(input)
+} else := task_data if {
+	task_data := tkn.latest_required_default_tasks
+}
+
+# get the current tasks that are pipeline specific. If none exists
+# get the default list
+current_required_tasks := task_data if {
+	task_data := tkn.current_required_pipeline_tasks(input)
+} else := task_data if {
+	task_data := tkn.current_required_default_tasks
 }

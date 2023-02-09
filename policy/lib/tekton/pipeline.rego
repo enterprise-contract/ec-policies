@@ -28,6 +28,11 @@ pipeline_label_selector(pipeline, selector) := value if {
 	label == selector
 }
 
+pipeline_label_selector(pipeline, selector) := value if {
+	some label, value in pipeline.predicate.invocation.environment.labels
+	label == selector
+}
+
 pipeline_name := name if {
 	name := input.metadata.name
 }

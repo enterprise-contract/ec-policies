@@ -53,7 +53,7 @@ deny contains result if {
 
 	# Don't report an error if a task is required now, but not in the future
 	required_task in tkn.latest_required_tasks
-	result := lib.result_helper(rego.metadata.chain(), [required_task])
+	result := lib.result_helper_with_term(rego.metadata.chain(), [required_task], required_task)
 }
 
 # METADATA
@@ -70,7 +70,7 @@ warn contains result if {
 	# If the required_task is also part of the current_required_tasks, do
 	# not proceed with a warning since that's clearly a violation.
 	not required_task in tkn.current_required_tasks
-	result := lib.result_helper(rego.metadata.chain(), [required_task])
+	result := lib.result_helper_with_term(rego.metadata.chain(), [required_task], required_task)
 }
 
 # METADATA

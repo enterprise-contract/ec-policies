@@ -9,6 +9,10 @@ result_helper(chain, failure_sprintf_params) := result {
 	result := _basic_result(chain, failure_sprintf_params)
 }
 
+result_helper_with_term(chain, failure_sprintf_params, term) := result {
+	result := object.union(result_helper(chain, failure_sprintf_params), {"term": term})
+}
+
 _basic_result(chain, failure_sprintf_params) := result {
 	result := {
 		"code": _code(chain),

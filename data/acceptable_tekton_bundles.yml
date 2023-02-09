@@ -265,21 +265,21 @@ pipeline-bundles:
       tag: d2e1cbe0cab869ade97d9b6c7235a23797e9b119
 pipeline-required-tasks:
   nodejs:
-    effective_on: "2023-03-11T00:00:00Z"
-    tasks:
-      - clair-scan
-      - clamav-scan
-      - configure-build
-      - deprecated-image-check
-      - git-clone
-      - init
-      - prefetch-dependencies
-      - s2i-nodejs
-      - sanity-inspect-image
-      - sanity-label-check
-      - sast-snyk-check
-      - sbom-json-check
-      - summary
+    - effective_on: "2023-03-11T00:00:00Z"
+      tasks:
+        - clair-scan
+        - clamav-scan
+        - configure-build
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - s2i-nodejs
+        - sanity-inspect-image
+        - sanity-label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
 required-tasks:
   - effective_on: "2023-03-05T00:00:00Z"
     tasks:

@@ -63,6 +63,20 @@ by a dot. Rule codes can be see in the documentation also. For example the
 xref::release_policy.adoc#unknown_att_type[Unknown attestation type found] rule
 name is `attestation_type.unknown_att_type`.
 
+A "package name:term"::
+
+Some policy rules process a list of items, "term" allows a particular item to
+be excluded or included. This matcher behaves like "package name" but only
+applies to policy rules in the package that match the "term". For example, the
+xref::release_policy.adoc#test_package[Test package] emits results for each
+test case. A particular test case can be ignored without ignoring the remaining
+ones.
+
+A "rule name:term"::
+
+This is similar to "package name:term", but allows finer granularity by only
+applying to a particular policy rule within the package.
+
 "*"::
 
 The `"\*"` acts as a wildcard to match any package. Note that it does not match

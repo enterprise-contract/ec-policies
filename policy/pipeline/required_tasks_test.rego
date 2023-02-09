@@ -36,7 +36,7 @@ test_future_required_tasks_met if {
 }
 
 test_future_required_tasks_not_met if {
-	missing_tasks := {"buildah"}
+	missing_tasks := {"buildah-future"}
 	pipeline := _pipeline_with_tasks_and_label(_expected_future_required_tasks - missing_tasks, [], [])
 
 	expected := _missing_tasks_warning(missing_tasks)
@@ -53,7 +53,7 @@ test_extra_tasks_ignored if {
 test_missing_pipeline_label if {
 	expected := {{
 		"code": "required_tasks.missing_required_pipeline_task_warning",
-		"msg": "Specific required tasks do not exist for pipeline \"fbc\"",
+		"msg": "Required tasks do not exist for pipeline \"fbc\"",
 		"effective_on": "2022-01-01T00:00:00Z"
 	}}
 	pipeline := _pipeline_with_tasks(_expected_required_tasks, [], [])
@@ -226,7 +226,7 @@ _missing_tasks_violation(tasks) = errors if {
 	errors := {error |
 		some task in tasks
 		error := {
-			"code": "required_tasks.missing_required_pipeline_task",
+			"code": "required_tasks.missing_required_task",
 			"msg": sprintf("Required task %q is missing", [task]),
 			"effective_on": "2022-01-01T00:00:00Z",
 		}
@@ -245,22 +245,11 @@ _missing_default_tasks_violation(tasks) = errors if {
 	}
 }
 
-_missing_pipeline_tasks_violation(tasks) = errors if {
-	errors := {error |
-		some task in tasks
-		error := {
-			"code": "required_tasks.missing_required_pipeline_task",
-			"msg": sprintf("Required task %q is missing", [task]),
-			"effective_on": "2022-01-01T00:00:00Z",
-		}
-	}
-}
-
 _missing_tasks_warning(tasks) = warnings if {
 	warnings := {warning |
 		some task in tasks
 		warning := {
-			"code": "required_tasks.missing_future_required_pipeline_task",
+			"code": "required_tasks.missing_future_required_task",
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": sprintf("Task %q is missing and will be required in the future", [task]),
 			"term": task,
@@ -273,7 +262,7 @@ _missing_pipeline_tasks_warning(name) = warnings if {
 		warning := {
 			"code": "required_tasks.missing_required_pipeline_task_warning",
 			"effective_on": "2022-01-01T00:00:00Z",
-			"msg": sprintf("Specific required tasks do not exist for pipeline %q", [name]),
+			"msg": sprintf("Required tasks do not exist for pipeline %q", [name]),
 		}
 	}
 }
@@ -295,6 +284,7 @@ _expected_required_tasks := {
 _expected_future_required_tasks := {
 	"git-clone",
 	"buildah",
+	"buildah-future",
 	"conftest-clair",
 	"sanity-label-check[POLICY_NAMESPACE=required_checks]",
 	"sanity-label-check[POLICY_NAMESPACE=optional_checks]",

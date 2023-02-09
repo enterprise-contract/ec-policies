@@ -13,13 +13,29 @@ missing_required_tasks_data if {
 
 # The latest set of required tasks. Tasks here are not required right now
 # but will be required in the future.
-latest_required_tasks contains task if {
+latest_required_default_tasks contains task if {
 	some task in time.newest(data["required-tasks"]).tasks
 }
 
 # The set of required tasks that are required right now.
-current_required_tasks contains task if {
+current_required_default_tasks contains task if {
 	some task in time.most_current(data["required-tasks"]).tasks
+}
+
+# get the future tasks that are pipeline specific. If none exists
+# get the default list
+latest_required_tasks := task_data if {
+	task_data := latest_required_pipeline_tasks(input)
+} else := task_data if {
+	task_data := latest_required_default_tasks
+}
+
+# get the current tasks that are pipeline specific. If none exists
+# get the default list
+current_required_tasks := task_data if {
+	task_data := current_required_pipeline_tasks(input)
+} else := task_data if {
+	task_data := current_required_default_tasks
 }
 
 # tasks returns the set of tasks found in the object.

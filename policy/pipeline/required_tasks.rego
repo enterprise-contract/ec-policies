@@ -28,50 +28,50 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
-# METADATA
-# title: Missing required specific pipeline tasks
-# description: |-
-#   This policy enforces that the required set of tasks are included
-#   in the Pipeline definition.
-# custom:
-#   short_name: missing_required_pipeline_task
-#   failure_msg: Required task %q is missing
-deny contains result if {
-	count(tkn.tasks(input)) > 0
-	required_pipeline_tasks := tkn.current_required_pipeline_tasks(input)
-	some missing_required_task in _missing_tasks(required_pipeline_tasks)
-	missing_required_task in required_pipeline_tasks
-	missing_required_task in tkn.latest_required_pipeline_tasks(input)
-	result := lib.result_helper(rego.metadata.chain(), [missing_required_task])
-}
+# # METADATA
+# # title: Missing required pipeline tasks
+# # description: |-
+# #   This policy enforces that the required set of tasks are included
+# #   in the Pipeline definition.
+# # custom:
+# #   short_name: missing_required_pipeline_task
+# #   failure_msg: Required task %q is missing
+# deny contains result if {
+# 	count(tkn.tasks(input)) > 0
+# 	required_pipeline_tasks := current_required_tasks(input)
+# 	some missing_required_task in _missing_tasks(required_pipeline_tasks)
+# 	missing_required_task in required_pipeline_tasks
+# 	missing_required_task in latest_required_tasks(input)
+# 	result := lib.result_helper(rego.metadata.chain(), [missing_required_task])
+# }
 
 # METADATA
 # title: Missing required pipeline tasks warning
 # description: |-
-#   This policy warns if a specific task list does not exist in the acceptable_bundles.yaml file
+#   This policy warns if a task list does not exist in the acceptable_bundles.yaml file
 # custom:
 #   short_name: missing_required_pipeline_task_warning
-#   failure_msg: Specific required tasks do not exist for pipeline %q
+#   failure_msg: Required tasks do not exist for pipeline %q
 warn contains result if {
 	count(tkn.tasks(input)) > 0
 	not tkn.current_required_pipeline_tasks(input)
 	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_name])
 }
 
-# METADATA
-# title: Missing future required specific pipeline tasks
-# description: |-
-#   This policy warns when a task that will be required in the future
-#   was not included in the Pipeline definition.
-# custom:
-#   short_name: missing_future_required_pipeline_task
-#   failure_msg: Task %q is missing and will be required in the future
-warn contains result if {
-	count(tkn.tasks(input)) > 0
-	required_pipeline_tasks := tkn.latest_required_pipeline_tasks(input)
-	some missing_required_task in _missing_tasks(required_pipeline_tasks)
-	result := lib.result_helper(rego.metadata.chain(), [missing_required_task])
-}
+# # METADATA
+# # title: Missing future required pipeline tasks
+# # description: |-
+# #   This policy warns when a task that will be required in the future
+# #   was not included in the Pipeline definition.
+# # custom:
+# #   short_name: missing_future_required_pipeline_task
+# #   failure_msg: Task %q is missing and will be required in the future
+# warn contains result if {
+# 	count(tkn.tasks(input)) > 0
+# 	required_pipeline_tasks := tkn.latest_required_pipeline_tasks(input)
+# 	some missing_required_task in _missing_tasks(required_pipeline_tasks)
+# 	result := lib.result_helper(rego.metadata.chain(), [missing_required_task])
+# }
 
 # METADATA
 # title: Missing required task
@@ -83,8 +83,6 @@ warn contains result if {
 #   failure_msg: Required task %q is missing
 deny contains result if {
 	count(tkn.tasks(input)) > 0
-	# Check if there is a specific pipeline task list
-	not tkn.current_required_pipeline_tasks(input)
 	# Get missing tasks by comparing with the default required task list
 	some required_task in _missing_tasks(tkn.current_required_tasks)
 
@@ -103,8 +101,6 @@ deny contains result if {
 #   failure_msg: Task %q is missing and will be required in the future
 warn contains result if {
 	count(tkn.tasks(input)) > 0
-	# Check if there is a specific pipeline task list
-	not tkn.latest_required_pipeline_tasks(input)
 	# Get missing tasks by comparing with the default required task list
 	some required_task in _missing_tasks(tkn.latest_required_tasks)
 

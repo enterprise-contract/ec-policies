@@ -52,7 +52,7 @@ test_extra_tasks_ignored if {
 
 test_missing_pipeline_label if {
 	expected := {{
-		"code": "required_tasks.missing_required_pipeline_task_warning",
+		"code": "required_tasks.missing_required_pipeline_task",
 		"msg": "Required tasks do not exist for pipeline \"fbc\"",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}
@@ -265,7 +265,7 @@ _missing_tasks_warning(tasks) = warnings if {
 _missing_pipeline_tasks_warning(name) = warnings if {
 	warnings := {warning |
 		warning := {
-			"code": "required_tasks.missing_required_pipeline_task_warning",
+			"code": "required_tasks.missing_required_pipeline_task",
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": sprintf("Required tasks do not exist for pipeline %q", [name]),
 		}

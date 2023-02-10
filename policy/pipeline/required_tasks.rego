@@ -28,50 +28,18 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
-# # METADATA
-# # title: Missing required pipeline tasks
-# # description: |-
-# #   This policy enforces that the required set of tasks are included
-# #   in the Pipeline definition.
-# # custom:
-# #   short_name: missing_required_pipeline_task
-# #   failure_msg: Required task %q is missing
-# deny contains result if {
-# 	count(tkn.tasks(input)) > 0
-# 	required_pipeline_tasks := current_required_tasks(input)
-# 	some missing_required_task in _missing_tasks(required_pipeline_tasks)
-# 	missing_required_task in required_pipeline_tasks
-# 	missing_required_task in latest_required_tasks(input)
-# 	result := lib.result_helper(rego.metadata.chain(), [missing_required_task])
-# }
-
 # METADATA
-# title: Missing required pipeline tasks warning
+# title: Missing required pipeline tasks
 # description: |-
 #   This policy warns if a task list does not exist in the acceptable_bundles.yaml file
 # custom:
-#   short_name: missing_required_pipeline_task_warning
+#   short_name: missing_required_pipeline_task
 #   failure_msg: Required tasks do not exist for pipeline %q
 warn contains result if {
 	count(tkn.tasks(input)) > 0
 	not tkn.current_required_pipeline_tasks(input)
 	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_name])
 }
-
-# # METADATA
-# # title: Missing future required pipeline tasks
-# # description: |-
-# #   This policy warns when a task that will be required in the future
-# #   was not included in the Pipeline definition.
-# # custom:
-# #   short_name: missing_future_required_pipeline_task
-# #   failure_msg: Task %q is missing and will be required in the future
-# warn contains result if {
-# 	count(tkn.tasks(input)) > 0
-# 	required_pipeline_tasks := tkn.latest_required_pipeline_tasks(input)
-# 	some missing_required_task in _missing_tasks(required_pipeline_tasks)
-# 	result := lib.result_helper(rego.metadata.chain(), [missing_required_task])
-# }
 
 # METADATA
 # title: Missing required task

@@ -121,6 +121,7 @@ warn contains result if {
 #   failure_msg: Missing required task-bundles data
 deny contains result if {
 	tkn.missing_required_tasks_data
+	not tkn.required_task_list(input)
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 

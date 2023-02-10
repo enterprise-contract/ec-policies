@@ -57,7 +57,6 @@ test_missing_pipeline_label if {
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}
 	pipeline := _pipeline_with_tasks(_expected_required_tasks, [], [])
-	expected_denies := _missing_tasks_violation(_expected_future_required_tasks - _expected_required_tasks)
 	lib.assert_equal(expected, warn) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
 		with input as pipeline
 }
@@ -170,6 +169,18 @@ test_parameterized if {
 
 	expected := _missing_default_tasks_violation({"sanity-label-check[POLICY_NAMESPACE=required_checks]"})
 	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
+		with input as pipeline
+}
+
+test_missing_required_tasks_data if {
+	pipeline := _pipeline_with_tasks_and_label(_expected_required_tasks, [], [])
+	expected := {{
+		"code": "required_tasks.missing_required_data",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "Missing required task-bundles data",
+	}}
+	lib.assert_equal(expected, deny) with data["required-tasks"] as []
+		with data["pipeline-required-tasks"] as {}
 		with input as pipeline
 }
 

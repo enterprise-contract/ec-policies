@@ -4,7 +4,6 @@ import future.keywords.contains
 import future.keywords.if
 import future.keywords.in
 
-import data.lib.refs
 import data.lib.time
 
 pipeline_label := "pipelines.openshift.io/runtime"

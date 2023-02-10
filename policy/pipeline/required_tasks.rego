@@ -29,6 +29,19 @@ deny contains result if {
 }
 
 # METADATA
+# title: Missing required pipeline tasks
+# description: |-
+#   This policy warns if a task list does not exist in the acceptable_bundles.yaml file
+# custom:
+#   short_name: missing_required_pipeline_task
+#   failure_msg: Required tasks do not exist for pipeline %q
+warn contains result if {
+	count(tkn.tasks(input)) > 0
+	not tkn.current_required_pipeline_tasks(input)
+	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_name])
+}
+
+# METADATA
 # title: Missing required task
 # description: |-
 #   This policy enforces that the required set of tasks are included
@@ -38,6 +51,8 @@ deny contains result if {
 #   failure_msg: Required task %q is missing
 deny contains result if {
 	count(tkn.tasks(input)) > 0
+
+	# Get missing tasks by comparing with the default required task list
 	some required_task in _missing_tasks(tkn.current_required_tasks)
 
 	# Don't report an error if a task is required now, but not in the future
@@ -55,6 +70,8 @@ deny contains result if {
 #   failure_msg: Task %q is missing and will be required in the future
 warn contains result if {
 	count(tkn.tasks(input)) > 0
+
+	# Get missing tasks by comparing with the default required task list
 	some required_task in _missing_tasks(tkn.latest_required_tasks)
 
 	# If the required_task is also part of the current_required_tasks, do
@@ -72,11 +89,12 @@ warn contains result if {
 #   failure_msg: Missing required task-bundles data
 deny contains result if {
 	tkn.missing_required_tasks_data
+	not tkn.required_task_list(input)
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
 # _missing_tasks returns a set of task names that are in the given
-# required_tasks, but not in the PipelineRun attestation.
+# required_tasks, but not in the pipeline definition.
 _missing_tasks(required_tasks) := tasks if {
 	tasks := {task |
 		some task in required_tasks

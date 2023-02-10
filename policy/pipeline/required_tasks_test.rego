@@ -7,6 +7,61 @@ import future.keywords.in
 import data.lib
 
 test_required_tasks_met if {
+	pipeline := _pipeline_with_tasks_and_label(_expected_required_tasks, [], [])
+	lib.assert_empty(deny) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with input as pipeline
+
+	pipeline_finally := _pipeline_with_tasks_and_label([], _expected_required_tasks, [])
+	lib.assert_empty(deny) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with input as pipeline_finally
+}
+
+test_required_tasks_not_met if {
+	missing_tasks := {"buildah"}
+	pipeline := _pipeline_with_tasks_and_label(_expected_required_tasks - missing_tasks, [], [])
+
+	expected := _missing_tasks_violation(missing_tasks)
+	lib.assert_equal(expected, deny) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with input as pipeline
+}
+
+test_future_required_tasks_met if {
+	pipeline := _pipeline_with_tasks_and_label(_expected_future_required_tasks, [], [])
+	lib.assert_empty(warn) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with input as pipeline
+
+	pipeline_finally := _pipeline_with_tasks_and_label([], _expected_future_required_tasks, [])
+	lib.assert_empty(warn) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with input as pipeline_finally
+}
+
+test_future_required_tasks_not_met if {
+	missing_tasks := {"buildah-future"}
+	pipeline := _pipeline_with_tasks_and_label(_expected_future_required_tasks - missing_tasks, [], [])
+
+	expected := _missing_tasks_warning(missing_tasks)
+	lib.assert_equal(expected, warn) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with input as pipeline
+}
+
+test_extra_tasks_ignored if {
+	pipeline := _pipeline_with_tasks_and_label(_expected_future_required_tasks | {"spam"}, [], [])
+	lib.assert_empty(deny | warn) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with input as pipeline
+}
+
+test_missing_pipeline_label if {
+	expected := {{
+		"code": "required_tasks.missing_required_pipeline_task",
+		"msg": "Required tasks do not exist for pipeline \"fbc\"",
+		"effective_on": "2022-01-01T00:00:00Z",
+	}}
+	pipeline := _pipeline_with_tasks(_expected_required_tasks, [], [])
+	lib.assert_equal(expected, warn) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with input as pipeline
+}
+
+test_default_required_task_met if {
 	pipeline := _pipeline_with_tasks(_expected_required_tasks, [], [])
 	lib.assert_empty(deny) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline
@@ -14,59 +69,63 @@ test_required_tasks_met if {
 	pipeline_finally := _pipeline_with_tasks([], _expected_required_tasks, [])
 	lib.assert_empty(deny) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline_finally
+
+	expected_warn := _missing_pipeline_tasks_warning("fbc")
+	lib.assert_equal(expected_warn, warn) with data["required-tasks"] as _expected_required_tasks
+		with input as pipeline
 }
 
-test_required_tasks_not_met if {
+test_default_required_tasks_not_met if {
 	missing_tasks := {"buildah"}
 	pipeline := _pipeline_with_tasks(_expected_required_tasks - missing_tasks, [], [])
 
-	expected := _missing_tasks_violation(missing_tasks)
+	expected := _missing_default_tasks_violation(missing_tasks)
 	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
+		with input as pipeline
+
+	expected_warn := _missing_pipeline_tasks_warning("fbc")
+	lib.assert_equal(expected_warn, warn) with data["required-tasks"] as _expected_required_tasks
 		with input as pipeline
 }
 
-test_future_required_tasks_met if {
+test_default_future_required_tasks_met if {
+	expected_warn := _missing_pipeline_tasks_warning("fbc")
 	pipeline := _pipeline_with_tasks(_expected_future_required_tasks, [], [])
-	lib.assert_empty(warn) with data["required-tasks"] as _time_based_required_tasks
+	lib.assert_equal(expected_warn, warn) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline
 
 	pipeline_finally := _pipeline_with_tasks([], _expected_future_required_tasks, [])
-	lib.assert_empty(warn) with data["required-tasks"] as _time_based_required_tasks
+	lib.assert_equal(expected_warn, warn) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline_finally
 }
 
-test_future_required_tasks_not_met if {
+test_default_future_required_tasks_not_met if {
 	missing_tasks := {"conftest-clair"}
 	pipeline := _pipeline_with_tasks(_expected_required_tasks - missing_tasks, [], [])
 
-	expected := _missing_tasks_warning(missing_tasks)
+	expected := _missing_pipeline_tasks_warning("fbc") | {{"code": "required_tasks.missing_future_required_task", "effective_on": "2022-01-01T00:00:00Z", "msg": "Task \"conftest-clair\" is missing and will be required in the future", "term": "conftest-clair"}}
 	lib.assert_equal(expected, warn) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline
 }
 
-test_extra_tasks_ignored if {
-	pipeline := _pipeline_with_tasks(_expected_future_required_tasks | {"spam"}, [], [])
-	lib.assert_empty(deny | warn) with data["required-tasks"] as _time_based_required_tasks
-		with input as pipeline
-}
-
 test_current_equal_latest if {
-	required_tasks := [{"effective_on": "2021-01-01T00:00:00Z", "tasks": _time_based_required_tasks[0].tasks}]
-	pipeline := _pipeline_with_tasks(_expected_future_required_tasks, [], [])
+	required_tasks := {"fbc": [{"effective_on": "2021-01-01T00:00:00Z", "tasks": _time_based_required_tasks[0].tasks}]}
+	pipeline := _pipeline_with_tasks_and_label(_expected_future_required_tasks, [], [])
 
-	lib.assert_empty(deny | warn) with data["required-tasks"] as required_tasks
+	lib.assert_empty(deny | warn) with data["pipeline-required-tasks"] as required_tasks
 		with input as pipeline
 }
 
 test_current_equal_latest_also if {
-	required_tasks := [{"effective_on": "2021-01-01T00:00:00Z", "tasks": _time_based_required_tasks[0].tasks}]
-	pipeline := _pipeline_with_tasks(_expected_required_tasks, [], [])
+	required_tasks := {"fbc": [{"effective_on": "2021-01-01T00:00:00Z", "tasks": _expected_required_tasks}]}
+	pipeline := _pipeline_with_tasks_and_label(_expected_required_tasks, [], [])
 
-	lib.assert_empty(warn) with data["required-tasks"] as required_tasks
+	lib.assert_empty(warn) with data["pipeline-required-tasks"] as required_tasks
 		with input as pipeline
 
+	required_tasks_denies := {"fbc": [{"effective_on": "2021-01-01T00:00:00Z", "tasks": _expected_future_required_tasks}]}
 	expected_denies := _missing_tasks_violation(_expected_future_required_tasks - _expected_required_tasks)
-	lib.assert_equal(expected_denies, deny) with data["required-tasks"] as required_tasks
+	lib.assert_equal(expected_denies, deny) with data["pipeline-required-tasks"] as required_tasks_denies
 		with input as pipeline
 }
 
@@ -77,13 +136,13 @@ test_no_tasks_present if {
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}
 
-	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
+	lib.assert_equal(expected, deny) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
 		with input as {"kind": "Pipeline"}
 
-	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
+	lib.assert_equal(expected, deny) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
 		with input as {"kind": "Pipeline", "spec": {}}
 
-	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
+	lib.assert_equal(expected, deny) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
 		with input as {"kind": "Pipeline", "spec": {"tasks": [], "finally": []}}
 }
 
@@ -106,20 +165,37 @@ test_parameterized if {
 			"params": [{"name": "POLICY_NAMESPACE", "value": "optional_checks"}],
 		},
 	]
-	pipeline := _pipeline_with_tasks({"git-clone", "buildah"}, [], with_wrong_parameter)
+	pipeline := _pipeline_with_tasks_and_label({"git-clone", "buildah"}, [], with_wrong_parameter)
 
-	expected := _missing_tasks_violation({"sanity-label-check[POLICY_NAMESPACE=required_checks]"})
+	expected := _missing_default_tasks_violation({"sanity-label-check[POLICY_NAMESPACE=required_checks]"})
 	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline
 }
 
 test_missing_required_tasks_data if {
+	pipeline := _pipeline_with_tasks_and_label(_expected_required_tasks, [], [])
 	expected := {{
 		"code": "required_tasks.missing_required_data",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required task-bundles data",
 	}}
 	lib.assert_equal(expected, deny) with data["required-tasks"] as []
+		with data["pipeline-required-tasks"] as {}
+		with input as pipeline
+}
+
+_pipeline_with_tasks_and_label(names, finally_names, add_tasks) = pipeline if {
+	tasks := array.concat([t | t := _task(names[_])], add_tasks)
+	finally_tasks := [t | t := _task(finally_names[_])]
+
+	pipeline := {
+		"kind": "Pipeline",
+		"metadata": {
+			"labels": {"pipelines.openshift.io/runtime": "fbc"},
+			"name": "fbc",
+		},
+		"spec": {"tasks": tasks, "finally": finally_tasks},
+	}
 }
 
 _pipeline_with_tasks(names, finally_names, add_tasks) = pipeline if {
@@ -128,6 +204,7 @@ _pipeline_with_tasks(names, finally_names, add_tasks) = pipeline if {
 
 	pipeline := {
 		"kind": "Pipeline",
+		"metadata": {"name": "fbc"},
 		"spec": {"tasks": tasks, "finally": finally_tasks},
 	}
 }
@@ -161,6 +238,18 @@ _missing_tasks_violation(tasks) = errors if {
 	}
 }
 
+_missing_default_tasks_violation(tasks) = errors if {
+	errors := {error |
+		some task in tasks
+		error := {
+			"code": "required_tasks.missing_required_task",
+			"msg": sprintf("Required task %q is missing", [task]),
+			"term": task,
+			"effective_on": "2022-01-01T00:00:00Z",
+		}
+	}
+}
+
 _missing_tasks_warning(tasks) = warnings if {
 	warnings := {warning |
 		some task in tasks
@@ -173,6 +262,21 @@ _missing_tasks_warning(tasks) = warnings if {
 	}
 }
 
+_missing_pipeline_tasks_warning(name) = warnings if {
+	warnings := {warning |
+		warning := {
+			"code": "required_tasks.missing_required_pipeline_task",
+			"effective_on": "2022-01-01T00:00:00Z",
+			"msg": sprintf("Required tasks do not exist for pipeline %q", [name]),
+		}
+	}
+}
+
+_time_based_pipeline_required_tasks := {"fbc": [
+	{"tasks": _expected_required_tasks, "effective_on": "2009-01-02T00:00:00Z"},
+	{"tasks": _expected_future_required_tasks, "effective_on": "2099-01-02T00:00:00Z"},
+]}
+
 _expected_required_tasks := {
 	"git-clone",
 	"buildah",
@@ -183,6 +287,7 @@ _expected_required_tasks := {
 _expected_future_required_tasks := {
 	"git-clone",
 	"buildah",
+	"buildah-future",
 	"conftest-clair",
 	"sanity-label-check[POLICY_NAMESPACE=required_checks]",
 	"sanity-label-check[POLICY_NAMESPACE=optional_checks]",

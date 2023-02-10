@@ -83,6 +83,7 @@ warn contains result if {
 #   failure_msg: Required task %q is missing
 deny contains result if {
 	count(tkn.tasks(input)) > 0
+
 	# Get missing tasks by comparing with the default required task list
 	some required_task in _missing_tasks(tkn.current_required_tasks)
 
@@ -101,6 +102,7 @@ deny contains result if {
 #   failure_msg: Task %q is missing and will be required in the future
 warn contains result if {
 	count(tkn.tasks(input)) > 0
+
 	# Get missing tasks by comparing with the default required task list
 	some required_task in _missing_tasks(tkn.latest_required_tasks)
 

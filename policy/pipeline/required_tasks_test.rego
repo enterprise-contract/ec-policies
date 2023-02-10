@@ -8,8 +8,8 @@ import data.lib
 
 test_required_tasks_met if {
 	pipeline := _pipeline_with_tasks_and_label(_expected_required_tasks, [], [])
-	lib.assert_empty(deny) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks 
-	with input as pipeline
+	lib.assert_empty(deny) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with input as pipeline
 
 	pipeline_finally := _pipeline_with_tasks_and_label([], _expected_required_tasks, [])
 	lib.assert_empty(deny) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
@@ -54,7 +54,7 @@ test_missing_pipeline_label if {
 	expected := {{
 		"code": "required_tasks.missing_required_pipeline_task_warning",
 		"msg": "Required tasks do not exist for pipeline \"fbc\"",
-		"effective_on": "2022-01-01T00:00:00Z"
+		"effective_on": "2022-01-01T00:00:00Z",
 	}}
 	pipeline := _pipeline_with_tasks(_expected_required_tasks, [], [])
 	expected_denies := _missing_tasks_violation(_expected_future_required_tasks - _expected_required_tasks)
@@ -104,9 +104,7 @@ test_default_future_required_tasks_not_met if {
 	missing_tasks := {"conftest-clair"}
 	pipeline := _pipeline_with_tasks(_expected_required_tasks - missing_tasks, [], [])
 
-	expected := _missing_pipeline_tasks_warning("fbc") | {
-		{"code": "required_tasks.missing_future_required_task", "effective_on": "2022-01-01T00:00:00Z", "msg": "Task \"conftest-clair\" is missing and will be required in the future"}
-	}
+	expected := _missing_pipeline_tasks_warning("fbc") | {{"code": "required_tasks.missing_future_required_task", "effective_on": "2022-01-01T00:00:00Z", "msg": "Task \"conftest-clair\" is missing and will be required in the future", "term": "conftest-clair"}}
 	lib.assert_equal(expected, warn) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline
 }
@@ -175,7 +173,6 @@ test_parameterized if {
 		with input as pipeline
 }
 
-
 _pipeline_with_tasks_and_label(names, finally_names, add_tasks) = pipeline if {
 	tasks := array.concat([t | t := _task(names[_])], add_tasks)
 	finally_tasks := [t | t := _task(finally_names[_])]
@@ -183,10 +180,8 @@ _pipeline_with_tasks_and_label(names, finally_names, add_tasks) = pipeline if {
 	pipeline := {
 		"kind": "Pipeline",
 		"metadata": {
-			"labels": {
-				"pipelines.openshift.io/runtime": "fbc"
-			},
-			"name": "fbc"
+			"labels": {"pipelines.openshift.io/runtime": "fbc"},
+			"name": "fbc",
 		},
 		"spec": {"tasks": tasks, "finally": finally_tasks},
 	}
@@ -198,9 +193,7 @@ _pipeline_with_tasks(names, finally_names, add_tasks) = pipeline if {
 
 	pipeline := {
 		"kind": "Pipeline",
-		"metadata": {
-			"name": "fbc"
-		},
+		"metadata": {"name": "fbc"},
 		"spec": {"tasks": tasks, "finally": finally_tasks},
 	}
 }
@@ -228,6 +221,7 @@ _missing_tasks_violation(tasks) = errors if {
 		error := {
 			"code": "required_tasks.missing_required_task",
 			"msg": sprintf("Required task %q is missing", [task]),
+			"term": task,
 			"effective_on": "2022-01-01T00:00:00Z",
 		}
 	}
@@ -267,12 +261,10 @@ _missing_pipeline_tasks_warning(name) = warnings if {
 	}
 }
 
-_time_based_pipeline_required_tasks := {
-	"fbc": [
-		{"tasks": _expected_required_tasks, "effective_on": "2009-01-02T00:00:00Z"},
-		{"tasks": _expected_future_required_tasks, "effective_on": "2099-01-02T00:00:00Z"},
-	]
-}
+_time_based_pipeline_required_tasks := {"fbc": [
+	{"tasks": _expected_required_tasks, "effective_on": "2009-01-02T00:00:00Z"},
+	{"tasks": _expected_future_required_tasks, "effective_on": "2099-01-02T00:00:00Z"},
+]}
 
 _expected_required_tasks := {
 	"git-clone",

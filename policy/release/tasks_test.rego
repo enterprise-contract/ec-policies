@@ -12,6 +12,24 @@ test_required_tasks_met if {
 		with input.attestations as attestations
 }
 
+test_required_tasks_met_no_label if {
+	attestations := _attestations_with_tasks(_expected_required_tasks, [])
+	lib.assert_empty(deny) with data["required-tasks"] as _time_based_required_tasks
+		with data["pipeline-required-tasks"] as {}
+		with input.attestations as attestations
+
+	attestations_no_label := _attestations_with_tasks_no_label(_expected_required_tasks, [])
+	lib.assert_empty(deny) with data["required-tasks"] as _time_based_required_tasks
+		with input.attestations as attestations_no_label
+}
+
+test_required_tasks_warning_no_label if {
+	attestations := _attestations_with_tasks_no_label(_expected_required_tasks, [])
+	expected := {{"code": "tasks.missing_required_pipeline_task_warning", "effective_on": "2022-01-01T00:00:00Z", "msg": "Required tasks do not exist for pipeline"}}
+	lib.assert_equal(expected, warn) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
+		with input.attestations as attestations
+}
+
 test_required_tasks_not_met if {
 	missing_tasks := {"buildah"}
 	attestations := _attestations_with_tasks(_expected_required_tasks - missing_tasks, [])

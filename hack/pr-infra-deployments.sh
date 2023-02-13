@@ -61,7 +61,7 @@ while [ $# -gt 0 ]; do
   SOURCE_URL="oci::https://${NEW_BUNDLE}@${NEW_DIGEST}"
 
   # Update the default EnterpriseContractPolicy resource with the new source URLs
-  SOURCE_KEY="$KEY" SOURCE_URL="$NEW_BUNDLE" yq e -i \
+  SOURCE_KEY="$KEY" SOURCE_URL="$SOURCE_URL" yq e -i \
     '(
         select(.kind == "EnterpriseContractPolicy" and .metadata.name == "default") |
         .spec.sources[0][env(SOURCE_KEY)][0] |= env(SOURCE_URL) |

@@ -62,8 +62,8 @@ function conftest_push() {
   fi
 }
 
-function cm_key_name() {
-  [ $1 == "data" ] && echo "ec_data_source" || echo "ec_policy_source"
+function ecp_source() {
+  [ $1 == "data" ] && echo "data" || echo "policy"
 }
 
 function ensure_unique_file() {
@@ -129,7 +129,7 @@ for b in $BUNDLES; do
     $DRY_RUN_ECHO skopeo copy --quiet docker://$push_repo:$tag docker://$push_repo:latest
 
     # Record some details that we can pass to pr-infra-deployments.sh later
-    [ $b != "pipeline" ] && pr_params="$pr_params $(cm_key_name $b) $push_repo:$tag"
+    [ $b != "pipeline" ] && pr_params="$pr_params $(ecp_source $b) $push_repo:$tag"
 
     cd $ROOT_DIR
   fi

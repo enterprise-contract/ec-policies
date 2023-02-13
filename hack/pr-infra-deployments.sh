@@ -51,7 +51,7 @@ git checkout -b ${BRANCH_NAME} --track upstream/main
 
 # Loop over params in pairs
 while [ $# -gt 0 ]; do
-  CM_KEY=$1
+  KEY=$1
   NEW_BUNDLE=$2
   shift
   shift
@@ -60,10 +60,14 @@ while [ $# -gt 0 ]; do
   NEW_DIGEST="$(skopeo manifest-digest <(skopeo inspect --raw "docker://${NEW_BUNDLE}"))"
   SOURCE_URL="oci::https://${NEW_BUNDLE}@${NEW_DIGEST}"
 
-  # Update the yaml file with the new source url
-  yq e -i \
-    '.configMapGenerator[] |= select(.name == "ec-defaults").literals[] |= select(. == "'"${CM_KEY}"'=*") = "'"${CM_KEY}"'='"${SOURCE_URL}"'"' \
-    components/enterprise-contract/kustomization.yaml
+  # Update the default EnterpriseContractPolicy resource with the new source URLs
+  SOURCE_KEY="$KEY" SOURCE_URL="$NEW_BUNDLE" yq e -i \
+    '(
+        select(.kind == "EnterpriseContractPolicy" and .metadata.name == "default") |
+        .spec.sources[0][env(SOURCE_KEY)][0] |= env(SOURCE_URL) |
+        .
+     ) // .' \
+    components/enterprise-contract/default-ecp.yaml
 done
 
 # commit & push

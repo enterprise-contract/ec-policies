@@ -49,11 +49,23 @@ deny contains result if {
 #   short_name: missing_required_task
 #   failure_msg: Required task %q is missing
 deny contains result if {
-	some required_task in _missing_tasks(tkn.current_required_tasks)
+	some required_task in _missing_tasks(current_required_tasks)
 
 	# Don't report an error if a task is required now, but not in the future
-	required_task in tkn.latest_required_tasks
+	required_task in latest_required_tasks
 	result := lib.result_helper_with_term(rego.metadata.chain(), [required_task], required_task)
+}
+
+# METADATA
+# title: Missing required pipeline tasks warning
+# description: |-
+#   This policy warns if a task list does not exist in the acceptable_bundles.yaml file
+# custom:
+#   short_name: missing_required_pipeline_task_warning
+#   failure_msg: Required tasks do not exist for pipeline
+warn contains result if {
+	not required_pipeline_task_data
+	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
 # METADATA
@@ -65,11 +77,11 @@ deny contains result if {
 #   short_name: missing_future_required_task
 #   failure_msg: Task %q is missing and will be required in the future
 warn contains result if {
-	some required_task in _missing_tasks(tkn.latest_required_tasks)
+	some required_task in _missing_tasks(latest_required_tasks)
 
 	# If the required_task is also part of the current_required_tasks, do
 	# not proceed with a warning since that's clearly a violation.
-	not required_task in tkn.current_required_tasks
+	not required_task in current_required_tasks
 	result := lib.result_helper_with_term(rego.metadata.chain(), [required_task], required_task)
 }
 
@@ -82,6 +94,7 @@ warn contains result if {
 #   failure_msg: Missing required task-bundles data
 deny contains result if {
 	tkn.missing_required_tasks_data
+	not required_pipeline_task_data
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -95,4 +108,31 @@ _missing_tasks(required_tasks) := tasks if {
 		some task in required_tasks
 		not task in tkn.tasks_names(att)
 	}
+}
+
+# get the future tasks that are pipeline specific. If none exists
+# get the default list
+latest_required_tasks := task_data if {
+	some att in lib.pipelinerun_attestations
+	count(tkn.tasks(att)) > 0
+	task_data := tkn.latest_required_pipeline_tasks(att)
+} else := task_data if {
+	task_data := tkn.latest_required_default_tasks
+}
+
+# get current required tasks. fall back to the default list if
+# no label exists in the attestation
+current_required_tasks := task_data if {
+	some att in lib.pipelinerun_attestations
+	count(tkn.tasks(att)) > 0
+	task_data := tkn.current_required_pipeline_tasks(att)
+} else := task_data if {
+	task_data := tkn.current_required_default_tasks
+}
+
+## get the required task data for a pipeline with a label
+required_pipeline_task_data := task_data if {
+	some att in lib.pipelinerun_attestations
+	count(tkn.tasks(att)) > 0
+	task_data := tkn.required_task_list(att)
 }

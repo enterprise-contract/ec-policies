@@ -91,6 +91,9 @@ for b in $BUNDLES; do
     # No push needed
     echo "Policy bundle $push_repo:$tag exists already, no push needed"
 
+    # Skip building and pushing a new bundle, but ensure the infra-deployments PR uses
+    # the latest built
+    [ $b != "pipeline" ] && pr_params="$pr_params $(ecp_source $b) $push_repo:$tag"
   else
     # Push needed
     echo "Pushing policy bundle $push_repo:$tag now"

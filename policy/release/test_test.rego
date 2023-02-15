@@ -41,7 +41,6 @@ mock_a_passing_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name,
 
 test_success_data {
 	lib.assert_empty(deny) with input.attestations as mock_a_passing_test
-		with data.config.policy as {"exclude": []}
 }
 
 mock_a_failing_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "FAILURE"}, "failed_1", _bundle)]
@@ -53,7 +52,6 @@ test_failure_data {
 		"term": "failed_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_a_failing_test
-		with data.config.policy as {"exclude": []}
 }
 
 mock_an_errored_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "ERROR"}, "errored_1", _bundle)]
@@ -65,7 +63,6 @@ test_error_data {
 		"term": "errored_1",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_an_errored_test
-		with data.config.policy as {"exclude": []}
 }
 
 mock_mixed_data := array.concat(mock_a_failing_test, mock_an_errored_test)
@@ -85,37 +82,6 @@ test_mix_data {
 			"effective_on": "2022-01-01T00:00:00Z",
 		},
 	}) with input.attestations as mock_mixed_data
-		with data.config.policy as {"exclude": []}
-}
-
-test_can_skip_by_name {
-	lib.assert_empty(deny) with input.attestations as mock_mixed_data
-		with data.config.policy as {"non_blocking_checks": ["test:errored_1", "test:failed_1"]}
-
-	# exclude works the same as non_blocking_checks
-	lib.assert_empty(deny) with input.attestations as mock_mixed_data
-		with data.config.policy as {"exclude": ["test:errored_1", "test:failed_1"]}
-
-	# It's an unlikely edge case, but you can use them both if you want
-	lib.assert_empty(deny) with input.attestations as mock_mixed_data
-		with data.config.policy as {"exclude": ["test:errored_1"], "non_blocking_checks": ["test:failed_1"]}
-
-	lib.assert_equal(deny, {{
-		"code": "test.test_result_failures",
-		"msg": "Test \"errored_1\" did not complete successfully",
-		"term": "errored_1",
-		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with input.attestations as mock_mixed_data
-		with data.config.policy as {"non_blocking_checks": ["test:failed_1"]}
-
-	# exclude works the same as non_blocking_checks
-	lib.assert_equal(deny, {{
-		"code": "test.test_result_failures",
-		"msg": "Test \"errored_1\" did not complete successfully",
-		"term": "errored_1",
-		"effective_on": "2022-01-01T00:00:00Z",
-	}}) with input.attestations as mock_mixed_data
-		with data.config.policy as {"exclude": ["test:failed_1"]}
 }
 
 test_skipped_is_not_deny {
@@ -231,14 +197,12 @@ test_missing_wrong_attestation_type {
 	pr := lib.att_mock_helper_ref("some-result", {"result": "value"}, "task1", _bundle)
 	tr := object.union(pr, {"predicate": {"buildType": lib.taskrun_att_build_types[0]}})
 	lib.assert_empty(deny) with input.attestations as [tr]
-		with data.config.policy as {"exclude": []}
 }
 
 test_wrong_attestation_type {
 	pr := lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "ERROR"}, "errored_1", _bundle)
 	tr := object.union(pr, {"predicate": {"buildType": lib.taskrun_att_build_types[0]}})
 	lib.assert_empty(deny) with input.attestations as [tr]
-		with data.config.policy as {"exclude": []}
 }
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"

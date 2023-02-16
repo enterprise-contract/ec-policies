@@ -1,7 +1,7 @@
 'use strict'
 
-const opa = require("@zregvart/opa-inspect")
-//const opa = require("../../../opa-inspect-js/index.js")
+const opa = import("@zregvart/opa-inspect")
+//const opa = import("../../../opa-inspect-js/index.js")
 
 // Helpers for handlebars templates
 const hbsHelpers = {
@@ -246,7 +246,7 @@ module.exports.register = function() {
     // Extract annotations from the rego files
     //
     const regoFiles = helpers.filesMatching(content, /^policy\/.*(?!_test)\.rego$/)
-    const rawAnnotationsData = await opa.inspect(regoFiles)
+    const rawAnnotationsData = await (await opa).inspect(regoFiles)
 
     // Prepare annotation data for use in the templates
     const pipelineAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.pipeline")

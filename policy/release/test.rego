@@ -88,20 +88,8 @@ deny[result] {
 #   failure_msg: "Test %q did not complete successfully"
 #
 deny[result] {
-	all_failed = resulted_in(lib.rule_data("failed_tests_results"))
-
-	# Failed tests are those contained within all_failed that are not
-	# listed in the exclude list
-	all_failed_blocking := all_failed - lib.exclude
-
-	some failed_blocking in all_failed_blocking
-
-	short_failed_blocking := split(failed_blocking, ":")[1]
-	result := lib.result_helper_with_term(
-		rego.metadata.chain(),
-		[short_failed_blocking],
-		short_failed_blocking,
-	)
+	some test in resulted_in(lib.rule_data("failed_tests_results"))
+	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
 
 # METADATA
@@ -113,15 +101,8 @@ deny[result] {
 #   failure_msg: "Test %q was skipped"
 #
 warn[result] {
-	all_skipped = resulted_in(lib.rule_data("skipped_tests_results"))
-	some skipped in all_skipped
-
-	short_skipped := split(skipped, ":")[1]
-	result := lib.result_helper_with_term(
-		rego.metadata.chain(),
-		[short_skipped],
-		short_skipped,
-	)
+	some test in resulted_in(lib.rule_data("skipped_tests_results"))
+	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
 
 # METADATA
@@ -133,15 +114,8 @@ warn[result] {
 #   failure_msg: "Test %q returned a warning"
 #
 warn[result] {
-	all_warned = resulted_in(lib.rule_data("warned_tests_results"))
-	some warned in all_warned
-
-	short_warned := split(all_warned[_], ":")[1]
-	result := lib.result_helper_with_term(
-		rego.metadata.chain(),
-		[short_warned],
-		short_warned,
-	)
+	some test in resulted_in(lib.rule_data("warned_tests_results"))
+	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
 
 resulted_in(results) = filtered_by_result {
@@ -151,6 +125,6 @@ resulted_in(results) = filtered_by_result {
 		result := lib.results_from_tests[_]
 		test := result.value
 		test.result in results
-		r := sprintf("test:%s", [result.name])
+		r := result.name
 	}
 }

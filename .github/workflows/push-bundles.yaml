@@ -34,7 +34,7 @@ jobs:
     - name: Install conftest
       run: make install-conftest CONFTEST_BIN=$HOME/.local/bin
 
-    - name: Push bundles and update infra-deployments
+    - name: Push bundles
       env:
         EC_AUTOMATION_KEY: ${{ secrets.EC_AUTOMATION_KEY }}
         DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}

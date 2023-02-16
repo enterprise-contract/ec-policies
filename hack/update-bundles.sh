@@ -62,10 +62,6 @@ function conftest_push() {
   fi
 }
 
-function ecp_source() {
-  [ $1 == "data" ] && echo "data" || echo "policy"
-}
-
 function ensure_unique_file() {
   if [ $1 == "data" ]; then
     # It really is data/data here...
@@ -75,7 +71,6 @@ function ensure_unique_file() {
   fi
 }
 
-pr_params=""
 for b in $BUNDLES; do
   # Find the git sha where the source files were last updated
   src_dirs=$(bundle_src_dirs $b)
@@ -91,9 +86,6 @@ for b in $BUNDLES; do
     # No push needed
     echo "Policy bundle $push_repo:$tag exists already, no push needed"
 
-    # Skip building and pushing a new bundle, but ensure the infra-deployments PR uses
-    # the latest built
-    [ $b != "pipeline" ] && pr_params="$pr_params $(ecp_source $b) $push_repo:$tag"
   else
     # Push needed
     echo "Pushing policy bundle $push_repo:$tag now"
@@ -131,19 +123,7 @@ for b in $BUNDLES; do
     # Set the 'latest' tag
     $DRY_RUN_ECHO skopeo copy --quiet docker://$push_repo:$tag docker://$push_repo:latest
 
-    # Record some details that we can pass to pr-infra-deployments.sh later
-    [ $b != "pipeline" ] && pr_params="$pr_params $(ecp_source $b) $push_repo:$tag"
-
     cd $ROOT_DIR
   fi
 
 done
-
-# If any new bundles where pushed
-if [ -n "$pr_params" ]; then
-  # If we have a token, try to make a pr for infra-deployments
-  if [ -n "$GITHUB_TOKEN" ]; then
-    echo Creating PRs with params: $pr_params
-    $DRY_RUN_ECHO hack/pr-infra-deployments.sh $pr_params
-  fi
-fi

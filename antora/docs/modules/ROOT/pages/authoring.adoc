@@ -35,16 +35,20 @@ rule.
   `custom.rule_data.allowed_registry_prefixes`, allowing a single source of truth for policy rule
   evaluation and documentation. For best results, each key in the `custom.rule_data` object
   should be a noun.
-* `custom.collection`: A list of strings representing a list of rule collections
+* `custom.collections`: A list of strings representing a list of rule collections
   that the policy rule is included in.
 
 The annotations must be defined at the `rule` https://www.openpolicyagent.org/docs/latest/annotations/#scope[scope].
 
 == Package annotations
 
-The use of package annotations is constrained to documenting the rule
-collections for the purposes of generating the documentation. Within a package
-named `policy.<kind>.<collection>` these annotations can be set:
+Package annotations can be used to give a title and description to a package.
+Use the package name "policy.<kind>.collection.<collectionName>" in an otherwise
+empty package for collection annotations.
 
 * `title`: (required) short description of the rule collection.
 * `description`: (required) descriptive information about the rule collection.
+
+See Open Policy Agent's
+https://www.openpolicyagent.org/docs/latest/annotations/[documentation] for
+further reference on annotations.

@@ -30,5 +30,5 @@ deny contains result if {
 hermetic_build := value if {
 	some attestation in lib.pipelinerun_attestations
 	task := tkn.build_task(attestation)
-	value := tkn.task_param(task, "HERMETIC_BUILD")
+	value := tkn.task_param(task, "HERMETIC")
 } else := "false"

@@ -79,7 +79,7 @@ test_tasks_from_attestation if {
 
 	lib.assert_equal(expected_tasks, tasks(attestation))
 
-	expected_names := {"git-clone", "buildah", "buildah[HERMETIC_BUILD=true]", "weird", "weird[SPAM=MAPS]", "summary"}
+	expected_names := {"git-clone", "buildah", "buildah[HERMETIC=true]", "weird", "weird[SPAM=MAPS]", "summary"}
 	lib.assert_equal(expected_names, tasks_names(attestation))
 }
 
@@ -213,7 +213,7 @@ _good_build_task := {
 		{"name": "IMAGE_DIGEST", "value": "digest"},
 	],
 	"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
-	"invocation": {"parameters": {"HERMETIC_BUILD": "true"}},
+	"invocation": {"parameters": {"HERMETIC": "true"}},
 }
 
 _good_attestation := {"predicate": {

@@ -194,49 +194,6 @@ file:
 }
 ----
 
-=== Available collections
-
-[cols="2,6"]
-|===
-|*Name*
-|*Description*
-
-| `minimal`
-a| Includes a minimal set of policy rules to ensure the build pipeline is
-functioning as expected, and able to produce signed attestations of the
-expected type.
-
-{{> rule_links releaseCollections.minimal}}
-
-| `slsa1`
-a| Includes policy rules required to meet SLSA Level 1.
-
-{{> rule_links releaseCollections.slsa1}}
-
-| `slsa2`
-a| Includes policy rules required to meet SLSA Level 2. Special attention must
-be given to two requirements which are not covered by the policy rules in this
-collection. The first is "Provenance - Authenticated" which is expected to be
-performed when fetching the attestation via cosign or ec-cli. The second
-requirement is "Provenace - Service Generated" which is a little more complex
-to verify. By meeting both the "Provenance - Authenticated" AND "Build - Build
-Service" requirements, we can have some confidence that this requirement is met
-since Chains is a service that generates signed attestations with data obtained
-from the build service (Tekton Pipelines).
-
-{{> rule_links releaseCollections.slsa2}}
-
-| `slsa3`
-a| Includes policy rules required to meet SLSA Level 3. This is currently a
-work in progress and functionally the same as the slsa2 collection.
-
-{{> rule_links releaseCollections.slsa3}}
-
-|===
-
-Policy rules may specify a `custom.collections` metadata attribute as a list of
-strings. Each string represents a collection the policy rule is included in.
-
 == The `non_blocking_checks` field
 
 The `non_blocking_checks` configuration option, previously used to skip rules

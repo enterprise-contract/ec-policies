@@ -1,6 +1,9 @@
 ---
 pipeline-bundles:
   quay.io/redhat-appstudio-tekton-catalog/pipeline-core-services-docker-build:
+    - digest: sha256:0e6bb22c0b68d810d2fcc771dcf64a7d2ce58cf156bfd3f9e535affc10c75c3b
+      effective_on: "2023-03-22T00:00:00Z"
+      tag: latest
     - digest: sha256:97e21873d889aa8fe7cf0e0846b518be547f6e048c625bc5231f7b8020b8ab8a
       effective_on: "2023-03-22T00:00:00Z"
       tag: latest
@@ -369,6 +372,35 @@ pipeline-required-tasks:
         - sbom-json-check
         - summary
   generic:
+    - effective_on: "2023-03-22T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - sanity-inspect-image
+        - sanity-label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
+        - update-infra-deployments
+    - effective_on: "2023-03-22T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - sanity-inspect-image
+        - sanity-label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
     - effective_on: "2023-03-22T00:00:00Z"
       tasks:
         - buildah

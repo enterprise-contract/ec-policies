@@ -89,6 +89,9 @@ pipeline-bundles:
       effective_on: "2023-01-16T00:00:00Z"
       tag: a8cf15a2b082bc97bbce863195305c9bb2ddc6c6
   quay.io/redhat-appstudio-tekton-catalog/pipeline-fbc-builder:
+    - digest: sha256:b0695d78efc53ed790494d5a664d2fa19d1c4360011671a7a4eab4e10d7e1a36
+      effective_on: "2023-03-22T00:00:00Z"
+      tag: b4bfe746ab023362c92d351b4b8907f579aac29f
     - digest: sha256:f2350200be2f322dd94eaee8bf622107d082ec7e21cc7ad3f45b2e19f227af90
       effective_on: "2023-03-22T00:00:00Z"
       tag: 4104361804a104899371e0fd2f7179cf2c6b07d1
@@ -395,6 +398,35 @@ pipeline-required-tasks:
         - sast-snyk-check
         - sbom-json-check
         - summary
+    - effective_on: "2023-03-22T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - sanity-inspect-image
+        - sanity-label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
+        - update-infra-deployments
+    - effective_on: "2023-03-22T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - sanity-inspect-image
+        - sanity-label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
     - effective_on: "2023-03-20T00:00:00Z"
       tasks:
         - buildah
@@ -669,6 +701,9 @@ task-bundles:
       effective_on: "2023-01-15T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-fbc-related-image-check:
+    - digest: sha256:59915cba6389f1afdf94295478ee65cbbeaa835245a0b56bd0ba3104a072c8f0
+      effective_on: "2023-03-22T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:0e9d84461ace5ffa1bcf7e42a4a9a388ef036b5434870dfaf45b2beef5f7607f
       effective_on: "2023-03-20T00:00:00Z"
       tag: "0.1"

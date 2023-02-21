@@ -5,7 +5,7 @@
 This document is meant to assist policy authors in creating and maintaining the policy rules
 defined in this repository.
 
-== Annotations
+== Rule annotations
 
 Policy rules must contain certain https://www.openpolicyagent.org/docs/latest/annotations[annotations] that describe additional information about the
 rule.
@@ -35,5 +35,20 @@ rule.
   `custom.rule_data.allowed_registry_prefixes`, allowing a single source of truth for policy rule
   evaluation and documentation. For best results, each key in the `custom.rule_data` object
   should be a noun.
+* `custom.collections`: A list of strings representing a list of rule collections
+  that the policy rule is included in.
 
 The annotations must be defined at the `rule` https://www.openpolicyagent.org/docs/latest/annotations/#scope[scope].
+
+== Package annotations
+
+Package annotations can be used to give a title and description to a package.
+Use the package name "policy.<kind>.collection.<collectionName>" in an otherwise
+empty package for collection annotations.
+
+* `title`: (required) short description of the rule collection.
+* `description`: (required) descriptive information about the rule collection.
+
+See Open Policy Agent's
+https://www.openpolicyagent.org/docs/latest/annotations/[documentation] for
+further reference on annotations.

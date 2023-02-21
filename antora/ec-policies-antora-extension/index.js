@@ -89,6 +89,7 @@ const helpers = {
 
     const output = []
     const packageAnnotations = {}
+    const ruleCollections = []
 
     // First pass to collect all the package annotations
     rawData.forEach((a) => {
@@ -142,11 +143,35 @@ const helpers = {
             description: pkgAnnotation.description || "",
           }
 
-          output.push({
+          const ruleData = {
             fullPath, packagePath, packageInfo,
             shortName, title, description, anchor, warningOrFailure,
             failureMsg, effectiveOn, collections, file, row
-          })
+          }
+
+          output.push(ruleData)
+
+          if (collections) {
+            collections.forEach(c => {
+              let ruleCollection = ruleCollections.find(col => col.title == c)
+              const collectionInfo = packageAnnotations[`${namespace}.collection.${c}`]
+              if (typeof ruleCollection === 'undefined') {
+                ruleCollection = {
+                  title: collectionInfo.title,
+                  description: collectionInfo.description,
+                  rules: [],
+                }
+                ruleCollections.push(ruleCollection)
+              }
+
+              ruleCollection.rules.push({
+                anchor: ruleData.anchor,
+                title: ruleData.title,
+                pkgTitle: ruleData.packageInfo.title,
+                pkgNamespace: ruleData.packageInfo.shortNamespace,
+              })
+            })
+          }
         }
       }
     })
@@ -155,27 +180,12 @@ const helpers = {
     const sortedOutput = output.sort(helpers.annotationSort)
 
     // Group the rules by their package
-    return helpers.groupBy(sortedOutput, a => a.packagePath)
+    const rules = helpers.groupBy(sortedOutput, a => a.packagePath)
 
-  },
-
-  processCollectionLists: (annotationsData) => {
-    const collectionLists = {}
-
-    Object.keys(annotationsData).forEach(packagePath => {
-      annotationsData[packagePath].forEach(a => {
-        (a.collections || []).forEach(c => {
-          (collectionLists[c] ||= []).push({
-            anchor: a.anchor,
-            title: a.title,
-            pkgTitle: a.packageInfo.title,
-            pkgNamespace: a.packageInfo.shortNamespace,
-          })
-        })
-      })
-    })
-
-    return collectionLists
+    return [
+      rules,
+      ruleCollections.sort((l, r) => l.title.localeCompare(r.title))
+    ]
   },
 
   processBundlesData: (rawData) => {
@@ -249,12 +259,8 @@ module.exports.register = function() {
     const rawAnnotationsData = await (await opa).inspect(regoFiles)
 
     // Prepare annotation data for use in the templates
-    const pipelineAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.pipeline")
-    const releaseAnnotations = helpers.processAnnotationsData(rawAnnotationsData, "policy.release")
-
-    // Prepare some collection lists
-    const pipelineCollections = helpers.processCollectionLists(pipelineAnnotations)
-    const releaseCollections = helpers.processCollectionLists(releaseAnnotations)
+    const [ pipelineAnnotations, pipelineCollections ]  = helpers.processAnnotationsData(rawAnnotationsData, "policy.pipeline")
+    const [ releaseAnnotations, releaseCollections ] = helpers.processAnnotationsData(rawAnnotationsData, "policy.release")
 
     //------------------------------------------------------------------
     // Find and load the acceptable bundle and rule collection data

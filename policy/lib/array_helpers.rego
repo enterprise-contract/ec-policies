@@ -4,9 +4,9 @@ import future.keywords.in
 
 _max_int := 9223372036854775807
 
-# Returns true if left is less or equal to right. Comparisson is done by using
-# native comparisson in Rego if both left and right are of the same type, or by
-# comparing their numerical values if they're not. Undefined values are allways
+# Returns true if left is less or equal to right. Comparison is done by using
+# native comparison in Rego if both left and right are of the same type, or by
+# comparing their numerical values if they're not. Undefined values are always
 # less or equal to any other value.
 le(left, right) = is_le {
 	type_name(left) == type_name(right)

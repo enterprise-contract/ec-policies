@@ -91,6 +91,9 @@ pipeline-bundles:
       effective_on: "2022-12-17T00:00:00Z"
       tag: b5020a8b61e6766f4ec1b4f13b05eca0e99925d6
   quay.io/redhat-appstudio-tekton-catalog/pipeline-enterprise-contract:
+    - digest: sha256:869cd6c5d20d4fb0251618226937899ad8ba334064054a720641f29f764dbdeb
+      effective_on: "2023-03-30T00:00:00Z"
+      tag: 549b18485f1624d2585a096e3b93424076a43b48
     - digest: sha256:e41dd530d7cdb897ab51445fc88d76ec36c28db7971d792dfc94c5f77520bf12
       effective_on: "2023-03-20T00:00:00Z"
       tag: b619d2af7bbfef580ea64dd4e90cd49ae7616884
@@ -366,6 +369,35 @@ pipeline-required-tasks:
         - sbom-json-check
         - summary
   generic:
+    - effective_on: "2023-03-30T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - sanity-inspect-image
+        - sanity-label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
+        - update-infra-deployments
+    - effective_on: "2023-03-30T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - sanity-inspect-image
+        - sanity-label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
     - effective_on: "2023-03-30T00:00:00Z"
       tasks:
         - buildah

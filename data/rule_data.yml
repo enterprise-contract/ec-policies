@@ -10,6 +10,8 @@ rule_data:
   - quay.io/redhat-appstudio/
   - registry.access.redhat.com/
   - registry.redhat.io/
+  # Added temporarily. It should be removed after https://issues.redhat.com/browse/STONEBLD-837
+  - quay.io/containerbuildsystem/cachi2
 
   allowed_java_component_sources:
   - redhat

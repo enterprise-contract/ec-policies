@@ -28,6 +28,9 @@ rule_data_defaults := {
 	],
 	"skipped_tests_results": ["SKIPPED"],
 	"warned_tests_results": ["WARNING"],
+	#
+	# Used in release/cve.go
+	"restrict_cve_security_levels": ["critical", "high"],
 }
 
 # Returns the "first found" of the following:

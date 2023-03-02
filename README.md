@@ -44,7 +44,7 @@ standard format run this before committing:
 The documentation is built using [Antora][antora].
 
 Those docs are published [here][docs] and imported automatically into the
-official [HACBS Documentation][hacbsdocs].
+official [Stonesoup Documentation][stonesoupdocs].
 
 To build the documentation locally:
 
@@ -145,7 +145,7 @@ contributing to the definition of policy rules.
 See also
 --------
 
-* [Policy rule documentation][hacbsdocs]
+* [Policy rule documentation][stonesoupdocs]
 * ["Verify Enterprise Contract" task definition][taskdef]
 * [github.com/hacbs-contract][contract]
 * [github.com/redhat-appstudio][appstudio]
@@ -157,7 +157,7 @@ See also
 [entr]: https://github.com/eradman/entr
 [testing]: https://www.openpolicyagent.org/docs/latest/policy-testing/
 [docs]: https://hacbs-contract.github.io/
-[hacbsdocs]: https://redhat-appstudio.github.io/docs.stonesoup.io/ec-policies/index.html
+[stonesoupdocs]: https://redhat-appstudio.github.io/docs.stonesoup.io/ec-policies/index.html
 [taskdef]: https://github.com/hacbs-contract/ec-cli/blob/main/task/0.1/verify-enterprise-contract.yaml
 [contract]: https://github.com/hacbs-contract
 [appstudio]: https://github.com/redhat-appstudio

@@ -15,7 +15,7 @@ xref:pipeline_policy.adoc[Pipeline Policy].
 
 === Additional Documentation
 
-* https://redhat-appstudio.github.io/docs.stonesoup.io/[HACBS Documentation]
+* https://redhat-appstudio.github.io/docs.stonesoup.io/[Stonesoup Documentation]
 * https://hacbs-contract.github.io/ec-cli/ec-cli/main/ec.html[EC CLI Documentation]
 
 === Code

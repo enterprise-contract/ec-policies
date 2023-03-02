@@ -1,0 +1,152 @@
+package policy.release.cve
+
+import future.keywords.contains
+import future.keywords.if
+import future.keywords.in
+
+import data.lib
+
+test_success if {
+	attestations := [lib.att_mock_helper_ref(
+		_result_name,
+		{"vulnerabilities": {"critical": 0, "high": 0, "medium": 20, "low": 300}},
+		"clair-scan",
+		_bundle,
+	)]
+	lib.assert_empty(deny) with input.attestations as attestations
+}
+
+test_success_with_rule_data if {
+	attestations := [lib.att_mock_helper_ref(
+		_result_name,
+		{"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+		"clair-scan",
+		_bundle,
+	)]
+	lib.assert_empty(deny) with input.attestations as attestations
+		with data.rule_data.restrict_cve_security_levels as ["spam"]
+}
+
+test_failure if {
+	attestations := [lib.att_mock_helper_ref(
+		_result_name,
+		{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+		"clair-scan",
+		_bundle,
+	)]
+	expected := {
+		{
+			"code": "cve.found_cve_vulnerabilities",
+			"term": "critical",
+			"collections": ["minimal"],
+			"effective_on": "2022-01-01T00:00:00Z",
+			"msg": "Found 1 CVE vulnerabilities of critical security level",
+		},
+		{
+			"code": "cve.found_cve_vulnerabilities",
+			"term": "high",
+			"collections": ["minimal"],
+			"effective_on": "2022-01-01T00:00:00Z",
+			"msg": "Found 10 CVE vulnerabilities of high security level",
+		},
+	}
+	lib.assert_equal(deny, expected) with input.attestations as attestations
+}
+
+test_failure_with_rule_data if {
+	attestations := [lib.att_mock_helper_ref(
+		_result_name,
+		{"vulnerabilities": {"spam": 1, "bacon": 2, "eggs": 3}},
+		"clair-scan",
+		_bundle,
+	)]
+	expected := {
+		{
+			"code": "cve.found_cve_vulnerabilities",
+			"term": "spam",
+			"collections": ["minimal"],
+			"effective_on": "2022-01-01T00:00:00Z",
+			"msg": "Found 1 CVE vulnerabilities of spam security level",
+		},
+		{
+			"code": "cve.found_cve_vulnerabilities",
+			"term": "bacon",
+			"collections": ["minimal"],
+			"effective_on": "2022-01-01T00:00:00Z",
+			"msg": "Found 2 CVE vulnerabilities of bacon security level",
+		},
+	}
+	lib.assert_equal(deny, expected) with input.attestations as attestations
+		with data.rule_data.restrict_cve_security_levels as ["spam", "bacon"]
+}
+
+test_warn if {
+	attestations := [lib.att_mock_helper_ref(
+		_result_name,
+		{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+		"clair-scan",
+		_bundle,
+	)]
+	lib.assert_empty(warn) with input.attestations as attestations
+}
+
+test_warn_with_rule_data if {
+	attestations := [lib.att_mock_helper_ref(
+		_result_name,
+		{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+		"clair-scan",
+		_bundle,
+	)]
+	expected := {
+		{
+			"code": "cve.found_non_blocking_cve_vulnerabilities",
+			"term": "medium",
+			"collections": ["minimal"],
+			"effective_on": "2022-01-01T00:00:00Z",
+			"msg": "Found 20 non-blocking CVE vulnerabilities of medium security level",
+		},
+		{
+			"code": "cve.found_non_blocking_cve_vulnerabilities",
+			"term": "low",
+			"collections": ["minimal"],
+			"effective_on": "2022-01-01T00:00:00Z",
+			"msg": "Found 300 non-blocking CVE vulnerabilities of low security level",
+		},
+	}
+	lib.assert_equal(warn, expected) with input.attestations as attestations
+		with data.rule_data.warn_cve_security_levels as ["medium", "low"]
+}
+
+test_missing_cve_scan_result if {
+	attestations := [lib.att_mock_helper_ref(
+		"WRONG_RESULT_NAME",
+		{"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+		"clair-scan",
+		_bundle,
+	)]
+	expected := {{
+		"code": "cve.missing_cve_scan_results",
+		"collections": ["minimal"],
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "CVE scan results not found",
+	}}
+	lib.assert_equal(deny, expected) with input.attestations as attestations
+}
+
+test_missing_cve_scan_vulnerabilities if {
+	attestations := [lib.att_mock_helper_ref(
+		_result_name,
+		{"seitilibarenluv": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+		"clair-scan",
+		_bundle,
+	)]
+	expected := {{
+		"code": "cve.missing_cve_scan_results",
+		"collections": ["minimal"],
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "CVE scan results not found",
+	}}
+	lib.assert_equal(deny, expected) with input.attestations as attestations
+}
+
+_bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"

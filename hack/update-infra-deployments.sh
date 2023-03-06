@@ -37,14 +37,14 @@ function oci_source() {
   echo "oci::https://${img}@sha256:${digest}"
 }
 
-function update_default_ecp() {
+function update_ecp_resources() {
   SOURCE_KEY="${1}" SOURCE_URL="${2}" yq e -i \
     '(
-        select(.kind == "EnterpriseContractPolicy" and .metadata.name == "default") |
+        select(.kind == "EnterpriseContractPolicy") |
         .spec.sources[0][env(SOURCE_KEY)][0] |= env(SOURCE_URL) |
         .
       ) // .' \
-    components/enterprise-contract/default-ecp.yaml
+    components/enterprise-contract/ecp.yaml
 }
 
 echo 'Resolving bundle image references...'
@@ -54,6 +54,6 @@ RELEASE_POLICY_REF_OCI="$(oci_source ${RELEASE_POLICY_REF})"
 echo "Resolved release policy is ${RELEASE_POLICY_REF_OCI}"
 
 echo 'Updating infra-deployments...'
-update_default_ecp data "${POLICY_DATA_REF_OCI}"
-update_default_ecp policy "${RELEASE_POLICY_REF_OCI}"
+update_ecp_resources data "${POLICY_DATA_REF_OCI}"
+update_ecp_resources policy "${RELEASE_POLICY_REF_OCI}"
 echo 'infra-deployments updated successfully'

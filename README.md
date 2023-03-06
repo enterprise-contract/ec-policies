@@ -110,7 +110,7 @@ For example to fetch a pipeline definition from your local cluster:
     more input/input.json # to look at it
 
 For a realistic HACBS pipeline definition that does't require cluster access,
-if you you have the [build-definitions][builddefs] repo checked out nearby you
+if you have the [build-definitions][builddefs] repo checked out nearby you
 can do something like this:
 
     ( cd ../build-definitions && kustomize build pipelines/hacbs | yq 'select(document_index == 2)' -o json ) > input/input.json

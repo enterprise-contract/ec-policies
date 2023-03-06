@@ -5,11 +5,7 @@
 #   This package contains a rule to confirm that all Java dependencies
 #   were rebuilt in house rather than imported directly from potentially
 #   untrusted respositories.
-#   The result must be reported by a Task that has been loaded from an
-#   acceptable Tekton Bundle.
-#   See xref:release_policy.adoc#attestation_task_bundle_package[Task bundle checks].
-#   If the result is missing or provided via a task loaded from unacceptable no
-#   issue is reported.
+#   If the result is missing no violation is reported.
 #
 package policy.release.java
 

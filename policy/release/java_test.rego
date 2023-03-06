@@ -27,16 +27,6 @@ test_has_foreign {
 	lib.assert_equal(deny, expected) with input.attestations as attestations
 }
 
-test_unacceptable_bundle {
-	attestations := [lib.att_mock_helper_ref(
-		lib.java_sbom_component_count_result_name,
-		{"redhat": 12, "rebuilt": 42},
-		"java-task-1",
-		"registry.img/unacceptable@sha256:digest",
-	)]
-	lib.assert_empty(deny) with input.attestations as attestations
-}
-
 test_missing_rule_data {
 	expected := {{
 		"code": "java.missing_rule_data",

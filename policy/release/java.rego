@@ -1,7 +1,7 @@
 #
 # METADATA
 # title: Java dependency checks
-# description: |-
+# description: >-
 #   This package contains a rule to confirm that all Java dependencies
 #   were rebuilt in house rather than imported directly from potentially
 #   untrusted respositories.
@@ -17,7 +17,7 @@ import data.lib
 
 # METADATA
 # title: Prevent Java builds from depending on foreign dependencies
-# description: |-
+# description: >-
 #   The SBOM_JAVA_COMPONENTS_COUNT TaskResult finds dependencies that have
 #   originated from foreign repositories, i.e. ones that are not rebuilt or
 #   redhat.
@@ -33,7 +33,7 @@ deny contains result if {
 
 # METADATA
 # title: Missing rule data
-# description: |-
+# description: >-
 #   The policy rules in this package require the allowed_java_component_sources
 #   rule data to be provided.
 # custom:

@@ -1,7 +1,7 @@
 #
 # METADATA
 # title: Pipeline definition sanity checks
-# description: |-
+# description: >-
 #   Currently there is just a check to confirm the input
 #   appears to be a Pipeline definition. We may add additional
 #   sanity checks in future.
@@ -21,7 +21,7 @@ expected_kind := "Pipeline"
 
 # METADATA
 # title: Input data has unexpected kind
-# description: |-
+# description: >-
 #   A sanity check to confirm the input data has the kind "Pipeline"
 # custom:
 #   short_name: unexpected_kind

@@ -1,7 +1,7 @@
 #
 # METADATA
 # title: Task bundle checks
-# description: |-
+# description: >-
 #   To be able to reproduce and audit builds accurately it's important
 #   to know exactly what happened during the build. To do this
 #   Enterprise Contract requires that all tasks are defined in a set of
@@ -17,7 +17,7 @@ import data.lib.bundles
 
 # METADATA
 # title: Task bundle was not used or is not defined
-# description: |-
+# description: >-
 #   Check for existence of a task bundle. Enforcing this rule will
 #   fail the contract if the task is not called from a bundle.
 # custom:
@@ -33,7 +33,7 @@ deny[result] {
 
 # METADATA
 # title: Task bundle reference is empty
-# description: |-
+# description: >-
 #   Check for a valid task bundle reference being used.
 # custom:
 #   short_name: empty_task_bundle_reference
@@ -48,7 +48,7 @@ deny[result] {
 
 # METADATA
 # title: Unpinned task bundle reference
-# description: |-
+# description: >-
 #   Check if the Tekton Bundle used for the Tasks in the Pipeline definition
 #   is pinned to a digest.
 # custom:
@@ -62,7 +62,7 @@ warn[result] {
 
 # METADATA
 # title: Task bundle is out of date
-# description: |-
+# description: >-
 #   Check if the Tekton Bundle used for the Tasks in the attestation
 #   is the most recent acceptable one. See the list of acceptable
 #   task bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at
@@ -80,7 +80,7 @@ warn[result] {
 
 # METADATA
 # title: Task bundle is not acceptable
-# description: |-
+# description: >-
 #   Check if the Tekton Bundle used for the Tasks in the attestation
 #   are acceptable given the tracked effective_on date. See the list of acceptable
 #   task bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at
@@ -98,7 +98,7 @@ deny[result] {
 
 # METADATA
 # title: Missing required data
-# description: |-
+# description: >-
 #   The policy rules in this package require the task-bundles data to be provided.
 # custom:
 #   short_name: missing_required_data

@@ -1,6 +1,6 @@
 #
 # METADATA
-# description: |-
+# description: >-
 #   HACBS expects that certain Tekton tasks are executed during image builds.
 #   This package includes policy rules to confirm that the pipeline definition
 #   includes the required Tekton tasks.
@@ -16,7 +16,7 @@ import data.lib.tkn
 
 # METADATA
 # title: No tasks in Pipeline
-# description: |-
+# description: >-
 #   This policy enforces that at least one Task is present in the Pipeline
 #   definition.
 # custom:
@@ -30,7 +30,7 @@ deny contains result if {
 
 # METADATA
 # title: Missing required pipeline tasks
-# description: |-
+# description: >-
 #   This policy warns if a task list does not exist in the acceptable_bundles.yaml file
 # custom:
 #   short_name: missing_required_pipeline_task
@@ -43,7 +43,7 @@ warn contains result if {
 
 # METADATA
 # title: Missing required task
-# description: |-
+# description: >-
 #   This policy enforces that the required set of tasks are included
 #   in the Pipeline definition.
 # custom:
@@ -62,7 +62,7 @@ deny contains result if {
 
 # METADATA
 # title: Missing future required task
-# description: |-
+# description: >-
 #   This policy warns when a task that will be required in the future
 #   was not included in the Pipeline definition.
 # custom:
@@ -82,7 +82,7 @@ warn contains result if {
 
 # METADATA
 # title: Missing required tasks data
-# description: |-
+# description: >-
 #   The policy rules in this package require the required-tasks data to be provided.
 # custom:
 #   short_name: missing_required_data

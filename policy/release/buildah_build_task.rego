@@ -1,7 +1,7 @@
 #
 # METADATA
 # title: Buildah build task
-# description: |-
+# description: >-
 #   This package is responsible for verifying the buildah build task
 #
 package policy.release.buildah_build_task
@@ -14,7 +14,7 @@ import data.lib
 
 # METADATA
 # title: Dockerfile param not included
-# description: |-
+# description: >-
 #   This policy verifies that there is a dockerfile parameter
 # custom:
 #   short_name: dockerfile_param_not_included
@@ -28,7 +28,7 @@ deny contains result if {
 
 # METADATA
 # title: Dockerfile param external source
-# description: |-
+# description: >-
 #   This policy verifies that the dockerfile is not an external source
 # custom:
 #   short_name: dockerfile_param_external_source

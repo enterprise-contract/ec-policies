@@ -1,7 +1,7 @@
 #
 # METADATA
 # title: SLSA - Source - Version Controlled
-# description: |-
+# description: >-
 #   The SLSA requirement states the following:
 #
 #   "Every change to the source is tracked in a version control system
@@ -34,7 +34,7 @@ import data.lib
 
 # METADATA
 # title: Material format
-# description: |-
+# description: >-
 #   At least one entry in the predicate.materials array of the attestation contains
 #   the expected attributes: uri and digest.sha1.
 # custom:
@@ -53,7 +53,7 @@ deny contains result if {
 
 # METADATA
 # title: Material from a git repository
-# description: |-
+# description: >-
 #   Each entry in the predicate.materials array of the attestation uses
 #   a git URI.
 # custom:
@@ -72,7 +72,7 @@ deny contains result if {
 
 # METADATA
 # title: Material with git commit digest
-# description: |-
+# description: >-
 #   Each entry in the predicate.materials array of the attestation includes
 #   a SHA1 digest which corresponds to a git commit.
 # custom:

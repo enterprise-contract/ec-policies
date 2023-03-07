@@ -1,7 +1,7 @@
 #
 # METADATA
 # title: SLSA - Build - Scripted Build
-# description: |-
+# description: >-
 #   The SLSA requirement states the following:
 #
 #   "All build steps were fully defined in some sort of “build script”.
@@ -22,7 +22,7 @@ import data.lib.tkn
 
 # METADATA
 # title: Build task contains steps
-# description: |-
+# description: >-
 #   The attestation attribute predicate.buildConfig.tasks.steps is not
 #   empty of the pipeline task responsible for building the image.
 # custom:
@@ -42,7 +42,7 @@ deny contains result if {
 
 # METADATA
 # title: Build task missing
-# description: |-
+# description: >-
 #   The attestations must contain a build task with the expected
 #   IMAGE_DIGEST and IMAGE_URL results.
 # custom:
@@ -61,7 +61,7 @@ deny contains result if {
 
 # METADATA
 # title: Mismatch subject
-# description: |-
+# description: >-
 #   The subject of the attestations must match the IMAGE_DIGEST and
 #   IMAGE_URL values from the build task.
 # custom:

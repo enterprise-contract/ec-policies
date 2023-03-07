@@ -1,6 +1,6 @@
 #
 # METADATA
-# description: |-
+# description: >-
 #   Enterprise Contract requires that each build was subjected
 #   to a set of tests and that those tests all passed. This package
 #   includes a set of rules to verify that.
@@ -19,7 +19,7 @@ import future.keywords.in
 
 # METADATA
 # title: No test data found
-# description: |-
+# description: >-
 #   None of the tasks in the pipeline included a HACBS_TEST_OUTPUT
 #   task result, which is where Enterprise Contract expects to find
 #   test result data.
@@ -37,7 +37,7 @@ deny[result] {
 
 # METADATA
 # title: Test data is missing the results key
-# description: |-
+# description: >-
 #   Each test result is expected to have a 'results' key. In at least
 #   one of the HACBS_TEST_OUTPUT task results this key was not present.
 # custom:
@@ -52,7 +52,7 @@ deny[result] {
 
 # METADATA
 # title: Unsupported result in test data
-# description: |-
+# description: >-
 #   This policy expects a set of known/supported results in the test data
 #   It is a failure if we encounter a result that is not supported.
 # custom:
@@ -78,7 +78,7 @@ deny[result] {
 
 # METADATA
 # title: Test result is FAILURE or ERROR
-# description: |-
+# description: >-
 #   Enterprise Contract requires that all the tests in the test results
 #   have a successful result. A successful result is one that isn't a
 #   "FAILURE" or "ERROR". This will fail if any of the tests failed and
@@ -94,7 +94,7 @@ deny[result] {
 
 # METADATA
 # title: Test was skipped
-# description: |-
+# description: >-
 #   Reports any test that has its result set to "SKIPPED".
 # custom:
 #   short_name: test_result_skipped
@@ -107,7 +107,7 @@ warn[result] {
 
 # METADATA
 # title: Test returned a warning
-# description: |-
+# description: >-
 #   Reports any test that has its result set to "WARNING".
 # custom:
 #   short_name: test_result_warning

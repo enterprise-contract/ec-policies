@@ -1,6 +1,6 @@
 #
 # METADATA
-# description: |-
+# description: >-
 #   This package verifies the build task in the attestation was invoked
 #   with the expected parameters to perform a hermetic build.
 #
@@ -15,7 +15,7 @@ import data.lib.tkn
 
 # METADATA
 # title: hermetic_build_task
-# description: |-
+# description: >-
 #   This policy verifies the build task in the PipelineRun attestation
 #   was invoked with the proper parameters to make the build process
 #   hermetic.

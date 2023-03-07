@@ -1,7 +1,7 @@
 #
 # METADATA
 # title: SLSA - Provenance - Available
-# description: |-
+# description: >-
 #   The SLSA Provenance Available requirement states the following:
 #
 #   "The provenance is available to the consumer in a format that the consumer accepts. The
@@ -20,7 +20,7 @@ import data.lib
 
 # METADATA
 # title: Attestation predicate type
-# description: |-
+# description: >-
 #   The predicateType field of the attestation must indicate the in-toto SLSA Provenance format
 #   was used to attest the PipelineRun.
 # custom:

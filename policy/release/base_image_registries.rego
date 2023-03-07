@@ -1,7 +1,7 @@
 #
 # METADATA
 # title: Base image checks
-# description: |-
+# description: >-
 #   This package is responsible for verifying the base (parent) images
 #   reported in the attestation are acceptable.
 #
@@ -15,7 +15,7 @@ import data.lib
 
 # METADATA
 # title: Restrict registry of base images
-# description: |-
+# description: >-
 #   The base images used when building a container image must come from a known set
 #   of trusted registries to reduce potential supply chain attacks. This policy
 #   defines trusted registries as registries that are fully maintained by Red Hat
@@ -34,7 +34,7 @@ deny contains result if {
 
 # METADATA
 # title: Base images must be provided
-# description: |-
+# description: >-
 #   The attestation must provide the expected information about which base images
 #   were used during the build process.
 # custom:
@@ -55,7 +55,7 @@ deny contains result if {
 
 # METADATA
 # title: Missing rule data
-# description: |-
+# description: >-
 #   The policy rules in this package require the allowed_registry_prefixes
 #   rule data to be provided.
 # custom:

@@ -4,7 +4,7 @@
 # description: |-
 #   Checks related to build tasks
 #
-package policy.task.build
+package policy.build_task.labels
 
 import future.keywords.contains
 import future.keywords.if

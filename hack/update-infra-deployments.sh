@@ -33,7 +33,18 @@ RELEASE_POLICY_REF='quay.io/hacbs-contract/ec-release-policy:latest'
 function oci_source() {
   img="${1}"
   # Must use --raw because skopeo cannot handle an OPA bundle image format.
-  digest="$(skopeo inspect --raw  "docker://${img}" | sha256sum | awk '{print $1}')"
+  manifest="$(mktemp --tmpdir)"
+  function cleanup() {
+    # shellcheck disable=SC2317
+    rm "${manifest}"
+  }
+  trap cleanup RETURN
+  skopeo inspect --raw  "docker://${img}" > "${manifest}"
+  revision="$(jq -r '.annotations["org.opencontainers.image.revision"]' "${manifest}")"
+  if [[ -n "${revision}" && "${revision}" != null ]]; then
+    img="${img/:latest/:git-${revision}}"
+  fi
+  digest="$(sha256sum "${manifest}" | awk '{print $1}')"
   echo "oci::https://${img}@sha256:${digest}"
 }
 

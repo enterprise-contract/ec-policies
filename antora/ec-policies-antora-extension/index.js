@@ -283,7 +283,30 @@ module.exports.register = function() {
       Handlebars.registerHelper(k, hbsHelpers[k])
     })
 
+    //------------------------------------------------------------------
+    // Handle our nav partials
+    //
+    const navPartials = [
+      {
+          name: 'release_policy_nav.adoc',
+          template: Handlebars.compile,
+          collections: {rulesCollection: releaseCollections, pipelineCollection: pipelineCollections, releaseAnnotations: releaseAnnotations}
+      },
+      {
+          name: 'pipeline_policy_nav.adoc',
+          template: Handlebars.compile,
+          collections: {pipelineAnnotations: pipelineAnnotations}
+      },
+    ]
+    navPartials.forEach(partial => {
+      const partialFile = content.files.find(f => f.path.endsWith(partial.name))
+      const partialTemplate = partial.template(partialFile.contents.toString())
+      partialFile.contents = Buffer.from(partialTemplate(partial.collections))
+    })
+
+    //------------------------------------------------------------------
     // Templates starting with '_' are treated as partials instead of pages
+    //
     const partialTemplates = helpers.filesMatching(content, /\/templates\/_[a-z_]*\.hbs$/)
     partialTemplates.forEach(f => {
       Handlebars.registerPartial(f.src.stem.replace(/^_/, ''), f._contents.toString())
@@ -294,6 +317,7 @@ module.exports.register = function() {
     //
     const pageTemplates = helpers.filesMatching(content, /\/templates\/[a-z][a-z_]*\.hbs$/)
 
+    //------------------------------------------------------------------
     // Dynamically create pages/foo.adoc for any templates/foo.hbs file found
     // Note that every template gets all the data whether it wants it or not
     pageTemplates.forEach(f => {
@@ -301,8 +325,6 @@ module.exports.register = function() {
       const generatedContent = hbsTemplate(allData)
       content.files.push(helpers.prepDynamicPage(f.src, generatedContent))
     })
-
-
   })
 
   // Generate some "raw" JSON that could be used by the UI team

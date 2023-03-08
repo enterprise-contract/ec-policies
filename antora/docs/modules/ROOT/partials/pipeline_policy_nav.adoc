@@ -1,0 +1,7 @@
+* xref:pipeline_policy.adoc[Pipeline Policy]
+{{#each pipelineAnnotations}}
+    ** xref:pipeline_policy.adoc#{{this.0.packageInfo.shortName}}_package[{{this.0.packageInfo.title}}]
+    {{#each .}}
+        *** xref:pipeline_policy.adoc#{{anchor}}[{{title}}]
+    {{/each}}
+{{/each}}

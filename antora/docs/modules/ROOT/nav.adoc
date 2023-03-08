@@ -1,6 +1,6 @@
 * xref:index.adoc[About Enterprise Contract]
-* xref:release_policy.adoc[Release Policy]
-* xref:pipeline_policy.adoc[Pipeline Policy]
+include::partial$release_policy_nav.adoc[]
+include::partial$pipeline_policy_nav.adoc[]
 * xref:acceptable_bundles.adoc[Acceptable Bundles]
 * xref:policy_bundles.adoc[Policy Bundles]
 * xref:policy_configuration.adoc[Policy Configuration]

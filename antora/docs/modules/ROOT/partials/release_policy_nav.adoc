@@ -1,0 +1,26 @@
+* xref:release_policy.adoc[Release Policy]
+** xref:_available_rule_collections[Rule Collections]
+{{#each rulesCollection}}
+    *** xref:release_policy.adoc#{{this.title}}[{{this.title}}]
+{{/each}}
+
+** Release Annotations
+{{#each releaseAnnotations}}
+        {{#if this.title}}
+            *** {{this.title }}
+        {{else}}
+            *** xref:{{ this.0.packageInfo.shortNamespace }}_policy.adoc#{{this.0.packageInfo.shortName}}_package[{{this.0.packageInfo.title}}]
+            {{#each .}}
+                {{#if title}}
+                    **** xref:{{ packageInfo.shortNamespace }}_policy.adoc#{{ anchor }}[{{ title }}]
+                {{/if}}
+            {{/each}}
+        {{/if}}
+{{/each}}
+
+{{#if pipelineCollection}}
+    * Pipeline Collections
+    {{#each pipelineCollection}}
+        ** {{this.title}}
+{{/each}}
+{{/if}}

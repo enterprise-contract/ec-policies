@@ -71,6 +71,12 @@ function ensure_unique_file() {
   fi
 }
 
+tmp_oci_dirs=()
+function cleanup() {
+  rm -rf "${tmp_oci_dirs[@]}"
+}
+trap cleanup EXIT
+
 for b in $BUNDLES; do
   # Find the git sha where the source files were last updated
   src_dirs=$(bundle_src_dirs $b)
@@ -92,7 +98,7 @@ for b in $BUNDLES; do
 
     # Prepare a temp dir with the bundle's content
     tmp_dir=$(mktemp -d -t ec-bundle-$b.XXXXXXXXXX)
-    trap 'rm -rf "${tmp_dir}"' EXIT
+    tmp_oci_dirs+=("${tmp_dir}")
     content_dir=$tmp_dir/$(bundle_subdir $b)
     mkdir $content_dir
     for d in $src_dirs; do
@@ -119,6 +125,14 @@ for b in $BUNDLES; do
 
     # Now push
     conftest_push $b "$push_repo:$tag"
+
+    # Add OCI annotations to the bundle image
+    tmp_oci_dir="$(mktemp -d --tmpdir)"
+    tmp_oci_dirs+=("${tmp_oci_dir}")
+    skopeo copy docker://"$push_repo:$tag" dir:"${tmp_oci_dir}"
+    manifest="$(jq -c '. += { "annotations": { "org.opencontainers.image.revision": "'"${last_update_sha}"'" } }' "${tmp_oci_dir}/manifest.json")"
+    echo "${manifest}" > "${tmp_oci_dir}/manifest.json"
+    skopeo copy dir:"${tmp_oci_dir}" docker://"$push_repo:$tag"
 
     # Set the 'latest' tag
     $DRY_RUN_ECHO skopeo copy --quiet docker://$push_repo:$tag docker://$push_repo:latest

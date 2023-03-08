@@ -41,7 +41,7 @@ function oci_source() {
   trap cleanup RETURN
   skopeo inspect --raw  "docker://${img}" > "${manifest}"
   revision="$(jq -r '.annotations["org.opencontainers.image.revision"]' "${manifest}")"
-  if [[ -n "${revision}" && "${revision}" != null ]]; then
+  if [[ -n "${revision}" && "${revision}" != "null" ]]; then
     img="${img/:latest/:git-${revision}}"
   fi
   digest="$(sha256sum "${manifest}" | awk '{print $1}')"

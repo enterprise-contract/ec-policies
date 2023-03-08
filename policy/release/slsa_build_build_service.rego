@@ -1,7 +1,7 @@
 #
 # METADATA
 # title: SLSA - Build - Build Service
-# description: |-
+# description: >-
 #   The SLSA requirement states the following:
 #
 #   "All build steps ran using some build service, not on a
@@ -20,7 +20,7 @@ import data.lib
 
 # METADATA
 # title: Builder ID exists
-# description: |-
+# description: >-
 #   The attestation attribute predicate.builder.id is set.
 # custom:
 #   short_name: missing_builder_id
@@ -37,7 +37,7 @@ deny contains result if {
 
 # METADATA
 # title: Build service used
-# description: |-
+# description: >-
 #   The attestation attribute predicate.builder.id is set to one
 #   of the values in data.rule_data.allowed_builder_ids, e.g.
 #   "https://tekton.dev/chains/v2".

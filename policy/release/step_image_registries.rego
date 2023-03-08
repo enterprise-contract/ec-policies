@@ -1,6 +1,6 @@
 #
 # METADATA
-# description: |-
+# description: >-
 #   This package contains a rule to ensure that each task in the image's
 #   build pipeline ran using a container image from a known and presumably
 #   trusted source.
@@ -15,7 +15,7 @@ import data.lib
 
 # METADATA
 # title: Task steps ran on container images that are disallowed
-# description: |-
+# description: >-
 #   Enterprise Contract has a list of allowed registry prefixes. Each step in each
 #   each TaskRun must run on a container image with a url that matches one of the
 #   prefixes in the list.
@@ -36,7 +36,7 @@ deny contains result if {
 
 # METADATA
 # title: Missing rule data
-# description: |-
+# description: >-
 #   The policy rules in this package require the allowed_step_image_registry_prefixes
 #   rule data to be provided.
 # custom:

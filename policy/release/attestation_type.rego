@@ -1,6 +1,6 @@
 #
 # METADATA
-# description: |-
+# description: >-
 #   Sanity checks related to the format of the image build's attestation.
 #
 package policy.release.attestation_type
@@ -13,7 +13,7 @@ import data.lib
 
 # METADATA
 # title: Unknown attestation type found
-# description: |-
+# description: >-
 #   A sanity check to confirm the attestation found for the image has a known
 #   attestation type.
 # custom:
@@ -31,7 +31,7 @@ deny contains result if {
 
 # METADATA
 # title: Missing pipelinerun attestation
-# description: >
+# description: >-
 #   At least one PipelineRun attestation must be present.
 # custom:
 #   short_name: missing_pipelinerun_attestation

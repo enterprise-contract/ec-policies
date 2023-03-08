@@ -1,7 +1,7 @@
 #
 # METADATA
 # title: slsa2
-# description: |-
+# description: >-
 #   Includes policy rules required to meet SLSA Level 2. Special attention must
 #   be given to two requirements which are not covered by the policy rules in this
 #   collection. The first is "Provenance - Authenticated" which is expected to be

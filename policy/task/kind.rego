@@ -1,7 +1,7 @@
 #
 # METADATA
 # title: Task definition kind checks
-# description: |-
+# description: >-
 #   Task definition kind check
 #
 package policy.task.kind
@@ -15,7 +15,7 @@ expected_kind := "Task"
 
 # METADATA
 # title: Input data has unexpected kind
-# description: |-
+# description: >-
 #   Check to confirm the input data has the kind "Task"
 # custom:
 #   short_name: unexpected_kind
@@ -29,7 +29,7 @@ deny contains result if {
 
 # METADATA
 # title: Input data has kind defined
-# description: |-
+# description: >-
 #   Check to confirm the input data has the kind field
 # custom:
 #   short_name: kind_not_found

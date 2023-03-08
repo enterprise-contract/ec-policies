@@ -1,6 +1,6 @@
 #
 # METADATA
-# description: |-
+# description: >-
 #   This package contains rules to check that the image is signed-off
 #   for release. There are different ways of providing that sign-off
 #   authorization.
@@ -17,7 +17,7 @@ import data.lib
 
 # METADATA
 # title: Authorization does not exist
-# description: |-
+# description: >-
 #   Enterprise Contract verifies if the build was authorized
 # custom:
 #   short_name: disallowed_no_authorization
@@ -29,7 +29,7 @@ deny contains result if {
 
 # METADATA
 # title: Authorized commit does not match
-# description: |-
+# description: >-
 #   Enterprise Contract verifies if an authorized commit was used as the source of a build
 # custom:
 #   short_name: disallowed_commit_does_not_match
@@ -43,7 +43,7 @@ deny contains result if {
 
 # METADATA
 # title: Authorized repo url does not match
-# description: |-
+# description: >-
 #   Enterprise Contract verifies if an authorized repo url was used to build an image
 # custom:
 #   short_name: disallowed_repo_url_does_not_match

@@ -1,6 +1,6 @@
 #
 # METADATA
-# description: |-
+# description: >-
 #   Enterprise Contract expects that a set of tasks were included
 #   in the pipeline build for each image to be released.
 #   This package includes a set of rules to verify that the expected
@@ -25,7 +25,7 @@ import data.lib.tkn
 
 # METADATA
 # title: No tasks run
-# description: |-
+# description: >-
 #   This policy enforces that at least one Task is present in the PipelineRun
 #   attestation.
 # custom:
@@ -42,7 +42,7 @@ deny contains result if {
 
 # METADATA
 # title: Missing required task
-# description: |-
+# description: >-
 #   This policy enforces that the required set of tasks are included
 #   in the PipelineRun attestation.
 # custom:
@@ -58,7 +58,7 @@ deny contains result if {
 
 # METADATA
 # title: Missing required pipeline tasks warning
-# description: |-
+# description: >-
 #   This policy warns if a task list does not exist in the acceptable_bundles.yaml file
 # custom:
 #   short_name: missing_required_pipeline_task_warning
@@ -70,7 +70,7 @@ warn contains result if {
 
 # METADATA
 # title: Missing future required task
-# description: |-
+# description: >-
 #   This policy warns when a task that will be required in the future
 #   was not included in the PipelineRun attestation.
 # custom:
@@ -87,7 +87,7 @@ warn contains result if {
 
 # METADATA
 # title: Missing required tasks data
-# description: |-
+# description: >-
 #   The policy rules in this package require the required-tasks data to be provided.
 # custom:
 #   short_name: missing_required_data

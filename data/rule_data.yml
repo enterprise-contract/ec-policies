@@ -20,3 +20,7 @@ rule_data:
   allowed_java_component_sources:
   - redhat
   - rebuilt
+
+  # Defaults for reference. Levels are "critical", "high", "medium", and "low".
+  #restrict_cve_security_levels: ["critical", "high"]
+  #warn_cve_security_levels: []

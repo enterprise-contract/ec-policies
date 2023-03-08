@@ -30,7 +30,9 @@ rule_data_defaults := {
 	"warned_tests_results": ["WARNING"],
 	#
 	# Used in release/cve.go
+	# Valid levels: "critical", "high", "medium", and "low"
 	"restrict_cve_security_levels": ["critical", "high"],
+	"warn_cve_security_levels": [],
 }
 
 # Returns the "first found" of the following:

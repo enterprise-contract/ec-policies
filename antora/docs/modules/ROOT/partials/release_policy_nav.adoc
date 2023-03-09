@@ -4,7 +4,7 @@
     *** xref:release_policy.adoc#{{this.title}}[{{this.title}}]
 {{/each}}
 
-** Release Annotations
+** Release Rules
 {{#each releaseAnnotations}}
         {{#if this.title}}
             *** {{this.title }}

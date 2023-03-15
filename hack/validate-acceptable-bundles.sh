@@ -26,6 +26,14 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
+if ! command -v ec > /dev/null 2>&1; then
+    # this is most likely on GitHub Actions, which runs on 64bit Linux
+    curl -o ec -sSL https://github.com/hacbs-contract/ec-cli/releases/download/snapshot/ec_linux_amd64
+    chmod +x ec
+    PATH=$PATH:$PWD
+    trap "rm ec" EXIT
+fi
+
 bundles_file='data/acceptable_tekton_bundles.yml'
 
 function list_pipeline_bundles() {

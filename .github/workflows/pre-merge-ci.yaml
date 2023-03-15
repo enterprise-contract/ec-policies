@@ -22,6 +22,9 @@ jobs:
     - name: Install opa
       run: make install-opa OPA_BIN=$HOME/.local/bin
 
+    - name: Install tkn
+      uses: jerop/tkn@v0.1.0
+
     - name: Run checks
       run: make ci
 

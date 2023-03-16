@@ -37,7 +37,12 @@ deny contains result if {
 #   failure_msg: Required tasks do not exist for pipeline %q
 warn contains result if {
 	count(tkn.tasks(input)) > 0
+
+	# check for current tasks
 	not tkn.current_required_pipeline_tasks(input)
+
+	# check for future tasks
+	not tkn.latest_required_pipeline_tasks(input)
 	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_name])
 }
 

@@ -35,6 +35,16 @@ test_future_required_tasks_met if {
 		with input as pipeline_finally
 }
 
+test_not_warn_if_only_future_required_tasks if {
+	pipeline := _pipeline_with_tasks_and_label(_expected_future_required_tasks, [], [])
+	lib.assert_empty(warn) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks_future_only
+		with input as pipeline
+
+	pipeline_finally := _pipeline_with_tasks_and_label([], _expected_future_required_tasks, [])
+	lib.assert_empty(warn) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks_future_only
+		with input as pipeline_finally
+}
+
 test_future_required_tasks_not_met if {
 	missing_tasks := {"buildah-future"}
 	pipeline := _pipeline_with_tasks_and_label(_expected_future_required_tasks - missing_tasks, [], [])
@@ -276,6 +286,8 @@ _time_based_pipeline_required_tasks := {"fbc": [
 	{"tasks": _expected_required_tasks, "effective_on": "2009-01-02T00:00:00Z"},
 	{"tasks": _expected_future_required_tasks, "effective_on": "2099-01-02T00:00:00Z"},
 ]}
+
+_time_based_pipeline_required_tasks_future_only := {"fbc": [{"tasks": _expected_future_required_tasks, "effective_on": "2099-01-02T00:00:00Z"}]}
 
 _expected_required_tasks := {
 	"git-clone",

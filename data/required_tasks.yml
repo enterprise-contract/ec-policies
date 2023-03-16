@@ -1,0 +1,76 @@
+---
+pipeline-required-tasks:
+  fbc:
+    - effective_on: "2023-03-16T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - fbc-related-image-check
+        - fbc-validation
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - sanity-inspect-image
+        - sanity-label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
+  generic:
+    - effective_on: "2023-04-15T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - sanity-inspect-image
+        - sanity-label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
+  java:
+    - effective_on: "2023-03-16T00:00:00Z"
+      tasks:
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - s2i-java
+        - sanity-inspect-image
+        - sanity-label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
+  nodejs:
+    - effective_on: "2023-03-16T00:00:00Z"
+      tasks:
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - s2i-nodejs
+        - sanity-inspect-image
+        - sanity-label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
+required-tasks:
+  - effective_on: "2023-03-16T00:00:00Z"
+    tasks:
+      - clair-scan
+      - clamav-scan
+      - git-clone
+      - init
+      - prefetch-dependencies
+      - sanity-inspect-image
+      - sanity-label-check
+      - sast-snyk-check
+      - summary

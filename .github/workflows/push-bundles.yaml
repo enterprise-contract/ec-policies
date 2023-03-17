@@ -37,7 +37,6 @@ jobs:
     - name: Push bundles
       env:
         EC_AUTOMATION_KEY: ${{ secrets.EC_AUTOMATION_KEY }}
-        DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
         APP_INSTALL_ID: 32872589
       run: |
         set -o errexit

@@ -8,7 +8,7 @@ readme: |
   OPA policies enforcing standards on a tekton pipeline definition. These policies
   are a work in progress and not yet production ready.
 install: |
-  `conftest pull oci::https://quay.io/hacbs-contract/ec-pipeline-policy:latest`
+  `conftest pull oci::quay.io/hacbs-contract/ec-pipeline-policy:latest`
 homeURL: https://hacbs-contract.github.io/ec-policies/
 keywords:
   - opa

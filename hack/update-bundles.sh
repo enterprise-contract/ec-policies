@@ -25,7 +25,7 @@ set -o nounset
 REPO_ORG=hacbs-contract
 QUAY_API_URL=https://quay.io/api/v1/repository/$REPO_ORG
 ROOT_DIR=$( git rev-parse --show-toplevel )
-BUNDLES="release pipeline data"
+BUNDLES="release pipeline data task build_task"
 
 # For example:
 #   ENSURE_UNIQUE=1 DRY_RUN=1 hack/update-bundles.sh

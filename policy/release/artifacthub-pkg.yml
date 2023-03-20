@@ -8,7 +8,7 @@ readme: |
   OPA policies enforcing releasable build standards. These policies
   are a work in progress and not yet production ready.
 install: |
-  `conftest pull oci::https://quay.io/hacbs-contract/ec-release-policy:latest`
+  `conftest pull oci::quay.io/hacbs-contract/ec-release-policy:latest`
 
   Configure your org-specific `--data` as necessary from [data/](https://github.com/hacbs-contract/ec-policies/tree/main/data)
 

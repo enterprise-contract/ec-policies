@@ -50,7 +50,7 @@ function oci_source() {
   # sanity check
   diff <(skopeo inspect --raw "docker://${img_ref_tag}") <(skopeo inspect --raw "docker://${img_ref_digest}") >&2
   img_ref="${img}@sha256:${digest}"
-  echo "oci::https://${img_ref}"
+  echo "oci::${img_ref}"
 }
 
 function update_ecp_resources() {

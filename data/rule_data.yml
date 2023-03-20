@@ -20,3 +20,6 @@ rule_data:
   allowed_java_component_sources:
   - redhat
   - rebuilt
+
+  # See also the additional default rule data values defined in
+  # https://github.com/hacbs-contract/ec-policies/blob/main/policy/lib/rule_data.rego

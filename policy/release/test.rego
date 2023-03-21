@@ -9,9 +9,6 @@
 #   from an acceptable Tekton Bundle.
 #   See xref:release_policy.adoc#attestation_task_bundle_package[Task bundle checks].
 #
-#   TODO: Document how you can skip the requirement for individual
-#   tests if needed using the `non_blocking_rule` configuration.
-#
 package policy.release.test
 
 import data.lib

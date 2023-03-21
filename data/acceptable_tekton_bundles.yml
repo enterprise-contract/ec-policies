@@ -1,6 +1,9 @@
 ---
 pipeline-bundles:
   quay.io/redhat-appstudio-tekton-catalog/pipeline-core-services-docker-build:
+    - digest: sha256:ffd753a865f34b1657bef40ad51a0ca8f1efd3ce4793e0db885b322b9c2e6531
+      effective_on: "2023-04-21T00:00:00Z"
+      tag: latest
     - digest: sha256:8884765f96faf0d59d4184d51e759dcb96b937198dbd5b59c71d4215e02e859f
       effective_on: "2023-04-17T00:00:00Z"
       tag: latest
@@ -44,6 +47,9 @@ pipeline-bundles:
       effective_on: "2023-03-20T00:00:00Z"
       tag: latest
   quay.io/redhat-appstudio-tekton-catalog/pipeline-docker-build:
+    - digest: sha256:a5fc879d78beeb87f458b2a1d6ae64b9ec0a0384748dfbb1522612e4066968e9
+      effective_on: "2023-04-21T00:00:00Z"
+      tag: f35d6c4cfd13c3006b5e94c4d764f76a3692d100
     - digest: sha256:6224e871caf50a5fb8cfa003c2e49a1ad1ef4ccef6b8a1f9f0a99fcd08a6b9bd
       effective_on: "2023-04-17T00:00:00Z"
       tag: dbaf3e93e37610c053e3f8df4419d1c2abc8966d
@@ -95,6 +101,9 @@ pipeline-bundles:
       effective_on: "2023-03-20T00:00:00Z"
       tag: b619d2af7bbfef580ea64dd4e90cd49ae7616884
   quay.io/redhat-appstudio-tekton-catalog/pipeline-fbc-builder:
+    - digest: sha256:fedfe995b0cc11c1e8e5d6f07921ceb4dcb2d4237df1f3ccebd5616e8c304bcb
+      effective_on: "2023-04-21T00:00:00Z"
+      tag: f35d6c4cfd13c3006b5e94c4d764f76a3692d100
     - digest: sha256:4c060812a29b6496c9696ae9fa0cb3da9770aa8de08e5db71b207205d1f69e5d
       effective_on: "2023-04-20T00:00:00Z"
       tag: 4863e3b605ff7114c90c447bfc43ea68def2a38a
@@ -151,6 +160,9 @@ pipeline-bundles:
       effective_on: "2023-02-26T00:00:00Z"
       tag: 717a6d74905d2398a05ee4f0909ae63a12a8f8e7
   quay.io/redhat-appstudio-tekton-catalog/pipeline-java-builder:
+    - digest: sha256:dca8914733c5ee5118a34e7d1a893d43e02ad5af9c4a8e3c546a30e78709c0d5
+      effective_on: "2023-04-21T00:00:00Z"
+      tag: f35d6c4cfd13c3006b5e94c4d764f76a3692d100
     - digest: sha256:2c65fdf19f78070f28381fffcea7dc69af1b44c578b2db9f14e69deca0c6d116
       effective_on: "2023-04-17T00:00:00Z"
       tag: dbaf3e93e37610c053e3f8df4419d1c2abc8966d
@@ -188,6 +200,9 @@ pipeline-bundles:
       effective_on: "2023-03-20T00:00:00Z"
       tag: 95cae8a053117f6023a77065c1a7bfe5b5fafe94
   quay.io/redhat-appstudio-tekton-catalog/pipeline-nodejs-builder:
+    - digest: sha256:c10b55b4f2a6e9cff937b674800d024bbb76428987066cd213b84d56bcf301c9
+      effective_on: "2023-04-21T00:00:00Z"
+      tag: f35d6c4cfd13c3006b5e94c4d764f76a3692d100
     - digest: sha256:6f3f2a58f4e1b9baa7490d55a9db67858c83b071251d03c5872477718a4fb366
       effective_on: "2023-04-17T00:00:00Z"
       tag: dbaf3e93e37610c053e3f8df4419d1c2abc8966d
@@ -216,6 +231,9 @@ pipeline-bundles:
       effective_on: "2023-03-20T00:00:00Z"
       tag: 95cae8a053117f6023a77065c1a7bfe5b5fafe94
   quay.io/redhat-appstudio-tekton-catalog/pipeline-tekton-bundle-builder:
+    - digest: sha256:1af43be67715d262067d0ee8e65521dcc53a8e642fef5b15607eb29a970b2f2d
+      effective_on: "2023-04-21T00:00:00Z"
+      tag: f35d6c4cfd13c3006b5e94c4d764f76a3692d100
     - digest: sha256:66252852f57ef097750eabcc2a2a9efb03f007eb72e5e7d0be9209988569e25a
       effective_on: "2023-04-17T00:00:00Z"
       tag: dbaf3e93e37610c053e3f8df4419d1c2abc8966d
@@ -396,6 +414,9 @@ task-bundles:
       effective_on: "2023-03-17T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-s2i-nodejs:
+    - digest: sha256:c1bccbe92bb31f8fca6deba2dce41ad8a2b8f6ea651f8b14904cd88dec05ff62
+      effective_on: "2023-04-21T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:41c5f1ecee565185db0c6d251747b1fe0386ad52eec0e957ae286933e136861a
       effective_on: "2023-04-06T00:00:00Z"
       tag: "0.1"
@@ -463,6 +484,9 @@ task-bundles:
       effective_on: "2023-03-20T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-summary:
+    - digest: sha256:6d7319a3c666a6ec8989e839175bdef4795c4459b97f62347ea7689379674389
+      effective_on: "2023-04-21T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:1dfe8966b3f2d377f068efa61fe403ef84d8f2d63374d8ba08bca95db0b919eb
       effective_on: "2023-03-17T00:00:00Z"
       tag: "0.1"

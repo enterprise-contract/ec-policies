@@ -103,16 +103,6 @@ att_mock_task_helper(task) = d {
 	}}]
 }
 
-att_mock_materials(uri, sha1) = d {
-	d := [{"predicate": {
-		"buildType": pipelinerun_att_build_types[0],
-		"materials": [{
-			"uri": uri,
-			"digest": {"sha1": sha1},
-		}],
-	}}]
-}
-
 test_pr_attestations {
 	assert_equal([mock_pr_att, mock_pr_att_legacy], pipelinerun_attestations) with input.attestations as [
 		mock_tr_att,

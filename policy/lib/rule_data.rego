@@ -36,6 +36,7 @@ rule_data_defaults := {
 }
 
 # Returns the "first found" of the following:
+#   data.rule_data__configuration__[key_name]
 #   data.rule_data_custom[key_name]
 #   data.rule_data[key_name]
 #   rule_data_defaults[key_name]
@@ -43,11 +44,21 @@ rule_data_defaults := {
 # And falls back to an empty list if the key is not found anywhere.
 #
 rule_data(key_name) := value {
+	# Expected to be defined under `configuration.rule_data` in the
+	# ECP configuration data being used when EC is run.
+	value := data.rule_data__configuration__[key_name]
+} else := value {
+	# Expected to be defined in a users custom data source accessed
+	# via an oci bundle or (more likely) a git url.
 	value := data.rule_data_custom[key_name]
 } else := value {
+	# Expected to be defined in a default data source accessed via
+	# an oci bundle or a maybe a git url. See data/rule_data.yml.
 	value := data.rule_data[key_name]
 } else := value {
+	# Default values defined in this file. See above.
 	value := rule_data_defaults[key_name]
 } else := value {
+	# If the key is not found, default to an empty list
 	value := []
 }

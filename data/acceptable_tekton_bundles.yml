@@ -91,6 +91,9 @@ pipeline-bundles:
       effective_on: "2022-12-17T00:00:00Z"
       tag: b5020a8b61e6766f4ec1b4f13b05eca0e99925d6
   quay.io/redhat-appstudio-tekton-catalog/pipeline-enterprise-contract:
+    - digest: sha256:89afc5536570f989eafb5ddf88884c62436d6d54a6643773a98389c3b4f0231f
+      effective_on: "2023-04-24T00:00:00Z"
+      tag: d9e6d8c009c17e94eab34eac3cd9e85b1a84f5d2
     - digest: sha256:c78554b34d2e5e9c0ae61746e0bb6278cc63e5283299c5cdb981b4cd79123a68
       effective_on: "2023-04-24T00:00:00Z"
       tag: a6009005d345a74fddb74f3688bc302469b74483

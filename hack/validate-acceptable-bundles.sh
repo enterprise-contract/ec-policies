@@ -69,13 +69,13 @@ for ref in ${new_bundles}; do
         || true)"
 
     # Process evaluation result
-    ref_success="$(echo -n "${report}" | jq -r 'unique_by(.success) | [.[].success] | join("")')"
+    ref_success="$(echo -n "${report}" | jq -r '.definitions | unique_by(.success) | [.[].success] | join("")')"
     if [[ "$ref_success" == "true" ]]; then
         echo "✅ ${ref}"
     else
         all_success=false
         echo "❌ ${ref}"
-        echo "${report}" | jq '.[].violations[]'
+        echo "${report}" | jq '.definitions[].violations[]'
         echo
     fi
 done

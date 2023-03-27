@@ -22,4 +22,4 @@ rule_data:
   - rebuilt
 
   # See also the additional default rule data values defined in
-  # https://github.com/hacbs-contract/ec-policies/blob/main/policy/lib/rule_data.rego
+  # https://github.com/enterprise-contract/ec-policies/blob/main/policy/lib/rule_data.rego

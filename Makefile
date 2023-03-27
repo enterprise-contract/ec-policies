@@ -133,13 +133,13 @@ npm-publish: ## Publish the antora extension npm package. Requires a suitable NP
 	  npm publish --access=public && \
 	  git checkout package.json
 
-HACBS_DOCS_DIR=../hacbs-contract.github.io
-HACBS_DOCS_REPO=git@github.com:hacbs-contract/hacbs-contract.github.io.git
+HACBS_DOCS_DIR=../enterprise-contract.github.io
+HACBS_DOCS_REPO=git@github.com:enterprise-contract/enterprise-contract.github.io.git
 $(HACBS_DOCS_DIR):
 	mkdir $(HACBS_DOCS_DIR) && cd $(HACBS_DOCS_DIR) && git clone $(HACBS_DOCS_REPO) .
 
 # See also the hack/local-build.sh script in the
-# hacbs-contract.github.io repo which does something similar
+# enterprise-contract.github.io repo which does something similar
 CURRENT_BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 docs-preview: $(HACBS_DOCS_DIR) ## Build a preview of the documentation
 	cd antora/ec-policies-antora-extension && \

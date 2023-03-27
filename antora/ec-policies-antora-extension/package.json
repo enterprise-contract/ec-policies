@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "Antora extension used to build documentation for the HACBS Enterprise Contract policy rules",
   "main": "index.js",
-  "repository": "https://github.com/hacbs-contract/ec-policies",
+  "repository": "https://github.com/enterprise-contract/ec-policies",
   "keywords": [
     "antora",
     "docs",
@@ -14,7 +14,7 @@
   "bugs": {
     "url": "https://issues.redhat.com/browse/HACBS"
   },
-  "homepage": "https://github.com/hacbs-contract/ec-policies/tree/main/antora/ec-policies-antora-extension#readme",
+  "homepage": "https://github.com/enterprise-contract/ec-policies/tree/main/antora/ec-policies-antora-extension#readme",
   "dependencies": {
     "@zregvart/opa-inspect": "latest"
   },

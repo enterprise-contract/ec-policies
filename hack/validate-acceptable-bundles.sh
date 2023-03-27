@@ -28,7 +28,7 @@ set -o nounset
 
 if ! command -v ec > /dev/null 2>&1; then
     # this is most likely on GitHub Actions, which runs on 64bit Linux
-    curl -o ec -sSL https://github.com/hacbs-contract/ec-cli/releases/download/snapshot/ec_linux_amd64
+    curl -o ec -sSL https://github.com/enterprise-contract/ec-cli/releases/download/snapshot/ec_linux_amd64
     chmod +x ec
     PATH=$PATH:$PWD
     trap "rm ec" EXIT
@@ -41,7 +41,7 @@ function list_pipeline_bundles() {
         '."pipeline-bundles" | to_entries | .[] | [.key + "@" + .value[].digest] | unique | sort | .[]'
 }
 
-origin_bundles="$(list_pipeline_bundles <(curl -s "https://raw.githubusercontent.com/hacbs-contract/ec-policies/main/${bundles_file}"))"
+origin_bundles="$(list_pipeline_bundles <(curl -s "https://raw.githubusercontent.com/enterprise-contract/ec-policies/main/${bundles_file}"))"
 pr_bundles="$(list_pipeline_bundles "${bundles_file}")"
 new_bundles="$(comm -13 <(echo "${origin_bundles}") <(echo "${pr_bundles}"))"
 
@@ -62,9 +62,9 @@ for ref in ${new_bundles}; do
 
     # Evaluate the pipeline definition
     report="$(ec validate definition \
-        --policy git::https://github.com/hacbs-contract/ec-policies//policy/lib?ref=main \
-        --policy git::https://github.com/hacbs-contract/ec-policies//policy/pipeline?ref=main \
-        --data git::https://github.com/hacbs-contract/ec-policies//data?ref=main \
+        --policy git::https://github.com/enterprise-contract/ec-policies//policy/lib?ref=main \
+        --policy git::https://github.com/enterprise-contract/ec-policies//policy/pipeline?ref=main \
+        --data git::https://github.com/enterprise-contract/ec-policies//data?ref=main \
         --file <(tkn bundle list -o json "${ref}" 2> /dev/null) \
         || true)"
 

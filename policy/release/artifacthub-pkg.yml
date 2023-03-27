@@ -10,10 +10,10 @@ readme: |
 install: |
   `conftest pull oci::quay.io/hacbs-contract/ec-release-policy:latest`
 
-  Configure your org-specific `--data` as necessary from [data/](https://github.com/hacbs-contract/ec-policies/tree/main/data)
+  Configure your org-specific `--data` as necessary from [data/](https://github.com/enterprise-contract/ec-policies/tree/main/data)
 
   Run your conftest command: `conftest verify --data data/`
-homeURL: https://hacbs-contract.github.io/ec-policies/
+homeURL: https://enterprise-contract.github.io/ec-policies/
 keywords:
   - opa
   - conftest

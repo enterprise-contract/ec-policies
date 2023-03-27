@@ -16,12 +16,12 @@ xref:pipeline_policy.adoc[Pipeline Policy].
 === Additional Documentation
 
 * https://redhat-appstudio.github.io/docs.stonesoup.io/[Stonesoup Documentation]
-* https://hacbs-contract.github.io/ec-cli/ec-cli/main/ec.html[EC CLI Documentation]
+* https://enterprise-contract.github.io/ec-cli/ec-cli/main/ec.html[EC CLI Documentation]
 
 === Code
 
 * https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract-v2.yaml["Verify Enterprise Contract" task definition]
-* https://github.com/hacbs-contract/ec-policies[github.com/hacbs-contract/ec-policies]
-* https://github.com/hacbs-contract/ec-cli[github.com/hacbs-contract/ec-cli]
-* https://github.com/hacbs-contract[github.com/hacbs-contract]
+* https://github.com/enterprise-contract/ec-policies[github.com/enterprise-contract/ec-policies]
+* https://github.com/enterprise-contract/ec-cli[github.com/enterprise-contract/ec-cli]
+* https://github.com/enterprise-contract[github.com/enterprise-contract]
 * https://github.com/redhat-appstudio[github.com/redhat-appstudio]

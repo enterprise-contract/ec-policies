@@ -12,19 +12,19 @@ The latest versions of the bundles can be found in the following repos:
 https://quay.io/repository/hacbs-contract/ec-release-policy?tab=tags[`quay.io/hacbs-contract/ec-release-policy`]::
 
 Used for validating attestations created by Tekton Chains. Contains the
-contents of https://github.com/hacbs-contract/ec-policies/tree/main/policy/release[`policy/release`]
-and https://github.com/hacbs-contract/ec-policies/tree/main/policy/lib[`policy/lib`]
+contents of https://github.com/enterprise-contract/ec-policies/tree/main/policy/release[`policy/release`]
+and https://github.com/enterprise-contract/ec-policies/tree/main/policy/lib[`policy/lib`]
 in this repo.
 
 https://quay.io/repository/hacbs-contract/ec-pipeline-policy?tab=tags[`quay.io/hacbs-contract/ec-pipeline-policy`]::
 
 Used for validating Tekton Pipeline definitions. Contains the contents of
-https://github.com/hacbs-contract/ec-policies/tree/main/policy/pipeline[`policy/pipeline`]
-and https://github.com/hacbs-contract/ec-policies/tree/main/policy/lib[`policy/lib`].
+https://github.com/enterprise-contract/ec-policies/tree/main/policy/pipeline[`policy/pipeline`]
+and https://github.com/enterprise-contract/ec-policies/tree/main/policy/lib[`policy/lib`].
 
 https://quay.io/repository/hacbs-contract/ec-policy-data?tab=tags[`quay.io/hacbs-contract/ec-policy-data`]::
 
-Contains the contents of https://github.com/hacbs-contract/ec-policies/tree/main/data[`data`] which is needed by both the policy bundles listed above.
+Contains the contents of https://github.com/enterprise-contract/ec-policies/tree/main/data[`data`] which is needed by both the policy bundles listed above.
 
 == Artifact Hub entries
 
@@ -32,7 +32,7 @@ The bundles mentioned above are also listed in https://artifacthub.io/packages/s
 
 == Example usage
 
-The bundles are designed to be used with the https://hacbs-contract.github.io/ec-cli/main/reference.html[ec-cli], but you
+The bundles are designed to be used with the https://enterprise-contract.github.io/ec-cli/main/reference.html[ec-cli], but you
 can also use them with conftest directly. The input should include a top level key called `attestations` which contains a list of
 attestations for the image being validated. For example:
 

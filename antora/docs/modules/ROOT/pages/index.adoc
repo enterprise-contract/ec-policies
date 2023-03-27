@@ -2,9 +2,9 @@
 
 :numbered:
 
-The HACBS Enterprise Contract is a set of tools for verifing the provenence of
-container images built in HACBS and validating them against a clearly defined
-policy.
+The Enterprise Contract is a set of tools for verifing the provenence of container
+images built in Red Hat Trusted Application Pipeline and validating them against a
+clearly defined policy.
 
 The Enterprise Contract policy is defined using the
 https://www.openpolicyagent.org/docs/latest/policy-language/[rego policy

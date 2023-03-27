@@ -133,18 +133,18 @@ npm-publish: ## Publish the antora extension npm package. Requires a suitable NP
 	  npm publish --access=public && \
 	  git checkout package.json
 
-HACBS_DOCS_DIR=../enterprise-contract.github.io
-HACBS_DOCS_REPO=git@github.com:enterprise-contract/enterprise-contract.github.io.git
-$(HACBS_DOCS_DIR):
-	mkdir $(HACBS_DOCS_DIR) && cd $(HACBS_DOCS_DIR) && git clone $(HACBS_DOCS_REPO) .
+EC_DOCS_DIR=../enterprise-contract.github.io
+EC_DOCS_REPO=git@github.com:enterprise-contract/enterprise-contract.github.io.git
+$(EC_DOCS_DIR):
+	mkdir $(EC_DOCS_DIR) && cd $(EC_DOCS_DIR) && git clone $(EC_DOCS_REPO) .
 
 # See also the hack/local-build.sh script in the
 # enterprise-contract.github.io repo which does something similar
 CURRENT_BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
-docs-preview: $(HACBS_DOCS_DIR) ## Build a preview of the documentation
+docs-preview: $(EC_DOCS_DIR) ## Build a preview of the documentation
 	cd antora/ec-policies-antora-extension && \
 	  npm ci
-	cd $(HACBS_DOCS_DIR) && \
+	cd $(EC_DOCS_DIR) && \
 	  yq e -i '.content.sources[] |= select(.url == "*ec-policies*").url |= "../ec-policies"' antora-playbook.yml && \
 	  yq e -i '.content.sources[] |= select(.url == "*ec-policies*").branches |= "$(CURRENT_BRANCH)"' antora-playbook.yml && \
 	  yq e -i '.antora.extensions[] |= select(.require == "*ec-policies-antora-extension").require |= "../ec-policies/antora/ec-policies-antora-extension"' antora-playbook.yml && \

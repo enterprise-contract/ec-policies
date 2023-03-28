@@ -17,6 +17,8 @@
 
 {{{ description }}}
 
+{{#if solution}}*Solution:* {{ solution }}{{/if}}
+
 * Rule type: [rule-type-indicator {{ warningOrFailure }}]#{{ toUpper warningOrFailure }}#
 * {{ toTitle warningOrFailure }} message: `{{ failureMsg }}`
 * Code: `{{ packageInfo.shortName }}.{{ shortName }}`

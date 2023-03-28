@@ -54,6 +54,8 @@ deny[result] {
 # custom:
 #   short_name: unpinned_task_bundle
 #   failure_msg: Pipeline task '%s' uses an unpinned task bundle reference '%s'
+#   solution: >-
+#     Specify the task bundle reference with a full digest rather than a tag.
 #
 warn[result] {
 	task := bundles.unpinned_task_bundle(lib.tasks_from_pipelinerun)[_]

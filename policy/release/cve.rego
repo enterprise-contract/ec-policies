@@ -59,6 +59,9 @@ warn contains result if {
 # custom:
 #   short_name: missing_cve_scan_results
 #   failure_msg: CVE scan results not found
+#   solution: >-
+#     Make sure there is a successful task in the build pipeline that runs a
+#     Clair scan and creates a task result called `CLAIR_SCAN_RESULT`.
 #   collections:
 #   - minimal
 deny contains result if {

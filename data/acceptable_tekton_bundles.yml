@@ -1,6 +1,9 @@
 ---
 pipeline-bundles:
   quay.io/redhat-appstudio-tekton-catalog/pipeline-core-services-docker-build:
+    - digest: sha256:b88778adce04c588754f9c51f67a95f006120ba6d08d48d8ae1f918dbd8c1c9c
+      effective_on: "2023-04-30T00:00:00Z"
+      tag: latest
     - digest: sha256:3e76b0dc3a23ef20dab20ec262c86ba5e9976552fbe57d6eb1b124062a9c4a99
       effective_on: "2023-04-30T00:00:00Z"
       tag: latest
@@ -59,6 +62,9 @@ pipeline-bundles:
       effective_on: "2023-03-29T00:00:00Z"
       tag: latest
   quay.io/redhat-appstudio-tekton-catalog/pipeline-docker-build:
+    - digest: sha256:6bec9482a5d736900e4914e3d5db0f7f8e04632e4289165af56bd79bc9131d01
+      effective_on: "2023-04-30T00:00:00Z"
+      tag: 2835c3fe836d65496f2454bc1d83ed9475834d99
     - digest: sha256:8b9e2cce5359cf0dbb1044324bc0b762bec3977ba22fc6183574a54b5973e50f
       effective_on: "2023-04-30T00:00:00Z"
       tag: 78d80a4f9fa039a643e4f4826f088affcf2d71cc
@@ -131,6 +137,9 @@ pipeline-bundles:
       effective_on: "2023-03-30T00:00:00Z"
       tag: 549b18485f1624d2585a096e3b93424076a43b48
   quay.io/redhat-appstudio-tekton-catalog/pipeline-fbc-builder:
+    - digest: sha256:afd96eb268fdfeed6ba9595555c1644d89f2f0e57a2e531062e8436ec62e46f5
+      effective_on: "2023-04-30T00:00:00Z"
+      tag: 2835c3fe836d65496f2454bc1d83ed9475834d99
     - digest: sha256:79bf4e8f98aa59b30e12517d115f3a1c9925ce0e282fa6c61ebc2facf7b5b978
       effective_on: "2023-04-30T00:00:00Z"
       tag: 78d80a4f9fa039a643e4f4826f088affcf2d71cc
@@ -199,6 +208,9 @@ pipeline-bundles:
       effective_on: "2023-02-26T00:00:00Z"
       tag: 717a6d74905d2398a05ee4f0909ae63a12a8f8e7
   quay.io/redhat-appstudio-tekton-catalog/pipeline-java-builder:
+    - digest: sha256:d36148a54ca87e9e487d689314ca9f98bd2eb28a813bbd4f90b16f3d49e56bbe
+      effective_on: "2023-04-30T00:00:00Z"
+      tag: 2835c3fe836d65496f2454bc1d83ed9475834d99
     - digest: sha256:3885e7eeb0e97bf210e9c1f56942cad1ed911950ded51c2c6a84eb5b0888f554
       effective_on: "2023-04-30T00:00:00Z"
       tag: 78d80a4f9fa039a643e4f4826f088affcf2d71cc
@@ -254,6 +266,9 @@ pipeline-bundles:
       effective_on: "2023-03-29T00:00:00Z"
       tag: b1aeee4d3ac149a88eab536577ff7dc20b0ebcb0
   quay.io/redhat-appstudio-tekton-catalog/pipeline-nodejs-builder:
+    - digest: sha256:e97f430f0f88ffc2469e394a88bb38dd27b77ae4409d5177ad1ed53f8cdcb28c
+      effective_on: "2023-04-30T00:00:00Z"
+      tag: 2835c3fe836d65496f2454bc1d83ed9475834d99
     - digest: sha256:f2623f0c67fdd4e3aa6df4315311c86a1d47b64c91de29e12e7663dbfc6029dd
       effective_on: "2023-04-30T00:00:00Z"
       tag: 78d80a4f9fa039a643e4f4826f088affcf2d71cc
@@ -300,6 +315,9 @@ pipeline-bundles:
       effective_on: "2023-03-29T00:00:00Z"
       tag: b1aeee4d3ac149a88eab536577ff7dc20b0ebcb0
   quay.io/redhat-appstudio-tekton-catalog/pipeline-tekton-bundle-builder:
+    - digest: sha256:f457da20d89e4dcac45ccd46461820120128e56284261574b89c43fbf92cb208
+      effective_on: "2023-04-30T00:00:00Z"
+      tag: 2835c3fe836d65496f2454bc1d83ed9475834d99
     - digest: sha256:22b9388a1ee2a772b83811489fc58a1ee9be3f4a21fc3f7646e3d14080f0b125
       effective_on: "2023-04-30T00:00:00Z"
       tag: 78d80a4f9fa039a643e4f4826f088affcf2d71cc
@@ -480,6 +498,9 @@ task-bundles:
       effective_on: "2023-04-28T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-prefetch-dependencies:
+    - digest: sha256:31df302dd4a99cda954ff5eb3631a8fedbd72af0bb96370c4518c02b3461bb23
+      effective_on: "2023-04-30T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:5c20a3b566c0977b894443481469cac4da5243665a152280a457cbce96cc1437
       effective_on: "2023-04-30T00:00:00Z"
       tag: "0.1"

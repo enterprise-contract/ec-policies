@@ -1,6 +1,8 @@
 * xref:index.adoc[About Enterprise Contract]
 include::partial$release_policy_nav.adoc[]
 include::partial$pipeline_policy_nav.adoc[]
+include::partial$build_task_policy_nav.adoc[]
+include::partial$task_policy_nav.adoc[]
 * xref:acceptable_bundles.adoc[Acceptable Bundles]
 * xref:policy_bundles.adoc[Policy Bundles]
 * xref:authoring.adoc[Policy Authoring]

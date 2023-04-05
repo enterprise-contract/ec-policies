@@ -261,6 +261,8 @@ module.exports.register = function() {
     // Prepare annotation data for use in the templates
     const [ pipelineAnnotations, pipelineCollections ]  = helpers.processAnnotationsData(rawAnnotationsData, "policy.pipeline")
     const [ releaseAnnotations, releaseCollections ] = helpers.processAnnotationsData(rawAnnotationsData, "policy.release")
+    const [ taskAnnotations, taskCollections ]  = helpers.processAnnotationsData(rawAnnotationsData, "policy.task")
+    const [ buildTaskAnnotations, buildTaskCollections ]  = helpers.processAnnotationsData(rawAnnotationsData, "policy.build_task")
 
     //------------------------------------------------------------------
     // Find and load the acceptable bundle and rule collection data
@@ -273,7 +275,7 @@ module.exports.register = function() {
     const acceptableBundles = helpers.processBundlesData(rawBundlesData)
 
     // Make the data available at higher scope
-    allData = { pipelineAnnotations, pipelineCollections, releaseAnnotations, releaseCollections, acceptableBundles }
+    allData = { taskAnnotations, taskCollections, buildTaskAnnotations, buildTaskCollections, pipelineAnnotations, pipelineCollections, releaseAnnotations, releaseCollections, acceptableBundles }
 
     //------------------------------------------------------------------
     // Setup Handlebars helpers and partials
@@ -296,6 +298,16 @@ module.exports.register = function() {
           name: 'pipeline_policy_nav.adoc',
           template: Handlebars.compile,
           collections: {pipelineAnnotations: pipelineAnnotations}
+      },
+      {
+          name: 'task_policy_nav.adoc',
+          template: Handlebars.compile,
+          collections: {taskAnnotations: taskAnnotations}
+      },
+      {
+          name: 'build_task_policy_nav.adoc',
+          template: Handlebars.compile,
+          collections: {buildTaskAnnotations: buildTaskAnnotations}
       },
     ]
     navPartials.forEach(partial => {

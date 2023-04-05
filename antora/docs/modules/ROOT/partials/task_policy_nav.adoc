@@ -1,0 +1,7 @@
+* xref:task_policy.adoc[Task Policy]
+{{#each taskAnnotations}}
+    ** xref:task_policy.adoc#{{this.0.packageInfo.shortName}}_package[{{this.0.packageInfo.title}}]
+    {{#each .}}
+        *** xref:task_policy.adoc#{{anchor}}[{{title}}]
+    {{/each}}
+{{/each}}

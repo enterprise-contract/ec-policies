@@ -118,6 +118,7 @@ const helpers = {
         if (isDeny || isWarn) {
           const title = a.annotations.title
           const description = a.annotations.description
+          const solution = a.annotations.custom.solution
           const shortName = a.annotations.custom.short_name
           const anchor = `${ helpers.toJoinedPath(a.path.slice(3, a.path.length-1), "_") }__${ shortName }`
           const warningOrFailure = isWarn ? "warning" : "failure"
@@ -145,7 +146,7 @@ const helpers = {
 
           const ruleData = {
             fullPath, packagePath, packageInfo,
-            shortName, title, description, anchor, warningOrFailure,
+            shortName, title, description, solution, anchor, warningOrFailure,
             failureMsg, effectiveOn, collections, file, row
           }
 

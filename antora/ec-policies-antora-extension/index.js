@@ -290,22 +290,22 @@ module.exports.register = function() {
     //
     const navPartials = [
       {
-          name: 'release_policy_nav.adoc',
+          name: '/release_policy_nav.adoc',
           template: Handlebars.compile,
           collections: {rulesCollection: releaseCollections, pipelineCollection: pipelineCollections, releaseAnnotations: releaseAnnotations}
       },
       {
-          name: 'pipeline_policy_nav.adoc',
+          name: '/pipeline_policy_nav.adoc',
           template: Handlebars.compile,
           collections: {pipelineAnnotations: pipelineAnnotations}
       },
       {
-          name: 'task_policy_nav.adoc',
+          name: '/task_policy_nav.adoc',
           template: Handlebars.compile,
           collections: {taskAnnotations: taskAnnotations}
       },
       {
-          name: 'build_task_policy_nav.adoc',
+          name: '/build_task_policy_nav.adoc',
           template: Handlebars.compile,
           collections: {buildTaskAnnotations: buildTaskAnnotations}
       },

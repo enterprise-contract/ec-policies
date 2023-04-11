@@ -160,7 +160,7 @@ test_parameterized if {
 	with_wrong_parameter := [
 		{
 			"taskRef": {
-				"name": "sanity-label-check",
+				"name": "label-check",
 				"kind": "Task",
 				"bundle": _bundle,
 			},
@@ -168,7 +168,7 @@ test_parameterized if {
 		},
 		{
 			"taskRef": {
-				"name": "sanity-label-check",
+				"name": "label-check",
 				"kind": "Task",
 				"bundle": _bundle,
 			},
@@ -177,7 +177,7 @@ test_parameterized if {
 	]
 	pipeline := _pipeline_with_tasks_and_label({"git-clone", "buildah"}, [], with_wrong_parameter)
 
-	expected := _missing_default_tasks_violation({"sanity-label-check[POLICY_NAMESPACE=required_checks]"})
+	expected := _missing_default_tasks_violation({"label-check[POLICY_NAMESPACE=required_checks]"})
 	lib.assert_equal(expected, deny) with data["required-tasks"] as _time_based_required_tasks
 		with input as pipeline
 }
@@ -292,8 +292,8 @@ _time_based_pipeline_required_tasks_future_only := {"fbc": [{"tasks": _expected_
 _expected_required_tasks := {
 	"git-clone",
 	"buildah",
-	"sanity-label-check[POLICY_NAMESPACE=required_checks]",
-	"sanity-label-check[POLICY_NAMESPACE=optional_checks]",
+	"label-check[POLICY_NAMESPACE=required_checks]",
+	"label-check[POLICY_NAMESPACE=optional_checks]",
 }
 
 _expected_future_required_tasks := {
@@ -301,8 +301,8 @@ _expected_future_required_tasks := {
 	"buildah",
 	"buildah-future",
 	"conftest-clair",
-	"sanity-label-check[POLICY_NAMESPACE=required_checks]",
-	"sanity-label-check[POLICY_NAMESPACE=optional_checks]",
+	"label-check[POLICY_NAMESPACE=required_checks]",
+	"label-check[POLICY_NAMESPACE=optional_checks]",
 }
 
 _time_based_required_tasks := [
@@ -312,8 +312,8 @@ _time_based_required_tasks := [
 			"git-clone",
 			"buildah",
 			"conftest-clair",
-			"sanity-label-check[POLICY_NAMESPACE=required_checks]",
-			"sanity-label-check[POLICY_NAMESPACE=optional_checks]",
+			"label-check[POLICY_NAMESPACE=required_checks]",
+			"label-check[POLICY_NAMESPACE=optional_checks]",
 		],
 	},
 	{
@@ -326,8 +326,8 @@ _time_based_required_tasks := [
 			"git-clone",
 			"buildah",
 			"not-required-in-future",
-			"sanity-label-check[POLICY_NAMESPACE=required_checks]",
-			"sanity-label-check[POLICY_NAMESPACE=optional_checks]",
+			"label-check[POLICY_NAMESPACE=required_checks]",
+			"label-check[POLICY_NAMESPACE=optional_checks]",
 		],
 	},
 	{

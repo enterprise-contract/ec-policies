@@ -1,6 +1,22 @@
 ---
 pipeline-required-tasks:
   fbc:
+    - effective_on: "2023-04-28T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - fbc-related-image-check
+        - fbc-validation
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - inspect-image
+        - label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
     - effective_on: "2023-03-16T00:00:00Z"
       tasks:
         - buildah
@@ -18,6 +34,20 @@ pipeline-required-tasks:
         - sbom-json-check
         - summary
   generic:
+    - effective_on: "2023-04-28T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - inspect-image
+        - label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
     - effective_on: "2023-04-15T00:00:00Z"
       tasks:
         - buildah
@@ -33,6 +63,20 @@ pipeline-required-tasks:
         - sbom-json-check
         - summary
   java:
+    - effective_on: "2023-04-28T00:00:00Z"
+      tasks:
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - s2i-java
+        - inspect-image
+        - label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
     - effective_on: "2023-03-16T00:00:00Z"
       tasks:
         - clair-scan
@@ -48,6 +92,20 @@ pipeline-required-tasks:
         - sbom-json-check
         - summary
   nodejs:
+    - effective_on: "2023-04-28T00:00:00Z"
+      tasks:
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - s2i-nodejs
+        - inspect-image
+        - label-check
+        - sast-snyk-check
+        - sbom-json-check
+        - summary
     - effective_on: "2023-03-16T00:00:00Z"
       tasks:
         - clair-scan
@@ -63,6 +121,17 @@ pipeline-required-tasks:
         - sbom-json-check
         - summary
 required-tasks:
+  - effective_on: "2023-04-28T00:00:00Z"
+    tasks:
+      - clair-scan
+      - clamav-scan
+      - git-clone
+      - init
+      - prefetch-dependencies
+      - inspect-image
+      - label-check
+      - sast-snyk-check
+      - summary
   - effective_on: "2023-03-16T00:00:00Z"
     tasks:
       - clair-scan

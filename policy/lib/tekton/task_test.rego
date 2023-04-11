@@ -178,8 +178,8 @@ _expected_latest := {
 		"git-clone",
 		"buildah",
 		"conftest-clair",
-		"sanity-label-check[POLICY_NAMESPACE=required_checks]",
-		"sanity-label-check[POLICY_NAMESPACE=optional_checks]",
+		"label-check[POLICY_NAMESPACE=required_checks]",
+		"label-check[POLICY_NAMESPACE=optional_checks]",
 	],
 }
 
@@ -189,8 +189,8 @@ _expected_current := {
 		"git-clone",
 		"buildah",
 		"not-required-in-future",
-		"sanity-label-check[POLICY_NAMESPACE=required_checks]",
-		"sanity-label-check[POLICY_NAMESPACE=optional_checks]",
+		"label-check[POLICY_NAMESPACE=required_checks]",
+		"label-check[POLICY_NAMESPACE=optional_checks]",
 	],
 }
 

@@ -101,7 +101,7 @@ test_parameterized if {
 	with_wrong_parameter := [
 		{
 			"ref": {
-				"name": "sanity-label-check",
+				"name": "label-check",
 				"kind": "Task",
 				"bundle": _bundle,
 			},
@@ -109,7 +109,7 @@ test_parameterized if {
 		},
 		{
 			"ref": {
-				"name": "sanity-label-check",
+				"name": "label-check",
 				"kind": "Task",
 				"bundle": _bundle,
 			},
@@ -118,7 +118,7 @@ test_parameterized if {
 	]
 	attestations := _attestations_with_tasks({"git-clone", "buildah"}, with_wrong_parameter)
 
-	expected := _missing_tasks_violation({"sanity-label-check[POLICY_NAMESPACE=required_checks]"})
+	expected := _missing_tasks_violation({"label-check[POLICY_NAMESPACE=required_checks]"})
 	lib.assert_equal(deny, expected) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
 		with input.attestations as attestations
 }
@@ -204,16 +204,16 @@ _missing_tasks_warning(tasks) = warnings if {
 _expected_required_tasks := {
 	"git-clone",
 	"buildah",
-	"sanity-label-check[POLICY_NAMESPACE=required_checks]",
-	"sanity-label-check[POLICY_NAMESPACE=optional_checks]",
+	"label-check[POLICY_NAMESPACE=required_checks]",
+	"label-check[POLICY_NAMESPACE=optional_checks]",
 }
 
 _expected_future_required_tasks := {
 	"git-clone",
 	"buildah",
 	"conftest-clair",
-	"sanity-label-check[POLICY_NAMESPACE=required_checks]",
-	"sanity-label-check[POLICY_NAMESPACE=optional_checks]",
+	"label-check[POLICY_NAMESPACE=required_checks]",
+	"label-check[POLICY_NAMESPACE=optional_checks]",
 }
 
 _time_based_required_pipeline_tasks := {"generic": [
@@ -223,8 +223,8 @@ _time_based_required_pipeline_tasks := {"generic": [
 			"git-clone",
 			"buildah",
 			"conftest-clair",
-			"sanity-label-check[POLICY_NAMESPACE=required_checks]",
-			"sanity-label-check[POLICY_NAMESPACE=optional_checks]",
+			"label-check[POLICY_NAMESPACE=required_checks]",
+			"label-check[POLICY_NAMESPACE=optional_checks]",
 		],
 	},
 	{
@@ -237,8 +237,8 @@ _time_based_required_pipeline_tasks := {"generic": [
 			"git-clone",
 			"buildah",
 			"not-required-in-future",
-			"sanity-label-check[POLICY_NAMESPACE=required_checks]",
-			"sanity-label-check[POLICY_NAMESPACE=optional_checks]",
+			"label-check[POLICY_NAMESPACE=required_checks]",
+			"label-check[POLICY_NAMESPACE=optional_checks]",
 		],
 	},
 	{
@@ -254,8 +254,8 @@ _time_based_required_tasks := [
 			"git-clone",
 			"buildah",
 			"conftest-clair",
-			"sanity-label-check[POLICY_NAMESPACE=required_checks]",
-			"sanity-label-check[POLICY_NAMESPACE=optional_checks]",
+			"label-check[POLICY_NAMESPACE=required_checks]",
+			"label-check[POLICY_NAMESPACE=optional_checks]",
 		],
 	},
 	{
@@ -268,8 +268,8 @@ _time_based_required_tasks := [
 			"git-clone",
 			"buildah",
 			"not-required-in-future",
-			"sanity-label-check[POLICY_NAMESPACE=required_checks]",
-			"sanity-label-check[POLICY_NAMESPACE=optional_checks]",
+			"label-check[POLICY_NAMESPACE=required_checks]",
+			"label-check[POLICY_NAMESPACE=optional_checks]",
 		],
 	},
 	{

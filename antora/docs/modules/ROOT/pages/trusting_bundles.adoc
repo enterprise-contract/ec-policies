@@ -1,0 +1,93 @@
+= Trusting Bundles
+
+:acceptable-bundles: acceptable_bundles.adoc
+:attestation-task-bundle: release_policy#attestation_task_bundle_package
+:build-definitions: https://github.com/redhat-appstudio/build-definitions
+:ec-policies: https://github.com/enterprise-contract/ec-policies
+:ec-track-bundle: https://enterprisecontract.dev/docs/ec-cli/main/ec_track_bundle.html
+:tekton-bundles: https://tekton.dev/docs/pipelines/pipelines/#tekton-bundles
+
+This document details the process of trusting a link:{tekton-bundles}[Tekton Bundle]. The term
+xref:{acceptable-bundles}[acceptable bundle] refers to a trusted Tekton Bundle.
+
+When evaluating a certain input, certain policy rules enforce that only acceptable bundles were
+used. The xref:{attestation-task-bundle}[Attestation Task Bundle] package, for example, performs
+this check on SLSA Provenance attestations.
+
+To reduce errors, use the link:{ec-track-bundle}[ec track bundle] command to manage entries in the
+list of acceptable bundles. The command adds a list of Tekton Bundles to an existing list of
+acceptable bundles. It can also generate a new list of acceptable bundles.
+
+For example, consider the two hypothetical Tekton Bundle, `example.com/org/bacon:v1.0` and
+`example.com/org/spam:v2.0`. These Tekton Bundles each include one or more Tekton Tasks. The snippet
+below illustrates how to generate a new list of acceptable bundles containing the example Tekton
+Bundles.
+
+[,bash]
+----
+$ date
+Thu Apr 13 02:21:56 PM EDT 2023
+
+$ ec track bundle \
+    --bundle example.com/org/bacon:v1.0 \
+    --bundle example.com/org/spam:v2.0 \
+    --output acceptable-bundles.yaml
+
+$ cat acceptable-bundles.yaml
+---
+task-bundles:
+  example.com/org/bacon:
+    - digest: sha256:311fe3feed16b9cd8df0f8b1517be5cb86048707df4889ba8dc37d4d68866d02
+      effective_on: "2023-05-14T00:00:00Z"
+      tag: "v1.0"
+  example.com/org/spam:
+    - digest: sha256:5a2928bc8e2936d8885460d7b7f22e9d407bca1ed847d709b7fd4115a7679e3b
+      effective_on: "2023-05-14T00:00:00Z"
+      tag: "v2.0"
+----
+
+NOTE: The `ec track bundle` command marks new entries as required in 30 days. This gives users a
+reasonable time-window to update.
+
+Now, imagine a new Tekton Bundle is available at `example.com/org/bacon:v1.1`. Add this new Tekton
+Bundle to the existing list of acceptable bundles like this:
+
+[,bash]
+----
+$ ec track bundle \
+    --bundle example.com/org/bacon:v1.1 \
+    --input acceptable-bundles.yaml \
+    --replace
+
+$ cat acceptable-bundles.yaml
+---
+task-bundles:
+  example.com/org/bacon:
+    - digest: sha256:9cca0703342e24806a9f64e08c053dca7f2cd90f10529af8ea872afb0a0c77d4
+      effective_on: "2023-05-14T00:00:00Z"
+      tag: "v1.1"
+    - digest: sha256:311fe3feed16b9cd8df0f8b1517be5cb86048707df4889ba8dc37d4d68866d02
+      effective_on: "2023-05-14T00:00:00Z"
+      tag: "v1.0"
+  example.com/org/spam:
+    - digest: sha256:5a2928bc8e2936d8885460d7b7f22e9d407bca1ed847d709b7fd4115a7679e3b
+      effective_on: "2023-05-14T00:00:00Z"
+      tag: "v2.0"
+----
+
+Be sure to include the `acceptable-bundles.yaml` file in a data source in your policy configuration.
+
+== An Example
+
+Automation using the process described above manages the acceptable bundles used in Red Hat Trusted Application Pipeline, RHTAP. This section describes how.
+
+The repository link:{build-definitions}[redhat-appstudio/build-definitions] contains all the Tekton
+definitions used by RHTAP. The CI/CD process on that repository performs the following actions:
+
+1. Determine which Tekton definitions have modifications.
+2. Build a new Tekton Bundle for each modified Tekton definition.
+3. Use the `ec track bundle` command to create a new list of acceptable bundles.
+4. Submit a new pull request to the link:{ec-policies}[ec-policies] repository. The pull request
+   includes the new list of acceptable bundles.
+
+The new Tekton Bundles become acceptable bundles as soon as the pull request merges.

@@ -144,10 +144,10 @@ CURRENT_BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 docs-preview: $(EC_DOCS_DIR) ## Build a preview of the documentation
 	cd antora/ec-policies-antora-extension && \
 	  npm ci
-	cd $(EC_DOCS_DIR) && \
-	  yq e -i '.content.sources[] |= select(.url == "*ec-policies*").url |= "../ec-policies"' antora-playbook.yml && \
+	cd $(EC_DOCS_DIR)/antora && \
+	  yq e -i '.content.sources[] |= select(.url == "*ec-policies*").url |= "../../ec-policies"' antora-playbook.yml && \
 	  yq e -i '.content.sources[] |= select(.url == "*ec-policies*").branches |= "$(CURRENT_BRANCH)"' antora-playbook.yml && \
-	  yq e -i '.antora.extensions[] |= select(.require == "*ec-policies-antora-extension").require |= "../ec-policies/antora/ec-policies-antora-extension"' antora-playbook.yml && \
+	  yq e -i '.antora.extensions[] |= select(.require == "*ec-policies-antora-extension").require |= "../../ec-policies/antora/ec-policies-antora-extension"' antora-playbook.yml && \
 	  npm ci && npm run build
 
 ##@ CI

@@ -1,5 +1,5 @@
 {
-  "name": "@hacbs-contract/ec-policies-antora-extension",
+  "name": "@enterprise-contract/ec-policies-antora-extension",
   "version": "0.0.2",
   "description": "Antora extension used to build documentation for the Enterprise Contract policy rules",
   "main": "index.js",

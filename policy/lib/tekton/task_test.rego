@@ -146,6 +146,30 @@ test_build_task_not_found if {
 	not build_task(missing_results)
 }
 
+test_git_clone_task if {
+	expected := _good_git_clone_task
+	lib.assert_equal(expected, git_clone_task(_good_attestation))
+}
+
+test_git_clone_task_not_found if {
+	missing_url := json.patch(_good_attestation, [{
+		"op": "add",
+		"path": "/predicate/buildConfig/tasks/1/results/0/name",
+		"value": "you-argh-el",
+	}])
+	not git_clone_task(missing_url)
+
+	missing_commit := json.patch(_good_attestation, [{
+		"op": "add",
+		"path": "/predicate/buildConfig/tasks/1/results/1/name",
+		"value": "bachelor",
+	}])
+	not git_clone_task(missing_commit)
+
+	missing_results := json.remove(_good_attestation, ["/predicate/buildConfig/tasks/1/results"])
+	not git_clone_task(missing_results)
+}
+
 test_task_data_bundle_ref if {
 	lib.assert_equal(
 		{
@@ -216,9 +240,17 @@ _good_build_task := {
 	"invocation": {"parameters": {"HERMETIC": "true"}},
 }
 
+_good_git_clone_task := {
+	"results": [
+		{"name": "url", "value": "https://forge/repo"},
+		{"name": "commit", "value": "250e77f12a5ab6972a0895d290c4792f0a326ea8"},
+	],
+	"ref": {"kind": "Task", "name": "git-clone", "bundle": _bundle},
+}
+
 _good_attestation := {"predicate": {
 	"buildType": lib.pipelinerun_att_build_types[0],
-	"buildConfig": {"tasks": [_good_build_task]},
+	"buildConfig": {"tasks": [_good_build_task, _good_git_clone_task]},
 }}
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"

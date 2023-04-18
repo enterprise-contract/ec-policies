@@ -114,6 +114,16 @@ build_task(attestation) := task if {
 	count(trim_space(image_digest)) > 0
 }
 
+git_clone_task(attestation) := task if {
+	some task in tasks(attestation)
+
+	commit := task_result(task, "commit")
+	count(trim_space(commit)) > 0
+
+	url := task_result(task, "url")
+	count(trim_space(url)) > 0
+}
+
 # task_data returns the data relating to the task. If the task is
 # referenced from a bundle, the "bundle" attribute is included.
 task_data(task) = info if {

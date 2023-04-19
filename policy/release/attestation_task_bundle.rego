@@ -16,12 +16,12 @@ import data.lib
 import data.lib.bundles
 
 # METADATA
-# title: Task bundle was not used or is not defined
+# title: Tasks defined using bundle references
 # description: >-
 #   Check for existence of a task bundle. Enforcing this rule will
 #   fail the contract if the task is not called from a bundle.
 # custom:
-#   short_name: disallowed_task_reference
+#   short_name: tasks_defined_in_bundle
 #   failure_msg: Pipeline task '%s' does not contain a bundle reference
 #   collections:
 #   - minimal
@@ -32,11 +32,11 @@ deny[result] {
 }
 
 # METADATA
-# title: Task bundle reference is empty
+# title: Task bundle references not empty
 # description: >-
 #   Check for a valid task bundle reference being used.
 # custom:
-#   short_name: empty_task_bundle_reference
+#   short_name: task_ref_bundles_not_empty
 #   failure_msg: Pipeline task '%s' uses an empty bundle image reference
 #   collections:
 #   - minimal
@@ -47,12 +47,12 @@ deny[result] {
 }
 
 # METADATA
-# title: Unpinned task bundle reference
+# title: Task bundle references pinned to digest
 # description: >-
 #   Check if the Tekton Bundle used for the Tasks in the Pipeline definition
 #   is pinned to a digest.
 # custom:
-#   short_name: unpinned_task_bundle
+#   short_name: task_ref_bundles_pinned
 #   failure_msg: Pipeline task '%s' uses an unpinned task bundle reference '%s'
 #   solution: >-
 #     Specify the task bundle reference with a full digest rather than a tag.
@@ -63,12 +63,12 @@ warn[result] {
 }
 
 # METADATA
-# title: Task bundle is out of date
+# title: Task bundles are latest versions
 # description: >-
 #   For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
 #   the most recent xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle].
 # custom:
-#   short_name: out_of_date_task_bundle
+#   short_name: task_ref_bundles_current
 #   failure_msg: Pipeline task '%s' uses an out of date task bundle '%s'
 #
 warn[result] {
@@ -77,13 +77,13 @@ warn[result] {
 }
 
 # METADATA
-# title: Task bundle is not acceptable
+# title: Task bundles are in acceptable bundles list
 # description: >-
 #   For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
 #   an xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle] given the tracked
 #   effective_on date.
 # custom:
-#   short_name: unacceptable_task_bundle
+#   short_name: task_ref_bundles_acceptable
 #   failure_msg: Pipeline task '%s' uses an unacceptable task bundle '%s'
 #
 deny[result] {
@@ -92,11 +92,12 @@ deny[result] {
 }
 
 # METADATA
-# title: Missing required data
+# title: An acceptable Tekton bundles list was provided
 # description: >-
-#   The policy rules in this package require the task-bundles data to be provided.
+#   The policy rules in this package require the acceptable Tekton task bundles
+#   rule data to be provided.
 # custom:
-#   short_name: missing_required_data
+#   short_name: acceptable_bundles_provided
 #   failure_msg: Missing required task-bundles data
 deny[result] {
 	bundles.missing_task_bundles_data

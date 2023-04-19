@@ -5,6 +5,7 @@
 #   This package is responsible for verifying a CVE scan was performed during
 #   the build pipeline, and that the image under test does not contain CVEs
 #   of certain security levels.
+#
 package policy.release.cve
 
 import future.keywords.contains
@@ -14,7 +15,7 @@ import future.keywords.in
 import data.lib
 
 # METADATA
-# title: Found CVE vulnerabilities
+# title: Blocking CVE check
 # description: >-
 #   The SLSA Provenance attestation for the image is inspected to ensure CVEs
 #   of certain security levels have not been detected. If detected, this policy
@@ -23,17 +24,18 @@ import data.lib
 #   "restrict_cve_security_levels". The available levels are critical, high,
 #    medium, and low.
 # custom:
-#   short_name: found_cve_vulnerabilities
+#   short_name: cve_blockers
 #   failure_msg: Found %d CVE vulnerabilities of %s security level
 #   collections:
 #   - minimal
+#
 deny contains result if {
 	some level, amount in _non_zero_levels("restrict_cve_security_levels")
 	result := lib.result_helper_with_term(rego.metadata.chain(), [amount, level], level)
 }
 
 # METADATA
-# title: Found non-blocking CVE vulnerabilities
+# title: Non-blocking CVE check
 # description: >-
 #   The SLSA Provenance attestation for the image is inspected to ensure CVEs
 #   of certain security levels have not been detected. If detected, this policy
@@ -42,28 +44,30 @@ deny contains result if {
 #   "warn_cve_security_levels". The available levels are critical, high,
 #    medium, and low.
 # custom:
-#   short_name: found_non_blocking_cve_vulnerabilities
+#   short_name: cve_warnings
 #   failure_msg: Found %d non-blocking CVE vulnerabilities of %s security level
 #   collections:
 #   - minimal
+#
 warn contains result if {
 	some level, amount in _non_zero_levels("warn_cve_security_levels")
 	result := lib.result_helper_with_term(rego.metadata.chain(), [amount, level], level)
 }
 
 # METADATA
-# title: Missing CVE scan results
+# title: CVE scan results found
 # description: >-
 #   The clair-scan task results have not been found in the SLSA Provenance
 #   attestation of the build pipeline.
 # custom:
-#   short_name: missing_cve_scan_results
-#   failure_msg: CVE scan results not found
+#   short_name: cve_results_found
+#   failure_msg: Clair CVE scan results were not found
 #   solution: >-
 #     Make sure there is a successful task in the build pipeline that runs a
 #     Clair scan and creates a task result called `CLAIR_SCAN_RESULT`.
 #   collections:
 #   - minimal
+#
 deny contains result if {
 	not _vulnerabilities
 	result := lib.result_helper(rego.metadata.chain(), [])

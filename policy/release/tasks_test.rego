@@ -25,7 +25,7 @@ test_required_tasks_met_no_label if {
 
 test_required_tasks_warning_no_label if {
 	attestations := _attestations_with_tasks_no_label(_expected_required_tasks, [])
-	expected := {{"code": "tasks.missing_required_pipeline_task_warning", "effective_on": "2022-01-01T00:00:00Z", "msg": "Required tasks do not exist for pipeline"}}
+	expected := {{"code": "tasks.pipeline_required_tasks_list_provided", "effective_on": "2022-01-01T00:00:00Z", "msg": "Required tasks do not exist for pipeline"}}
 	lib.assert_equal(expected, warn) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
 		with input.attestations as attestations
 }
@@ -84,7 +84,7 @@ test_current_equal_latest_also if {
 
 test_no_tasks_present if {
 	expected := {{
-		"code": "tasks.tasks_missing",
+		"code": "tasks.pipeline_has_tasks",
 		"collections": ["minimal"],
 		"msg": "No tasks found in PipelineRun attestation",
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -123,10 +123,10 @@ test_parameterized if {
 		with input.attestations as attestations
 }
 
-test_missing_required_tasks_data if {
+test_required_tasks_founds_data if {
 	attestations := _attestations_with_tasks(_expected_required_tasks, [])
 	expected := {{
-		"code": "tasks.missing_required_data",
+		"code": "tasks.required_tasks_list_provided",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required task-bundles data",
 	}}
@@ -137,7 +137,7 @@ test_missing_required_tasks_data if {
 test_missing_required_pipeline_data if {
 	attestations := _attestations_with_tasks(_expected_required_tasks, [])
 	expected := {{
-		"code": "tasks.missing_required_pipeline_task_warning",
+		"code": "tasks.pipeline_required_tasks_list_provided",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Required tasks do not exist for pipeline",
 	}}
@@ -181,7 +181,7 @@ _missing_tasks_violation(tasks) = errors if {
 	errors := {error |
 		some task in tasks
 		error := {
-			"code": "tasks.missing_required_task",
+			"code": "tasks.required_tasks_found",
 			"msg": sprintf("Required task %q is missing", [task]),
 			"term": task,
 			"effective_on": "2022-01-01T00:00:00Z",
@@ -193,7 +193,7 @@ _missing_tasks_warning(tasks) = warnings if {
 	warnings := {warning |
 		some task in tasks
 		warning := {
-			"code": "tasks.missing_future_required_task",
+			"code": "tasks.future_required_tasks_found",
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": sprintf("Task %q is missing and will be required in the future", [task]),
 			"term": task,

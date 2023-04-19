@@ -33,12 +33,12 @@ import future.keywords.in
 import data.lib
 
 # METADATA
-# title: Material format
+# title: Materials have uri and digest
 # description: >-
 #   At least one entry in the predicate.materials array of the attestation contains
 #   the expected attributes: uri and digest.sha1.
 # custom:
-#   short_name: missing_materials
+#   short_name: materials_format_okay
 #   failure_msg: No materials match expected format
 #   collections:
 #   - minimal
@@ -52,12 +52,12 @@ deny contains result if {
 }
 
 # METADATA
-# title: Material from a git repository
+# title: Material uri is a git repo
 # description: >-
 #   Each entry in the predicate.materials array of the attestation uses
 #   a git URI.
 # custom:
-#   short_name: material_non_git_uri
+#   short_name: materials_uri_is_git_repo
 #   failure_msg: Material URI %q is not a git URI
 #   collections:
 #   - minimal
@@ -71,13 +71,13 @@ deny contains result if {
 }
 
 # METADATA
-# title: Material with git commit digest
+# title: Materials include git commit shas
 # description: >-
 #   Each entry in the predicate.materials array of the attestation includes
 #   a SHA1 digest which corresponds to a git commit.
 # custom:
-#   short_name: material_without_git_commit
-#   failure_msg: Material digest %q is not a git commit
+#   short_name: materials_include_git_sha
+#   failure_msg: Material digest %q is not a git commit sha
 #   collections:
 #   - minimal
 #   - slsa2

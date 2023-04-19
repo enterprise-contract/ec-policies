@@ -19,11 +19,11 @@ import future.keywords.in
 import data.lib
 
 # METADATA
-# title: Builder ID exists
+# title: SLSA Builder ID found
 # description: >-
 #   The attestation attribute predicate.builder.id is set.
 # custom:
-#   short_name: missing_builder_id
+#   short_name: slsa_builder_id_found
 #   failure_msg: Builder ID not set in attestation
 #   collections:
 #   - slsa2
@@ -36,13 +36,13 @@ deny contains result if {
 }
 
 # METADATA
-# title: Build service used
+# title: SLSA Builder ID is known and accepted
 # description: >-
 #   The attestation attribute predicate.builder.id is set to one
-#   of the values in data.rule_data.allowed_builder_ids, e.g.
+#   of the values in the allowed_builder_ids rule data, e.g.
 #   "https://tekton.dev/chains/v2".
 # custom:
-#   short_name: unexpected_builder_id
+#   short_name: slsa_builder_id_accepted
 #   failure_msg: Builder ID %q is unexpected
 #   collections:
 #   - slsa2

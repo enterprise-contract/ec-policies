@@ -16,14 +16,16 @@ import future.keywords.in
 import data.lib
 
 # METADATA
-# title: Prevent Java builds from depending on foreign dependencies
+# title: Java builds have no foreign dependencies
 # description: >-
 #   The SBOM_JAVA_COMPONENTS_COUNT TaskResult finds dependencies that have
 #   originated from foreign repositories, i.e. ones that are not rebuilt or
-#   redhat.
+#   provided by Red Hat. This rule uses the `allowed_java_component_sources`
+#   rule data.
 # custom:
-#   short_name: java_foreign_dependencies
+#   short_name: no_foreign_dependencies
 #   failure_msg: Found Java dependencies from '%s', expecting to find only from '%s'
+#
 deny contains result if {
 	allowed := {a | some a in lib.rule_data("allowed_java_component_sources")}
 	foreign := _java_component_sources - allowed
@@ -32,13 +34,14 @@ deny contains result if {
 }
 
 # METADATA
-# title: Missing rule data
+# title: Trusted Java dependency source list was provided
 # description: >-
-#   The policy rules in this package require the allowed_java_component_sources
+#   The policy rules in this package require the `allowed_java_component_sources`
 #   rule data to be provided.
 # custom:
-#   short_name: missing_rule_data
+#   short_name: trusted_dependencies_source_list_provided
 #   failure_msg: Missing required allowed_java_component_sources rule data
+#
 deny contains result if {
 	count(lib.rule_data("allowed_java_component_sources")) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])

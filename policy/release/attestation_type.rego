@@ -12,12 +12,12 @@ import future.keywords.in
 import data.lib
 
 # METADATA
-# title: Unknown attestation type found
+# title: Known attestation type found
 # description: >-
 #   A sanity check to confirm the attestation found for the image has a known
 #   attestation type.
 # custom:
-#   short_name: unknown_att_type
+#   short_name: known_attestation_type
 #   failure_msg: Unknown attestation type '%s'
 #   collections:
 #   - minimal
@@ -30,11 +30,11 @@ deny contains result if {
 }
 
 # METADATA
-# title: Missing pipelinerun attestation
+# title: PipelineRun attestation found
 # description: >-
 #   At least one PipelineRun attestation must be present.
 # custom:
-#   short_name: missing_pipelinerun_attestation
+#   short_name: pipelinerun_attestation_found
 #   failure_msg: Missing pipelinerun attestation
 #   collections:
 #   - minimal

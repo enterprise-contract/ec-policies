@@ -22,12 +22,12 @@ import data.lib
 import data.lib.tkn
 
 # METADATA
-# title: No tasks run
+# title: Pipeline run includes at least one task
 # description: >-
 #   This policy enforces that at least one Task is present in the PipelineRun
 #   attestation.
 # custom:
-#   short_name: tasks_missing
+#   short_name: pipeline_has_tasks
 #   failure_msg: No tasks found in PipelineRun attestation
 #   collections:
 #   - minimal
@@ -39,12 +39,12 @@ deny contains result if {
 }
 
 # METADATA
-# title: Missing required task
+# title: All required tasks were included in the pipeline
 # description: >-
 #   This policy enforces that the required set of tasks are included
 #   in the PipelineRun attestation.
 # custom:
-#   short_name: missing_required_task
+#   short_name: required_tasks_found
 #   failure_msg: Required task %q is missing
 deny contains result if {
 	some required_task in _missing_tasks(current_required_tasks)
@@ -55,11 +55,11 @@ deny contains result if {
 }
 
 # METADATA
-# title: Missing required pipeline tasks warning
+# title: Required tasks list for pipeline was provided
 # description: >-
 #   This policy warns if a task list does not exist in the required_tasks.yaml file
 # custom:
-#   short_name: missing_required_pipeline_task_warning
+#   short_name: pipeline_required_tasks_list_provided
 #   failure_msg: Required tasks do not exist for pipeline
 warn contains result if {
 	not required_pipeline_task_data
@@ -67,12 +67,12 @@ warn contains result if {
 }
 
 # METADATA
-# title: Missing future required task
+# title: Future required tasks were found
 # description: >-
 #   This policy warns when a task that will be required in the future
 #   was not included in the PipelineRun attestation.
 # custom:
-#   short_name: missing_future_required_task
+#   short_name: future_required_tasks_found
 #   failure_msg: Task %q is missing and will be required in the future
 warn contains result if {
 	some required_task in _missing_tasks(latest_required_tasks)
@@ -84,11 +84,11 @@ warn contains result if {
 }
 
 # METADATA
-# title: Missing required tasks data
+# title: Required tasks list was provided
 # description: >-
 #   The policy rules in this package require the required-tasks data to be provided.
 # custom:
-#   short_name: missing_required_data
+#   short_name: required_tasks_list_provided
 #   failure_msg: Missing required task-bundles data
 deny contains result if {
 	tkn.missing_required_tasks_data

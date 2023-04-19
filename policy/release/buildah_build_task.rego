@@ -13,12 +13,14 @@ import future.keywords.in
 import data.lib
 
 # METADATA
-# title: Dockerfile param not included
+# title: Buildah task has Dockerfile param defined
 # description: >-
-#   This policy verifies that there is a dockerfile parameter
+#   This policy verifies that a DOCKERFILE parameter was provided to
+#   the buildah task.
 # custom:
-#   short_name: dockerfile_param_not_included
-#   failure_msg: DOCKERFILE param is not included in the task
+#   short_name: buildah_task_has_dockerfile_param
+#   failure_msg: The DOCKERFILE param was not included in the buildah task
+#
 deny contains result if {
 	# Skip this rule if the buildah task is not present
 	buildah_task
@@ -27,12 +29,14 @@ deny contains result if {
 }
 
 # METADATA
-# title: Dockerfile param external source
+# title: Buildah task uses a local Dockerfile
 # description: >-
-#   This policy verifies that the dockerfile is not an external source
+#   This policy verifies that the Dockerfile used in the buildah task is not
+#   fetched from an external source
 # custom:
-#   short_name: dockerfile_param_external_source
+#   short_name: buildah_uses_local_dockerfile
 #   failure_msg: DOCKERFILE param value (%s) is an external source
+#
 deny contains result if {
 	_not_allowed_prefix(dockerfile_param)
 	result := lib.result_helper(rego.metadata.chain(), [dockerfile_param])

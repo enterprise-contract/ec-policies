@@ -11,8 +11,6 @@
 #   the name of the task. For example: ``name[PARAM=val]``. Only single parameter
 #   is supported, to assert multiple parameters repeat the required task
 #   definition for each parameter seperately.
-#   The Tasks must be loaded from an acceptable Tekton Bundle.
-#   See xref:release_policy.adoc#attestation_task_bundle_package[Task bundle checks].
 #
 package policy.release.tasks
 
@@ -59,7 +57,7 @@ deny contains result if {
 # METADATA
 # title: Missing required pipeline tasks warning
 # description: >-
-#   This policy warns if a task list does not exist in the acceptable_bundles.yaml file
+#   This policy warns if a task list does not exist in the required_tasks.yaml file
 # custom:
 #   short_name: missing_required_pipeline_task_warning
 #   failure_msg: Required tasks do not exist for pipeline

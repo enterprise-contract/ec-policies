@@ -5,10 +5,6 @@
 #   to a set of tests and that those tests all passed. This package
 #   includes a set of rules to verify that.
 #
-#   The test result data must be reported by a Tekton Task that has been loaded
-#   from an acceptable Tekton Bundle.
-#   See xref:release_policy.adoc#attestation_task_bundle_package[Task bundle checks].
-#
 package policy.release.test
 
 import data.lib

@@ -65,12 +65,8 @@ warn[result] {
 # METADATA
 # title: Task bundle is out of date
 # description: >-
-#   Check if the Tekton Bundle used for the Tasks in the attestation
-#   is the most recent acceptable one. See the list of acceptable
-#   task bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at
-#   xref:attachment$acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
-#   in this git repository. The meaning of an acceptable bundle is explained in
-#   xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles]
+#   For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
+#   the most recent xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle].
 # custom:
 #   short_name: out_of_date_task_bundle
 #   failure_msg: Pipeline task '%s' uses an out of date task bundle '%s'
@@ -83,12 +79,9 @@ warn[result] {
 # METADATA
 # title: Task bundle is not acceptable
 # description: >-
-#   Check if the Tekton Bundle used for the Tasks in the attestation
-#   are acceptable given the tracked effective_on date. See the list of acceptable
-#   task bundles at xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles] or look at
-#   xref:attachment$acceptable_tekton_bundles.yml[data/acceptable_tekton_bundles.yml]
-#   in this git repository. The meaning of an acceptable bundle is explained in
-#   xref:acceptable_bundles.adoc#_task_bundles[Acceptable Bundles]
+#   For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
+#   an xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle] given the tracked
+#   effective_on date.
 # custom:
 #   short_name: unacceptable_task_bundle
 #   failure_msg: Pipeline task '%s' uses an unacceptable task bundle '%s'

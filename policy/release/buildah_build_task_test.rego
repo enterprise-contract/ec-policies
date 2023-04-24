@@ -13,7 +13,7 @@ test_good_dockerfile_param if {
 
 test_dockerfile_param_https_source if {
 	expected := {{
-		"code": "buildah_build_task.dockerfile_param_external_source",
+		"code": "buildah_build_task.buildah_uses_local_dockerfile",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "DOCKERFILE param value (https://Dockerfile) is an external source",
 	}}
@@ -23,7 +23,7 @@ test_dockerfile_param_https_source if {
 
 test_dockerfile_param_http_source if {
 	expected := {{
-		"code": "buildah_build_task.dockerfile_param_external_source",
+		"code": "buildah_build_task.buildah_uses_local_dockerfile",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "DOCKERFILE param value (http://Dockerfile) is an external source",
 	}}
@@ -31,11 +31,11 @@ test_dockerfile_param_http_source if {
 	lib.assert_equal(expected, deny) with input.attestations as [attestation]
 }
 
-test_dockerfile_param_not_included if {
+test_buildah_task_has_dockerfile_param if {
 	expected := {{
-		"code": "buildah_build_task.dockerfile_param_not_included",
+		"code": "buildah_build_task.buildah_task_has_dockerfile_param",
 		"effective_on": "2022-01-01T00:00:00Z",
-		"msg": "DOCKERFILE param is not included in the task",
+		"msg": "The DOCKERFILE param was not included in the buildah task",
 	}}
 	lib.assert_equal(expected, deny) with input.attestations as [_attestation("buildah", {})]
 }

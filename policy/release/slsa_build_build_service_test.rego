@@ -9,7 +9,7 @@ test_all_good if {
 	lib.assert_empty(deny) with input.attestations as [_mock_attestation(builder_id)]
 }
 
-test_missing_builder_id if {
+test_slsa_builder_id_found if {
 	attestations := [
 		# Missing predicate.builder.id
 		{"predicate": {
@@ -21,7 +21,7 @@ test_missing_builder_id if {
 	]
 
 	expected := {{
-		"code": "slsa_build_build_service.missing_builder_id",
+		"code": "slsa_build_build_service.slsa_builder_id_found",
 		"collections": ["slsa2", "slsa3"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Builder ID not set in attestation",
@@ -30,10 +30,10 @@ test_missing_builder_id if {
 	lib.assert_equal(expected, deny) with input.attestations as attestations
 }
 
-test_unexpected_builder_id if {
+test_accepted_slsa_builder_id if {
 	builder_id := "https://notket.ved/sniahc/2v"
 	expected := {{
-		"code": "slsa_build_build_service.unexpected_builder_id",
+		"code": "slsa_build_build_service.slsa_builder_id_accepted",
 		"collections": ["slsa2", "slsa3"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Builder ID \"https://notket.ved/sniahc/2v\" is unexpected",

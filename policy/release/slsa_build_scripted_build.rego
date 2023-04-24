@@ -26,7 +26,7 @@ import data.lib.tkn
 #   The attestation attribute predicate.buildConfig.tasks.steps is not
 #   empty of the pipeline task responsible for building the image.
 # custom:
-#   short_name: empty_build_task
+#   short_name: build_script_used
 #   failure_msg: Build task %q does not contain any steps
 #   collections:
 #   - slsa1
@@ -41,12 +41,12 @@ deny contains result if {
 }
 
 # METADATA
-# title: Build task missing
+# title: Build task set image digest and url task results
 # description: >-
 #   The attestations must contain a build task with the expected
 #   IMAGE_DIGEST and IMAGE_URL results.
 # custom:
-#   short_name: missing_build_task
+#   short_name: build_task_image_results_found
 #   failure_msg: Build task not found
 #   collections:
 #   - slsa1
@@ -60,12 +60,12 @@ deny contains result if {
 }
 
 # METADATA
-# title: Mismatch subject
+# title: Provenance subject matches build task image result
 # description: >-
 #   The subject of the attestations must match the IMAGE_DIGEST and
 #   IMAGE_URL values from the build task.
 # custom:
-#   short_name: subject_build_task_mismatch
+#   short_name: subject_build_task_matches
 #   failure_msg: The attestation subject, %q, does not match the build task image, %q
 #   collections:
 #   - slsa1

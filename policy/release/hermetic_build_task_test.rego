@@ -10,9 +10,9 @@ test_hermetic_build if {
 
 test_not_hermetic_build if {
 	expected := {{
-		"code": "hermetic_build_task.build_task_not_hermetic",
+		"code": "hermetic_build_task.build_task_hermetic",
 		"effective_on": "2022-01-01T00:00:00Z",
-		"msg": "Build task was not invoked with hermetic parameter",
+		"msg": "Build task was not invoked with the hermetic parameter set",
 	}}
 
 	hermetic_not_true := json.patch(_good_attestation, [{

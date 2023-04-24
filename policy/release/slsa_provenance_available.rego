@@ -19,12 +19,12 @@ import future.keywords.in
 import data.lib
 
 # METADATA
-# title: Attestation predicate type
+# title: Expected attestation predicate type found
 # description: >-
 #   The predicateType field of the attestation must indicate the in-toto SLSA Provenance format
 #   was used to attest the PipelineRun.
 # custom:
-#   short_name: unexpected_predicate_type
+#   short_name: attestation_predicate_type_accepted
 #   failure_msg: Attestation predicate type %q is not an expected type (%s)
 #   collections:
 #   - minimal

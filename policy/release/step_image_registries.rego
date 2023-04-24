@@ -14,13 +14,13 @@ import future.keywords.in
 import data.lib
 
 # METADATA
-# title: Task steps ran on container images that are disallowed
+# title: Task steps ran on permitted container images
 # description: >-
 #   Enterprise Contract has a list of allowed registry prefixes. Each step in each
 #   each TaskRun must run on a container image with a url that matches one of the
 #   prefixes in the list.
 # custom:
-#   short_name: disallowed_task_step_image
+#   short_name: task_step_images_permitted
 #   failure_msg: Step %d in task '%s' has disallowed image ref '%s'
 #   collections:
 #   - minimal
@@ -35,12 +35,12 @@ deny contains result if {
 }
 
 # METADATA
-# title: Missing rule data
+# title: Permitted step image registry prefix list provided
 # description: >-
 #   The policy rules in this package require the allowed_step_image_registry_prefixes
 #   rule data to be provided.
 # custom:
-#   short_name: missing_rule_data
+#   short_name: step_image_registry_prefix_list_provided
 #   failure_msg: Missing required allowed_step_image_registry_prefixes rule data
 #   collections:
 #   - minimal

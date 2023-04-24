@@ -14,14 +14,15 @@ import future.keywords.in
 import data.lib
 
 # METADATA
-# title: Restrict registry of base images
+# title: Base image comes from permitted registry
 # description: >-
 #   The base images used when building a container image must come from a known set
-#   of trusted registries to reduce potential supply chain attacks. This policy
-#   defines trusted registries as registries that are fully maintained by Red Hat
-#   and only contain content produced by Red Hat.
+#   of trusted registries to reduce potential supply chain attacks. By default this
+#   policy defines trusted registries as registries that are fully maintained by Red
+#   Hat and only contain content produced by Red Hat. The list of permitted registries
+#   can be customized by setting the `allowed_registry_prefixes` list in the rule data.
 # custom:
-#   short_name: disallowed_base_image
+#   short_name: base_image_permitted
 #   failure_msg: Base image %q is from a disallowed registry
 #   collections:
 #   - minimal
@@ -33,12 +34,13 @@ deny contains result if {
 }
 
 # METADATA
-# title: Base images must be provided
+# title: Base image task result was provided
 # description: >-
 #   The attestation must provide the expected information about which base images
-#   were used during the build process.
+#   were used during the build process. The base image information is expected to
+#   be found in a task result called `BASE_IMAGES_DIGESTS`.
 # custom:
-#   short_name: base_images_missing
+#   short_name: base_image_info_found
 #   failure_msg: Base images result is missing
 #   collections:
 #   - minimal
@@ -54,12 +56,12 @@ deny contains result if {
 }
 
 # METADATA
-# title: Missing rule data
+# title: Allowed base image registry prefixes list was provided
 # description: >-
-#   The policy rules in this package require the allowed_registry_prefixes
+#   The policy rules in this package require the `allowed_registry_prefixes`
 #   rule data to be provided.
 # custom:
-#   short_name: missing_rule_data
+#   short_name: allowed_registries_provided
 #   failure_msg: Missing required allowed_registry_prefixes rule data
 #   collections:
 #   - minimal

@@ -14,14 +14,15 @@ import data.lib
 import data.lib.tkn
 
 # METADATA
-# title: hermetic_build_task
+# title: Build task called with hermetic param set
 # description: >-
 #   This policy verifies the build task in the PipelineRun attestation
 #   was invoked with the proper parameters to make the build process
 #   hermetic.
 # custom:
-#   short_name: build_task_not_hermetic
-#   failure_msg: Build task was not invoked with hermetic parameter
+#   short_name: build_task_hermetic
+#   failure_msg: Build task was not invoked with the hermetic parameter set
+#
 deny contains result if {
 	hermetic_build != "true"
 	result := lib.result_helper(rego.metadata.chain(), [])

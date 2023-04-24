@@ -15,11 +15,11 @@ import data.lib
 import data.lib.tkn
 
 # METADATA
-# title: Task git-clone missing
+# title: Git clone task found
 # description: >-
-#   The attestation must contain a git-clone task with the expected commit and url results.
+#   The attestation must contain a git-clone task with `commit` and `url` task results.
 # custom:
-#   short_name: missing_git_clong_task
+#   short_name: git_clone_task_found
 #   failure_msg: Task git-clone not found
 #   collections:
 #   - minimal
@@ -31,12 +31,12 @@ deny contains result if {
 }
 
 # METADATA
-# title: Git repo materials mismatch
+# title: Git clone source matches materials provenance
 # description: >-
 #   The result of the git-clone task must be included in the materials section of the SLSA
 #   provenance attestation.
 # custom:
-#   short_name: git_repo_materials_mismatch
+#   short_name: git_clone_source_matches_provenance
 #   failure_msg: Entry in materials for the git repo %q and commit %q not found
 #   collections:
 #   - minimal

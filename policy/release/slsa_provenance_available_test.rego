@@ -9,10 +9,10 @@ test_expected_predicate_type {
 	lib.assert_empty(deny) with input.attestations as attestations
 }
 
-test_unexpected_predicate_type {
+test_att_predicate_type {
 	attestations := _mock_attestations(["spam"])
 	expected_deny := {{
-		"code": "slsa_provenance_available.unexpected_predicate_type",
+		"code": "slsa_provenance_available.attestation_predicate_type_accepted",
 		"collections": ["minimal", "slsa1", "slsa2", "slsa3"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Attestation predicate type \"spam\" is not an expected type (https://slsa.dev/provenance/v0.2)",

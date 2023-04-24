@@ -20,16 +20,16 @@ test_has_foreign {
 		_bundle,
 	)]
 	expected := {{
-		"code": "java.java_foreign_dependencies",
+		"code": "java.no_foreign_dependencies",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Found Java dependencies from 'central', expecting to find only from 'rebuilt,redhat'",
 	}}
 	lib.assert_equal(deny, expected) with input.attestations as attestations
 }
 
-test_missing_rule_data {
+test_trusted_dependency_source_list_provided {
 	expected := {{
-		"code": "java.missing_rule_data",
+		"code": "java.trusted_dependencies_source_list_provided",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required allowed_java_component_sources rule data",
 	}}

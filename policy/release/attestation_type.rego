@@ -19,6 +19,9 @@ import data.lib
 # custom:
 #   short_name: known_attestation_type
 #   failure_msg: Unknown attestation type '%s'
+#   solution: >-
+#     Make sure the "_type" field in the attestation is supported. Supported types are configured
+#     in xref:configuration.html#_data_sources[data sources].
 #   collections:
 #   - minimal
 #
@@ -36,6 +39,8 @@ deny contains result if {
 # custom:
 #   short_name: pipelinerun_attestation_found
 #   failure_msg: Missing pipelinerun attestation
+#   solution: >-
+#     Make sure the attestation being verified was generated from a Tekton pipelineRun.
 #   collections:
 #   - minimal
 #

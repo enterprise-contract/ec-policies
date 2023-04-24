@@ -25,7 +25,9 @@ import data.lib
 # custom:
 #   short_name: no_foreign_dependencies
 #   failure_msg: Found Java dependencies from '%s', expecting to find only from '%s'
-#
+#   solution: >-
+#     Make sure there are no build dependencies that originate from foreign repositories. 
+#     The allowed sources are in the rule_data under the key 'allowed_java_component_sources'.
 deny contains result if {
 	allowed := {a | some a in lib.rule_data("allowed_java_component_sources")}
 	foreign := _java_component_sources - allowed
@@ -41,7 +43,10 @@ deny contains result if {
 # custom:
 #   short_name: trusted_dependencies_source_list_provided
 #   failure_msg: Missing required allowed_java_component_sources rule data
-#
+#   solution: >-
+#     Add a data source that contains allowable source repositories for build dependencies.
+#     The source must be located under a key named 'allowed_java_component_sources'. More
+#     information on adding xref:configuration.html#_data_sources[data sources].
 deny contains result if {
 	count(lib.rule_data("allowed_java_component_sources")) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])

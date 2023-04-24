@@ -28,6 +28,10 @@ import data.lib.tkn
 # custom:
 #   short_name: build_script_used
 #   failure_msg: Build task %q does not contain any steps
+#   solution: >-
+#     There were no build tasks detected. Make sure the build pipeline contains
+#     tasks and that the build system is recording them properly when the attestation
+#     is generated.
 #   collections:
 #   - slsa1
 #   - slsa2
@@ -48,6 +52,9 @@ deny contains result if {
 # custom:
 #   short_name: build_task_image_results_found
 #   failure_msg: Build task not found
+#   solution: >-
+#     Make sure the build pipeline contains a build task. The build task
+#     must contain results named 'IMAGE_DIGEST' and 'IMAGE_URL'.
 #   collections:
 #   - slsa1
 #   - slsa2
@@ -67,6 +74,9 @@ deny contains result if {
 # custom:
 #   short_name: subject_build_task_matches
 #   failure_msg: The attestation subject, %q, does not match the build task image, %q
+#   solution: >-
+#     Make sure the subject in the attestation matches the 'IMAGE_URL' and 'IMAGE_DIGEST'
+#     results from the build task. The format for the subject should be 'IMAGE_URL@IMAGE_DIGEST'.
 #   collections:
 #   - slsa1
 #   - slsa2

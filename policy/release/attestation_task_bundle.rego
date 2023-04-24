@@ -38,6 +38,8 @@ deny[result] {
 # custom:
 #   short_name: task_ref_bundles_not_empty
 #   failure_msg: Pipeline task '%s' uses an empty bundle image reference
+#   solution: >-
+#     Specify a task bundle with a reference as the full digest.
 #   collections:
 #   - minimal
 #
@@ -70,6 +72,9 @@ warn[result] {
 # custom:
 #   short_name: task_ref_bundles_current
 #   failure_msg: Pipeline task '%s' uses an out of date task bundle '%s'
+#   solution: >-
+#     A task bundle used is not the most recent. The most recent task bundles are defined
+#     as in xref:acceptable_bundles.adoc#_task_bundles[acceptable bundles] list.
 #
 warn[result] {
 	task := bundles.out_of_date_task_bundle(lib.tasks_from_pipelinerun)[_]
@@ -85,6 +90,9 @@ warn[result] {
 # custom:
 #   short_name: task_ref_bundles_acceptable
 #   failure_msg: Pipeline task '%s' uses an unacceptable task bundle '%s'
+#   solution: >-
+#     For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
+#     an xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle].
 #
 deny[result] {
 	task := bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)[_]
@@ -99,6 +107,10 @@ deny[result] {
 # custom:
 #   short_name: acceptable_bundles_provided
 #   failure_msg: Missing required task-bundles data
+#   solution: >-
+#     Create an acceptable bundles list. This is a list of task bundles with a top-level key
+#     of 'task-bundles'. More information can be found at 
+#     xref:acceptable_bundles.adoc#_task_bundles[acceptable bundles].
 deny[result] {
 	bundles.missing_task_bundles_data
 	result := lib.result_helper(rego.metadata.chain(), [])

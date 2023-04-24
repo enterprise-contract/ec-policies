@@ -26,6 +26,9 @@ import data.lib
 # custom:
 #   short_name: cve_blockers
 #   failure_msg: Found %d CVE vulnerabilities of %s security level
+#   solution: >-
+#     Make sure to address any CVE's related to the image. The CVEs are detected
+#     by the task that runs a Clair scan and emits a result named `CLAIR_SCAN_RESULT`.
 #   collections:
 #   - minimal
 #
@@ -46,6 +49,9 @@ deny contains result if {
 # custom:
 #   short_name: cve_warnings
 #   failure_msg: Found %d non-blocking CVE vulnerabilities of %s security level
+#   solution: >-
+#     Make sure to address any CVE's related to the image. The CVEs are detected
+#     by the task that runs a Clair scan and emits a result named `CLAIR_SCAN_RESULT`.   
 #   collections:
 #   - minimal
 #

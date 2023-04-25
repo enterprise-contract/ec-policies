@@ -17,7 +17,7 @@ import data.lib
 # title: Task steps ran on container images that are disallowed
 # description: >-
 #   Enterprise Contract has a list of allowed registry prefixes. Each step in each
-#   each TaskRun must run on a container image with a url that matches one of the
+#   TaskRun must run on a container image with a url that matches one of the
 #   prefixes in the list.
 # custom:
 #   short_name: disallowed_task_step_image

@@ -23,7 +23,6 @@ set -o pipefail
 set -o nounset
 
 REPO_ORG=hacbs-contract
-QUAY_API_URL=https://quay.io/api/v1/repository/$REPO_ORG
 ROOT_DIR=$( git rev-parse --show-toplevel )
 BUNDLES="release pipeline data task build_task"
 
@@ -85,13 +84,11 @@ for b in $BUNDLES; do
   # Check if the bundle for that git sha exists already
   repo=$(repo_name $b)
   tag=git-$last_update_sha
-  found_count=$(curl -s $QUAY_API_URL/$repo/tag/?specificTag=$tag | jq '.tags | length')
   push_repo=quay.io/$REPO_ORG/$repo
 
-  if [ "$found_count" == "1" -a "$ENSURE_UNIQUE" == "1" ]; then
+  if [ "$(skopeo list-tags "docker://${push_repo}" | jq 'any(.Tags[]; . == "'"${tag}"'")')" == "true" ] && [ "$ENSURE_UNIQUE" == "1" ]; then
     # No push needed
     echo "Policy bundle $push_repo:$tag exists already, no push needed"
-
   else
     # Push needed
     echo "Pushing policy bundle $push_repo:$tag now"
@@ -132,7 +129,7 @@ for b in $BUNDLES; do
     skopeo copy docker://"$push_repo:$tag" dir:"${tmp_oci_dir}"
     manifest="$(jq -c '. += { "annotations": { "org.opencontainers.image.revision": "'"${last_update_sha}"'" } }' "${tmp_oci_dir}/manifest.json")"
     echo "${manifest}" > "${tmp_oci_dir}/manifest.json"
-    skopeo copy dir:"${tmp_oci_dir}" docker://"$push_repo:$tag"
+    $DRY_RUN_ECHO skopeo copy dir:"${tmp_oci_dir}" docker://"$push_repo:$tag"
 
     # Set the 'latest' tag
     $DRY_RUN_ECHO skopeo copy --quiet docker://$push_repo:$tag docker://$push_repo:latest

@@ -14,7 +14,11 @@ taskrun_att_build_types := [
 	"https://tekton.dev/attestations/chains@v2",
 ]
 
-hacbs_test_task_result_name := "HACBS_TEST_OUTPUT"
+# (We can't call this test_task_result_name since anything prefixed
+# with test_ is treated as though it was a test.)
+task_test_result_name := "TEST_OUTPUT"
+
+task_test_result_name_deprecated := "HACBS_TEST_OUTPUT"
 
 java_sbom_component_count_result_name := "SBOM_JAVA_COMPONENTS_COUNT"
 
@@ -65,7 +69,15 @@ unmarshal(raw) = value {
 
 # (Don't call it test_results since test_ means a unit test)
 results_from_tests = results {
-	results := results_named(hacbs_test_task_result_name)
+	# First find results using the new task result name
+	_results := results_named(task_test_result_name)
+
+	# If some were found then return them
+	count(_results) > 0
+	results := _results
+} else = results {
+	# Try the older task result name, return it even if empty
+	results := results_named(task_test_result_name_deprecated)
 }
 
 # Check for a task by name. Return the task if found

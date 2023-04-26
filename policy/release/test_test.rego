@@ -14,7 +14,7 @@ test_needs_non_empty_data {
 }
 
 # There is a test result, but the data inside it doesn't include the "result" key
-mock_without_results_data := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"rezult": "SUCCESS"}, "task1", _bundle)]
+mock_without_results_data := [lib.att_mock_helper_ref(lib.task_test_result_name, {"rezult": "SUCCESS"}, "task1", _bundle)]
 
 test_needs_tests_with_results {
 	lib.assert_equal(deny, {{
@@ -25,8 +25,8 @@ test_needs_tests_with_results {
 }
 
 mock_without_results_data_mixed := [
-	lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SUCCESS"}, "task1", _bundle),
-	lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"rezult": "SUCCESS"}, "task2", _bundle),
+	lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "SUCCESS"}, "task1", _bundle),
+	lib.att_mock_helper_ref(lib.task_test_result_name, {"rezult": "SUCCESS"}, "task2", _bundle),
 ]
 
 test_needs_tests_with_results_mixed {
@@ -37,13 +37,13 @@ test_needs_tests_with_results_mixed {
 	}}) with input.attestations as mock_without_results_data_mixed
 }
 
-mock_a_passing_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SUCCESS"}, "task1", _bundle)]
+mock_a_passing_test := [lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "SUCCESS"}, "task1", _bundle)]
 
 test_success_data {
 	lib.assert_empty(deny) with input.attestations as mock_a_passing_test
 }
 
-mock_a_failing_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "FAILURE"}, "failed_1", _bundle)]
+mock_a_failing_test := [lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "FAILURE"}, "failed_1", _bundle)]
 
 test_failure_data {
 	lib.assert_equal(deny, {{
@@ -54,7 +54,7 @@ test_failure_data {
 	}}) with input.attestations as mock_a_failing_test
 }
 
-mock_an_errored_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "ERROR"}, "errored_1", _bundle)]
+mock_an_errored_test := [lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "ERROR"}, "errored_1", _bundle)]
 
 test_error_data {
 	lib.assert_equal(deny, {{
@@ -85,12 +85,12 @@ test_mix_data {
 }
 
 test_skipped_is_not_deny {
-	skipped_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SKIPPED"}, "skipped_1", _bundle)]
+	skipped_test := [lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "SKIPPED"}, "skipped_1", _bundle)]
 	lib.assert_empty(deny) with input.attestations as skipped_test
 }
 
 test_skipped_is_warning {
-	skipped_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SKIPPED"}, "skipped_1", _bundle)]
+	skipped_test := [lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "SKIPPED"}, "skipped_1", _bundle)]
 	lib.assert_equal(warn, {{
 		"code": "test.no_skipped_tests",
 		"msg": "Test \"skipped_1\" was skipped",
@@ -100,7 +100,7 @@ test_skipped_is_warning {
 }
 
 test_warning_is_warning {
-	warning_test := [lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "WARNING"}, "warning_1", _bundle)]
+	warning_test := [lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "WARNING"}, "warning_1", _bundle)]
 	lib.assert_equal(warn, {{
 		"code": "test.no_test_warnings",
 		"msg": "Test \"warning_1\" returned a warning",
@@ -111,15 +111,15 @@ test_warning_is_warning {
 
 test_mixed_statuses {
 	test_results := [
-		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "ERROR"}, "error_1", _bundle),
-		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SUCCESS"}, "success_1", _bundle),
-		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "FAILURE"}, "failure_1", _bundle),
-		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SKIPPED"}, "skipped_1", _bundle),
-		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "FAILURE"}, "failure_2", _bundle),
-		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SKIPPED"}, "skipped_2", _bundle),
-		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "WARNING"}, "warning_1", _bundle),
-		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "ERROR"}, "error_2", _bundle),
-		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "WARNING"}, "warning_2", _bundle),
+		lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "ERROR"}, "error_1", _bundle),
+		lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "SUCCESS"}, "success_1", _bundle),
+		lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "FAILURE"}, "failure_1", _bundle),
+		lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "SKIPPED"}, "skipped_1", _bundle),
+		lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "FAILURE"}, "failure_2", _bundle),
+		lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "SKIPPED"}, "skipped_2", _bundle),
+		lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "WARNING"}, "warning_1", _bundle),
+		lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "ERROR"}, "error_2", _bundle),
+		lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "WARNING"}, "warning_2", _bundle),
 	]
 
 	lib.assert_equal(deny, {
@@ -179,10 +179,10 @@ test_mixed_statuses {
 
 test_unsupported_test_result {
 	test_results := [
-		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "EROR"}, "error_1", _bundle),
-		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SUCESS"}, "success_1", _bundle),
-		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "FAIL"}, "failure_1", _bundle),
-		lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "SKIPED"}, "skipped_1", _bundle),
+		lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "EROR"}, "error_1", _bundle),
+		lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "SUCESS"}, "success_1", _bundle),
+		lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "FAIL"}, "failure_1", _bundle),
+		lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "SKIPED"}, "skipped_1", _bundle),
 	]
 
 	lib.assert_equal(deny, {
@@ -200,7 +200,7 @@ test_missing_wrong_attestation_type {
 }
 
 test_wrong_attestation_type {
-	pr := lib.att_mock_helper_ref(lib.hacbs_test_task_result_name, {"result": "ERROR"}, "errored_1", _bundle)
+	pr := lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "ERROR"}, "errored_1", _bundle)
 	tr := object.union(pr, {"predicate": {"buildType": lib.taskrun_att_build_types[0]}})
 	lib.assert_empty(deny) with input.attestations as [tr]
 }

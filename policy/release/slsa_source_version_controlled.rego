@@ -40,6 +40,9 @@ import data.lib
 # custom:
 #   short_name: materials_format_okay
 #   failure_msg: No materials match expected format
+#   solution: >-
+#     Make sure the attestation contains the repository URI and digest.sha1. This information
+#     comes from the 'CHAINS-GIT_URL' and 'CHAINS-GIT_COMMIT' results in the 'git-clone' task.
 #   collections:
 #   - minimal
 #   - slsa2
@@ -59,6 +62,10 @@ deny contains result if {
 # custom:
 #   short_name: materials_uri_is_git_repo
 #   failure_msg: Material URI %q is not a git URI
+#   solution: >-
+#     Make sure the format of the URI in the materials section of the attestation
+#     is a valid URI. This information comes from the 'CHAINS-GIT_URL' result of the
+#     'git-clone' task.
 #   collections:
 #   - minimal
 #   - slsa2
@@ -78,6 +85,10 @@ deny contains result if {
 # custom:
 #   short_name: materials_include_git_sha
 #   failure_msg: Material digest %q is not a git commit sha
+#   solution: >-
+#     Make sure the format of the digest.sha1 in the materials section of the attestation
+#     is a valid commit sha. This information comes from the 'CHAINS-GIT_COMMIT' result of the
+#     'git-clone' task.
 #   collections:
 #   - minimal
 #   - slsa2

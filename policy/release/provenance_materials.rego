@@ -21,6 +21,8 @@ import data.lib.tkn
 # custom:
 #   short_name: git_clone_task_found
 #   failure_msg: Task git-clone not found
+#   solution: >-
+#     Make sure the build pipeline contains a task named 'git-clone'.
 #   collections:
 #   - minimal
 #
@@ -38,6 +40,10 @@ deny contains result if {
 # custom:
 #   short_name: git_clone_source_matches_provenance
 #   failure_msg: Entry in materials for the git repo %q and commit %q not found
+#   solution: >-
+#     The build pipeline must contain a task named 'git-clone' and that task must emit
+#     results named 'url' and 'commit' and contain the clone git repository and commit,
+#     respectively.
 #   collections:
 #   - minimal
 #

@@ -29,6 +29,9 @@ import data.lib.tkn
 # custom:
 #   short_name: pipeline_has_tasks
 #   failure_msg: No tasks found in PipelineRun attestation
+#   solution: >- 
+#     Make sure the build pipeline ran any tasks and that the build system is
+#     generating a proper attestation.
 #   collections:
 #   - minimal
 #
@@ -46,6 +49,9 @@ deny contains result if {
 # custom:
 #   short_name: required_tasks_found
 #   failure_msg: Required task %q is missing
+#   solution: >-
+#     Make sure all required tasks are in the build pipeline. The required task list
+#     is contained as xref:configuration.html#_data_sources[data] under the key 'required-tasks'.
 deny contains result if {
 	some required_task in _missing_tasks(current_required_tasks)
 
@@ -61,6 +67,9 @@ deny contains result if {
 # custom:
 #   short_name: pipeline_required_tasks_list_provided
 #   failure_msg: Required tasks do not exist for pipeline
+#   solution: >-
+#     The required task list is contained as xref:configuration.html#_data_sources[data] 
+#     under the key 'required-tasks'. Make sure this list exists.
 warn contains result if {
 	not required_pipeline_task_data
 	result := lib.result_helper(rego.metadata.chain(), [])
@@ -74,6 +83,9 @@ warn contains result if {
 # custom:
 #   short_name: future_required_tasks_found
 #   failure_msg: Task %q is missing and will be required in the future
+#   solution: >-
+#     There is a task that will be required at a future date that is missing
+#     from the build pipeline.
 warn contains result if {
 	some required_task in _missing_tasks(latest_required_tasks)
 
@@ -90,6 +102,10 @@ warn contains result if {
 # custom:
 #   short_name: required_tasks_list_provided
 #   failure_msg: Missing required task-bundles data
+#   solution: >-
+#     Make sure the xref:configuration.html#_data_sources[data sources] contains a key
+#     'required-tasks' that contains a list of tasks that are required to run in the
+#     build pipeline.
 deny contains result if {
 	tkn.missing_required_tasks_data
 	not required_pipeline_task_data

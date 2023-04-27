@@ -20,7 +20,8 @@ import data.lib
 # custom:
 #   short_name: buildah_task_has_dockerfile_param
 #   failure_msg: The DOCKERFILE param was not included in the buildah task
-#
+#   solution: >-
+#     Make sure the buildah task has a parameter named 'DOCKERFILE'.
 deny contains result if {
 	# Skip this rule if the buildah task is not present
 	buildah_task
@@ -36,7 +37,8 @@ deny contains result if {
 # custom:
 #   short_name: buildah_uses_local_dockerfile
 #   failure_msg: DOCKERFILE param value (%s) is an external source
-#
+#   solution: >-
+#     Make sure the 'DOCKERFILE' parameter does not come from an external source.
 deny contains result if {
 	_not_allowed_prefix(dockerfile_param)
 	result := lib.result_helper(rego.metadata.chain(), [dockerfile_param])

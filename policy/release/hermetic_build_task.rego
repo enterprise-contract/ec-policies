@@ -22,7 +22,9 @@ import data.lib.tkn
 # custom:
 #   short_name: build_task_hermetic
 #   failure_msg: Build task was not invoked with the hermetic parameter set
-#
+#   solution: >-
+#     Make sure the task that builds the image has a parameter named 'HERMETIC' and
+#     it's set to 'true'.
 deny contains result if {
 	hermetic_build != "true"
 	result := lib.result_helper(rego.metadata.chain(), [])

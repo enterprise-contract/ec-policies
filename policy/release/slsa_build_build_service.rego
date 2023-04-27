@@ -25,6 +25,9 @@ import data.lib
 # custom:
 #   short_name: slsa_builder_id_found
 #   failure_msg: Builder ID not set in attestation
+#   solution: >-
+#     The builder id in the attestation is missing. Make sure the build system
+#     is setting the build id when generating an attestation.
 #   collections:
 #   - slsa2
 #   - slsa3
@@ -44,6 +47,9 @@ deny contains result if {
 # custom:
 #   short_name: slsa_builder_id_accepted
 #   failure_msg: Builder ID %q is unexpected
+#   solution: >-
+#     Make sure the build id is set to an expected value. The expected values
+#     are set in the xref:configuration.html#_data_sources[data sources].
 #   collections:
 #   - slsa2
 #   - slsa3

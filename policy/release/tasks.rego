@@ -29,7 +29,7 @@ import data.lib.tkn
 # custom:
 #   short_name: pipeline_has_tasks
 #   failure_msg: No tasks found in PipelineRun attestation
-#   solution: >- 
+#   solution: >-
 #     Make sure the build pipeline ran any tasks and that the build system is
 #     generating a proper attestation.
 #   collections:
@@ -51,7 +51,7 @@ deny contains result if {
 #   failure_msg: Required task %q is missing
 #   solution: >-
 #     Make sure all required tasks are in the build pipeline. The required task list
-#     is contained as xref:configuration.html#_data_sources[data] under the key 'required-tasks'.
+#     is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'.
 deny contains result if {
 	some required_task in _missing_tasks(current_required_tasks)
 
@@ -68,7 +68,7 @@ deny contains result if {
 #   short_name: pipeline_required_tasks_list_provided
 #   failure_msg: Required tasks do not exist for pipeline
 #   solution: >-
-#     The required task list is contained as xref:configuration.html#_data_sources[data] 
+#     The required task list is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data]
 #     under the key 'required-tasks'. Make sure this list exists.
 warn contains result if {
 	not required_pipeline_task_data
@@ -103,7 +103,7 @@ warn contains result if {
 #   short_name: required_tasks_list_provided
 #   failure_msg: Missing required task-bundles data
 #   solution: >-
-#     Make sure the xref:configuration.html#_data_sources[data sources] contains a key
+#     Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key
 #     'required-tasks' that contains a list of tasks that are required to run in the
 #     build pipeline.
 deny contains result if {

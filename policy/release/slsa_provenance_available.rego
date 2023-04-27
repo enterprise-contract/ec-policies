@@ -27,8 +27,8 @@ import data.lib
 #   short_name: attestation_predicate_type_accepted
 #   failure_msg: Attestation predicate type %q is not an expected type (%s)
 #   solution: >-
-#     The predicate type field in the attestation does not match the 'allowed_predicate_types' field. 
-#     This field is set in the xref:configuration.html#_data_sources[data sources].
+#     The predicate type field in the attestation does not match the 'allowed_predicate_types' field.
+#     This field is set in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
 #   collections:
 #   - minimal
 #   - slsa1

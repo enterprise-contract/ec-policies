@@ -25,7 +25,7 @@ import data.lib
 #   solution: >-
 #     Make sure the container image used in each step of the build pipeline comes from
 #     an approved registry. The approved list is under 'allowed_step_image_registry_prefixes'
-#     in the xref:configuration.html#_data_sources[data sources].
+#     in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
 #   collections:
 #   - minimal
 #
@@ -47,7 +47,7 @@ deny contains result if {
 #   short_name: step_image_registry_prefix_list_provided
 #   failure_msg: Missing required allowed_step_image_registry_prefixes rule data
 #   solution: >-
-#     Make sure the xref:configuration.html#_data_sources[data sources] contains a key
+#     Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key
 #     'allowed_step_image_registry_prefixes' that contains a list of approved registries
 #     that can be used to run tasks in the build pipeline.
 #   collections:

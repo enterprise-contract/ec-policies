@@ -24,9 +24,9 @@ import data.lib
 # custom:
 #   short_name: base_image_permitted
 #   failure_msg: Base image %q is from a disallowed registry
-#   solution: >- 
-#     Make sure the image used in each task comes from a trusted registry. The list of 
-#     trusted registries is a configurable xref:configuration.html#_data_sources[data source].
+#   solution: >-
+#     Make sure the image used in each task comes from a trusted registry. The list of
+#     trusted registries is a configurable xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
 #   collections:
 #   - minimal
 #
@@ -70,7 +70,7 @@ deny contains result if {
 #   failure_msg: Missing required allowed_registry_prefixes rule data
 #   solution: >-
 #     Make sure to configure a list of trusted registries as a
-#     xref:configuration.html#_data_sources[data source].
+#     xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
 #   collections:
 #   - minimal
 #

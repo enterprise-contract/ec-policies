@@ -17,7 +17,7 @@ name: Enable auto-merge
 jobs:
   enable-auto-merge:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'infra-deployments-updater[bot]'
+    if: github.event.pull_request.user.login == 'rh-tap-build-team[bot]'
     steps:
       - uses: alexwilson/enable-github-automerge-action@main
         with:

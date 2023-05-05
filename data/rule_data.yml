@@ -10,8 +10,6 @@ rule_data:
   - quay.io/redhat-appstudio/
   - registry.access.redhat.com/
   - registry.redhat.io/
-  # Added temporarily. It should be removed after https://issues.redhat.com/browse/STONEBLD-837
-  - quay.io/containerbuildsystem/cachi2
   # Due to https://issues.redhat.com/browse/OCPBUGS-8428 images from registry.redhat.io may
   # sometimes be reported as coming from the repository below. This is a temporary workaround
   # until the JIRA is resolved.

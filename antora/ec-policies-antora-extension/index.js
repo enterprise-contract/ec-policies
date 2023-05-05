@@ -128,7 +128,7 @@ const helpers = {
           const file = a.location.file
           const row = a.location.row
 
-          const packageShortName = a.path[3].value
+          const packageShortName = helpers.toJoinedPath(a.path.slice(3, a.path.length-1), '_')
           const packageShortNamespace = a.path[2].value
           const packagePath = helpers.toDottedPath(a.path.slice(1, a.path.length-1))
           const pkgAnnotation = packageAnnotations[packagePath] || {}

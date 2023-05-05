@@ -250,13 +250,12 @@ module.exports.register = function() {
 
   this.on('contentAggregated', async ({ contentAggregate }) => {
 
-    // Only operate on the ec-policies docs
-    const content = contentAggregate.find(c => c.name == 'ec-policies')
+    const ecContent = contentAggregate.find(c => c.name == 'ec-policies')
 
     //------------------------------------------------------------------
     // Extract annotations from the rego files
     //
-    const regoFiles = helpers.filesMatching(content, /^policy\/.*(?!_test)\.rego$/)
+    const regoFiles = contentAggregate.reduce((files, c) => files.concat(helpers.filesMatching(c, /^policy\/.*(?!_test)\.rego$/)), [])
     const rawAnnotationsData = await (await opa).inspect(regoFiles)
 
     // Prepare annotation data for use in the templates
@@ -270,7 +269,7 @@ module.exports.register = function() {
     //
     const yaml = this.require('js-yaml')
 
-    const bundlesFile = helpers.firstFileMatching(content, /\/acceptable_tekton_bundles.yml$/)
+    const bundlesFile = helpers.firstFileMatching(ecContent, /\/acceptable_tekton_bundles.yml$/)
     if (!bundlesFile) throw `Unable to find acceptable bundles file: (${__filename})`
     const rawBundlesData = yaml.load(bundlesFile._contents.toString())
     const acceptableBundles = helpers.processBundlesData(rawBundlesData)
@@ -312,7 +311,7 @@ module.exports.register = function() {
       },
     ]
     navPartials.forEach(partial => {
-      const partialFile = content.files.find(f => f.path.endsWith(partial.name))
+      const partialFile = ecContent.files.find(f => f.path.endsWith(partial.name))
       const partialTemplate = partial.template(partialFile.contents.toString())
       partialFile.contents = Buffer.from(partialTemplate(partial.collections))
     })
@@ -320,7 +319,7 @@ module.exports.register = function() {
     //------------------------------------------------------------------
     // Templates starting with '_' are treated as partials instead of pages
     //
-    const partialTemplates = helpers.filesMatching(content, /\/templates\/_[a-z_]*\.hbs$/)
+    const partialTemplates = helpers.filesMatching(ecContent, /\/templates\/_[a-z_]*\.hbs$/)
     partialTemplates.forEach(f => {
       Handlebars.registerPartial(f.src.stem.replace(/^_/, ''), f._contents.toString())
     })
@@ -328,7 +327,7 @@ module.exports.register = function() {
     //------------------------------------------------------------------
     // Generate a page for each page templates
     //
-    const pageTemplates = helpers.filesMatching(content, /\/templates\/[a-z][a-z_]*\.hbs$/)
+    const pageTemplates = helpers.filesMatching(ecContent, /\/templates\/[a-z][a-z_]*\.hbs$/)
 
     //------------------------------------------------------------------
     // Dynamically create pages/foo.adoc for any templates/foo.hbs file found
@@ -336,7 +335,7 @@ module.exports.register = function() {
     pageTemplates.forEach(f => {
       const hbsTemplate = Handlebars.compile(f._contents.toString())
       const generatedContent = hbsTemplate(allData)
-      content.files.push(helpers.prepDynamicPage(f.src, generatedContent))
+      ecContent.files.push(helpers.prepDynamicPage(f.src, generatedContent))
     })
   })
 

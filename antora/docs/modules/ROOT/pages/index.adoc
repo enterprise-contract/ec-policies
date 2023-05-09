@@ -1,24 +1,22 @@
-= About Enterprise Contract
+= Enterprise Contract Policies
 
 :numbered:
 
 The Enterprise Contract is a set of tools for verifing the provenance of container
 images built in Red Hat Trusted Application Pipeline and validating them against a
-clearly defined policy.
+clearly defined Enterprise Contract policy.
 
 The Enterprise Contract policy is defined using the
 https://www.openpolicyagent.org/docs/latest/policy-language/[rego policy
 language] and is described here in xref:release_policy.adoc[Release Policy] and
 xref:pipeline_policy.adoc[Pipeline Policy].
 
-== See Also
-
-=== Additional Documentation
+== Additional Documentation
 
 * https://redhat-appstudio.github.io/docs.stonesoup.io/[Stonesoup Documentation]
 * https://enterprise-contract.github.io/ec-cli/ec-cli/main/ec.html[EC CLI Documentation]
 
-=== Code
+== Code
 
 * https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract-v2.yaml["Verify Enterprise Contract" task definition]
 * https://github.com/enterprise-contract/ec-policies[github.com/enterprise-contract/ec-policies]

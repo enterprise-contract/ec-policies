@@ -13,12 +13,14 @@ import future.keywords.in
 # METADATA
 # title: Test data found in task results
 # description: >-
-#   Fails if none of the tasks in the pipeline included a HACBS_TEST_OUTPUT
+#   Fails if none of the tasks in the pipeline included a TEST_OUTPUT
 #   task result, which is where Enterprise Contract expects to find
 #   test result data.
 # custom:
 #   short_name: test_data_found
 #   failure_msg: No test data found
+#   solution: >-
+#     At least one task in the build pipeline must contain a result named TEST_OUTPUT.
 #
 deny[result] {
 	count(lib.pipelinerun_attestations) > 0 # make sure we're looking at a PipelineRun attestation
@@ -32,10 +34,13 @@ deny[result] {
 # title: Test data includes results key
 # description: >-
 #   Each test result is expected to have a 'results' key. The check fails if
-#   in at least one of the HACBS_TEST_OUTPUT task results this key was not present.
+#   in at least one of the TEST_OUTPUT task results this key was not present.
 # custom:
 #   short_name: test_results_found
 #   failure_msg: Found tests without results
+#   solution: >-
+#     There was at least one result named TEST_OUTPUT found, but it did not contain a key
+#     named 'result'. For a TEST_OUTPUT result to be valid, this key must exist.  
 #
 deny[result] {
 	with_results := [result | result := lib.results_from_tests[_].value.result]
@@ -52,6 +57,9 @@ deny[result] {
 # custom:
 #   short_name: test_results_known
 #   failure_msg: Test '%s' has unsupported result '%s'
+#   solution: >-
+#     The test results should be of a known value. Values can be set as a
+#     xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
 #
 deny[result] {
 	all_unsupported := [u |
@@ -80,6 +88,9 @@ deny[result] {
 # custom:
 #   short_name: required_tests_passed
 #   failure_msg: "Test %q did not complete successfully"
+#   solution: >- 
+#     There is a required test that did not pass. Make sure that any task
+#     in the build pipeline with a result named 'TEST_OUTPUT' passes.
 #
 deny[result] {
 	some test in resulted_in(lib.rule_data("failed_tests_results"))
@@ -93,6 +104,10 @@ deny[result] {
 # custom:
 #   short_name: no_skipped_tests
 #   failure_msg: "Test %q was skipped"
+#   solution: >-
+#     There is a test that was skipped. Make sure that each
+#     task with a result named 'TEST_OUTPUT' was not skipped. You can find
+#     which test was skipped by examining the 'result' key in the 'TEST_OUTPUT'.
 #
 warn[result] {
 	some test in resulted_in(lib.rule_data("skipped_tests_results"))
@@ -106,6 +121,10 @@ warn[result] {
 # custom:
 #   short_name: no_test_warnings
 #   failure_msg: "Test %q returned a warning"
+#   solution: >-
+#     There is a task with result 'TEST_OUTPUT' that returned a result of 'WARNING'.
+#     You can find which test resulted in 'WARNING' by examining the 'result' key 
+#     in the 'TEST_OUTPUT'.
 #
 warn[result] {
 	some test in resulted_in(lib.rule_data("warned_tests_results"))

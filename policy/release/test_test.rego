@@ -2,8 +2,8 @@ package policy.release.test
 
 import data.lib
 
-# Because HACBS_TEST_OUTPUT isn't in the task results, the lib.results_from_tests will be empty
-mock_empty_data := [lib.att_mock_helper_ref("NOT_HACBS_TEST_OUTPUT", {}, "task1", _bundle)]
+# Because TEST_OUTPUT isn't in the task results, the lib.results_from_tests will be empty
+mock_empty_data := [lib.att_mock_helper_ref("NOT_TEST_OUTPUT", {}, "task1", _bundle)]
 
 test_needs_non_empty_data {
 	lib.assert_equal(deny, {{

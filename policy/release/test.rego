@@ -8,6 +8,8 @@
 package policy.release.test
 
 import data.lib
+import future.keywords.contains
+import future.keywords.if
 import future.keywords.in
 
 # METADATA
@@ -20,7 +22,7 @@ import future.keywords.in
 #   short_name: test_data_found
 #   failure_msg: No test data found
 #
-deny[result] {
+deny contains result if {
 	count(lib.pipelinerun_attestations) > 0 # make sure we're looking at a PipelineRun attestation
 	results := lib.results_from_tests
 	count(results) == 0 # there are none at all
@@ -37,7 +39,7 @@ deny[result] {
 #   short_name: test_results_found
 #   failure_msg: Found tests without results
 #
-deny[result] {
+deny contains result if {
 	with_results := [result | result := lib.results_from_tests[_].value.result]
 	count(with_results) != count(lib.results_from_tests)
 	result := lib.result_helper(rego.metadata.chain(), [])
@@ -53,7 +55,7 @@ deny[result] {
 #   short_name: test_results_known
 #   failure_msg: Test '%s' has unsupported result '%s'
 #
-deny[result] {
+deny contains result if {
 	all_unsupported := [u |
 		result := lib.results_from_tests[_]
 		test := result.value
@@ -81,7 +83,7 @@ deny[result] {
 #   short_name: required_tests_passed
 #   failure_msg: "Test %q did not complete successfully"
 #
-deny[result] {
+deny contains result if {
 	some test in resulted_in(lib.rule_data("failed_tests_results"))
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
@@ -94,7 +96,7 @@ deny[result] {
 #   short_name: no_skipped_tests
 #   failure_msg: "Test %q was skipped"
 #
-warn[result] {
+warn contains result if {
 	some test in resulted_in(lib.rule_data("skipped_tests_results"))
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
@@ -107,12 +109,12 @@ warn[result] {
 #   short_name: no_test_warnings
 #   failure_msg: "Test %q returned a warning"
 #
-warn[result] {
+warn contains result if {
 	some test in resulted_in(lib.rule_data("warned_tests_results"))
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
 
-resulted_in(results) = filtered_by_result {
+resulted_in(results) = filtered_by_result if {
 	# Collect all tests that have resulted with one of the given
 	# results and convert their name to "test:<name>" format
 	filtered_by_result := {r |

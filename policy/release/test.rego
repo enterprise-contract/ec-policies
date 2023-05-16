@@ -8,6 +8,8 @@
 package policy.release.test
 
 import data.lib
+import future.keywords.contains
+import future.keywords.if
 import future.keywords.in
 
 # METADATA
@@ -22,7 +24,7 @@ import future.keywords.in
 #   solution: >-
 #     At least one task in the build pipeline must contain a result named TEST_OUTPUT.
 #
-deny[result] {
+deny contains result if {
 	count(lib.pipelinerun_attestations) > 0 # make sure we're looking at a PipelineRun attestation
 	results := lib.results_from_tests
 	count(results) == 0 # there are none at all
@@ -42,7 +44,7 @@ deny[result] {
 #     There was at least one result named TEST_OUTPUT found, but it did not contain a key
 #     named 'result'. For a TEST_OUTPUT result to be valid, this key must exist.  
 #
-deny[result] {
+deny contains result if {
 	with_results := [result | result := lib.results_from_tests[_].value.result]
 	count(with_results) != count(lib.results_from_tests)
 	result := lib.result_helper(rego.metadata.chain(), [])
@@ -61,7 +63,7 @@ deny[result] {
 #     The test results should be of a known value. Values can be set as a
 #     xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
 #
-deny[result] {
+deny contains result if {
 	all_unsupported := [u |
 		result := lib.results_from_tests[_]
 		test := result.value
@@ -92,7 +94,7 @@ deny[result] {
 #     There is a required test that did not pass. Make sure that any task
 #     in the build pipeline with a result named 'TEST_OUTPUT' passes.
 #
-deny[result] {
+deny contains result if {
 	some test in resulted_in(lib.rule_data("failed_tests_results"))
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
@@ -109,7 +111,7 @@ deny[result] {
 #     task with a result named 'TEST_OUTPUT' was not skipped. You can find
 #     which test was skipped by examining the 'result' key in the 'TEST_OUTPUT'.
 #
-warn[result] {
+warn contains result if {
 	some test in resulted_in(lib.rule_data("skipped_tests_results"))
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
@@ -126,12 +128,12 @@ warn[result] {
 #     You can find which test resulted in 'WARNING' by examining the 'result' key 
 #     in the 'TEST_OUTPUT'.
 #
-warn[result] {
+warn contains result if {
 	some test in resulted_in(lib.rule_data("warned_tests_results"))
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
 
-resulted_in(results) = filtered_by_result {
+resulted_in(results) = filtered_by_result if {
 	# Collect all tests that have resulted with one of the given
 	# results and convert their name to "test:<name>" format
 	filtered_by_result := {r |

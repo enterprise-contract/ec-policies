@@ -12,6 +12,9 @@
 #
 package policy.release.attestation_task_bundle
 
+import future.keywords.contains
+import future.keywords.if
+
 import data.lib
 import data.lib.bundles
 
@@ -26,7 +29,7 @@ import data.lib.bundles
 #   collections:
 #   - minimal
 #
-deny[result] {
+deny contains result if {
 	name := bundles.disallowed_task_reference(lib.tasks_from_pipelinerun)[_].name
 	result := lib.result_helper(rego.metadata.chain(), [name])
 }
@@ -43,7 +46,7 @@ deny[result] {
 #   collections:
 #   - minimal
 #
-deny[result] {
+deny contains result if {
 	name := bundles.empty_task_bundle_reference(lib.tasks_from_pipelinerun)[_].name
 	result := lib.result_helper(rego.metadata.chain(), [name])
 }
@@ -59,7 +62,7 @@ deny[result] {
 #   solution: >-
 #     Specify the task bundle reference with a full digest rather than a tag.
 #
-warn[result] {
+warn contains result if {
 	task := bundles.unpinned_task_bundle(lib.tasks_from_pipelinerun)[_]
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
 }
@@ -76,7 +79,7 @@ warn[result] {
 #     A task bundle used is not the most recent. The most recent task bundles are defined
 #     as in xref:acceptable_bundles.adoc#_task_bundles[acceptable bundles] list.
 #
-warn[result] {
+warn contains result if {
 	task := bundles.out_of_date_task_bundle(lib.tasks_from_pipelinerun)[_]
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
 }
@@ -94,7 +97,7 @@ warn[result] {
 #     For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
 #     an xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle].
 #
-deny[result] {
+deny contains result if {
 	task := bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)[_]
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
 }
@@ -109,9 +112,9 @@ deny[result] {
 #   failure_msg: Missing required task-bundles data
 #   solution: >-
 #     Create an acceptable bundles list. This is a list of task bundles with a top-level key
-#     of 'task-bundles'. More information can be found at 
+#     of 'task-bundles'. More information can be found at
 #     xref:acceptable_bundles.adoc#_task_bundles[acceptable bundles].
-deny[result] {
+deny contains result if {
 	bundles.missing_task_bundles_data
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

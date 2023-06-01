@@ -228,6 +228,9 @@ pipeline-bundles:
       effective_on: "2023-05-29T00:00:00Z"
       tag: 84a9ea6d18542964c4b2bc81de4567f4b9d0f29d
   quay.io/redhat-appstudio-tekton-catalog/pipeline-tekton-bundle-builder:
+    - digest: sha256:655d823e44b8638de3c2c0bf0c0bcbd49d79deaac2c549e3e048f48f7b86c4f8
+      effective_on: "2023-07-01T00:00:00Z"
+      tag: 4c203a1b6b05196fdac8916c19a4d1ce918704bd
     - digest: sha256:cfb6c5aad085a772ecc22b4e98324a2475c960de26210852d3b5297f45c787f0
       effective_on: "2023-07-01T00:00:00Z"
       tag: 4f4959b4275e2a23387f4fe520515d52f77395a0

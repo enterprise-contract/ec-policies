@@ -1,6 +1,9 @@
 ---
 pipeline-bundles:
   quay.io/redhat-appstudio-tekton-catalog/pipeline-core-services-docker-build:
+    - digest: sha256:30b3b0da73e68d5b80128fc0afcb656975dd9f841decae7f0caf71fbc544c702
+      effective_on: "2023-07-01T00:00:00Z"
+      tag: latest
     - digest: sha256:d21268ff5fae4cffe8545bf33f71077e27da39d9df33d64f655875b5b02700cb
       effective_on: "2023-07-01T00:00:00Z"
       tag: latest
@@ -38,6 +41,9 @@ pipeline-bundles:
       effective_on: "2023-06-01T00:00:00Z"
       tag: latest
   quay.io/redhat-appstudio-tekton-catalog/pipeline-docker-build:
+    - digest: sha256:e6acf197a3dccfd94e213fa33aa285dc2436df2332d7e9d96561d7e64eb31b50
+      effective_on: "2023-07-01T00:00:00Z"
+      tag: 4f4959b4275e2a23387f4fe520515d52f77395a0
     - digest: sha256:04b483713f3b27429ff3e18bf01f4ecbdb7c740ef4bcaf785b44789485d45f9f
       effective_on: "2023-07-01T00:00:00Z"
       tag: 164e8a34ab56a83437f438be397428234829f12d
@@ -76,6 +82,9 @@ pipeline-bundles:
       effective_on: "2022-12-17T00:00:00Z"
       tag: b5020a8b61e6766f4ec1b4f13b05eca0e99925d6
   quay.io/redhat-appstudio-tekton-catalog/pipeline-enterprise-contract:
+    - digest: sha256:67765074d2c1991cf2370618e9b16c7586af4bf39567628b73f7f493db815441
+      effective_on: "2023-07-01T00:00:00Z"
+      tag: 4f4959b4275e2a23387f4fe520515d52f77395a0
     - digest: sha256:1a9f49811f010319582655231c9b8c699fac58a0f69f7176b3b4af6e5c8ec705
       effective_on: "2023-06-26T00:00:00Z"
       tag: 9f2def9f3624bf81e6bdb81e53b1c8e434ad4593
@@ -89,6 +98,9 @@ pipeline-bundles:
       effective_on: "2023-05-30T00:00:00Z"
       tag: 0d94cb1673140d895102f9c2597311b92b70f36c
   quay.io/redhat-appstudio-tekton-catalog/pipeline-fbc-builder:
+    - digest: sha256:61518062e7cefaa6e0b582d94289494ba3235b56f458866ee3cdcbc3629c45d1
+      effective_on: "2023-07-01T00:00:00Z"
+      tag: 4f4959b4275e2a23387f4fe520515d52f77395a0
     - digest: sha256:a189fe5b6f39390ec1cd78e583566f295d823a875f1e6a198c32d722712c7692
       effective_on: "2023-07-01T00:00:00Z"
       tag: 164e8a34ab56a83437f438be397428234829f12d
@@ -127,6 +139,9 @@ pipeline-bundles:
       effective_on: "2023-02-26T00:00:00Z"
       tag: 717a6d74905d2398a05ee4f0909ae63a12a8f8e7
   quay.io/redhat-appstudio-tekton-catalog/pipeline-java-builder:
+    - digest: sha256:4e7ed59ed71ab6b9d479d2cd187db3e835aca27accd365c3e2205afa06869ab7
+      effective_on: "2023-07-01T00:00:00Z"
+      tag: 4f4959b4275e2a23387f4fe520515d52f77395a0
     - digest: sha256:7e622baad56fb1330df2a5cf9b86818e657d94602801b8d3a7a9768579309be5
       effective_on: "2023-07-01T00:00:00Z"
       tag: 164e8a34ab56a83437f438be397428234829f12d
@@ -161,6 +176,9 @@ pipeline-bundles:
       effective_on: "2023-05-29T00:00:00Z"
       tag: 84a9ea6d18542964c4b2bc81de4567f4b9d0f29d
   quay.io/redhat-appstudio-tekton-catalog/pipeline-nodejs-builder:
+    - digest: sha256:1880d7c055deebd87b8a61198a62cc703422e7db389edb1c0b8be59ece70d3e4
+      effective_on: "2023-07-01T00:00:00Z"
+      tag: 4f4959b4275e2a23387f4fe520515d52f77395a0
     - digest: sha256:ed459a4865ee7fe4efc5a85823d22d104c5c03c08b84ab06221c04c91a29db7d
       effective_on: "2023-07-01T00:00:00Z"
       tag: 164e8a34ab56a83437f438be397428234829f12d
@@ -195,6 +213,9 @@ pipeline-bundles:
       effective_on: "2023-05-29T00:00:00Z"
       tag: 84a9ea6d18542964c4b2bc81de4567f4b9d0f29d
   quay.io/redhat-appstudio-tekton-catalog/pipeline-tekton-bundle-builder:
+    - digest: sha256:cfb6c5aad085a772ecc22b4e98324a2475c960de26210852d3b5297f45c787f0
+      effective_on: "2023-07-01T00:00:00Z"
+      tag: 4f4959b4275e2a23387f4fe520515d52f77395a0
     - digest: sha256:157499f9bbe1a904a2174899ce76ee115a039afb9782e4514c18408b32d5b618
       effective_on: "2023-07-01T00:00:00Z"
       tag: 164e8a34ab56a83437f438be397428234829f12d
@@ -366,6 +387,9 @@ task-bundles:
       effective_on: "2023-05-29T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-prefetch-dependencies:
+    - digest: sha256:a2467a6da53d7822ebad8cea24ee4c0d187c6dbce3e40da2305053e6786da29e
+      effective_on: "2023-07-01T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:2ff6954b7065cd09daffb2703f22860fd57c7cbd0f22cf3365f16991007b770d
       effective_on: "2023-06-26T00:00:00Z"
       tag: "0.1"

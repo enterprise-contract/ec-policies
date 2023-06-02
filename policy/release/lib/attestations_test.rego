@@ -163,7 +163,6 @@ test_att_mock_helper_ref {
 
 test_results_from_tests {
 	assert_equal("TEST_OUTPUT", lib.task_test_result_name)
-	assert_equal("HACBS_TEST_OUTPUT", lib.task_test_result_name_deprecated)
 
 	expected := {
 		"value": {"result": "SUCCESS", "foo": "bar"},
@@ -173,13 +172,8 @@ test_results_from_tests {
 
 	assert_equal([expected], results_from_tests) with input.attestations as [att_mock_helper_ref(lib.task_test_result_name, {"result": "SUCCESS", "foo": "bar"}, "mytask", bundles.acceptable_bundle_ref)]
 
-	assert_equal([expected], results_from_tests) with input.attestations as [att_mock_helper_ref(lib.task_test_result_name_deprecated, {"result": "SUCCESS", "foo": "bar"}, "mytask", bundles.acceptable_bundle_ref)]
-
 	# An edge case that may never happen
-	assert_equal([expected], results_from_tests) with input.attestations as [
-		att_mock_helper_ref(lib.task_test_result_name, {"result": "SUCCESS", "foo": "bar"}, "mytask", bundles.acceptable_bundle_ref),
-		att_mock_helper_ref(lib.task_test_result_name_deprecated, {"result": "SUCCESS", "baz": "quux"}, "myothertask", bundles.acceptable_bundle_ref),
-	]
+	assert_equal([expected], results_from_tests) with input.attestations as [att_mock_helper_ref(lib.task_test_result_name, {"result": "SUCCESS", "foo": "bar"}, "mytask", bundles.acceptable_bundle_ref)]
 }
 
 test_task_in_pipelinerun {

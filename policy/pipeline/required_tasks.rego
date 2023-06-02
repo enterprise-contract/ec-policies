@@ -1,7 +1,7 @@
 #
 # METADATA
 # description: >-
-#   HACBS expects that certain Tekton tasks are executed during image builds.
+#   RHTAP expects that certain Tekton tasks are executed during image builds.
 #   This package includes policy rules to confirm that the pipeline definition
 #   includes the required Tekton tasks.
 #

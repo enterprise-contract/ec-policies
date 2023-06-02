@@ -18,8 +18,6 @@ taskrun_att_build_types := [
 # with test_ is treated as though it was a test.)
 task_test_result_name := "TEST_OUTPUT"
 
-task_test_result_name_deprecated := "HACBS_TEST_OUTPUT"
-
 java_sbom_component_count_result_name := "SBOM_JAVA_COMPONENTS_COUNT"
 
 build_base_images_digests_result_name := "BASE_IMAGES_DIGESTS"
@@ -70,14 +68,7 @@ unmarshal(raw) = value {
 # (Don't call it test_results since test_ means a unit test)
 results_from_tests = results {
 	# First find results using the new task result name
-	_results := results_named(task_test_result_name)
-
-	# If some were found then return them
-	count(_results) > 0
-	results := _results
-} else = results {
-	# Try the older task result name, return it even if empty
-	results := results_named(task_test_result_name_deprecated)
+	results := results_named(task_test_result_name)
 }
 
 # Check for a task by name. Return the task if found

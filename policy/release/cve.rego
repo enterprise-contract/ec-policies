@@ -29,8 +29,6 @@ import data.lib
 #   solution: >-
 #     Make sure to address any CVE's related to the image. The CVEs are detected
 #     by the task that runs a Clair scan and emits a result named `CLAIR_SCAN_RESULT`.
-#   collections:
-#   - minimal
 #
 deny contains result if {
 	some level, amount in _non_zero_levels("restrict_cve_security_levels")
@@ -52,8 +50,6 @@ deny contains result if {
 #   solution: >-
 #     Make sure to address any CVE's related to the image. The CVEs are detected
 #     by the task that runs a Clair scan and emits a result named `CLAIR_SCAN_RESULT`.   
-#   collections:
-#   - minimal
 #
 warn contains result if {
 	some level, amount in _non_zero_levels("warn_cve_security_levels")
@@ -71,8 +67,6 @@ warn contains result if {
 #   solution: >-
 #     Make sure there is a successful task in the build pipeline that runs a
 #     Clair scan and creates a task result called `CLAIR_SCAN_RESULT`.
-#   collections:
-#   - minimal
 #
 deny contains result if {
 	not _vulnerabilities

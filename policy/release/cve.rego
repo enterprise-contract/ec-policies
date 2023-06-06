@@ -49,7 +49,7 @@ deny contains result if {
 #   failure_msg: Found %d non-blocking CVE vulnerabilities of %s security level
 #   solution: >-
 #     Make sure to address any CVE's related to the image. The CVEs are detected
-#     by the task that runs a Clair scan and emits a result named `CLAIR_SCAN_RESULT`.   
+#     by the task that runs a Clair scan and emits a result named `CLAIR_SCAN_RESULT`.
 #
 warn contains result if {
 	some level, amount in _non_zero_levels("warn_cve_security_levels")

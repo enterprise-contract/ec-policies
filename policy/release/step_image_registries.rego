@@ -28,6 +28,8 @@ import data.lib
 #     in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
 #   collections:
 #   - minimal
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	some task in lib.pipelinerun_attestations[_].predicate.buildConfig.tasks

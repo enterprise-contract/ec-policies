@@ -31,6 +31,8 @@ import data.lib
 #   collections:
 #   - slsa2
 #   - slsa3
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations
@@ -53,6 +55,8 @@ deny contains result if {
 #   collections:
 #   - slsa2
 #   - slsa3
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	allowed_builder_ids := lib.rule_data("allowed_builder_ids")

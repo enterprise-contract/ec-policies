@@ -34,6 +34,8 @@ import data.lib.tkn
 #     generating a proper attestation.
 #   collections:
 #   - minimal
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations
@@ -52,6 +54,9 @@ deny contains result if {
 #   solution: >-
 #     Make sure all required tasks are in the build pipeline. The required task list
 #     is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'.
+#   depends_on:
+#   - tasks.pipeline_has_tasks
+#
 deny contains result if {
 	some required_task in _missing_tasks(current_required_tasks)
 
@@ -70,6 +75,9 @@ deny contains result if {
 #   solution: >-
 #     The required task list is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data]
 #     under the key 'required-tasks'. Make sure this list exists.
+#   depends_on:
+#   - tasks.pipeline_has_tasks
+#
 warn contains result if {
 	not required_pipeline_task_data
 	result := lib.result_helper(rego.metadata.chain(), [])
@@ -86,6 +94,9 @@ warn contains result if {
 #   solution: >-
 #     There is a task that will be required at a future date that is missing
 #     from the build pipeline.
+#   depends_on:
+#   - tasks.pipeline_has_tasks
+#
 warn contains result if {
 	some required_task in _missing_tasks(latest_required_tasks)
 
@@ -106,6 +117,9 @@ warn contains result if {
 #     Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key
 #     'required-tasks' that contains a list of tasks that are required to run in the
 #     build pipeline.
+#   depends_on:
+#   - tasks.pipeline_has_tasks
+#
 deny contains result if {
 	tkn.missing_required_tasks_data
 	not required_pipeline_task_data

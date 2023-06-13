@@ -28,6 +28,8 @@ import data.lib.bundles
 #   failure_msg: Pipeline task '%s' does not contain a bundle reference
 #   collections:
 #   - minimal
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	name := bundles.disallowed_task_reference(lib.tasks_from_pipelinerun)[_].name
@@ -45,6 +47,8 @@ deny contains result if {
 #     Specify a task bundle with a reference as the full digest.
 #   collections:
 #   - minimal
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	name := bundles.empty_task_bundle_reference(lib.tasks_from_pipelinerun)[_].name
@@ -61,6 +65,8 @@ deny contains result if {
 #   failure_msg: Pipeline task '%s' uses an unpinned task bundle reference '%s'
 #   solution: >-
 #     Specify the task bundle reference with a full digest rather than a tag.
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 warn contains result if {
 	task := bundles.unpinned_task_bundle(lib.tasks_from_pipelinerun)[_]
@@ -78,6 +84,8 @@ warn contains result if {
 #   solution: >-
 #     A task bundle used is not the most recent. The most recent task bundles are defined
 #     as in xref:acceptable_bundles.adoc#_task_bundles[acceptable bundles] list.
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 warn contains result if {
 	task := bundles.out_of_date_task_bundle(lib.tasks_from_pipelinerun)[_]
@@ -96,6 +104,8 @@ warn contains result if {
 #   solution: >-
 #     For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
 #     an xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle].
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	task := bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)[_]
@@ -114,6 +124,7 @@ deny contains result if {
 #     Create an acceptable bundles list. This is a list of task bundles with a top-level key
 #     of 'task-bundles'. More information can be found at
 #     xref:acceptable_bundles.adoc#_task_bundles[acceptable bundles].
+#
 deny contains result if {
 	bundles.missing_task_bundles_data
 	result := lib.result_helper(rego.metadata.chain(), [])

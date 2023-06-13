@@ -36,6 +36,8 @@ import data.lib.tkn
 #   - slsa1
 #   - slsa2
 #   - slsa3
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
@@ -59,6 +61,8 @@ deny contains result if {
 #   - slsa1
 #   - slsa2
 #   - slsa3
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
@@ -81,6 +85,8 @@ deny contains result if {
 #   - slsa1
 #   - slsa2
 #   - slsa3
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations

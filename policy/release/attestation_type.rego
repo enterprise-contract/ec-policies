@@ -24,6 +24,8 @@ import data.lib
 #     in xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
 #   collections:
 #   - minimal
+#   depends_on:
+#   - attestation_type.pipelinerun_attestation_found
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations

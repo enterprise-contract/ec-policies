@@ -34,6 +34,8 @@ import data.lib
 #   - slsa1
 #   - slsa2
 #   - slsa3
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations

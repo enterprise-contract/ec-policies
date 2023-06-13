@@ -29,6 +29,9 @@ import data.lib
 #     trusted registries is a configurable xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
 #   collections:
 #   - minimal
+#   depends_on:
+#   - base_image_registries.base_image_info_found
+#   - base_image_registries.allowed_registries_provided
 #
 deny contains result if {
 	some image_ref in _base_images
@@ -49,6 +52,8 @@ deny contains result if {
 #     A Tekton task must exist that emits a result named 'BASE_IMAGES_DIGESTS'.
 #   collections:
 #   - minimal
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	count(lib.pipelinerun_attestations) > 0

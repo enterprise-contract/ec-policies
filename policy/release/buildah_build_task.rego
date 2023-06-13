@@ -22,6 +22,9 @@ import data.lib
 #   failure_msg: The DOCKERFILE param was not included in the buildah task
 #   solution: >-
 #     Make sure the buildah task has a parameter named 'DOCKERFILE'.
+#   depends_on:
+#   - attestation_type.known_attestation_type
+#
 deny contains result if {
 	# Skip this rule if the buildah task is not present
 	buildah_task
@@ -39,6 +42,9 @@ deny contains result if {
 #   failure_msg: DOCKERFILE param value (%s) is an external source
 #   solution: >-
 #     Make sure the 'DOCKERFILE' parameter does not come from an external source.
+#   depends_on:
+#   - attestation_type.known_attestation_type
+#
 deny contains result if {
 	_not_allowed_prefix(dockerfile_param)
 	result := lib.result_helper(rego.metadata.chain(), [dockerfile_param])

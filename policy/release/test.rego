@@ -23,6 +23,8 @@ import future.keywords.in
 #   failure_msg: No test data found
 #   solution: >-
 #     At least one task in the build pipeline must contain a result named TEST_OUTPUT.
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	count(lib.pipelinerun_attestations) > 0 # make sure we're looking at a PipelineRun attestation
@@ -42,7 +44,9 @@ deny contains result if {
 #   failure_msg: Found tests without results
 #   solution: >-
 #     There was at least one result named TEST_OUTPUT found, but it did not contain a key
-#     named 'result'. For a TEST_OUTPUT result to be valid, this key must exist.  
+#     named 'result'. For a TEST_OUTPUT result to be valid, this key must exist.
+#   depends_on:
+#   - test.test_data_found
 #
 deny contains result if {
 	with_results := [result | result := lib.results_from_tests[_].value.result]
@@ -62,6 +66,8 @@ deny contains result if {
 #   solution: >-
 #     The test results should be of a known value. Values can be set as a
 #     xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
+#   depends_on:
+#   - test.test_data_found
 #
 deny contains result if {
 	all_unsupported := [u |
@@ -90,9 +96,11 @@ deny contains result if {
 # custom:
 #   short_name: required_tests_passed
 #   failure_msg: "Test %q did not complete successfully"
-#   solution: >- 
+#   solution: >-
 #     There is a required test that did not pass. Make sure that any task
 #     in the build pipeline with a result named 'TEST_OUTPUT' passes.
+#   depends_on:
+#   - test.test_data_found
 #
 deny contains result if {
 	some test in resulted_in(lib.rule_data("failed_tests_results"))
@@ -110,6 +118,8 @@ deny contains result if {
 #     There is a test that was skipped. Make sure that each
 #     task with a result named 'TEST_OUTPUT' was not skipped. You can find
 #     which test was skipped by examining the 'result' key in the 'TEST_OUTPUT'.
+#   depends_on:
+#   - test.test_data_found
 #
 warn contains result if {
 	some test in resulted_in(lib.rule_data("skipped_tests_results"))
@@ -125,8 +135,10 @@ warn contains result if {
 #   failure_msg: "Test %q returned a warning"
 #   solution: >-
 #     There is a task with result 'TEST_OUTPUT' that returned a result of 'WARNING'.
-#     You can find which test resulted in 'WARNING' by examining the 'result' key 
+#     You can find which test resulted in 'WARNING' by examining the 'result' key
 #     in the 'TEST_OUTPUT'.
+#   depends_on:
+#   - test.test_data_found
 #
 warn contains result if {
 	some test in resulted_in(lib.rule_data("warned_tests_results"))

@@ -38,7 +38,7 @@ bundles_file='data/acceptable_tekton_bundles.yml'
 
 function list_pipeline_bundles() {
     < "${1}" yq \
-        '."pipeline-bundles" | to_entries | .[] | [.key + "@" + .value[].digest] | unique | sort | .[]'
+        '."pipeline-bundles" | to_entries | .[] | [.key + "@" + .value[].digest] | .[]' | sort -u
 }
 
 origin_bundles="$(list_pipeline_bundles <(curl -s "https://raw.githubusercontent.com/enterprise-contract/ec-policies/main/${bundles_file}"))"

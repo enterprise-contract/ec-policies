@@ -28,6 +28,9 @@ import data.lib
 #   solution: >-
 #     Make sure there are no build dependencies that originate from foreign repositories.
 #     The allowed sources are in the rule_data under the key 'allowed_java_component_sources'.
+#   depends_on:
+#   - java.trusted_dependencies_source_list_provided
+#
 deny contains result if {
 	allowed := {a | some a in lib.rule_data("allowed_java_component_sources")}
 	foreign := _java_component_sources - allowed
@@ -47,6 +50,9 @@ deny contains result if {
 #     Add a data source that contains allowable source repositories for build dependencies.
 #     The source must be located under a key named 'allowed_java_component_sources'. More
 #     information on adding xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
+#   depends_on:
+#   - attestation_type.known_attestation_type
+#
 deny contains result if {
 	count(lib.rule_data("allowed_java_component_sources")) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])

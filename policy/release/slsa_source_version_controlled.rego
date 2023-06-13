@@ -47,6 +47,8 @@ import data.lib
 #   - minimal
 #   - slsa2
 #   - slsa3
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	count(lib.pipelinerun_attestations) > 0
@@ -70,6 +72,8 @@ deny contains result if {
 #   - minimal
 #   - slsa2
 #   - slsa3
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	some material in materials
@@ -93,6 +97,8 @@ deny contains result if {
 #   - minimal
 #   - slsa2
 #   - slsa3
+#   depends_on:
+#   - attestation_type.known_attestation_type
 #
 deny contains result if {
 	some material in materials

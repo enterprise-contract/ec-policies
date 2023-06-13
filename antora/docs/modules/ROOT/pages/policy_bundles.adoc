@@ -28,7 +28,7 @@ Contains the contents of https://github.com/enterprise-contract/ec-policies/tree
 
 == Artifact Hub entries
 
-The bundles mentioned above are also listed in https://artifacthub.io/packages/search?org=stonesoup-enterprise-contract[Artifact Hub].
+The bundles mentioned above are also listed in https://artifacthub.io/packages/search?org=enterprise-contract[Artifact Hub].
 
 == Example usage
 

@@ -43,8 +43,7 @@ standard format run this before committing:
 
 The documentation is built using [Antora][antora].
 
-Those docs are published [here][docs] and imported automatically into the
-official [Stonesoup Documentation][stonesoupdocs].
+Those docs are published [here][docs].
 
 To build the documentation locally:
 
@@ -145,7 +144,7 @@ contributing to the definition of policy rules.
 See also
 --------
 
-* [Policy rule documentation][stonesoupdocs]
+* [Policy rule documentation][policydocs]
 * ["Verify Enterprise Contract" task definition][taskdef]
 * [github.com/enterprise-contract][contract]
 * [github.com/redhat-appstudio][appstudio]
@@ -156,13 +155,13 @@ See also
 [gomplate]: https://docs.gomplate.ca/
 [entr]: https://github.com/eradman/entr
 [testing]: https://www.openpolicyagent.org/docs/latest/policy-testing/
-[docs]: https://enterprise-contract.github.io/
-[stonesoupdocs]: https://redhat-appstudio.github.io/docs.stonesoup.io/ec-policies/index.html
-[taskdef]: https://github.com/enterprise-contract/ec-cli/blob/main/task/0.1/verify-enterprise-contract.yaml
+[docs]: https://enterprisecontract.dev/
+[policydocs]: https://enterprisecontract.dev/docs/ec-policies/release_policy.html
+[taskdef]: https://github.com/enterprise-contract/ec-cli/blob/main/tasks/verify-enterprise-contract/0.1/verify-enterprise-contract.yaml
 [contract]: https://github.com/enterprise-contract
 [appstudio]: https://github.com/redhat-appstudio
 [builddefs]: https://github.com/redhat-appstudio/build-definitions
-[authoring]: https://enterprise-contract.github.io/ec-policies/ec-policies/authoring.html
+[authoring]: https://enterprisecontract.dev/docs/ec-policies/authoring.html
 [antora]: https://docs.antora.org/antora/latest/install-and-run-quickstart/
 [quay]: https://quay.io/
 [infradeployments]: https://github.com/redhat-appstudio/infra-deployments

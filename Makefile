@@ -266,10 +266,10 @@ install-conftest: ## Install `conftest` CLI from GitHub releases
 	chmod 755 $(CONFTEST_DEST)
 	rm $(CONFTEST_FILE)
 
-OPA_VER=v0.47.0
-OPA_SHA_darwin_amd64=9d6cf8cfe0f6273b60076557f416b15213fe54ff5d72e4903543c573c32c395d
-OPA_SHA_darwin_arm64_static=ad9abbffde89ad1aaf3fca565504174be3b28c35e8a48990454b3ec071b0a13d
-OPA_SHA_linux_amd64_static=dfcb9c220448b3311d7199f4e7f586345079dd8732e8edc3afe748a48e8fd9c3
+OPA_VER=v0.53.1
+OPA_SHA_darwin_amd64=73a76e498c1f9ec0442787efa056599fc11845301e4e3f03f436be6c31c3f7aa
+OPA_SHA_darwin_arm64_static=e9641a218f3ba3e4d5d9cc18e584aa824318961fb560548672673652d1f66587
+OPA_SHA_linux_amd64_static=54e58abab85d125038152476f7c7987d352ca314c5e49e1f10d8e6800e6f6bef
 OPA_OS_ARCH=$(shell go env GOOS)_$(shell go env GOARCH)
 OPA_STATIC=$(if $(OPA_SHA_${OPA_OS_ARCH}_static),_static)
 OPA_FILE=opa_$(OPA_OS_ARCH)$(OPA_STATIC)

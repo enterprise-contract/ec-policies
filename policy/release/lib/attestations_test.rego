@@ -34,7 +34,7 @@ _task_ref(task_name, bundle_ref) = r {
 	r := {"ref": ref_data}
 }
 
-_task_ref(task_name, bundle_ref) = r {
+_task_ref(_, bundle_ref) = r {
 	bundle_ref == ""
 	r := {}
 }

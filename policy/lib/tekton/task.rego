@@ -139,6 +139,6 @@ _key_value(obj, name) := value if {
 }
 
 # task_labels returns the key/value pair of task labels
-task_labels(task) := labels if {
+task_labels := labels if {
 	labels := input.metadata.labels
 }

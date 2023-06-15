@@ -119,6 +119,58 @@ test_pr_attestations {
 	]
 }
 
+test_pipelinerun_slsa_provenance_v1 {
+	provenance_with_pr_spec := {
+		"predicateType": "https://slsa.dev/provenance/v1",
+		"predicate": {"buildDefinition": {
+			"buildType": "https://tekton.dev/chains/v2/slsa",
+			"externalParameters": {"runSpec": {"pipelineSpec": {}}},
+		}},
+	}
+	provenance_with_pr_ref := json.patch(provenance_with_pr_spec, [{
+		"op": "add",
+		"path": "/predicate/buildDefinition/externalParameters/runSpec",
+		"value": {"pipelineRef": {}},
+	}])
+
+	attestations := [
+		provenance_with_pr_spec,
+		provenance_with_pr_ref,
+		json.patch(provenance_with_pr_spec, [{
+			"op": "add",
+			"path": "/predicateType", "value": "https://slsa.dev/provenance/v0.2",
+		}]),
+		json.patch(provenance_with_pr_spec, [{"op": "add", "path": "/predicate", "value": {}}]),
+		json.patch(provenance_with_pr_spec, [{
+			"op": "add",
+			"path": "/predicate/buildDefinition",
+			"value": {},
+		}]),
+		json.patch(provenance_with_pr_spec, [{
+			"op": "add",
+			"path": "/predicate/buildDefinition/buildType",
+			"value": "https://tekton.dev/chains/v2/mambo",
+		}]),
+		json.patch(provenance_with_pr_spec, [{
+			"op": "add",
+			"path": "/predicate/buildDefinition/externalParameters",
+			"value": {},
+		}]),
+		json.patch(provenance_with_pr_spec, [{
+			"op": "add",
+			"path": "/predicate/buildDefinition/externalParameters/runSpec",
+			"value": {},
+		}]),
+		json.patch(provenance_with_pr_spec, [{
+			"op": "add",
+			"path": "/predicate/buildDefinition/externalParameters/runSpec",
+			"value": {"taskRef": {}},
+		}]),
+	]
+	expected := [provenance_with_pr_spec, provenance_with_pr_ref]
+	assert_equal(expected, pipelinerun_slsa_provenance_v1) with input.attestations as attestations
+}
+
 test_tr_attestations {
 	assert_equal([mock_tr_att], taskrun_attestations) with input.attestations as [
 		mock_tr_att,

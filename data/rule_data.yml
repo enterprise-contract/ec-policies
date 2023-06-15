@@ -19,5 +19,9 @@ rule_data:
   - redhat
   - rebuilt
 
+  pipeline_run_params:
+  - git-repo
+  - git-revision
+  - output-image
   # See also the additional default rule data values defined in
   # https://github.com/enterprise-contract/ec-policies/blob/main/policy/lib/rule_data.rego

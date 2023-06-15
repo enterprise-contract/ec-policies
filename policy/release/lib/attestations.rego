@@ -28,6 +28,19 @@ pipelinerun_attestations := [att |
 	att.predicate.buildType == pipelinerun_att_build_types[_]
 ]
 
+# TODO: Make this work with pipelinerun_attestations above so policy rules can be
+# written for either.
+pipelinerun_slsa_provenance_v1 := [att |
+	att := input.attestations[_]
+	att.predicateType == "https://slsa.dev/provenance/v1"
+	att.predicate.buildDefinition.buildType == "https://tekton.dev/chains/v2/slsa"
+
+	# TODO: Workaround to distinguish between taskrun and pipelinerun attestations
+	spec_keys := object.keys(att.predicate.buildDefinition.externalParameters.runSpec)
+	pipeline_keys := {"pipelineRef", "pipelineSpec"}
+	count(pipeline_keys - spec_keys) != count(pipeline_keys)
+]
+
 # These ones we don't care about any more
 taskrun_attestations := [att |
 	att := input.attestations[_]

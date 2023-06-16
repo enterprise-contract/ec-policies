@@ -17,7 +17,7 @@ import data.lib
 # title: pipeline run params
 # description: >-
 #   Verify the PipelineRun was initialized with a set of expected parameters.
-#   By default it asserts git-repo, git-revision, and otuput-image are provided
+#   By default it asserts git-repo, git-revision, and output-image are provided
 #   with non-empty values. This is configurable by the rule data key
 #   "pipeline_run_params". Any additional parameters are NOT allowed.
 # custom:

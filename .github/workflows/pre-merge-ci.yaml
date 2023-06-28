@@ -12,6 +12,9 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   all-tests-and-checks:
     runs-on: ubuntu-latest

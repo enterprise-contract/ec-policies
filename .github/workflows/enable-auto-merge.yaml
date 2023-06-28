@@ -14,10 +14,16 @@ name: Enable auto-merge
       - reopened
     branches:
       - main
+
+permissions:
+  pull-requests: read
+
 jobs:
   enable-auto-merge:
     runs-on: ubuntu-latest
     if: github.event.pull_request.user.login == 'rh-tap-build-team[bot]'
+    permissions:
+      pull-requests: write
     steps:
       - uses: alexwilson/enable-github-automerge-action@d7e0043317b5118a91776831707b9ed81deba951 # main
         with:

@@ -19,6 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.user.login == 'rh-tap-build-team[bot]'
     steps:
-      - uses: alexwilson/enable-github-automerge-action@main
+      - uses: alexwilson/enable-github-automerge-action@d7e0043317b5118a91776831707b9ed81deba951 # main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

@@ -6,6 +6,9 @@ name: docs
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   website_update:
     runs-on: ubuntu-latest

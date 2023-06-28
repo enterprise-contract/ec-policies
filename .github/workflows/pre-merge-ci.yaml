@@ -17,13 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
     - name: Install opa
       run: make install-opa OPA_BIN=$HOME/.local/bin
 
     - name: Install tkn
-      uses: jerop/tkn@v0.1.0
+      uses: jerop/tkn@5a3b12eb115505e3b593c6b622f31e1a9fad374c # v0.1.0
 
     - name: Run checks
       run: make ci
@@ -32,5 +32,5 @@ jobs:
       run: ./hack/validate-acceptable-bundles.sh
 
     - name: Upload test coverage report
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
       if: always()

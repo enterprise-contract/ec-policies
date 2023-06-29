@@ -35,7 +35,8 @@ test_buildah_task_has_dockerfile_param if {
 	expected := {{
 		"code": "buildah_build_task.buildah_task_has_dockerfile_param",
 		"effective_on": "2022-01-01T00:00:00Z",
-		"msg": "The DOCKERFILE param was not included in the buildah task",
+		"msg": "The DOCKERFILE param was not included in the buildah task(s): \"ignored\"",
+		"term": "ignored",
 	}}
 	lib.assert_equal(expected, deny) with input.attestations as [_attestation("buildah", {})]
 }
@@ -47,6 +48,105 @@ test_task_not_named_buildah if {
 test_missing_pipeline_run_attestations if {
 	attestation := {"predicate": {"buildType": "something/else"}}
 	lib.assert_empty(deny) with input.attestations as [attestation]
+}
+
+test_multiple_buildah_tasks if {
+	attestation := {"predicate": {
+		"buildType": lib.pipelinerun_att_build_types[0],
+		"buildConfig": {"tasks": [
+			{
+				"name": "b1",
+				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
+				"invocation": {"parameters": {"DOCKERFILE": "one/Dockerfile"}},
+			},
+			{
+				"name": "b2",
+				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
+				"invocation": {"parameters": {"DOCKERFILE": "two/Dockerfile"}},
+			},
+		]},
+	}}
+	lib.assert_empty(deny) with input.attestations as [attestation]
+}
+
+test_multiple_buildah_tasks_one_without_params if {
+	attestation := {"predicate": {
+		"buildType": lib.pipelinerun_att_build_types[0],
+		"buildConfig": {"tasks": [
+			{
+				"name": "b1",
+				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
+				"invocation": {"parameters": {"DOCKERFILE": "one/Dockerfile"}},
+			},
+			{
+				"name": "b2",
+				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
+			},
+		]},
+	}}
+	expected := {{
+		"code": "buildah_build_task.buildah_task_has_dockerfile_param",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "The DOCKERFILE param was not included in the buildah task(s): \"b2\"",
+		"term": "b2",
+	}}
+	lib.assert_equal(expected, deny) with input.attestations as [attestation]
+}
+
+test_multiple_buildah_tasks_all_without_params if {
+	attestation := {"predicate": {
+		"buildType": lib.pipelinerun_att_build_types[0],
+		"buildConfig": {"tasks": [
+			{
+				"name": "b1",
+				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
+				"invocation": {"parameters": {}},
+			},
+			{
+				"name": "b2",
+				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
+			},
+		]},
+	}}
+	expected := {
+		{
+			"code": "buildah_build_task.buildah_task_has_dockerfile_param",
+			"effective_on": "2022-01-01T00:00:00Z",
+			"msg": "The DOCKERFILE param was not included in the buildah task(s): \"b1\"",
+			"term": "b1",
+		},
+		{
+			"code": "buildah_build_task.buildah_task_has_dockerfile_param",
+			"effective_on": "2022-01-01T00:00:00Z",
+			"msg": "The DOCKERFILE param was not included in the buildah task(s): \"b2\"",
+			"term": "b2",
+		},
+	}
+	lib.assert_equal(expected, deny) with input.attestations as [attestation]
+}
+
+test_multiple_buildah_tasks_one_with_external_dockerfile if {
+	attestation := {"predicate": {
+		"buildType": lib.pipelinerun_att_build_types[0],
+		"buildConfig": {"tasks": [
+			{
+				"name": "b1",
+				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
+				"invocation": {"parameters": {"DOCKERFILE": "one/Dockerfile"}},
+			},
+			{
+				"name": "b2",
+				"invocation": {"parameters": {"DOCKERFILE": "http://Dockerfile"}},
+				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
+			},
+		]},
+	}}
+	expected := {{
+		"code": "buildah_build_task.buildah_uses_local_dockerfile",
+		"effective_on": "2022-01-01T00:00:00Z",
+		"msg": "DOCKERFILE param value (http://Dockerfile) is an external source",
+	}}
+	lib.assert_equal(expected, deny) with input.attestations as [attestation]
 }
 
 _attestation(task_name, params) = attestation if {

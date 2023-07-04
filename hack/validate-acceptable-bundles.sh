@@ -26,6 +26,10 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
+if [ "${RUNNER_DEBUG:-}" == "1" ]; then
+  set -x
+fi
+
 if ! command -v ec > /dev/null 2>&1; then
     # this is most likely on GitHub Actions, which runs on 64bit Linux
     curl -o ec -sSL https://github.com/enterprise-contract/ec-cli/releases/download/snapshot/ec_linux_amd64

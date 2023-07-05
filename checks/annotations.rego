@@ -1,5 +1,7 @@
 package checks
 
+import future.keywords.contains
+import future.keywords.if
 import future.keywords.in
 
 # Required annotations on policy rules
@@ -11,7 +13,7 @@ required_annotations := {
 }
 
 # returns Rego files corresponding to policy rules
-policy_rule_files(namespaces) = result {
+policy_rule_files(namespaces) = result if {
 	result := {rule |
 		namespaces[n]
 		startswith(n, "data.policy") # look only in the policy namespace
@@ -27,7 +29,7 @@ policy_rule_files(namespaces) = result {
 #   "<ann>": "..."
 # }
 # return set with single element "<ann>"
-flat(annotation_name, annotation_definition) = result {
+flat(annotation_name, annotation_definition) = result if {
 	is_string(annotation_definition)
 	result := {annotation_name}
 }
@@ -39,7 +41,7 @@ flat(annotation_name, annotation_definition) = result {
 #     "<ann3>": "..."
 #  }
 # return set with elements "<ann1>.<ann2>" and "<ann1>.<ann3>"
-flat(annotation_name, annotation_definition) = result {
+flat(annotation_name, annotation_definition) = result if {
 	is_object(annotation_definition)
 	result := {x |
 		annotation_definition[nested_name]
@@ -48,11 +50,11 @@ flat(annotation_name, annotation_definition) = result {
 }
 
 # Validates that the policy rules have all required annotations
-violation[msg] {
+violation contains msg if {
 	policy_files := policy_rule_files(input.namespaces)[_]
 
 	some file in policy_files.files
-	annotation := input.annotations[_]
+	some annotation in input.annotations
 
 	# just examine Rego files that declare policies
 	annotation.location.file == file
@@ -73,4 +75,30 @@ violation[msg] {
 	count(missing_annotations) > 0
 
 	msg := sprintf("ERROR: Missing annotation(s) %s at %s:%d", [concat(", ", missing_annotations), file, annotation.location.row])
+}
+
+all_rule_names contains name if {
+	some policy_files in policy_rule_files(input.namespaces)
+	some file in policy_files.files
+	some annotation in input.annotations
+
+	annotation.location.file == file
+
+	name := sprintf("%s.%s", [policy_files.namespace, annotation.annotations.custom.short_name])
+}
+
+# Validates that the `depends_op` annotation points to an existing rule
+violation contains msg if {
+	some policy_files in policy_rule_files(input.namespaces)
+
+	some file in policy_files.files
+	some annotation in input.annotations
+
+	annotation.location.file == file
+
+	some depends_on in annotation.annotations.custom.depends_on
+	dependency_rule_name := sprintf("data.policy.release.%s", [depends_on])
+
+	count({dependency_rule_name} & all_rule_names) == 0
+	msg := sprintf("ERROR: Missing dependency rule %q at %s:%d", [dependency_rule_name, file, annotation.location.row])
 }

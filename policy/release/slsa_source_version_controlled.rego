@@ -47,6 +47,7 @@ import data.lib
 #   - minimal
 #   - slsa2
 #   - slsa3
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -72,6 +73,7 @@ deny contains result if {
 #   - minimal
 #   - slsa2
 #   - slsa3
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -97,6 +99,7 @@ deny contains result if {
 #   - minimal
 #   - slsa2
 #   - slsa3
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #

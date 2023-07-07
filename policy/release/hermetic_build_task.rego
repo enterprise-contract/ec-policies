@@ -25,6 +25,8 @@ import data.lib.tkn
 #   solution: >-
 #     Make sure the task that builds the image has a parameter named 'HERMETIC' and
 #     it's set to 'true'.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #

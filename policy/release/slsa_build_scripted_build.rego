@@ -36,6 +36,7 @@ import data.lib.tkn
 #   - slsa1
 #   - slsa2
 #   - slsa3
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -61,6 +62,7 @@ deny contains result if {
 #   - slsa1
 #   - slsa2
 #   - slsa3
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -85,6 +87,7 @@ deny contains result if {
 #   - slsa1
 #   - slsa2
 #   - slsa3
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #

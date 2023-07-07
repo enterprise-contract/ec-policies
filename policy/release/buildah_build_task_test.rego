@@ -16,6 +16,7 @@ test_dockerfile_param_https_source if {
 		"code": "buildah_build_task.buildah_uses_local_dockerfile",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "DOCKERFILE param value (https://Dockerfile) is an external source",
+		"collections": ["redhat"],
 	}}
 	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "https://Dockerfile"}})
 	lib.assert_equal(expected, deny) with input.attestations as [attestation]
@@ -26,6 +27,7 @@ test_dockerfile_param_http_source if {
 		"code": "buildah_build_task.buildah_uses_local_dockerfile",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "DOCKERFILE param value (http://Dockerfile) is an external source",
+		"collections": ["redhat"],
 	}}
 	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "http://Dockerfile"}})
 	lib.assert_equal(expected, deny) with input.attestations as [attestation]
@@ -37,6 +39,7 @@ test_buildah_task_has_dockerfile_param if {
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "The DOCKERFILE param was not included in the buildah task(s): \"ignored\"",
 		"term": "ignored",
+		"collections": ["redhat"],
 	}}
 	lib.assert_equal(expected, deny) with input.attestations as [_attestation("buildah", {})]
 }
@@ -89,6 +92,7 @@ test_multiple_buildah_tasks_one_without_params if {
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "The DOCKERFILE param was not included in the buildah task(s): \"b2\"",
 		"term": "b2",
+		"collections": ["redhat"],
 	}}
 	lib.assert_equal(expected, deny) with input.attestations as [attestation]
 }
@@ -114,12 +118,14 @@ test_multiple_buildah_tasks_all_without_params if {
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "The DOCKERFILE param was not included in the buildah task(s): \"b1\"",
 			"term": "b1",
+			"collections": ["redhat"],
 		},
 		{
 			"code": "buildah_build_task.buildah_task_has_dockerfile_param",
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "The DOCKERFILE param was not included in the buildah task(s): \"b2\"",
 			"term": "b2",
+			"collections": ["redhat"],
 		},
 	}
 	lib.assert_equal(expected, deny) with input.attestations as [attestation]
@@ -145,6 +151,7 @@ test_multiple_buildah_tasks_one_with_external_dockerfile if {
 		"code": "buildah_build_task.buildah_uses_local_dockerfile",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "DOCKERFILE param value (http://Dockerfile) is an external source",
+		"collections": ["redhat"],
 	}}
 	lib.assert_equal(expected, deny) with input.attestations as [attestation]
 }

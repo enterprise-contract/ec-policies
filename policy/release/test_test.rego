@@ -10,6 +10,7 @@ test_needs_non_empty_data {
 		"code": "test.test_data_found",
 		"msg": "No test data found",
 		"effective_on": "2022-01-01T00:00:00Z",
+		"collections": ["redhat"],
 	}}) with input.attestations as mock_empty_data
 }
 
@@ -21,6 +22,7 @@ test_needs_tests_with_results {
 		"code": "test.test_results_found",
 		"msg": "Found tests without results",
 		"effective_on": "2022-01-01T00:00:00Z",
+		"collections": ["redhat"],
 	}}) with input.attestations as mock_without_results_data
 }
 
@@ -34,6 +36,7 @@ test_needs_tests_with_results_mixed {
 		"code": "test.test_results_found",
 		"msg": "Found tests without results",
 		"effective_on": "2022-01-01T00:00:00Z",
+		"collections": ["redhat"],
 	}}) with input.attestations as mock_without_results_data_mixed
 }
 
@@ -51,6 +54,7 @@ test_failure_data {
 		"msg": "Test \"failed_1\" did not complete successfully",
 		"term": "failed_1",
 		"effective_on": "2022-01-01T00:00:00Z",
+		"collections": ["redhat"],
 	}}) with input.attestations as mock_a_failing_test
 }
 
@@ -62,6 +66,7 @@ test_error_data {
 		"msg": "Test \"errored_1\" did not complete successfully",
 		"term": "errored_1",
 		"effective_on": "2022-01-01T00:00:00Z",
+		"collections": ["redhat"],
 	}}) with input.attestations as mock_an_errored_test
 }
 
@@ -74,12 +79,14 @@ test_mix_data {
 			"msg": "Test \"failed_1\" did not complete successfully",
 			"term": "failed_1",
 			"effective_on": "2022-01-01T00:00:00Z",
+			"collections": ["redhat"],
 		},
 		{
 			"code": "test.required_tests_passed",
 			"msg": "Test \"errored_1\" did not complete successfully",
 			"term": "errored_1",
 			"effective_on": "2022-01-01T00:00:00Z",
+			"collections": ["redhat"],
 		},
 	}) with input.attestations as mock_mixed_data
 }
@@ -96,6 +103,7 @@ test_skipped_is_warning {
 		"msg": "Test \"skipped_1\" was skipped",
 		"term": "skipped_1",
 		"effective_on": "2022-01-01T00:00:00Z",
+		"collections": ["redhat"],
 	}}) with input.attestations as skipped_test
 }
 
@@ -106,6 +114,7 @@ test_warning_is_warning {
 		"msg": "Test \"warning_1\" returned a warning",
 		"term": "warning_1",
 		"effective_on": "2022-01-01T00:00:00Z",
+		"collections": ["redhat"],
 	}}) with input.attestations as warning_test
 }
 
@@ -128,24 +137,28 @@ test_mixed_statuses {
 			"msg": "Test \"error_1\" did not complete successfully",
 			"term": "error_1",
 			"effective_on": "2022-01-01T00:00:00Z",
+			"collections": ["redhat"],
 		},
 		{
 			"code": "test.required_tests_passed",
 			"msg": "Test \"error_2\" did not complete successfully",
 			"term": "error_2",
 			"effective_on": "2022-01-01T00:00:00Z",
+			"collections": ["redhat"],
 		},
 		{
 			"code": "test.required_tests_passed",
 			"msg": "Test \"failure_1\" did not complete successfully",
 			"term": "failure_1",
 			"effective_on": "2022-01-01T00:00:00Z",
+			"collections": ["redhat"],
 		},
 		{
 			"code": "test.required_tests_passed",
 			"msg": "Test \"failure_2\" did not complete successfully",
 			"term": "failure_2",
 			"effective_on": "2022-01-01T00:00:00Z",
+			"collections": ["redhat"],
 		},
 	}) with input.attestations as test_results
 
@@ -155,24 +168,28 @@ test_mixed_statuses {
 			"msg": "Test \"skipped_1\" was skipped",
 			"term": "skipped_1",
 			"effective_on": "2022-01-01T00:00:00Z",
+			"collections": ["redhat"],
 		},
 		{
 			"code": "test.no_skipped_tests",
 			"msg": "Test \"skipped_2\" was skipped",
 			"term": "skipped_2",
 			"effective_on": "2022-01-01T00:00:00Z",
+			"collections": ["redhat"],
 		},
 		{
 			"code": "test.no_test_warnings",
 			"msg": "Test \"warning_1\" returned a warning",
 			"term": "warning_1",
 			"effective_on": "2022-01-01T00:00:00Z",
+			"collections": ["redhat"],
 		},
 		{
 			"code": "test.no_test_warnings",
 			"msg": "Test \"warning_2\" returned a warning",
 			"term": "warning_2",
 			"effective_on": "2022-01-01T00:00:00Z",
+			"collections": ["redhat"],
 		},
 	}) with input.attestations as test_results
 }
@@ -186,10 +203,10 @@ test_unsupported_test_result {
 	]
 
 	lib.assert_equal(deny, {
-		{"code": "test.test_results_known", "msg": "Test 'error_1' has unsupported result 'EROR'", "effective_on": "2022-01-01T00:00:00Z", "term": "error_1"},
-		{"code": "test.test_results_known", "msg": "Test 'failure_1' has unsupported result 'FAIL'", "effective_on": "2022-01-01T00:00:00Z", "term": "failure_1"},
-		{"code": "test.test_results_known", "msg": "Test 'skipped_1' has unsupported result 'SKIPED'", "effective_on": "2022-01-01T00:00:00Z", "term": "skipped_1"},
-		{"code": "test.test_results_known", "msg": "Test 'success_1' has unsupported result 'SUCESS'", "effective_on": "2022-01-01T00:00:00Z", "term": "success_1"},
+		{"code": "test.test_results_known", "msg": "Test 'error_1' has unsupported result 'EROR'", "collections": ["redhat"], "effective_on": "2022-01-01T00:00:00Z", "term": "error_1"},
+		{"code": "test.test_results_known", "msg": "Test 'failure_1' has unsupported result 'FAIL'", "collections": ["redhat"], "effective_on": "2022-01-01T00:00:00Z", "term": "failure_1"},
+		{"code": "test.test_results_known", "msg": "Test 'skipped_1' has unsupported result 'SKIPED'", "collections": ["redhat"], "effective_on": "2022-01-01T00:00:00Z", "term": "skipped_1"},
+		{"code": "test.test_results_known", "msg": "Test 'success_1' has unsupported result 'SUCESS'", "collections": ["redhat"], "effective_on": "2022-01-01T00:00:00Z", "term": "success_1"},
 	}) with input.attestations as test_results
 }
 

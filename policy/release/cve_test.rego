@@ -38,14 +38,14 @@ test_failure if {
 		{
 			"code": "cve.cve_blockers",
 			"term": "critical",
-			"collections": ["minimal"],
+			"collections": ["minimal", "redhat"],
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Found 1 CVE vulnerabilities of critical security level",
 		},
 		{
 			"code": "cve.cve_blockers",
 			"term": "high",
-			"collections": ["minimal"],
+			"collections": ["minimal", "redhat"],
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Found 10 CVE vulnerabilities of high security level",
 		},
@@ -64,14 +64,14 @@ test_failure_with_rule_data if {
 		{
 			"code": "cve.cve_blockers",
 			"term": "spam",
-			"collections": ["minimal"],
+			"collections": ["minimal", "redhat"],
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Found 1 CVE vulnerabilities of spam security level",
 		},
 		{
 			"code": "cve.cve_blockers",
 			"term": "bacon",
-			"collections": ["minimal"],
+			"collections": ["minimal", "redhat"],
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Found 2 CVE vulnerabilities of bacon security level",
 		},
@@ -101,14 +101,14 @@ test_warn_with_rule_data if {
 		{
 			"code": "cve.cve_warnings",
 			"term": "medium",
-			"collections": ["minimal"],
+			"collections": ["minimal", "redhat"],
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Found 20 non-blocking CVE vulnerabilities of medium security level",
 		},
 		{
 			"code": "cve.cve_warnings",
 			"term": "low",
-			"collections": ["minimal"],
+			"collections": ["minimal", "redhat"],
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Found 300 non-blocking CVE vulnerabilities of low security level",
 		},
@@ -126,7 +126,7 @@ test_missing_cve_scan_result if {
 	)]
 	expected := {{
 		"code": "cve.cve_results_found",
-		"collections": ["minimal"],
+		"collections": ["minimal", "redhat"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Clair CVE scan results were not found",
 	}}
@@ -142,7 +142,7 @@ test_missing_cve_scan_vulnerabilities if {
 	)]
 	expected := {{
 		"code": "cve.cve_results_found",
-		"collections": ["minimal"],
+		"collections": ["minimal", "redhat"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Clair CVE scan results were not found",
 	}}

@@ -23,6 +23,8 @@ import future.keywords.in
 #   failure_msg: No test data found
 #   solution: >-
 #     At least one task in the build pipeline must contain a result named TEST_OUTPUT.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -45,6 +47,8 @@ deny contains result if {
 #   solution: >-
 #     There was at least one result named TEST_OUTPUT found, but it did not contain a key
 #     named 'result'. For a TEST_OUTPUT result to be valid, this key must exist.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - test.test_data_found
 #
@@ -66,6 +70,8 @@ deny contains result if {
 #   solution: >-
 #     The test results should be of a known value. Values can be set as a
 #     xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
+#   collections:
+#   - redhat
 #   depends_on:
 #   - test.test_data_found
 #
@@ -99,6 +105,8 @@ deny contains result if {
 #   solution: >-
 #     There is a required test that did not pass. Make sure that any task
 #     in the build pipeline with a result named 'TEST_OUTPUT' passes.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - test.test_data_found
 #
@@ -118,6 +126,8 @@ deny contains result if {
 #     There is a test that was skipped. Make sure that each
 #     task with a result named 'TEST_OUTPUT' was not skipped. You can find
 #     which test was skipped by examining the 'result' key in the 'TEST_OUTPUT'.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - test.test_data_found
 #
@@ -137,6 +147,8 @@ warn contains result if {
 #     There is a task with result 'TEST_OUTPUT' that returned a result of 'WARNING'.
 #     You can find which test resulted in 'WARNING' by examining the 'result' key
 #     in the 'TEST_OUTPUT'.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - test.test_data_found
 #

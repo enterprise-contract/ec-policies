@@ -28,6 +28,7 @@ import data.lib.bundles
 #   failure_msg: Pipeline task '%s' does not contain a bundle reference
 #   collections:
 #   - minimal
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -47,6 +48,7 @@ deny contains result if {
 #     Specify a task bundle with a reference as the full digest.
 #   collections:
 #   - minimal
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -65,6 +67,8 @@ deny contains result if {
 #   failure_msg: Pipeline task '%s' uses an unpinned task bundle reference '%s'
 #   solution: >-
 #     Specify the task bundle reference with a full digest rather than a tag.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -84,6 +88,8 @@ warn contains result if {
 #   solution: >-
 #     A task bundle used is not the most recent. The most recent task bundles are defined
 #     as in xref:acceptable_bundles.adoc#_task_bundles[acceptable bundles] list.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -104,6 +110,8 @@ warn contains result if {
 #   solution: >-
 #     For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
 #     an xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle].
+#   collections:
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -124,6 +132,8 @@ deny contains result if {
 #     Create an acceptable bundles list. This is a list of task bundles with a top-level key
 #     of 'task-bundles'. More information can be found at
 #     xref:acceptable_bundles.adoc#_task_bundles[acceptable bundles].
+#   collections:
+#   - redhat
 #
 deny contains result if {
 	bundles.missing_task_bundles_data

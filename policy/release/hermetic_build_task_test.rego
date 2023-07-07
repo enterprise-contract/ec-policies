@@ -13,6 +13,7 @@ test_not_hermetic_build if {
 		"code": "hermetic_build_task.build_task_hermetic",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Build task was not invoked with the hermetic parameter set",
+		"collections": ["redhat"],
 	}}
 
 	hermetic_not_true := json.patch(_good_attestation, [{

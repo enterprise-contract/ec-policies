@@ -31,6 +31,7 @@ import data.lib
 #   collections:
 #   - slsa2
 #   - slsa3
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -55,6 +56,7 @@ deny contains result if {
 #   collections:
 #   - slsa2
 #   - slsa3
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #

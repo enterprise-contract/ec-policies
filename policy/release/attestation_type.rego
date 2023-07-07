@@ -24,6 +24,7 @@ import data.lib
 #     in xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
 #   collections:
 #   - minimal
+#   - redhat
 #   depends_on:
 #   - attestation_type.pipelinerun_attestation_found
 #
@@ -45,6 +46,7 @@ deny contains result if {
 #     Make sure the attestation being verified was generated from a Tekton pipelineRun.
 #   collections:
 #   - minimal
+#   - redhat
 #
 deny contains result if {
 	count(lib.pipelinerun_attestations) == 0

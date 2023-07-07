@@ -39,7 +39,7 @@ test_scattered_results if {
 
 	expected := {{
 		"code": "slsa_build_scripted_build.build_task_image_results_found",
-		"collections": ["slsa1", "slsa2", "slsa3"],
+		"collections": ["slsa1", "slsa2", "slsa3", "redhat"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Build task not found",
 	}}
@@ -59,7 +59,7 @@ test_missing_task_steps if {
 
 	expected := {{
 		"code": "slsa_build_scripted_build.build_script_used",
-		"collections": ["slsa1", "slsa2", "slsa3"],
+		"collections": ["slsa1", "slsa2", "slsa3", "redhat"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Build task \"buildah\" does not contain any steps",
 	}}
@@ -79,7 +79,7 @@ test_empty_task_steps if {
 
 	expected := {{
 		"code": "slsa_build_scripted_build.build_script_used",
-		"collections": ["slsa1", "slsa2", "slsa3"],
+		"collections": ["slsa1", "slsa2", "slsa3", "redhat"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Build task \"buildah\" does not contain any steps",
 	}}
@@ -99,7 +99,7 @@ test_results_missing_value_url if {
 
 	expected := {{
 		"code": "slsa_build_scripted_build.build_task_image_results_found",
-		"collections": ["slsa1", "slsa2", "slsa3"],
+		"collections": ["slsa1", "slsa2", "slsa3", "redhat"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Build task not found",
 	}}
@@ -119,7 +119,7 @@ test_results_missing_value_digest if {
 
 	expected := {{
 		"code": "slsa_build_scripted_build.build_task_image_results_found",
-		"collections": ["slsa1", "slsa2", "slsa3"],
+		"collections": ["slsa1", "slsa2", "slsa3", "redhat"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Build task not found",
 	}}
@@ -139,7 +139,7 @@ test_results_empty_value_url if {
 
 	expected := {{
 		"code": "slsa_build_scripted_build.build_task_image_results_found",
-		"collections": ["slsa1", "slsa2", "slsa3"],
+		"collections": ["slsa1", "slsa2", "slsa3", "redhat"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Build task not found",
 	}}
@@ -159,7 +159,7 @@ test_results_empty_value_digest if {
 
 	expected := {{
 		"code": "slsa_build_scripted_build.build_task_image_results_found",
-		"collections": ["slsa1", "slsa2", "slsa3"],
+		"collections": ["slsa1", "slsa2", "slsa3", "redhat"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Build task not found",
 	}}
@@ -179,7 +179,7 @@ test_subject_mismatch if {
 
 	expected := {{
 		"code": "slsa_build_scripted_build.subject_build_task_matches",
-		"collections": ["slsa1", "slsa2", "slsa3"],
+		"collections": ["slsa1", "slsa2", "slsa3", "redhat"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "The attestation subject, \"some.image/foo:bar@sha256:123\", does not match the build task image, \"some.image/foo:bar@sha256:anotherdigest\"",
 	}}
@@ -243,7 +243,7 @@ test_subject_with_tag_and_digest_mismatch_digest_fails if {
 
 	expected := {{
 		"code": "slsa_build_scripted_build.subject_build_task_matches",
-		"collections": ["slsa1", "slsa2", "slsa3"],
+		"collections": ["slsa1", "slsa2", "slsa3", "redhat"],
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "The attestation subject, \"registry.io/repository/image@sha256:unexpected\", does not match the build task image, \"registry.io/repository/image:tag@sha256:digest\"",
 	}}

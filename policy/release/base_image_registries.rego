@@ -29,6 +29,7 @@ import data.lib
 #     trusted registries is a configurable xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
 #   collections:
 #   - minimal
+#   - redhat
 #   depends_on:
 #   - base_image_registries.base_image_info_found
 #   - base_image_registries.allowed_registries_provided
@@ -52,6 +53,7 @@ deny contains result if {
 #     A Tekton task must exist that emits a result named 'BASE_IMAGES_DIGESTS'.
 #   collections:
 #   - minimal
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -78,6 +80,7 @@ deny contains result if {
 #     xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
 #   collections:
 #   - minimal
+#   - redhat
 #
 deny contains result if {
 	count(lib.rule_data("allowed_registry_prefixes")) == 0

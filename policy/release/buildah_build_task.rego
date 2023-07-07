@@ -23,6 +23,8 @@ import data.lib
 #   failure_msg: 'The DOCKERFILE param was not included in the buildah task(s): %q'
 #   solution: >-
 #     Make sure the buildah task has a parameter named 'DOCKERFILE'.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -44,6 +46,8 @@ deny contains result if {
 #   failure_msg: DOCKERFILE param value (%s) is an external source
 #   solution: >-
 #     Make sure the 'DOCKERFILE' parameter does not come from an external source.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #

@@ -28,6 +28,7 @@ import data.lib
 #     in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
 #   collections:
 #   - minimal
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -54,6 +55,7 @@ deny contains result if {
 #     that can be used to run tasks in the build pipeline.
 #   collections:
 #   - minimal
+#   - redhat
 #
 deny contains result if {
 	count(lib.rule_data("allowed_step_image_registry_prefixes")) == 0

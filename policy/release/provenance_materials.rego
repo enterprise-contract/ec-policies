@@ -25,6 +25,7 @@ import data.lib.tkn
 #     Make sure the build pipeline contains a task named 'git-clone'.
 #   collections:
 #   - minimal
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -48,6 +49,7 @@ deny contains result if {
 #     respectively.
 #   collections:
 #   - minimal
+#   - redhat
 #   depends_on:
 #   - provenance_materials.git_clone_task_found
 #

@@ -25,7 +25,7 @@ test_required_tasks_met_no_label if {
 
 test_required_tasks_warning_no_label if {
 	attestations := _attestations_with_tasks_no_label(_expected_required_tasks, [])
-	expected := {{"code": "tasks.pipeline_required_tasks_list_provided", "effective_on": "2022-01-01T00:00:00Z", "msg": "Required tasks do not exist for pipeline"}}
+	expected := {{"code": "tasks.pipeline_required_tasks_list_provided", "collections": ["redhat"], "effective_on": "2022-01-01T00:00:00Z", "msg": "Required tasks do not exist for pipeline"}}
 	lib.assert_equal(expected, warn) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
 		with input.attestations as attestations
 }
@@ -85,7 +85,7 @@ test_current_equal_latest_also if {
 test_no_tasks_present if {
 	expected := {{
 		"code": "tasks.pipeline_has_tasks",
-		"collections": ["minimal"],
+		"collections": ["minimal", "redhat"],
 		"msg": "No tasks found in PipelineRun attestation",
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}
@@ -129,6 +129,7 @@ test_required_tasks_founds_data if {
 		"code": "tasks.required_tasks_list_provided",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required task-bundles data",
+		"collections": ["redhat"],
 	}}
 	lib.assert_equal(expected, deny) with data["required-tasks"] as [] with input.attestations as attestations
 		with data["pipeline-required-tasks"] as {}
@@ -140,6 +141,7 @@ test_missing_required_pipeline_data if {
 		"code": "tasks.pipeline_required_tasks_list_provided",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Required tasks do not exist for pipeline",
+		"collections": ["redhat"],
 	}}
 	lib.assert_equal(expected, warn) with data["required-tasks"] as _expected_required_tasks with input.attestations as attestations
 }
@@ -185,6 +187,7 @@ _missing_tasks_violation(tasks) = errors if {
 			"msg": sprintf("Required task %q is missing", [task]),
 			"term": task,
 			"effective_on": "2022-01-01T00:00:00Z",
+			"collections": ["redhat"],
 		}
 	}
 }
@@ -197,6 +200,7 @@ _missing_tasks_warning(tasks) = warnings if {
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": sprintf("Task %q is missing and will be required in the future", [task]),
 			"term": task,
+			"collections": ["redhat"],
 		}
 	}
 }

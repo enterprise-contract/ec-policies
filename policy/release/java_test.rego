@@ -23,6 +23,7 @@ test_has_foreign {
 		"code": "java.no_foreign_dependencies",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Found Java dependencies from 'central', expecting to find only from 'rebuilt,redhat'",
+		"collections": ["redhat"],
 	}}
 	lib.assert_equal(deny, expected) with input.attestations as attestations
 }
@@ -32,6 +33,7 @@ test_trusted_dependency_source_list_provided {
 		"code": "java.trusted_dependencies_source_list_provided",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required allowed_java_component_sources rule data",
+		"collections": ["redhat"],
 	}}
 	lib.assert_equal(expected, deny) with data.rule_data as {}
 }

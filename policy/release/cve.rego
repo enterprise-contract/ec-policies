@@ -31,6 +31,7 @@ import data.lib
 #     by the task that runs a Clair scan and emits a result named `CLAIR_SCAN_RESULT`.
 #   collections:
 #   - minimal
+#   - redhat
 #   depends_on:
 #   - cve.cve_results_found
 #
@@ -56,6 +57,7 @@ deny contains result if {
 #     by the task that runs a Clair scan and emits a result named `CLAIR_SCAN_RESULT`.
 #   collections:
 #   - minimal
+#   - redhat
 #   depends_on:
 #   - cve.cve_results_found
 #
@@ -77,6 +79,7 @@ warn contains result if {
 #     Clair scan and creates a task result called `CLAIR_SCAN_RESULT`.
 #   collections:
 #   - minimal
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #

@@ -34,6 +34,7 @@ import data.lib.tkn
 #     generating a proper attestation.
 #   collections:
 #   - minimal
+#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -54,6 +55,8 @@ deny contains result if {
 #   solution: >-
 #     Make sure all required tasks are in the build pipeline. The required task list
 #     is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - tasks.pipeline_has_tasks
 #
@@ -75,6 +78,8 @@ deny contains result if {
 #   solution: >-
 #     The required task list is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data]
 #     under the key 'required-tasks'. Make sure this list exists.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - tasks.pipeline_has_tasks
 #
@@ -94,6 +99,8 @@ warn contains result if {
 #   solution: >-
 #     There is a task that will be required at a future date that is missing
 #     from the build pipeline.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - tasks.pipeline_has_tasks
 #
@@ -117,6 +124,8 @@ warn contains result if {
 #     Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key
 #     'required-tasks' that contains a list of tasks that are required to run in the
 #     build pipeline.
+#   collections:
+#   - redhat
 #   depends_on:
 #   - tasks.pipeline_has_tasks
 #

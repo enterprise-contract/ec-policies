@@ -19,7 +19,7 @@ test_bundle_not_exists {
 	expected_msg := "Pipeline task 'my-task' does not contain a bundle reference"
 	lib.assert_equal(deny, {{
 		"code": "attestation_task_bundle.tasks_defined_in_bundle",
-		"collections": ["minimal"],
+		"collections": ["minimal", "redhat"],
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as d with data["task-bundles"] as task_bundles
@@ -38,7 +38,7 @@ test_bundle_not_exists_empty_string {
 	expected_msg := sprintf("Pipeline task '%s' uses an empty bundle image reference", [name])
 	lib.assert_equal(deny, {{
 		"code": "attestation_task_bundle.task_ref_bundles_not_empty",
-		"collections": ["minimal"],
+		"collections": ["minimal", "redhat"],
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as d with data["task-bundles"] as task_bundles
@@ -62,6 +62,7 @@ test_bundle_unpinned {
 		"code": "attestation_task_bundle.task_ref_bundles_pinned",
 		"msg": expected_msg,
 		"effective_on": "2022-01-01T00:00:00Z",
+		"collections": ["redhat"],
 	}}) with input.attestations as d
 }
 
@@ -100,11 +101,13 @@ test_acceptable_bundle_out_of_date_past {
 			"code": "attestation_task_bundle.task_ref_bundles_current",
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Pipeline task 'task-run-0' uses an out of date task bundle 'reg.com/repo@sha256:bcd'",
+			"collections": ["redhat"],
 		},
 		{
 			"code": "attestation_task_bundle.task_ref_bundles_current",
 			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Pipeline task 'task-run-1' uses an out of date task bundle 'reg.com/repo@sha256:cde'",
+			"collections": ["redhat"],
 		},
 	}) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
@@ -123,6 +126,7 @@ test_acceptable_bundle_expired {
 		"code": "attestation_task_bundle.task_ref_bundles_acceptable",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Pipeline task 'task-run-0' uses an unacceptable task bundle 'reg.com/repo@sha256:def'",
+		"collections": ["redhat"],
 	}}) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 }
@@ -132,6 +136,7 @@ test_acceptable_bundles_provided {
 		"code": "attestation_task_bundle.acceptable_bundles_provided",
 		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required task-bundles data",
+		"collections": ["redhat"],
 	}}
 	lib.assert_equal(expected, deny) with data["task-bundles"] as []
 }

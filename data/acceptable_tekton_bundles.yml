@@ -1,6 +1,9 @@
 ---
 pipeline-bundles:
   quay.io/redhat-appstudio-tekton-catalog/pipeline-core-services-docker-build:
+    - digest: sha256:4d0573c1aec0115881fc8c7bd28a858f5c686507b1dacc72c0e3bcb282dc5ae9
+      effective_on: "2023-08-13T00:00:00Z"
+      tag: latest
     - digest: sha256:f9c65ce4bea570afd6d54b2834cecf5f7fd1ceb46fd1708fdaa10fd91d7b0fd7
       effective_on: "2023-08-03T00:00:00Z"
       tag: latest
@@ -623,6 +626,9 @@ task-bundles:
       effective_on: "2023-07-27T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-slack-webhook-notification:
+    - digest: sha256:ea12803aadb1c58538ec65a377ba542e1e7052b6fb1ae8bab58aaf095657318a
+      effective_on: "2023-08-13T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:6ca67466fb39d31abb48abf8cb33cccc4a0ed2f647d1c0bb4abc8004175244c9
       effective_on: "2023-08-03T00:00:00Z"
       tag: "0.1"

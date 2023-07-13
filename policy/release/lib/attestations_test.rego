@@ -289,3 +289,9 @@ test_task_not_succeeded {
 
 	not task_succeeded(task_name) with input.attestations as d
 }
+
+test_unmarshall_json {
+	assert_equal({"a": 1, "b": "c"}, unmarshal("{\"a\":1,\"b\":\"c\"}"))
+	assert_equal("not JSON", unmarshal("not JSON"))
+	assert_equal("", unmarshal(""))
+}

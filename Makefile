@@ -184,10 +184,25 @@ ifndef IMAGE
   IMAGE="quay.io/redhat-appstudio/ec-golden-image:latest"
 endif
 
+# jq snippets to massage the various pieces of data into the shape we want.
+# Each part gets deep merged together into a single object similar to the
+# input that ec-cli would present to the conftest evaluator. (Note that it
+# doesn't include everything - the `attestations[].extra.signatures` and
+# `image.signatures` fields are missing.)
+#
+JQ_COSIGN={"attestations": [.[].payload | @base64d | fromjson]}
+JQ_SKOPEO={"image": {"ref": "\(.Name)@\(.Digest)"}}
+JQ_SKOPEO_CONFIG={"image": {"config": .config}}
+JQ_SKOPEO_RAW={"image": {"parent": {"ref": .annotations["org.opencontainers.image.base.name"]}}}
+
 .PHONY: fetch-att
-fetch-att: clean-input ## Fetches attestation data for IMAGE, use `make fetch-att IMAGE=<ref>`. Note: This is compatible with the 'verify-enterprise-contract' task
-	cosign download attestation $(IMAGE) | \
-	  jq -s '{ "attestations": [.[].payload | @base64d | fromjson] }' > $(INPUT_FILE)
+fetch-att: clean-input ## Fetches attestation data and metadata for IMAGE, use `make fetch-att IMAGE=<ref>`
+	jq -s '.[0] * .[1] * .[2] * .[3]' \
+	  <( cosign download attestation $(IMAGE)       | jq -s '$(JQ_COSIGN)'     ) \
+	  <( skopeo inspect --no-tags docker://$(IMAGE) | jq '$(JQ_SKOPEO)'        ) \
+	  <( skopeo inspect --config  docker://$(IMAGE) | jq '$(JQ_SKOPEO_CONFIG)' ) \
+	  <( skopeo inspect --raw     docker://$(IMAGE) | jq '$(JQ_SKOPEO_RAW)'    ) \
+	  > $(INPUT_FILE)
 
 #--------------------------------------------------------------------
 

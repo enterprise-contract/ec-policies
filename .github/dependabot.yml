@@ -5,6 +5,10 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+  - package-ecosystem: "gomod"
+    directory: "/"
+    schedule:
+      interval: "daily"
   - package-ecosystem: "npm"
     directory: "/antora/ec-policies-antora-extension"
     schedule:

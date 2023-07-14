@@ -25,6 +25,7 @@ set -o nounset
 REPO_ORG=hacbs-contract
 ROOT_DIR=$( git rev-parse --show-toplevel )
 BUNDLES="release pipeline data task build_task"
+CONFTEST="go run github.com/open-policy-agent/conftest"
 
 # For example:
 #   ENSURE_UNIQUE=1 DRY_RUN=1 hack/update-bundles.sh
@@ -55,9 +56,9 @@ function repo_name() {
 
 function conftest_push() {
   if [ $1 == "data" ]; then
-    $DRY_RUN_ECHO conftest push --policy '' --data data $2
+    $DRY_RUN_ECHO ${CONFTEST} push --policy '' --data data $2
   else
-    $DRY_RUN_ECHO conftest push --policy policy $2
+    $DRY_RUN_ECHO ${CONFTEST} push --policy policy $2
   fi
 }
 
@@ -120,6 +121,8 @@ for b in $BUNDLES; do
     cd $tmp_dir || exit 1
     find . -type f
 
+    # go.mod/go.sum files needs to be copied for go run to function
+    cp "${ROOT_DIR}/go.mod" "${ROOT_DIR}/go.sum" "$tmp_dir"
     # Now push
     conftest_push $b "$push_repo:$tag"
 

@@ -5,10 +5,14 @@ CONFIG_DATA_FILE=$(DATA_DIR)/config.json
 
 POLICY_DIR=./policy
 
+OPA=go run github.com/open-policy-agent/opa
+CONFTEST=go run github.com/open-policy-agent/conftest
+TKN=go run github.com/tektoncd/cli/cmd/tkn
+
 TEST_FILES = $(DATA_DIR)/rule_data.yml $(POLICY_DIR) checks
 define COVERAGE
-@opa test --coverage --format json $(TEST_FILES) | { \
-	T=$$(mktemp); tee "$${T}"; opa eval --format pretty \
+@$(OPA) test --coverage --format json $(TEST_FILES) | { \
+	T=$$(mktemp); tee "$${T}"; $(OPA) eval --format pretty \
 	--input "$${T}" \
 	--data hack/simplecov.rego \
 	data.simplecov.from_opa > coverage.json; \
@@ -55,18 +59,18 @@ help: ## Display this help.
 ##@ Development
 
 .PHONY: test
-test: soft-install-tools ## Run all tests in verbose mode and check coverage
-	@opa test $(TEST_FILES) -v
+test: ## Run all tests in verbose mode and check coverage
+	@$(OPA) test $(TEST_FILES) -v
 	$(COVERAGE)
 
 .PHONY: coverage
 # The cat does nothing but avoids a non-zero exit code from grep -v
-coverage: soft-install-tools ## Show which lines of rego are not covered by tests
-	@opa test $(TEST_FILES) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
+coverage: ## Show which lines of rego are not covered by tests
+	@$(OPA) test $(TEST_FILES) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
 
 .PHONY: quiet-test
-quiet-test: soft-install-tools ## Run all tests in quiet mode and check coverage
-	@opa test $(TEST_FILES)
+quiet-test: ## Run all tests in quiet mode and check coverage
+	@$(OPA) test $(TEST_FILES)
 	$(COVERAGE)
 
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
@@ -90,13 +94,13 @@ live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` ne
 ## we will ignore the error and not use conftest verify in the CI.
 ##
 .PHONY: conftest-test
-conftest-test: soft-install-tools ## Run all tests with conftest instead of opa
-	@conftest verify \
+conftest-test: ## Run all tests with conftest instead of opa
+	@$(CONFTEST) verify \
 	  --policy $(POLICY_DIR)
 
 .PHONY: fmt
-fmt: soft-install-tools ## Apply default formatting to all rego files. Use before you commit
-	@opa fmt . --write
+fmt: ## Apply default formatting to all rego files. Use before you commit
+	@$(OPA) fmt . --write
 
 .PHONY: fmt-amend
 fmt-amend: fmt ## Apply default formatting to all rego files then amend the current commit
@@ -107,12 +111,12 @@ fmt-amend: fmt ## Apply default formatting to all rego files then amend the curr
 	git commit --amend --no-edit
 
 .PHONY: opa-check
-opa-check: soft-install-tools ## Check Rego files with strict mode (https://www.openpolicyagent.org/docs/latest/strict/)
-	@opa check $(TEST_FILES) --strict
+opa-check: ## Check Rego files with strict mode (https://www.openpolicyagent.org/docs/latest/strict/)
+	@$(OPA) check $(TEST_FILES) --strict
 
 .PHONY: conventions-check
-conventions-check: soft-install-tools ## Check Rego policy files for convention violations
-	@OUT=$$(opa eval --data checks --data $(POLICY_DIR)/lib --data data --input <(opa inspect . -a -f json) 'data.checks.violation[_]' --format raw); \
+conventions-check: ## Check Rego policy files for convention violations
+	@OUT=$$($(OPA) eval --data checks --data $(POLICY_DIR)/lib --data data --input <($(OPA) inspect . -a -f json) 'data.checks.violation[_]' --format raw); \
 	if [[ -n "$${OUT}" ]]; then echo "$${OUT}"; exit 1; fi
 
 .PHONY: ready
@@ -121,8 +125,8 @@ ready: fmt-amend ## Amend current commit with fmt changes
 ##@ Documentation
 
 .PHONY: annotations-opa
-annotations-opa: soft-install-tools
-	@opa inspect --annotations --format json ./policy | jq '.annotations | sort_by(.location.file, .location.row)'
+annotations-opa:
+	@$(OPA) inspect --annotations --format json ./policy | jq '.annotations | sort_by(.location.file, .location.row)'
 
 SHORT_SHA=$(shell git rev-parse --short HEAD)
 
@@ -153,9 +157,9 @@ docs-preview: $(EC_DOCS_DIR) ## Build a preview of the documentation
 ##@ CI
 
 .PHONY: fmt-check
-fmt-check: soft-install-tools ## Check formatting of Rego files
-	@opa fmt . --list | xargs -r -n1 echo 'FAIL: Incorrect formatting found in'
-	@opa fmt . --list --fail >/dev/null 2>&1
+fmt-check: ## Check formatting of Rego files
+	@$(OPA) fmt . --list | xargs -r -n1 echo 'FAIL: Incorrect formatting found in'
+	@$(OPA) fmt . --list --fail >/dev/null 2>&1
 
 .PHONY: ci
 ci: quiet-test opa-check conventions-check fmt-check ## Runs all checks and tests
@@ -200,7 +204,7 @@ endif
 
 .PHONY: fetch-pipeline
 fetch-pipeline: clean-input ## Fetches pipeline data for PIPELINE from your local cluster, use `make fetch-pipeline PIPELINE=<name>`
-	tkn bundle list $(PIPELINE) -o json > $(INPUT_FILE)
+	@$(TKN) bundle list $(PIPELINE) -o json > $(INPUT_FILE)
 
 #--------------------------------------------------------------------
 
@@ -210,8 +214,8 @@ INPUT_DIR=./input
 INPUT_FILE=$(INPUT_DIR)/input.json
 
 .PHONY: check-release
-check-release: soft-install-tools ## Run policy evaluation for release
-	@conftest test $(INPUT_FILE) \
+check-release: ## Run policy evaluation for release
+	@$(CONFTEST) test $(INPUT_FILE) \
 	  --all-namespaces \
 	  --policy $(POLICY_DIR) \
 	  --data $(DATA_DIR) \
@@ -219,8 +223,8 @@ check-release: soft-install-tools ## Run policy evaluation for release
 	  --output json
 
 .PHONY: check-pipeline
-check-pipeline: soft-install-tools ## Run policy evaluation for pipeline definition
-	@conftest test $(INPUT_FILE) \
+check-pipeline: ## Run policy evaluation for pipeline definition
+	@$(CONFTEST) test $(INPUT_FILE) \
 	  --all-namespaces \
 	  --policy $(POLICY_DIR) \
 	  --data $(DATA_DIR) \
@@ -238,63 +242,3 @@ update-bundles: ## Push policy bundles to quay.io and generate infra-deployments
 	@hack/update-bundles.sh
 
 #--------------------------------------------------------------------
-
-##@ Utility
-
-CONFTEST_VER=0.37.0
-CONFTEST_SHA_Darwin_x86_64=8cbac190f519fff0acbf70e2fa5cdbec0fd1a6e2a03cf6e5eecdca89f470b678
-CONFTEST_SHA_Darwin_arm64=9646567f3b9978efa2c34ffdba1edee2b44a7e2760ed4a605742a26fe668eb18
-CONFTEST_SHA_Linux_x86_64=3a3d56163b27c4641b0fab112171d76176bd084331825e5da549dd881f0bd4f0
-CONFTEST_GOOS=$(shell go env GOOS | awk '{ print toupper( substr( $$0, 1, 1 ) ) substr( $$0, 2 ); }')
-CONFTEST_GOARCH=$(shell go env GOARCH | sed 's/amd64/x86_64/' )
-CONFTEST_OS_ARCH=$(CONFTEST_GOOS)_$(CONFTEST_GOARCH)
-CONFTEST_FILE=conftest_$(CONFTEST_VER)_$(CONFTEST_OS_ARCH).tar.gz
-CONFTEST_URL=https://github.com/open-policy-agent/conftest/releases/download/v$(CONFTEST_VER)/$(CONFTEST_FILE)
-CONFTEST_SHA=$(CONFTEST_SHA_${CONFTEST_OS_ARCH})
-ifndef CONFTEST_BIN
-  CONFTEST_BIN=$(HOME)/bin
-endif
-CONFTEST_DEST=$(CONFTEST_BIN)/conftest
-
-.PHONY: install-conftest
-install-conftest: ## Install `conftest` CLI from GitHub releases
-	curl -s -L -O $(CONFTEST_URL)
-	echo "$(CONFTEST_SHA) $(CONFTEST_FILE)" | sha256sum --check
-	tar xzf $(CONFTEST_FILE) conftest
-	@mkdir -p $(CONFTEST_BIN)
-	mv conftest $(CONFTEST_DEST)
-	chmod 755 $(CONFTEST_DEST)
-	rm $(CONFTEST_FILE)
-
-OPA_VER=v0.53.1
-OPA_SHA_darwin_amd64=73a76e498c1f9ec0442787efa056599fc11845301e4e3f03f436be6c31c3f7aa
-OPA_SHA_darwin_arm64_static=e9641a218f3ba3e4d5d9cc18e584aa824318961fb560548672673652d1f66587
-OPA_SHA_linux_amd64_static=54e58abab85d125038152476f7c7987d352ca314c5e49e1f10d8e6800e6f6bef
-OPA_OS_ARCH=$(shell go env GOOS)_$(shell go env GOARCH)
-OPA_STATIC=$(if $(OPA_SHA_${OPA_OS_ARCH}_static),_static)
-OPA_FILE=opa_$(OPA_OS_ARCH)$(OPA_STATIC)
-OPA_URL=https://openpolicyagent.org/downloads/$(OPA_VER)/$(OPA_FILE)
-OPA_SHA=$(OPA_SHA_${OPA_OS_ARCH}${OPA_STATIC})
-ifndef OPA_BIN
-  OPA_BIN=$(HOME)/bin
-endif
-OPA_DEST=$(OPA_BIN)/opa
-
-.PHONY: install-opa
-install-opa: ## Install `opa` CLI from GitHub releases
-	curl -s -L -O $(OPA_URL)
-	echo "$(OPA_SHA) $(OPA_FILE)" | sha256sum --check
-	@mkdir -p $(OPA_BIN)
-	cp $(OPA_FILE) $(OPA_DEST)
-	chmod 755 $(OPA_DEST)
-	rm $(OPA_FILE)
-
-.PHONY: install-tools soft-install-tools
-install-tools: install-conftest install-opa ## Force a reinstall of all tools
-soft-install-tools: ## Install all tools if not installed
-ifeq ("$(wildcard $(OPA_DEST))","")
-	@$(MAKE) -s install-opa
-endif
-ifeq ("$(wildcard $(CONFTEST_DEST))","")
-	@$(MAKE) -s install-conftest
-endif

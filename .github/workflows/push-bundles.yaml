@@ -26,6 +26,12 @@ jobs:
         # most recently updated
         fetch-depth: 0
 
+    - name: Setup Go environment
+      uses: actions/setup-go@fac708d6674e30b6ba41289acaab6d4b75aa0753 # v4.0.1
+      with:
+        go-version-file: go.mod
+        cache: true
+
     - name: Docker login
       uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
       with:
@@ -33,9 +39,6 @@ jobs:
         registry: quay.io
         username: ${{ secrets.BUNDLE_PUSH_USER }}
         password: ${{ secrets.BUNDLE_PUSH_PASS }}
-
-    - name: Install conftest
-      run: make install-conftest CONFTEST_BIN=$HOME/.local/bin
 
     - name: Push bundles
       env:

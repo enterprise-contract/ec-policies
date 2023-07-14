@@ -22,11 +22,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
-    - name: Install opa
-      run: make install-opa OPA_BIN=$HOME/.local/bin
-
-    - name: Install tkn
-      uses: jerop/tkn@5a3b12eb115505e3b593c6b622f31e1a9fad374c # v0.1.0
+    - name: Setup Go environment
+      uses: actions/setup-go@fac708d6674e30b6ba41289acaab6d4b75aa0753 # v4.0.1
+      with:
+        go-version-file: go.mod
+        cache: true
 
     - name: Run checks
       run: make ci

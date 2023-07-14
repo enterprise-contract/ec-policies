@@ -75,6 +75,7 @@ results_named(name) = results {
 # value is returned as is. This is helpful when interpreting certain values
 # in attestations created by Tekton Chains.
 unmarshal(raw) = value {
+	json.is_valid(raw)
 	value = json.unmarshal(raw)
 } else = raw
 

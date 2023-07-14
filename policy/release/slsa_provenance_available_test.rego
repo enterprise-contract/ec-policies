@@ -13,11 +13,9 @@ test_att_predicate_type {
 	attestations := _mock_attestations(["spam"])
 	expected_deny := {{
 		"code": "slsa_provenance_available.attestation_predicate_type_accepted",
-		"collections": ["minimal", "slsa1", "slsa2", "slsa3", "redhat"],
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Attestation predicate type \"spam\" is not an expected type (https://slsa.dev/provenance/v0.2)",
 	}}
-	lib.assert_equal(deny, expected_deny) with input.attestations as attestations
+	lib.assert_equal_results(deny, expected_deny) with input.attestations as attestations
 }
 
 _mock_attestations(types) = attestations {

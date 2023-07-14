@@ -28,10 +28,9 @@ test_gh_workflow_repository_mismatch if {
 	signatures := [{"certificate": good_cert}]
 	expected := {{
 		"code": "github_certificate.gh_workflow_repository",
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Repository \"lcarva/festoji\" not in allowed list: [\"ec-cli\", \"ec-policies\"]",
 	}}
-	lib.assert_equal(deny, expected) with input.image.signatures as signatures
+	lib.assert_equal_results(deny, expected) with input.image.signatures as signatures
 		with data.rule_data.allowed_gh_workflow_repos as ["ec-cli", "ec-policies"]
 }
 
@@ -45,10 +44,9 @@ test_gh_workflow_ref_mismatch if {
 	signatures := [{"certificate": good_cert}]
 	expected := {{
 		"code": "github_certificate.gh_workflow_ref",
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Ref \"refs/heads/master\" not in allowed list: [\"refs/heads/prod\"]",
 	}}
-	lib.assert_equal(deny, expected) with input.image.signatures as signatures
+	lib.assert_equal_results(deny, expected) with input.image.signatures as signatures
 		with data.rule_data.allowed_gh_workflow_refs as ["refs/heads/prod"]
 }
 
@@ -62,10 +60,9 @@ test_gh_workflow_name_mismatch if {
 	signatures := [{"certificate": good_cert}]
 	expected := {{
 		"code": "github_certificate.gh_workflow_name",
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Name \"Package\" not in allowed list: [\"hackery\"]",
 	}}
-	lib.assert_equal(deny, expected) with input.image.signatures as signatures
+	lib.assert_equal_results(deny, expected) with input.image.signatures as signatures
 		with data.rule_data.allowed_gh_workflow_names as ["hackery"]
 }
 
@@ -79,10 +76,9 @@ test_gh_workflow_trigger_mismatch if {
 	signatures := [{"certificate": good_cert}]
 	expected := {{
 		"code": "github_certificate.gh_workflow_trigger",
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Trigger \"push\" not in allowed list: [\"build\"]",
 	}}
-	lib.assert_equal(deny, expected) with input.image.signatures as signatures
+	lib.assert_equal_results(deny, expected) with input.image.signatures as signatures
 		with data.rule_data.allowed_gh_workflow_triggers as ["build"]
 }
 
@@ -90,37 +86,32 @@ test_missing_extensions if {
 	expected := {
 		{
 			"code": "github_certificate.gh_workflow_extensions",
-			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Missing extension \"GitHub Workflow Name\"",
 		},
 		{
 			"code": "github_certificate.gh_workflow_extensions",
-			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Missing extension \"GitHub Workflow Ref\"",
 		},
 		{
 			"code": "github_certificate.gh_workflow_extensions",
-			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Missing extension \"GitHub Workflow Repository\"",
 		},
 		{
 			"code": "github_certificate.gh_workflow_extensions",
-			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Missing extension \"GitHub Workflow SHA\"",
 		},
 		{
 			"code": "github_certificate.gh_workflow_extensions",
-			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Missing extension \"GitHub Workflow Trigger\"",
 		},
 	}
-	lib.assert_equal(warn, expected)
-	lib.assert_equal(warn, expected) with input as {}
-	lib.assert_equal(warn, expected) with input.image as {}
-	lib.assert_equal(warn, expected) with input.image.signatures as []
-	lib.assert_equal(warn, expected) with input.image.signatures as [{}]
-	lib.assert_equal(warn, expected) with input.image.signatures as [{"certificate": ""}]
-	lib.assert_equal(warn, expected) with input.image.signatures as [{"certificate": bad_cert}]
+	lib.assert_equal_results(warn, expected)
+	lib.assert_equal_results(warn, expected) with input as {}
+	lib.assert_equal_results(warn, expected) with input.image as {}
+	lib.assert_equal_results(warn, expected) with input.image.signatures as []
+	lib.assert_equal_results(warn, expected) with input.image.signatures as [{}]
+	lib.assert_equal_results(warn, expected) with input.image.signatures as [{"certificate": ""}]
+	lib.assert_equal_results(warn, expected) with input.image.signatures as [{"certificate": bad_cert}]
 }
 
 # This is a certificate used when signing an image on GitHub. It

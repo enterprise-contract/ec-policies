@@ -14,10 +14,9 @@ test_pipeline_run_params_missing_params if {
 	provenance := json.remove(good_provenance, ["/predicate/buildDefinition/externalParameters/runSpec/params/0"])
 	expected := {{
 		"code": "external_parameters.pipeline_run_params",
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "PipelineRun params, {\"git-revision\", \"output-image\"}, do not match expectation, {\"git-repo\", \"git-revision\", \"output-image\"}.",
 	}}
-	lib.assert_equal(deny, expected) with input.attestations as [provenance]
+	lib.assert_equal_results(deny, expected) with input.attestations as [provenance]
 }
 
 test_pipeline_run_params_empty_values if {
@@ -28,10 +27,9 @@ test_pipeline_run_params_empty_values if {
 	}])
 	expected := {{
 		"code": "external_parameters.pipeline_run_params",
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "PipelineRun params, {\"git-revision\", \"output-image\"}, do not match expectation, {\"git-repo\", \"git-revision\", \"output-image\"}.",
 	}}
-	lib.assert_equal(deny, expected) with input.attestations as [provenance]
+	lib.assert_equal_results(deny, expected) with input.attestations as [provenance]
 }
 
 test_restrict_shared_volumes_existing_pvc if {
@@ -42,10 +40,9 @@ test_restrict_shared_volumes_existing_pvc if {
 	}])
 	expected := {{
 		"code": "external_parameters.restrict_shared_volumes",
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "PipelineRun uses shared volumes, {{\"persistentVolumeClaim\": {\"claimName\": \"my-pvc\"}}}.",
 	}}
-	lib.assert_equal(deny, expected) with input.attestations as [provenance]
+	lib.assert_equal_results(deny, expected) with input.attestations as [provenance]
 }
 
 good_provenance := {

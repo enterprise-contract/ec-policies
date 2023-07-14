@@ -22,23 +22,19 @@ test_slsa_builder_id_found if {
 
 	expected := {{
 		"code": "slsa_build_build_service.slsa_builder_id_found",
-		"collections": ["slsa2", "slsa3", "redhat"],
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Builder ID not set in attestation",
 	}}
 
-	lib.assert_equal(expected, deny) with input.attestations as attestations
+	lib.assert_equal_results(expected, deny) with input.attestations as attestations
 }
 
 test_accepted_slsa_builder_id if {
 	builder_id := "https://notket.ved/sniahc/2v"
 	expected := {{
 		"code": "slsa_build_build_service.slsa_builder_id_accepted",
-		"collections": ["slsa2", "slsa3", "redhat"],
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Builder ID \"https://notket.ved/sniahc/2v\" is unexpected",
 	}}
-	lib.assert_equal(expected, deny) with input.attestations as [_mock_attestation(builder_id)]
+	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(builder_id)]
 }
 
 _mock_attestation(builder_id) = d if {

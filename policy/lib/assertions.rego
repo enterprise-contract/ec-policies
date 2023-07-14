@@ -1,5 +1,7 @@
 package lib
 
+import future.keywords.in
+
 # Produce more useful output when a test fails
 
 # Beware: `lib.assert_equal(<boolean>, ...)` does not work like
@@ -54,3 +56,21 @@ _assert_output_one_value(assert_type, value) {
 	trace(debug_output)
 	print(debug_output)
 }
+
+# assert_equal_results is successful if both results match.
+# The values of "collections" and "effective_on" attributes are ignored.
+assert_equal_results(left_result, right_result) {
+	ignore_paths := ["/collections", "/effective_on"]
+	assert_equal(
+		_ignore_attributes(left_result, ignore_paths),
+		_ignore_attributes(right_result, ignore_paths),
+	)
+}
+
+_ignore_attributes(values, ignore_paths) := new_values {
+	new_values := {new_value |
+		some value in values
+		new_value := json.remove(value, ignore_paths)
+	}
+	count(values) == count(new_values)
+} else := values

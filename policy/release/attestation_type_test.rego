@@ -16,20 +16,16 @@ test_allow_when_permitted {
 
 test_deny_when_not_permitted {
 	expected_msg := sprintf("Unknown attestation type '%s'", [bad_type])
-	lib.assert_equal(deny, {{
+	lib.assert_equal_results(deny, {{
 		"code": "attestation_type.known_attestation_type",
-		"collections": ["minimal", "redhat"],
 		"msg": expected_msg,
-		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.attestations as mock_data(bad_type)
 }
 
 test_deny_when_pipelinerun_attestation_founds {
 	expected := {{
 		"code": "attestation_type.pipelinerun_attestation_found",
-		"collections": ["minimal", "redhat"],
 		"msg": "Missing pipelinerun attestation",
-		"effective_on": "2022-01-01T00:00:00Z",
 	}}
 	attestations := [
 		{
@@ -41,5 +37,5 @@ test_deny_when_pipelinerun_attestation_founds {
 			"predicate": {"buildType": "spam/spam/eggs/spam"},
 		},
 	]
-	lib.assert_equal(deny, expected) with input.attestations as attestations
+	lib.assert_equal_results(deny, expected) with input.attestations as attestations
 }

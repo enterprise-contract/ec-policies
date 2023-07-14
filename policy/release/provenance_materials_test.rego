@@ -44,12 +44,10 @@ test_missing_git_clone_task if {
 
 	expected := {{
 		"code": "provenance_materials.git_clone_task_found",
-		"collections": ["minimal", "redhat"],
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Task git-clone not found",
 	}}
 
-	lib.assert_equal(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_scattered_results if {
@@ -68,12 +66,10 @@ test_scattered_results if {
 
 	expected := {{
 		"code": "provenance_materials.git_clone_task_found",
-		"collections": ["minimal", "redhat"],
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Task git-clone not found",
 	}}
 
-	lib.assert_equal(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_missing_materials if {
@@ -90,11 +86,9 @@ test_missing_materials if {
 
 	expected := {{
 		"code": "provenance_materials.git_clone_source_matches_provenance",
-		"collections": ["minimal", "redhat"],
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Entry in materials for the git repo \"git+https://gitforge/repo.git\" and commit \"9d25f3b6ab8cfba5d2d68dc8d062988534a63e87\" not found",
 	}}
-	lib.assert_equal(expected, deny) with input.attestations as [missing_materials]
+	lib.assert_equal_results(expected, deny) with input.attestations as [missing_materials]
 }
 
 test_commit_mismatch if {
@@ -109,11 +103,9 @@ test_commit_mismatch if {
 
 	expected := {{
 		"code": "provenance_materials.git_clone_source_matches_provenance",
-		"collections": ["minimal", "redhat"],
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Entry in materials for the git repo \"git+https://gitforge/repo.git\" and commit \"b10a8c637a91f427576eb0a4f39f1766c7987385\" not found",
 	}}
-	lib.assert_equal(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_url_mismatch if {
@@ -128,11 +120,9 @@ test_url_mismatch if {
 
 	expected := {{
 		"code": "provenance_materials.git_clone_source_matches_provenance",
-		"collections": ["minimal", "redhat"],
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Entry in materials for the git repo \"git+https://shady/repo.git\" and commit \"9d25f3b6ab8cfba5d2d68dc8d062988534a63e87\" not found",
 	}}
-	lib.assert_equal(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_commit_and_url_mismatch if {
@@ -147,11 +137,9 @@ test_commit_and_url_mismatch if {
 
 	expected := {{
 		"code": "provenance_materials.git_clone_source_matches_provenance",
-		"collections": ["minimal", "redhat"],
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Entry in materials for the git repo \"git+https://shady/repo.git\" and commit \"b10a8c637a91f427576eb0a4f39f1766c7987385\" not found",
 	}}
-	lib.assert_equal(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"

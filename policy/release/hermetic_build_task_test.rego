@@ -11,9 +11,7 @@ test_hermetic_build if {
 test_not_hermetic_build if {
 	expected := {{
 		"code": "hermetic_build_task.build_task_hermetic",
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Build task was not invoked with the hermetic parameter set",
-		"collections": ["redhat"],
 	}}
 
 	hermetic_not_true := json.patch(_good_attestation, [{
@@ -21,10 +19,10 @@ test_not_hermetic_build if {
 		"path": "/predicate/buildConfig/tasks/0/invocation/parameters/HERMETIC",
 		"value": "false",
 	}])
-	lib.assert_equal(expected, deny) with input.attestations as [hermetic_not_true]
+	lib.assert_equal_results(expected, deny) with input.attestations as [hermetic_not_true]
 
 	hermetic_missing := json.remove(_good_attestation, ["/predicate/buildConfig/tasks/0/invocation/parameters/HERMETIC"])
-	lib.assert_equal(expected, deny) with input.attestations as [hermetic_missing]
+	lib.assert_equal_results(expected, deny) with input.attestations as [hermetic_missing]
 }
 
 _good_attestation := {"predicate": {

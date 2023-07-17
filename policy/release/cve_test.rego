@@ -38,19 +38,15 @@ test_failure if {
 		{
 			"code": "cve.cve_blockers",
 			"term": "critical",
-			"collections": ["minimal", "redhat"],
-			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Found 1 CVE vulnerabilities of critical security level",
 		},
 		{
 			"code": "cve.cve_blockers",
 			"term": "high",
-			"collections": ["minimal", "redhat"],
-			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Found 10 CVE vulnerabilities of high security level",
 		},
 	}
-	lib.assert_equal(deny, expected) with input.attestations as attestations
+	lib.assert_equal_results(deny, expected) with input.attestations as attestations
 }
 
 test_failure_with_rule_data if {
@@ -64,19 +60,15 @@ test_failure_with_rule_data if {
 		{
 			"code": "cve.cve_blockers",
 			"term": "spam",
-			"collections": ["minimal", "redhat"],
-			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Found 1 CVE vulnerabilities of spam security level",
 		},
 		{
 			"code": "cve.cve_blockers",
 			"term": "bacon",
-			"collections": ["minimal", "redhat"],
-			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Found 2 CVE vulnerabilities of bacon security level",
 		},
 	}
-	lib.assert_equal(deny, expected) with input.attestations as attestations
+	lib.assert_equal_results(deny, expected) with input.attestations as attestations
 		with data.rule_data.restrict_cve_security_levels as ["spam", "bacon"]
 }
 
@@ -101,19 +93,15 @@ test_warn_with_rule_data if {
 		{
 			"code": "cve.cve_warnings",
 			"term": "medium",
-			"collections": ["minimal", "redhat"],
-			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Found 20 non-blocking CVE vulnerabilities of medium security level",
 		},
 		{
 			"code": "cve.cve_warnings",
 			"term": "low",
-			"collections": ["minimal", "redhat"],
-			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Found 300 non-blocking CVE vulnerabilities of low security level",
 		},
 	}
-	lib.assert_equal(warn, expected) with input.attestations as attestations
+	lib.assert_equal_results(warn, expected) with input.attestations as attestations
 		with data.rule_data.warn_cve_security_levels as ["medium", "low"]
 }
 
@@ -126,11 +114,9 @@ test_missing_cve_scan_result if {
 	)]
 	expected := {{
 		"code": "cve.cve_results_found",
-		"collections": ["minimal", "redhat"],
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Clair CVE scan results were not found",
 	}}
-	lib.assert_equal(deny, expected) with input.attestations as attestations
+	lib.assert_equal_results(deny, expected) with input.attestations as attestations
 }
 
 test_missing_cve_scan_vulnerabilities if {
@@ -142,11 +128,9 @@ test_missing_cve_scan_vulnerabilities if {
 	)]
 	expected := {{
 		"code": "cve.cve_results_found",
-		"collections": ["minimal", "redhat"],
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Clair CVE scan results were not found",
 	}}
-	lib.assert_equal(deny, expected) with input.attestations as attestations
+	lib.assert_equal_results(deny, expected) with input.attestations as attestations
 }
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"

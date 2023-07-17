@@ -6,10 +6,9 @@ test_bundle_not_exists {
 	tasks := [{"name": "my-task", "taskRef": {}}]
 
 	expected_msg := "Pipeline task 'my-task' does not contain a bundle reference"
-	lib.assert_equal(deny, {{
+	lib.assert_equal_results(deny, {{
 		"code": "task_bundle.disallowed_task_reference",
 		"msg": expected_msg,
-		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.spec.tasks as tasks with data["task-bundles"] as task_bundles
 
 	lib.assert_empty(warn) with input.spec.tasks as tasks
@@ -19,10 +18,9 @@ test_bundle_not_exists_empty_string {
 	tasks := [{"name": "my-task", "taskRef": {"bundle": ""}}]
 
 	expected_msg := "Pipeline task 'my-task' uses an empty bundle image reference"
-	lib.assert_equal(deny, {{
+	lib.assert_equal_results(deny, {{
 		"code": "task_bundle.empty_task_bundle_reference",
 		"msg": expected_msg,
-		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.spec.tasks as tasks with data["task-bundles"] as task_bundles
 
 	lib.assert_empty(warn) with input.spec.tasks as tasks
@@ -34,10 +32,9 @@ test_bundle_unpinned {
 		"taskRef": {"bundle": "reg.com/repo:latest"},
 	}]
 
-	lib.assert_equal(warn, {{
+	lib.assert_equal_results(warn, {{
 		"code": "task_bundle.unpinned_task_bundle",
 		"msg": "Pipeline task 'my-task' uses an unpinned task bundle reference 'reg.com/repo:latest'",
-		"effective_on": "2022-01-01T00:00:00Z",
 	}}) with input.spec.tasks as tasks
 }
 
@@ -69,15 +66,13 @@ test_acceptable_bundle_out_of_date_past {
 		{"name": "my-task-2", "taskRef": {"bundle": "reg.com/repo@sha256:cde"}},
 	]
 
-	lib.assert_equal(warn, {
+	lib.assert_equal_results(warn, {
 		{
 			"code": "task_bundle.out_of_date_task_bundle",
-			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Pipeline task 'my-task-1' uses an out of date task bundle 'reg.com/repo@sha256:bcd'",
 		},
 		{
 			"code": "task_bundle.out_of_date_task_bundle",
-			"effective_on": "2022-01-01T00:00:00Z",
 			"msg": "Pipeline task 'my-task-2' uses an out of date task bundle 'reg.com/repo@sha256:cde'",
 		},
 	}) with input.spec.tasks as tasks
@@ -94,9 +89,8 @@ test_acceptable_bundle_expired {
 	lib.assert_empty(warn) with input.spec.tasks as tasks
 		with data["task-bundles"] as task_bundles
 
-	lib.assert_equal(deny, {{
+	lib.assert_equal_results(deny, {{
 		"code": "task_bundle.unacceptable_task_bundle",
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Pipeline task 'my-task' uses an unacceptable task bundle 'reg.com/repo@sha256:def'",
 	}}) with input.spec.tasks as tasks
 		with data["task-bundles"] as task_bundles
@@ -105,10 +99,9 @@ test_acceptable_bundle_expired {
 test_missing_required_data {
 	expected := {{
 		"code": "task_bundle.missing_required_data",
-		"effective_on": "2022-01-01T00:00:00Z",
 		"msg": "Missing required task-bundles data",
 	}}
-	lib.assert_equal(expected, deny) with data["task-bundles"] as []
+	lib.assert_equal_results(expected, deny) with data["task-bundles"] as []
 }
 
 task_bundles = {"reg.com/repo": [

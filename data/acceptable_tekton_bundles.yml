@@ -567,18 +567,18 @@ task-bundles:
       effective_on: "2023-04-15T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-sast-go:
+    - digest: sha256:fb3ee7e051c11ff688e5c4d7ed682dacd013d7c37c204869a3fcff9d03da200d
+      effective_on: "2023-08-17T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:920477e041f79ab7efba912d89f38918f3a059ca3c82d1a9cb22c17724274fe6
       effective_on: "2023-07-24T00:00:00Z"
       tag: "0.1"
-    - digest: sha256:fb3ee7e051c11ff688e5c4d7ed682dacd013d7c37c204869a3fcff9d03da200d
-      effective_on: "2023-05-29T00:00:00Z"
-      tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-sast-java-sec-check:
+    - digest: sha256:75d28da4b817885309bb8f71682e75cf9fbb2d4f0ed7988a94b4aa29dd458bd5
+      effective_on: "2023-08-17T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:e601313247f30548c096b623eedbb83e3bec5ce54362f49090f8e3b46a82a5e6
       effective_on: "2023-07-24T00:00:00Z"
-      tag: "0.1"
-    - digest: sha256:75d28da4b817885309bb8f71682e75cf9fbb2d4f0ed7988a94b4aa29dd458bd5
-      effective_on: "2023-05-29T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-sast-snyk-check:
     - digest: sha256:2d3369bdbe3b5d37f6528d3048cb894e37c191c6db0395054b6b01d94d662118

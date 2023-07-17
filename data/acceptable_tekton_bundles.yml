@@ -503,6 +503,9 @@ task-bundles:
       effective_on: "2022-12-31T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-git-clone:
+    - digest: sha256:458f4853a01c3273bd76076ac1b015d5f901e70fb4b776f788b577adb25bf5f8
+      effective_on: "2023-08-17T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:f4e37778cba00296606ddfbc1c58181330899cafcaa1ee41c75a7cf8bed312f0
       effective_on: "2023-02-23T00:00:00Z"
       tag: "0.1"
@@ -511,6 +514,9 @@ task-bundles:
       effective_on: "2022-12-01T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-init:
+    - digest: sha256:26586a7ef08c3e86dfdaf0a5cc38dd3d70c4c02db1331b469caaed0a0f5b3d86
+      effective_on: "2023-08-17T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:1fd586c1114e0500533c0f5e9b9dd52958e52535fe0f28004b949666726e99e0
       effective_on: "2023-07-06T00:00:00Z"
       tag: "0.1"
@@ -559,10 +565,16 @@ task-bundles:
       effective_on: "2023-07-14T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-sanity-inspect-image:
+    - digest: sha256:b9ad0ed56be21c9e3c8e2e636275f92d887e57681c718cd36f117eb6fa547824
+      effective_on: "2023-08-17T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:fd4efd9d12eea3a8d47532c4226e685618845d0ba95abb98e008020243d96301
       effective_on: "2023-04-15T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-sanity-label-check:
+    - digest: sha256:dd49667be76c81264a7fb28e3b43f72c527507e5691720c6262575255cb60689
+      effective_on: "2023-08-17T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:534770bf7a7c10277ab5f9c1e7b766abbffb343cc864dd9545aecc5278257dc3
       effective_on: "2023-04-15T00:00:00Z"
       tag: "0.1"
@@ -616,6 +628,9 @@ task-bundles:
       effective_on: "2023-07-06T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-tkn-bundle:
+    - digest: sha256:063b00006cc5d8ef6af98245a30651da2207472d7673dc8ef348e170a46c2bef
+      effective_on: "2023-08-17T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:3772f3993e5c4f06f499e6099c142330a14225912e7467573f3ae18f8d5a4b63
       effective_on: "2023-04-28T00:00:00Z"
       tag: "0.1"

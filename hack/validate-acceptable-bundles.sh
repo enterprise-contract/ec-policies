@@ -30,6 +30,8 @@ if [ "${RUNNER_DEBUG:-}" == "1" ]; then
   set -x
 fi
 
+TKN="go run github.com/tektoncd/cli/cmd/tkn"
+
 if ! command -v ec > /dev/null 2>&1; then
     # this is most likely on GitHub Actions, which runs on 64bit Linux
     curl -o ec -sSL https://github.com/enterprise-contract/ec-cli/releases/download/snapshot/ec_linux_amd64
@@ -69,7 +71,7 @@ for ref in ${new_bundles}; do
         --policy git::https://github.com/enterprise-contract/ec-policies//policy/lib?ref=main \
         --policy git::https://github.com/enterprise-contract/ec-policies//policy/pipeline?ref=main \
         --data git::https://github.com/enterprise-contract/ec-policies//data?ref=main \
-        --file <(tkn bundle list -o json "${ref}" 2> /dev/null) \
+        --file <(${TKN} bundle list -o json "${ref}" 2> /dev/null) \
         || true)"
 
     # Process evaluation result

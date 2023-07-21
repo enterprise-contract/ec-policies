@@ -6,6 +6,11 @@ const opa = import("@zregvart/opa-inspect")
 // Helpers for handlebars templates
 const hbsHelpers = {
 
+  // Determines if value starts with 'builtin'
+  isBuiltIn: (a) => {
+    return a.startsWith("builtin")
+  },
+
   // Convert "foo" to "FOO"
   toUpper: (s) => {
     return s.toUpperCase()

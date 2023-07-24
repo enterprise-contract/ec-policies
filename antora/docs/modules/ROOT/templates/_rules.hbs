@@ -24,6 +24,13 @@
 * Code: `{{ packageInfo.shortName }}.{{ shortName }}`
 {{#if effectiveOn}}
 * Effective from: `{{ effectiveOn }}`{{/if}}
-* https://github.com/enterprise-contract/ec-policies/blob/main/{{ file }}#L{{ row }}[Source, window="_blank"]
+{{#if packageInfo.shortName}}
+    {{#if (isBuiltIn packageInfo.shortName)}}
+    * https://github.com/enterprise-contract/ec-cli/blob/main/docs/{{ file }}#L{{ row }}[Source, window="_blank"]
 
+    {{else}}
+    * https://github.com/enterprise-contract/ec-policies/blob/main/{{ file }}#L{{ row }}[Source, window="_blank"]
+
+    {{/if}}
+{{/if}}
 {{/each}}

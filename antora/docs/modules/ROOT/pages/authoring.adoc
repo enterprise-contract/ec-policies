@@ -52,3 +52,9 @@ empty package for collection annotations.
 See Open Policy Agent's
 https://www.openpolicyagent.org/docs/latest/annotations/[documentation] for
 further reference on annotations.
+
+== Input
+
+The https://enterprisecontract.dev/docs/ec-cli/main/index.html[ec-cli] is reponsible for gathering
+the information to be validated which is made available to policies via the `input` object. Its
+structure is defined https://enterprisecontract.dev/docs/ec-cli/main/policy_input.html[here].

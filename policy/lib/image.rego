@@ -28,6 +28,22 @@ parse(ref) = d {
 	}
 }
 
+# Formats the parsed reference as string
+str(d) = s1 {
+	d.repo != ""
+	d.digest != ""
+	d.tag != ""
+	s1 := sprintf("%s:%s@%s", [d.repo, d.tag, d.digest])
+} else = s2 {
+	d.repo != ""
+	d.digest != ""
+	s2 := sprintf("%s@%s", [d.repo, d.digest])
+} else = s3 {
+	d.repo != ""
+	d.tag != ""
+	s3 := sprintf("%s:%s", [d.repo, d.tag])
+}
+
 # equal_ref returns true if two image references point to the same image. The
 # algorithm first checks if the constituent parts repository, tag and digest are
 # all equal

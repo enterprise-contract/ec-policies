@@ -58,3 +58,9 @@ test_equal {
 	not equal_ref("registry.com/re/po@digest", "registry.com/different/po@digest")
 	not equal_ref("registry.com/re/po@digest", "registry.com/re/different@digest")
 }
+
+test_str {
+	lib.assert_equal("registry.io/repository:tag@digest", str({"repo": "registry.io/repository", "tag": "tag", "digest": "digest"}))
+	lib.assert_equal("registry.io/repository:tag", str({"repo": "registry.io/repository", "tag": "tag"}))
+	lib.assert_equal("registry.io/repository@digest", str({"repo": "registry.io/repository", "digest": "digest"}))
+}

@@ -16,16 +16,16 @@ test_not_hermetic_build if {
 
 	hermetic_not_true := json.patch(_good_attestation, [{
 		"op": "add",
-		"path": "/predicate/buildConfig/tasks/0/invocation/parameters/HERMETIC",
+		"path": "/statement/predicate/buildConfig/tasks/0/invocation/parameters/HERMETIC",
 		"value": "false",
 	}])
 	lib.assert_equal_results(expected, deny) with input.attestations as [hermetic_not_true]
 
-	hermetic_missing := json.remove(_good_attestation, ["/predicate/buildConfig/tasks/0/invocation/parameters/HERMETIC"])
+	hermetic_missing := json.remove(_good_attestation, ["/statement/predicate/buildConfig/tasks/0/invocation/parameters/HERMETIC"])
 	lib.assert_equal_results(expected, deny) with input.attestations as [hermetic_missing]
 }
 
-_good_attestation := {"predicate": {
+_good_attestation := {"statement": {"predicate": {
 	"buildType": lib.pipelinerun_att_build_types[0],
 	"buildConfig": {"tasks": [{
 		"results": [
@@ -35,4 +35,4 @@ _good_attestation := {"predicate": {
 		"ref": {"kind": "Task", "name": "any-task", "bundle": "reg.img/spam@sha256:abc"},
 		"invocation": {"parameters": {"HERMETIC": "true"}},
 	}]},
-}}
+}}}

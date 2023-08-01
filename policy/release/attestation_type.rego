@@ -67,7 +67,8 @@ deny contains result if {
 #   - redhat
 #   effective_on: 2023-08-31T00:00:00Z
 deny contains result if {
-	some att in lib.pipelinerun_attestations
+	# Use input.attestations directly so we can detect the actual format in use.
+	some att in input.attestations
 	not att.statement
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

@@ -3,10 +3,10 @@ package policy.release.attestation_task_bundle
 import data.lib
 
 mock_data(task) = d {
-	d := [{"predicate": {
+	d := [{"statement": {"predicate": {
 		"buildConfig": {"tasks": [task]},
 		"buildType": lib.pipelinerun_att_build_types[0],
-	}}]
+	}}}]
 }
 
 test_bundle_not_exists {
@@ -139,10 +139,10 @@ mock_attestation(bundles) = a {
 		}
 	]
 
-	a := [{"predicate": {
+	a := [{"statement": {"predicate": {
 		"buildConfig": {"tasks": tasks},
 		"buildType": lib.pipelinerun_att_build_types[0],
-	}}]
+	}}}]
 }
 
 task_bundles = {"reg.com/repo": [

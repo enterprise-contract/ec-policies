@@ -82,7 +82,7 @@ test_missing_materials if {
 		"steps": [{"entrypoint": "/bin/bash"}],
 	}]
 	good_attestation := _mock_attestation(tasks)
-	missing_materials := json.remove(good_attestation, ["/predicate/materials"])
+	missing_materials := json.remove(good_attestation, ["/statement/predicate/materials"])
 
 	expected := {{
 		"code": "provenance_materials.git_clone_source_matches_provenance",
@@ -163,12 +163,12 @@ _mock_attestation(original_tasks) = d if {
 		task := object.union(default_task, original_task)
 	]
 
-	d := {"predicate": {
+	d := {"statement": {"predicate": {
 		"buildType": lib.pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": tasks},
 		"materials": [{
 			"uri": sprintf("git+%s.git", [_git_url]),
 			"digest": {"sha1": _git_commit},
 		}],
-	}}
+	}}}
 }

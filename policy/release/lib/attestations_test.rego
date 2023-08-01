@@ -11,15 +11,15 @@ tr_build_type := "tekton.dev/v1beta1/TaskRun"
 
 tr_build_type_legacy := "https://tekton.dev/attestations/chains@v2"
 
-mock_pr_att := {"predicate": {"buildType": pr_build_type}}
+mock_pr_att := {"statement": {"predicate": {"buildType": pr_build_type}}}
 
-mock_pr_att_legacy := {"predicate": {"buildType": pr_build_type_legacy}}
+mock_pr_att_legacy := {"statement": {"predicate": {"buildType": pr_build_type_legacy}}}
 
-mock_tr_att := {"predicate": {"buildType": tr_build_type}}
+mock_tr_att := {"statement": {"predicate": {"buildType": tr_build_type}}}
 
-mock_tr_att_legacy := {"predicate": {"buildType": tr_build_type_legacy}}
+mock_tr_att_legacy := {"statement": {"predicate": {"buildType": tr_build_type_legacy}}}
 
-garbage_att := {"predicate": {"buildType": "garbage"}}
+garbage_att := {"statement": {"predicate": {"buildType": "garbage"}}}
 
 # This is used through the tests to generate an attestation of a PipelineRun
 # with an inline Task definition, look at using att_mock_helper_ref to generate
@@ -60,7 +60,7 @@ _task_ref(_, bundle_ref) = r {
 # NOTE: In most cases, a task produces a result that is JSON encoded. When mocking results
 # from such tasks, prefer the att_mock_helper_ref function instead.
 att_mock_helper_ref_plain_result(name, result, task_name, bundle_ref) = d {
-	d := {"predicate": {
+	d := {"statement": {"predicate": {
 		"buildType": pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": [object.union(
 			{"name": task_name, "results": [{
@@ -69,7 +69,7 @@ att_mock_helper_ref_plain_result(name, result, task_name, bundle_ref) = d {
 			}]},
 			_task_ref(task_name, bundle_ref),
 		)]},
-	}}
+	}}}
 }
 
 # This is used through the tests to generate an attestation of a PipelineRun
@@ -97,19 +97,28 @@ att_mock_helper_ref(name, result, task_name, bundle_ref) = d {
 }
 
 att_mock_task_helper(task) = d {
-	d := [{"predicate": {
+	d := [{"statement": {"predicate": {
 		"buildConfig": {"tasks": [task]},
 		"buildType": pipelinerun_att_build_types[0],
-	}}]
+	}}}]
 }
 
 test_pr_attestations {
-	assert_equal([mock_pr_att, mock_pr_att_legacy], pipelinerun_attestations) with input.attestations as [
+	assert_equal([mock_pr_att.statement, mock_pr_att_legacy.statement], pipelinerun_attestations) with input.attestations as [
 		mock_tr_att,
 		mock_tr_att_legacy,
 		mock_pr_att,
 		mock_pr_att_legacy,
 		garbage_att,
+	]
+
+	# Deprecate format should still work for now
+	assert_equal([mock_pr_att.statement, mock_pr_att_legacy.statement], pipelinerun_attestations) with input.attestations as [
+		mock_tr_att.statement,
+		mock_tr_att_legacy.statement,
+		mock_pr_att.statement,
+		mock_pr_att_legacy.statement,
+		garbage_att.statement,
 	]
 
 	assert_equal([], pipelinerun_attestations) with input.attestations as [
@@ -120,16 +129,16 @@ test_pr_attestations {
 }
 
 test_pipelinerun_slsa_provenance_v1 {
-	provenance_with_pr_spec := {
+	provenance_with_pr_spec := {"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
 		"predicate": {"buildDefinition": {
 			"buildType": "https://tekton.dev/chains/v2/slsa",
 			"externalParameters": {"runSpec": {"pipelineSpec": {}}},
 		}},
-	}
+	}}
 	provenance_with_pr_ref := json.patch(provenance_with_pr_spec, [{
 		"op": "add",
-		"path": "/predicate/buildDefinition/externalParameters/runSpec",
+		"path": "/statement/predicate/buildDefinition/externalParameters/runSpec",
 		"value": {"pipelineRef": {}},
 	}])
 
@@ -138,63 +147,74 @@ test_pipelinerun_slsa_provenance_v1 {
 		provenance_with_pr_ref,
 		json.patch(provenance_with_pr_spec, [{
 			"op": "add",
-			"path": "/predicateType", "value": "https://slsa.dev/provenance/v0.2",
+			"path": "/statement/predicateType", "value": "https://slsa.dev/provenance/v0.2",
 		}]),
-		json.patch(provenance_with_pr_spec, [{"op": "add", "path": "/predicate", "value": {}}]),
+		json.patch(provenance_with_pr_spec, [{"op": "add", "path": "/statement/predicate", "value": {}}]),
 		json.patch(provenance_with_pr_spec, [{
 			"op": "add",
-			"path": "/predicate/buildDefinition",
+			"path": "/statement/predicate/buildDefinition",
 			"value": {},
 		}]),
 		json.patch(provenance_with_pr_spec, [{
 			"op": "add",
-			"path": "/predicate/buildDefinition/buildType",
+			"path": "/statement/predicate/buildDefinition/buildType",
 			"value": "https://tekton.dev/chains/v2/mambo",
 		}]),
 		json.patch(provenance_with_pr_spec, [{
 			"op": "add",
-			"path": "/predicate/buildDefinition/externalParameters",
+			"path": "/statement/predicate/buildDefinition/externalParameters",
 			"value": {},
 		}]),
 		json.patch(provenance_with_pr_spec, [{
 			"op": "add",
-			"path": "/predicate/buildDefinition/externalParameters/runSpec",
+			"path": "/statement/predicate/buildDefinition/externalParameters/runSpec",
 			"value": {},
 		}]),
 		json.patch(provenance_with_pr_spec, [{
 			"op": "add",
-			"path": "/predicate/buildDefinition/externalParameters/runSpec",
+			"path": "/statement/predicate/buildDefinition/externalParameters/runSpec",
 			"value": {"taskRef": {}},
 		}]),
 	]
-	expected := [provenance_with_pr_spec, provenance_with_pr_ref]
+	expected := [provenance_with_pr_spec.statement, provenance_with_pr_ref.statement]
 	assert_equal(expected, pipelinerun_slsa_provenance_v1) with input.attestations as attestations
+
+	# Deprecated format should still work for now
+	old_attestations := [att.statement | att := attestations[_]]
+	assert_equal(expected, pipelinerun_slsa_provenance_v1) with input.attestations as old_attestations
 }
 
 test_tr_attestations {
-	assert_equal([mock_tr_att], taskrun_attestations) with input.attestations as [
+	assert_equal([mock_tr_att.statement], taskrun_attestations) with input.attestations as [
 		mock_tr_att,
 		mock_pr_att,
 		garbage_att,
+	]
+
+	# Deprecated format should still work for now
+	assert_equal([mock_tr_att.statement], taskrun_attestations) with input.attestations as [
+		mock_tr_att.statement,
+		mock_pr_att.statement,
+		garbage_att.statement,
 	]
 
 	assert_equal([], taskrun_attestations) with input.attestations as [mock_pr_att, garbage_att]
 }
 
 test_att_mock_helper {
-	expected := {"predicate": {
+	expected := {"statement": {"predicate": {
 		"buildType": pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": [{"name": "mytask", "results": [{
 			"name": "result-name",
 			"value": "{\"foo\":\"bar\"}",
 		}]}]},
-	}}
+	}}}
 
 	assert_equal(expected, lib.att_mock_helper("result-name", {"foo": "bar"}, "mytask"))
 }
 
 test_att_mock_helper_ref {
-	expected := {"predicate": {
+	expected := {"statement": {"predicate": {
 		"buildType": pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": [{
 			"name": "mytask",
@@ -208,7 +228,7 @@ test_att_mock_helper_ref {
 				"value": "{\"foo\":\"bar\"}",
 			}],
 		}]},
-	}}
+	}}}
 
 	assert_equal(expected, lib.att_mock_helper_ref("result-name", {"foo": "bar"}, "mytask", "registry.img/name:tag@sha256:digest"))
 }

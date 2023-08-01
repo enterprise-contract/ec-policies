@@ -12,12 +12,12 @@ test_all_good if {
 test_slsa_builder_id_found if {
 	attestations := [
 		# Missing predicate.builder.id
-		{"predicate": {
+		{"statement": {"predicate": {
 			"builder": {},
 			"buildType": lib.pipelinerun_att_build_types[0],
-		}},
+		}}},
 		# Missing predicate.builder
-		{"predicate": {"buildType": lib.pipelinerun_att_build_types[0]}},
+		{"statement": {"predicate": {"buildType": lib.pipelinerun_att_build_types[0]}}},
 	]
 
 	expected := {{
@@ -38,8 +38,8 @@ test_accepted_slsa_builder_id if {
 }
 
 _mock_attestation(builder_id) = d if {
-	d := {"predicate": {
+	d := {"statement": {"predicate": {
 		"builder": {"id": builder_id},
 		"buildType": lib.pipelinerun_att_build_types[0],
-	}}
+	}}}
 }

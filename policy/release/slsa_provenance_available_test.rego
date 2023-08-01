@@ -21,6 +21,9 @@ test_att_predicate_type {
 _mock_attestations(types) = attestations {
 	attestations := [attestation |
 		some type in types
-		attestation := {"predicateType": type, "predicate": {"buildType": lib.pipelinerun_att_build_types[0]}}
+		attestation := {"statement": {
+			"predicateType": type,
+			"predicate": {"buildType": lib.pipelinerun_att_build_types[0]},
+		}}
 	]
 }

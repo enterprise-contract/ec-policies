@@ -92,10 +92,10 @@ test_no_tasks_present if {
 	}}
 
 	lib.assert_equal_results(deny, expected) with data["pipeline-required-tasks"] as _time_based_required_tasks
-		with input.attestations as [{"predicate": {
+		with input.attestations as [{"statement": {"predicate": {
 			"buildType": lib.pipelinerun_att_build_types[0],
 			"buildConfig": {"tasks": []},
-		}}]
+		}}}]
 }
 
 test_parameterized if {
@@ -146,20 +146,20 @@ test_missing_required_pipeline_data if {
 _attestations_with_tasks(names, add_tasks) = attestations if {
 	tasks := array.concat([t | t := _task(names[_])], add_tasks)
 
-	attestations := [{"predicate": {
+	attestations := [{"statement": {"predicate": {
 		"buildType": lib.pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": tasks},
 		"invocation": {"environment": {"labels": {"pipelines.openshift.io/runtime": "generic"}}},
-	}}]
+	}}}]
 }
 
 _attestations_with_tasks_no_label(names, add_tasks) = attestations if {
 	tasks := array.concat([t | t := _task(names[_])], add_tasks)
 
-	attestations := [{"predicate": {
+	attestations := [{"statement": {"predicate": {
 		"buildType": lib.pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": tasks},
-	}}]
+	}}}]
 }
 
 _task(name) = task if {

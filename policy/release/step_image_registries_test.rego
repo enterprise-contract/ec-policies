@@ -7,10 +7,10 @@ good_image := "registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@s
 bad_image := "hackz.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:af7dd5b3b"
 
 mock_data(image_ref) = d {
-	d := [{"predicate": {
+	d := [{"statement": {"predicate": {
 		"buildType": lib.pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": [{"name": "mytask", "steps": [{"environment": {"image": image_ref}}]}]},
-	}}]
+	}}}]
 }
 
 test_image_registry_valid {

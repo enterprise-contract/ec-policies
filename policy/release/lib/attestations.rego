@@ -23,29 +23,36 @@ java_sbom_component_count_result_name := "SBOM_JAVA_COMPONENTS_COUNT"
 build_base_images_digests_result_name := "BASE_IMAGES_DIGESTS"
 
 # These are the ones we're interested in
-pipelinerun_attestations := [att |
+pipelinerun_attestations := [statement |
 	att := input.attestations[_]
-	att.predicate.buildType == pipelinerun_att_build_types[_]
+	statement := _statement(att)
+	statement.predicate.buildType == pipelinerun_att_build_types[_]
 ]
 
 # TODO: Make this work with pipelinerun_attestations above so policy rules can be
 # written for either.
-pipelinerun_slsa_provenance_v1 := [att |
+pipelinerun_slsa_provenance_v1 := [statement |
 	att := input.attestations[_]
-	att.predicateType == "https://slsa.dev/provenance/v1"
-	att.predicate.buildDefinition.buildType == "https://tekton.dev/chains/v2/slsa"
+	statement := _statement(att)
+	statement.predicateType == "https://slsa.dev/provenance/v1"
+	statement.predicate.buildDefinition.buildType == "https://tekton.dev/chains/v2/slsa"
 
 	# TODO: Workaround to distinguish between taskrun and pipelinerun attestations
-	spec_keys := object.keys(att.predicate.buildDefinition.externalParameters.runSpec)
+	spec_keys := object.keys(statement.predicate.buildDefinition.externalParameters.runSpec)
 	pipeline_keys := {"pipelineRef", "pipelineSpec"}
 	count(pipeline_keys - spec_keys) != count(pipeline_keys)
 ]
 
 # These ones we don't care about any more
-taskrun_attestations := [att |
+taskrun_attestations := [statement |
 	att := input.attestations[_]
-	att.predicate.buildType == taskrun_att_build_types[_]
+	statement := _statement(att)
+	statement.predicate.buildType == taskrun_att_build_types[_]
 ]
+
+_statement(att) = statement {
+	statement := att.statement
+} else = att
 
 tasks_from_pipelinerun := [task |
 	att := pipelinerun_attestations[_]

@@ -178,13 +178,13 @@ test_unsupported_test_result {
 
 test_missing_wrong_attestation_type {
 	pr := lib.att_mock_helper_ref("some-result", {"result": "value"}, "task1", _bundle)
-	tr := object.union(pr, {"predicate": {"buildType": lib.taskrun_att_build_types[0]}})
+	tr := object.union(pr, {"statement": {"predicate": {"buildType": lib.taskrun_att_build_types[0]}}})
 	lib.assert_empty(deny) with input.attestations as [tr]
 }
 
 test_wrong_attestation_type {
 	pr := lib.att_mock_helper_ref(lib.task_test_result_name, {"result": "ERROR"}, "errored_1", _bundle)
-	tr := object.union(pr, {"predicate": {"buildType": lib.taskrun_att_build_types[0]}})
+	tr := object.union(pr, {"statement": {"predicate": {"buildType": lib.taskrun_att_build_types[0]}}})
 	lib.assert_empty(deny) with input.attestations as [tr]
 }
 

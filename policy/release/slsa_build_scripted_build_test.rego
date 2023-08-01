@@ -181,7 +181,7 @@ test_subject_with_tag_and_digest_is_good if {
 		"steps": [{"entrypoint": "/bin/bash"}],
 	}]
 
-	lib.assert_empty(deny) with input.attestations as [{
+	lib.assert_empty(deny) with input.attestations as [{"statement": {
 		"subject": [{
 			"name": "registry.io/repository/image",
 			"digest": {"sha256": "digest"},
@@ -190,7 +190,7 @@ test_subject_with_tag_and_digest_is_good if {
 			"buildType": lib.pipelinerun_att_build_types[0],
 			"buildConfig": {"tasks": tasks},
 		},
-	}]
+	}}]
 }
 
 test_subject_with_tag_and_digest_mismatch_tag_is_good if {
@@ -203,7 +203,7 @@ test_subject_with_tag_and_digest_mismatch_tag_is_good if {
 		"steps": [{"entrypoint": "/bin/bash"}],
 	}]
 
-	lib.assert_empty(deny) with input.attestations as [{
+	lib.assert_empty(deny) with input.attestations as [{"statement": {
 		"subject": [{
 			"name": "registry.io/repository/image:different",
 			"digest": {"sha256": "digest"},
@@ -212,7 +212,7 @@ test_subject_with_tag_and_digest_mismatch_tag_is_good if {
 			"buildType": lib.pipelinerun_att_build_types[0],
 			"buildConfig": {"tasks": tasks},
 		},
-	}]
+	}}]
 }
 
 test_subject_with_tag_and_digest_mismatch_digest_fails if {
@@ -230,7 +230,7 @@ test_subject_with_tag_and_digest_mismatch_digest_fails if {
 		"msg": "The attestation subject, \"registry.io/repository/image@sha256:unexpected\", does not match the build task image, \"registry.io/repository/image:tag@sha256:digest\"",
 	}}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [{
+	lib.assert_equal_results(expected, deny) with input.attestations as [{"statement": {
 		"subject": [{
 			"name": "registry.io/repository/image",
 			"digest": {"sha256": "unexpected"},
@@ -239,7 +239,7 @@ test_subject_with_tag_and_digest_mismatch_digest_fails if {
 			"buildType": lib.pipelinerun_att_build_types[0],
 			"buildConfig": {"tasks": tasks},
 		},
-	}]
+	}}]
 }
 
 _image_url := "some.image/foo:bar"
@@ -261,7 +261,7 @@ _mock_attestation(original_tasks) = d if {
 		task := object.union(default_task, original_task)
 	]
 
-	d := {
+	d := {"statement": {
 		"subject": [{
 			"name": _image_url,
 			"digest": {_image_digest_algorithm: _image_digest_value},
@@ -270,5 +270,5 @@ _mock_attestation(original_tasks) = d if {
 			"buildType": lib.pipelinerun_att_build_types[0],
 			"buildConfig": {"tasks": tasks},
 		},
-	}
+	}}
 }

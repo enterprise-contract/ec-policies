@@ -101,8 +101,8 @@ test_invalid_materials if {
 }
 
 _mock_attestation(materials) = d if {
-	d := {"predicate": {
+	d := {"statement": {"predicate": {
 		"buildType": lib.pipelinerun_att_build_types[0],
 		"materials": materials,
-	}}
+	}}}
 }

@@ -7,7 +7,11 @@ good_type := "https://in-toto.io/Statement/v0.1"
 bad_type := "https://in-toto.io/Statement/v0.0.9999999"
 
 mock_data(att_type) = d {
-	d := [{"_type": att_type, "predicate": {"buildType": lib.pipelinerun_att_build_types[0]}}]
+	d := [{
+		"_type": att_type,
+		"predicate": {"buildType": lib.pipelinerun_att_build_types[0]},
+		"statement": {"_type": att_type, "predicate": {"buildType": lib.pipelinerun_att_build_types[0]}},
+	}]
 }
 
 test_allow_when_permitted {
@@ -31,11 +35,31 @@ test_deny_when_pipelinerun_attestation_founds {
 		{
 			"_type": good_type,
 			"predicate": {"buildType": "tekton.dev/v1beta1/TaskRun"},
+			"statement": {
+				"_type": good_type,
+				"predicate": {"buildType": "tekton.dev/v1beta1/TaskRun"},
+			},
 		},
 		{
 			"_type": good_type,
 			"predicate": {"buildType": "spam/spam/eggs/spam"},
+			"statement": {
+				"_type": good_type,
+				"predicate": {"buildType": "spam/spam/eggs/spam"},
+			},
 		},
 	]
+	lib.assert_equal_results(deny, expected) with input.attestations as attestations
+}
+
+test_deny_deprecated_policy_attestation_format {
+	expected := {{
+		"code": "attestation_type.deprecated_policy_attestation_format",
+		"msg": "Deprecated policy attestation format found",
+	}}
+	attestations := [{
+		"_type": good_type,
+		"predicate": {"buildType": lib.pipelinerun_att_build_types[0]},
+	}]
 	lib.assert_equal_results(deny, expected) with input.attestations as attestations
 }

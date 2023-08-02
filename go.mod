@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/open-policy-agent/conftest v0.44.1
 	github.com/open-policy-agent/opa v0.55.0
-	github.com/tektoncd/cli v0.31.1
+	github.com/tektoncd/cli v0.31.2
 )
 
 // address CVE-2023-2253 https://github.com/advisories/GHSA-hqxw-f8mx-cpmw

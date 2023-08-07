@@ -25,6 +25,6 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: alexwilson/enable-github-automerge-action@41dcf8cdb29f6764cfa1c8f6cb418887222871c4 # main
+      - uses: alexwilson/enable-github-automerge-action@48e267a59a9d224163e7eaab525347f15572d3f4 # main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

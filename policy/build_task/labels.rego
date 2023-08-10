@@ -1,8 +1,9 @@
 #
 # METADATA
-# title: Checks related to build tasks
-# description: |-
-#   Checks related to build tasks
+# title: Tekton task build type label checks
+# description: >-
+#   Policies to verify that a Tekton build task definition has the
+#   required build type label.
 #
 package policy.build_task.labels
 
@@ -16,24 +17,26 @@ import data.lib.tkn
 build_label := "build.appstudio.redhat.com/build_type"
 
 # METADATA
-# title: Build task does not contain required label
-# description: |-
-#   This policy enforces that a required build label is present in a build task
+# title: Build task has build type label
+# description: >-
+#   Confirm the build task definition has the required build type label.
 # custom:
-#   short_name: build_task_label_missing
+#   short_name: build_type_label_set
 #   failure_msg: The required build label '%s' is missing
+#
 deny contains result if {
 	not build_label in object.keys(tkn.task_labels)
 	result := lib.result_helper(rego.metadata.chain(), [build_label])
 }
 
 # METADATA
-# title: Build task does not contain any labels
-# description: |-
-#   This policy enforces that the task contains a label
+# title: Build task has label
+# description: >-
+#   Confirm that the build task definition includes at least one label.
 # custom:
-#   short_name: build_task_no_labels
-#   failure_msg: The task does not contain labels
+#   short_name: build_task_has_label
+#   failure_msg: The task definition does not include any labels
+#
 deny contains result if {
 	not tkn.task_labels
 	result := lib.result_helper(rego.metadata.chain(), [])

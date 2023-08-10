@@ -69,7 +69,7 @@ warn contains result if {
 # METADATA
 # title: CVE scan results found
 # description: >-
-#   The clair-scan task results have not been found in the SLSA Provenance
+#   Confirm that clair-scan task results are present in the SLSA Provenance
 #   attestation of the build pipeline.
 # custom:
 #   short_name: cve_results_found

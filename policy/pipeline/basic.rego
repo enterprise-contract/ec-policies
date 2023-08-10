@@ -2,9 +2,7 @@
 # METADATA
 # title: Pipeline definition sanity checks
 # description: >-
-#   Currently there is just a check to confirm the input
-#   appears to be a Pipeline definition. We may add additional
-#   sanity checks in future.
+#   Policies to confirm the Tekton Pipeline definition has the expected kind.
 #
 package policy.pipeline.basic
 
@@ -20,12 +18,12 @@ expected_kind := "Pipeline"
 # Fixme: It doesn't fail if the kind key is entirely missing..
 
 # METADATA
-# title: Input data has unexpected kind
+# title: Pipeline definition has expected kind
 # description: >-
-#   A sanity check to confirm the input data has the kind "Pipeline"
+#   Confirm that the pipeline definition has the kind "Pipeline".
 # custom:
-#   short_name: unexpected_kind
-#   failure_msg: Unexpected kind '%s'
+#   short_name: expected_kind
+#   failure_msg: Unexpected kind '%s' for pipeline definition
 #
 deny contains result if {
 	expected_kind != input.kind

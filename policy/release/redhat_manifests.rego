@@ -19,6 +19,8 @@ import data.lib
 # custom:
 #   short_name: redhat_manifests_missing
 #   failure_msg: "Missing Red Hat manifest %q"
+#   collections:
+#   - redhat
 #
 deny contains result if {
 	wanted := {_sbom_purl_path, _sbom_cyclonedx_path}

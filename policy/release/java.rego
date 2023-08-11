@@ -18,10 +18,10 @@ import data.lib
 # METADATA
 # title: Java builds have no foreign dependencies
 # description: >-
-#   The SBOM_JAVA_COMPONENTS_COUNT TaskResult finds dependencies that have
+#   The SBOM_JAVA_COMPONENTS_COUNT task result finds dependencies that have
 #   originated from foreign repositories, i.e. ones that are not rebuilt or
-#   provided by Red Hat. This rule uses the `allowed_java_component_sources`
-#   rule data.
+#   provided by Red Hat. Verify there are no dependencies from sources not
+#   listed in the `allowed_java_component_sources` rule data.
 # custom:
 #   short_name: no_foreign_dependencies
 #   failure_msg: Found Java dependencies from '%s', expecting to find only from '%s'
@@ -43,8 +43,8 @@ deny contains result if {
 # METADATA
 # title: Trusted Java dependency source list was provided
 # description: >-
-#   The policy rules in this package require the `allowed_java_component_sources`
-#   rule data to be provided.
+#   Confirm the `allowed_java_component_sources` rule data was provided, since it's
+#   required by the policy rules in this package.
 # custom:
 #   short_name: trusted_dependencies_source_list_provided
 #   failure_msg: Missing required allowed_java_component_sources rule data

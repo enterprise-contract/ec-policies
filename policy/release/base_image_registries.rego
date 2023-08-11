@@ -16,8 +16,8 @@ import data.lib
 # METADATA
 # title: Base image comes from permitted registry
 # description: >-
-#   The base images used when building a container image must come from a known set
-#   of trusted registries to reduce potential supply chain attacks. By default this
+#   Verify that the base images used when building a container image come from a known
+#   set of trusted registries to reduce potential supply chain attacks. By default this
 #   policy defines trusted registries as registries that are fully maintained by Red
 #   Hat and only contain content produced by Red Hat. The list of permitted registries
 #   can be customized by setting the `allowed_registry_prefixes` list in the rule data.
@@ -43,14 +43,14 @@ deny contains result if {
 # METADATA
 # title: Base image task result was provided
 # description: >-
-#   The attestation must provide the expected information about which base images
+#   Verify the attestation provides the expected information about which base images
 #   were used during the build process. The base image information is expected to
-#   be found in a task result called `BASE_IMAGES_DIGESTS`.
+#   be found in a task result called BASE_IMAGES_DIGESTS.
 # custom:
 #   short_name: base_image_info_found
 #   failure_msg: Base images result is missing
 #   solution: >-
-#     A Tekton task must exist that emits a result named 'BASE_IMAGES_DIGESTS'.
+#     A Tekton task must exist that emits a result named BASE_IMAGES_DIGESTS.
 #   collections:
 #   - minimal
 #   - redhat
@@ -70,8 +70,8 @@ deny contains result if {
 # METADATA
 # title: Allowed base image registry prefixes list was provided
 # description: >-
-#   The policy rules in this package require the `allowed_registry_prefixes`
-#   rule data to be provided.
+#   Confirm the `allowed_registry_prefixes` rule data was provided, since it's
+#   required by the policy rules in this package.
 # custom:
 #   short_name: allowed_registries_provided
 #   failure_msg: Missing required allowed_registry_prefixes rule data

@@ -35,7 +35,7 @@ import data.lib
 # METADATA
 # title: Materials have uri and digest
 # description: >-
-#   At least one entry in the predicate.materials array of the attestation contains
+#   Confirm at least one entry in the predicate.materials array of the attestation contains
 #   the expected attributes: uri and digest.sha1.
 # custom:
 #   short_name: materials_format_okay
@@ -60,7 +60,7 @@ deny contains result if {
 # METADATA
 # title: Material uri is a git repo
 # description: >-
-#   Each entry in the predicate.materials array of the attestation uses
+#   Ensure each entry in the predicate.materials array of the attestation uses
 #   a git URI.
 # custom:
 #   short_name: materials_uri_is_git_repo
@@ -86,7 +86,7 @@ deny contains result if {
 # METADATA
 # title: Materials include git commit shas
 # description: >-
-#   Each entry in the predicate.materials array of the attestation includes
+#   Ensure each entry in the predicate.materials array of the attestation includes
 #   a SHA1 digest which corresponds to a git commit.
 # custom:
 #   short_name: materials_include_git_sha

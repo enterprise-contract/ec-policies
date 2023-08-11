@@ -24,7 +24,7 @@ import data.lib.tkn
 # METADATA
 # title: Pipeline run includes at least one task
 # description: >-
-#   This policy enforces that at least one Task is present in the PipelineRun
+#   Ensure that at least one Task is present in the PipelineRun
 #   attestation.
 # custom:
 #   short_name: pipeline_has_tasks
@@ -47,7 +47,7 @@ deny contains result if {
 # METADATA
 # title: All required tasks were included in the pipeline
 # description: >-
-#   This policy enforces that the required set of tasks are included
+#   Ensure that the set of required tasks are included
 #   in the PipelineRun attestation.
 # custom:
 #   short_name: required_tasks_found
@@ -71,7 +71,7 @@ deny contains result if {
 # METADATA
 # title: Required tasks list for pipeline was provided
 # description: >-
-#   This policy warns if a task list does not exist in the required_tasks.yaml file
+#   Produce a warning if the required tasks list rule data was not provided.
 # custom:
 #   short_name: pipeline_required_tasks_list_provided
 #   failure_msg: Required tasks do not exist for pipeline
@@ -91,7 +91,7 @@ warn contains result if {
 # METADATA
 # title: Future required tasks were found
 # description: >-
-#   This policy warns when a task that will be required in the future
+#   Produce a warning when a task that will be required in the future
 #   was not included in the PipelineRun attestation.
 # custom:
 #   short_name: future_required_tasks_found
@@ -116,7 +116,8 @@ warn contains result if {
 # METADATA
 # title: Required tasks list was provided
 # description: >-
-#   The policy rules in this package require the required-tasks data to be provided.
+#   Confirm the `required-tasks` rule data was provided, since it's
+#   required by the policy rules in this package.
 # custom:
 #   short_name: required_tasks_list_provided
 #   failure_msg: Missing required task-bundles data

@@ -16,7 +16,7 @@ import data.lib.tkn
 # METADATA
 # title: Build task called with hermetic param set
 # description: >-
-#   This policy verifies the build task in the PipelineRun attestation
+#   Verify the build task in the PipelineRun attestation
 #   was invoked with the proper parameters to make the build process
 #   hermetic.
 # custom:

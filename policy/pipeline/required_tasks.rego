@@ -1,6 +1,6 @@
 #
 # METADATA
-# title: Pipeline definition required tasks
+# title: Required tasks
 # description: >-
 #   RHTAP expects that certain Tekton tasks are executed during image builds.
 #   This package includes policy rules to confirm that the pipeline definition
@@ -18,7 +18,7 @@ import data.lib.tkn
 # METADATA
 # title: Pipeline contains tasks
 # description: >-
-#   Confirm that at least one task is present in the pipeline definition.
+#   Confirm at least one task is present in the pipeline definition.
 # custom:
 #   short_name: tasks_found
 #   failure_msg: No tasks found in pipeline
@@ -50,7 +50,7 @@ warn contains result if {
 # METADATA
 # title: Missing required task
 # description: >-
-#   This policy enforces that the required set of tasks are included
+#   Ensure that the set of required tasks is included
 #   in the Pipeline definition.
 # custom:
 #   short_name: missing_required_task
@@ -69,8 +69,8 @@ deny contains result if {
 # METADATA
 # title: Missing future required task
 # description: >-
-#   This policy warns when a task that will be required in the future
-#   was not included in the Pipeline definition.
+#   Produce a warning when a task that will be required in the future
+#   is not currently included in the Pipeline definition.
 # custom:
 #   short_name: missing_future_required_task
 #   failure_msg: Task %q is missing and will be required in the future
@@ -89,7 +89,8 @@ warn contains result if {
 # METADATA
 # title: Required task list is present in rule data
 # description: >-
-#   The policy rules in this package require the required-tasks rule data to be provided.
+#   Confirm the `required-tasks` rule data was provided, since it's
+#   required by the policy rules in this package.
 # custom:
 #   short_name: required_tasks_list_present
 #   failure_msg: The required tasks list is missing from the rule data

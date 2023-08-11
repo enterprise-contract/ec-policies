@@ -21,7 +21,7 @@ import data.lib
 # METADATA
 # title: SLSA Builder ID found
 # description: >-
-#   The attestation attribute predicate.builder.id is set.
+#   Verify that the attestation attribute predicate.builder.id is set.
 # custom:
 #   short_name: slsa_builder_id_found
 #   failure_msg: Builder ID not set in attestation
@@ -44,8 +44,8 @@ deny contains result if {
 # METADATA
 # title: SLSA Builder ID is known and accepted
 # description: >-
-#   The attestation attribute predicate.builder.id is set to one
-#   of the values in the allowed_builder_ids rule data, e.g.
+#   Verify that the attestation attribute predicate.builder.id is set to one
+#   of the values in the `allowed_builder_ids` rule data, e.g.
 #   "https://tekton.dev/chains/v2".
 # custom:
 #   short_name: slsa_builder_id_accepted

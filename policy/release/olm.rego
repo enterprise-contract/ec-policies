@@ -17,8 +17,8 @@ olm_manifestv1 := "operators.operatorframework.io.bundle.manifests.v1"
 # METADATA
 # title: Unpinned images in OLM bundle
 # description: >-
-#   Checks the OLM bundle image for the presence of unpinned image references.
-#   Unpinned image pull refernces are references to images found in
+#   Check the OLM bundle image for the presence of unpinned image references.
+#   Unpinned image pull references are references to images found in
 #   link:https://osbs.readthedocs.io/en/latest/users.html#pullspec-locations[varying
 #   locations] that do not contain a digest -- uniquely identifying the version of
 #   the image being pulled.

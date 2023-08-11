@@ -17,7 +17,7 @@ import data.lib.tkn
 # METADATA
 # title: Git clone task found
 # description: >-
-#   The attestation must contain a git-clone task with `commit` and `url` task results.
+#   Confirm that the attestation contains a git-clone task with `commit` and `url` task results.
 # custom:
 #   short_name: git_clone_task_found
 #   failure_msg: Task git-clone not found
@@ -38,7 +38,7 @@ deny contains result if {
 # METADATA
 # title: Git clone source matches materials provenance
 # description: >-
-#   The result of the git-clone task must be included in the materials section of the SLSA
+#   Confirm that the result of the git-clone task is included in the materials section of the SLSA
 #   provenance attestation.
 # custom:
 #   short_name: git_clone_source_matches_provenance

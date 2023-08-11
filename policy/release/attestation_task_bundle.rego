@@ -21,8 +21,8 @@ import data.lib.bundles
 # METADATA
 # title: Tasks defined using bundle references
 # description: >-
-#   Check for existence of a task bundle. Enforcing this rule will
-#   fail the contract if the task is not called from a bundle.
+#   Check for the existence of a task bundle. This rule will
+#   fail if the task is not called from a bundle.
 # custom:
 #   short_name: tasks_defined_in_bundle
 #   failure_msg: Pipeline task '%s' does not contain a bundle reference
@@ -40,7 +40,7 @@ deny contains result if {
 # METADATA
 # title: Task bundle references not empty
 # description: >-
-#   Check for a valid task bundle reference being used.
+#   Check that a valid task bundle reference is being used.
 # custom:
 #   short_name: task_ref_bundles_not_empty
 #   failure_msg: Pipeline task '%s' uses an empty bundle image reference
@@ -123,8 +123,8 @@ deny contains result if {
 # METADATA
 # title: An acceptable Tekton bundles list was provided
 # description: >-
-#   The policy rules in this package require the acceptable Tekton task bundles
-#   rule data to be provided.
+#   Confirm the `task-bundles` rule data was provided, since it's
+#   required by the policy rules in this package.
 # custom:
 #   short_name: acceptable_bundles_provided
 #   failure_msg: Missing required task-bundles data

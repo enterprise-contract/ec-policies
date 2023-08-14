@@ -85,6 +85,9 @@ pipeline-bundles:
       effective_on: "2022-12-17T00:00:00Z"
       tag: b5020a8b61e6766f4ec1b4f13b05eca0e99925d6
   quay.io/redhat-appstudio-tekton-catalog/pipeline-enterprise-contract:
+    - digest: sha256:91df01daf03ed53f2a21b4aee896ea2e88d21b1b0a02465abda300d9ab18d920
+      effective_on: "2023-09-14T00:00:00Z"
+      tag: 2078b63d38fbd1ce197ef4825b23e7ff2adf63b5
     - digest: sha256:694d62dc9a5547b33ec816799ffb83598d353dba14ee8376bf4229435a4c040b
       effective_on: "2023-09-09T00:00:00Z"
       tag: 321948bdd916f567917671627063fbcb179f6b38
@@ -149,6 +152,9 @@ pipeline-bundles:
       effective_on: "2023-08-14T00:00:00Z"
       tag: 147d788a22d2a436e5733deaa370dbda5b2329af
   quay.io/redhat-appstudio-tekton-catalog/pipeline-enterprise-contract-everything:
+    - digest: sha256:74e21f88e0bb383716db791be08c0d5129151944e5bd33f87379a7f477a18fb9
+      effective_on: "2023-09-14T00:00:00Z"
+      tag: 2078b63d38fbd1ce197ef4825b23e7ff2adf63b5
     - digest: sha256:c318f415190acfc51f032717c5e1e141e8657de7acd1ea8fc8bced859013a589
       effective_on: "2023-09-09T00:00:00Z"
       tag: 321948bdd916f567917671627063fbcb179f6b38
@@ -213,6 +219,9 @@ pipeline-bundles:
       effective_on: "2023-08-14T00:00:00Z"
       tag: 147d788a22d2a436e5733deaa370dbda5b2329af
   quay.io/redhat-appstudio-tekton-catalog/pipeline-enterprise-contract-slsa1:
+    - digest: sha256:bf54c3bea521b034b93e945270df898929fc9d4c1ab6a2c81ad6020a7f2929ce
+      effective_on: "2023-09-14T00:00:00Z"
+      tag: 2078b63d38fbd1ce197ef4825b23e7ff2adf63b5
     - digest: sha256:819686f2a3749a9c7b294669ea509f42037770e89a5a1d9047647e152b82d07b
       effective_on: "2023-09-09T00:00:00Z"
       tag: 321948bdd916f567917671627063fbcb179f6b38
@@ -277,6 +286,9 @@ pipeline-bundles:
       effective_on: "2023-08-14T00:00:00Z"
       tag: 147d788a22d2a436e5733deaa370dbda5b2329af
   quay.io/redhat-appstudio-tekton-catalog/pipeline-enterprise-contract-slsa2:
+    - digest: sha256:e3f4256f45ce4ef23f5de0ae077a7264e8e2a1bc9a35e7e5823cff55d1b783fe
+      effective_on: "2023-09-14T00:00:00Z"
+      tag: 2078b63d38fbd1ce197ef4825b23e7ff2adf63b5
     - digest: sha256:c79ff7c297b26ce36b182cfefe33a8524870044cad71ef5baae1f636a2214fca
       effective_on: "2023-09-09T00:00:00Z"
       tag: 321948bdd916f567917671627063fbcb179f6b38
@@ -341,6 +353,9 @@ pipeline-bundles:
       effective_on: "2023-08-14T00:00:00Z"
       tag: 147d788a22d2a436e5733deaa370dbda5b2329af
   quay.io/redhat-appstudio-tekton-catalog/pipeline-enterprise-contract-slsa3:
+    - digest: sha256:96ed356133bccb0d413cb9f3e341548f9afabe57b7135267ba96942a431bb8da
+      effective_on: "2023-09-14T00:00:00Z"
+      tag: 2078b63d38fbd1ce197ef4825b23e7ff2adf63b5
     - digest: sha256:6f39a5da21c5035737db55aba210b1f3e4e69feda78682e429a871d695415242
       effective_on: "2023-09-09T00:00:00Z"
       tag: 321948bdd916f567917671627063fbcb179f6b38

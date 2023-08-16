@@ -15,14 +15,14 @@ import future.keywords.in
 # METADATA
 # title: Test data found in task results
 # description: >-
-#   Fails if none of the tasks in the pipeline included a TEST_OUTPUT
-#   task result, which is where Enterprise Contract expects to find
-#   test result data.
+#   Ensure that at least one of the tasks in the pipeline includes a
+#   TEST_OUTPUT task result, which is where Enterprise Contract expects
+#   to find test result data.
 # custom:
 #   short_name: test_data_found
 #   failure_msg: No test data found
 #   solution: >-
-#     At least one task in the build pipeline must contain a result named TEST_OUTPUT.
+#     Confirm at least one task in the build pipeline contains a result named TEST_OUTPUT.
 #   collections:
 #   - redhat
 #   depends_on:
@@ -39,8 +39,8 @@ deny contains result if {
 # METADATA
 # title: Test data includes results key
 # description: >-
-#   Each test result is expected to have a 'results' key. The check fails if
-#   in at least one of the TEST_OUTPUT task results this key was not present.
+#   Each test result is expected to have a `results` key. Verify that the `results`
+#   key is present in all of the TEST_OUTPUT task results.
 # custom:
 #   short_name: test_results_found
 #   failure_msg: Found tests without results
@@ -61,9 +61,7 @@ deny contains result if {
 # METADATA
 # title: No unsupported test result values found
 # description: >-
-#   This policy expects all test results to be one of a set of known/supported
-#   values. It is a failure if we encounter a result in the test data that is
-#   not supported.
+#   Ensure all test data result values are in the set of known/supported result values.
 # custom:
 #   short_name: test_results_known
 #   failure_msg: Test '%s' has unsupported result '%s'
@@ -95,7 +93,7 @@ deny contains result if {
 # METADATA
 # title: All required tests passed
 # description: >-
-#   Enterprise Contract requires that all the tests in the test results
+#   Confirm that all the tests in the test results
 #   have a successful result. A successful result is one that isn't a
 #   "FAILURE" or "ERROR". This will fail if any of the tests failed and
 #   the failure message will list the names of the failing tests.
@@ -118,7 +116,7 @@ deny contains result if {
 # METADATA
 # title: No tests were skipped
 # description: >-
-#   Reports any test that has its result set to "SKIPPED".
+#   Produce a warning if any tests have their result set to "SKIPPED".
 # custom:
 #   short_name: no_skipped_tests
 #   failure_msg: "Test %q was skipped"
@@ -139,7 +137,7 @@ warn contains result if {
 # METADATA
 # title: No tests produced warnings
 # description: >-
-#   Reports any test that has its result set to "WARNING".
+#   Produce a warning if any tests have their result set to "WARNING".
 # custom:
 #   short_name: no_test_warnings
 #   failure_msg: "Test %q returned a warning"

@@ -16,7 +16,7 @@ import data.lib
 # METADATA
 # title: Buildah task has Dockerfile param defined
 # description: >-
-#   This policy verifies that a DOCKERFILE parameter was provided to
+#   Verify that a DOCKERFILE parameter was provided to
 #   the buildah task.
 # custom:
 #   short_name: buildah_task_has_dockerfile_param
@@ -39,8 +39,8 @@ deny contains result if {
 # METADATA
 # title: Buildah task uses a local Dockerfile
 # description: >-
-#   This policy verifies that the Dockerfile used in the buildah task is not
-#   fetched from an external source
+#   Verify the Dockerfile used in the buildah task was not
+#   fetched from an external source.
 # custom:
 #   short_name: buildah_uses_local_dockerfile
 #   failure_msg: DOCKERFILE param value (%s) is an external source

@@ -14,12 +14,12 @@ import future.keywords.in
 import data.lib
 
 # METADATA
-# title: pipeline run params
+# title: Pipeline run params
 # description: >-
 #   Verify the PipelineRun was initialized with a set of expected parameters.
 #   By default it asserts git-repo, git-revision, and output-image are provided
 #   with non-empty values. This is configurable by the rule data key
-#   "pipeline_run_params". Any additional parameters are NOT allowed.
+#   `pipeline_run_params`. Any additional parameters are NOT allowed.
 # custom:
 #   short_name: pipeline_run_params
 #   failure_msg: PipelineRun params, %v, do not match expectation, %v.
@@ -37,7 +37,7 @@ deny contains result if {
 }
 
 # METADATA
-# title: restrict shared volumes
+# title: Restrict shared volumes
 # description: >-
 #   Verify the PipelineRun did not use any pre-existing PersistentVolumeClaim
 #   workspaces.

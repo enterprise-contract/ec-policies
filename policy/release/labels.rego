@@ -19,7 +19,7 @@ import data.lib
 # title: Deprecated labels
 # description: >-
 #   Check the image for the presence of labels that have been deprecated.
-#   Use the rule data key "deprecated_labels" to set the list of labels
+#   Use the rule data key `deprecated_labels` to set the list of labels
 #   to check.
 # custom:
 #   short_name: deprecated_labels
@@ -44,8 +44,8 @@ deny contains result if {
 # title: Required labels
 # description: >-
 #   Check the image for the presence of labels that are required.
-#   Use the rule data "required_labels" key to set the list of labels
-#   to check, or the "fbc_required_labels" key for fbc images.
+#   Use the rule data `required_labels` key to set the list of labels
+#   to check, or the `fbc_required_labels` key for fbc images.
 # custom:
 #   short_name: required_labels
 #   failure_msg: 'The required %q label is missing. Label description: %s'
@@ -70,8 +70,8 @@ deny contains result if {
 # title: Optional labels
 # description: >-
 #   Check the image for the presence of labels that are recommended,
-#   but not required. Use the rule data "optional_labels" key to set
-#   the list of labels to check, or the "fbc_optional_labels" key for
+#   but not required. Use the rule data `optional_labels` key to set
+#   the list of labels to check, or the `fbc_optional_labels` key for
 #   fbc images.
 # custom:
 #   short_name: optional_labels
@@ -99,8 +99,8 @@ warn contains result if {
 #   Check that certain labels on the image have different values than the labels
 #   from the parent image. If the label is inherited from the parent image but not
 #   redefined for the image, it will contain an incorrect value for the image.
-#   Use the rule data "disallowed_inherited_labels" key to set the list of labels
-#   to check, or the "fbc_disallowed_inherited_labels" key for fbc images.
+#   Use the rule data `disallowed_inherited_labels` key to set the list of labels
+#   to check, or the `fbc_disallowed_inherited_labels` key for fbc images.
 # custom:
 #   short_name: disallowed_inherited_labels
 #   failure_msg: The %q label should not be inherited from the parent image

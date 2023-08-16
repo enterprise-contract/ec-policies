@@ -21,8 +21,8 @@ import data.lib
 # METADATA
 # title: Expected attestation predicate type found
 # description: >-
-#   The predicateType field of the attestation must indicate the in-toto SLSA Provenance format
-#   was used to attest the PipelineRun.
+#   Verify that the predicateType field of the attestation indicates the in-toto SLSA Provenance
+#   format was used to attest the PipelineRun.
 # custom:
 #   short_name: attestation_predicate_type_accepted
 #   failure_msg: Attestation predicate type %q is not an expected type (%s)

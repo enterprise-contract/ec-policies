@@ -1,8 +1,9 @@
 #
 # METADATA
-# title: Task definition kind checks
+# title: Tekton task kind checks
 # description: >-
-#   Task definition kind check
+#   Policies to verify that a Tekton task definition has the expected
+#   value for kind.
 #
 package policy.task.kind
 
@@ -14,12 +15,12 @@ import data.lib
 expected_kind := "Task"
 
 # METADATA
-# title: Input data has unexpected kind
+# title: Task definition has expected kind
 # description: >-
-#   Check to confirm the input data has the kind "Task"
+#   Confirm the task definition has the kind "Task".
 # custom:
-#   short_name: unexpected_kind
-#   failure_msg: Unexpected kind '%s'
+#   short_name: expected_kind
+#   failure_msg: Unexpected kind '%s' for task definition
 #
 deny contains result if {
 	input.kind
@@ -28,11 +29,11 @@ deny contains result if {
 }
 
 # METADATA
-# title: Input data has kind defined
+# title: Kind field is present in task definition
 # description: >-
-#   Check to confirm the input data has the kind field
+#   Confirm the task definition includes the kind field.
 # custom:
-#   short_name: kind_not_found
+#   short_name: kind_present
 #   failure_msg: Required field 'kind' not found
 #
 deny contains result if {

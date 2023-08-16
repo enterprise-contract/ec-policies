@@ -1,9 +1,10 @@
 #
 # METADATA
+# title: Required tasks
 # description: >-
 #   RHTAP expects that certain Tekton tasks are executed during image builds.
 #   This package includes policy rules to confirm that the pipeline definition
-#   includes the required Tekton tasks.
+#   includes those required tasks.
 #
 package policy.pipeline.required_tasks
 
@@ -15,13 +16,12 @@ import data.lib
 import data.lib.tkn
 
 # METADATA
-# title: No tasks in Pipeline
+# title: Pipeline contains tasks
 # description: >-
-#   This policy enforces that at least one Task is present in the Pipeline
-#   definition.
+#   Confirm at least one task is present in the pipeline definition.
 # custom:
-#   short_name: tasks_missing
-#   failure_msg: No tasks found in Pipeline definition
+#   short_name: tasks_found
+#   failure_msg: No tasks found in pipeline
 deny contains result if {
 	input.kind == "Pipeline"
 	count(tkn.tasks(input)) == 0
@@ -29,11 +29,12 @@ deny contains result if {
 }
 
 # METADATA
-# title: Missing required pipeline tasks
+# title: Required tasks found in pipeline definition
 # description: >-
-#   This policy warns if a task list does not exist in the acceptable_bundles.yaml file
+#   Produce a warning if a task list does not exist in the acceptable
+#   bundles rule data.
 # custom:
-#   short_name: missing_required_pipeline_task
+#   short_name: required_tasks_found
 #   failure_msg: Required tasks do not exist for pipeline %q
 warn contains result if {
 	count(tkn.tasks(input)) > 0
@@ -49,7 +50,7 @@ warn contains result if {
 # METADATA
 # title: Missing required task
 # description: >-
-#   This policy enforces that the required set of tasks are included
+#   Ensure that the set of required tasks is included
 #   in the Pipeline definition.
 # custom:
 #   short_name: missing_required_task
@@ -68,8 +69,8 @@ deny contains result if {
 # METADATA
 # title: Missing future required task
 # description: >-
-#   This policy warns when a task that will be required in the future
-#   was not included in the Pipeline definition.
+#   Produce a warning when a task that will be required in the future
+#   is not currently included in the Pipeline definition.
 # custom:
 #   short_name: missing_future_required_task
 #   failure_msg: Task %q is missing and will be required in the future
@@ -86,12 +87,13 @@ warn contains result if {
 }
 
 # METADATA
-# title: Missing required tasks data
+# title: Required task list is present in rule data
 # description: >-
-#   The policy rules in this package require the required-tasks data to be provided.
+#   Confirm the `required-tasks` rule data was provided, since it's
+#   required by the policy rules in this package.
 # custom:
-#   short_name: missing_required_data
-#   failure_msg: Missing required task-bundles data
+#   short_name: required_tasks_list_present
+#   failure_msg: The required tasks list is missing from the rule data
 deny contains result if {
 	tkn.missing_required_tasks_data
 	not tkn.required_task_list(input)

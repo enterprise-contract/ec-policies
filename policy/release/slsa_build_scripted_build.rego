@@ -23,8 +23,8 @@ import data.lib.tkn
 # METADATA
 # title: Build task contains steps
 # description: >-
-#   The attestation attribute predicate.buildConfig.tasks.steps is not
-#   empty of the pipeline task responsible for building the image.
+#   Verify that the predicate.buildConfig.tasks.steps attribute for the task
+#   responsible for building and pushing the image is not empty.
 # custom:
 #   short_name: build_script_used
 #   failure_msg: Build task %q does not contain any steps
@@ -50,8 +50,8 @@ deny contains result if {
 # METADATA
 # title: Build task set image digest and url task results
 # description: >-
-#   The attestations must contain a build task with the expected
-#   IMAGE_DIGEST and IMAGE_URL results.
+#   Confirm that a build task exists and it has the expected
+#   IMAGE_DIGEST and IMAGE_URL task results.
 # custom:
 #   short_name: build_task_image_results_found
 #   failure_msg: Build task not found
@@ -75,7 +75,7 @@ deny contains result if {
 # METADATA
 # title: Provenance subject matches build task image result
 # description: >-
-#   The subject of the attestations must match the IMAGE_DIGEST and
+#   Verify the subject of the attestations matches the IMAGE_DIGEST and
 #   IMAGE_URL values from the build task.
 # custom:
 #   short_name: subject_build_task_matches

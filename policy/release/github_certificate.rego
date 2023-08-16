@@ -34,7 +34,7 @@ warn contains result if {
 # description: >-
 #   Check if the value of the GitHub Workflow Repository extension in the image
 #   signature certificate matches one of the allowed values. Use the rule data
-#   key "allowed_gh_workflow_repos" to specify the list of allowed values.
+#   key `allowed_gh_workflow_repos` to specify the list of allowed values.
 #   An empty allow list, which is the default value, causes this check to succeeded.
 # custom:
 #   short_name: gh_workflow_repository
@@ -49,7 +49,7 @@ deny contains result if {
 # description: >-
 #   Check if the value of the GitHub Workflow Ref extension in the image
 #   signature certificate matches one of the allowed values. Use the rule data
-#   key "allowed_gh_workflow_refs" to specify the list of allowed values.
+#   key `allowed_gh_workflow_refs` to specify the list of allowed values.
 #   An empty allow list, which is the default value, causes this check to succeeded.
 # custom:
 #   short_name: gh_workflow_ref
@@ -64,7 +64,7 @@ deny contains result if {
 # description: >-
 #   Check if the value of the GitHub Workflow Name extension in the image
 #   signature certificate matches one of the allowed values. Use the rule data
-#   key "allowed_gh_workflow_names" to specify the list of allowed values.
+#   key `allowed_gh_workflow_names` to specify the list of allowed values.
 #   An empty allow list, which is the default value, causes this check to succeeded.
 # custom:
 #   short_name: gh_workflow_name
@@ -79,7 +79,7 @@ deny contains result if {
 # description: >-
 #   Check if the value of the GitHub Workflow Trigger extension in the image
 #   signature certificate matches one of the allowed values. Use the rule data
-#   key "allowed_gh_workflow_triggers" to specify the list of allowed values.
+#   key `allowed_gh_workflow_triggers` to specify the list of allowed values.
 #   An empty allow list, which is the default value, causes this check to succeeded.
 # custom:
 #   short_name: gh_workflow_trigger

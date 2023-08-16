@@ -53,7 +53,7 @@ opa_inspect_valid := {
 					"short_name": "pipelinerun_attestation_found",
 					"solution": "Make sure the attestation being verified was generated from a Tekton pipelineRun.",
 				},
-				"description": "At least one PipelineRun attestation must be present.",
+				"description": "Confirm at least one PipelineRun attestation is present.",
 				"scope": "rule",
 				"title": "PipelineRun attestation found",
 			},
@@ -78,7 +78,7 @@ opa_inspect_missing_annotations := {
 	"annotations": [{
 		"annotations": {
 			"scope": "rule",
-			"description": "Check for existence of a task bundle. Enforcing this rule will\nfail the contract if the task is not called from a bundle.",
+			"description": "Check for the existence of a task bundle. This rule will fail if the task is not called from a bundle.",
 			"custom": {
 				"flagiure_msg": "Task '%s' does not contain a bundle reference",
 				"short_name": "disallowed_task_reference",

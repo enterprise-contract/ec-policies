@@ -62,7 +62,7 @@ test_extra_tasks_ignored if {
 
 test_missing_pipeline_label if {
 	expected := {{
-		"code": "required_tasks.missing_required_pipeline_task",
+		"code": "required_tasks.required_tasks_found",
 		"msg": "Required tasks do not exist for pipeline \"fbc\"",
 	}}
 	pipeline := _pipeline_with_tasks(_expected_required_tasks, [], [])
@@ -140,8 +140,8 @@ test_current_equal_latest_also if {
 
 test_no_tasks_present if {
 	expected := {{
-		"code": "required_tasks.tasks_missing",
-		"msg": "No tasks found in Pipeline definition",
+		"code": "required_tasks.tasks_found",
+		"msg": "No tasks found in pipeline",
 	}}
 
 	lib.assert_equal_results(expected, deny) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
@@ -183,8 +183,8 @@ test_parameterized if {
 test_missing_required_tasks_data if {
 	pipeline := _pipeline_with_tasks_and_label(_expected_required_tasks, [], [])
 	expected := {{
-		"code": "required_tasks.missing_required_data",
-		"msg": "Missing required task-bundles data",
+		"code": "required_tasks.required_tasks_list_present",
+		"msg": "The required tasks list is missing from the rule data",
 	}}
 	lib.assert_equal_results(expected, deny) with data["required-tasks"] as []
 		with data["pipeline-required-tasks"] as {}
@@ -269,7 +269,7 @@ _missing_tasks_warning(tasks) = warnings if {
 _missing_pipeline_tasks_warning(name) = warnings if {
 	warnings := {warning |
 		warning := {
-			"code": "required_tasks.missing_required_pipeline_task",
+			"code": "required_tasks.required_tasks_found",
 			"msg": sprintf("Required tasks do not exist for pipeline %q", [name]),
 		}
 	}

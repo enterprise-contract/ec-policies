@@ -14,7 +14,7 @@ import data.lib
 # METADATA
 # title: Known attestation type found
 # description: >-
-#   A sanity check to confirm the attestation found for the image has a known
+#   Confirm the attestation found for the image has a known
 #   attestation type.
 # custom:
 #   short_name: known_attestation_type
@@ -38,7 +38,7 @@ deny contains result if {
 # METADATA
 # title: PipelineRun attestation found
 # description: >-
-#   At least one PipelineRun attestation must be present.
+#   Confirm at least one PipelineRun attestation is present.
 # custom:
 #   short_name: pipelinerun_attestation_found
 #   failure_msg: Missing pipelinerun attestation

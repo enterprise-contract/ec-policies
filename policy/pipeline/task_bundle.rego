@@ -21,8 +21,8 @@ import data.lib.bundles
 # METADATA
 # title: Task bundle was not used or is not defined
 # description: >-
-#   Check for existence of a task bundle. Enforcing this rule will
-#   fail the contract if the task is not called from a bundle.
+#   Check for the existence of a task bundle. This rule will
+#   fail if the task is not called from a bundle.
 # custom:
 #   short_name: disallowed_task_reference
 #   failure_msg: Pipeline task '%s' does not contain a bundle reference
@@ -35,7 +35,7 @@ deny contains result if {
 # METADATA
 # title: Task bundle reference is empty
 # description: >-
-#   Check for a valid task bundle reference being used.
+#   Check that a valid task bundle reference is being used.
 # custom:
 #   short_name: empty_task_bundle_reference
 #   failure_msg: Pipeline task '%s' uses an empty bundle image reference
@@ -91,7 +91,8 @@ deny contains result if {
 # METADATA
 # title: Missing required data
 # description: >-
-#   The policy rules in this package require the task-bundles data to be provided.
+#   Confirm the `task-bundles` rule data was provided, since it's
+#   required by the policy rules in this package.
 # custom:
 #   short_name: missing_required_data
 #   failure_msg: Missing required task-bundles data

@@ -16,9 +16,9 @@ import data.lib
 # METADATA
 # title: Task steps ran on permitted container images
 # description: >-
-#   Enterprise Contract has a list of allowed registry prefixes. Each step in each
-#   TaskRun must run on a container image with a url that matches one of the
-#   prefixes in the list.
+#   Confirm that each step in each TaskRun ran on a container image with a url that
+#   matches one of the prefixes in the provided list of allowed step image registry
+#   prefixes.
 # custom:
 #   short_name: task_step_images_permitted
 #   failure_msg: Step %d in task '%s' has disallowed image ref '%s'
@@ -44,8 +44,8 @@ deny contains result if {
 # METADATA
 # title: Permitted step image registry prefix list provided
 # description: >-
-#   The policy rules in this package require the allowed_step_image_registry_prefixes
-#   rule data to be provided.
+#   Confirm the `allowed_step_image_registry_prefixes` rule data was provided, since it's
+#   required by the policy rules in this package.
 # custom:
 #   short_name: step_image_registry_prefix_list_provided
 #   failure_msg: Missing required allowed_step_image_registry_prefixes rule data

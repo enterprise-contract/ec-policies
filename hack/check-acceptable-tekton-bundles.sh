@@ -18,11 +18,15 @@
 # Checks if the latest entries in acceptable_tekton_bundles.yml are in fact the latest entries
 # in the registry for them.
 #
+# Usage: ./hack/check-acceptable-tekton-bundles.sh [path]
+# [path] specifies the location for the existing acceptable_tekton_bundles YAML file.
+#        If not provided, use the one from this repo.
+#
 set -o errexit
 set -o pipefail
 set -o nounset
 
-BUNDLES_FILE="$(git rev-parse --show-toplevel)/data/acceptable_tekton_bundles.yml"
+BUNDLES_FILE="${1:-$(git rev-parse --show-toplevel)/data/acceptable_tekton_bundles.yml}"
 
 bundles="$(< "${BUNDLES_FILE}" \
     yq '."task-bundles" + ."pipeline-bundles" | to_entries | map(.key + ":" + .value[0].tag + "@" + .value[0].digest) | .[]')"

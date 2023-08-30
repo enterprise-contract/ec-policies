@@ -22,7 +22,7 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-REPO_ORG=hacbs-contract
+REPO_ORG="${REPO_ORG:-enterprise-contract}"
 ROOT_DIR=$( git rev-parse --show-toplevel )
 BUNDLES="release pipeline data task build_task"
 CONFTEST="go run github.com/open-policy-agent/conftest"
@@ -76,6 +76,7 @@ function cleanup() {
   rm -rf "${tmp_oci_dirs[@]}"
 }
 trap cleanup EXIT
+
 
 for b in $BUNDLES; do
   # Find the git sha where the source files were last updated

@@ -53,22 +53,7 @@ jobs:
         EC_AUTOMATION_KEY: ${{ secrets.EC_AUTOMATION_KEY }}
         APP_INSTALL_ID: 32872589
         REPO_ORG: hacbs-contract
-      run: |
-        set -o errexit
-        set -o pipefail
-        set -o nounset
-
-        function createJWT() {
-          local header=$(echo -n '{"alg":"RS256","typ":"JWT"}' | base64 | sed s/\+/-/ | sed -E s/=+$//)
-          local now_utc=$(date --utc +%s)
-          local payload=$(echo -n '{"iat":'$((now_utc - 60))',"exp":'$((now_utc + 120))',"iss":245286}' | base64 | sed s/\+/-/ | sed -E s/=+$//)
-          local signature=$(echo -n "${header}.${payload}" | openssl dgst -sha256 -binary -sign <(echo "${EC_AUTOMATION_KEY}")| base64 | tr -d '\n=' | tr -- '+/' '-_')
-          echo "${header}.${payload}.${signature}"
-        }
-
-        ENSURE_UNIQUE=1 \
-        GITHUB_TOKEN=$(curl -s -X POST -H "Authorization: Bearer $(createJWT)" -H "Accept: application/vnd.github+json" "https://api.github.com/app/installations/${APP_INSTALL_ID}/access_tokens" | jq -r .token) \
-        hack/update-bundles.sh
+      run: hack/update-bundles.sh
 
     - name: Docker login (quay.io/enterprise-contract)
       uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
@@ -82,20 +67,5 @@ jobs:
       env:
         EC_AUTOMATION_KEY: ${{ secrets.EC_AUTOMATION_KEY }}
         APP_INSTALL_ID: 32872589
-      run: |
-        set -o errexit
-        set -o pipefail
-        set -o nounset
-
-        function createJWT() {
-          local header=$(echo -n '{"alg":"RS256","typ":"JWT"}' | base64 | sed s/\+/-/ | sed -E s/=+$//)
-          local now_utc=$(date --utc +%s)
-          local payload=$(echo -n '{"iat":'$((now_utc - 60))',"exp":'$((now_utc + 120))',"iss":245286}' | base64 | sed s/\+/-/ | sed -E s/=+$//)
-          local signature=$(echo -n "${header}.${payload}" | openssl dgst -sha256 -binary -sign <(echo "${EC_AUTOMATION_KEY}")| base64 | tr -d '\n=' | tr -- '+/' '-_')
-          echo "${header}.${payload}.${signature}"
-        }
-
-        ENSURE_UNIQUE=1 \
-        GITHUB_TOKEN=$(curl -s -X POST -H "Authorization: Bearer $(createJWT)" -H "Accept: application/vnd.github+json" "https://api.github.com/app/installations/${APP_INSTALL_ID}/access_tokens" | jq -r .token) \
-        hack/update-bundles.sh
+      run: hack/update-bundles.sh
 

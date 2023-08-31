@@ -27,8 +27,8 @@ set -o nounset
 TARGET_DIR="${1}"
 cd "${TARGET_DIR}" || exit 1
 
-POLICY_DATA_REF='quay.io/hacbs-contract/ec-policy-data:latest'
-RELEASE_POLICY_REF='quay.io/hacbs-contract/ec-release-policy:latest'
+POLICY_DATA_REF='quay.io/enterprise-contract/ec-policy-data:latest'
+RELEASE_POLICY_REF='quay.io/enterprise-contract/ec-release-policy:latest'
 
 function oci_source() {
   img="${1}"

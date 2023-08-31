@@ -38,7 +38,7 @@ jobs:
         go-version-file: go.mod
         cache: true
 
-    # TODO: Remove this once all referecnes to quay.io/hacbs-contract are removed
+    # TODO: Remove this once all references to quay.io/hacbs-contract are removed
     - name: Docker login
       uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
       with:

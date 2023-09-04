@@ -3,7 +3,7 @@ module github.com/enterprise-contract/ec-policies
 go 1.19
 
 require (
-	github.com/open-policy-agent/conftest v0.44.1
+	github.com/open-policy-agent/conftest v0.45.0
 	github.com/open-policy-agent/opa v0.56.0
 	github.com/tektoncd/cli v0.31.2
 )
@@ -135,7 +135,6 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
 	github.com/gdamore/tcell/v2 v2.5.3 // indirect
-	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-akka/configuration v0.0.0-20200606091224-a002c0330665 // indirect
 	github.com/go-chi/chi v4.1.2+incompatible // indirect
 	github.com/go-errors/errors v1.0.1 // indirect

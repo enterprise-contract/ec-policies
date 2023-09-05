@@ -9,20 +9,20 @@ compatible with the `conftest pull` command.
 
 The latest versions of the bundles can be found in the following repos:
 
-https://quay.io/repository/hacbs-contract/ec-release-policy?tab=tags[`quay.io/hacbs-contract/ec-release-policy`]::
+https://quay.io/repository/enterprise-contract/ec-release-policy?tab=tags[`quay.io/enterprise-contract/ec-release-policy`]::
 
 Used for validating attestations created by Tekton Chains. Contains the
 contents of https://github.com/enterprise-contract/ec-policies/tree/main/policy/release[`policy/release`]
 and https://github.com/enterprise-contract/ec-policies/tree/main/policy/lib[`policy/lib`]
 in this repo.
 
-https://quay.io/repository/hacbs-contract/ec-pipeline-policy?tab=tags[`quay.io/hacbs-contract/ec-pipeline-policy`]::
+https://quay.io/repository/enterprise-contract/ec-pipeline-policy?tab=tags[`quay.io/enterprise-contract/ec-pipeline-policy`]::
 
 Used for validating Tekton Pipeline definitions. Contains the contents of
 https://github.com/enterprise-contract/ec-policies/tree/main/policy/pipeline[`policy/pipeline`]
 and https://github.com/enterprise-contract/ec-policies/tree/main/policy/lib[`policy/lib`].
 
-https://quay.io/repository/hacbs-contract/ec-policy-data?tab=tags[`quay.io/hacbs-contract/ec-policy-data`]::
+https://quay.io/repository/enterprise-contract/ec-policy-data?tab=tags[`quay.io/enterprise-contract/ec-policy-data`]::
 
 Contains the contents of https://github.com/enterprise-contract/ec-policies/tree/main/data[`data`] which is needed by both the policy bundles listed above.
 
@@ -38,6 +38,6 @@ attestations for the image being validated. For example:
 
 ```
 cosign download attestation quay.io/redhat-appstudio/ec-golden-image:latest | jq --slurp '{"attestations":[.[].payload|@base64d|fromjson]}' > input.json
-conftest pull -p . quay.io/hacbs-contract/ec-release-policy quay.io/hacbs-contract/ec-policy-data
+conftest pull -p . quay.io/enterprise-contract/ec-release-policy quay.io/enterprise-contract/ec-policy-data
 conftest test input.json -d data -p policy --all-namespaces -o json | yq -P
 ```

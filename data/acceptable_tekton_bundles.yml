@@ -1,6 +1,9 @@
 ---
 pipeline-bundles:
   quay.io/redhat-appstudio-tekton-catalog/pipeline-core-services-docker-build:
+    - digest: sha256:d4022baa537f4966a4c06a7406173e1516b5cc89116fbfda2955035431a43e25
+      effective_on: "2023-10-06T00:00:00Z"
+      tag: latest
     - digest: sha256:0e17eff2988f987e2653c917d62e87d4e05d515e9d43996bdd46e917bbd02f58
       effective_on: "2023-10-06T00:00:00Z"
       tag: latest
@@ -662,6 +665,9 @@ task-bundles:
       effective_on: "2023-08-17T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-update-infra-deployments:
+    - digest: sha256:daf02f09a7b0faa0ffb2ebca1751fe439b89696ce7d743069f07e2bb54585821
+      effective_on: "2023-10-06T00:00:00Z"
+      tag: "0.1"
     - digest: sha256:038e20ddb9858072b21f0756440c8b89303b188c1ce3773c018c5451d9d38843
       effective_on: "2023-10-06T00:00:00Z"
       tag: "0.1"

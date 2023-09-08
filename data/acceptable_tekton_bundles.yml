@@ -432,9 +432,6 @@ pipeline-bundles:
     - digest: sha256:d410244e778c0821590d862b0fa5d939516195121bf510c74a3894de22cf9ab6
       effective_on: "2023-09-08T00:00:00Z"
       tag: 3269d2853fe591b35f1d7ce11eb8572060052f5a
-    - digest: sha256:654345acf634cf092a0129b6b00766040cfe4c6dbea9cfd58ffd7b834d1afdf7
-      effective_on: "2023-09-03T00:00:00Z"
-      tag: 49ec9460ea5248229d89fad18814a36c4d1be32d
   quay.io/redhat-appstudio-tekton-catalog/pipeline-hacbs-docker-build:
     - digest: sha256:e71c4dd1d1a4ba320d370bc7d0cadb0ff8a5c199f9b2c47cc285e10b524d9ce6
       effective_on: "2023-02-26T00:00:00Z"
@@ -605,9 +602,6 @@ task-bundles:
       tag: "0.1"
     - digest: sha256:7cc28e197de625ee5e3ef2d1bb7bec48ce6b108331bcf57d4673291edb3f8499
       effective_on: "2023-09-08T00:00:00Z"
-      tag: "0.1"
-    - digest: sha256:21f9c6415c028fe54dcd12a2c1c78cc1f3d7563d3cd7fcbf5a2fdad6ad161888
-      effective_on: "2023-09-02T00:00:00Z"
       tag: "0.1"
   quay.io/redhat-appstudio-tekton-catalog/task-get-clair-scan:
     - digest: sha256:f5259b6194f73e43f8f1d8ec8f7cd7466209fbf8aaf8b8ac4cf653fc54fc6b3b

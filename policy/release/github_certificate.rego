@@ -22,6 +22,8 @@ import data.lib
 # custom:
 #   short_name: gh_workflow_extensions
 #   failure_msg: 'Missing extension %q'
+#   collections:
+#   - github
 #
 warn contains result if {
 	some extension in [_TRIGGER, _SHA, _NAME, _REPOSITORY, _REF]
@@ -39,6 +41,8 @@ warn contains result if {
 # custom:
 #   short_name: gh_workflow_repository
 #   failure_msg: 'Repository %q not in allowed list: %v'
+#   collections:
+#   - github
 #
 deny contains result if {
 	result := _check_extension(rego.metadata.chain(), "allowed_gh_workflow_repos", _REPOSITORY)
@@ -54,6 +58,8 @@ deny contains result if {
 # custom:
 #   short_name: gh_workflow_ref
 #   failure_msg: 'Ref %q not in allowed list: %v'
+#   collections:
+#   - github
 #
 deny contains result if {
 	result := _check_extension(rego.metadata.chain(), "allowed_gh_workflow_refs", _REF)
@@ -69,6 +75,8 @@ deny contains result if {
 # custom:
 #   short_name: gh_workflow_name
 #   failure_msg: 'Name %q not in allowed list: %v'
+#   collections:
+#   - github
 #
 deny contains result if {
 	result := _check_extension(rego.metadata.chain(), "allowed_gh_workflow_names", _NAME)
@@ -84,6 +92,8 @@ deny contains result if {
 # custom:
 #   short_name: gh_workflow_trigger
 #   failure_msg: 'Trigger %q not in allowed list: %v'
+#   collections:
+#   - github
 #
 deny contains result if {
 	result := _check_extension(rego.metadata.chain(), "allowed_gh_workflow_triggers", _TRIGGER)

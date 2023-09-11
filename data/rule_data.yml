@@ -26,8 +26,7 @@ rule_data:
   # See also the additional default rule data values defined in
   # https://github.com/enterprise-contract/ec-policies/blob/main/policy/lib/rule_data.rego
 
-  # Used in release/labels.rego. See the policy.release.labels docs for an explanation
-  # of how these are used.
+  # https://enterprisecontract.dev/docs/ec-policies/release_policy.html#labels__deprecated_labels
   deprecated_labels:
   - name: INSTALL
     replacement: install
@@ -46,8 +45,7 @@ rule_data:
   - name: Version
     replacement: version
 
-  # Used in release/labels.rego. See the policy.release.labels docs for an explanation
-  # of how these are used.
+  # https://enterprisecontract.dev/docs/ec-policies/release_policy.html#labels__required_labels
   required_labels:
   - name: architecture
     description: Architecture the software in the image should target.
@@ -82,8 +80,7 @@ rule_data:
   - name: version
     description: Version of the image.
 
-  # Used in release/labels.rego. See the policy.release.labels docs for an explanation
-  # of how these are used.
+  # https://enterprisecontract.dev/docs/ec-policies/release_policy.html#labels__optional_labels
   optional_labels:
   - name: maintainer
     description: >-
@@ -92,8 +89,7 @@ rule_data:
   - name: summary
     description: A short description of the image.
 
-  # Used in release/labels.rego. See the policy.release.labels docs for an explanation
-  # of how these are used.
+  # https://enterprisecontract.dev/docs/ec-policies/release_policy.html#labels__disallowed_inherited_labels
   disallowed_inherited_labels:
   - name: description
   - name: io.k8s.description
@@ -101,8 +97,12 @@ rule_data:
   - name: io.openshift.tags
   - name: summary
 
-  # Used in release/labels.rego. See the policy.release.labels docs for an explanation
-  # of how these are used.
+  # https://enterprisecontract.dev/docs/ec-policies/release_policy.html#labels__required_labels
   fbc_required_labels: []
+
+  # https://enterprisecontract.dev/docs/ec-policies/release_policy.html#labels__optional_labels
   fbc_optional_labels: []
+
+  # https://enterprisecontract.dev/docs/ec-policies/release_policy.html#labels__disallowed_inherited_labels
   fbc_disallowed_inherited_labels: []
+

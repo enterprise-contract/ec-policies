@@ -33,6 +33,14 @@ rule_data_defaults := {
 	# Valid levels: "critical", "high", "medium", and "low"
 	"restrict_cve_security_levels": ["critical", "high"],
 	"warn_cve_security_levels": [],
+	# Used in policy/release/slsa_source_correlated.rego
+	# According to https://pip.pypa.io/en/latest/topics/vcs-support/#vcs-support
+	# and https://spdx.dev/spdx-specification-20-web-version/#h.49x2ik5
+	"supported_vcs": ["git", "hg", "bzr", "svn"],
+	# Used in policy/release/slsa_source_correlated.rego
+	# Supported digests in DigestSet of SLSA Provenance v1.0
+	# See https://github.com/in-toto/attestation/blob/main/spec/v1/digest_set.md
+	"supported_digests": ["sha256", "sha224", "sha384", "sha512", "sha512_224", "sha512_256", "sha3_224", "sha3_256", "sha3_384", "sha3_512", "shake128", "shake256", "blake2b", "blake2s", "ripemd160", "sm3", "gost", "sha1", "md5", "gitCommit", "gitTree", "gitBlob", "gitTag"],
 }
 
 # Returns the "first found" of the following:

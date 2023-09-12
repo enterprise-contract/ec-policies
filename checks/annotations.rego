@@ -102,3 +102,31 @@ violation contains msg if {
 	count({dependency_rule_name} & all_rule_names) == 0
 	msg := sprintf("ERROR: Missing dependency rule %q at %s:%d", [dependency_rule_name, file, annotation.location.row])
 }
+
+all_rule_names_ary := [name |
+	some policy_files in policy_rule_files(input.namespaces)
+	some file in policy_files.files
+	some annotation in input.annotations
+
+	annotation.location.file == file
+
+	name := sprintf("%s.%s", [policy_files.namespace, annotation.annotations.custom.short_name])
+]
+
+# Validates that package.short_name is unique
+violation contains msg if {
+	some policy_files in policy_rule_files(input.namespaces)
+
+	some file in policy_files.files
+	some annotation in input.annotations
+
+	annotation.location.file == file
+
+	code := sprintf("%s.%s", [policy_files.namespace, annotation.annotations.custom.short_name])
+
+	duplicates := [r | some r in all_rule_names_ary; r == code]
+
+	count(duplicates) > 1
+
+	msg := sprintf("ERROR: Found non-unique code %q at %s:%d", [code, file, annotation.location.row])
+}

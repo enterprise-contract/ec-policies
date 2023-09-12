@@ -117,10 +117,56 @@ opa_inspect_missing_dependency := {
 	}],
 }
 
+opa_inspect_duplicate := {
+	"namespaces": {"data.policy.release.attestation_type": ["policy/release/attestation_type.rego"]},
+	"annotations": [
+		{
+			"annotations": {
+				"custom": {
+					"collections": ["minimal"],
+					"failure_msg": "Unknown attestation type '%s'",
+					"short_name": "known_attestation_type",
+					"solution": "Make sure the \"_type\" field in the attestation is supported. Supported types are configured in xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].",
+				},
+				"description": "A sanity check to confirm the attestation found for the image has a known attestation type.",
+				"scope": "rule",
+				"title": "Known attestation type found",
+			},
+			"location": {
+				"file": "policy/release/attestation_type.rego",
+				"row": 30,
+				"col": 1,
+			},
+		},
+		{
+			"annotations": {
+				"custom": {
+					"collections": ["minimal"],
+					"failure_msg": "Unknown attestation type '%s'",
+					"short_name": "known_attestation_type",
+					"solution": "Make sure the \"_type\" field in the attestation is supported. Supported types are configured in xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].",
+				},
+				"description": "A sanity check to confirm the attestation found for the image has a known attestation type.",
+				"scope": "rule",
+				"title": "Known attestation type found",
+			},
+			"location": {
+				"file": "policy/release/attestation_type.rego",
+				"row": 50,
+				"col": 1,
+			},
+		},
+	],
+}
+
 test_required_annotations_invalid {
 	lib.assert_equal({"ERROR: Missing annotation(s) custom.failure_msg, title at policy/release/attestation_task_bundle.rego:13"}, violation) with input as opa_inspect_missing_annotations
 }
 
 test_missing_dependency_invalid {
 	lib.assert_equal({"ERROR: Missing dependency rule \"data.policy.release.attestation_type.known_attestation_type\" at policy/release/attestation_task_bundle.rego:71"}, violation) with input as opa_inspect_missing_dependency
+}
+
+test_duplicate_rules {
+	lib.assert_equal({"ERROR: Found non-unique code \"data.policy.release.attestation_type.known_attestation_type\" at policy/release/attestation_type.rego:30", "ERROR: Found non-unique code \"data.policy.release.attestation_type.known_attestation_type\" at policy/release/attestation_type.rego:50"}, violation) with input as opa_inspect_duplicate
 }

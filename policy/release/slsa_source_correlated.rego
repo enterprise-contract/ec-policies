@@ -23,11 +23,11 @@ import data.lib
 nul := base64.decode("AA==")
 
 # METADATA
-# title: Expected source code reference
+# title: Source code reference provided
 # description: >-
 #   Warn if the expected source code reference is not provided.
 # custom:
-#   short_name: expected_source_code_reference
+#   short_name: source_code_reference_provided
 #   failure_msg: Expected source code reference was not provided for verification
 #   solution: >-
 #     Provide the expected source code reference in inputs.

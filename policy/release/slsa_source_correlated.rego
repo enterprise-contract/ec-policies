@@ -99,7 +99,11 @@ deny contains result if {
 	expected_revision := vcs_info.revision
 	expected_sources := {
 		sprintf("%s@sha1:%s", [expected_vcs_uri, expected_revision]),
+		sprintf("%s.git@sha1:%s", [expected_vcs_uri, expected_revision]), # tolerate missing .git suffix
+		sprintf("%s@sha1:%s", [trim_suffix(expected_vcs_uri, ".git"), expected_revision]), # tolerate extra or missing .git suffix
 		sprintf("%s@gitCommit:%s", [expected_vcs_uri, crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision]))]),
+		sprintf("%s.git@gitCommit:%s", [expected_vcs_uri, crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision]))]), # tolerate missing .git suffix
+		sprintf("%s@gitCommit:%s", [trim_suffix(expected_vcs_uri, ".git"), crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision]))]), # tolerate extra or missing .git suffix
 	}
 
 	# TODO: this is rather loose, this checks that the expected source is

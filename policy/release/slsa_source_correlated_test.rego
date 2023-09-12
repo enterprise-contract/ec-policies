@@ -86,6 +86,70 @@ test_deny_expected_source_code_reference_happy_day {
 			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"}, # printf 'commit 3\0ref' | sha1sum
 			"name": "inputs/result",
 		}])]
+
+	# missing .git suffix in input.image.source.git.url SLSA Provenance v0.2
+	lib.assert_empty(deny) with input.image as expected
+		with input.attestations as [_source_material_attestation("git+https://git.repository.git", "ref")]
+
+	# missing .git in predicate.materials.uri of SLSA Provenance v0.2
+	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+		with input.attestations as [_source_material_attestation("git+https://git.repository", "ref")]
+
+	# extra .git suffix in input.image.source.git.url SLSA Provenance v0.2
+	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git.git", "revision": "ref"}}}
+		with input.attestations as [_source_material_attestation("git+https://git.repository.git", "ref")]
+
+	# extra .git suffix in predicate.materials.uri SLSA Provenance v0.2
+	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+		with input.attestations as [_source_material_attestation("git+https://git.repository.git.git", "ref")]
+
+	# missing .git suffix in input.image.source.git.url SLSA Provenance v1.0
+	lib.assert_empty(deny) with input.image as expected
+		with input.attestations as [_source_resolvedDependencies_attestation("git+https://git.repository.git", "ref")]
+
+	# missing .git in predicate.resolvedDependencies.uri of SLSA Provenance v1.0
+	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+		with input.attestations as [_source_resolvedDependencies_attestation("git+https://git.repository", "ref")]
+
+	# extra .git suffix in input.image.source.git.url SLSA Provenance v1.0
+	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git.git", "revision": "ref"}}}
+		with input.attestations as [_source_resolvedDependencies_attestation("git+https://git.repository.git", "ref")]
+
+	# extra .git suffix in predicate.resolvedDependencies.uri SLSA Provenance v0.2
+	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+		with input.attestations as [_source_resolvedDependencies_attestation("git+https://git.repository.git.git", "ref")]
+
+	# missing .git suffix in input.image.source.git.url SLSA Provenance v1.0, gitCommit support
+	lib.assert_empty(deny) with input.image as expected
+		with input.attestations as [_resolvedDependencies_attestation([{
+			"uri": "git+https://git.repository.git",
+			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"},
+			"name": "inputs/result",
+		}])]
+
+	# missing .git in predicate.resolvedDependencies.uri of SLSA Provenance v1.0, gitCommit support
+	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+		with input.attestations as [_resolvedDependencies_attestation([{
+			"uri": "git+https://git.repository",
+			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"},
+			"name": "inputs/result",
+		}])]
+
+	# extra .git suffix in input.image.source.git.url SLSA Provenance v1.0, gitCommit support
+	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git.git", "revision": "ref"}}}
+		with input.attestations as [_resolvedDependencies_attestation([{
+			"uri": "git+https://git.repository.git",
+			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"},
+			"name": "inputs/result",
+		}])]
+
+	# extra .git suffix in predicate.resolvedDependencies.uri SLSA Provenance v0.2, gitCommit support
+	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+		with input.attestations as [_resolvedDependencies_attestation([{
+			"uri": "git+https://git.repository.git.git",
+			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"},
+			"name": "inputs/result",
+		}])]
 }
 
 test_deny_expected_source_code_reference_v02 {

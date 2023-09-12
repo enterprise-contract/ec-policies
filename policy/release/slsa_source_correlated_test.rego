@@ -10,7 +10,7 @@ test_warn_missing_source_code_happy_day {
 
 test_warn_missing_expected_source_code_reference {
 	expected := {{
-		"code": "slsa_source_correlated.expected_source_code_reference",
+		"code": "slsa_source_correlated.source_code_reference_provided",
 		"msg": "Expected source code reference was not provided for verification",
 	}}
 	lib.assert_equal_results(warn, expected) with input as {}

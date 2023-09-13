@@ -40,7 +40,7 @@ jobs:
 
     # TODO: Remove this once all references to quay.io/hacbs-contract are removed
     - name: Docker login
-      uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
+      uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
       with:
         # See also BUNDLE_REPO defined in Makefile
         registry: quay.io
@@ -56,7 +56,7 @@ jobs:
       run: hack/update-bundles.sh
 
     - name: Docker login (quay.io/enterprise-contract)
-      uses: docker/login-action@465a07811f14bebb1938fbed4728c6a1ff8901fc # v2.2.0
+      uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
       with:
         # See also BUNDLE_REPO defined in Makefile
         registry: quay.io

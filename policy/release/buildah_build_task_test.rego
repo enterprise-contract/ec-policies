@@ -9,6 +9,28 @@ import data.lib
 test_good_dockerfile_param if {
 	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "./Dockerfile"}})
 	lib.assert_empty(deny) with input.attestations as [attestation]
+	slsav1_attestation := _slsav1_attestation("buildah", [{"name": "DOCKERFILE", "value": "./Dockerfile"}])
+	lib.assert_empty(deny) with input.attestations as [slsav1_attestation]
+}
+
+test_buildah_tasks if {
+	tasks := [
+		{
+			"name": "task/buildah",
+			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {}}),
+		},
+		{
+			"name": "task/buildah",
+			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {}}),
+		},
+	]
+	slsav1_attestation := json.patch(_slsav1_attestation("buildah", [{"name": "DOCKERFILE", "value": "./Dockerfile"}]), [{
+		"op": "add",
+		"path": "/statement/predicate/buildDefinition/resolvedDependencies",
+		"value": tasks,
+	}])
+
+	lib.assert_equal({{"kind": "TaskRun", "metadata": {"name": "buildah"}, "spec": {}}}, buildah_tasks) with input.attestations as [slsav1_attestation]
 }
 
 test_dockerfile_param_https_source if {
@@ -18,6 +40,9 @@ test_dockerfile_param_https_source if {
 	}}
 	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "https://Dockerfile"}})
 	lib.assert_equal_results(expected, deny) with input.attestations as [attestation]
+
+	slsav1_attestation := _slsav1_attestation("buildah", [{"name": "DOCKERFILE", "value": "https://Dockerfile"}])
+	lib.assert_equal_results(expected, deny) with input.attestations as [slsav1_attestation]
 }
 
 test_dockerfile_param_http_source if {
@@ -27,15 +52,20 @@ test_dockerfile_param_http_source if {
 	}}
 	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "http://Dockerfile"}})
 	lib.assert_equal_results(expected, deny) with input.attestations as [attestation]
+
+	slsav1_attestation := _slsav1_attestation("buildah", [{"name": "DOCKERFILE", "value": "http://Dockerfile"}])
+	lib.assert_equal_results(expected, deny) with input.attestations as [slsav1_attestation]
 }
 
 test_buildah_task_has_dockerfile_param if {
 	expected := {{
 		"code": "buildah_build_task.buildah_task_has_dockerfile_param",
-		"msg": "The DOCKERFILE param was not included in the buildah task(s): \"ignored\"",
-		"term": "ignored",
+		"msg": "The DOCKERFILE param was not included in the buildah task(s): \"buildah\"",
+		"term": "buildah",
 	}}
 	lib.assert_equal_results(expected, deny) with input.attestations as [_attestation("buildah", {})]
+
+	lib.assert_equal_results(expected, deny) with input.attestations as [_slsav1_attestation("buildah", {})]
 }
 
 test_task_not_named_buildah if {
@@ -45,6 +75,9 @@ test_task_not_named_buildah if {
 test_missing_pipeline_run_attestations if {
 	attestation := {"statement": {"predicate": {"buildType": "something/else"}}}
 	lib.assert_empty(deny) with input.attestations as [attestation]
+
+	slsav1_attestation := {"statement": {"predicate": {"buildDefinition": {"buildType": "something/else"}}}}
+	lib.assert_empty(deny) with input.attestations as [slsav1_attestation]
 }
 
 test_multiple_buildah_tasks if {
@@ -64,6 +97,23 @@ test_multiple_buildah_tasks if {
 		]},
 	}}}
 	lib.assert_empty(deny) with input.attestations as [attestation]
+
+	tasks := [
+		{
+			"name": "task/buildah",
+			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {"params": [{"name": "DOCKERFILE", "value": "none"}]}}),
+		},
+		{
+			"name": "task/buildah",
+			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {"params": [{"name": "DOCKERFILE", "value": "none"}]}}),
+		},
+	]
+	slsav1_attestation := json.patch(_slsav1_attestation("buildah", {}), [{
+		"op": "add",
+		"path": "/statement/predicate/buildDefinition/resolvedDependencies",
+		"value": tasks,
+	}])
+	lib.assert_empty(deny) with input.attestations as [slsav1_attestation]
 }
 
 test_multiple_buildah_tasks_one_without_params if {
@@ -83,40 +133,28 @@ test_multiple_buildah_tasks_one_without_params if {
 	}}}
 	expected := {{
 		"code": "buildah_build_task.buildah_task_has_dockerfile_param",
-		"msg": "The DOCKERFILE param was not included in the buildah task(s): \"b2\"",
-		"term": "b2",
+		"msg": "The DOCKERFILE param was not included in the buildah task(s): \"buildah\"",
+		"term": "buildah",
 	}}
 	lib.assert_equal_results(expected, deny) with input.attestations as [attestation]
-}
 
-test_multiple_buildah_tasks_all_without_params if {
-	attestation := {"statement": {"predicate": {
-		"buildType": lib.pipelinerun_att_build_types[0],
-		"buildConfig": {"tasks": [
-			{
-				"name": "b1",
-				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
-				"invocation": {"parameters": {}},
-			},
-			{
-				"name": "b2",
-				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
-			},
-		]},
-	}}}
-	expected := {
+	tasks := [
 		{
-			"code": "buildah_build_task.buildah_task_has_dockerfile_param",
-			"msg": "The DOCKERFILE param was not included in the buildah task(s): \"b1\"",
-			"term": "b1",
+			"name": "task/buildah",
+			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {"params": [{"name": "DOCKERFILE", "value": "none"}]}}),
 		},
 		{
-			"code": "buildah_build_task.buildah_task_has_dockerfile_param",
-			"msg": "The DOCKERFILE param was not included in the buildah task(s): \"b2\"",
-			"term": "b2",
+			"name": "task/buildah",
+			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {}}),
 		},
-	}
-	lib.assert_equal_results(expected, deny) with input.attestations as [attestation]
+	]
+	slsav1_attestation := json.patch(_slsav1_attestation("buildah", {}), [{
+		"op": "add",
+		"path": "/statement/predicate/buildDefinition/resolvedDependencies",
+		"value": tasks,
+	}])
+
+	lib.assert_equal_results(expected, deny) with input.attestations as [slsav1_attestation]
 }
 
 test_multiple_buildah_tasks_one_with_external_dockerfile if {
@@ -140,17 +178,50 @@ test_multiple_buildah_tasks_one_with_external_dockerfile if {
 		"msg": "DOCKERFILE param value (http://Dockerfile) is an external source",
 	}}
 	lib.assert_equal_results(expected, deny) with input.attestations as [attestation]
+
+	tasks := [
+		{
+			"name": "task/buildah",
+			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {"params": [{"name": "DOCKERFILE", "value": "none"}]}}),
+		},
+		{
+			"name": "task/buildah",
+			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {"params": [{"name": "DOCKERFILE", "value": "http://Dockerfile"}]}}),
+		},
+	]
+	slsav1_attestation := json.patch(_slsav1_attestation("buildah", {}), [{
+		"op": "add",
+		"path": "/statement/predicate/buildDefinition/resolvedDependencies",
+		"value": tasks,
+	}])
+
+	lib.assert_equal_results(expected, deny) with input.attestations as [slsav1_attestation]
 }
 
 _attestation(task_name, params) = attestation if {
 	attestation := {"statement": {"predicate": {
 		"buildType": lib.pipelinerun_att_build_types[0],
 		"buildConfig": {"tasks": [{
-			"name": "ignored",
+			"name": task_name,
 			"ref": {"kind": "Task", "name": task_name, "bundle": _bundle},
 			"invocation": params,
 		}]},
 	}}}
+}
+
+_slsav1_attestation(task_name, params) := attestation if {
+	content := json.marshal({"metadata": {"name": task_name}, "kind": "TaskRun", "spec": {"params": params}})
+	attestation := {"statement": {
+		"predicateType": "https://slsa.dev/provenance/v1",
+		"predicate": {"buildDefinition": {
+			"buildType": "https://tekton.dev/chains/v2/slsa-tekton",
+			"externalParameters": {"runSpec": {"pipelineSpec": {}}},
+			"resolvedDependencies": [{
+				"name": "task/git-init",
+				"content": content,
+			}],
+		}},
+	}}
 }
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"

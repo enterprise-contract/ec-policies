@@ -8,6 +8,11 @@ pipelinerun_att_build_types := [
 	"https://tekton.dev/attestations/chains/pipelinerun@v2",
 ]
 
+slsav1_pipelinerun_att_build_types := [
+	"https://tekton.dev/chains/v2/slsa",
+	"https://tekton.dev/chains/v2/slsa-tekton",
+]
+
 taskrun_att_build_types := [
 	"tekton.dev/v1beta1/TaskRun",
 	# Legacy build type
@@ -35,7 +40,7 @@ pipelinerun_slsa_provenance_v1 := [statement |
 	att := input.attestations[_]
 	statement := _statement(att)
 	statement.predicateType == "https://slsa.dev/provenance/v1"
-	statement.predicate.buildDefinition.buildType == "https://tekton.dev/chains/v2/slsa"
+	statement.predicate.buildDefinition.buildType == slsav1_pipelinerun_att_build_types[_]
 
 	# TODO: Workaround to distinguish between taskrun and pipelinerun attestations
 	spec_keys := object.keys(statement.predicate.buildDefinition.externalParameters.runSpec)

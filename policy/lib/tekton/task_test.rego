@@ -24,6 +24,73 @@ test_tasks_from_attestation if {
 	lib.assert_equal(expected, tasks(attestation))
 }
 
+test_tasks_from_slsav1_tekton_attestation if {
+	content := json.marshal({"metadata": {"name": "git-init"}, "kind": "TaskRun", "spec": {}})
+	git_init := {
+		"name": "task/git-init",
+		"uri": "oci://gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init",
+		"digest": {"sha256": "28ff94e63e4058afc3f15b4c11c08cf3b54fa91faa646a4bbac90380cd7158df"},
+		"content": content,
+	}
+
+	attestation := {
+		"predicateType": "https://slsa.dev/provenance/v1",
+		"predicate": {"buildDefinition": {
+			"buildType": "https://tekton.dev/chains/v2/slsa-tekton",
+			"externalParameters": {"runSpec": {"pipelineSpec": {}}},
+			"resolvedDependencies": [git_init],
+		}},
+	}
+	lib.assert_equal({{"metadata": {"name": "git-init"}, "kind": "TaskRun", "spec": {}}}, tasks(attestation))
+}
+
+test_tasks_from_slsav1_tekton_mixture_attestation if {
+	content1 := json.marshal({"metadata": {"name": "git-init"}, "kind": "TaskRun"})
+	content2 := json.marshal({"metadata": {"name": "git-init-2"}, "kind": "TaskRun"})
+	content3 := json.marshal({"metadata": {"name": "git-init-3"}, "kind": "TaskRun"})
+	git_init := {
+		"name": "task/git-init",
+		"uri": "oci://gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init",
+		"digest": {"sha256": "28ff94e63e4058afc3f15b4c11c08cf3b54fa91faa646a4bbac90380cd7158df"},
+		"content": content1,
+	}
+	git_init_pipeline := {
+		"name": "pipelineTask/git-init",
+		"uri": "oci://gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init",
+		"digest": {"sha256": "28ff94e63e4058afc3f15b4c11c08cf3b54fa91faa646a4bbac90380cd7158df"},
+		"content": content2,
+	}
+	git_init_bad := {
+		"name": "pipeline/git-init",
+		"uri": "oci://gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init",
+		"digest": {"sha256": "28ff94e63e4058afc3f15b4c11c08cf3b54fa91faa646a4bbac90380cd7158df"},
+		"content": content3,
+	}
+
+	attestation := {"predicate": {"buildDefinition": {
+		"buildType": "https://tekton.dev/chains/v2/tekton-slsa",
+		"resolvedDependencies": [
+			git_init,
+			git_init_pipeline,
+			git_init_bad,
+		],
+	}}}
+	lib.assert_equal({{"metadata": {"name": "git-init"}, "kind": "TaskRun"}, {"metadata": {"name": "git-init-2"}, "kind": "TaskRun"}}, tasks(attestation))
+}
+
+test_tasks_from_slsav1_attestation if {
+	git_init := {
+		"name": "task/git-init",
+		"uri": "oci://gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init",
+		"digest": {"sha256": "28ff94e63e4058afc3f15b4c11c08cf3b54fa91faa646a4bbac90380cd7158df"},
+	}
+	attestation := {"predicate": {"buildDefinition": {
+		"buildType": "https://tekton.dev/chains/v2/tekton-slsa",
+		"resolvedDependencies": [git_init],
+	}}}
+	lib.assert_equal(set(), tasks(attestation))
+}
+
 test_tasks_from_pipeline if {
 	git_clone := {"taskRef": {"name": "git-clone"}}
 	buildah := {"taskRef": {"name": "buildah"}}
@@ -54,6 +121,12 @@ test_tasks_not_found if {
 
 test_task_param if {
 	task := {"params": [{"name": "NETWORK", "value": "none"}]}
+	lib.assert_equal("none", task_param(task, "NETWORK"))
+	not task_param(task, "missing")
+}
+
+test_task_slsav1_param if {
+	task := {"kind": "TaskRun", "metadata": {"name": "buildah"}, "spec": {"params": [{"name": "NETWORK", "value": "none"}]}}
 	lib.assert_equal("none", task_param(task, "NETWORK"))
 	not task_param(task, "missing")
 }
@@ -185,6 +258,11 @@ test_task_data_bundle_ref if {
 			},
 		}),
 	)
+}
+
+test_task_names if {
+	content := {"metadata": {"name": "git-init"}, "kind": "TaskRun"}
+	lib.assert_equal({"git-init"}, task_names(content))
 }
 
 test_task_data_no_bundle_Ref if {

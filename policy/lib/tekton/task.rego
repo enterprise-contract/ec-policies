@@ -26,9 +26,19 @@ current_required_default_tasks contains task if {
 tasks(obj) := _tasks if {
 	_tasks := {task |
 		some task in _maybe_tasks(obj)
-		task_ref := refs.task_ref(task)
-		task_ref.kind == "task"
+		_slsa_task(task)
 	}
+}
+
+# task from a slsav0.1 or slsav0.2 attestation
+_slsa_task(task) if {
+	task_ref := refs.task_ref(task)
+	task_ref.kind == "task"
+}
+
+# slsav1 returns the whole TaskRun resource
+_slsa_task(task) if {
+	task.kind == "TaskRun"
 }
 
 # _maybe_tasks returns a set of potential tasks.
@@ -40,12 +50,33 @@ _maybe_tasks(attestation) := _tasks if {
 
 # Handle tasks from a Pipeline defintion.
 _maybe_tasks(pipeline) := _tasks if {
-	not pipeline.predicate.buildConfig
+	pipeline.spec
 	spec := object.get(pipeline, "spec", {})
 	_tasks := array.concat(
 		object.get(spec, "tasks", []),
 		object.get(spec, "finally", []),
 	)
+}
+
+# handle tasks from a slsav1 attestation
+_maybe_tasks(slsav1) := _tasks if {
+	slsav1.predicate.buildDefinition
+	_tasks := {json.unmarshal(dep.content) |
+		some dep in slsav1.predicate.buildDefinition.resolvedDependencies
+		_slsav1_tekton(dep)
+	}
+}
+
+# check if a resolvedDependency is a pipeline task
+_slsav1_tekton(dep) if {
+	"pipelineTask" == split(dep.name, "/")[0]
+	dep.content
+}
+
+# check if a resolvedDependency is a standalone task
+_slsav1_tekton(dep) if {
+	"task" == split(dep.name, "/")[0]
+	dep.content
 }
 
 # tasks_names returns the set of task names extracted from the
@@ -64,13 +95,23 @@ tasks_names(obj) := names if {
 # task named "my-task" which takes the parameter "spam" with
 # value "maps".
 task_names(task) := names if {
-	raw_name := refs.task_ref(task).name
+	raw_name := task_name(task)
 	name := split(raw_name, "[")[0] # don't allow smuggling task name with parameters
 	params := {n |
 		some k, v in _task_params(task)
 		n := sprintf("%s[%s=%s]", [name, k, v])
 	}
 	names := {name} | params
+}
+
+# task name from a v0.1 and v0.2 attestation
+task_name(task) := name if {
+	name := refs.task_ref(task).name
+}
+
+# task name from a slsav1 attestation
+task_name(task) := name if {
+	name := task.metadata.name
 }
 
 # _task_params returns an object where keys are parameter names
@@ -85,6 +126,16 @@ _task_params(task) := params if {
 	task.params
 	params := {name: value |
 		some param in task.params
+		name := _key_value(param, "name")
+		value := _key_value(param, "value")
+	}
+}
+
+# handle params from a taskRun
+_task_params(task) := params if {
+	task.spec.params
+	params := {name: value |
+		some param in task.spec.params
 		name := _key_value(param, "name")
 		value := _key_value(param, "value")
 	}

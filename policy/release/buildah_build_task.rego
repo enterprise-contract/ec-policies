@@ -33,7 +33,8 @@ deny contains result if {
 	buildah_tasks
 	some buildah_task in buildah_tasks
 	not lib.tkn.task_param(buildah_task, "DOCKERFILE")
-	result := lib.result_helper_with_term(rego.metadata.chain(), [buildah_task.name], buildah_task.name)
+	name := lib.tkn.task_name(buildah_task)
+	result := lib.result_helper_with_term(rego.metadata.chain(), [name], name)
 }
 
 # METADATA
@@ -63,9 +64,23 @@ _not_allowed_prefix(search) if {
 }
 
 buildah_tasks contains task if {
-	some att in lib.pipelinerun_attestations
+	some att in _att
 	some task in lib.tkn.tasks(att)
 	"buildah" in lib.tkn.task_names(task)
+}
+
+_att := att if {
+	att := {a |
+		some a in lib.pipelinerun_slsa_provenance_v1
+	}
+	count(att) > 0
+}
+
+_att := att if {
+	att := {a |
+		some a in lib.pipelinerun_attestations
+	}
+	count(att) > 0
 }
 
 dockerfile_params contains param if {

@@ -27,7 +27,6 @@ set -o nounset
 TARGET_DIR="${1}"
 cd "${TARGET_DIR}" || exit 1
 
-POLICY_DATA_REF='quay.io/enterprise-contract/ec-policy-data:latest'
 RELEASE_POLICY_REF='quay.io/enterprise-contract/ec-release-policy:latest'
 
 function oci_source() {
@@ -64,12 +63,9 @@ function update_ecp_resources() {
 }
 
 echo 'Resolving bundle image references...'
-POLICY_DATA_REF_OCI="$(oci_source ${POLICY_DATA_REF})"
-echo "Resolved policy data is ${POLICY_DATA_REF_OCI}"
 RELEASE_POLICY_REF_OCI="$(oci_source ${RELEASE_POLICY_REF})"
 echo "Resolved release policy is ${RELEASE_POLICY_REF_OCI}"
 
 echo 'Updating infra-deployments...'
-update_ecp_resources data "${POLICY_DATA_REF_OCI}"
 update_ecp_resources policy "${RELEASE_POLICY_REF_OCI}"
 echo 'infra-deployments updated successfully'

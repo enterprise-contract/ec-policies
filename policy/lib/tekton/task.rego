@@ -36,11 +36,6 @@ _slsa_task(task) if {
 	task_ref.kind == "task"
 }
 
-# slsav1 returns the whole TaskRun resource
-_slsa_task(task) if {
-	task.kind == "TaskRun"
-}
-
 # _maybe_tasks returns a set of potential tasks.
 # Handle tasks from a PipelineRun attestation.
 _maybe_tasks(attestation) := _tasks if {
@@ -69,13 +64,13 @@ _maybe_tasks(slsav1) := _tasks if {
 
 # check if a resolvedDependency is a pipeline task
 _slsav1_tekton(dep) if {
-	"pipelineTask" == split(dep.name, "/")[0]
+	"pipelineTask" == dep.name
 	dep.content
 }
 
 # check if a resolvedDependency is a standalone task
 _slsav1_tekton(dep) if {
-	"task" == split(dep.name, "/")[0]
+	"task" == dep.name
 	dep.content
 }
 
@@ -107,11 +102,6 @@ task_names(task) := names if {
 # task name from a v0.1 and v0.2 attestation
 task_name(task) := name if {
 	name := refs.task_ref(task).name
-}
-
-# task name from a slsav1 attestation
-task_name(task) := name if {
-	name := task.metadata.name
 }
 
 # _task_params returns an object where keys are parameter names

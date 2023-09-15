@@ -16,12 +16,12 @@ test_good_dockerfile_param if {
 test_buildah_tasks if {
 	tasks := [
 		{
-			"name": "task/buildah",
-			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {}}),
+			"name": "pipelineTask",
+			"content": json.marshal(lib.tkn.slsav1_attestation_local_spec),
 		},
 		{
-			"name": "task/buildah",
-			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {}}),
+			"name": "pipelineTask",
+			"content": json.marshal(lib.tkn.slsav1_attestation_local_spec),
 		},
 	]
 	slsav1_attestation := json.patch(_slsav1_attestation("buildah", [{"name": "DOCKERFILE", "value": "./Dockerfile"}]), [{
@@ -30,7 +30,8 @@ test_buildah_tasks if {
 		"value": tasks,
 	}])
 
-	lib.assert_equal({{"kind": "TaskRun", "metadata": {"name": "buildah"}, "spec": {}}}, buildah_tasks) with input.attestations as [slsav1_attestation]
+	expected := {{"params": [{"name": "IMAGE", "value": "quay.io/jstuart/hacbs-docker-build"}, {"name": "DOCKERFILE", "value": "./image_with_labels/Dockerfile"}], "podTemplate": {"imagePullSecrets": [{"name": "docker-chains"}], "securityContext": {"fsGroup": 65532}}, "serviceAccountName": "default", "taskRef": {"kind": "Task", "name": "buildah"}, "timeout": "1h0m0s", "workspaces": [{"name": "source", "persistentVolumeClaim": {"claimName": "pvc-bf2ed289ae"}}, {"name": "dockerconfig", "secret": {"secretName": "docker-credentials"}}]}}
+	lib.assert_equal(expected, buildah_tasks) with input.attestations as [slsav1_attestation]
 }
 
 test_dockerfile_param_https_source if {
@@ -63,13 +64,13 @@ test_buildah_task_has_dockerfile_param if {
 		"msg": "The DOCKERFILE param was not included in the buildah task(s): \"buildah\"",
 		"term": "buildah",
 	}}
-	lib.assert_equal_results(expected, deny) with input.attestations as [_attestation("buildah", {})]
+	lib.assert_equal_results(expected, deny) with input.attestations as [_attestation("buildah", [{}])]
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_slsav1_attestation("buildah", {})]
+	lib.assert_equal_results(expected, deny) with input.attestations as [_slsav1_attestation("buildah", [{}])]
 }
 
 test_task_not_named_buildah if {
-	lib.assert_empty(deny) with input.attestations as [_attestation("java", {})]
+	lib.assert_empty(deny) with input.attestations as [_attestation("java", [{}])]
 }
 
 test_missing_pipeline_run_attestations if {
@@ -100,15 +101,31 @@ test_multiple_buildah_tasks if {
 
 	tasks := [
 		{
-			"name": "task/buildah",
-			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {"params": [{"name": "DOCKERFILE", "value": "none"}]}}),
+			"name": "task",
+			"content": json.marshal(json.patch(lib.tkn.slsav1_attestation_local_spec, [{
+				"op": "add",
+				"path": "/taskRef/name",
+				"value": "task1",
+			}])),
 		},
 		{
-			"name": "task/buildah",
-			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {"params": [{"name": "DOCKERFILE", "value": "none"}]}}),
+			"name": "pipelineTask",
+			"content": json.marshal(json.patch(lib.tkn.slsav1_attestation_local_spec, [{
+				"op": "add",
+				"path": "/taskRef/name",
+				"value": "task1",
+			}])),
+		},
+		{
+			"name": "pipeline",
+			"content": json.marshal(json.patch(lib.tkn.slsav1_attestation_local_spec, [{
+				"op": "add",
+				"path": "/taskRef/name",
+				"value": "task1",
+			}])),
 		},
 	]
-	slsav1_attestation := json.patch(_slsav1_attestation("buildah", {}), [{
+	slsav1_attestation := json.patch(_slsav1_attestation("buildah", [{}]), [{
 		"op": "add",
 		"path": "/statement/predicate/buildDefinition/resolvedDependencies",
 		"value": tasks,
@@ -140,15 +157,23 @@ test_multiple_buildah_tasks_one_without_params if {
 
 	tasks := [
 		{
-			"name": "task/buildah",
-			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {"params": [{"name": "DOCKERFILE", "value": "none"}]}}),
+			"name": "task",
+			"content": json.marshal(json.patch(lib.tkn.slsav1_attestation_local_spec, [{
+				"op": "add",
+				"path": "/taskRef/name",
+				"value": "task1",
+			}])),
 		},
 		{
-			"name": "task/buildah",
-			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {}}),
+			"name": "pipelineTask",
+			"content": json.marshal(json.patch(lib.tkn.slsav1_attestation_local_spec, [{
+				"op": "add",
+				"path": "/params",
+				"value": [{}],
+			}])),
 		},
 	]
-	slsav1_attestation := json.patch(_slsav1_attestation("buildah", {}), [{
+	slsav1_attestation := json.patch(_slsav1_attestation("buildah", [{}]), [{
 		"op": "add",
 		"path": "/statement/predicate/buildDefinition/resolvedDependencies",
 		"value": tasks,
@@ -181,12 +206,20 @@ test_multiple_buildah_tasks_one_with_external_dockerfile if {
 
 	tasks := [
 		{
-			"name": "task/buildah",
-			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {"params": [{"name": "DOCKERFILE", "value": "none"}]}}),
+			"name": "task",
+			"content": json.marshal(json.patch(lib.tkn.slsav1_attestation_local_spec, [{
+				"op": "add",
+				"path": "params",
+				"value": [{"name": "DOCKERFILE", "value": "Dockerfile"}],
+			}])),
 		},
 		{
-			"name": "task/buildah",
-			"content": json.marshal({"metadata": {"name": "buildah"}, "kind": "TaskRun", "spec": {"params": [{"name": "DOCKERFILE", "value": "http://Dockerfile"}]}}),
+			"name": "pipelineTask",
+			"content": json.marshal(json.patch(lib.tkn.slsav1_attestation_local_spec, [{
+				"op": "add",
+				"path": "/params",
+				"value": [{"name": "DOCKERFILE", "value": "http://Dockerfile"}],
+			}])),
 		},
 	]
 	slsav1_attestation := json.patch(_slsav1_attestation("buildah", {}), [{
@@ -210,14 +243,25 @@ _attestation(task_name, params) = attestation if {
 }
 
 _slsav1_attestation(task_name, params) := attestation if {
-	content := json.marshal({"metadata": {"name": task_name}, "kind": "TaskRun", "spec": {"params": params}})
+	content := json.marshal(json.patch(lib.tkn.slsav1_attestation_local_spec, [
+		{
+			"op": "replace",
+			"path": "/params",
+			"value": params,
+		},
+		{
+			"op": "replace",
+			"path": "/taskRef/name",
+			"value": task_name,
+		},
+	]))
 	attestation := {"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
 		"predicate": {"buildDefinition": {
 			"buildType": "https://tekton.dev/chains/v2/slsa-tekton",
 			"externalParameters": {"runSpec": {"pipelineSpec": {}}},
 			"resolvedDependencies": [{
-				"name": "task/git-init",
+				"name": "pipelineTask",
 				"content": content,
 			}],
 		}},

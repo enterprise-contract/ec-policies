@@ -35,6 +35,7 @@ import data.lib.tkn
 #   collections:
 #   - minimal
 #   - redhat
+#   - slsa3
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -42,6 +43,32 @@ deny contains result if {
 	some att in lib.pipelinerun_attestations
 	count(tkn.tasks(att)) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
+}
+
+# METADATA
+# title: Successful pipeline tasks
+# description: >-
+#   Ensure that all of the Tasks in the Pipeline completed successfully. Note that
+#   skipped Tasks are not taken into account and do not influence the outcome.
+# custom:
+#   short_name: successful_pipeline_tasks
+#   failure_msg: Pipeline task %q did not complete successfully, %q
+#   solution: >-
+#     Make sure the build pipeline is properly configured so all the tasks can be
+#     executed successfully.
+#   collections:
+#   - minimal
+#   - redhat
+#   - slsa3
+#   depends_on:
+#   - tasks.pipeline_has_tasks
+#
+deny contains result if {
+	some att in lib.pipelinerun_attestations
+	some task in tkn.tasks(att)
+	status := _status(task)
+	status != "Succeeded"
+	result := lib.result_helper_with_term(rego.metadata.chain(), [task.name, status], task.name)
 }
 
 # METADATA
@@ -174,3 +201,7 @@ required_pipeline_task_data := task_data if {
 	count(tkn.tasks(att)) > 0
 	task_data := tkn.required_task_list(att)
 }
+
+_status(task) := status if {
+	status := task.status
+} else = "MISSING"

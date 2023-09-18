@@ -6,6 +6,48 @@ import future.keywords.contains
 import future.keywords.if
 import future.keywords.in
 
+test_no_tasks_present if {
+	expected := {{
+		"code": "tasks.pipeline_has_tasks",
+		"msg": "No tasks found in PipelineRun attestation",
+	}}
+
+	lib.assert_equal_results(deny, expected) with input.attestations as [{"statement": {"predicate": {
+		"buildType": lib.pipelinerun_att_build_types[0],
+		"buildConfig": {"tasks": []},
+	}}}]
+}
+
+test_failed_tasks if {
+	expected := {
+		{
+			"code": "tasks.successful_pipeline_tasks",
+			"msg": "Pipeline task \"av-scanner-p\" did not complete successfully, \"Failed\"",
+			"term": "av-scanner-p",
+		},
+		{
+			"code": "tasks.successful_pipeline_tasks",
+			"msg": "Pipeline task \"cve-scanner-p\" did not complete successfully, \"MISSING\"",
+			"term": "cve-scanner-p",
+		},
+	}
+
+	tasks := [
+		_task("buildah"),
+		json.patch(_task("av-scanner"), [{
+			"op": "add",
+			"path": "/status",
+			"value": "Failed",
+		}]),
+		json.remove(_task("cve-scanner"), ["/status"]),
+	]
+
+	lib.assert_equal_results(deny, expected) with input.attestations as [{"statement": {"predicate": {
+		"buildType": lib.pipelinerun_att_build_types[0],
+		"buildConfig": {"tasks": tasks},
+	}}}]
+}
+
 test_required_tasks_met if {
 	attestations := _attestations_with_tasks(_expected_required_tasks, [])
 	lib.assert_empty(deny) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
@@ -85,19 +127,6 @@ test_current_equal_latest_also if {
 		with input.attestations as attestations
 }
 
-test_no_tasks_present if {
-	expected := {{
-		"code": "tasks.pipeline_has_tasks",
-		"msg": "No tasks found in PipelineRun attestation",
-	}}
-
-	lib.assert_equal_results(deny, expected) with data["pipeline-required-tasks"] as _time_based_required_tasks
-		with input.attestations as [{"statement": {"predicate": {
-			"buildType": lib.pipelinerun_att_build_types[0],
-			"buildConfig": {"tasks": []},
-		}}}]
-}
-
 test_parameterized if {
 	with_wrong_parameter := [
 		{
@@ -166,14 +195,25 @@ _task(name) = task if {
 	parts := regex.split("[\\[\\]=]", name)
 	parts[1]
 	task_name := parts[0]
+	pipeline_task_name := sprintf("%s-p", [task_name])
 
-	task := {"ref": {"name": task_name, "kind": "Task", "bundle": _bundle}, "invocation": {"parameters": {parts[1]: parts[2]}}}
+	task := {
+		"name": pipeline_task_name,
+		"status": "Succeeded",
+		"ref": {"name": task_name, "kind": "Task", "bundle": _bundle},
+		"invocation": {"parameters": {parts[1]: parts[2]}},
+	}
 }
 
 _task(name) = task if {
 	parts := regex.split("[\\[\\]=]", name)
 	not parts[1]
-	task := {"ref": {"name": name, "kind": "Task", "bundle": _bundle}}
+	pipeline_task_name := sprintf("%s-p", [name])
+	task := {
+		"name": pipeline_task_name,
+		"status": "Succeeded",
+		"ref": {"name": name, "kind": "Task", "bundle": _bundle},
+	}
 }
 
 _missing_tasks_violation(tasks) = errors if {

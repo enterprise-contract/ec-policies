@@ -30,6 +30,14 @@ task_ref(task) = i {
 		"kind": lower(_param(r, "kind", "task")),
 	}
 } else = i {
+	r := _ref(task)
+	r.resolver == "git"
+	i := {
+		"url": _param(r, "url", ""),
+		"revision": _param(r, "revision", ""),
+		"pathInRepo": _param(r, "pathInRepo", ""),
+	}
+} else = i {
 	# Handle local reference
 	r := _ref(task)
 	i := {
@@ -50,4 +58,7 @@ _ref(task) = r {
 } else = r {
 	# Reference from within a Pipeline definition
 	r := task.taskRef
+} else = r {
+	# reference from a taskRun in a slsav1 attestation
+	r := task.spec.taskRef
 }

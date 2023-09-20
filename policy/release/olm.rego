@@ -32,14 +32,15 @@ olm_manifestv1 := "operators.operatorframework.io.bundle.manifests.v1"
 #   - redhat
 #
 deny contains result if {
-	manifestDir := input.image.config.Labels[olm_manifestv1]
+	manifest_dir := input.image.config.Labels[olm_manifestv1]
 
 	some path, manifest in input.image.files
 
 	# only consider files in the manifest path as determined by the OLM manifest v1 label
-	startswith(path, manifestDir)
+	startswith(path, manifest_dir)
 
 	# only consider this API prefix, disregard the version
+	# regal ignore:prefer-snake-case
 	startswith(manifest.apiVersion, "operators.coreos.com/")
 
 	# only consider CSV manifests
@@ -57,6 +58,7 @@ _name(o) := n if {
 
 # Finds all image references and their locations (paths). Returns all image
 # references (parsed into components) found in locations as specified by:
+# regal ignore:line-length
 # https://github.com/containerbuildsystem/operator-manifest/blob/f24cd9374f5ad9fed04f47701acffa16837d940e/README.md#pull-specifications
 # and https://osbs.readthedocs.io/en/latest/users.html#pullspec-locations
 all_image_ref(manifest) := [e |
@@ -72,17 +74,22 @@ all_image_ref(manifest) := [e |
 	# as the components of manifest.metadata.annotations.containerImage could be undefined!
 	some imgs in [
 		[r |
+			# regal ignore:prefer-snake-case
 			some i, related in manifest.spec.relatedImages
 			r := {"path": sprintf("spec.relatedImages[%d].image", [i]), "ref": image.parse(related.image)}
 		],
 		[r |
+			# regal ignore:prefer-snake-case
 			manifest.metadata.annotations.containerImage
-			r := {"path": "annotations.containerImage", "ref": image.parse(manifest.metadata.annotations.containerImage)}
+			r := {
+				"path": "annotations.containerImage",
+				"ref": image.parse(manifest.metadata.annotations.containerImage),
+			}
 		],
 		[r |
 			some _, values in walk(manifest)
 			some key, val in values.metadata.annotations
-			some annotation in regex.split("(,|;|\\n|\\s+)", val)
+			some annotation in regex.split(`(,|;|\n|\s+)`, val)
 			ref := image.parse(trim_space(annotation))
 			ref.repo # ones that are parsed as image reference, detected by having "repo" property set
 			r := {"path": sprintf("annotations[%q]", [key]), "ref": ref}
@@ -91,13 +98,27 @@ all_image_ref(manifest) := [e |
 			some d, deployment in manifest.spec.install.spec.deployments
 			some c, container in deployment.spec.template.spec.containers
 			ref := image.parse(container.image)
-			r := {"path": sprintf("spec.install.spec.deployments[%d (%q)].spec.template.spec.containers[%d (%q)].image", [d, _name(deployment), c, _name(container)]), "ref": ref}
+			r := {
+				"path": sprintf(
+					"spec.install.spec.deployments[%d (%q)].spec.template.spec.containers[%d (%q)].image",
+					[d, _name(deployment), c, _name(container)],
+				),
+				"ref": ref,
+			}
 		],
 		[r |
 			some d, deployment in manifest.spec.install.spec.deployments
+
+			# regal ignore:prefer-snake-case
 			some c, initContainer in deployment.spec.template.spec.initContainers
 			ref := image.parse(initContainer.image)
-			r := {"path": sprintf("spec.install.spec.deployments[%d (%q)].spec.template.spec.initContainers[%d (%q)].image", [d, _name(deployment), c, _name(initContainer)]), "ref": ref}
+			r := {
+				"path": sprintf(
+					"spec.install.spec.deployments[%d (%q)].spec.template.spec.initContainers[%d (%q)].image",
+					[d, _name(deployment), c, _name(initContainer)],
+				),
+				"ref": ref,
+			}
 		],
 		[r |
 			some d, deployment in manifest.spec.install.spec.deployments
@@ -105,15 +126,29 @@ all_image_ref(manifest) := [e |
 			some e in container.env
 			startswith(e.name, "RELATED_IMAGE_")
 			ref := image.parse(e.value)
-			r := {"path": sprintf("spec.install.spec.deployments[%d (%q)].spec.template.spec.containers[%d (%q)].env[%q]", [d, _name(deployment), c, _name(container), e.name]), "ref": ref}
+			r := {
+				"path": sprintf(
+					"spec.install.spec.deployments[%d (%q)].spec.template.spec.containers[%d (%q)].env[%q]",
+					[d, _name(deployment), c, _name(container), e.name],
+				),
+				"ref": ref,
+			}
 		],
 		[r |
 			some d, deployment in manifest.spec.install.spec.deployments
+
+			# regal ignore:prefer-snake-case
 			some c, initContainer in deployment.spec.template.spec.initContainers
 			some e in initContainer.env
 			startswith(e.name, "RELATED_IMAGE_")
 			ref := image.parse(e.value)
-			r := {"path": sprintf("spec.install.spec.deployments[%d (%q)].spec.template.spec.initContainers[%d (%q)].env[%q]", [d, _name(deployment), c, _name(initContainer), e.name]), "ref": ref}
+			r := {
+				"path": sprintf(
+					"spec.install.spec.deployments[%d (%q)].spec.template.spec.initContainers[%d (%q)].env[%q]",
+					[d, _name(deployment), c, _name(initContainer), e.name],
+				),
+				"ref": ref,
+			}
 		],
 	]
 	some i in imgs

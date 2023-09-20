@@ -1,23 +1,29 @@
 package lib
 
+import future.keywords.in
+
 import data.lib.tkn
 
-pipelinerun_att_build_types := [
-	"tekton.dev/v1beta1/PipelineRun",
+tekton_pipeline_run := "tekton.dev/v1beta1/PipelineRun"
+
+pipelinerun_att_build_types := {
+	tekton_pipeline_run,
 	# Legacy build type
 	"https://tekton.dev/attestations/chains/pipelinerun@v2",
-]
+}
 
-slsav1_pipelinerun_att_build_types := [
+slsav1_pipelinerun_att_build_types := {
 	"https://tekton.dev/chains/v2/slsa",
 	"https://tekton.dev/chains/v2/slsa-tekton",
-]
+}
 
-taskrun_att_build_types := [
-	"tekton.dev/v1beta1/TaskRun",
+tekton_task_run := "tekton.dev/v1beta1/TaskRun"
+
+taskrun_att_build_types := {
+	tekton_task_run,
 	# Legacy build type
 	"https://tekton.dev/attestations/chains@v2",
-]
+}
 
 # (We can't call this test_task_result_name since anything prefixed
 # with test_ is treated as though it was a test.)
@@ -29,18 +35,19 @@ build_base_images_digests_result_name := "BASE_IMAGES_DIGESTS"
 
 # These are the ones we're interested in
 pipelinerun_attestations := [statement |
-	att := input.attestations[_]
+	some att in input.attestations
 	statement := _statement(att)
-	statement.predicate.buildType == pipelinerun_att_build_types[_]
+	statement.predicate.buildType in pipelinerun_att_build_types
 ]
 
 # TODO: Make this work with pipelinerun_attestations above so policy rules can be
 # written for either.
 pipelinerun_slsa_provenance_v1 := [statement |
-	att := input.attestations[_]
+	some att in input.attestations
 	statement := _statement(att)
 	statement.predicateType == "https://slsa.dev/provenance/v1"
-	statement.predicate.buildDefinition.buildType == slsav1_pipelinerun_att_build_types[_]
+
+	statement.predicate.buildDefinition.buildType in slsav1_pipelinerun_att_build_types
 
 	# TODO: Workaround to distinguish between taskrun and pipelinerun attestations
 	spec_keys := object.keys(statement.predicate.buildDefinition.externalParameters.runSpec)
@@ -50,18 +57,19 @@ pipelinerun_slsa_provenance_v1 := [statement |
 
 # These ones we don't care about any more
 taskrun_attestations := [statement |
-	att := input.attestations[_]
+	some att in input.attestations
 	statement := _statement(att)
-	statement.predicate.buildType == taskrun_att_build_types[_]
+
+	statement.predicate.buildType in taskrun_att_build_types
 ]
 
-_statement(att) = statement {
+_statement(att) := statement {
 	statement := att.statement
 } else = att
 
 tasks_from_pipelinerun := [task |
-	att := pipelinerun_attestations[_]
-	task := att.predicate.buildConfig.tasks[_]
+	some att in pipelinerun_attestations
+	some task in att.predicate.buildConfig.tasks
 ]
 
 # All results from the attested PipelineRun with the provided name. Results are
@@ -70,36 +78,32 @@ tasks_from_pipelinerun := [task |
 #   name: name of the task in which the result appears.
 #   name: Tekton bundle image reference for the corresponding task.
 #   value: unmarshalled task result.
-results_named(name) = results {
-	results := [r |
-		task := tasks_from_pipelinerun[_]
-		result := task.results[_]
-		result.name == name
-		result_map := unmarshal(result.value)
+results_named(name) := [r |
+	some task in tasks_from_pipelinerun
+	some result in task.results
+	result.name == name
+	result_map := unmarshal(result.value)
 
-		# Inject the task data, currently task name and task bundle image
-		# reference so we can show it in failure messages
-		r := object.union({"value": result_map}, tkn.task_data(task))
-	]
-}
+	# Inject the task data, currently task name and task bundle image
+	# reference so we can show it in failure messages
+	r := object.union({"value": result_map}, tkn.task_data(task))
+]
 
 # Attempts to json.unmarshal the given value. If not possible, the given
 # value is returned as is. This is helpful when interpreting certain values
 # in attestations created by Tekton Chains.
-unmarshal(raw) = value {
+unmarshal(raw) := value {
 	json.is_valid(raw)
-	value = json.unmarshal(raw)
+	value := json.unmarshal(raw)
 } else = raw
 
 # (Don't call it test_results since test_ means a unit test)
-results_from_tests = results {
-	# First find results using the new task result name
-	results := results_named(task_test_result_name)
-}
+# First find results using the new task result name
+results_from_tests := results_named(task_test_result_name)
 
 # Check for a task by name. Return the task if found
-task_in_pipelinerun(name) = task {
-	task := tasks_from_pipelinerun[_]
+task_in_pipelinerun(name) := task {
+	some task in tasks_from_pipelinerun
 	task.name == name
 	task
 }
@@ -107,7 +111,7 @@ task_in_pipelinerun(name) = task {
 # Check for a task result by name
 result_in_task(task_name, result_name) {
 	task := task_in_pipelinerun(task_name)
-	task_result := task.results[_]
+	some task_result in task.results
 	task_result.name == result_name
 }
 

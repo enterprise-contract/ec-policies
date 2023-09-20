@@ -1,16 +1,17 @@
 # Copied from https://github.com/open-policy-agent/contrib/tree/main/simplecov/simplecov.rego
 package simplecov
 
-import future.keywords
+import future.keywords.if
+import future.keywords.in
 
 from_opa := {"coverage": coverage}
 
-coverage[file] = obj if {
+coverage[file] := obj if {
 	some file, report in input.files
 	obj := {"lines": lines(report)}
 }
 
-covered_map(report) = cm if {
+covered_map(report) := cm if {
 	covered := object.get(report, "covered", [])
 	cm := {line: 1 |
 		some item in covered
@@ -18,7 +19,7 @@ covered_map(report) = cm if {
 	}
 }
 
-not_covered_map(report) = ncm if {
+not_covered_map(report) := ncm if {
 	not_covered := object.get(report, "not_covered", [])
 	ncm := {line: 0 |
 		some item in not_covered
@@ -26,7 +27,7 @@ not_covered_map(report) = ncm if {
 	}
 }
 
-lines(report) = lines if {
+lines(report) := lines if {
 	cm := covered_map(report)
 	ncm := not_covered_map(report)
 	keys := sort([line | some line, _ in object.union(cm, ncm)])
@@ -38,15 +39,15 @@ lines(report) = lines if {
 	]
 }
 
-to_value(cm, _, line) = 1 if {
+to_value(cm, _, line) := 1 if {
 	cm[line]
 }
 
-to_value(_, ncm, line) = 0 if {
+to_value(_, ncm, line) := 0 if {
 	ncm[line]
 }
 
-to_value(cm, ncm, line) = null if {
+to_value(cm, ncm, line) := null if {
 	not cm[line]
 	not ncm[line]
 }

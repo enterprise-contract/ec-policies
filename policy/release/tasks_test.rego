@@ -1,6 +1,7 @@
-package policy.release.tasks
+package policy.release.tasks_test
 
 import data.lib
+import data.policy.release.tasks
 
 import future.keywords.contains
 import future.keywords.if
@@ -12,8 +13,8 @@ test_no_tasks_present if {
 		"msg": "No tasks found in PipelineRun attestation",
 	}}
 
-	lib.assert_equal_results(deny, expected) with input.attestations as [{"statement": {"predicate": {
-		"buildType": lib.pipelinerun_att_build_types[0],
+	lib.assert_equal_results(tasks.deny, expected) with input.attestations as [{"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
 		"buildConfig": {"tasks": []},
 	}}}]
 }
@@ -32,7 +33,7 @@ test_failed_tasks if {
 		},
 	}
 
-	tasks := [
+	given_tasks := [
 		_task("buildah"),
 		json.patch(_task("av-scanner"), [{
 			"op": "add",
@@ -42,26 +43,26 @@ test_failed_tasks if {
 		json.remove(_task("cve-scanner"), ["/status"]),
 	]
 
-	lib.assert_equal_results(deny, expected) with input.attestations as [{"statement": {"predicate": {
-		"buildType": lib.pipelinerun_att_build_types[0],
-		"buildConfig": {"tasks": tasks},
+	lib.assert_equal_results(tasks.deny, expected) with input.attestations as [{"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": given_tasks},
 	}}}]
 }
 
 test_required_tasks_met if {
 	attestations := _attestations_with_tasks(_expected_required_tasks, [])
-	lib.assert_empty(deny) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
+	lib.assert_empty(tasks.deny) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
 		with input.attestations as attestations
 }
 
 test_required_tasks_met_no_label if {
 	attestations := _attestations_with_tasks(_expected_required_tasks, [])
-	lib.assert_empty(deny) with data["required-tasks"] as _time_based_required_tasks
+	lib.assert_empty(tasks.deny) with data["required-tasks"] as _time_based_required_tasks
 		with data["pipeline-required-tasks"] as {}
 		with input.attestations as attestations
 
 	attestations_no_label := _attestations_with_tasks_no_label(_expected_required_tasks, [])
-	lib.assert_empty(deny) with data["required-tasks"] as _time_based_required_tasks
+	lib.assert_empty(tasks.deny) with data["required-tasks"] as _time_based_required_tasks
 		with input.attestations as attestations_no_label
 }
 
@@ -71,7 +72,10 @@ test_required_tasks_warning_no_label if {
 		"code": "tasks.pipeline_required_tasks_list_provided",
 		"msg": "Required tasks do not exist for pipeline",
 	}}
-	lib.assert_equal_results(expected, warn) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
+	lib.assert_equal_results(
+		expected,
+		tasks.warn,
+	) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
 		with input.attestations as attestations
 }
 
@@ -80,13 +84,16 @@ test_required_tasks_not_met if {
 	attestations := _attestations_with_tasks(_expected_required_tasks - missing_tasks, [])
 
 	expected := _missing_tasks_violation(missing_tasks)
-	lib.assert_equal_results(expected, deny) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
+	lib.assert_equal_results(
+		expected,
+		tasks.deny,
+	) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
 		with input.attestations as attestations
 }
 
 test_future_required_tasks_met if {
 	attestations := _attestations_with_tasks(_expected_future_required_tasks, [])
-	lib.assert_empty(warn) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
+	lib.assert_empty(tasks.warn) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
 		with input.attestations as attestations
 }
 
@@ -95,35 +102,44 @@ test_future_required_tasks_not_met if {
 	attestations := _attestations_with_tasks(_expected_required_tasks - missing_tasks, [])
 
 	expected := _missing_tasks_warning(missing_tasks)
-	lib.assert_equal_results(expected, warn) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
+	lib.assert_equal_results(
+		expected,
+		tasks.warn,
+	) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
 		with input.attestations as attestations
 }
 
 test_extra_tasks_ignored if {
 	attestations := _attestations_with_tasks(_expected_future_required_tasks | {"spam"}, [])
-	lib.assert_empty(deny) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
+	lib.assert_empty(tasks.deny) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
 		with input.attestations as attestations
-	lib.assert_empty(warn) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
+	lib.assert_empty(tasks.warn) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
 		with input.attestations as attestations
 }
 
 test_current_equal_latest if {
-	required_tasks := {"generic": [{"effective_on": "2021-01-01T00:00:00Z", "tasks": _time_based_required_pipeline_tasks.generic[0].tasks}]}
+	required_tasks := {"generic": [{
+		"effective_on": "2021-01-01T00:00:00Z",
+		"tasks": _time_based_required_pipeline_tasks.generic[0].tasks,
+	}]}
 	attestations := _attestations_with_tasks(_expected_future_required_tasks, [])
 
-	lib.assert_empty(deny | warn) with data["pipeline-required-tasks"] as required_tasks
+	lib.assert_empty(tasks.deny | tasks.warn) with data["pipeline-required-tasks"] as required_tasks
 		with input.attestations as attestations
 }
 
 test_current_equal_latest_also if {
-	required_tasks := {"generic": [{"effective_on": "2021-01-01T00:00:00Z", "tasks": _time_based_required_pipeline_tasks.generic[0].tasks}]}
+	required_tasks := {"generic": [{
+		"effective_on": "2021-01-01T00:00:00Z",
+		"tasks": _time_based_required_pipeline_tasks.generic[0].tasks,
+	}]}
 	attestations := _attestations_with_tasks(_expected_required_tasks, [])
 
-	lib.assert_empty(warn) with data["pipeline-required-tasks"] as required_tasks
+	lib.assert_empty(tasks.warn) with data["pipeline-required-tasks"] as required_tasks
 		with input.attestations as attestations
 
 	expected_denies := _missing_tasks_violation(_expected_future_required_tasks - _expected_required_tasks)
-	lib.assert_equal_results(expected_denies, deny) with data["pipeline-required-tasks"] as required_tasks
+	lib.assert_equal_results(expected_denies, tasks.deny) with data["pipeline-required-tasks"] as required_tasks
 		with input.attestations as attestations
 }
 
@@ -149,7 +165,10 @@ test_parameterized if {
 	attestations := _attestations_with_tasks({"git-clone", "buildah"}, with_wrong_parameter)
 
 	expected := _missing_tasks_violation({"label-check[POLICY_NAMESPACE=required_checks]"})
-	lib.assert_equal_results(deny, expected) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
+	lib.assert_equal_results(
+		tasks.deny,
+		expected,
+	) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
 		with input.attestations as attestations
 }
 
@@ -159,7 +178,8 @@ test_required_tasks_founds_data if {
 		"code": "tasks.required_tasks_list_provided",
 		"msg": "Missing required task-bundles data",
 	}}
-	lib.assert_equal_results(expected, deny) with data["required-tasks"] as [] with input.attestations as attestations
+	lib.assert_equal_results(expected, tasks.deny) with data["required-tasks"] as []
+		with input.attestations as attestations
 		with data["pipeline-required-tasks"] as {}
 }
 
@@ -169,30 +189,31 @@ test_missing_required_pipeline_data if {
 		"code": "tasks.pipeline_required_tasks_list_provided",
 		"msg": "Required tasks do not exist for pipeline",
 	}}
-	lib.assert_equal_results(expected, warn) with data["required-tasks"] as _expected_required_tasks with input.attestations as attestations
+	lib.assert_equal_results(expected, tasks.warn) with data["required-tasks"] as _expected_required_tasks
+		with input.attestations as attestations
 }
 
-_attestations_with_tasks(names, add_tasks) = attestations if {
-	tasks := array.concat([t | t := _task(names[_])], add_tasks)
+_attestations_with_tasks(names, add_tasks) := attestations if {
+	tasks := array.concat([t | some name in names; t := _task(name)], add_tasks)
 
 	attestations := [{"statement": {"predicate": {
-		"buildType": lib.pipelinerun_att_build_types[0],
+		"buildType": lib.tekton_pipeline_run,
 		"buildConfig": {"tasks": tasks},
 		"invocation": {"environment": {"labels": {"pipelines.openshift.io/runtime": "generic"}}},
 	}}}]
 }
 
-_attestations_with_tasks_no_label(names, add_tasks) = attestations if {
-	tasks := array.concat([t | t := _task(names[_])], add_tasks)
+_attestations_with_tasks_no_label(names, add_tasks) := attestations if {
+	tasks := array.concat([t | some name in names; t := _task(name)], add_tasks)
 
 	attestations := [{"statement": {"predicate": {
-		"buildType": lib.pipelinerun_att_build_types[0],
+		"buildType": lib.tekton_pipeline_run,
 		"buildConfig": {"tasks": tasks},
 	}}}]
 }
 
-_task(name) = task if {
-	parts := regex.split("[\\[\\]=]", name)
+_task(name) := task if {
+	parts := regex.split(`[\[\]=]`, name)
 	parts[1]
 	task_name := parts[0]
 	pipeline_task_name := sprintf("%s-p", [task_name])
@@ -205,8 +226,8 @@ _task(name) = task if {
 	}
 }
 
-_task(name) = task if {
-	parts := regex.split("[\\[\\]=]", name)
+_task(name) := task if {
+	parts := regex.split(`[\[\]=]`, name)
 	not parts[1]
 	pipeline_task_name := sprintf("%s-p", [name])
 	task := {
@@ -216,25 +237,21 @@ _task(name) = task if {
 	}
 }
 
-_missing_tasks_violation(tasks) = errors if {
-	errors := {error |
-		some task in tasks
-		error := {
-			"code": "tasks.required_tasks_found",
-			"msg": sprintf("Required task %q is missing", [task]),
-			"term": task,
-		}
+_missing_tasks_violation(tasks) := {error |
+	some task in tasks
+	error := {
+		"code": "tasks.required_tasks_found",
+		"msg": sprintf("Required task %q is missing", [task]),
+		"term": task,
 	}
 }
 
-_missing_tasks_warning(tasks) = warnings if {
-	warnings := {warning |
-		some task in tasks
-		warning := {
-			"code": "tasks.future_required_tasks_found",
-			"msg": sprintf("Task %q is missing and will be required in the future", [task]),
-			"term": task,
-		}
+_missing_tasks_warning(tasks) := {warning |
+	some task in tasks
+	warning := {
+		"code": "tasks.future_required_tasks_found",
+		"msg": sprintf("Task %q is missing and will be required in the future", [task]),
+		"term": task,
 	}
 }
 

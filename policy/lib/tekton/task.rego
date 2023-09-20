@@ -23,11 +23,9 @@ current_required_default_tasks contains task if {
 }
 
 # tasks returns the set of tasks found in the object.
-tasks(obj) := _tasks if {
-	_tasks := {task |
-		some task in _maybe_tasks(obj)
-		_slsa_task(task)
-	}
+tasks(obj) := {task |
+	some task in _maybe_tasks(obj)
+	_slsa_task(task)
 }
 
 # task from a slsav0.1 or slsav0.2 attestation
@@ -77,11 +75,9 @@ _slsav1_tekton(dep) if {
 # tasks_names returns the set of task names extracted from the
 # given object. It expands names to include the parameterized
 # form, see task_names.
-tasks_names(obj) := names if {
-	names := {name |
-		some task in tasks(obj)
-		some name in task_names(task)
-	}
+tasks_names(obj) := {name |
+	some task in tasks(obj)
+	some name in task_names(task)
 }
 
 # task_names returns the different names of the task. Additional
@@ -100,16 +96,12 @@ task_names(task) := names if {
 }
 
 # task name from a v0.1 and v0.2 attestation
-task_name(task) := name if {
-	name := refs.task_ref(task).name
-}
+task_name(task) := refs.task_ref(task).name
 
 # _task_params returns an object where keys are parameter names
 # and values are parameter values.
 # Handle parameters of a task from a PipelineRun attestation.
-_task_params(task) := params if {
-	params := task.invocation.parameters
-}
+_task_params(task) := task.invocation.parameters
 
 # Handle parameters of a task in a Pipeline definition.
 _task_params(task) := params if {
@@ -132,8 +124,10 @@ _task_params(task) := params if {
 }
 
 # task_param returns the value of the given parameter in the task.
-task_param(task, name) := value if {
-	value := _task_params(task)[name]
+task_param(task, name) := params if {
+	# without this we end up with https://docs.styra.com/regal/rules/bugs/top-level-iteration
+	# regal ignore:unconditional-assignment
+	params := _task_params(task)[name]
 }
 
 # task_result returns the value of the given result in the task.
@@ -167,7 +161,7 @@ git_clone_task(attestation) := task if {
 
 # task_data returns the data relating to the task. If the task is
 # referenced from a bundle, the "bundle" attribute is included.
-task_data(task) = info if {
+task_data(task) := info if {
 	r := refs.task_ref(task)
 	info := {"name": r.name, "bundle": r.bundle}
 } else := info if {
@@ -180,6 +174,4 @@ _key_value(obj, name) := value if {
 }
 
 # task_labels returns the key/value pair of task labels
-task_labels := labels if {
-	labels := input.metadata.labels
-}
+task_labels := input.metadata.labels

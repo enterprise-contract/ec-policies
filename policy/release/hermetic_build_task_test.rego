@@ -1,11 +1,12 @@
-package policy.release.hermetic_build_task
+package policy.release.hermetic_build_task_test
 
 import future.keywords.if
 
 import data.lib
+import data.policy.release.hermetic_build_task
 
 test_hermetic_build if {
-	lib.assert_empty(deny) with input.attestations as [_good_attestation]
+	lib.assert_empty(hermetic_build_task.deny) with input.attestations as [_good_attestation]
 }
 
 test_not_hermetic_build if {
@@ -19,14 +20,15 @@ test_not_hermetic_build if {
 		"path": "/statement/predicate/buildConfig/tasks/0/invocation/parameters/HERMETIC",
 		"value": "false",
 	}])
-	lib.assert_equal_results(expected, deny) with input.attestations as [hermetic_not_true]
+	lib.assert_equal_results(expected, hermetic_build_task.deny) with input.attestations as [hermetic_not_true]
 
+	# regal ignore:line-length
 	hermetic_missing := json.remove(_good_attestation, ["/statement/predicate/buildConfig/tasks/0/invocation/parameters/HERMETIC"])
-	lib.assert_equal_results(expected, deny) with input.attestations as [hermetic_missing]
+	lib.assert_equal_results(expected, hermetic_build_task.deny) with input.attestations as [hermetic_missing]
 }
 
 _good_attestation := {"statement": {"predicate": {
-	"buildType": lib.pipelinerun_att_build_types[0],
+	"buildType": lib.tekton_pipeline_run,
 	"buildConfig": {"tasks": [{
 		"results": [
 			{"name": "IMAGE_URL", "value": "registry/repo"},

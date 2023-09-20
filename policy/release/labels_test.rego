@@ -1,12 +1,13 @@
-package policy.release.labels
+package policy.release.labels_test
 
 import future.keywords.if
 
 import data.lib
+import data.policy.release.labels
 
 test_all_good if {
-	lib.assert_empty(deny | warn) with input.image as _image with data.rule_data as _rule_data
-	lib.assert_empty(deny | warn) with input.image as _fbc_image with data.rule_data as _rule_data
+	lib.assert_empty(labels.deny | labels.warn) with input.image as _image with data.rule_data as _rule_data
+	lib.assert_empty(labels.deny | labels.warn) with input.image as _fbc_image with data.rule_data as _rule_data
 }
 
 test_deprecated_image_labels if {
@@ -16,7 +17,7 @@ test_deprecated_image_labels if {
 		"term": "oldie",
 	}}
 
-	lib.assert_equal_results(deny, expected) with input.image as json.patch(_image, [{
+	lib.assert_equal_results(labels.deny, expected) with input.image as json.patch(_image, [{
 		"op": "add",
 		"path": "/config/Labels/oldie",
 		"value": "sudo rm -rf /",
@@ -31,7 +32,7 @@ test_required_image_labels if {
 		"term": "name",
 	}}
 
-	lib.assert_equal_results(deny, expected) with input.image as json.remove(_image, ["/config/Labels/name"])
+	lib.assert_equal_results(labels.deny, expected) with input.image as json.remove(_image, ["/config/Labels/name"])
 		with data.rule_data as _rule_data
 }
 
@@ -42,7 +43,10 @@ test_fbc_required_image_labels if {
 		"term": "fbc.name",
 	}}
 
-	lib.assert_equal_results(deny, expected) with input.image as json.remove(_fbc_image, ["/config/Labels/fbc.name"])
+	lib.assert_equal_results(
+		labels.deny,
+		expected,
+	) with input.image as json.remove(_fbc_image, ["/config/Labels/fbc.name"])
 		with data.rule_data as _rule_data
 }
 
@@ -53,7 +57,7 @@ test_optional_image_labels if {
 		"term": "summary",
 	}}
 
-	lib.assert_equal_results(warn, expected) with input.image as json.remove(_image, ["/config/Labels/summary"])
+	lib.assert_equal_results(labels.warn, expected) with input.image as json.remove(_image, ["/config/Labels/summary"])
 		with data.rule_data as _rule_data
 }
 
@@ -64,7 +68,10 @@ test_fbc_optional_image_labels if {
 		"term": "fbc.summary",
 	}}
 
-	lib.assert_equal_results(warn, expected) with input.image as json.remove(_fbc_image, ["/config/Labels/fbc.summary"])
+	lib.assert_equal_results(
+		labels.warn,
+		expected,
+	) with input.image as json.remove(_fbc_image, ["/config/Labels/fbc.summary"])
 		with data.rule_data as _rule_data
 }
 
@@ -79,16 +86,16 @@ test_disallowed_inherited_image_labels if {
 		{"op": "add", "path": "/config/Labels/unique", "value": "spam"},
 		{"op": "add", "path": "/parent/config/Labels/unique", "value": "spam"},
 	])
-	lib.assert_equal_results(deny, expected) with input.image as image with data.rule_data as _rule_data
+	lib.assert_equal_results(labels.deny, expected) with input.image as image with data.rule_data as _rule_data
 
 	# A missing label on either image does not trigger a violation.
-	lib.assert_empty(deny) with input.image as json.patch(_image, [{
+	lib.assert_empty(labels.deny) with input.image as json.patch(_image, [{
 		"op": "add",
 		"path": "/parent/config/Labels/unique",
 		"value": "spam",
 	}])
 		with data.rule_data as _rule_data
-	lib.assert_empty(deny) with input.image as json.patch(_image, [{
+	lib.assert_empty(labels.deny) with input.image as json.patch(_image, [{
 		"op": "add",
 		"path": "/config/Labels/unique",
 		"value": "spam",
@@ -107,16 +114,16 @@ test_fbc_disallowed_inherited_image_labels if {
 		{"op": "add", "path": "/config/Labels/fbc.unique", "value": "spam"},
 		{"op": "add", "path": "/parent/config/Labels/fbc.unique", "value": "spam"},
 	])
-	lib.assert_equal_results(deny, expected) with input.image as image with data.rule_data as _rule_data
+	lib.assert_equal_results(labels.deny, expected) with input.image as image with data.rule_data as _rule_data
 
 	# A missing label on either image does not trigger a violation.
-	lib.assert_empty(deny) with input.image as json.patch(_fbc_image, [{
+	lib.assert_empty(labels.deny) with input.image as json.patch(_fbc_image, [{
 		"op": "add",
 		"path": "/parent/config/Labels/fbc.unique",
 		"value": "spam",
 	}])
 		with data.rule_data as _rule_data
-	lib.assert_empty(deny) with input.image as json.patch(_fbc_image, [{
+	lib.assert_empty(labels.deny) with input.image as json.patch(_fbc_image, [{
 		"op": "add",
 		"path": "/config/Labels/fbc.unique",
 		"value": "spam",

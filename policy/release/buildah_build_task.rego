@@ -59,8 +59,9 @@ deny contains result if {
 }
 
 _not_allowed_prefix(search) if {
-	not_allowed := ["http://", "https://"]
-	startswith(search, not_allowed[_])
+	not_allowed_prefixes := ["http://", "https://"]
+	some not_allowed_prefix in not_allowed_prefixes
+	startswith(search, not_allowed_prefix)
 }
 
 buildah_tasks contains task if {

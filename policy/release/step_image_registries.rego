@@ -33,8 +33,9 @@ import data.lib
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	some task in lib.pipelinerun_attestations[_].predicate.buildConfig.tasks
-	step := task.steps[step_index]
+	some attestation in lib.pipelinerun_attestations
+	some task in attestation.predicate.buildConfig.tasks
+	some step_index, step in task.steps
 	image_ref := step.environment.image
 	allowed_registry_prefixes := lib.rule_data("allowed_step_image_registry_prefixes")
 	not image_ref_permitted(image_ref, allowed_registry_prefixes)
@@ -63,5 +64,6 @@ deny contains result if {
 }
 
 image_ref_permitted(image_ref, allowed_prefixes) if {
-	startswith(image_ref, allowed_prefixes[_])
+	some allowed_prefix in allowed_prefixes
+	startswith(image_ref, allowed_prefix)
 }

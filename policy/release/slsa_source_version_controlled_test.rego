@@ -1,8 +1,9 @@
-package policy.release.slsa_source_version_controlled
+package policy.release.slsa_source_version_controlled_test
 
 import future.keywords.if
 
 import data.lib
+import data.policy.release.slsa_source_version_controlled
 
 test_all_good if {
 	materials := [
@@ -16,7 +17,7 @@ test_all_good if {
 		},
 	]
 
-	lib.assert_empty(deny) with input.attestations as [_mock_attestation(materials)]
+	lib.assert_empty(slsa_source_version_controlled.deny) with input.attestations as [_mock_attestation(materials)]
 }
 
 test_non_git_uri if {
@@ -42,7 +43,10 @@ test_non_git_uri if {
 		},
 	}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(materials)]
+	lib.assert_equal_results(
+		expected,
+		slsa_source_version_controlled.deny,
+	) with input.attestations as [_mock_attestation(materials)]
 }
 
 test_non_git_commit if {
@@ -79,7 +83,10 @@ test_non_git_commit if {
 		},
 	}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(materials)]
+	lib.assert_equal_results(
+		expected,
+		slsa_source_version_controlled.deny,
+	) with input.attestations as [_mock_attestation(materials)]
 }
 
 test_invalid_materials if {
@@ -97,12 +104,13 @@ test_invalid_materials if {
 		"msg": "No materials match expected format",
 	}}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(materials)]
+	lib.assert_equal_results(
+		expected,
+		slsa_source_version_controlled.deny,
+	) with input.attestations as [_mock_attestation(materials)]
 }
 
-_mock_attestation(materials) = d if {
-	d := {"statement": {"predicate": {
-		"buildType": lib.pipelinerun_att_build_types[0],
-		"materials": materials,
-	}}}
-}
+_mock_attestation(materials) := {"statement": {"predicate": {
+	"buildType": lib.tekton_pipeline_run,
+	"materials": materials,
+}}}

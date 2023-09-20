@@ -12,7 +12,7 @@ import future.keywords.in
 # gives precedence to the old-style. Further, Tekton falls back to the local resolver if
 # a bundle is not used in neither format. The "else" usage in this function ensures the
 # same precendence order is honored.
-task_ref(task) = i {
+task_ref(task) := i {
 	# Handle old-style bundle reference
 	r := _ref(task)
 	i := {
@@ -46,13 +46,13 @@ task_ref(task) = i {
 	}
 }
 
-_param(taskRef, name, fallback) = value {
+_param(taskRef, name, fallback) := value {
 	some param in taskRef.params
 	param.name == name
 	value := param.value
 } else = fallback
 
-_ref(task) = r {
+_ref(task) := r {
 	# Reference from within a PipelineRun attestation
 	r := task.ref
 } else = r {

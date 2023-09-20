@@ -1,5 +1,6 @@
-package checks
+package checks_test
 
+import data.checks
 import data.lib
 
 opa_inspect_valid := {
@@ -10,7 +11,7 @@ opa_inspect_valid := {
 	"annotations": [
 		{
 			"annotations": {
-				"description": "Check if the Tekton Bundle used for the Tasks in the Pipeline definition is pinned to a digest.",
+				"description": "Check if the Tekton Bundle used for the Tasks in the Pipeline definition is...",
 				"scope": "rule",
 				"title": "Task bundle references pinned to digest",
 				"custom": {
@@ -33,9 +34,9 @@ opa_inspect_valid := {
 					"depends_on": ["attestation_type.pipelinerun_attestation_found"],
 					"failure_msg": "Unknown attestation type '%s'",
 					"short_name": "known_attestation_type",
-					"solution": "Make sure the \"_type\" field in the attestation is supported. Supported types are configured in xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].",
+					"solution": "Make sure the \"_type\" field in the attestation is supported. Supported types are...",
 				},
-				"description": "A sanity check to confirm the attestation found for the image has a known attestation type.",
+				"description": "A sanity check to confirm the attestation found for the image has a known...",
 				"scope": "rule",
 				"title": "Known attestation type found",
 			},
@@ -67,7 +68,7 @@ opa_inspect_valid := {
 }
 
 test_required_annotations_valid {
-	lib.assert_empty(violation) with input as opa_inspect_valid
+	lib.assert_empty(checks.violation) with input as opa_inspect_valid
 }
 
 opa_inspect_missing_annotations := {
@@ -78,7 +79,7 @@ opa_inspect_missing_annotations := {
 	"annotations": [{
 		"annotations": {
 			"scope": "rule",
-			"description": "Check for the existence of a task bundle. This rule will fail if the task is not called from a bundle.",
+			"description": "Check for the existence of a task bundle. This rule will fail if the task is not called...",
 			"custom": {
 				"flagiure_msg": "Task '%s' does not contain a bundle reference",
 				"short_name": "disallowed_task_reference",
@@ -99,7 +100,7 @@ opa_inspect_missing_dependency := {
 	]},
 	"annotations": [{
 		"annotations": {
-			"description": "Check if the Tekton Bundle used for the Tasks in the Pipeline definition is pinned to a digest.",
+			"description": "Check if the Tekton Bundle used for the Tasks in the Pipeline definition is pinned to...",
 			"scope": "rule",
 			"title": "Task bundle references pinned to digest",
 			"custom": {
@@ -126,9 +127,9 @@ opa_inspect_duplicate := {
 					"collections": ["minimal"],
 					"failure_msg": "Unknown attestation type '%s'",
 					"short_name": "known_attestation_type",
-					"solution": "Make sure the \"_type\" field in the attestation is supported. Supported types are configured in xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].",
+					"solution": "Make sure the \"_type\" field in the attestation is supported. Supported types are...",
 				},
-				"description": "A sanity check to confirm the attestation found for the image has a known attestation type.",
+				"description": "A sanity check to confirm the attestation found for the image has a known...",
 				"scope": "rule",
 				"title": "Known attestation type found",
 			},
@@ -144,9 +145,9 @@ opa_inspect_duplicate := {
 					"collections": ["minimal"],
 					"failure_msg": "Unknown attestation type '%s'",
 					"short_name": "known_attestation_type",
-					"solution": "Make sure the \"_type\" field in the attestation is supported. Supported types are configured in xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].",
+					"solution": "Make sure the \"_type\" field in the attestation is supported. Supported types are...",
 				},
-				"description": "A sanity check to confirm the attestation found for the image has a known attestation type.",
+				"description": "A sanity check to confirm the attestation found for the image has a known...",
 				"scope": "rule",
 				"title": "Known attestation type found",
 			},
@@ -160,13 +161,21 @@ opa_inspect_duplicate := {
 }
 
 test_required_annotations_invalid {
-	lib.assert_equal({"ERROR: Missing annotation(s) custom.failure_msg, title at policy/release/attestation_task_bundle.rego:13"}, violation) with input as opa_inspect_missing_annotations
+	err = "ERROR: Missing annotation(s) custom.failure_msg, title at policy/release/attestation_task_bundle.rego:13"
+	lib.assert_equal({err}, checks.violation) with input as opa_inspect_missing_annotations
 }
 
 test_missing_dependency_invalid {
-	lib.assert_equal({"ERROR: Missing dependency rule \"data.policy.release.attestation_type.known_attestation_type\" at policy/release/attestation_task_bundle.rego:71"}, violation) with input as opa_inspect_missing_dependency
+	# regal ignore:line-length
+	err = `ERROR: Missing dependency rule "data.policy.release.attestation_type.known_attestation_type" at policy/release/attestation_task_bundle.rego:71`
+	lib.assert_equal({err}, checks.violation) with input as opa_inspect_missing_dependency
 }
 
 test_duplicate_rules {
-	lib.assert_equal({"ERROR: Found non-unique code \"data.policy.release.attestation_type.known_attestation_type\" at policy/release/attestation_type.rego:30", "ERROR: Found non-unique code \"data.policy.release.attestation_type.known_attestation_type\" at policy/release/attestation_type.rego:50"}, violation) with input as opa_inspect_duplicate
+	# regal ignore:line-length
+	err1 = `ERROR: Found non-unique code "data.policy.release.attestation_type.known_attestation_type" at policy/release/attestation_type.rego:30`
+
+	# regal ignore:line-length
+	err2 = `ERROR: Found non-unique code "data.policy.release.attestation_type.known_attestation_type" at policy/release/attestation_type.rego:50`
+	lib.assert_equal({err1, err2}, checks.violation) with input as opa_inspect_duplicate
 }

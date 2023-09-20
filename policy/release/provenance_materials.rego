@@ -70,9 +70,7 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [url, commit])
 }
 
-_normalize_git_url(url) := normalized if {
-	normalized := _suffix_git_url(_prefix_git_url(url))
-}
+_normalize_git_url(url) := _suffix_git_url(_prefix_git_url(url))
 
 _prefix_git_url(url) := normalized if {
 	prefix := "git+"

@@ -1,10 +1,11 @@
-package policy.release.slsa_build_scripted_build
+package policy.release.slsa_build_scripted_build_test
 
 import future.keywords.contains
 import future.keywords.if
 import future.keywords.in
 
 import data.lib
+import data.policy.release.slsa_build_scripted_build
 
 mock_bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
 
@@ -18,7 +19,7 @@ test_all_good if {
 		"steps": [{"entrypoint": "/bin/bash"}],
 	}]
 
-	lib.assert_empty(deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_empty(slsa_build_scripted_build.deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
 # It's unclear if this should be allowed or not. This unit test exists to
@@ -42,7 +43,10 @@ test_scattered_results if {
 		"msg": "Build task not found",
 	}}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(
+		expected,
+		slsa_build_scripted_build.deny,
+	) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_missing_task_steps if {
@@ -60,7 +64,10 @@ test_missing_task_steps if {
 		"msg": "Build task \"buildah\" does not contain any steps",
 	}}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(
+		expected,
+		slsa_build_scripted_build.deny,
+	) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_empty_task_steps if {
@@ -78,7 +85,10 @@ test_empty_task_steps if {
 		"msg": "Build task \"buildah\" does not contain any steps",
 	}}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(
+		expected,
+		slsa_build_scripted_build.deny,
+	) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_results_missing_value_url if {
@@ -96,7 +106,10 @@ test_results_missing_value_url if {
 		"msg": "Build task not found",
 	}}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(
+		expected,
+		slsa_build_scripted_build.deny,
+	) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_results_missing_value_digest if {
@@ -114,7 +127,10 @@ test_results_missing_value_digest if {
 		"msg": "Build task not found",
 	}}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(
+		expected,
+		slsa_build_scripted_build.deny,
+	) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_results_empty_value_url if {
@@ -132,7 +148,10 @@ test_results_empty_value_url if {
 		"msg": "Build task not found",
 	}}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(
+		expected,
+		slsa_build_scripted_build.deny,
+	) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_results_empty_value_digest if {
@@ -150,7 +169,10 @@ test_results_empty_value_digest if {
 		"msg": "Build task not found",
 	}}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(
+		expected,
+		slsa_build_scripted_build.deny,
+	) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_subject_mismatch if {
@@ -165,10 +187,14 @@ test_subject_mismatch if {
 
 	expected := {{
 		"code": "slsa_build_scripted_build.subject_build_task_matches",
-		"msg": "The attestation subject, \"some.image/foo:bar@sha256:123\", does not match the build task image, \"some.image/foo:bar@sha256:anotherdigest\"",
+		# regal ignore:line-length
+		"msg": `The attestation subject, "some.image/foo:bar@sha256:123", does not match the build task image, "some.image/foo:bar@sha256:anotherdigest"`,
 	}}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(
+		expected,
+		slsa_build_scripted_build.deny,
+	) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_subject_with_tag_and_digest_is_good if {
@@ -181,13 +207,13 @@ test_subject_with_tag_and_digest_is_good if {
 		"steps": [{"entrypoint": "/bin/bash"}],
 	}]
 
-	lib.assert_empty(deny) with input.attestations as [{"statement": {
+	lib.assert_empty(slsa_build_scripted_build.deny) with input.attestations as [{"statement": {
 		"subject": [{
 			"name": "registry.io/repository/image",
 			"digest": {"sha256": "digest"},
 		}],
 		"predicate": {
-			"buildType": lib.pipelinerun_att_build_types[0],
+			"buildType": lib.tekton_pipeline_run,
 			"buildConfig": {"tasks": tasks},
 		},
 	}}]
@@ -203,13 +229,13 @@ test_subject_with_tag_and_digest_mismatch_tag_is_good if {
 		"steps": [{"entrypoint": "/bin/bash"}],
 	}]
 
-	lib.assert_empty(deny) with input.attestations as [{"statement": {
+	lib.assert_empty(slsa_build_scripted_build.deny) with input.attestations as [{"statement": {
 		"subject": [{
 			"name": "registry.io/repository/image:different",
 			"digest": {"sha256": "digest"},
 		}],
 		"predicate": {
-			"buildType": lib.pipelinerun_att_build_types[0],
+			"buildType": lib.tekton_pipeline_run,
 			"buildConfig": {"tasks": tasks},
 		},
 	}}]
@@ -227,16 +253,17 @@ test_subject_with_tag_and_digest_mismatch_digest_fails if {
 
 	expected := {{
 		"code": "slsa_build_scripted_build.subject_build_task_matches",
-		"msg": "The attestation subject, \"registry.io/repository/image@sha256:unexpected\", does not match the build task image, \"registry.io/repository/image:tag@sha256:digest\"",
+		# regal ignore:line-length
+		"msg": `The attestation subject, "registry.io/repository/image@sha256:unexpected", does not match the build task image, "registry.io/repository/image:tag@sha256:digest"`,
 	}}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [{"statement": {
+	lib.assert_equal_results(expected, slsa_build_scripted_build.deny) with input.attestations as [{"statement": {
 		"subject": [{
 			"name": "registry.io/repository/image",
 			"digest": {"sha256": "unexpected"},
 		}],
 		"predicate": {
-			"buildType": lib.pipelinerun_att_build_types[0],
+			"buildType": lib.tekton_pipeline_run,
 			"buildConfig": {"tasks": tasks},
 		},
 	}}]
@@ -250,7 +277,7 @@ _image_digest_value := "123"
 
 _image_digest := concat(":", [_image_digest_algorithm, _image_digest_value])
 
-_mock_attestation(original_tasks) = d if {
+_mock_attestation(original_tasks) := d if {
 	default_task := {
 		"name": "buildah",
 		"ref": {"kind": "Task"},
@@ -267,7 +294,7 @@ _mock_attestation(original_tasks) = d if {
 			"digest": {_image_digest_algorithm: _image_digest_value},
 		}],
 		"predicate": {
-			"buildType": lib.pipelinerun_att_build_types[0],
+			"buildType": lib.tekton_pipeline_run,
 			"buildConfig": {"tasks": tasks},
 		},
 	}}

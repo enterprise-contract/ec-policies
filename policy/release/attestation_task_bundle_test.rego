@@ -1,13 +1,14 @@
-package policy.release.attestation_task_bundle
+package policy.release.attestation_task_bundle_test
+
+import future.keywords.in
 
 import data.lib
+import data.policy.release.attestation_task_bundle
 
-mock_data(task) = d {
-	d := [{"statement": {"predicate": {
-		"buildConfig": {"tasks": [task]},
-		"buildType": lib.pipelinerun_att_build_types[0],
-	}}}]
-}
+mock_data(task) := [{"statement": {"predicate": {
+	"buildConfig": {"tasks": [task]},
+	"buildType": lib.tekton_pipeline_run,
+}}}]
 
 test_bundle_not_exists {
 	name := "my-task"
@@ -17,12 +18,12 @@ test_bundle_not_exists {
 	})
 
 	expected_msg := "Pipeline task 'my-task' does not contain a bundle reference"
-	lib.assert_equal_results(deny, {{
+	lib.assert_equal_results(attestation_task_bundle.deny, {{
 		"code": "attestation_task_bundle.tasks_defined_in_bundle",
 		"msg": expected_msg,
 	}}) with input.attestations as d with data["task-bundles"] as task_bundles
 
-	lib.assert_empty(warn) with input.attestations as d
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as d
 }
 
 test_bundle_not_exists_empty_string {
@@ -34,12 +35,12 @@ test_bundle_not_exists_empty_string {
 	})
 
 	expected_msg := sprintf("Pipeline task '%s' uses an empty bundle image reference", [name])
-	lib.assert_equal_results(deny, {{
+	lib.assert_equal_results(attestation_task_bundle.deny, {{
 		"code": "attestation_task_bundle.task_ref_bundles_not_empty",
 		"msg": expected_msg,
 	}}) with input.attestations as d with data["task-bundles"] as task_bundles
 
-	lib.assert_empty(warn) with input.attestations as d
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as d
 }
 
 test_bundle_unpinned {
@@ -54,7 +55,7 @@ test_bundle_unpinned {
 	})
 
 	expected_msg := sprintf("Pipeline task '%s' uses an unpinned task bundle reference '%s'", [name, image])
-	lib.assert_equal_results(warn, {{
+	lib.assert_equal_results(attestation_task_bundle.warn, {{
 		"code": "attestation_task_bundle.task_ref_bundles_pinned",
 		"msg": expected_msg,
 	}}) with input.attestations as d
@@ -71,18 +72,18 @@ test_bundle_reference_valid {
 		},
 	})
 
-	lib.assert_empty(warn) with input.attestations as d
-	lib.assert_empty(deny) with input.attestations as d with data["task-bundles"] as task_bundles
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as d
+	lib.assert_empty(attestation_task_bundle.deny) with input.attestations as d with data["task-bundles"] as task_bundles
 }
 
 # All good when the most recent bundle is used.
 test_acceptable_bundle_up_to_date {
 	attestations := mock_attestation(["reg.com/repo@sha256:abc"])
 
-	lib.assert_empty(warn) with input.attestations as attestations
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 
-	lib.assert_empty(deny) with input.attestations as attestations
+	lib.assert_empty(attestation_task_bundle.deny) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 }
 
@@ -90,7 +91,7 @@ test_acceptable_bundle_up_to_date {
 test_acceptable_bundle_out_of_date_past {
 	attestations := mock_attestation(["reg.com/repo@sha256:bcd", "reg.com/repo@sha256:cde"])
 
-	lib.assert_equal_results(warn, {
+	lib.assert_equal_results(attestation_task_bundle.warn, {
 		{
 			"code": "attestation_task_bundle.task_ref_bundles_current",
 			"msg": "Pipeline task 'task-run-0' uses an out of date task bundle 'reg.com/repo@sha256:bcd'",
@@ -102,17 +103,17 @@ test_acceptable_bundle_out_of_date_past {
 	}) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 
-	lib.assert_empty(deny) with input.attestations as attestations
+	lib.assert_empty(attestation_task_bundle.deny) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 }
 
 # Deny bundles that are no longer active.
 test_acceptable_bundle_expired {
 	attestations := mock_attestation(["reg.com/repo@sha256:def"])
-	lib.assert_empty(warn) with input.attestations as attestations
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 
-	lib.assert_equal_results(deny, {{
+	lib.assert_equal_results(attestation_task_bundle.deny, {{
 		"code": "attestation_task_bundle.task_ref_bundles_acceptable",
 		"msg": "Pipeline task 'task-run-0' uses an unacceptable task bundle 'reg.com/repo@sha256:def'",
 	}}) with input.attestations as attestations
@@ -124,12 +125,12 @@ test_acceptable_bundles_provided {
 		"code": "attestation_task_bundle.acceptable_bundles_provided",
 		"msg": "Missing required task-bundles data",
 	}}
-	lib.assert_equal_results(expected, deny) with data["task-bundles"] as []
+	lib.assert_equal_results(expected, attestation_task_bundle.deny) with data["task-bundles"] as []
 }
 
-mock_attestation(bundles) = a {
+mock_attestation(bundles) := a {
 	tasks := [task |
-		bundle := bundles[index]
+		some index, bundle in bundles
 		task := {
 			"name": sprintf("task-run-%d", [index]),
 			"ref": {
@@ -141,11 +142,11 @@ mock_attestation(bundles) = a {
 
 	a := [{"statement": {"predicate": {
 		"buildConfig": {"tasks": tasks},
-		"buildType": lib.pipelinerun_att_build_types[0],
+		"buildType": lib.tekton_pipeline_run,
 	}}}]
 }
 
-task_bundles = {"reg.com/repo": [
+task_bundles := {"reg.com/repo": [
 	{
 		# Latest bundle, allowed
 		"digest": "sha256:abc",
@@ -153,13 +154,13 @@ task_bundles = {"reg.com/repo": [
 		"effective_on": "2262-04-11T00:00:00Z",
 	},
 	{
-		# Recent bundle effective in the future, allowed but warn to upgrade
+		# Recent bundle effective in the future, allowed but attestation_task_bundle.warn to upgrade
 		"digest": "sha256:bcd",
 		"tag": "",
 		"effective_on": "2262-03-11T00:00:00Z",
 	},
 	{
-		# Recent bundle effective in the past, allowed but warn to upgrade
+		# Recent bundle effective in the past, allowed but attestation_task_bundle.warn to upgrade
 		"digest": "sha256:cde",
 		"tag": "",
 		"effective_on": "2022-02-01T00:00:00Z",

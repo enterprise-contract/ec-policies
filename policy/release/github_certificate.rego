@@ -122,12 +122,17 @@ _fulcio_extension_value(ext) := value if {
 	value := base64.decode(extension.Value)
 }
 
+# regal ignore:prefer-snake-case
 _TRIGGER := {"id": 2, "name": "GitHub Workflow Trigger"}
 
+# regal ignore:prefer-snake-case
 _SHA := {"id": 3, "name": "GitHub Workflow SHA"}
 
+# regal ignore:prefer-snake-case
 _NAME := {"id": 4, "name": "GitHub Workflow Name"}
 
+# regal ignore:prefer-snake-case
 _REPOSITORY := {"id": 5, "name": "GitHub Workflow Repository"}
 
+# regal ignore:prefer-snake-case
 _REF := {"id": 6, "name": "GitHub Workflow Ref"}

@@ -9,16 +9,15 @@ result_helper(chain, failure_sprintf_params) := result {
 	result := _basic_result(chain, failure_sprintf_params)
 }
 
-result_helper_with_term(chain, failure_sprintf_params, term) := result {
-	result := object.union(result_helper(chain, failure_sprintf_params), {"term": term})
-}
+result_helper_with_term(chain, failure_sprintf_params, term) := object.union(
+	result_helper(chain, failure_sprintf_params),
+	{"term": term},
+)
 
-_basic_result(chain, failure_sprintf_params) := result {
-	result := {
-		"code": _code(chain),
-		"msg": sprintf(_rule_annotations(chain).custom.failure_msg, failure_sprintf_params),
-		"effective_on": time_lib.when(chain),
-	}
+_basic_result(chain, failure_sprintf_params) := {
+	"code": _code(chain),
+	"msg": sprintf(_rule_annotations(chain).custom.failure_msg, failure_sprintf_params),
+	"effective_on": time_lib.when(chain),
 }
 
 _code(chain) := code {
@@ -28,9 +27,7 @@ _code(chain) := code {
 	code := sprintf("%s.%s", [pkg_name, rule_name])
 }
 
-_rule_annotations(chain) := annotations {
-	# The first entry in the chain always points to the active rule, even if it has
-	# no declared annotations (in which case the annotations member is not present).
-	# Thus, result_helper assumes every rule defines annotations.
-	annotations := chain[0].annotations
-}
+# The first entry in the chain always points to the active rule, even if it has
+# no declared annotations (in which case the annotations member is not present).
+# Thus, result_helper assumes every rule defines annotations.
+_rule_annotations(chain) := chain[0].annotations

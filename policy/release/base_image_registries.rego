@@ -88,11 +88,13 @@ deny contains result if {
 }
 
 _image_ref_permitted(image_ref, allowed_prefixes) if {
-	startswith(image_ref, allowed_prefixes[_])
+	some allowed_prefix in allowed_prefixes
+	startswith(image_ref, allowed_prefix)
 }
 
 _base_images contains name if {
-	some name in split(_base_images_results[_].value, "\n")
+	some _, image in _base_images_results
+	some name in split(image.value, "\n")
 	count(name) > 0
 }
 

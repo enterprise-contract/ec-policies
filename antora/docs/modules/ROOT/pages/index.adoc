@@ -13,7 +13,7 @@ xref:pipeline_policy.adoc[Pipeline Policy].
 
 == Additional Documentation
 
-* https://redhat-appstudio.github.io/docs.stonesoup.io/[Stonesoup Documentation]
+* https://redhat-appstudio.github.io/appstudio.docs.ui.io/[Stonesoup Documentation]
 * xref:main@ec-cli::index.adoc[EC CLI Documentation]
 
 == Code

@@ -13,7 +13,7 @@ install: |
   Configure your org-specific `--data` as necessary from [data/](https://github.com/enterprise-contract/ec-policies/tree/main/data)
 
   Run your conftest command: `conftest verify --data data/`
-homeURL: https://enterprise-contract.github.io/ec-policies/
+homeURL: https://enterprisecontract.dev/docs/ec-policies/
 keywords:
   - opa
   - conftest

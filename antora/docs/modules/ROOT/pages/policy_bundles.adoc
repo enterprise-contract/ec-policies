@@ -32,7 +32,7 @@ The bundles mentioned above are also listed in https://artifacthub.io/packages/s
 
 == Example usage
 
-The bundles are designed to be used with the https://enterprise-contract.github.io/ec-cli/main/reference.html[ec-cli], but you
+The bundles are designed to be used with the xref:main@ec-cli::index.adoc[ec-cli], but you
 can also use them with conftest directly. The input should include a top level key called `attestations` which contains a list of
 attestations for the image being validated. For example:
 

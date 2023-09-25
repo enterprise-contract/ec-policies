@@ -8,7 +8,7 @@ _max_int := 9223372036854775807
 # native comparison in Rego if both left and right are of the same type, or by
 # comparing their numerical values if they're not. Undefined values are always
 # less or equal to any other value.
-le(left, right) = is_le {
+le(left, right) := is_le {
 	type_name(left) == type_name(right)
 	is_le := left <= right
 } else = is_le {
@@ -18,7 +18,7 @@ le(left, right) = is_le {
 # Calculates the rank of an object by given key within an array ary. That is,
 # returns number of elements `o` of ary that have `o[key]` less than `obj[key]`
 # for a given object `obj`.
-rank(obj, key, ary) = count(less_or_eq) {
+rank(obj, key, ary) := count(less_or_eq) {
 	less_or_eq := [o |
 		some o in ary
 		left := object.get(o, key, _max_int)
@@ -30,7 +30,7 @@ rank(obj, key, ary) = count(less_or_eq) {
 # Sorts elements of the array of objects by the the specified key in ascending
 # order. Performs a # N x (N-1) search of an element of `ary` that has the rank
 # corresponding to the indexing variable 1..N.
-sort_by(key, ary) = [sorted |
+sort_by(key, ary) := [sorted |
 	some i in numbers.range(1, count(ary))
 
 	ranked := [o |
@@ -40,5 +40,5 @@ sort_by(key, ary) = [sorted |
 	]
 
 	count(ranked) > 0 # skip gaps in ranking that happen when two or more objects have the same rank
-	sorted := ranked[_] # flatten any objects with the same rank
+	some sorted in ranked # flatten any objects with the same rank
 ]

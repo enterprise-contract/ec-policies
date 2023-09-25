@@ -1,10 +1,11 @@
-package policy.release.provenance_materials
+package policy.release.provenance_materials_test
 
 import future.keywords.contains
 import future.keywords.if
 import future.keywords.in
 
 import data.lib
+import data.policy.release.provenance_materials
 
 test_all_good if {
 	tasks := [{
@@ -16,7 +17,7 @@ test_all_good if {
 		"steps": [{"entrypoint": "/bin/bash"}],
 	}]
 
-	lib.assert_empty(deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_empty(provenance_materials.deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_normalized_git_url if {
@@ -29,7 +30,7 @@ test_normalized_git_url if {
 		"steps": [{"entrypoint": "/bin/bash"}],
 	}]
 
-	lib.assert_empty(deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_empty(provenance_materials.deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_missing_git_clone_task if {
@@ -47,7 +48,7 @@ test_missing_git_clone_task if {
 		"msg": "Task git-clone not found",
 	}}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(expected, provenance_materials.deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_scattered_results if {
@@ -69,7 +70,7 @@ test_scattered_results if {
 		"msg": "Task git-clone not found",
 	}}
 
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(expected, provenance_materials.deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_missing_materials if {
@@ -86,9 +87,10 @@ test_missing_materials if {
 
 	expected := {{
 		"code": "provenance_materials.git_clone_source_matches_provenance",
-		"msg": "Entry in materials for the git repo \"git+https://gitforge/repo.git\" and commit \"9d25f3b6ab8cfba5d2d68dc8d062988534a63e87\" not found",
+		# regal ignore:line-length
+		"msg": `Entry in materials for the git repo "git+https://gitforge/repo.git" and commit "9d25f3b6ab8cfba5d2d68dc8d062988534a63e87" not found`,
 	}}
-	lib.assert_equal_results(expected, deny) with input.attestations as [missing_materials]
+	lib.assert_equal_results(expected, provenance_materials.deny) with input.attestations as [missing_materials]
 }
 
 test_commit_mismatch if {
@@ -103,9 +105,10 @@ test_commit_mismatch if {
 
 	expected := {{
 		"code": "provenance_materials.git_clone_source_matches_provenance",
-		"msg": "Entry in materials for the git repo \"git+https://gitforge/repo.git\" and commit \"b10a8c637a91f427576eb0a4f39f1766c7987385\" not found",
+		# regal ignore:line-length
+		"msg": `Entry in materials for the git repo "git+https://gitforge/repo.git" and commit "b10a8c637a91f427576eb0a4f39f1766c7987385" not found`,
 	}}
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(expected, provenance_materials.deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_url_mismatch if {
@@ -120,9 +123,17 @@ test_url_mismatch if {
 
 	expected := {{
 		"code": "provenance_materials.git_clone_source_matches_provenance",
-		"msg": "Entry in materials for the git repo \"git+https://shady/repo.git\" and commit \"9d25f3b6ab8cfba5d2d68dc8d062988534a63e87\" not found",
+		"msg": concat(
+			" ",
+			[
+				"Entry in materials for the git repo",
+				`"git+https://shady/repo.git"`,
+				"and commit",
+				`"9d25f3b6ab8cfba5d2d68dc8d062988534a63e87" not found`,
+			],
+		),
 	}}
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(expected, provenance_materials.deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
 test_commit_and_url_mismatch if {
@@ -137,9 +148,10 @@ test_commit_and_url_mismatch if {
 
 	expected := {{
 		"code": "provenance_materials.git_clone_source_matches_provenance",
-		"msg": "Entry in materials for the git repo \"git+https://shady/repo.git\" and commit \"b10a8c637a91f427576eb0a4f39f1766c7987385\" not found",
+		# regal ignore:line-length
+		"msg": `Entry in materials for the git repo "git+https://shady/repo.git" and commit "b10a8c637a91f427576eb0a4f39f1766c7987385" not found`,
 	}}
-	lib.assert_equal_results(expected, deny) with input.attestations as [_mock_attestation(tasks)]
+	lib.assert_equal_results(expected, provenance_materials.deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
@@ -152,7 +164,7 @@ _git_commit := "9d25f3b6ab8cfba5d2d68dc8d062988534a63e87"
 
 _bad_git_commit := "b10a8c637a91f427576eb0a4f39f1766c7987385"
 
-_mock_attestation(original_tasks) = d if {
+_mock_attestation(original_tasks) := d if {
 	default_task := {
 		"name": "git-clone",
 		"ref": {"kind": "Task"},
@@ -164,7 +176,7 @@ _mock_attestation(original_tasks) = d if {
 	]
 
 	d := {"statement": {"predicate": {
-		"buildType": lib.pipelinerun_att_build_types[0],
+		"buildType": lib.tekton_pipeline_run,
 		"buildConfig": {"tasks": tasks},
 		"materials": [{
 			"uri": sprintf("git+%s.git", [_git_url]),

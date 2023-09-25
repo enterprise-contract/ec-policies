@@ -1,29 +1,30 @@
-package policy.pipeline.task_bundle
+package policy.pipeline.task_bundle_test
 
 import data.lib
+import data.policy.pipeline.task_bundle
 
 test_bundle_not_exists {
 	tasks := [{"name": "my-task", "taskRef": {}}]
 
 	expected_msg := "Pipeline task 'my-task' does not contain a bundle reference"
-	lib.assert_equal_results(deny, {{
+	lib.assert_equal_results(task_bundle.deny, {{
 		"code": "task_bundle.disallowed_task_reference",
 		"msg": expected_msg,
 	}}) with input.spec.tasks as tasks with data["task-bundles"] as task_bundles
 
-	lib.assert_empty(warn) with input.spec.tasks as tasks
+	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks
 }
 
 test_bundle_not_exists_empty_string {
 	tasks := [{"name": "my-task", "taskRef": {"bundle": ""}}]
 
 	expected_msg := "Pipeline task 'my-task' uses an empty bundle image reference"
-	lib.assert_equal_results(deny, {{
+	lib.assert_equal_results(task_bundle.deny, {{
 		"code": "task_bundle.empty_task_bundle_reference",
 		"msg": expected_msg,
 	}}) with input.spec.tasks as tasks with data["task-bundles"] as task_bundles
 
-	lib.assert_empty(warn) with input.spec.tasks as tasks
+	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks
 }
 
 test_bundle_unpinned {
@@ -32,7 +33,7 @@ test_bundle_unpinned {
 		"taskRef": {"bundle": "reg.com/repo:latest"},
 	}]
 
-	lib.assert_equal_results(warn, {{
+	lib.assert_equal_results(task_bundle.warn, {{
 		"code": "task_bundle.unpinned_task_bundle",
 		"msg": "Pipeline task 'my-task' uses an unpinned task bundle reference 'reg.com/repo:latest'",
 	}}) with input.spec.tasks as tasks
@@ -44,18 +45,18 @@ test_bundle_reference_valid {
 		"taskRef": {"bundle": "quay.io/redhat-appstudio/hacbs-templates-bundle:latest@sha256:abc"},
 	}]
 
-	lib.assert_empty(deny) with input.spec.tasks as tasks with data["task-bundles"] as task_bundles
-	lib.assert_empty(warn) with input.spec.tasks as tasks with data["task-bundles"] as task_bundles
+	lib.assert_empty(task_bundle.deny) with input.spec.tasks as tasks with data["task-bundles"] as task_bundles
+	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks with data["task-bundles"] as task_bundles
 }
 
 # All good when the most recent bundle is used.
 test_acceptable_bundle_up_to_date {
 	tasks := [{"name": "my-task", "taskRef": {"bundle": "reg.com/repo@sha256:abc"}}]
 
-	lib.assert_empty(warn) with input.spec.tasks as tasks
+	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks
 		with data["task-bundles"] as task_bundles
 
-	lib.assert_empty(deny) with input.spec.tasks as tasks
+	lib.assert_empty(task_bundle.deny) with input.spec.tasks as tasks
 		with data["task-bundles"] as task_bundles
 }
 
@@ -66,7 +67,7 @@ test_acceptable_bundle_out_of_date_past {
 		{"name": "my-task-2", "taskRef": {"bundle": "reg.com/repo@sha256:cde"}},
 	]
 
-	lib.assert_equal_results(warn, {
+	lib.assert_equal_results(task_bundle.warn, {
 		{
 			"code": "task_bundle.out_of_date_task_bundle",
 			"msg": "Pipeline task 'my-task-1' uses an out of date task bundle 'reg.com/repo@sha256:bcd'",
@@ -78,7 +79,7 @@ test_acceptable_bundle_out_of_date_past {
 	}) with input.spec.tasks as tasks
 		with data["task-bundles"] as task_bundles
 
-	lib.assert_empty(deny) with input.spec.tasks as tasks
+	lib.assert_empty(task_bundle.deny) with input.spec.tasks as tasks
 		with data["task-bundles"] as task_bundles
 }
 
@@ -86,10 +87,10 @@ test_acceptable_bundle_out_of_date_past {
 test_acceptable_bundle_expired {
 	tasks := [{"name": "my-task", "taskRef": {"bundle": "reg.com/repo@sha256:def"}}]
 
-	lib.assert_empty(warn) with input.spec.tasks as tasks
+	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks
 		with data["task-bundles"] as task_bundles
 
-	lib.assert_equal_results(deny, {{
+	lib.assert_equal_results(task_bundle.deny, {{
 		"code": "task_bundle.unacceptable_task_bundle",
 		"msg": "Pipeline task 'my-task' uses an unacceptable task bundle 'reg.com/repo@sha256:def'",
 	}}) with input.spec.tasks as tasks
@@ -101,10 +102,10 @@ test_missing_required_data {
 		"code": "task_bundle.missing_required_data",
 		"msg": "Missing required task-bundles data",
 	}}
-	lib.assert_equal_results(expected, deny) with data["task-bundles"] as []
+	lib.assert_equal_results(expected, task_bundle.deny) with data["task-bundles"] as []
 }
 
-task_bundles = {"reg.com/repo": [
+task_bundles := {"reg.com/repo": [
 	{
 		# Latest bundle, allowed
 		"digest": "sha256:abc",

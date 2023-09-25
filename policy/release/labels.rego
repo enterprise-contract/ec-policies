@@ -128,13 +128,11 @@ parent_labels contains label if {
 	label := {"name": name, "value": value}
 }
 
-_value(labels, name) := value if {
-	value := [v |
-		some label in labels
-		label.name == name
-		v := label.value
-	][0]
-}
+_value(labels, name) := [v |
+	some label in labels
+	label.name == name
+	v := label.value
+][0]
 
 required_labels := lib.rule_data("required_labels") if {
 	not is_fbc

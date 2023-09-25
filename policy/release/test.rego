@@ -53,7 +53,7 @@ deny contains result if {
 #   - test.test_data_found
 #
 deny contains result if {
-	with_results := [result | result := lib.results_from_tests[_].value.result]
+	with_results := [result | some r in lib.results_from_tests; result := r.value.result]
 	count(with_results) != count(lib.results_from_tests)
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
@@ -75,14 +75,14 @@ deny contains result if {
 #
 deny contains result if {
 	all_unsupported := [u |
-		result := lib.results_from_tests[_]
+		some result in lib.results_from_tests
 		test := result.value
 		not test.result in lib.rule_data("supported_tests_results")
 		u := {"task": result.name, "result": test.result}
 	]
 
 	count(all_unsupported) > 0
-	unsupported = all_unsupported[_]
+	some unsupported in all_unsupported
 	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
 		[unsupported.task, unsupported.result],
@@ -155,13 +155,11 @@ warn contains result if {
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
 
-resulted_in(results) = filtered_by_result if {
-	# Collect all tests that have resulted with one of the given
-	# results and convert their name to "test:<name>" format
-	filtered_by_result := {r |
-		result := lib.results_from_tests[_]
-		test := result.value
-		test.result in results
-		r := result.name
-	}
+# Collect all tests that have resulted with one of the given
+# results and convert their name to "test:<name>" format
+resulted_in(results) := {r |
+	some result in lib.results_from_tests
+	test := result.value
+	test.result in results
+	r := result.name
 }

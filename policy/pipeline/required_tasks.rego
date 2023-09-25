@@ -102,11 +102,9 @@ deny contains result if {
 
 # _missing_tasks returns a set of task names that are in the given
 # required_tasks, but not in the pipeline definition.
-_missing_tasks(required_tasks) := tasks if {
-	tasks := {task |
-		some task in required_tasks
-		not task in tkn.tasks_names(input)
-	}
+_missing_tasks(required_tasks) := {task |
+	some task in required_tasks
+	not task in tkn.tasks_names(input)
 }
 
 # get the future tasks that are pipeline specific. If none exists

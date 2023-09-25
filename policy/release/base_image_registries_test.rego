@@ -1,11 +1,13 @@
-package policy.release.base_image_registries
+package policy.release.base_image_registries_test
 
 import data.lib
+import data.lib_test
+import data.policy.release.base_image_registries
 
 mock_bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
 
 test_acceptable_base_images {
-	attestations := [lib.att_mock_helper_ref_plain_result(
+	attestations := [lib_test.att_mock_helper_ref_plain_result(
 		lib.build_base_images_digests_result_name,
 		concat("\n", [
 			"registry.redhat.io/ubi7:latest@sha256:abc",
@@ -15,21 +17,21 @@ test_acceptable_base_images {
 		"buildah-task-1",
 		mock_bundle,
 	)]
-	lib.assert_empty(deny) with input.attestations as attestations
+	lib.assert_empty(base_image_registries.deny) with input.attestations as attestations
 }
 
 test_empty_base_images {
-	attestations := [lib.att_mock_helper_ref_plain_result(
+	attestations := [lib_test.att_mock_helper_ref_plain_result(
 		lib.build_base_images_digests_result_name,
 		"",
 		"buildah-task-1",
 		mock_bundle,
 	)]
-	lib.assert_empty(deny) with input.attestations as attestations
+	lib.assert_empty(base_image_registries.deny) with input.attestations as attestations
 }
 
 test_unacceptable_base_images {
-	attestations := [lib.att_mock_helper_ref_plain_result(
+	attestations := [lib_test.att_mock_helper_ref_plain_result(
 		lib.build_base_images_digests_result_name,
 		concat("\n", [
 			"registry.redhat.io/ubi7:latest@sha256:abc",
@@ -50,11 +52,11 @@ test_unacceptable_base_images {
 			"msg": "Base image \"registry.redhat.ioo/spam:latest@sha256:def\" is from a disallowed registry",
 		},
 	}
-	lib.assert_equal_results(deny, expected) with input.attestations as attestations
+	lib.assert_equal_results(base_image_registries.deny, expected) with input.attestations as attestations
 }
 
 test_missing_result {
-	attestations := [lib.att_mock_helper_ref_plain_result(
+	attestations := [lib_test.att_mock_helper_ref_plain_result(
 		"SPAM_SPAM_SPAM",
 		"registry.redhat.io/ubi7:latest@sha256:abc",
 		"buildah-task-1",
@@ -64,7 +66,7 @@ test_missing_result {
 		"code": "base_image_registries.base_image_info_found",
 		"msg": "Base images result is missing",
 	}}
-	lib.assert_equal_results(deny, expected) with input.attestations as attestations
+	lib.assert_equal_results(base_image_registries.deny, expected) with input.attestations as attestations
 }
 
 test_allowed_registries_provided {
@@ -72,5 +74,5 @@ test_allowed_registries_provided {
 		"code": "base_image_registries.allowed_registries_provided",
 		"msg": "Missing required allowed_registry_prefixes rule data",
 	}}
-	lib.assert_equal_results(expected, deny) with data.rule_data as {}
+	lib.assert_equal_results(expected, base_image_registries.deny) with data.rule_data as {}
 }

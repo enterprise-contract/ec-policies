@@ -106,12 +106,13 @@ deny contains result if {
 deny contains result if {
 	some material in materials
 	commit := material.digest.sha1
-	not regex.match("^[a-f0-9]{40}$", commit)
+	not regex.match(`^[a-f0-9]{40}$`, commit)
 	result := lib.result_helper(rego.metadata.chain(), [commit])
 }
 
 materials contains material if {
-	some material in lib.pipelinerun_attestations[_].predicate.materials
+	some attestation in lib.pipelinerun_attestations
+	some material in attestation.predicate.materials
 	material.uri
 	material.digest.sha1
 }

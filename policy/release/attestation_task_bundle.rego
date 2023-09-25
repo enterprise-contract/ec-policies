@@ -14,6 +14,7 @@ package policy.release.attestation_task_bundle
 
 import future.keywords.contains
 import future.keywords.if
+import future.keywords.in
 
 import data.lib
 import data.lib.bundles
@@ -33,8 +34,8 @@ import data.lib.bundles
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	name := bundles.disallowed_task_reference(lib.tasks_from_pipelinerun)[_].name
-	result := lib.result_helper(rego.metadata.chain(), [name])
+	some bundle in bundles.disallowed_task_reference(lib.tasks_from_pipelinerun)
+	result := lib.result_helper(rego.metadata.chain(), [bundle.name])
 }
 
 # METADATA
@@ -53,7 +54,8 @@ deny contains result if {
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	name := bundles.empty_task_bundle_reference(lib.tasks_from_pipelinerun)[_].name
+	some task in bundles.empty_task_bundle_reference(lib.tasks_from_pipelinerun)
+	name := task.name
 	result := lib.result_helper(rego.metadata.chain(), [name])
 }
 
@@ -73,7 +75,7 @@ deny contains result if {
 #   - attestation_type.known_attestation_type
 #
 warn contains result if {
-	task := bundles.unpinned_task_bundle(lib.tasks_from_pipelinerun)[_]
+	some task in bundles.unpinned_task_bundle(lib.tasks_from_pipelinerun)
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
 }
 
@@ -94,7 +96,7 @@ warn contains result if {
 #   - attestation_type.known_attestation_type
 #
 warn contains result if {
-	task := bundles.out_of_date_task_bundle(lib.tasks_from_pipelinerun)[_]
+	some task in bundles.out_of_date_task_bundle(lib.tasks_from_pipelinerun)
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
 }
 
@@ -116,7 +118,7 @@ warn contains result if {
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	task := bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)[_]
+	some task in bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
 }
 

@@ -1,0 +1,6 @@
+# Configures Regal rules, see https://docs.styra.com/regal/category/rules
+---
+rules:
+  style:
+    todo-comment:
+      level: warning

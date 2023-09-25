@@ -35,6 +35,4 @@ pipeline_label_selector(pipeline, selector) := value if {
 	label == selector
 }
 
-pipeline_name := name if {
-	name := input.metadata.name
-}
+pipeline_name := input.metadata.name

@@ -95,10 +95,8 @@ _vulnerabilities := vulnerabilities if {
 
 _result_name := "CLAIR_SCAN_RESULT"
 
-_non_zero_levels(key) := d if {
-	d := {level: amount |
-		some level in {a | some a in lib.rule_data(key)}
-		amount := _vulnerabilities[level]
-		amount > 0
-	}
+_non_zero_levels(key) := {level: amount |
+	some level in {a | some a in lib.rule_data(key)}
+	amount := _vulnerabilities[level]
+	amount > 0
 }

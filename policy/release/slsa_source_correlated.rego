@@ -99,11 +99,24 @@ deny contains result if {
 	expected_revision := vcs_info.revision
 	expected_sources := {
 		sprintf("%s@sha1:%s", [expected_vcs_uri, expected_revision]),
-		sprintf("%s.git@sha1:%s", [expected_vcs_uri, expected_revision]), # tolerate missing .git suffix
-		sprintf("%s@sha1:%s", [trim_suffix(expected_vcs_uri, ".git"), expected_revision]), # tolerate extra or missing .git suffix
-		sprintf("%s@gitCommit:%s", [expected_vcs_uri, crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision]))]),
-		sprintf("%s.git@gitCommit:%s", [expected_vcs_uri, crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision]))]), # tolerate missing .git suffix
-		sprintf("%s@gitCommit:%s", [trim_suffix(expected_vcs_uri, ".git"), crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision]))]), # tolerate extra or missing .git suffix
+		# tolerate missing .git suffix
+		sprintf("%s.git@sha1:%s", [expected_vcs_uri, expected_revision]),
+		# tolerate extra or missing .git suffix
+		sprintf("%s@sha1:%s", [trim_suffix(expected_vcs_uri, ".git"), expected_revision]),
+		sprintf("%s@gitCommit:%s", [
+			expected_vcs_uri,
+			crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
+		]),
+		# tolerate missing .git suffix
+		sprintf("%s.git@gitCommit:%s", [
+			expected_vcs_uri,
+			crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
+		]),
+		# tolerate extra or missing .git suffix
+		sprintf("%s@gitCommit:%s", [
+			trim_suffix(expected_vcs_uri, ".git"),
+			crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
+		]),
 	}
 
 	# TODO: this is rather loose, this checks that the expected source is
@@ -113,7 +126,10 @@ deny contains result if {
 
 	some attested_source in _source_references
 
-	result := lib.result_helper_with_term(rego.metadata.chain(), [sprintf("%s@%s", [expected_vcs_uri, expected_revision])], attested_source)
+	result := lib.result_helper_with_term(
+		rego.metadata.chain(),
+		[sprintf("%s@%s", [expected_vcs_uri, expected_revision])], attested_source,
+	)
 }
 
 # SLSA Provenance v0.2
@@ -137,17 +153,20 @@ _source_references contains ref if {
 # SLSA Provenance v1.0
 _source_references contains ref if {
 	some att in lib.pipelinerun_slsa_provenance_v1
-	some resolvedDependency in att.predicate.buildDefinition.resolvedDependencies
-	some digest_alg in object.keys(resolvedDependency.digest)
+
+	# regal ignore:prefer-snake-case
+	some dep in att.predicate.buildDefinition.resolvedDependencies
+	some digest_alg in object.keys(dep.digest)
 	some supported_vcs_type in lib.rule_data("supported_vcs")
 
 	# the material.uri is a kind of vcs_type, lets us ignore other, non-vcs, materials
-	startswith(resolvedDependency.uri, sprintf("%s+", [supported_vcs_type]))
+	startswith(dep.uri, sprintf("%s+", [supported_vcs_type]))
 
 	# make sure the digest algorithm is supported
 	digest_alg in lib.rule_data("supported_digests")
 
 	# note, the digest_alg is not compared, it is expected that the value
 	# matches the expected reference
-	ref := sprintf("%s@%s:%s", [resolvedDependency.uri, digest_alg, resolvedDependency.digest[digest_alg]])
+	# regal ignore:prefer-snake-case
+	ref := sprintf("%s@%s:%s", [dep.uri, digest_alg, dep.digest[digest_alg]])
 }

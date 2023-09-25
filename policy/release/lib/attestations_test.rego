@@ -1,7 +1,10 @@
-package lib
+package lib_test
+
+import future.keywords.in
 
 import data.lib
-import data.lib.bundles
+import data.lib.bundles_test
+import data.lib_test
 
 pr_build_type := "tekton.dev/v1beta1/PipelineRun"
 
@@ -24,17 +27,15 @@ garbage_att := {"statement": {"predicate": {"buildType": "garbage"}}}
 # This is used through the tests to generate an attestation of a PipelineRun
 # with an inline Task definition, look at using att_mock_helper_ref to generate
 # an attestation with a Task referenced from a Tekton Bundle image
-att_mock_helper(name, result_map, task_name) = d {
-	d := att_mock_helper_ref(name, result_map, task_name, "")
-}
+att_mock_helper(name, result_map, task_name) := att_mock_helper_ref(name, result_map, task_name, "")
 
-_task_ref(task_name, bundle_ref) = r {
+_task_ref(task_name, bundle_ref) := r {
 	bundle_ref != ""
 	ref_data := {"kind": "Task", "name": task_name, "bundle": bundle_ref}
 	r := {"ref": ref_data}
 }
 
-_task_ref(_, bundle_ref) = r {
+_task_ref(_, bundle_ref) := r {
 	bundle_ref == ""
 	r := {}
 }
@@ -50,7 +51,7 @@ _task_ref(_, bundle_ref) = r {
 #
 # import data.lib
 # import data.lib.bundles
-# attestations := [lib.att_mock_helper_ref_plain_result(
+# attestations := [att_mock_helper_ref_plain_result(
 #	"RESULT_NAME", "result_value", "task-name", bundles.acceptable_bundle_ref
 # )]
 # {...} == deny
@@ -59,18 +60,16 @@ _task_ref(_, bundle_ref) = r {
 #
 # NOTE: In most cases, a task produces a result that is JSON encoded. When mocking results
 # from such tasks, prefer the att_mock_helper_ref function instead.
-att_mock_helper_ref_plain_result(name, result, task_name, bundle_ref) = d {
-	d := {"statement": {"predicate": {
-		"buildType": pipelinerun_att_build_types[0],
-		"buildConfig": {"tasks": [object.union(
-			{"name": task_name, "results": [{
-				"name": name,
-				"value": result,
-			}]},
-			_task_ref(task_name, bundle_ref),
-		)]},
-	}}}
-}
+att_mock_helper_ref_plain_result(name, result, task_name, bundle_ref) := {"statement": {"predicate": {
+	"buildType": lib.tekton_pipeline_run,
+	"buildConfig": {"tasks": [object.union(
+		{"name": task_name, "results": [{
+			"name": name,
+			"value": result,
+		}]},
+		_task_ref(task_name, bundle_ref),
+	)]},
+}}}
 
 # This is used through the tests to generate an attestation of a PipelineRun
 # with an Task definition loaded from a Tekton Bundle image provided via
@@ -83,7 +82,7 @@ att_mock_helper_ref_plain_result(name, result, task_name, bundle_ref) = d {
 #
 # import data.lib
 # import data.lib.bundles
-# attestations := [lib.att_mock_helper_ref(
+# attestations := [att_mock_helper_ref(
 #	"RESULT_NAME", {...}, "task-name", bundles.acceptable_bundle_ref
 # )]
 # {...} == deny
@@ -92,19 +91,23 @@ att_mock_helper_ref_plain_result(name, result, task_name, bundle_ref) = d {
 #
 # NOTE: If the task being mocked does not produced a JSON encoded result, use
 # att_mock_helper_ref_plain_result instead.
-att_mock_helper_ref(name, result, task_name, bundle_ref) = d {
-	d := att_mock_helper_ref_plain_result(name, json.marshal(result), task_name, bundle_ref)
-}
+att_mock_helper_ref(name, result, task_name, bundle_ref) := att_mock_helper_ref_plain_result(
+	name,
+	json.marshal(result),
+	task_name,
+	bundle_ref,
+)
 
-att_mock_task_helper(task) = d {
-	d := [{"statement": {"predicate": {
-		"buildConfig": {"tasks": [task]},
-		"buildType": pipelinerun_att_build_types[0],
-	}}}]
-}
+att_mock_task_helper(task) := [{"statement": {"predicate": {
+	"buildConfig": {"tasks": [task]},
+	"buildType": lib.tekton_pipeline_run,
+}}}]
 
 test_pr_attestations {
-	assert_equal([mock_pr_att.statement, mock_pr_att_legacy.statement], pipelinerun_attestations) with input.attestations as [
+	lib.assert_equal(
+		[mock_pr_att.statement, mock_pr_att_legacy.statement],
+		lib.pipelinerun_attestations,
+	) with input.attestations as [
 		mock_tr_att,
 		mock_tr_att_legacy,
 		mock_pr_att,
@@ -113,7 +116,10 @@ test_pr_attestations {
 	]
 
 	# Deprecate format should still work for now
-	assert_equal([mock_pr_att.statement, mock_pr_att_legacy.statement], pipelinerun_attestations) with input.attestations as [
+	lib.assert_equal(
+		[mock_pr_att.statement, mock_pr_att_legacy.statement],
+		lib.pipelinerun_attestations,
+	) with input.attestations as [
 		mock_tr_att.statement,
 		mock_tr_att_legacy.statement,
 		mock_pr_att.statement,
@@ -121,7 +127,7 @@ test_pr_attestations {
 		garbage_att.statement,
 	]
 
-	assert_equal([], pipelinerun_attestations) with input.attestations as [
+	lib.assert_equal([], lib.pipelinerun_attestations) with input.attestations as [
 		mock_tr_att,
 		mock_tr_att_legacy,
 		garbage_att,
@@ -177,45 +183,45 @@ test_pipelinerun_slsa_provenance_v1 {
 		}]),
 	]
 	expected := [provenance_with_pr_spec.statement, provenance_with_pr_ref.statement]
-	assert_equal(expected, pipelinerun_slsa_provenance_v1) with input.attestations as attestations
+	lib.assert_equal(expected, lib.pipelinerun_slsa_provenance_v1) with input.attestations as attestations
 
 	# Deprecated format should still work for now
-	old_attestations := [att.statement | att := attestations[_]]
-	assert_equal(expected, pipelinerun_slsa_provenance_v1) with input.attestations as old_attestations
+	old_attestations := [att.statement | some att in attestations]
+	lib.assert_equal(expected, lib.pipelinerun_slsa_provenance_v1) with input.attestations as old_attestations
 }
 
 test_tr_attestations {
-	assert_equal([mock_tr_att.statement], taskrun_attestations) with input.attestations as [
+	lib.assert_equal([mock_tr_att.statement], lib.taskrun_attestations) with input.attestations as [
 		mock_tr_att,
 		mock_pr_att,
 		garbage_att,
 	]
 
 	# Deprecated format should still work for now
-	assert_equal([mock_tr_att.statement], taskrun_attestations) with input.attestations as [
+	lib.assert_equal([mock_tr_att.statement], lib.taskrun_attestations) with input.attestations as [
 		mock_tr_att.statement,
 		mock_pr_att.statement,
 		garbage_att.statement,
 	]
 
-	assert_equal([], taskrun_attestations) with input.attestations as [mock_pr_att, garbage_att]
+	lib.assert_equal([], lib.taskrun_attestations) with input.attestations as [mock_pr_att, garbage_att]
 }
 
 test_att_mock_helper {
 	expected := {"statement": {"predicate": {
-		"buildType": pipelinerun_att_build_types[0],
+		"buildType": lib.tekton_pipeline_run,
 		"buildConfig": {"tasks": [{"name": "mytask", "results": [{
 			"name": "result-name",
 			"value": "{\"foo\":\"bar\"}",
 		}]}]},
 	}}}
 
-	assert_equal(expected, lib.att_mock_helper("result-name", {"foo": "bar"}, "mytask"))
+	lib.assert_equal(expected, att_mock_helper("result-name", {"foo": "bar"}, "mytask"))
 }
 
 test_att_mock_helper_ref {
 	expected := {"statement": {"predicate": {
-		"buildType": pipelinerun_att_build_types[0],
+		"buildType": lib.tekton_pipeline_run,
 		"buildConfig": {"tasks": [{
 			"name": "mytask",
 			"ref": {
@@ -230,11 +236,16 @@ test_att_mock_helper_ref {
 		}]},
 	}}}
 
-	assert_equal(expected, lib.att_mock_helper_ref("result-name", {"foo": "bar"}, "mytask", "registry.img/name:tag@sha256:digest"))
+	lib.assert_equal(expected, att_mock_helper_ref(
+		"result-name",
+		{"foo": "bar"},
+		"mytask",
+		"registry.img/name:tag@sha256:digest",
+	))
 }
 
 test_results_from_tests {
-	assert_equal("TEST_OUTPUT", lib.task_test_result_name)
+	lib.assert_equal("TEST_OUTPUT", lib.task_test_result_name)
 
 	expected := {
 		"value": {"result": "SUCCESS", "foo": "bar"},
@@ -242,24 +253,38 @@ test_results_from_tests {
 		"bundle": "registry.img/acceptable@sha256:digest",
 	}
 
-	assert_equal([expected], results_from_tests) with input.attestations as [att_mock_helper_ref(lib.task_test_result_name, {"result": "SUCCESS", "foo": "bar"}, "mytask", bundles.acceptable_bundle_ref)]
+	att1 = lib_test.att_mock_helper_ref(
+		lib.task_test_result_name, {
+			"result": "SUCCESS",
+			"foo": "bar",
+		},
+		"mytask", bundles_test.acceptable_bundle_ref,
+	)
+	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att1]
 
 	# An edge case that may never happen
-	assert_equal([expected], results_from_tests) with input.attestations as [att_mock_helper_ref(lib.task_test_result_name, {"result": "SUCCESS", "foo": "bar"}, "mytask", bundles.acceptable_bundle_ref)]
+	att2 = lib_test.att_mock_helper_ref(
+		lib.task_test_result_name, {
+			"result": "SUCCESS",
+			"foo": "bar",
+		},
+		"mytask", bundles_test.acceptable_bundle_ref,
+	)
+	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att2]
 }
 
 test_task_in_pipelinerun {
 	task_name := "my-task"
 	d := att_mock_task_helper({"name": task_name})
 
-	assert_equal({"name": task_name}, task_in_pipelinerun(task_name)) with input.attestations as d
+	lib.assert_equal({"name": task_name}, lib.task_in_pipelinerun(task_name)) with input.attestations as d
 }
 
 test_task_not_in_pipelinerun {
 	task_name := "bad-task"
 	d := att_mock_task_helper({"name": "my-task"})
 
-	not task_in_pipelinerun(task_name) with input.attestations as d
+	not lib.task_in_pipelinerun(task_name) with input.attestations as d
 }
 
 test_result_in_task {
@@ -273,7 +298,7 @@ test_result_in_task {
 		}],
 	})
 
-	result_in_task(task_name, result_name) with input.attestations as d
+	lib.result_in_task(task_name, result_name) with input.attestations as d
 }
 
 test_result_not_in_task {
@@ -287,7 +312,7 @@ test_result_not_in_task {
 		}],
 	})
 
-	not result_in_task(task_name, result_name) with input.attestations as d
+	not lib.result_in_task(task_name, result_name) with input.attestations as d
 }
 
 test_task_succeeded {
@@ -297,7 +322,7 @@ test_task_succeeded {
 		"status": "Succeeded",
 	})
 
-	task_succeeded(task_name) with input.attestations as d
+	lib.task_succeeded(task_name) with input.attestations as d
 }
 
 test_task_not_succeeded {
@@ -307,11 +332,11 @@ test_task_not_succeeded {
 		"status": "Failed",
 	})
 
-	not task_succeeded(task_name) with input.attestations as d
+	not lib.task_succeeded(task_name) with input.attestations as d
 }
 
 test_unmarshall_json {
-	assert_equal({"a": 1, "b": "c"}, unmarshal("{\"a\":1,\"b\":\"c\"}"))
-	assert_equal("not JSON", unmarshal("not JSON"))
-	assert_equal("", unmarshal(""))
+	lib.assert_equal({"a": 1, "b": "c"}, lib.unmarshal("{\"a\":1,\"b\":\"c\"}"))
+	lib.assert_equal("not JSON", lib.unmarshal("not JSON"))
+	lib.assert_equal("", lib.unmarshal(""))
 }

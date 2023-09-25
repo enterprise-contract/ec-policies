@@ -165,14 +165,12 @@ deny contains result if {
 
 # _missing_tasks returns a set of task names that are in the given
 # required_tasks, but not in the PipelineRun attestation.
-_missing_tasks(required_tasks) := tasks if {
-	tasks := {task |
-		some att in lib.pipelinerun_attestations
-		count(tkn.tasks(att)) > 0
+_missing_tasks(required_tasks) := {task |
+	some att in lib.pipelinerun_attestations
+	count(tkn.tasks(att)) > 0
 
-		some task in required_tasks
-		not task in tkn.tasks_names(att)
-	}
+	some task in required_tasks
+	not task in tkn.tasks_names(att)
 }
 
 # get the future tasks that are pipeline specific. If none exists

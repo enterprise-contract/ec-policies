@@ -2,7 +2,7 @@ package lib.image
 
 # parse returns a data structure representing the different portions
 # of the OCI image reference.
-parse(ref) = d {
+parse(ref) := d {
 	digest_parts := split(ref, "@")
 	digest := _get(digest_parts, 1, "")
 
@@ -29,7 +29,7 @@ parse(ref) = d {
 }
 
 # Formats the parsed reference as string
-str(d) = s1 {
+str(d) := s1 {
 	d.repo != ""
 	d.digest != ""
 	d.tag != ""
@@ -69,6 +69,6 @@ equal_ref(ref1, ref2) {
 	object.remove(img1, ["tag"]) == object.remove(img2, ["tag"])
 }
 
-_get(array, index, default_value) = value {
+_get(array, index, default_value) := value {
 	value := array[index]
 } else = default_value

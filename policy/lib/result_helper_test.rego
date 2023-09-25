@@ -1,4 +1,4 @@
-package lib
+package lib_test
 
 import data.lib
 
@@ -19,7 +19,7 @@ test_result_helper {
 		{"annotations": {}, "path": ["ignored", "oh"]},
 	]
 
-	lib.assert_equal(expected_result, result_helper(chain, ["foo"]))
+	lib.assert_equal(expected_result, lib.result_helper(chain, ["foo"]))
 }
 
 test_result_helper_with_collections {
@@ -41,7 +41,7 @@ test_result_helper_with_collections {
 		{"annotations": {}, "path": ["ignored", "oh"]},
 	]
 
-	lib.assert_equal(expected, result_helper(chain, ["foo"]))
+	lib.assert_equal(expected, lib.result_helper(chain, ["foo"]))
 }
 
 test_result_helper_with_term {
@@ -62,5 +62,5 @@ test_result_helper_with_term {
 		{"annotations": {}, "path": ["ignored", "oh"]},
 	]
 
-	lib.assert_equal(expected, result_helper_with_term(chain, ["foo"], "ola"))
+	lib.assert_equal(expected, lib.result_helper_with_term(chain, ["foo"], "ola"))
 }

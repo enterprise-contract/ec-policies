@@ -13,15 +13,13 @@ required_annotations := {
 }
 
 # returns Rego files corresponding to policy rules
-policy_rule_files(namespaces) = result if {
-	result := {rule |
-		namespaces[n]
-		startswith(n, "data.policy") # look only in the policy namespace
-		rule := {"namespace": n, "files": {file |
-			file := namespaces[n][_]
-			not endswith(file, "_test.rego") # disregard test Rego files
-		}}
-	}
+policy_rule_files(namespaces) := {rule |
+	some namespace, files in namespaces
+	startswith(namespace, "data.policy") # look only in the policy namespace
+	rule := {"namespace": namespace, "files": {file |
+		some file in files
+		not endswith(file, "_test.rego") # disregard test Rego files
+	}}
 }
 
 # for annotations defined as:
@@ -29,7 +27,7 @@ policy_rule_files(namespaces) = result if {
 #   "<ann>": "..."
 # }
 # return set with single element "<ann>"
-flat(annotation_name, annotation_definition) = result if {
+flat(annotation_name, annotation_definition) := result if {
 	is_string(annotation_definition)
 	result := {annotation_name}
 }
@@ -41,17 +39,17 @@ flat(annotation_name, annotation_definition) = result if {
 #     "<ann3>": "..."
 #  }
 # return set with elements "<ann1>.<ann2>" and "<ann1>.<ann3>"
-flat(annotation_name, annotation_definition) = result if {
+flat(annotation_name, annotation_definition) := result if {
 	is_object(annotation_definition)
 	result := {x |
-		annotation_definition[nested_name]
+		some nested_name, _ in annotation_definition
 		x := concat(".", [annotation_name, nested_name])
 	}
 }
 
 # Validates that the policy rules have all required annotations
 violation contains msg if {
-	policy_files := policy_rule_files(input.namespaces)[_]
+	some policy_files in policy_rule_files(input.namespaces)
 
 	some file in policy_files.files
 	some annotation in input.annotations
@@ -64,8 +62,8 @@ violation contains msg if {
 
 	# gather all annotations in a dotted format (e.g. "custom.short_name")
 	declared_annotations := union({a |
-		annotation.annotations[x]
-		a := flat(x, annotation.annotations[x])
+		some key, _ in annotation.annotations
+		a := flat(key, annotation.annotations[key])
 	})
 
 	# what required annotations are missing
@@ -74,7 +72,10 @@ violation contains msg if {
 	# if we have any?
 	count(missing_annotations) > 0
 
-	msg := sprintf("ERROR: Missing annotation(s) %s at %s:%d", [concat(", ", missing_annotations), file, annotation.location.row])
+	msg := sprintf("ERROR: Missing annotation(s) %s at %s:%d", [
+		concat(", ", missing_annotations),
+		file, annotation.location.row,
+	])
 }
 
 all_rule_names contains name if {

@@ -5,7 +5,7 @@ import future.keywords.in
 # It's fairly idiomatic rego to just write this inline but still
 # I think this makes things a little more readable
 #
-to_set(arr) := {member | member := arr[_]}
+to_set(arr) := {member | some member in arr}
 
 # Without the in keyword it could be done like this:
 #  needle == haystack[_]

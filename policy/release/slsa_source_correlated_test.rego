@@ -1,11 +1,12 @@
-package policy.release.slsa_source_correlated
+package policy.release.slsa_source_correlated_test
 
 import future.keywords.in
 
 import data.lib
+import data.policy.release.slsa_source_correlated
 
 test_warn_missing_source_code_happy_day {
-	lib.assert_empty(warn) with input.image as {"source": {"something": "here"}}
+	lib.assert_empty(slsa_source_correlated.warn) with input.image as {"source": {"something": "here"}}
 }
 
 test_warn_missing_expected_source_code_reference {
@@ -13,33 +14,42 @@ test_warn_missing_expected_source_code_reference {
 		"code": "slsa_source_correlated.source_code_reference_provided",
 		"msg": "Expected source code reference was not provided for verification",
 	}}
-	lib.assert_equal_results(warn, expected) with input as {}
-	lib.assert_equal_results(warn, expected) with input.image as {}
-	lib.assert_equal_results(warn, expected) with input.image as {"source": {}}
+	lib.assert_equal_results(slsa_source_correlated.warn, expected) with input as {}
+	lib.assert_equal_results(slsa_source_correlated.warn, expected) with input.image as {}
+	lib.assert_equal_results(slsa_source_correlated.warn, expected) with input.image as {"source": {}}
 }
 
 test_deny_material_code_reference {
 	# no source materials
-	lib.assert_equal_results(deny, {{"code": "slsa_source_correlated.attested_source_code_reference", "msg": "The attested material contains no source code reference"}}) with input.image as expected
-		with input.attestations as [_material_attestation([]), _resolvedDependencies_attestation([])]
+	lib.assert_equal_results(slsa_source_correlated.deny, {{
+		"code": "slsa_source_correlated.attested_source_code_reference",
+		"msg": "The attested material contains no source code reference",
+	}}) with input.image as expected
+		with input.attestations as [_material_attestation([]), _resolved_dependencies_attestation([])]
 
 	# unsupported scm SLSA Provenance v0.2
-	lib.assert_equal_results(deny, {{"code": "slsa_source_correlated.attested_source_code_reference", "msg": "The attested material contains no source code reference"}}) with input.image as expected
+	lib.assert_equal_results(slsa_source_correlated.deny, {{
+		"code": "slsa_source_correlated.attested_source_code_reference",
+		"msg": "The attested material contains no source code reference",
+	}}) with input.image as expected
 		with input.attestations as [_source_material_attestation("xyz+https://some.repository", "ref")]
 
 	# unsupported scm SLSA Provenance v1.0
-	lib.assert_equal_results(deny, {{"code": "slsa_source_correlated.attested_source_code_reference", "msg": "The attested material contains no source code reference"}}) with input.image as expected
-		with input.attestations as [_source_resolvedDependencies_attestation("xyz+https://some.repository", "ref")]
+	lib.assert_equal_results(slsa_source_correlated.deny, {{
+		"code": "slsa_source_correlated.attested_source_code_reference",
+		"msg": "The attested material contains no source code reference",
+	}}) with input.image as expected
+		with input.attestations as [_source_resolved_dependencies_attestation("xyz+https://some.repository", "ref")]
 }
 
 test_deny_expected_source_code_reference_happy_day {
 	# one material matches expected SLSA Provenance v0.2
-	lib.assert_empty(deny) with input.image as expected
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
 		with input.attestations as [_source_material_attestation("git+https://git.repository", "ref")]
 
 	# one material matches expected SLSA Provenance v1.0
-	lib.assert_empty(deny) with input.image as expected
-		with input.attestations as [_source_resolvedDependencies_attestation("git+https://git.repository", "ref")]
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
+		with input.attestations as [_source_resolved_dependencies_attestation("git+https://git.repository", "ref")]
 
 	dependencies := [
 		{
@@ -57,10 +67,10 @@ test_deny_expected_source_code_reference_happy_day {
 	]
 
 	# more than one material, one matches expected the others are unrelated
-	lib.assert_empty(deny) with input.image as expected
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
 		with input.attestations as [
 			_material_attestation(dependencies),
-			_resolvedDependencies_attestation(dependencies),
+			_resolved_dependencies_attestation(dependencies),
 		]
 
 	# more than one material, one matches expected the other doesn't, this is,
@@ -68,84 +78,104 @@ test_deny_expected_source_code_reference_happy_day {
 	#
 	# TODO: most likely we want to distinguish what source was built from what
 	# source references were used by the build
-	lib.assert_empty(deny) with input.image as expected
-		with input.attestations as [_source_material_attestation("git+https://git.repository", "ref"), _source_material_attestation("git+https://unexpected.repository", "unexpected")]
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
+		with input.attestations as [
+			_source_material_attestation("git+https://git.repository", "ref"),
+			_source_material_attestation("git+https://unexpected.repository", "unexpected"),
+		]
 
 	# more than one material, one matches expected the other doesn't, this is,
 	# currently not a failure SLSA Provenance v1.0
 	#
 	# TODO: most likely we want to distinguish what source was built from what
 	# source references were used by the build
-	lib.assert_empty(deny) with input.image as expected
-		with input.attestations as [_source_resolvedDependencies_attestation("git+https://git.repository", "ref"), _source_material_attestation("git+https://unexpected.repository", "unexpected")]
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
+		with input.attestations as [
+			_source_resolved_dependencies_attestation("git+https://git.repository", "ref"),
+			_source_material_attestation("git+https://unexpected.repository", "unexpected"),
+		]
 
 	# the `gitCommit` support as digest algorithm in SLSA Provenance v1.0
-	lib.assert_empty(deny) with input.image as expected
-		with input.attestations as [_resolvedDependencies_attestation([{
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
+		with input.attestations as [_resolved_dependencies_attestation([{
 			"uri": "git+https://git.repository",
 			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"}, # printf 'commit 3\0ref' | sha1sum
 			"name": "inputs/result",
 		}])]
 
 	# missing .git suffix in input.image.source.git.url SLSA Provenance v0.2
-	lib.assert_empty(deny) with input.image as expected
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
 		with input.attestations as [_source_material_attestation("git+https://git.repository.git", "ref")]
 
 	# missing .git in predicate.materials.uri of SLSA Provenance v0.2
-	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+	img1 = {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as img1
 		with input.attestations as [_source_material_attestation("git+https://git.repository", "ref")]
 
 	# extra .git suffix in input.image.source.git.url SLSA Provenance v0.2
-	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git.git", "revision": "ref"}}}
+	img2 = {"source": {"git": {"url": "https://git.repository.git.git", "revision": "ref"}}}
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as img2
 		with input.attestations as [_source_material_attestation("git+https://git.repository.git", "ref")]
 
 	# extra .git suffix in predicate.materials.uri SLSA Provenance v0.2
-	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+	img3 = {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as img3
 		with input.attestations as [_source_material_attestation("git+https://git.repository.git.git", "ref")]
 
 	# missing .git suffix in input.image.source.git.url SLSA Provenance v1.0
-	lib.assert_empty(deny) with input.image as expected
-		with input.attestations as [_source_resolvedDependencies_attestation("git+https://git.repository.git", "ref")]
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
+		with input.attestations as [_source_resolved_dependencies_attestation("git+https://git.repository.git", "ref")]
 
 	# missing .git in predicate.resolvedDependencies.uri of SLSA Provenance v1.0
-	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
-		with input.attestations as [_source_resolvedDependencies_attestation("git+https://git.repository", "ref")]
+	img4 = {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as img4
+		with input.attestations as [_source_resolved_dependencies_attestation("git+https://git.repository", "ref")]
 
 	# extra .git suffix in input.image.source.git.url SLSA Provenance v1.0
-	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git.git", "revision": "ref"}}}
-		with input.attestations as [_source_resolvedDependencies_attestation("git+https://git.repository.git", "ref")]
+	img5 = {"source": {"git": {"url": "https://git.repository.git.git", "revision": "ref"}}}
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as img5
+		with input.attestations as [_source_resolved_dependencies_attestation("git+https://git.repository.git", "ref")]
 
-	# extra .git suffix in predicate.resolvedDependencies.uri SLSA Provenance v0.2
-	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
-		with input.attestations as [_source_resolvedDependencies_attestation("git+https://git.repository.git.git", "ref")]
+	# extra .git suffix in predicate.resolvedDependencies.uri SLSA Provenance
+	# v0.2
+	img6 = {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+	att1 = _source_resolved_dependencies_attestation("git+https://git.repository.git.git", "ref")
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as img6
+		with input.attestations as [att1]
 
 	# missing .git suffix in input.image.source.git.url SLSA Provenance v1.0, gitCommit support
-	lib.assert_empty(deny) with input.image as expected
-		with input.attestations as [_resolvedDependencies_attestation([{
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
+		with input.attestations as [_resolved_dependencies_attestation([{
 			"uri": "git+https://git.repository.git",
 			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"},
 			"name": "inputs/result",
 		}])]
 
-	# missing .git in predicate.resolvedDependencies.uri of SLSA Provenance v1.0, gitCommit support
-	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
-		with input.attestations as [_resolvedDependencies_attestation([{
+	# missing .git in predicate.resolvedDependencies.uri of SLSA Provenance
+	# v1.0, gitCommit support
+	img7 = {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as img7
+		with input.attestations as [_resolved_dependencies_attestation([{
 			"uri": "git+https://git.repository",
 			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"},
 			"name": "inputs/result",
 		}])]
 
-	# extra .git suffix in input.image.source.git.url SLSA Provenance v1.0, gitCommit support
-	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git.git", "revision": "ref"}}}
-		with input.attestations as [_resolvedDependencies_attestation([{
+	# extra .git suffix in input.image.source.git.url SLSA Provenance v1.0,
+	# gitCommit support
+	img8 = {"source": {"git": {"url": "https://git.repository.git.git", "revision": "ref"}}}
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as img8
+		with input.attestations as [_resolved_dependencies_attestation([{
 			"uri": "git+https://git.repository.git",
 			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"},
 			"name": "inputs/result",
 		}])]
 
-	# extra .git suffix in predicate.resolvedDependencies.uri SLSA Provenance v0.2, gitCommit support
-	lib.assert_empty(deny) with input.image as {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
-		with input.attestations as [_resolvedDependencies_attestation([{
+	# extra .git suffix in predicate.resolvedDependencies.uri SLSA Provenance
+	# v0.2, gitCommit support
+	img9 = {"source": {"git": {"url": "https://git.repository.git", "revision": "ref"}}}
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as img9
+		with input.attestations as [_resolved_dependencies_attestation([{
 			"uri": "git+https://git.repository.git.git",
 			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"},
 			"name": "inputs/result",
@@ -154,78 +184,174 @@ test_deny_expected_source_code_reference_happy_day {
 
 test_deny_expected_source_code_reference_v02 {
 	# different scm SLSA Provenance v0.2
-	lib.assert_equal_results(deny, {{"code": "slsa_source_correlated.expected_source_code_reference", "msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested", "term": "svn+https://git.repository@sha1:ref"}}) with input.image as expected
+	lib.assert_equal_results(slsa_source_correlated.deny, {{
+		"code": "slsa_source_correlated.expected_source_code_reference",
+		"msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested",
+		"term": "svn+https://git.repository@sha1:ref",
+	}}) with input.image as expected
 		with input.attestations as [_source_material_attestation("svn+https://git.repository", "ref")]
 
 	# different repository SLSA Provenance v0.2
-	lib.assert_equal_results(deny, {{"code": "slsa_source_correlated.expected_source_code_reference", "msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested", "term": "git+https://unexpected.repository@sha1:ref"}}) with input.image as expected
+	lib.assert_equal_results(slsa_source_correlated.deny, {{
+		"code": "slsa_source_correlated.expected_source_code_reference",
+		"msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested",
+		"term": "git+https://unexpected.repository@sha1:ref",
+	}}) with input.image as expected
 		with input.attestations as [_source_material_attestation("git+https://unexpected.repository", "ref")]
 
 	# different revision SLSA Provenance v0.2
-	lib.assert_equal_results(deny, {{"code": "slsa_source_correlated.expected_source_code_reference", "msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested", "term": "git+https://git.repository@sha1:unexpected"}}) with input.image as expected
+	lib.assert_equal_results(slsa_source_correlated.deny, {{
+		"code": "slsa_source_correlated.expected_source_code_reference",
+		"msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested",
+		"term": "git+https://git.repository@sha1:unexpected",
+	}}) with input.image as expected
 		with input.attestations as [_source_material_attestation("git+https://git.repository", "unexpected")]
 
 	# multiple mismatches SLSA Provenance v0.2
-	lib.assert_equal_results(deny, {{"code": "slsa_source_correlated.expected_source_code_reference", "msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested", "term": "git+https://git.repository@sha1:unexpected"}, {"code": "slsa_source_correlated.expected_source_code_reference", "msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested", "term": "git+https://unexpected.repository@sha1:ref"}, {"code": "slsa_source_correlated.expected_source_code_reference", "msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested", "term": "svn+https://git.repository@sha1:ref"}}) with input.image as expected
-		with input.attestations as [_source_material_attestation("svn+https://git.repository", "ref"), _source_material_attestation("git+https://unexpected.repository", "ref"), _source_material_attestation("git+https://git.repository", "unexpected")]
+	lib.assert_equal_results(slsa_source_correlated.deny, {
+		{
+			"code": "slsa_source_correlated.expected_source_code_reference",
+			"msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested",
+			"term": "git+https://git.repository@sha1:unexpected",
+		},
+		{
+			"code": "slsa_source_correlated.expected_source_code_reference",
+			"msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested",
+			"term": "git+https://unexpected.repository@sha1:ref",
+		},
+		{
+			"code": "slsa_source_correlated.expected_source_code_reference",
+			"msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested",
+			"term": "svn+https://git.repository@sha1:ref",
+		},
+	}) with input.image as expected
+		with input.attestations as [
+			_source_material_attestation("svn+https://git.repository", "ref"),
+			_source_material_attestation("git+https://unexpected.repository", "ref"),
+			_source_material_attestation("git+https://git.repository", "unexpected"),
+		]
 }
 
 test_deny_expected_source_code_reference_v10 {
 	# different scm SLSA Provenance v1.0
-	lib.assert_equal_results(deny, {{"code": "slsa_source_correlated.expected_source_code_reference", "msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested", "term": "svn+https://git.repository@sha1:ref"}}) with input.image as expected
-		with input.attestations as [_source_resolvedDependencies_attestation("svn+https://git.repository", "ref")]
+	lib.assert_equal_results(slsa_source_correlated.deny, {{
+		"code": "slsa_source_correlated.expected_source_code_reference",
+		"msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested",
+		"term": "svn+https://git.repository@sha1:ref",
+	}}) with input.image as expected
+		with input.attestations as [_source_resolved_dependencies_attestation("svn+https://git.repository", "ref")]
 
 	# different repository SLSA Provenance v1.0
-	lib.assert_equal_results(deny, {{"code": "slsa_source_correlated.expected_source_code_reference", "msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested", "term": "git+https://unexpected.repository@sha1:ref"}}) with input.image as expected
-		with input.attestations as [_source_resolvedDependencies_attestation("git+https://unexpected.repository", "ref")]
+	att1 = _source_resolved_dependencies_attestation("git+https://unexpected.repository", "ref")
+	lib.assert_equal_results(slsa_source_correlated.deny, {{
+		"code": "slsa_source_correlated.expected_source_code_reference",
+		"msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested",
+		"term": "git+https://unexpected.repository@sha1:ref",
+	}}) with input.image as expected
+		with input.attestations as [att1]
 
 	# different revision SLSA Provenance v1.0
-	lib.assert_equal_results(deny, {{"code": "slsa_source_correlated.expected_source_code_reference", "msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested", "term": "git+https://git.repository@sha1:unexpected"}}) with input.image as expected
-		with input.attestations as [_source_resolvedDependencies_attestation("git+https://git.repository", "unexpected")]
+	att2 = _source_resolved_dependencies_attestation("git+https://git.repository", "unexpected")
+	lib.assert_equal_results(slsa_source_correlated.deny, {{
+		"code": "slsa_source_correlated.expected_source_code_reference",
+		"msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested",
+		"term": "git+https://git.repository@sha1:unexpected",
+	}}) with input.image as expected
+		with input.attestations as [att2]
 
 	# multiple mismatches SLSA Provenance v1.0
-	lib.assert_equal_results(deny, {{"code": "slsa_source_correlated.expected_source_code_reference", "msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested", "term": "git+https://git.repository@sha1:unexpected"}, {"code": "slsa_source_correlated.expected_source_code_reference", "msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested", "term": "git+https://unexpected.repository@sha1:ref"}, {"code": "slsa_source_correlated.expected_source_code_reference", "msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested", "term": "svn+https://git.repository@sha1:ref"}}) with input.image as expected
-		with input.attestations as [_source_resolvedDependencies_attestation("svn+https://git.repository", "ref"), _source_resolvedDependencies_attestation("git+https://unexpected.repository", "ref"), _source_resolvedDependencies_attestation("git+https://git.repository", "unexpected")]
+	lib.assert_equal_results(slsa_source_correlated.deny, {
+		{
+			"code": "slsa_source_correlated.expected_source_code_reference",
+			"msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested",
+			"term": "git+https://git.repository@sha1:unexpected",
+		},
+		{
+			"code": "slsa_source_correlated.expected_source_code_reference",
+			"msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested",
+			"term": "git+https://unexpected.repository@sha1:ref",
+		},
+		{
+			"code": "slsa_source_correlated.expected_source_code_reference",
+			"msg": "The expected source code reference \"git+https://git.repository@ref\" is not attested",
+			"term": "svn+https://git.repository@sha1:ref",
+		},
+	}) with input.image as expected
+		with input.attestations as [
+			_source_resolved_dependencies_attestation("svn+https://git.repository", "ref"),
+			_source_resolved_dependencies_attestation("git+https://unexpected.repository", "ref"),
+			_source_resolved_dependencies_attestation("git+https://git.repository", "unexpected"),
+		]
 }
 
 test_slsa_v02_source_references {
-	lib.assert_empty(_source_references)
-	lib.assert_empty(_source_references) with input.attestations as [_material_attestation([])]
-	lib.assert_empty(_source_references) with input.attestations as [_source_material_attestation("https://something:somewhere", "cafe")]
+	lib.assert_empty(slsa_source_correlated._source_references)
+	lib.assert_empty(slsa_source_correlated._source_references) with input.attestations as [_material_attestation([])]
+	att1 = _source_material_attestation("https://something:somewhere", "cafe")
+	lib.assert_empty(slsa_source_correlated._source_references) with input.attestations as [att1]
 
 	# no digest
-	lib.assert_empty(_source_references) with input.attestations as [_material_attestation([{"uri": "git+https://git.repository"}])]
+	att2 = _material_attestation([{"uri": "git+https://git.repository"}])
+	lib.assert_empty(slsa_source_correlated._source_references) with input.attestations as [att2]
 
 	# unsupported digest algorithm
-	lib.assert_empty(_source_references) with input.attestations as [_material_attestation([{"uri": "git+https://git.repository", "digest": {"md2": "unsupported"}}])]
+	att3 = _material_attestation([{"uri": "git+https://git.repository", "digest": {"md2": "unsupported"}}])
+	lib.assert_empty(slsa_source_correlated._source_references) with input.attestations as [att3]
 
 	# no uri
-	lib.assert_empty(_source_references) with input.attestations as [_material_attestation([{"digest": {"sha256": "cafe"}}])]
-	lib.assert_equal({"git+ssh://git.repository@sha1:cafe"}, _source_references) with input.attestations as [_source_material_attestation("git+ssh://git.repository", "cafe")]
-	lib.assert_equal({"git+ssh://git.repository@sha1:cafe", "hg+https://hg.repository@sha1:dada"}, _source_references) with input.attestations as [_source_material_attestation("git+ssh://git.repository", "cafe"), _source_material_attestation("hg+https://hg.repository", "dada")]
+	att4 = _material_attestation([{"digest": {"sha256": "cafe"}}])
+	lib.assert_empty(slsa_source_correlated._source_references) with input.attestations as [att4]
+	lib.assert_equal(
+		{"git+ssh://git.repository@sha1:cafe"},
+		slsa_source_correlated._source_references,
+	) with input.attestations as [_source_material_attestation("git+ssh://git.repository", "cafe")]
+	lib.assert_equal(
+		{"git+ssh://git.repository@sha1:cafe", "hg+https://hg.repository@sha1:dada"},
+		slsa_source_correlated._source_references,
+	) with input.attestations as [
+		_source_material_attestation("git+ssh://git.repository", "cafe"),
+		_source_material_attestation("hg+https://hg.repository", "dada"),
+	]
 }
 
 test_slsa_v10_source_references {
-	lib.assert_empty(_source_references) with input.attestations as [_resolvedDependencies_attestation([])]
-	lib.assert_empty(_source_references) with input.attestations as [_source_resolvedDependencies_attestation("https://something:somewhere", "cafe")]
+	att1 = _resolved_dependencies_attestation([])
+	lib.assert_empty(slsa_source_correlated._source_references) with input.attestations as [att1]
+	att2 = _source_resolved_dependencies_attestation("https://something:somewhere", "cafe")
+	lib.assert_empty(slsa_source_correlated._source_references) with input.attestations as [att2]
 
 	# no digest
-	lib.assert_empty(_source_references) with input.attestations as [_resolvedDependencies_attestation([{"uri": "git+https://git.repository"}])]
+	att3 = _resolved_dependencies_attestation([{"uri": "git+https://git.repository"}])
+	lib.assert_empty(slsa_source_correlated._source_references) with input.attestations as [att3]
 
 	# unsupported digest algorithm
-	lib.assert_empty(_source_references) with input.attestations as [_resolvedDependencies_attestation([{"uri": "git+https://git.repository", "digest": {"md2": "unsupported"}}])]
+	att4 = _resolved_dependencies_attestation([{
+		"uri": "git+https://git.repository",
+		"digest": {"md2": "unsupported"},
+	}])
+	lib.assert_empty(slsa_source_correlated._source_references) with input.attestations as [att4]
 
 	# no uri
-	lib.assert_empty(_source_references) with input.attestations as [_resolvedDependencies_attestation([{"digest": {"sha256": "cafe"}}])]
-	lib.assert_equal({"git+ssh://git.repository@sha1:cafe"}, _source_references) with input.attestations as [_source_resolvedDependencies_attestation("git+ssh://git.repository", "cafe")]
-	lib.assert_equal({"git+ssh://git.repository@sha1:cafe", "hg+https://hg.repository@sha1:dada"}, _source_references) with input.attestations as [_source_resolvedDependencies_attestation("git+ssh://git.repository", "cafe"), _source_resolvedDependencies_attestation("hg+https://hg.repository", "dada")]
+	att5 = _resolved_dependencies_attestation([{"digest": {"sha256": "cafe"}}])
+	lib.assert_empty(slsa_source_correlated._source_references) with input.attestations as [att5]
+	lib.assert_equal(
+		{"git+ssh://git.repository@sha1:cafe"},
+		slsa_source_correlated._source_references,
+	) with input.attestations as [_source_resolved_dependencies_attestation("git+ssh://git.repository", "cafe")]
+	lib.assert_equal(
+		{"git+ssh://git.repository@sha1:cafe", "hg+https://hg.repository@sha1:dada"},
+		slsa_source_correlated._source_references,
+	) with input.attestations as [
+		_source_resolved_dependencies_attestation("git+ssh://git.repository", "cafe"),
+		_source_resolved_dependencies_attestation("hg+https://hg.repository", "dada"),
+	]
 }
 
 expected := {"source": {"git": {"url": "https://git.repository", "revision": "ref"}}}
 
 # SLSA Provenance v0.2
 _material_attestation(materials) := {"statement": {"predicate": {
-	"buildType": lib.pipelinerun_att_build_types[0],
+	"buildType": lib.tekton_pipeline_run,
 	"materials": materials,
 }}}
 
@@ -236,7 +362,7 @@ _source_material_attestation(uri, sha1) := _material_attestation([{
 }])
 
 # SLSA Provenance v1.0
-_resolvedDependencies_attestation(dependencies) := {"statement": {
+_resolved_dependencies_attestation(dependencies) := {"statement": {
 	"predicateType": "https://slsa.dev/provenance/v1",
 	"predicate": {"buildDefinition": {
 		"buildType": "https://tekton.dev/chains/v2/slsa",
@@ -246,7 +372,7 @@ _resolvedDependencies_attestation(dependencies) := {"statement": {
 }}
 
 # SLSA Provenance v1.0
-_source_resolvedDependencies_attestation(uri, sha1) := _resolvedDependencies_attestation([{
+_source_resolved_dependencies_attestation(uri, sha1) := _resolved_dependencies_attestation([{
 	"uri": uri,
 	"digest": {"sha1": sha1},
 	"name": "inputs/result",

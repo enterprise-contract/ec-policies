@@ -44,16 +44,26 @@ _assert_not_empty_fails(value) {
 }
 
 _assert_output_two_values(assert_type, left_value, right_value) {
-	debug_output := sprintf("Assert %s failure:\n  Left value:  %s\n  Right value: %s", [assert_type, left_value, right_value])
+	debug_output := sprintf("Assert %s failure:\n  Left value:  %s\n  Right value: %s", [
+		assert_type,
+		left_value, right_value,
+	])
 
 	# Use trace to show debug output in query explanations and print for stdout
+	# regal ignore:print-or-trace-call
 	trace(debug_output)
+
+	# regal ignore:print-or-trace-call
 	print(debug_output)
 }
 
 _assert_output_one_value(assert_type, value) {
 	debug_output := sprintf("Assert %s failure:\n  Value: %s", [assert_type, value])
+
+	# regal ignore:print-or-trace-call
 	trace(debug_output)
+
+	# regal ignore:print-or-trace-call
 	print(debug_output)
 }
 

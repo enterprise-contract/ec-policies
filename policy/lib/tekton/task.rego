@@ -28,7 +28,7 @@ tasks(obj) := {task |
 	_slsa_task(task)
 }
 
-# task from a slsav0.1 or slsav0.2 attestation
+# task from a slsav0.2 attestation
 _slsa_task(task) if {
 	task_ref := refs.task_ref(task)
 	task_ref.kind == "task"
@@ -95,7 +95,7 @@ task_names(task) := names if {
 	names := {name} | params
 }
 
-# task name from a v0.1 and v0.2 attestation
+# task name from a v0.2 and v1.0 attestation
 task_name(task) := refs.task_ref(task).name
 
 # _task_params returns an object where keys are parameter names
@@ -113,7 +113,7 @@ _task_params(task) := params if {
 	}
 }
 
-# handle params from a taskRun
+# handle params from a slsav1.0 attestation
 _task_params(task) := params if {
 	task.spec.params
 	params := {name: value |

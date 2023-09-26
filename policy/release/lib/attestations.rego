@@ -12,9 +12,11 @@ pipelinerun_att_build_types := {
 	"https://tekton.dev/attestations/chains/pipelinerun@v2",
 }
 
+tekton_slsav1_pipeline_run := "https://tekton.dev/chains/v2/slsa-tekton"
+
 slsav1_pipelinerun_att_build_types := {
 	"https://tekton.dev/chains/v2/slsa",
-	"https://tekton.dev/chains/v2/slsa-tekton",
+	tekton_slsav1_pipeline_run,
 }
 
 tekton_task_run := "tekton.dev/v1beta1/TaskRun"

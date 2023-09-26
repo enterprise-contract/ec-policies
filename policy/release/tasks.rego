@@ -40,7 +40,7 @@ import data.lib.tkn
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	some att in lib.pipelinerun_attestations
+	some att in _pipelineruns
 	count(tkn.tasks(att)) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
@@ -64,11 +64,11 @@ deny contains result if {
 #   - tasks.pipeline_has_tasks
 #
 deny contains result if {
-	some att in lib.pipelinerun_attestations
+	some att in _pipelineruns
 	some task in tkn.tasks(att)
-	status := _status(task)
+	some status in _status(task)
 	status != "Succeeded"
-	result := lib.result_helper_with_term(rego.metadata.chain(), [task.name, status], task.name)
+	result := lib.result_helper_with_term(rego.metadata.chain(), [tkn.task_name(task), status], tkn.task_name(task))
 }
 
 # METADATA
@@ -166,7 +166,7 @@ deny contains result if {
 # _missing_tasks returns a set of task names that are in the given
 # required_tasks, but not in the PipelineRun attestation.
 _missing_tasks(required_tasks) := {task |
-	some att in lib.pipelinerun_attestations
+	some att in _pipelineruns
 	count(tkn.tasks(att)) > 0
 
 	some task in required_tasks
@@ -176,7 +176,7 @@ _missing_tasks(required_tasks) := {task |
 # get the future tasks that are pipeline specific. If none exists
 # get the default list
 latest_required_tasks := task_data if {
-	some att in lib.pipelinerun_attestations
+	some att in _pipelineruns
 	count(tkn.tasks(att)) > 0
 	task_data := tkn.latest_required_pipeline_tasks(att)
 } else := task_data if {
@@ -186,7 +186,7 @@ latest_required_tasks := task_data if {
 # get current required tasks. fall back to the default list if
 # no label exists in the attestation
 current_required_tasks := task_data if {
-	some att in lib.pipelinerun_attestations
+	some att in _pipelineruns
 	count(tkn.tasks(att)) > 0
 	task_data := tkn.current_required_pipeline_tasks(att)
 } else := task_data if {
@@ -195,11 +195,51 @@ current_required_tasks := task_data if {
 
 ## get the required task data for a pipeline with a label
 required_pipeline_task_data := task_data if {
-	some att in lib.pipelinerun_attestations
+	some att in _pipelineruns
 	count(tkn.tasks(att)) > 0
 	task_data := tkn.required_task_list(att)
 }
 
 _status(task) := status if {
-	status := task.status
-} else = "MISSING"
+	# Handle SLSA Provenance v0.2
+	task.status
+	not task.status.conditions
+	status := [s |
+		s := task.status
+	]
+
+	# if task.status = [], we want ["MISSING"] returned
+	count(status) > 0
+} else := status if {
+	# Handle SLSA Provenance v1.0
+	task.status.conditions
+	status := [s |
+		some condition in task.status.conditions
+		condition.type == "Succeeded"
+		s := _slsav1_status(condition)
+	]
+
+	# if task.status.conditions = [], we want ["MISSING"] returned
+	count(status) > 0
+} else = ["MISSING"]
+
+_slsav1_status(condition) := status if {
+	condition.status == "True"
+	status := "Succeeded"
+}
+
+_slsav1_status(condition) := status if {
+	condition.status == "False"
+	status := "Failed"
+}
+
+_pipelineruns := att if {
+	v1_0 := [a |
+		some a in lib.pipelinerun_slsa_provenance_v1
+	]
+	v0_1 := [a |
+		some a in lib.pipelinerun_attestations
+	]
+
+	att := array.concat(v1_0, v0_1)
+}

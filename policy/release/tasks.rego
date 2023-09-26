@@ -207,9 +207,6 @@ _status(task) := status if {
 	status := [s |
 		s := task.status
 	]
-
-	# if task.status = [], we want ["MISSING"] returned
-	count(status) > 0
 } else := status if {
 	# Handle SLSA Provenance v1.0
 	task.status.conditions

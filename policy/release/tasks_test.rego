@@ -290,6 +290,7 @@ test_multiple_conditions_in_status if {
 			"type": "Succeeded",
 			"status": "False",
 		},
+		{"type": "invalid"},
 	]
 	slsav1_task := json.patch(_slsav1_task("buildah"), [{
 		"op": "replace",
@@ -298,6 +299,19 @@ test_multiple_conditions_in_status if {
 	}])
 
 	lib.assert_equal(["Succeeded", "Failed"], tasks._status(slsav1_task))
+}
+
+test_invalid_status_conditions if {
+	conditions := []
+	slsav1_task1 := json.patch(_slsav1_task("buildah"), [{
+		"op": "replace",
+		"path": "/status/conditions",
+		"value": conditions,
+	}])
+	lib.assert_equal(["MISSING"], tasks._status(slsav1_task1))
+
+	given_task := json.remove(_task("buildah"), ["/status"])
+	lib.assert_equal(["MISSING"], tasks._status(given_task))
 }
 
 _attestations_with_tasks(names, add_tasks) := attestations if {

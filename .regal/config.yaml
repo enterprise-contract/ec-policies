@@ -4,3 +4,7 @@ rules:
   style:
     todo-comment:
       level: warning
+    file-length:
+      level: warning
+    line-length:
+      max-line-length: 130

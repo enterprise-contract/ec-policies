@@ -35,4 +35,9 @@ pipeline_label_selector(pipeline, selector) := value if {
 	label == selector
 }
 
+pipeline_label_selector(pipeline, selector) := value if {
+	some label, value in pipeline.predicate.buildDefinition.internalParameters.labels
+	label == selector
+}
+
 pipeline_name := input.metadata.name

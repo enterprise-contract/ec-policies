@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/open-policy-agent/conftest v0.45.0
 	github.com/open-policy-agent/opa v0.56.0
-	github.com/styrainc/regal v0.8.0
+	github.com/styrainc/regal v0.9.0
 	github.com/tektoncd/cli v0.32.0
 )
 

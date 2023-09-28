@@ -472,3 +472,57 @@ slsav1_attestation_local_spec := {
 }
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
+
+slsav1_task(name) := task if {
+	parts := regex.split(`[\[\]=]`, name)
+	not parts[1]
+	pipeline_task_name := sprintf("%s-p", [name])
+	unnamed_task := {
+		"metadata": {"name": pipeline_task_name},
+		"spec": slsav1_attestation_local_spec,
+		"status": {"conditions": [{
+			"type": "Succeeded",
+			"status": "True",
+		}]},
+	}
+	task := json.patch(unnamed_task, [{
+		"op": "replace",
+		"path": "/spec/taskRef/name",
+		"value": name,
+	}])
+}
+
+slsav1_task(name) := task if {
+	parts := regex.split(`[\[\]=]`, name)
+	parts[1]
+	task_name := parts[0]
+	pipeline_task_name := sprintf("%s-p", [task_name])
+	unnamed_task := {
+		"metadata": {"name": pipeline_task_name},
+		"spec": slsav1_attestation_local_spec,
+		"status": {"conditions": [{
+			"type": "Succeeded",
+			"status": "True",
+		}]},
+	}
+	task := json.patch(unnamed_task, [
+		{
+			"op": "replace",
+			"path": "/spec/taskRef/name",
+			"value": task_name,
+		},
+		{
+			"op": "replace",
+			"path": "/spec/params",
+			"value": [{"name": parts[1], "value": parts[2]}],
+		},
+	])
+}
+
+resolved_dependencies(tasks) := [r |
+	some task in tasks
+	r := {
+		"name": "pipelineTask",
+		"content": json.marshal(task),
+	}
+]

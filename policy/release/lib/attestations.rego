@@ -1,6 +1,7 @@
 package lib
 
 import future.keywords.in
+import future.keywords.if
 
 import data.lib.tkn
 
@@ -36,7 +37,18 @@ java_sbom_component_count_result_name := "SBOM_JAVA_COMPONENTS_COUNT"
 build_base_images_digests_result_name := "BASE_IMAGES_DIGESTS"
 
 # These are the ones we're interested in
-pipelinerun_attestations := [statement |
+pipelinerun_attestations := att if {
+	v1_0 := [a |
+		some a in pipelinerun_slsa_provenance_v1
+	]
+	v0_2 := [a |
+		some a in pipelinerun_slsa_provenance02
+	]
+
+	att := array.concat(v1_0, v0_2)
+}
+
+pipelinerun_slsa_provenance02 := [statement |
 	some att in input.attestations
 	statement := _statement(att)
 	statement.predicate.buildType in pipelinerun_att_build_types
@@ -69,9 +81,25 @@ _statement(att) := statement {
 	statement := att.statement
 } else = att
 
+# tasks_from_pipelinerun := tasks if {
+#     tasks := [task |
+# 		some att in pipelinerun_attestations
+# 		some task in att.predicate.buildConfig.tasks
+# 	]
+# 	count(tasks) > 0
+# }
+
+# tasks_from_pipelinerun := tasks if {
+# 	tasks := [task |
+# 		some att in pipelinerun_attestations
+# 		some task in tkn.tasks(att)
+# 	]
+# 	count(tasks) > 0
+# }
+
 tasks_from_pipelinerun := [task |
 	some att in pipelinerun_attestations
-	some task in att.predicate.buildConfig.tasks
+	some task in tkn.tasks(att)
 ]
 
 # All results from the attested PipelineRun with the provided name. Results are

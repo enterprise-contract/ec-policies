@@ -163,7 +163,7 @@ task_data(task) := info if {
 	r := refs.task_ref(task)
 	info := {"name": r.name, "bundle": r.bundle}
 } else := info if {
-	info := {"name": task.name}
+	info := {"name": task_name(task)}
 }
 
 _key_value(obj, name) := value if {

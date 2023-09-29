@@ -25,7 +25,7 @@ import data.lib
 #   failure_msg: PipelineRun params, %v, do not match expectation, %v.
 #
 deny contains result if {
-	some provenance in lib.pipelinerun_slsa_provenance_v1
+	some provenance in lib.pipelinerun_attestations
 	param_names := {name |
 		some p in provenance.predicate.buildDefinition.externalParameters.runSpec.params
 		p.value != ""
@@ -46,7 +46,7 @@ deny contains result if {
 #   failure_msg: PipelineRun uses shared volumes, %v.
 #
 deny contains result if {
-	some provenance in lib.pipelinerun_slsa_provenance_v1
+	some provenance in lib.pipelinerun_attestations
 	shared_workspaces := {w |
 		some w in provenance.predicate.buildDefinition.externalParameters.runSpec.workspaces
 		w.persistentVolumeClaim

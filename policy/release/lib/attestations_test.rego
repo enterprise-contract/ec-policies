@@ -114,7 +114,7 @@ att_mock_task_helper(task) := [{"statement": {"predicate": {
 }}}]
 
 # make working with tasks and resolvedDeps easier
-mock_slsav1_attestation(tasks) := {"statement": {
+mock_slsav1_attestation_with_tasks(tasks) := {"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
 		"predicate": {"buildDefinition": {
 			"buildType": lib.tekton_slsav1_pipeline_run,
@@ -123,12 +123,21 @@ mock_slsav1_attestation(tasks) := {"statement": {
 		}}
 }}
 
+mock_slsav1_attestation := {"statement": {
+		"predicateType": "https://slsa.dev/provenance/v1",
+		"predicate": {"buildDefinition": {
+			"buildType": lib.tekton_slsav1_pipeline_run,
+			"externalParameters": {"runSpec": {"pipelineSpec": {}}},
+			"resolvedDependencies": [{}]
+		}}
+}}
+
 mock_slsav1_attestation_bundles(bundles) := a {
 	tasks := [task |
 		some bundle in bundles
 		task := tkn_test.slsav1_task_bundle("my-task", bundle)
 	]
-	a := mock_slsav1_attestation(tasks)
+	a := mock_slsav1_attestation_with_tasks(tasks)
 }
 
 mock_slsav02_attestation_bundles(bundles) := a {

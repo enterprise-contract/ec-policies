@@ -373,7 +373,7 @@ test_task_names_local if {
 }
 
 test_task_data_no_bundle_ref if {
-	lib.assert_equal({"name": "name"}, tkn.task_data({"name": "name"}))
+	lib.assert_equal({"name": "name"}, tkn.task_data({"ref": {"name": "name"}}))
 }
 
 test_missing_required_tasks_data if {
@@ -516,6 +516,16 @@ slsav1_task(name) := task if {
 			"path": "/spec/params",
 			"value": [{"name": parts[1], "value": parts[2]}],
 		},
+	])
+}
+
+slsav1_task_bundle(name, bundle) := task {
+	task := json.patch(slsav1_task(name), [
+		{
+			"op": "add",
+			"path": "/spec/taskRef/bundle",
+			"value": bundle,
+		}
 	])
 }
 

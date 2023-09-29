@@ -152,4 +152,4 @@ disallowed_inherited_labels := lib.rule_data("disallowed_inherited_labels") if {
 is_fbc if {
 	some label in labels
 	label.name == "operators.operatorframework.io.index.configs.v1"
-} else := false if {}
+} else := false

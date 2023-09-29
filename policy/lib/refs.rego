@@ -38,6 +38,7 @@ task_ref(task) := i {
 		"revision": _param(r, "revision", ""),
 		"pathInRepo": _param(r, "pathInRepo", ""),
 		"name": _param(r, "pathInRepo", ""),
+		"kind": lower(object.get(r, "kind", "task")),
 	}
 } else = i {
 	# Handle local reference

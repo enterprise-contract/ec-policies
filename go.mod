@@ -1,6 +1,6 @@
 module github.com/enterprise-contract/ec-policies
 
-go 1.19
+go 1.21
 
 require (
 	github.com/open-policy-agent/conftest v0.45.0

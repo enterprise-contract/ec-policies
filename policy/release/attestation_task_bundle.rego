@@ -17,6 +17,7 @@ import future.keywords.if
 import future.keywords.in
 
 import data.lib
+import data.lib.tkn
 import data.lib.bundles
 
 # METADATA
@@ -34,8 +35,8 @@ import data.lib.bundles
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	some bundle in bundles.disallowed_task_reference(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [bundle.name])
+	some task in bundles.disallowed_task_reference(lib.tasks_from_pipelinerun)
+	result := lib.result_helper(rego.metadata.chain(), [tkn.task_name(task)])
 }
 
 # METADATA
@@ -55,8 +56,7 @@ deny contains result if {
 #
 deny contains result if {
 	some task in bundles.empty_task_bundle_reference(lib.tasks_from_pipelinerun)
-	name := task.name
-	result := lib.result_helper(rego.metadata.chain(), [name])
+	result := lib.result_helper(rego.metadata.chain(), [tkn.task_name(task)])
 }
 
 # METADATA
@@ -76,7 +76,7 @@ deny contains result if {
 #
 warn contains result if {
 	some task in bundles.unpinned_task_bundle(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
+	result := lib.result_helper(rego.metadata.chain(), [tkn.task_name(task), bundles.bundle(task)])
 }
 
 # METADATA
@@ -97,7 +97,7 @@ warn contains result if {
 #
 warn contains result if {
 	some task in bundles.out_of_date_task_bundle(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
+	result := lib.result_helper(rego.metadata.chain(), [tkn.task_name(task), bundles.bundle(task)])
 }
 
 # METADATA
@@ -119,7 +119,7 @@ warn contains result if {
 #
 deny contains result if {
 	some task in bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
+	result := lib.result_helper(rego.metadata.chain(), [tkn.task_name(task), bundles.bundle(task)])
 }
 
 # METADATA

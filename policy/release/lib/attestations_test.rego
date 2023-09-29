@@ -113,6 +113,42 @@ att_mock_task_helper(task) := [{"statement": {"predicate": {
 	"buildType": lib.tekton_pipeline_run,
 }}}]
 
+# make working with tasks and resolvedDeps easier
+mock_slsav1_attestation(tasks) := {"statement": {
+		"predicateType": "https://slsa.dev/provenance/v1",
+		"predicate": {"buildDefinition": {
+			"buildType": lib.tekton_slsav1_pipeline_run,
+			"externalParameters": {"runSpec": {"pipelineSpec": {}}},
+			"resolvedDependencies": tkn_test.resolved_dependencies(tasks)
+		}}
+}}
+
+mock_slsav1_attestation_bundles(bundles) := a {
+	tasks := [task |
+		some bundle in bundles
+		task := tkn_test.slsav1_task_bundle("my-task", bundle)
+	]
+	a := mock_slsav1_attestation(tasks)
+}
+
+mock_slsav02_attestation_bundles(bundles) := a {
+	tasks := [task |
+		some index, bundle in bundles
+		task := {
+			"name": sprintf("task-run-%d", [index]),
+			"ref": {
+				"name": "my-task",
+				"bundle": bundle,
+			},
+		}
+	]
+
+	a := {"statement": {"predicate": {
+		"buildConfig": {"tasks": tasks},
+		"buildType": lib.tekton_pipeline_run,
+	}}}
+}
+
 test_tasks_from_pipelinerun {
 	slsa1_task := tkn_test.slsav1_task("buildah")
 	slsa1_att := [json.patch(valid_slsav1_att, [

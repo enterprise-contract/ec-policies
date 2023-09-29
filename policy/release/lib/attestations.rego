@@ -1,7 +1,7 @@
 package lib
 
-import future.keywords.in
 import future.keywords.if
+import future.keywords.in
 
 import data.lib.tkn
 
@@ -77,7 +77,7 @@ taskrun_attestations := [statement |
 	statement.predicate.buildType in taskrun_att_build_types
 ]
 
-_statement(att) := statement {
+_statement(att) := statement if {
 	statement := att.statement
 } else = att
 
@@ -122,7 +122,7 @@ results_named(name) := [r |
 # Attempts to json.unmarshal the given value. If not possible, the given
 # value is returned as is. This is helpful when interpreting certain values
 # in attestations created by Tekton Chains.
-unmarshal(raw) := value {
+unmarshal(raw) := value if {
 	json.is_valid(raw)
 	value := json.unmarshal(raw)
 } else = raw
@@ -132,21 +132,21 @@ unmarshal(raw) := value {
 results_from_tests := results_named(task_test_result_name)
 
 # Check for a task by name. Return the task if found
-task_in_pipelinerun(name) := task {
+task_in_pipelinerun(name) := task if {
 	some task in tasks_from_pipelinerun
 	task.name == name
 	task
 }
 
 # Check for a task result by name
-result_in_task(task_name, result_name) {
+result_in_task(task_name, result_name) if {
 	task := task_in_pipelinerun(task_name)
 	some task_result in task.results
 	task_result.name == result_name
 }
 
 # Check for a Succeeded status from a task
-task_succeeded(name) {
+task_succeeded(name) if {
 	task := task_in_pipelinerun(name)
 	task.status == "Succeeded"
 }

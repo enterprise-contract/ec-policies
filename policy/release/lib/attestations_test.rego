@@ -3,8 +3,8 @@ package lib_test
 import future.keywords.in
 
 import data.lib
-import data.lib.tkn_test
 import data.lib.bundles_test
+import data.lib.tkn_test
 import data.lib_test
 
 pr_build_type := "tekton.dev/v1beta1/PipelineRun"
@@ -26,12 +26,12 @@ mock_tr_att_legacy := {"statement": {"predicate": {"buildType": tr_build_type_le
 garbage_att := {"statement": {"predicate": {"buildType": "garbage"}}}
 
 valid_slsav1_att := {"statement": {
-		"predicateType": "https://slsa.dev/provenance/v1",
-		"predicate": {"buildDefinition": {
-			"buildType": "https://tekton.dev/chains/v2/slsa-tekton",
-			"externalParameters": {"runSpec": {"pipelineSpec": {}}},
-			"resolvedDependencies": []
-		}}
+	"predicateType": "https://slsa.dev/provenance/v1",
+	"predicate": {"buildDefinition": {
+		"buildType": "https://tekton.dev/chains/v2/slsa-tekton",
+		"externalParameters": {"runSpec": {"pipelineSpec": {}}},
+		"resolvedDependencies": [],
+	}},
 }}
 
 # This is used through the tests to generate an attestation of a PipelineRun
@@ -115,21 +115,21 @@ att_mock_task_helper(task) := [{"statement": {"predicate": {
 
 # make working with tasks and resolvedDeps easier
 mock_slsav1_attestation_with_tasks(tasks) := {"statement": {
-		"predicateType": "https://slsa.dev/provenance/v1",
-		"predicate": {"buildDefinition": {
-			"buildType": lib.tekton_slsav1_pipeline_run,
-			"externalParameters": {"runSpec": {"pipelineSpec": {}}},
-			"resolvedDependencies": tkn_test.resolved_dependencies(tasks)
-		}}
+	"predicateType": "https://slsa.dev/provenance/v1",
+	"predicate": {"buildDefinition": {
+		"buildType": lib.tekton_slsav1_pipeline_run,
+		"externalParameters": {"runSpec": {"pipelineSpec": {}}},
+		"resolvedDependencies": tkn_test.resolved_dependencies(tasks),
+	}},
 }}
 
 mock_slsav1_attestation := {"statement": {
-		"predicateType": "https://slsa.dev/provenance/v1",
-		"predicate": {"buildDefinition": {
-			"buildType": lib.tekton_slsav1_pipeline_run,
-			"externalParameters": {"runSpec": {"pipelineSpec": {}}},
-			"resolvedDependencies": [{}]
-		}}
+	"predicateType": "https://slsa.dev/provenance/v1",
+	"predicate": {"buildDefinition": {
+		"buildType": lib.tekton_slsav1_pipeline_run,
+		"externalParameters": {"runSpec": {"pipelineSpec": {}}},
+		"resolvedDependencies": [{}],
+	}},
 }}
 
 mock_slsav1_attestation_bundles(bundles) := a {
@@ -160,19 +160,16 @@ mock_slsav02_attestation_bundles(bundles) := a {
 
 test_tasks_from_pipelinerun {
 	slsa1_task := tkn_test.slsav1_task("buildah")
-	slsa1_att := [json.patch(valid_slsav1_att, [
-		{
-			"op": "replace",
-			"path": "/statement/predicate/buildDefinition/resolvedDependencies",
-			"value": tkn_test.resolved_dependencies([slsa1_task])
-		}
-	])]
+	slsa1_att := [json.patch(valid_slsav1_att, [{
+		"op": "replace",
+		"path": "/statement/predicate/buildDefinition/resolvedDependencies",
+		"value": tkn_test.resolved_dependencies([slsa1_task]),
+	}])]
 	lib.assert_equal([slsa1_task], lib.tasks_from_pipelinerun) with input.attestations as slsa1_att
 
 	slsa02_task := {"name": "my-task", "ref": {"kind": "task"}}
 	slsa02_att := att_mock_task_helper(slsa02_task)
 	lib.assert_equal([slsa02_task], lib.tasks_from_pipelinerun) with input.attestations as slsa02_att
-
 }
 
 test_pr_attestations {
@@ -362,9 +359,7 @@ test_result_in_task {
 			"name": result_name,
 			"value": "result value",
 		}],
-		"ref": {
-			"kind": "task"
-		}
+		"ref": {"kind": "task"},
 	})
 
 	lib.result_in_task(task_name, result_name) with input.attestations as d
@@ -379,9 +374,7 @@ test_result_not_in_task {
 			"name": "result name",
 			"value": "result value",
 		}],
-		"ref": {
-			"kind": "task"
-		}
+		"ref": {"kind": "task"},
 	})
 
 	not lib.result_in_task(task_name, result_name) with input.attestations as d
@@ -392,9 +385,7 @@ test_task_succeeded {
 	d := att_mock_task_helper({
 		"name": task_name,
 		"status": "Succeeded",
-		"ref": {
-			"kind": "task"
-		}
+		"ref": {"kind": "task"},
 	})
 
 	lib.task_succeeded(task_name) with input.attestations as d
@@ -405,9 +396,7 @@ test_task_not_succeeded {
 	d := att_mock_task_helper({
 		"name": task_name,
 		"status": "Failed",
-		"ref": {
-			"kind": "task"
-		}
+		"ref": {"kind": "task"},
 	})
 
 	not lib.task_succeeded(task_name) with input.attestations as d

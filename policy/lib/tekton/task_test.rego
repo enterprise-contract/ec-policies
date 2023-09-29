@@ -519,14 +519,12 @@ slsav1_task(name) := task if {
 	])
 }
 
-slsav1_task_bundle(name, bundle) := task {
-	task := json.patch(slsav1_task(name), [
-		{
-			"op": "add",
-			"path": "/spec/taskRef/bundle",
-			"value": bundle,
-		}
-	])
+slsav1_task_bundle(name, bundle) := task if {
+	task := json.patch(slsav1_task(name), [{
+		"op": "add",
+		"path": "/spec/taskRef/bundle",
+		"value": bundle,
+	}])
 }
 
 resolved_dependencies(tasks) := [r |

@@ -94,7 +94,7 @@ test_git_resolver_in_slsav1_pipelinerun {
 		"url": "https://github.com/enterprise-contract/hacbs-docker-build.git",
 		"revision": "main", "pathInRepo": "pipelines/git-clone.yaml",
 		"name": "pipelines/git-clone.yaml",
-		"kind": "task"
+		"kind": "task",
 	}
 	lib.assert_equal(refs.task_ref(ref), info)
 }

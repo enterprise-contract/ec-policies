@@ -17,8 +17,8 @@ import future.keywords.if
 import future.keywords.in
 
 import data.lib
-import data.lib.tkn
 import data.lib.bundles
+import data.lib.tkn
 
 # METADATA
 # title: Tasks defined using bundle references

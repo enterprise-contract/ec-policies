@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/open-policy-agent/conftest v0.45.0
 	github.com/open-policy-agent/opa v0.57.0
-	github.com/styrainc/regal v0.9.0
+	github.com/styrainc/regal v0.9.1-0.20230928133047-716a574ee33e
 	github.com/tektoncd/cli v0.32.0
 )
 
@@ -274,9 +274,9 @@ require (
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v1.16.0 // indirect
-	github.com/prometheus/client_model v0.4.0 // indirect
+	github.com/prometheus/client_model v0.4.1-0.20230718164431-9a2bf3000d16 // indirect
 	github.com/prometheus/common v0.44.0 // indirect
-	github.com/prometheus/procfs v0.10.1 // indirect
+	github.com/prometheus/procfs v0.11.1 // indirect
 	github.com/prometheus/statsd_exporter v0.21.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect

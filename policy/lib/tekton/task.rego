@@ -124,11 +124,7 @@ _task_params(task) := params if {
 }
 
 # task_param returns the value of the given parameter in the task.
-task_param(task, name) := params if {
-	# without this we end up with https://docs.styra.com/regal/rules/bugs/top-level-iteration
-	# regal ignore:unconditional-assignment
-	params := _task_params(task)[name]
-}
+task_param(task, name) := _task_params(task)[name]
 
 # task_result returns the value of the given result in the task.
 task_result(task, name) := value if {

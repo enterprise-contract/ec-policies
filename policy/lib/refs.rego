@@ -37,6 +37,7 @@ task_ref(task) := i {
 		"url": _param(r, "url", ""),
 		"revision": _param(r, "revision", ""),
 		"pathInRepo": _param(r, "pathInRepo", ""),
+		"name": _param(r, "pathInRepo", ""),
 	}
 } else = i {
 	# Handle local reference

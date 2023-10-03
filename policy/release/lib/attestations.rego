@@ -86,32 +86,14 @@ tasks_from_pipelinerun := [task |
 	some task in tkn.tasks(att)
 ]
 
-_results_named(name) := result if {
-	result := [r |
-		some task in tasks_from_pipelinerun
-		some result in task.results
-		result.name == name
-		result_map := unmarshal(result.value)
-
-		# Inject the task data, currently task name and task bundle image
-		# reference so we can show it in failure messages
-		r := object.union({"value": result_map}, tkn.task_data(task))
-	]
-	count(result) > 0
+# slsa v0.2 results
+task_results(task) := results if {
+	results := task.results
 }
 
-_results_named(name) := result if {
-	result := [r |
-		some task in tasks_from_pipelinerun
-		some result in task.status.taskResults
-		result.name == name
-		result_map := unmarshal(result.value)
-
-		# Inject the task data, currently task name and task bundle image
-		# reference so we can show it in failure messages
-		r := object.union({"value": result_map}, tkn.task_data(task))
-	]
-	count(result) > 0
+# slsa v1.0 results
+task_results(task) := results if {
+	results := task.status.taskResults
 }
 
 # All results from the attested PipelineRun with the provided name. Results are
@@ -121,7 +103,14 @@ _results_named(name) := result if {
 #   name: Tekton bundle image reference for the corresponding task.
 #   value: unmarshalled task result.
 results_named(name) := [r |
-	some r in _results_named(name)
+	some task in tasks_from_pipelinerun
+	some result in task_results(task)
+	result.name == name
+	result_map := unmarshal(result.value)
+
+	# Inject the task data, currently task name and task bundle image
+	# reference so we can show it in failure messages
+	r := object.union({"value": result_map}, tkn.task_data(task))
 ]
 
 # Attempts to json.unmarshal the given value. If not possible, the given

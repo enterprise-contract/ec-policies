@@ -5,37 +5,70 @@ import future.keywords.if
 import future.keywords.in
 
 import data.lib
+import data.lib.tkn_test
 import data.lib_test
 import data.policy.release.cve
 
 test_success if {
-	attestations := [lib_test.att_mock_helper_ref(
-		cve._result_name,
-		{"vulnerabilities": {"critical": 0, "high": 0, "medium": 20, "low": 300}},
+	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
 		"clair-scan",
-		_bundle,
-	)]
+		[{
+			"name": cve._result_name,
+			"type": "string",
+			"value": {"vulnerabilities": {"critical": 0, "high": 0, "medium": 20, "low": 300}},
+		}],
+	)
+	attestations := [
+		lib_test.att_mock_helper_ref(
+			cve._result_name,
+			{"vulnerabilities": {"critical": 0, "high": 0, "medium": 20, "low": 300}},
+			"clair-scan",
+			_bundle,
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+	]
 	lib.assert_empty(cve.deny) with input.attestations as attestations
 }
 
 test_success_with_rule_data if {
-	attestations := [lib_test.att_mock_helper_ref(
-		cve._result_name,
-		{"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
 		"clair-scan",
-		_bundle,
-	)]
+		[{
+			"name": cve._result_name,
+			"type": "string",
+			"value": {"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+		}],
+	)
+	attestations := [
+		lib_test.att_mock_helper_ref(
+			cve._result_name,
+			{"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+			"clair-scan",
+			_bundle,
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+	]
 	lib.assert_empty(cve.deny) with input.attestations as attestations
 		with data.rule_data.restrict_cve_security_levels as ["spam"]
 }
 
 test_failure if {
+	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+		"clair-scan",
+		[{
+			"name": cve._result_name,
+			"type": "string",
+			"value": {"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+		}],
+	)
 	attestations := [lib_test.att_mock_helper_ref(
 		cve._result_name,
 		{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
 		"clair-scan",
 		_bundle,
-	)]
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+	]
 	expected := {
 		{
 			"code": "cve.cve_blockers",
@@ -52,12 +85,22 @@ test_failure if {
 }
 
 test_failure_with_rule_data if {
+	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+		"clair-scan",
+		[{
+			"name": cve._result_name,
+			"type": "string",
+			"value": {"vulnerabilities": {"spam": 1, "bacon": 2, "eggs": 3}},
+		}],
+	)
 	attestations := [lib_test.att_mock_helper_ref(
 		cve._result_name,
 		{"vulnerabilities": {"spam": 1, "bacon": 2, "eggs": 3}},
 		"clair-scan",
 		_bundle,
-	)]
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+	]
 	expected := {
 		{
 			"code": "cve.cve_blockers",
@@ -75,22 +118,42 @@ test_failure_with_rule_data if {
 }
 
 test_warn if {
+	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+		"clair-scan",
+		[{
+			"name": cve._result_name,
+			"type": "string",
+			"value":{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+		}],
+	)
 	attestations := [lib_test.att_mock_helper_ref(
 		cve._result_name,
 		{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
 		"clair-scan",
 		_bundle,
-	)]
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+	]
 	lib.assert_empty(cve.warn) with input.attestations as attestations
 }
 
 test_warn_with_rule_data if {
+	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+		"clair-scan",
+		[{
+			"name": cve._result_name,
+			"type": "string",
+			"value":{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+		}],
+	)
 	attestations := [lib_test.att_mock_helper_ref(
 		cve._result_name,
 		{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
 		"clair-scan",
 		_bundle,
-	)]
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+	]
 	expected := {
 		{
 			"code": "cve.cve_warnings",
@@ -108,12 +171,22 @@ test_warn_with_rule_data if {
 }
 
 test_missing_cve_scan_result if {
+	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+		"clair-scan",
+		[{
+			"name": "WRONG_RESULT_NAME",
+			"type": "string",
+			"value":{"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+		}],
+	)
 	attestations := [lib_test.att_mock_helper_ref(
 		"WRONG_RESULT_NAME",
 		{"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
 		"clair-scan",
 		_bundle,
-	)]
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+	]
 	expected := {{
 		"code": "cve.cve_results_found",
 		"msg": "Clair CVE scan results were not found",
@@ -122,12 +195,22 @@ test_missing_cve_scan_result if {
 }
 
 test_missing_cve_scan_vulnerabilities if {
+	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+		"clair-scan",
+		[{
+			"name": cve._result_name,
+			"type": "string",
+			"value":{"seitilibarenluv": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+		}],
+	)
 	attestations := [lib_test.att_mock_helper_ref(
 		cve._result_name,
 		{"seitilibarenluv": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
 		"clair-scan",
 		_bundle,
-	)]
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+	]
 	expected := {{
 		"code": "cve.cve_results_found",
 		"msg": "Clair CVE scan results were not found",

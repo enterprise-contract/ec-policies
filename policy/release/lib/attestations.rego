@@ -81,26 +81,38 @@ _statement(att) := statement if {
 	statement := att.statement
 } else = att
 
-# tasks_from_pipelinerun := tasks if {
-#     tasks := [task |
-# 		some att in pipelinerun_attestations
-# 		some task in att.predicate.buildConfig.tasks
-# 	]
-# 	count(tasks) > 0
-# }
-
-# tasks_from_pipelinerun := tasks if {
-# 	tasks := [task |
-# 		some att in pipelinerun_attestations
-# 		some task in tkn.tasks(att)
-# 	]
-# 	count(tasks) > 0
-# }
-
 tasks_from_pipelinerun := [task |
 	some att in pipelinerun_attestations
 	some task in tkn.tasks(att)
 ]
+
+_results_named(name) := result if {
+	result := [r |
+		some task in tasks_from_pipelinerun
+		some result in task.results
+		result.name == name
+		result_map := unmarshal(result.value)
+
+		# Inject the task data, currently task name and task bundle image
+		# reference so we can show it in failure messages
+		r := object.union({"value": result_map}, tkn.task_data(task))
+	]
+	count(result) > 0
+}
+
+_results_named(name) := result if {
+	result := [r |
+		some task in tasks_from_pipelinerun
+		some result in task.status.taskResults
+		result.name == name
+		result_map := unmarshal(result.value)
+
+		# Inject the task data, currently task name and task bundle image
+		# reference so we can show it in failure messages
+		r := object.union({"value": result_map}, tkn.task_data(task))
+	]
+	count(result) > 0
+}
 
 # All results from the attested PipelineRun with the provided name. Results are
 # expected to contain a JSON value. The return object contains the following
@@ -109,14 +121,7 @@ tasks_from_pipelinerun := [task |
 #   name: Tekton bundle image reference for the corresponding task.
 #   value: unmarshalled task result.
 results_named(name) := [r |
-	some task in tasks_from_pipelinerun
-	some result in task.results
-	result.name == name
-	result_map := unmarshal(result.value)
-
-	# Inject the task data, currently task name and task bundle image
-	# reference so we can show it in failure messages
-	r := object.union({"value": result_map}, tkn.task_data(task))
+	some r in _results_named(name)
 ]
 
 # Attempts to json.unmarshal the given value. If not possible, the given

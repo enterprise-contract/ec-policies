@@ -520,11 +520,32 @@ slsav1_task(name) := task if {
 }
 
 slsav1_task_bundle(name, bundle) := task if {
+	not name.spec
 	task := json.patch(slsav1_task(name), [{
 		"op": "add",
 		"path": "/spec/taskRef/bundle",
 		"value": bundle,
 	}])
+}
+
+slsav1_task_bundle(name, bundle) := task if {
+	name.spec
+	task := json.patch(name, [{
+		"op": "add",
+		"path": "/spec/taskRef/bundle",
+		"value": bundle,
+	}])
+}
+
+# results are an array of dictionaries with keys, "name", "type", "value"
+slsav1_task_result(name, results) := task if {
+	task := json.patch(slsav1_task(name), [
+		{
+			"op": "add",
+			"path": "/status/taskResults",
+			"value": results
+		}
+	])
 }
 
 resolved_dependencies(tasks) := [r |

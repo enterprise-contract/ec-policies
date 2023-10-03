@@ -341,6 +341,19 @@ test_results_from_tests {
 		"mytask", bundles_test.acceptable_bundle_ref,
 	)
 	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att2]
+
+	att3 := mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(
+		tkn_test.slsav1_task_result(
+			"mytask",
+			[{
+				"name": lib.task_test_result_name,
+				"type": "string",
+				"value": json.marshal({"result": "SUCCESS", "foo": "bar"}),
+			}],
+		),
+		bundles_test.acceptable_bundle_ref,
+	)])
+	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att3]
 }
 
 test_task_not_in_pipelinerun {

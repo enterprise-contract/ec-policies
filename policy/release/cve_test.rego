@@ -61,11 +61,12 @@ test_failure if {
 			"value": {"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
 		}],
 	)
-	attestations := [lib_test.att_mock_helper_ref(
-		cve._result_name,
-		{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
-		"clair-scan",
-		_bundle,
+	attestations := [
+		lib_test.att_mock_helper_ref(
+			cve._result_name,
+			{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+			"clair-scan",
+			_bundle,
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
@@ -93,11 +94,12 @@ test_failure_with_rule_data if {
 			"value": {"vulnerabilities": {"spam": 1, "bacon": 2, "eggs": 3}},
 		}],
 	)
-	attestations := [lib_test.att_mock_helper_ref(
-		cve._result_name,
-		{"vulnerabilities": {"spam": 1, "bacon": 2, "eggs": 3}},
-		"clair-scan",
-		_bundle,
+	attestations := [
+		lib_test.att_mock_helper_ref(
+			cve._result_name,
+			{"vulnerabilities": {"spam": 1, "bacon": 2, "eggs": 3}},
+			"clair-scan",
+			_bundle,
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
@@ -123,14 +125,15 @@ test_warn if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value":{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+			"value": {"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
 		}],
 	)
-	attestations := [lib_test.att_mock_helper_ref(
-		cve._result_name,
-		{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
-		"clair-scan",
-		_bundle,
+	attestations := [
+		lib_test.att_mock_helper_ref(
+			cve._result_name,
+			{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+			"clair-scan",
+			_bundle,
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
@@ -143,14 +146,15 @@ test_warn_with_rule_data if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value":{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+			"value": {"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
 		}],
 	)
-	attestations := [lib_test.att_mock_helper_ref(
-		cve._result_name,
-		{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
-		"clair-scan",
-		_bundle,
+	attestations := [
+		lib_test.att_mock_helper_ref(
+			cve._result_name,
+			{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+			"clair-scan",
+			_bundle,
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
@@ -176,14 +180,15 @@ test_missing_cve_scan_result if {
 		[{
 			"name": "WRONG_RESULT_NAME",
 			"type": "string",
-			"value":{"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+			"value": {"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
 		}],
 	)
-	attestations := [lib_test.att_mock_helper_ref(
-		"WRONG_RESULT_NAME",
-		{"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
-		"clair-scan",
-		_bundle,
+	attestations := [
+		lib_test.att_mock_helper_ref(
+			"WRONG_RESULT_NAME",
+			{"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+			"clair-scan",
+			_bundle,
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
@@ -200,14 +205,15 @@ test_missing_cve_scan_vulnerabilities if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value":{"seitilibarenluv": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+			"value": {"seitilibarenluv": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
 		}],
 	)
-	attestations := [lib_test.att_mock_helper_ref(
-		cve._result_name,
-		{"seitilibarenluv": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
-		"clair-scan",
-		_bundle,
+	attestations := [
+		lib_test.att_mock_helper_ref(
+			cve._result_name,
+			{"seitilibarenluv": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+			"clair-scan",
+			_bundle,
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]

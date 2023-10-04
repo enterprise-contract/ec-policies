@@ -519,6 +519,7 @@ slsav1_task(name) := task if {
 	])
 }
 
+# create a task and add a bundle to it
 slsav1_task_bundle(name, bundle) := task if {
 	not name.spec
 	task := json.patch(slsav1_task(name), [{
@@ -528,6 +529,7 @@ slsav1_task_bundle(name, bundle) := task if {
 	}])
 }
 
+# add a bundle to an existing task
 slsav1_task_bundle(name, bundle) := task if {
 	name.spec
 	task := json.patch(name, [{
@@ -535,6 +537,21 @@ slsav1_task_bundle(name, bundle) := task if {
 		"path": "/spec/taskRef/bundle",
 		"value": bundle,
 	}])
+}
+
+slsav1_task_steps(name, steps) := task if {
+	task := json.patch(slsav1_task(name), [
+		{
+			"op": "add",
+			"path": "/status/taskSpec",
+			"value": {},
+		},
+		{
+			"op": "add",
+			"path": "/status/taskSpec/steps",
+			"value": steps,
+		},
+	])
 }
 
 # results are an array of dictionaries with keys, "name", "type", "value"

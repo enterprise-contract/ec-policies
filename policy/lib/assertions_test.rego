@@ -42,6 +42,7 @@ test_assert_not_empty {
 	not lib.assert_not_empty(set())
 }
 
+# regal ignore:rule-length
 test_assert_equal_results {
 	# Empty results
 	lib.assert_equal_results(set(), set())

@@ -46,6 +46,7 @@ manifest := {
 	"metadata-with-empty-annotations": {"metadata": {"annotations": {}}},
 }
 
+# regal ignore:rule-length
 test_all_image_ref if {
 	lib.assert_equal(
 		[

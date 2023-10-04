@@ -3,6 +3,7 @@ package lib.image_test
 import data.lib
 import data.lib.image
 
+# regal ignore:rule-length
 test_parse {
 	repository := "registry.com/re/po"
 	repository_with_port := "registry.com:8443/re/po"

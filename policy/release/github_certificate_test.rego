@@ -83,6 +83,7 @@ test_gh_workflow_trigger_mismatch if {
 		with data.rule_data.allowed_gh_workflow_triggers as ["build"]
 }
 
+# regal ignore:rule-length
 test_missing_extensions if {
 	expected := {
 		{

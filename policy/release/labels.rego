@@ -149,7 +149,10 @@ disallowed_inherited_labels := lib.rule_data("disallowed_inherited_labels") if {
 # A file-based catalog (FBC) image is just like a regular binary image, but
 # with a very specific application in the operator framework ecosystem. Here
 # we use heurisitics to determine whether or not the image is an FBC image.
+
+default is_fbc := false
+
 is_fbc if {
 	some label in labels
 	label.name == "operators.operatorframework.io.index.configs.v1"
-} else := false
+}

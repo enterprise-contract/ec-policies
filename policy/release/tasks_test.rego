@@ -22,6 +22,7 @@ test_no_tasks_present if {
 	lib.assert_equal_results(tasks.deny, expected) with input.attestations as _slsav1_attestations_with_tasks([], [])
 }
 
+# regal ignore:rule-length
 test_failed_tasks if {
 	expected := {
 		{
@@ -204,6 +205,7 @@ test_current_equal_latest_also if {
 		with input.attestations as slsav1_attestations
 }
 
+# regal ignore:rule-length
 test_parameterized if {
 	with_wrong_parameter := [
 		{

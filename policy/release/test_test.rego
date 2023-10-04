@@ -123,6 +123,7 @@ test_warning_is_warning {
 	}}) with input.attestations as warning_test
 }
 
+# regal ignore:rule-length
 test_mixed_statuses {
 	test_results := [
 		lib_test.att_mock_helper_ref(lib.task_test_result_name, {"result": "ERROR"}, "error_1", _bundle),

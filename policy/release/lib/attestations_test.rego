@@ -134,6 +134,7 @@ test_pr_attestations {
 	]
 }
 
+# regal ignore:rule-length
 test_pipelinerun_slsa_provenance_v1 {
 	provenance_with_pr_spec := {"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",

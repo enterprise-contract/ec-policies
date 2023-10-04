@@ -15,6 +15,7 @@ test_good_dockerfile_param if {
 	lib.assert_empty(buildah_build_task.deny) with input.attestations as [slsav1_attestation]
 }
 
+# regal ignore:rule-length
 test_buildah_tasks if {
 	tasks := [
 		{
@@ -113,6 +114,7 @@ test_missing_pipeline_run_attestations if {
 	lib.assert_empty(buildah_build_task.deny) with input.attestations as [slsav1_attestation]
 }
 
+# regal ignore:rule-length
 test_multiple_buildah_tasks if {
 	attestation := {"statement": {"predicate": {
 		"buildType": lib.tekton_pipeline_run,
@@ -165,6 +167,7 @@ test_multiple_buildah_tasks if {
 	lib.assert_empty(buildah_build_task.deny) with input.attestations as [slsav1_attestation]
 }
 
+# regal ignore:rule-length
 test_multiple_buildah_tasks_one_without_params if {
 	attestation := {"statement": {"predicate": {
 		"buildType": lib.tekton_pipeline_run,
@@ -214,6 +217,7 @@ test_multiple_buildah_tasks_one_without_params if {
 	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [slsav1_attestation]
 }
 
+# regal ignore:rule-length
 test_multiple_buildah_tasks_one_with_external_dockerfile if {
 	attestation := {"statement": {"predicate": {
 		"buildType": lib.tekton_pipeline_run,

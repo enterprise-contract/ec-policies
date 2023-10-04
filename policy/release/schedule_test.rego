@@ -7,6 +7,7 @@ test_no_restriction_by_default {
 	lib.assert_empty(schedule.deny)
 }
 
+# regal ignore:rule-length
 test_weekday_restriction {
 	disallowed := ["friday", "saturday", "sunday"]
 

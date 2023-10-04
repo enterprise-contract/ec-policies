@@ -42,6 +42,7 @@ test_deny_material_code_reference {
 		with input.attestations as [_source_resolved_dependencies_attestation("xyz+https://some.repository", "ref")]
 }
 
+# regal ignore:rule-length
 test_deny_expected_source_code_reference_happy_day {
 	# one material matches expected SLSA Provenance v0.2
 	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
@@ -182,6 +183,7 @@ test_deny_expected_source_code_reference_happy_day {
 		}])]
 }
 
+# regal ignore:rule-length
 test_deny_expected_source_code_reference_v02 {
 	# different scm SLSA Provenance v0.2
 	lib.assert_equal_results(slsa_source_correlated.deny, {{
@@ -232,6 +234,7 @@ test_deny_expected_source_code_reference_v02 {
 		]
 }
 
+# regal ignore:rule-length
 test_deny_expected_source_code_reference_v10 {
 	# different scm SLSA Provenance v1.0
 	lib.assert_equal_results(slsa_source_correlated.deny, {{
@@ -314,6 +317,7 @@ test_slsa_v02_source_references {
 	]
 }
 
+# regal ignore:rule-length
 test_slsa_v10_source_references {
 	att1 = _resolved_dependencies_attestation([])
 	lib.assert_empty(slsa_source_correlated._source_references) with input.attestations as [att1]

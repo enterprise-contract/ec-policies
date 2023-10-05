@@ -7,7 +7,11 @@ rules:
     file-length:
       level: warning
     line-length:
+<<<<<<< HEAD
       max-line-length: 130
   idiomatic:
     no-defined-entrypoint:
       level: ignore
+=======
+      level: warning
+>>>>>>> c4d3317 (regal lint is in conflict with opa fmt on the line-length)

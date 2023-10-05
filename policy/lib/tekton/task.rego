@@ -129,14 +129,10 @@ _task_params(task) := params if {
 task_param(task, name) := _task_params(task)[name]
 
 # slsa v0.2 results
-_task_results(task) := results if {
-	results := task.results
-}
+_task_results(task) := task.results
 
 # slsa v1.0 results
-_task_results(task) := results if {
-	results := task.status.taskResults
-}
+_task_results(task) := task.status.taskResults
 
 # task_result returns the value of the given result in the task.
 task_result(task, name) := value if {
@@ -147,24 +143,16 @@ task_result(task, name) := value if {
 }
 
 # slsa v0.2 task steps
-task_steps(task) := steps if {
-	steps := task.steps
-}
+task_steps(task) := task.steps
 
 # slsa v1.0 task steps
-task_steps(task) := steps if {
-	steps := task.status.taskSpec.steps
-}
+task_steps(task) := task.status.taskSpec.steps
 
 # slsa v0.2 step image
-task_step_image_ref(step) := image_ref if {
-	image_ref := step.environment.image
-}
+task_step_image_ref(step) := step.environment.image
 
 # slsa v1.0 step image
-task_step_image_ref(step) := image_ref if {
-	image_ref := step.image
-}
+task_step_image_ref(step) := step.image
 
 # build_task returns the build task found in the attestation
 build_task(attestation) := task if {

@@ -87,14 +87,10 @@ tasks_from_pipelinerun := [task |
 ]
 
 # slsa v0.2 results
-task_results(task) := results if {
-	results := task.results
-}
+task_results(task) := task.results
 
 # slsa v1.0 results
-task_results(task) := results if {
-	results := task.status.taskResults
-}
+task_results(task) := task.status.taskResults
 
 # All results from the attested PipelineRun with the provided name. Results are
 # expected to contain a JSON value. The return object contains the following

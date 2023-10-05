@@ -385,6 +385,17 @@ test_missing_required_tasks_data if {
 	lib.assert_equal(tkn.missing_required_tasks_data, false) with data["required-tasks"] as _time_based_required_tasks
 }
 
+test_task_step_image_ref if {
+	lib.assert_equal(
+		"redhat.io/openshift/rhel8@sha256:af7dd5b3b",
+		tkn.task_step_image_ref({"name": "mystep", "image": "redhat.io/openshift/rhel8@sha256:af7dd5b3b"}),
+	)
+	lib.assert_equal(
+		"redhat.io/openshift/rhel8@sha256:af7dd5b3b",
+		tkn.task_step_image_ref({"environment": {"image": "redhat.io/openshift/rhel8@sha256:af7dd5b3b"}}),
+	)
+}
+
 _expected_latest := {
 	"effective_on": "2099-01-02T00:00:00Z",
 	"tasks": [
@@ -543,8 +554,9 @@ slsav1_task_bundle(name, bundle) := task if {
 	}])
 }
 
-slsav1_task_steps(name, steps) := task if {
-	task := json.patch(slsav1_task(name), [
+slsav1_task_steps(name, steps) := json.patch(
+	slsav1_task(name),
+	[
 		{
 			"op": "add",
 			"path": "/status/taskSpec",
@@ -555,26 +567,28 @@ slsav1_task_steps(name, steps) := task if {
 			"path": "/status/taskSpec/steps",
 			"value": steps,
 		},
-	])
-}
+	],
+)
 
 # results are an array of dictionaries with keys, "name", "type", "value"
-slsav1_task_result(name, results) := task if {
-	task := json.patch(slsav1_task(name), [{
+slsav1_task_result(name, results) := json.patch(
+	slsav1_task(name),
+	[{
 		"op": "add",
 		"path": "/status/taskResults",
 		"value": results,
-	}])
-}
+	}],
+)
 
 # results are an array of dictionaries with keys, "name", "type", "value"
-slsav1_task_result_ref(name, results) := task if {
-	task := json.patch(slsav1_task(name), [{
+slsav1_task_result_ref(name, results) := json.patch(
+	slsav1_task(name),
+	[{
 		"op": "add",
 		"path": "/status/taskResults",
 		"value": _marshal_slsav1_results(results),
-	}])
-}
+	}],
+)
 
 _marshal_slsav1_results(results) := [r |
 	some result in results

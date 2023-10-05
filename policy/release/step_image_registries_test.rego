@@ -29,7 +29,7 @@ test_image_registry_valid if {
 		mock_data(good_image),
 		mock_data(good_oci_image),
 		mock_slsav1_data(good_image),
-		mock_slsav1_data(good_oci_image)
+		mock_slsav1_data(good_oci_image),
 	]
 	lib.assert_empty(step_image_registries.deny) with input.attestations as attestations
 	lib.assert_empty(step_image_registries.deny) with input.attestations as attestations
@@ -38,7 +38,7 @@ test_image_registry_valid if {
 test_attestation_type_invalid if {
 	bad_attestations := [
 		mock_data(bad_image),
-		mock_slsav1_data(bad_image)
+		mock_slsav1_data(bad_image),
 	]
 	lib.assert_equal_results(step_image_registries.deny, {{
 		"code": "step_image_registries.task_step_images_permitted",
@@ -47,7 +47,7 @@ test_attestation_type_invalid if {
 
 	bad_oci_attestations := [
 		mock_data(bad_oci_image),
-		mock_slsav1_data(bad_oci_image)
+		mock_slsav1_data(bad_oci_image),
 	]
 	lib.assert_equal_results(step_image_registries.deny, {{
 		"code": "step_image_registries.task_step_images_permitted",

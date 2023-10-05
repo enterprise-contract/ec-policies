@@ -155,24 +155,6 @@ test_acceptable_bundles_provided {
 	lib.assert_equal_results(expected, attestation_task_bundle.deny) with data["task-bundles"] as []
 }
 
-mock_attestation(bundles) := a {
-	tasks := [task |
-		some index, bundle in bundles
-		task := {
-			"name": sprintf("task-run-%d", [index]),
-			"ref": {
-				"name": "my-task",
-				"bundle": bundle,
-			},
-		}
-	]
-
-	a := [{"statement": {"predicate": {
-		"buildConfig": {"tasks": tasks},
-		"buildType": lib.tekton_pipeline_run,
-	}}}]
-}
-
 task_bundles := {"reg.com/repo": [
 	{
 		# Latest bundle, allowed

@@ -37,7 +37,7 @@ task_ref(task) := i {
 		"url": _param(r, "url", ""),
 		"revision": _param(r, "revision", ""),
 		"pathInRepo": _param(r, "pathInRepo", ""),
-		"name":  object.get(r, "name", ""),
+		"name": object.get(r, "name", ""),
 		"kind": lower(object.get(r, "kind", "task")),
 	}
 } else = i {

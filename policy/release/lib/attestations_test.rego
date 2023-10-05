@@ -123,15 +123,6 @@ mock_slsav1_attestation_with_tasks(tasks) := {"statement": {
 	}},
 }}
 
-mock_slsav1_attestation := {"statement": {
-	"predicateType": "https://slsa.dev/provenance/v1",
-	"predicate": {"buildDefinition": {
-		"buildType": lib.tekton_slsav1_pipeline_run,
-		"externalParameters": {"runSpec": {"pipelineSpec": {}}},
-		"resolvedDependencies": [{}],
-	}},
-}}
-
 mock_slsav1_attestation_bundles(bundles) := a {
 	tasks := [task |
 		some bundle in bundles

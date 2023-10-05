@@ -235,6 +235,10 @@ test_task_result if {
 	task := {"results": [{"name": "SPAM", "value": "maps"}]}
 	lib.assert_equal("maps", tkn.task_result(task, "SPAM"))
 	not tkn.task_result(task, "missing")
+
+	slsav1_task := {"status": {"taskResults": [{"name": "SPAM", "value": "maps"}]}}
+	lib.assert_equal("maps", tkn.task_result(slsav1_task, "SPAM"))
+	not tkn.task_result(slsav1_task, "missing")
 }
 
 test_tasks_from_attestation_with_spam if {

@@ -73,6 +73,7 @@ test_slsav1_local_ref {
 
 test_git_resolver_in_slsav1_pipelinerun {
 	ref := {"spec": {"taskRef": {
+		"name": "git-clone",
 		"kind": "Task",
 		"resolver": "git",
 		"params": [
@@ -93,7 +94,7 @@ test_git_resolver_in_slsav1_pipelinerun {
 	info := {
 		"url": "https://github.com/enterprise-contract/hacbs-docker-build.git",
 		"revision": "main", "pathInRepo": "pipelines/git-clone.yaml",
-		"name": "pipelines/git-clone.yaml",
+		"name": "git-clone",
 		"kind": "task",
 	}
 	lib.assert_equal(refs.task_ref(ref), info)

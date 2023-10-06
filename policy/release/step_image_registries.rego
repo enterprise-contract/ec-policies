@@ -26,9 +26,6 @@ import data.lib
 #     Make sure the container image used in each step of the build pipeline comes from
 #     an approved registry. The approved list is under 'allowed_step_image_registry_prefixes'
 #     in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
-#   collections:
-#   - minimal
-#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -54,9 +51,6 @@ deny contains result if {
 #     Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key
 #     'allowed_step_image_registry_prefixes' that contains a list of approved registries
 #     that can be used to run tasks in the build pipeline.
-#   collections:
-#   - minimal
-#   - redhat
 #
 deny contains result if {
 	count(lib.rule_data("allowed_step_image_registry_prefixes")) == 0
@@ -65,5 +59,15 @@ deny contains result if {
 
 image_ref_permitted(image_ref, allowed_prefixes) if {
 	some allowed_prefix in allowed_prefixes
-	startswith(image_ref, allowed_prefix)
+	startswith(_normalize_image_ref(image_ref), allowed_prefix)
+}
+
+_normalize_image_ref(image_ref) := normalized if {
+	parts := split(image_ref, "://")
+	parts[0] == "oci"
+	normalized := parts[1]
+} else := normalized if {
+	parts := split(image_ref, "://")
+	count(parts) == 1
+	normalized := image_ref
 }

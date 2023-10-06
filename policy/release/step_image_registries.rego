@@ -65,5 +65,15 @@ deny contains result if {
 
 image_ref_permitted(image_ref, allowed_prefixes) if {
 	some allowed_prefix in allowed_prefixes
-	startswith(image_ref, allowed_prefix)
+	startswith(_normalize_image_ref(image_ref), allowed_prefix)
+}
+
+_normalize_image_ref(image_ref) := normalized if {
+	parts := split(image_ref, "://")
+	parts[0] == "oci"
+	normalized := parts[1]
+} else := normalized if {
+	parts := split(image_ref, "://")
+	count(parts) == 1
+	normalized := image_ref
 }

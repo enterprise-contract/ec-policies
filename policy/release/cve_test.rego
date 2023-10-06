@@ -15,13 +15,13 @@ test_success if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value": {"vulnerabilities": {"critical": 0, "high": 0, "medium": 20, "low": 300}},
+			"value": {"vulnerabilities": {"critical": 0, "high": 0, "medium": 20, "low": 300, "unknown": 2}},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
-			{"vulnerabilities": {"critical": 0, "high": 0, "medium": 20, "low": 300}},
+			{"vulnerabilities": {"critical": 0, "high": 0, "medium": 20, "low": 300, "unknown": 2}},
 			"clair-scan",
 			_bundle,
 		),
@@ -36,13 +36,13 @@ test_success_with_rule_data if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value": {"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+			"value": {"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300, "unknown": 2}},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
-			{"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+			{"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300, "unknown": 2}},
 			"clair-scan",
 			_bundle,
 		),
@@ -58,13 +58,13 @@ test_failure if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value": {"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+			"value": {"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300, "unknown": 2}},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
-			{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+			{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300, "unknown": 2}},
 			"clair-scan",
 			_bundle,
 		),
@@ -125,13 +125,13 @@ test_warn if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value": {"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+			"value": {"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300, "unknown": 2}},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
-			{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+			{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300, "unknown": 2}},
 			"clair-scan",
 			_bundle,
 		),
@@ -146,13 +146,13 @@ test_warn_with_rule_data if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value": {"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+			"value": {"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300, "unknown": 2}},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
-			{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300}},
+			{"vulnerabilities": {"critical": 1, "high": 10, "medium": 20, "low": 300, "unknown": 2}},
 			"clair-scan",
 			_bundle,
 		),
@@ -169,9 +169,14 @@ test_warn_with_rule_data if {
 			"term": "low",
 			"msg": "Found 300 non-blocking CVE vulnerabilities of low security level",
 		},
+		{
+			"code": "cve.cve_warnings",
+			"term": "unknown",
+			"msg": "Found 2 non-blocking CVE vulnerabilities of unknown security level",
+		},
 	}
 	lib.assert_equal_results(cve.warn, expected) with input.attestations as attestations
-		with data.rule_data.warn_cve_security_levels as ["medium", "low"]
+		with data.rule_data.warn_cve_security_levels as ["medium", "low", "unknown"]
 }
 
 test_missing_cve_scan_result if {
@@ -180,13 +185,13 @@ test_missing_cve_scan_result if {
 		[{
 			"name": "WRONG_RESULT_NAME",
 			"type": "string",
-			"value": {"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+			"value": {"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300, "unknown": 2}},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			"WRONG_RESULT_NAME",
-			{"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+			{"vulnerabilities": {"critical": 1, "high": 1, "medium": 20, "low": 300, "unknown": 2}},
 			"clair-scan",
 			_bundle,
 		),
@@ -205,13 +210,13 @@ test_missing_cve_scan_vulnerabilities if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value": {"seitilibarenluv": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+			"value": {"seitilibarenluv": {"critical": 1, "high": 1, "medium": 20, "low": 300, "unknown": 2}},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
-			{"seitilibarenluv": {"critical": 1, "high": 1, "medium": 20, "low": 300}},
+			{"seitilibarenluv": {"critical": 1, "high": 1, "medium": 20, "low": 300, "unknown": 2}},
 			"clair-scan",
 			_bundle,
 		),

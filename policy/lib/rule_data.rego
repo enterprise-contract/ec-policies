@@ -30,7 +30,7 @@ rule_data_defaults := {
 	"warned_tests_results": ["WARNING"],
 	#
 	# Used in release/cve.go
-	# Valid levels: "critical", "high", "medium", and "low"
+	# Valid levels: "critical", "high", "medium", "low", and "unknown"
 	"restrict_cve_security_levels": ["critical", "high"],
 	"warn_cve_security_levels": [],
 	# Used in policy/release/slsa_source_correlated.rego

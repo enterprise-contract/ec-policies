@@ -27,6 +27,7 @@ test_not_found if {
 		with input.image.ref as "registry.local/spam@sha256:123"
 }
 
+# regal ignore:rule-length
 test_not_valid if {
 	attestations := [
 		# bad name

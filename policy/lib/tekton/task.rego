@@ -7,9 +7,11 @@ import future.keywords.in
 import data.lib.refs
 import data.lib.time
 
+default missing_required_tasks_data := false
+
 missing_required_tasks_data if {
 	count(data["required-tasks"]) == 0
-} else := false
+}
 
 # The latest set of required tasks. Tasks here are not required right now
 # but will be required in the future.

@@ -12,6 +12,7 @@ import future.keywords.in
 # gives precedence to the old-style. Further, Tekton falls back to the local resolver if
 # a bundle is not used in neither format. The "else" usage in this function ensures the
 # same precendence order is honored.
+# regal ignore:rule-length
 task_ref(task) := i {
 	# Handle old-style bundle reference
 	r := _ref(task)

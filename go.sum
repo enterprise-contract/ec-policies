@@ -2311,8 +2311,8 @@ github.com/onsi/gomega v1.27.4/go.mod h1:riYq/GJKh8hhoM01HN6Vmuy93AarCXCBGpvFDK3
 github.com/op/go-logging v0.0.0-20160315200505-970db520ece7/go.mod h1:HzydrMdWErDVzsI23lYNej1Htcns9BCg93Dk0bBINWk=
 github.com/open-policy-agent/conftest v0.46.0 h1:91NFzcOh7aDiIdf+pfgdqE9RP7xy7KLZu6m2UWca6ZE=
 github.com/open-policy-agent/conftest v0.46.0/go.mod h1:UiQCjVlXxO850P5glVu1HdQf7eZZz+BSWZVyob+nHUE=
-github.com/open-policy-agent/opa v0.57.0 h1:DftxYfOEHOheXvO2Q6HCIM2ZVdKrvnF4cZlU9C64MIQ=
-github.com/open-policy-agent/opa v0.57.0/go.mod h1:3FY6GNSbUqOhjCdvTXCBJ2rNuh66p/XrIc2owr/hSwo=
+github.com/open-policy-agent/opa v0.57.1-0.20231003111229-7fa6165c27bb h1:D9q7LaCyzkCNAe9xPAG11fumqVnwsG1ih3vwaB3/qMA=
+github.com/open-policy-agent/opa v0.57.1-0.20231003111229-7fa6165c27bb/go.mod h1:3FY6GNSbUqOhjCdvTXCBJ2rNuh66p/XrIc2owr/hSwo=
 github.com/opencontainers/go-digest v0.0.0-20180430190053-c9281466c8b2/go.mod h1:cMLVZDEM3+U2I4VmLI6N8jQYUd2OVphdqWwCJHrFt2s=
 github.com/opencontainers/go-digest v1.0.0-rc1/go.mod h1:cMLVZDEM3+U2I4VmLI6N8jQYUd2OVphdqWwCJHrFt2s=
 github.com/opencontainers/go-digest v1.0.0-rc1.0.20180430190053-c9281466c8b2/go.mod h1:cMLVZDEM3+U2I4VmLI6N8jQYUd2OVphdqWwCJHrFt2s=
@@ -2635,8 +2635,8 @@ github.com/stretchr/testify v1.8.2/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o
 github.com/stretchr/testify v1.8.3/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
 github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcUk=
 github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
-github.com/styrainc/regal v0.9.1-0.20230928133047-716a574ee33e h1:RmlswOIugip9VFiPh5xz30UHUta7TYoBVxj9WaOt8aU=
-github.com/styrainc/regal v0.9.1-0.20230928133047-716a574ee33e/go.mod h1:e37Y2X13OAE7uuZra/VgoO1zV+zhPJ99cevYvPAxts4=
+github.com/styrainc/regal v0.10.0 h1:GiJOwwG2ETyWrdDwOGZKZJ5kLxR88myF6hxyQ6AiouI=
+github.com/styrainc/regal v0.10.0/go.mod h1:kUeiROeSdGloHMYlS49gp0t/h+JUoTj+Kch6VYB2pzI=
 github.com/subosito/gotenv v1.2.0/go.mod h1:N0PQaV/YGNqwC0u51sEeR/aUtSLEXKX9iv69rRypqCw=
 github.com/subosito/gotenv v1.4.1/go.mod h1:ayKnFf/c6rvx/2iiLrJUk1e6plDbT3edrFNGqEflhK0=
 github.com/subosito/gotenv v1.6.0 h1:9NlTDc1FTs4qu0DDq7AEtTPNw6SVm7uBMsUCUjABIf8=

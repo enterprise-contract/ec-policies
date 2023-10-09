@@ -49,6 +49,7 @@ test_non_git_uri if {
 	) with input.attestations as [_mock_attestation(materials)]
 }
 
+# regal ignore:rule-length
 test_non_git_commit if {
 	materials := [
 		{

@@ -35,8 +35,10 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
+default hermetic_build := "false"
+
 hermetic_build := value if {
 	some attestation in lib.pipelinerun_attestations
 	task := tkn.build_task(attestation)
 	value := tkn.task_param(task, "HERMETIC")
-} else := "false"
+}

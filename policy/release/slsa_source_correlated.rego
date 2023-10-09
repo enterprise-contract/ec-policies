@@ -88,48 +88,57 @@ deny contains result if {
 #   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
-#
 deny contains result if {
 	count(_source_references) > 0
 
-	some vcs_type, vcs_info in input.image.source
-
-	# e.g. git+https://github.com/...
-	expected_vcs_uri := sprintf("%s+%s", [vcs_type, vcs_info.url])
-	expected_revision := vcs_info.revision
-	expected_sources := {
-		sprintf("%s@sha1:%s", [expected_vcs_uri, expected_revision]),
-		# tolerate missing .git suffix
-		sprintf("%s.git@sha1:%s", [expected_vcs_uri, expected_revision]),
-		# tolerate extra or missing .git suffix
-		sprintf("%s@sha1:%s", [trim_suffix(expected_vcs_uri, ".git"), expected_revision]),
-		sprintf("%s@gitCommit:%s", [
-			expected_vcs_uri,
-			crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
-		]),
-		# tolerate missing .git suffix
-		sprintf("%s.git@gitCommit:%s", [
-			expected_vcs_uri,
-			crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
-		]),
-		# tolerate extra or missing .git suffix
-		sprintf("%s@gitCommit:%s", [
-			trim_suffix(expected_vcs_uri, ".git"),
-			crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
-		]),
-	}
+	some expected_source in _expected_sources
 
 	# TODO: this is rather loose, this checks that the expected source is
 	# one of the attested sources, thus allowing also the inclusion of
 	# unexpected source
-	count(expected_sources & _source_references) == 0
+	count(expected_source.refs & _source_references) == 0
 
 	some attested_source in _source_references
 
 	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
-		[sprintf("%s@%s", [expected_vcs_uri, expected_revision])], attested_source,
+		[sprintf("%s@%s", [expected_source.expected_vcs_uri, expected_source.expected_revision])], attested_source,
 	)
+}
+
+_refs(expected_vcs_uri, expected_revision) := {
+	sprintf("%s@sha1:%s", [expected_vcs_uri, expected_revision]),
+	# tolerate missing .git suffix
+	sprintf("%s.git@sha1:%s", [expected_vcs_uri, expected_revision]),
+	# tolerate extra or missing .git suffix
+	sprintf("%s@sha1:%s", [trim_suffix(expected_vcs_uri, ".git"), expected_revision]),
+	sprintf("%s@gitCommit:%s", [
+		expected_vcs_uri,
+		crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
+	]),
+	# tolerate missing .git suffix
+	sprintf("%s.git@gitCommit:%s", [
+		expected_vcs_uri,
+		crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
+	]),
+	# tolerate extra or missing .git suffix
+	sprintf("%s@gitCommit:%s", [
+		trim_suffix(expected_vcs_uri, ".git"),
+		crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
+	]),
+}
+
+_expected_sources contains expected_source if {
+	some vcs_type, vcs_info in input.image.source
+
+	# e.g. git+https://github.com/...
+	expected_vcs_uri := sprintf("%s+%s", [vcs_type, vcs_info.url])
+	expected_revision := vcs_info.revision
+	expected_source := {
+		"expected_vcs_uri": expected_vcs_uri,
+		"expected_revision": expected_revision,
+		"refs": _refs(expected_vcs_uri, expected_revision),
+	}
 }
 
 # SLSA Provenance v0.2

@@ -31,6 +31,7 @@ test_tasks_from_attestation if {
 	lib.assert_equal(expected, tkn.tasks(attestation))
 }
 
+# regal ignore:rule-length
 test_tasks_from_slsav1_tekton_attestation if {
 	content := json.marshal(slsav1_attestation_local_spec)
 	task := {
@@ -81,6 +82,7 @@ test_tasks_from_slsav1_tekton_attestation if {
 	lib.assert_equal(expected, tkn.tasks(attestation))
 }
 
+# regal ignore:rule-length
 test_tasks_from_slsav1_tekton_mixture_attestation if {
 	task1 := json.marshal(json.patch(slsav1_attestation_local_spec, [{
 		"op": "add",
@@ -254,6 +256,7 @@ test_tasks_from_attestation_with_spam if {
 	lib.assert_equal(expected_names, tkn.tasks_names(attestation))
 }
 
+# regal ignore:rule-length
 test_tasks_from_pipeline_with_spam if {
 	pipeline := {
 		"kind": "Pipeline",

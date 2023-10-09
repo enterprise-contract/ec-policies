@@ -35,6 +35,7 @@ test_effective_current_time_ns {
 	) with data.config.policy.when_ns as future_timestamp
 }
 
+# regal ignore:rule-length
 test_most_current {
 	# Ignore future item
 	lib.assert_equal(
@@ -67,6 +68,7 @@ test_most_current {
 	)
 }
 
+# regal ignore:rule-length
 test_future_items {
 	# Ignore items in the past
 	lib.assert_equal(
@@ -108,6 +110,7 @@ test_future_items {
 	)
 }
 
+# regal ignore:rule-length
 test_acceptable_items {
 	# Include future items and most current
 	lib.assert_equal(

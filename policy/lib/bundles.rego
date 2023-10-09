@@ -52,9 +52,11 @@ unacceptable_task_bundle(tasks) := {task |
 }
 
 # Returns if the required task-bundles data is missing
+default missing_task_bundles_data := false
+
 missing_task_bundles_data {
 	count(data["task-bundles"]) == 0
-} else := false
+}
 
 # Returns true if the provided bundle reference is acceptable
 is_acceptable(bundle_ref) {

@@ -152,7 +152,7 @@ task_steps(task) := task.status.taskSpec.steps
 task_step_image_ref(step) := step.environment.image
 
 # slsa v1.0 step image
-task_step_image_ref(step) := step.image
+task_step_image_ref(step) := step.imageID
 
 # build_task returns the build task found in the attestation
 build_task(attestation) := task if {

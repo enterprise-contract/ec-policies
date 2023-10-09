@@ -8,6 +8,8 @@ rules:
       level: warning
     line-length:
       level: warning
+    rule-length:
+      max-rule-length: 50
   idiomatic:
     no-defined-entrypoint:
       level: ignore

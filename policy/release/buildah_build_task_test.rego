@@ -20,11 +20,11 @@ test_buildah_tasks if {
 	tasks := [
 		{
 			"name": "pipelineTask",
-			"content": json.marshal(tkn_test.slsav1_attestation_local_spec),
+			"content": base64.encode(json.marshal(tkn_test.slsav1_attestation_local_spec)),
 		},
 		{
 			"name": "pipelineTask",
-			"content": json.marshal(tkn_test.slsav1_attestation_local_spec),
+			"content": base64.encode(json.marshal(tkn_test.slsav1_attestation_local_spec)),
 		},
 	]
 	slsav1_attestation := json.patch(
@@ -136,27 +136,27 @@ test_multiple_buildah_tasks if {
 	tasks := [
 		{
 			"name": "task",
-			"content": json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
+			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
 				"op": "add",
 				"path": "/taskRef/name",
 				"value": "task1",
-			}])),
+			}]))),
 		},
 		{
 			"name": "pipelineTask",
-			"content": json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
+			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
 				"op": "add",
 				"path": "/taskRef/name",
 				"value": "task1",
-			}])),
+			}]))),
 		},
 		{
 			"name": "pipeline",
-			"content": json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
+			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
 				"op": "add",
 				"path": "/taskRef/name",
 				"value": "task1",
-			}])),
+			}]))),
 		},
 	]
 	slsav1_attestation := json.patch(_slsav1_attestation("buildah", [{}]), [{
@@ -193,19 +193,19 @@ test_multiple_buildah_tasks_one_without_params if {
 	tasks := [
 		{
 			"name": "task",
-			"content": json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
+			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
 				"op": "add",
 				"path": "/taskRef/name",
 				"value": "task1",
-			}])),
+			}]))),
 		},
 		{
 			"name": "pipelineTask",
-			"content": json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
+			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
 				"op": "add",
 				"path": "/params",
 				"value": [{}],
-			}])),
+			}]))),
 		},
 	]
 	slsav1_attestation := json.patch(_slsav1_attestation("buildah", [{}]), [{
@@ -243,19 +243,19 @@ test_multiple_buildah_tasks_one_with_external_dockerfile if {
 	tasks := [
 		{
 			"name": "task",
-			"content": json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
+			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
 				"op": "add",
 				"path": "params",
 				"value": [{"name": "DOCKERFILE", "value": "Dockerfile"}],
-			}])),
+			}]))),
 		},
 		{
 			"name": "pipelineTask",
-			"content": json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
+			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
 				"op": "add",
 				"path": "/params",
 				"value": [{"name": "DOCKERFILE", "value": "http://Dockerfile"}],
-			}])),
+			}]))),
 		},
 	]
 	slsav1_attestation := json.patch(_slsav1_attestation("buildah", {}), [{
@@ -277,7 +277,7 @@ _attestation(task_name, params) := {"statement": {"predicate": {
 }}}
 
 _slsav1_attestation(task_name, params) := attestation if {
-	content := json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [
+	content := base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [
 		{
 			"op": "replace",
 			"path": "/params",
@@ -288,7 +288,7 @@ _slsav1_attestation(task_name, params) := attestation if {
 			"path": "/taskRef/name",
 			"value": task_name,
 		},
-	]))
+	])))
 	attestation := {"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
 		"predicate": {"buildDefinition": {

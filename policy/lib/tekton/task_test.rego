@@ -33,7 +33,7 @@ test_tasks_from_attestation if {
 
 # regal ignore:rule-length
 test_tasks_from_slsav1_tekton_attestation if {
-	content := json.marshal(slsav1_attestation_local_spec)
+	content := base64.encode(json.marshal(slsav1_attestation_local_spec))
 	task := {
 		"name": "pipelineTask",
 		"uri": "oci://gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init",
@@ -84,21 +84,21 @@ test_tasks_from_slsav1_tekton_attestation if {
 
 # regal ignore:rule-length
 test_tasks_from_slsav1_tekton_mixture_attestation if {
-	task1 := json.marshal(json.patch(slsav1_attestation_local_spec, [{
+	task1 := base64.encode(json.marshal(json.patch(slsav1_attestation_local_spec, [{
 		"op": "add",
 		"path": "/taskRef/name",
 		"value": "task1",
-	}]))
-	task2 := json.marshal(json.patch(slsav1_attestation_local_spec, [{
+	}])))
+	task2 := base64.encode(json.marshal(json.patch(slsav1_attestation_local_spec, [{
 		"op": "add",
 		"path": "/taskRef/name",
 		"value": "task2",
-	}]))
-	task3 := json.marshal(json.patch(slsav1_attestation_local_spec, [{
+	}])))
+	task3 := base64.encode(json.marshal(json.patch(slsav1_attestation_local_spec, [{
 		"op": "add",
 		"path": "/taskRef/name",
 		"value": "task3",
-	}]))
+	}])))
 
 	git_init := {
 		"name": "task",
@@ -388,7 +388,7 @@ test_missing_required_tasks_data if {
 test_task_step_image_ref if {
 	lib.assert_equal(
 		"redhat.io/openshift/rhel8@sha256:af7dd5b3b",
-		tkn.task_step_image_ref({"name": "mystep", "image": "redhat.io/openshift/rhel8@sha256:af7dd5b3b"}),
+		tkn.task_step_image_ref({"name": "mystep", "imageID": "redhat.io/openshift/rhel8@sha256:af7dd5b3b"}),
 	)
 	lib.assert_equal(
 		"redhat.io/openshift/rhel8@sha256:af7dd5b3b",
@@ -599,6 +599,6 @@ resolved_dependencies(tasks) := [r |
 	some task in tasks
 	r := {
 		"name": "pipelineTask",
-		"content": json.marshal(task),
+		"content": base64.encode(json.marshal(task)),
 	}
 ]

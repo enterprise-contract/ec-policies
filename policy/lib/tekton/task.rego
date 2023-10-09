@@ -56,7 +56,7 @@ _maybe_tasks(pipeline) := _tasks if {
 # handle tasks from a slsav1 attestation
 _maybe_tasks(slsav1) := _tasks if {
 	slsav1.predicate.buildDefinition
-	_tasks := {json.unmarshal(dep.content) |
+	_tasks := {json.unmarshal(base64.decode(dep.content)) |
 		some dep in slsav1.predicate.buildDefinition.resolvedDependencies
 		_slsav1_tekton(dep)
 	}

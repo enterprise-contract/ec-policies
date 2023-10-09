@@ -1,5 +1,6 @@
 package lib
 
+import future.keywords.if
 import future.keywords.in
 
 import data.lib.tkn
@@ -36,7 +37,18 @@ java_sbom_component_count_result_name := "SBOM_JAVA_COMPONENTS_COUNT"
 build_base_images_digests_result_name := "BASE_IMAGES_DIGESTS"
 
 # These are the ones we're interested in
-pipelinerun_attestations := [statement |
+pipelinerun_attestations := att if {
+	v1_0 := [a |
+		some a in pipelinerun_slsa_provenance_v1
+	]
+	v0_2 := [a |
+		some a in pipelinerun_slsa_provenance02
+	]
+
+	att := array.concat(v1_0, v0_2)
+}
+
+pipelinerun_slsa_provenance02 := [statement |
 	some att in input.attestations
 	statement := _statement(att)
 	statement.predicate.buildType in pipelinerun_att_build_types
@@ -65,14 +77,20 @@ taskrun_attestations := [statement |
 	statement.predicate.buildType in taskrun_att_build_types
 ]
 
-_statement(att) := statement {
+_statement(att) := statement if {
 	statement := att.statement
 } else = att
 
 tasks_from_pipelinerun := [task |
 	some att in pipelinerun_attestations
-	some task in att.predicate.buildConfig.tasks
+	some task in tkn.tasks(att)
 ]
+
+# slsa v0.2 results
+task_results(task) := task.results
+
+# slsa v1.0 results
+task_results(task) := task.status.taskResults
 
 # All results from the attested PipelineRun with the provided name. Results are
 # expected to contain a JSON value. The return object contains the following
@@ -82,7 +100,7 @@ tasks_from_pipelinerun := [task |
 #   value: unmarshalled task result.
 results_named(name) := [r |
 	some task in tasks_from_pipelinerun
-	some result in task.results
+	some result in task_results(task)
 	result.name == name
 	result_map := unmarshal(result.value)
 
@@ -94,7 +112,7 @@ results_named(name) := [r |
 # Attempts to json.unmarshal the given value. If not possible, the given
 # value is returned as is. This is helpful when interpreting certain values
 # in attestations created by Tekton Chains.
-unmarshal(raw) := value {
+unmarshal(raw) := value if {
 	json.is_valid(raw)
 	value := json.unmarshal(raw)
 } else = raw
@@ -104,21 +122,21 @@ unmarshal(raw) := value {
 results_from_tests := results_named(task_test_result_name)
 
 # Check for a task by name. Return the task if found
-task_in_pipelinerun(name) := task {
+task_in_pipelinerun(name) := task if {
 	some task in tasks_from_pipelinerun
 	task.name == name
 	task
 }
 
 # Check for a task result by name
-result_in_task(task_name, result_name) {
+result_in_task(task_name, result_name) if {
 	task := task_in_pipelinerun(task_name)
 	some task_result in task.results
 	task_result.name == result_name
 }
 
 # Check for a Succeeded status from a task
-task_succeeded(name) {
+task_succeeded(name) if {
 	task := task_in_pipelinerun(name)
 	task.status == "Succeeded"
 }

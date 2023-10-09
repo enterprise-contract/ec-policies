@@ -12,6 +12,7 @@ import future.keywords.if
 import future.keywords.in
 
 import data.lib
+import data.lib.tkn
 
 # METADATA
 # title: Task steps ran on permitted container images
@@ -30,13 +31,12 @@ import data.lib
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	some attestation in lib.pipelinerun_attestations
-	some task in attestation.predicate.buildConfig.tasks
-	some step_index, step in task.steps
-	image_ref := step.environment.image
+	some task in lib.tasks_from_pipelinerun
+	some step_index, step in tkn.task_steps(task)
+	image_ref := tkn.task_step_image_ref(step)
 	allowed_registry_prefixes := lib.rule_data("allowed_step_image_registry_prefixes")
 	not image_ref_permitted(image_ref, allowed_registry_prefixes)
-	result := lib.result_helper(rego.metadata.chain(), [step_index, task.name, image_ref])
+	result := lib.result_helper(rego.metadata.chain(), [step_index, tkn.task_name(task), image_ref])
 }
 
 # METADATA

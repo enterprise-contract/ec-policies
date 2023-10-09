@@ -53,13 +53,13 @@ test_failed_tasks if {
 	}}}]
 
 	slsav1_tasks := [
-		_slsav1_task("buildah"),
-		json.patch(_slsav1_task("av-scanner"), [{
+		tkn_test.slsav1_task("buildah"),
+		json.patch(tkn_test.slsav1_task("av-scanner"), [{
 			"op": "replace",
 			"path": "/status/conditions",
 			"value": [{"type": "Succeeded", "status": "False"}],
 		}]),
-		json.patch(_slsav1_task("cve-scanner"), [{
+		json.patch(tkn_test.slsav1_task("cve-scanner"), [{
 			"op": "replace",
 			"path": "/status/conditions",
 			"value": [],
@@ -236,7 +236,7 @@ test_parameterized if {
 	) with data["pipeline-required-tasks"] as _time_based_required_pipeline_tasks
 		with input.attestations as attestations
 
-	slsav1_no_param := _slsav1_task("label-check")
+	slsav1_no_param := tkn_test.slsav1_task("label-check")
 	slsav1_task1 := json.patch(slsav1_no_param, [{
 		"op": "replace",
 		"path": "/spec/params",
@@ -294,7 +294,7 @@ test_multiple_conditions_in_status if {
 		},
 		{"type": "invalid"},
 	]
-	slsav1_task := json.patch(_slsav1_task("buildah"), [{
+	slsav1_task := json.patch(tkn_test.slsav1_task("buildah"), [{
 		"op": "replace",
 		"path": "/status/conditions",
 		"value": conditions,
@@ -305,7 +305,7 @@ test_multiple_conditions_in_status if {
 
 test_invalid_status_conditions if {
 	conditions := []
-	slsav1_task1 := json.patch(_slsav1_task("buildah"), [{
+	slsav1_task1 := json.patch(tkn_test.slsav1_task("buildah"), [{
 		"op": "replace",
 		"path": "/status/conditions",
 		"value": conditions,
@@ -327,14 +327,14 @@ _attestations_with_tasks(names, add_tasks) := attestations if {
 }
 
 _slsav1_attestations_with_tasks(names, add_tasks) := attestations if {
-	slsav1_tasks := array.concat([t | some name in names; t := _slsav1_task(name)], add_tasks)
+	slsav1_tasks := array.concat([t | some name in names; t := tkn_test.slsav1_task(name)], add_tasks)
 
 	attestations := [{"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
 		"predicate": {"buildDefinition": {
 			"buildType": lib.tekton_slsav1_pipeline_run,
 			"externalParameters": {"runSpec": {"pipelineRef": {"name": "pipeline1"}}},
-			"resolvedDependencies": _resolved_dependencies(slsav1_tasks),
+			"resolvedDependencies": tkn_test.resolved_dependencies(slsav1_tasks),
 			"internalParameters": {"labels": {"pipelines.openshift.io/runtime": "generic"}},
 		}},
 	}}]
@@ -350,14 +350,14 @@ _attestations_with_tasks_no_label(names, add_tasks) := attestations if {
 }
 
 _slsav1_attestations_with_tasks_no_label(names, add_tasks) := attestations if {
-	slsav1_tasks := array.concat([t | some name in names; t := _slsav1_task(name)], add_tasks)
+	slsav1_tasks := array.concat([t | some name in names; t := tkn_test.slsav1_task(name)], add_tasks)
 
 	attestations := [{"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
 		"predicate": {"buildDefinition": {
 			"buildType": lib.tekton_slsav1_pipeline_run,
 			"externalParameters": {"runSpec": {"pipelineRef": {"name": "pipeline1"}}},
-			"resolvedDependencies": _resolved_dependencies(slsav1_tasks),
+			"resolvedDependencies": tkn_test.resolved_dependencies(slsav1_tasks),
 			"internalParameters": {},
 		}},
 	}}]
@@ -387,60 +387,6 @@ _task(name) := task if {
 		"ref": {"name": name, "kind": "Task", "bundle": _bundle},
 	}
 }
-
-_slsav1_task(name) := task if {
-	parts := regex.split(`[\[\]=]`, name)
-	not parts[1]
-	pipeline_task_name := sprintf("%s-p", [name])
-	unnamed_task := {
-		"metadata": {"name": pipeline_task_name},
-		"spec": tkn_test.slsav1_attestation_local_spec,
-		"status": {"conditions": [{
-			"type": "Succeeded",
-			"status": "True",
-		}]},
-	}
-	task := json.patch(unnamed_task, [{
-		"op": "replace",
-		"path": "/spec/taskRef/name",
-		"value": name,
-	}])
-}
-
-_slsav1_task(name) := task if {
-	parts := regex.split(`[\[\]=]`, name)
-	parts[1]
-	task_name := parts[0]
-	pipeline_task_name := sprintf("%s-p", [task_name])
-	unnamed_task := {
-		"metadata": {"name": pipeline_task_name},
-		"spec": tkn_test.slsav1_attestation_local_spec,
-		"status": {"conditions": [{
-			"type": "Succeeded",
-			"status": "True",
-		}]},
-	}
-	task := json.patch(unnamed_task, [
-		{
-			"op": "replace",
-			"path": "/spec/taskRef/name",
-			"value": task_name,
-		},
-		{
-			"op": "replace",
-			"path": "/spec/params",
-			"value": [{"name": parts[1], "value": parts[2]}],
-		},
-	])
-}
-
-_resolved_dependencies(tasks) := [r |
-	some task in tasks
-	r := {
-		"name": "pipelineTask",
-		"content": json.marshal(task),
-	}
-]
 
 _missing_tasks_violation(tasks) := {error |
 	some task in tasks

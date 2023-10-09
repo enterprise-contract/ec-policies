@@ -40,7 +40,7 @@ import data.lib.tkn
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	some att in _pipelineruns
+	some att in lib.pipelinerun_attestations
 	count(tkn.tasks(att)) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
@@ -64,7 +64,7 @@ deny contains result if {
 #   - tasks.pipeline_has_tasks
 #
 deny contains result if {
-	some att in _pipelineruns
+	some att in lib.pipelinerun_attestations
 	some task in tkn.tasks(att)
 	some status in _status(task)
 	status != "Succeeded"
@@ -166,7 +166,7 @@ deny contains result if {
 # _missing_tasks returns a set of task names that are in the given
 # required_tasks, but not in the PipelineRun attestation.
 _missing_tasks(required_tasks) := {task |
-	some att in _pipelineruns
+	some att in lib.pipelinerun_attestations
 	count(tkn.tasks(att)) > 0
 
 	some task in required_tasks
@@ -176,7 +176,7 @@ _missing_tasks(required_tasks) := {task |
 # get the future tasks that are pipeline specific. If none exists
 # get the default list
 latest_required_tasks := task_data if {
-	some att in _pipelineruns
+	some att in lib.pipelinerun_attestations
 	count(tkn.tasks(att)) > 0
 	task_data := tkn.latest_required_pipeline_tasks(att)
 } else := task_data if {
@@ -186,7 +186,7 @@ latest_required_tasks := task_data if {
 # get current required tasks. fall back to the default list if
 # no label exists in the attestation
 current_required_tasks := task_data if {
-	some att in _pipelineruns
+	some att in lib.pipelinerun_attestations
 	count(tkn.tasks(att)) > 0
 	task_data := tkn.current_required_pipeline_tasks(att)
 } else := task_data if {
@@ -195,7 +195,7 @@ current_required_tasks := task_data if {
 
 ## get the required task data for a pipeline with a label
 required_pipeline_task_data := task_data if {
-	some att in _pipelineruns
+	some att in lib.pipelinerun_attestations
 	count(tkn.tasks(att)) > 0
 	task_data := tkn.required_task_list(att)
 }
@@ -228,15 +228,4 @@ _slsav1_status(condition) := status if {
 _slsav1_status(condition) := status if {
 	condition.status == "False"
 	status := "Failed"
-}
-
-_pipelineruns := att if {
-	v1_0 := [a |
-		some a in lib.pipelinerun_slsa_provenance_v1
-	]
-	v0_1 := [a |
-		some a in lib.pipelinerun_attestations
-	]
-
-	att := array.concat(v1_0, v0_1)
 }

@@ -4,6 +4,7 @@ import future.keywords.in
 
 import data.lib
 import data.lib.bundles_test
+import data.lib.tkn_test
 import data.lib_test
 
 pr_build_type := "tekton.dev/v1beta1/PipelineRun"
@@ -23,6 +24,15 @@ mock_tr_att := {"statement": {"predicate": {"buildType": tr_build_type}}}
 mock_tr_att_legacy := {"statement": {"predicate": {"buildType": tr_build_type_legacy}}}
 
 garbage_att := {"statement": {"predicate": {"buildType": "garbage"}}}
+
+valid_slsav1_att := {"statement": {
+	"predicateType": "https://slsa.dev/provenance/v1",
+	"predicate": {"buildDefinition": {
+		"buildType": "https://tekton.dev/chains/v2/slsa-tekton",
+		"externalParameters": {"runSpec": {"pipelineSpec": {}}},
+		"resolvedDependencies": [],
+	}},
+}}
 
 # This is used through the tests to generate an attestation of a PipelineRun
 # with an inline Task definition, look at using att_mock_helper_ref to generate
@@ -102,6 +112,56 @@ att_mock_task_helper(task) := [{"statement": {"predicate": {
 	"buildConfig": {"tasks": [task]},
 	"buildType": lib.tekton_pipeline_run,
 }}}]
+
+# make working with tasks and resolvedDeps easier
+mock_slsav1_attestation_with_tasks(tasks) := {"statement": {
+	"predicateType": "https://slsa.dev/provenance/v1",
+	"predicate": {"buildDefinition": {
+		"buildType": lib.tekton_slsav1_pipeline_run,
+		"externalParameters": {"runSpec": {"pipelineSpec": {}}},
+		"resolvedDependencies": tkn_test.resolved_dependencies(tasks),
+	}},
+}}
+
+mock_slsav1_attestation_bundles(bundles) := a {
+	tasks := [task |
+		some bundle in bundles
+		task := tkn_test.slsav1_task_bundle("my-task", bundle)
+	]
+	a := mock_slsav1_attestation_with_tasks(tasks)
+}
+
+mock_slsav02_attestation_bundles(bundles) := a {
+	tasks := [task |
+		some index, bundle in bundles
+		task := {
+			"name": sprintf("task-run-%d", [index]),
+			"ref": {
+				"name": "my-task",
+				"bundle": bundle,
+			},
+		}
+	]
+
+	a := {"statement": {"predicate": {
+		"buildConfig": {"tasks": tasks},
+		"buildType": lib.tekton_pipeline_run,
+	}}}
+}
+
+test_tasks_from_pipelinerun {
+	slsa1_task := tkn_test.slsav1_task("buildah")
+	slsa1_att := [json.patch(valid_slsav1_att, [{
+		"op": "replace",
+		"path": "/statement/predicate/buildDefinition/resolvedDependencies",
+		"value": tkn_test.resolved_dependencies([slsa1_task]),
+	}])]
+	lib.assert_equal([slsa1_task], lib.tasks_from_pipelinerun) with input.attestations as slsa1_att
+
+	slsa02_task := {"name": "my-task", "ref": {"kind": "task"}}
+	slsa02_att := att_mock_task_helper(slsa02_task)
+	lib.assert_equal([slsa02_task], lib.tasks_from_pipelinerun) with input.attestations as slsa02_att
+}
 
 test_pr_attestations {
 	lib.assert_equal(
@@ -272,18 +332,24 @@ test_results_from_tests {
 		"mytask", bundles_test.acceptable_bundle_ref,
 	)
 	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att2]
-}
 
-test_task_in_pipelinerun {
-	task_name := "my-task"
-	d := att_mock_task_helper({"name": task_name})
-
-	lib.assert_equal({"name": task_name}, lib.task_in_pipelinerun(task_name)) with input.attestations as d
+	att3 := mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(
+		tkn_test.slsav1_task_result(
+			"mytask",
+			[{
+				"name": lib.task_test_result_name,
+				"type": "string",
+				"value": json.marshal({"result": "SUCCESS", "foo": "bar"}),
+			}],
+		),
+		bundles_test.acceptable_bundle_ref,
+	)])
+	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att3]
 }
 
 test_task_not_in_pipelinerun {
 	task_name := "bad-task"
-	d := att_mock_task_helper({"name": "my-task"})
+	d := att_mock_task_helper({"name": "my-task", "ref": {"kind": "task"}})
 
 	not lib.task_in_pipelinerun(task_name) with input.attestations as d
 }
@@ -297,6 +363,7 @@ test_result_in_task {
 			"name": result_name,
 			"value": "result value",
 		}],
+		"ref": {"kind": "task"},
 	})
 
 	lib.result_in_task(task_name, result_name) with input.attestations as d
@@ -311,6 +378,7 @@ test_result_not_in_task {
 			"name": "result name",
 			"value": "result value",
 		}],
+		"ref": {"kind": "task"},
 	})
 
 	not lib.result_in_task(task_name, result_name) with input.attestations as d
@@ -321,6 +389,7 @@ test_task_succeeded {
 	d := att_mock_task_helper({
 		"name": task_name,
 		"status": "Succeeded",
+		"ref": {"kind": "task"},
 	})
 
 	lib.task_succeeded(task_name) with input.attestations as d
@@ -331,6 +400,7 @@ test_task_not_succeeded {
 	d := att_mock_task_helper({
 		"name": task_name,
 		"status": "Failed",
+		"ref": {"kind": "task"},
 	})
 
 	not lib.task_succeeded(task_name) with input.attestations as d

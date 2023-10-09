@@ -33,7 +33,7 @@ test_tasks_from_attestation if {
 
 # regal ignore:rule-length
 test_tasks_from_slsav1_tekton_attestation if {
-	content := json.marshal(slsav1_attestation_local_spec)
+	content := base64.encode(json.marshal(slsav1_attestation_local_spec))
 	task := {
 		"name": "pipelineTask",
 		"uri": "oci://gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init",
@@ -84,21 +84,21 @@ test_tasks_from_slsav1_tekton_attestation if {
 
 # regal ignore:rule-length
 test_tasks_from_slsav1_tekton_mixture_attestation if {
-	task1 := json.marshal(json.patch(slsav1_attestation_local_spec, [{
+	task1 := base64.encode(json.marshal(json.patch(slsav1_attestation_local_spec, [{
 		"op": "add",
 		"path": "/taskRef/name",
 		"value": "task1",
-	}]))
-	task2 := json.marshal(json.patch(slsav1_attestation_local_spec, [{
+	}])))
+	task2 := base64.encode(json.marshal(json.patch(slsav1_attestation_local_spec, [{
 		"op": "add",
 		"path": "/taskRef/name",
 		"value": "task2",
-	}]))
-	task3 := json.marshal(json.patch(slsav1_attestation_local_spec, [{
+	}])))
+	task3 := base64.encode(json.marshal(json.patch(slsav1_attestation_local_spec, [{
 		"op": "add",
 		"path": "/taskRef/name",
 		"value": "task3",
-	}]))
+	}])))
 
 	git_init := {
 		"name": "task",
@@ -235,6 +235,10 @@ test_task_result if {
 	task := {"results": [{"name": "SPAM", "value": "maps"}]}
 	lib.assert_equal("maps", tkn.task_result(task, "SPAM"))
 	not tkn.task_result(task, "missing")
+
+	slsav1_task := {"status": {"taskResults": [{"name": "SPAM", "value": "maps"}]}}
+	lib.assert_equal("maps", tkn.task_result(slsav1_task, "SPAM"))
+	not tkn.task_result(slsav1_task, "missing")
 }
 
 test_tasks_from_attestation_with_spam if {
@@ -373,12 +377,23 @@ test_task_names_local if {
 }
 
 test_task_data_no_bundle_ref if {
-	lib.assert_equal({"name": "name"}, tkn.task_data({"name": "name"}))
+	lib.assert_equal({"name": "name"}, tkn.task_data({"ref": {"name": "name"}}))
 }
 
 test_missing_required_tasks_data if {
 	lib.assert_equal(tkn.missing_required_tasks_data, true) with data["required-tasks"] as []
 	lib.assert_equal(tkn.missing_required_tasks_data, false) with data["required-tasks"] as _time_based_required_tasks
+}
+
+test_task_step_image_ref if {
+	lib.assert_equal(
+		"redhat.io/openshift/rhel8@sha256:af7dd5b3b",
+		tkn.task_step_image_ref({"name": "mystep", "imageID": "redhat.io/openshift/rhel8@sha256:af7dd5b3b"}),
+	)
+	lib.assert_equal(
+		"redhat.io/openshift/rhel8@sha256:af7dd5b3b",
+		tkn.task_step_image_ref({"environment": {"image": "redhat.io/openshift/rhel8@sha256:af7dd5b3b"}}),
+	)
 }
 
 _expected_latest := {
@@ -472,3 +487,118 @@ slsav1_attestation_local_spec := {
 }
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
+
+slsav1_task(name) := task if {
+	parts := regex.split(`[\[\]=]`, name)
+	not parts[1]
+	pipeline_task_name := sprintf("%s-p", [name])
+	unnamed_task := {
+		"metadata": {"name": pipeline_task_name},
+		"spec": slsav1_attestation_local_spec,
+		"status": {"conditions": [{
+			"type": "Succeeded",
+			"status": "True",
+		}]},
+	}
+	task := json.patch(unnamed_task, [{
+		"op": "replace",
+		"path": "/spec/taskRef/name",
+		"value": name,
+	}])
+}
+
+slsav1_task(name) := task if {
+	parts := regex.split(`[\[\]=]`, name)
+	parts[1]
+	task_name := parts[0]
+	pipeline_task_name := sprintf("%s-p", [task_name])
+	unnamed_task := {
+		"metadata": {"name": pipeline_task_name},
+		"spec": slsav1_attestation_local_spec,
+		"status": {"conditions": [{
+			"type": "Succeeded",
+			"status": "True",
+		}]},
+	}
+	task := json.patch(unnamed_task, [
+		{
+			"op": "replace",
+			"path": "/spec/taskRef/name",
+			"value": task_name,
+		},
+		{
+			"op": "replace",
+			"path": "/spec/params",
+			"value": [{"name": parts[1], "value": parts[2]}],
+		},
+	])
+}
+
+# create a task and add a bundle to it
+slsav1_task_bundle(name, bundle) := task if {
+	not name.spec
+	task := json.patch(slsav1_task(name), [{
+		"op": "add",
+		"path": "/spec/taskRef/bundle",
+		"value": bundle,
+	}])
+}
+
+# add a bundle to an existing task
+slsav1_task_bundle(name, bundle) := task if {
+	name.spec
+	task := json.patch(name, [{
+		"op": "add",
+		"path": "/spec/taskRef/bundle",
+		"value": bundle,
+	}])
+}
+
+slsav1_task_steps(name, steps) := json.patch(
+	slsav1_task(name),
+	[
+		{
+			"op": "add",
+			"path": "/status/taskSpec",
+			"value": {},
+		},
+		{
+			"op": "add",
+			"path": "/status/taskSpec/steps",
+			"value": steps,
+		},
+	],
+)
+
+# results are an array of dictionaries with keys, "name", "type", "value"
+slsav1_task_result(name, results) := json.patch(
+	slsav1_task(name),
+	[{
+		"op": "add",
+		"path": "/status/taskResults",
+		"value": results,
+	}],
+)
+
+# results are an array of dictionaries with keys, "name", "type", "value"
+slsav1_task_result_ref(name, results) := json.patch(
+	slsav1_task(name),
+	[{
+		"op": "add",
+		"path": "/status/taskResults",
+		"value": _marshal_slsav1_results(results),
+	}],
+)
+
+_marshal_slsav1_results(results) := [r |
+	some result in results
+	r := {"name": result.name, "type": result.type, "value": json.marshal(result.value)}
+]
+
+resolved_dependencies(tasks) := [r |
+	some task in tasks
+	r := {
+		"name": "pipelineTask",
+		"content": base64.encode(json.marshal(task)),
+	}
+]

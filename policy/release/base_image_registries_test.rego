@@ -1,47 +1,91 @@
 package policy.release.base_image_registries_test
 
 import data.lib
+import data.lib.tkn_test
 import data.lib_test
 import data.policy.release.base_image_registries
 
 mock_bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
 
 test_acceptable_base_images {
-	attestations := [lib_test.att_mock_helper_ref_plain_result(
-		lib.build_base_images_digests_result_name,
-		concat("\n", [
-			"registry.redhat.io/ubi7:latest@sha256:abc",
-			"registry.access.redhat.com/ubi8:8.9@sha256:bcd",
-			"", # Verify trailing new line is ignored
-		]),
+	slsav1_task_with_result := tkn_test.slsav1_task_result(
 		"buildah-task-1",
-		mock_bundle,
-	)]
+		[{
+			"name": lib.build_base_images_digests_result_name,
+			"type": "string",
+			"value": concat("\n", [
+				"registry.redhat.io/ubi7:latest@sha256:abc",
+				"registry.access.redhat.com/ubi8:8.9@sha256:bcd",
+				"", # Verify trailing new line is ignored
+			]),
+		}],
+	)
+	attestations := [
+		lib_test.att_mock_helper_ref_plain_result(
+			lib.build_base_images_digests_result_name,
+			concat("\n", [
+				"registry.redhat.io/ubi7:latest@sha256:abc",
+				"registry.access.redhat.com/ubi8:8.9@sha256:bcd",
+				"", # Verify trailing new line is ignored
+			]),
+			"buildah-task-1",
+			mock_bundle,
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, mock_bundle)]),
+	]
 	lib.assert_empty(base_image_registries.deny) with input.attestations as attestations
 }
 
 test_empty_base_images {
-	attestations := [lib_test.att_mock_helper_ref_plain_result(
-		lib.build_base_images_digests_result_name,
-		"",
+	slsav1_task_with_result := tkn_test.slsav1_task_result(
 		"buildah-task-1",
-		mock_bundle,
-	)]
+		[{
+			"name": lib.build_base_images_digests_result_name,
+			"type": "string",
+			"value": "",
+		}],
+	)
+
+	attestations := [
+		lib_test.att_mock_helper_ref_plain_result(
+			lib.build_base_images_digests_result_name,
+			"",
+			"buildah-task-1",
+			mock_bundle,
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, mock_bundle)]),
+	]
 	lib.assert_empty(base_image_registries.deny) with input.attestations as attestations
 }
 
 test_unacceptable_base_images {
-	attestations := [lib_test.att_mock_helper_ref_plain_result(
-		lib.build_base_images_digests_result_name,
-		concat("\n", [
-			"registry.redhat.io/ubi7:latest@sha256:abc",
-			"docker.io/busybox:latest@sha256:bcd",
-			"registry.access.redhat.com/ubi8:8.9@sha256:cde",
-			"registry.redhat.ioo/spam:latest@sha256:def",
-		]),
+	slsav1_task_with_result := tkn_test.slsav1_task_result(
 		"buildah-task-1",
-		mock_bundle,
-	)]
+		[{
+			"name": lib.build_base_images_digests_result_name,
+			"type": "string",
+			"value": concat("\n", [
+				"registry.redhat.io/ubi7:latest@sha256:abc",
+				"docker.io/busybox:latest@sha256:bcd",
+				"registry.access.redhat.com/ubi8:8.9@sha256:cde",
+				"registry.redhat.ioo/spam:latest@sha256:def",
+			]),
+		}],
+	)
+	attestations := [
+		lib_test.att_mock_helper_ref_plain_result(
+			lib.build_base_images_digests_result_name,
+			concat("\n", [
+				"registry.redhat.io/ubi7:latest@sha256:abc",
+				"docker.io/busybox:latest@sha256:bcd",
+				"registry.access.redhat.com/ubi8:8.9@sha256:cde",
+				"registry.redhat.ioo/spam:latest@sha256:def",
+			]),
+			"buildah-task-1",
+			mock_bundle,
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, mock_bundle)]),
+	]
 	expected := {
 		{
 			"code": "base_image_registries.base_image_permitted",
@@ -56,12 +100,23 @@ test_unacceptable_base_images {
 }
 
 test_missing_result {
-	attestations := [lib_test.att_mock_helper_ref_plain_result(
-		"SPAM_SPAM_SPAM",
-		"registry.redhat.io/ubi7:latest@sha256:abc",
+	slsav1_task_with_result := tkn_test.slsav1_task_result(
 		"buildah-task-1",
-		"registry.img/unacceptable@sha256:012",
-	)]
+		[{
+			"name": "SPAM_SPAM_SPAM",
+			"type": "string",
+			"value": "registry.redhat.io/ubi7:latest@sha256:abc",
+		}],
+	)
+	attestations := [
+		lib_test.att_mock_helper_ref_plain_result(
+			"SPAM_SPAM_SPAM",
+			"registry.redhat.io/ubi7:latest@sha256:abc",
+			"buildah-task-1",
+			"registry.img/unacceptable@sha256:012",
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, "registry.img/unacceptable@sha256:012")]),
+	]
 	expected := {{
 		"code": "base_image_registries.base_image_info_found",
 		"msg": "Base images result is missing",

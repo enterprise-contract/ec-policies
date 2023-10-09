@@ -31,6 +31,12 @@ nul := base64.decode("AA==")
 #   failure_msg: Expected source code reference was not provided for verification
 #   solution: >-
 #     Provide the expected source code reference in inputs.
+#   collections:
+#   - minimal
+#   - slsa1
+#   - slsa2
+#   - slsa3
+#   - redhat
 warn contains result if {
 	source := object.get(input, ["image", "source"], {})
 	count(source) == 0

@@ -19,10 +19,17 @@ unexpected_image := sprintf("spam://%s", [good_image])
 
 mock_data(image_ref) := {"statement": {"predicate": {
 	"buildType": lib.tekton_pipeline_run,
-	"buildConfig": {"tasks": [{"name": "mytask", "ref": {"kind": "task", "name": "mytask"}, "steps": [{"environment": {"image": image_ref}}]}]},
+	"buildConfig": {"tasks": [{
+		"name": "mytask",
+		"ref": {"kind": "task", "name": "mytask"},
+		"steps": [{"environment": {"image": image_ref}}],
+	}]},
 }}}
 
-mock_slsav1_data(image_ref) := lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_steps("mytask", [{"name": "mystep", "image": image_ref}])])
+mock_slsav1_data(image_ref) := lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_steps("mytask", [{
+	"name": "mystep",
+	"image": image_ref,
+}])])
 
 test_image_registry_valid if {
 	attestations := [

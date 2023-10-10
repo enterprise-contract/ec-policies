@@ -100,14 +100,18 @@ test_unacceptable_base_images {
 }
 
 test_missing_result {
-	slsav1_task_with_result := tkn_test.slsav1_task_result(
-		"buildah-task-1",
-		[{
-			"name": "SPAM_SPAM_SPAM",
-			"type": "string",
-			"value": "registry.redhat.io/ubi7:latest@sha256:abc",
-		}],
+	slsav1_task_with_result := tkn_test.slsav1_task_bundle(
+		tkn_test.slsav1_task_result(
+			"buildah-task-1",
+			[{
+				"name": "SPAM_SPAM_SPAM",
+				"type": "string",
+				"value": "registry.redhat.io/ubi7:latest@sha256:abc",
+			}],
+		),
+		"registry.img/unacceptable@sha256:012",
 	)
+
 	attestations := [
 		lib_test.att_mock_helper_ref_plain_result(
 			"SPAM_SPAM_SPAM",
@@ -115,7 +119,7 @@ test_missing_result {
 			"buildah-task-1",
 			"registry.img/unacceptable@sha256:012",
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, "registry.img/unacceptable@sha256:012")]),
+		lib_test.mock_slsav1_attestation_with_tasks([slsav1_task_with_result]),
 	]
 	expected := {{
 		"code": "base_image_registries.base_image_info_found",

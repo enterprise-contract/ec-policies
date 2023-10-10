@@ -1,3 +1,4 @@
+# regal ignore:file-length
 package lib.tkn_test
 
 import future.keywords.if

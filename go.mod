@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/open-policy-agent/conftest v0.46.0
 	github.com/open-policy-agent/opa v0.57.1-0.20231003111229-7fa6165c27bb
-	github.com/styrainc/regal v0.10.0
+	github.com/styrainc/regal v0.10.1
 	github.com/tektoncd/cli v0.32.0
 )
 

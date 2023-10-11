@@ -1,15 +1,24 @@
-# Configures Regal rules, see https://docs.styra.com/regal/category/rules
 ---
+# Configures Regal rules, see https://docs.styra.com/regal/category/rules
+
+# In most cases, consider addressing violations even if it requires restructuring the code. Chances
+# are that this will improve the code quality. If that is not feasible, then consider using an
+# inline comment to ignore the rule at a particular place. As a last resort, add an entry here. If
+# so, be sure to include a comment explaining why. Avoid turning violations into warnings as these
+# make it difficult to detect when a new issue is detected and they end up being ignored and
+# cluttering the output.
 rules:
   style:
     todo-comment:
-      level: warning
-    file-length:
-      level: warning
-    line-length:
-      level: warning
+      # We use TODO comments through out the code base to indicate work that
+      # needs further refinement.
+      level: ignore
     rule-length:
-      max-rule-length: 50
+      # The test rules can be quite verbose as most of them use hard-coded data
+      # which is very useful in tests.
+      ignore:
+        files:
+          - "*_test.rego"
   idiomatic:
     no-defined-entrypoint:
       level: ignore

@@ -88,7 +88,8 @@ test_bundle_reference_valid {
 	]
 
 	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
-	lib.assert_empty(attestation_task_bundle.deny) with input.attestations as attestations with data["task-bundles"] as task_bundles
+	lib.assert_empty(attestation_task_bundle.deny) with input.attestations as attestations
+		with data["task-bundles"] as task_bundles
 }
 
 # All good when the most recent bundle is used.

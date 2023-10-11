@@ -13,7 +13,11 @@ test_all_good {
 			"java-task-1",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("java-task-2", [{"name": lib.java_sbom_component_count_result_name, "type": "string", "value": {"redhat": 12, "rebuilt": 42}}])]),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("java-task-2", [{
+			"name": lib.java_sbom_component_count_result_name,
+			"type": "string",
+			"value": {"redhat": 12, "rebuilt": 42},
+		}])]),
 	]
 	lib.assert_empty(java.deny) with input.attestations as attestations
 }
@@ -26,7 +30,11 @@ test_has_foreign {
 			"java-task-1",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("java-task-2", [{"name": lib.java_sbom_component_count_result_name, "type": "string", "value": {"redhat": 12, "rebuilt": 42, "central": 1}}])]),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("java-task-2", [{
+			"name": lib.java_sbom_component_count_result_name,
+			"type": "string",
+			"value": {"redhat": 12, "rebuilt": 42, "central": 1},
+		}])]),
 	]
 	expected := {{
 		"code": "java.no_foreign_dependencies",

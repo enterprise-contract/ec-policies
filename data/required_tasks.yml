@@ -18,6 +18,21 @@ pipeline-required-tasks:
         - sbom-json-check
         - show-sbom
         - summary
+  docker:
+    - effective_on: "2023-11-11T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - inspect-image
+        - sast-snyk-check
+        - sbom-json-check
+        - show-sbom
+        - summary
   generic:
     - effective_on: "2023-08-31T00:00:00Z"
       tasks:

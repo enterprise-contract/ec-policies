@@ -3,6 +3,7 @@ package lib
 import future.keywords.if
 import future.keywords.in
 
+import data.lib
 import data.lib.tkn
 
 tekton_pipeline_run := "tekton.dev/v1beta1/PipelineRun"
@@ -50,7 +51,7 @@ pipelinerun_attestations := att if {
 
 pipelinerun_slsa_provenance02 := [statement |
 	some att in input.attestations
-	statement := _statement(att)
+	statement := lib.statement(att)
 	statement.predicate.buildType in pipelinerun_att_build_types
 ]
 
@@ -58,7 +59,7 @@ pipelinerun_slsa_provenance02 := [statement |
 # written for either.
 pipelinerun_slsa_provenance_v1 := [statement |
 	some att in input.attestations
-	statement := _statement(att)
+	statement := lib.statement(att)
 	statement.predicateType == "https://slsa.dev/provenance/v1"
 
 	statement.predicate.buildDefinition.buildType in slsav1_pipelinerun_att_build_types
@@ -72,14 +73,10 @@ pipelinerun_slsa_provenance_v1 := [statement |
 # These ones we don't care about any more
 taskrun_attestations := [statement |
 	some att in input.attestations
-	statement := _statement(att)
+	statement := lib.statement(att)
 
 	statement.predicate.buildType in taskrun_att_build_types
 ]
-
-_statement(att) := statement if {
-	statement := att.statement
-} else = att
 
 tasks_from_pipelinerun := [task |
 	some att in pipelinerun_attestations

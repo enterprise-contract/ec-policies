@@ -1,0 +1,58 @@
+---
+# Usage: https://enterprisecontract.dev/docs/ec-policies/acceptable_bundles.html
+pipeline-bundles:
+  quay.io/redhat-appstudio-tekton-catalog/pipeline-docker-build:
+    - digest: sha256:48841b87d60e855f50c92ad142d1ec374191c443c32008c3476e209a892f1b60
+      effective_on: "2023-12-01T00:00:00Z"
+      tag: 87eb21df3b9949aba765f6768298dd4cb28e0ade
+    - digest: sha256:47f306d36f97fa0acb64b6cf343bc808a876ac83c35990c13e521329b87acd91
+      effective_on: "2023-11-06T00:00:00Z"
+      tag: 58955dd900d3fe7adc3d8842f5984fcb068cda76
+    - digest: sha256:037999f15cc62ce94931ce9a6c795fccff69e0ed08f013199515cf3cd5a5782d
+      effective_on: "2023-11-03T00:00:00Z"
+      tag: 00cf7e06044c12738add87c18e4d73d5f832b547
+
+  quay.io/redhat-appstudio-tekton-catalog/pipeline-fbc-builder:
+    - digest: sha256:5be601d04f791f4e3ae42fd6a790cfe923db9470d99605f65e209e065a8899c1
+      effective_on: "2023-12-01T00:00:00Z"
+      tag: 87eb21df3b9949aba765f6768298dd4cb28e0ade
+    - digest: sha256:6b570fec154ce354325f6eaf3122aeb21aa8e6659db1adced0220b9eab485862
+      effective_on: "2023-11-06T00:00:00Z"
+      tag: 58955dd900d3fe7adc3d8842f5984fcb068cda76
+    - digest: sha256:5c33b3c84f3027b7ce79c5e43024d0e080c2c44962bcf5d9a8361b508ebbb5ef
+      effective_on: "2023-11-03T00:00:00Z"
+      tag: 00cf7e06044c12738add87c18e4d73d5f832b547
+
+  quay.io/redhat-appstudio-tekton-catalog/pipeline-nodejs-builder:
+    - digest: sha256:4cd9b81c84603edd5635e1eb9bf2c9a64851991dbc8c54def54de0ad30b3ce3a
+      effective_on: "2023-12-01T00:00:00Z"
+      tag: 87eb21df3b9949aba765f6768298dd4cb28e0ade
+    - digest: sha256:5d0ab17e88563c38ada64d0cb45a68bce2c12c244cdcf2b10d9ba9b14d0ca4b8
+      effective_on: "2023-11-06T00:00:00Z"
+      tag: 58955dd900d3fe7adc3d8842f5984fcb068cda76
+    - digest: sha256:b7f1a273c0447e338c27eff10a6ebef990c42389cba4b68116c900f661895cb2
+      effective_on: "2023-11-03T00:00:00Z"
+      tag: 00cf7e06044c12738add87c18e4d73d5f832b547
+
+task-bundles:
+  quay.io/redhat-appstudio-tekton-catalog/task-buildah:
+    - digest: sha256:c37e542031de193398cd54463af146e42539b5f5c9082df56d65354494566db0
+      effective_on: "2023-11-06T00:00:00Z"
+      tag: "0.1"
+    - digest: sha256:97f21661e237735af04b37feeeaedd328424bfa0ebd4cd0f79ac39cde17137f6
+      effective_on: "2023-10-25T00:00:00Z"
+      tag: "0.1"
+    - digest: sha256:487b82bbdbd361d6ef3cd7a522bb6fe2f163a2d517181f13fe07565a4838f1bb
+      effective_on: "2023-10-21T00:00:00Z"
+      tag: "0.1"
+
+  quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:
+    - digest: sha256:4d8588502c3265cca7c43f131d77661f9254b4b12e5af0cf093afcc464bfb850
+      effective_on: "2023-11-01T00:00:00Z"
+      tag: "0.1"
+    - digest: sha256:64203069d09be49e45082ec02588ee0308e693c7777999ed351a78d554657c61
+      effective_on: "2023-10-29T00:00:00Z"
+      tag: "0.1"
+    - digest: sha256:aa9595966afe40bdc1935c8bec51648e2266500120b02fe336a8f26c58ae7387
+      effective_on: "2023-10-28T00:00:00Z"
+      tag: "0.1"

@@ -1,0 +1,93 @@
+---
+# Usage: https://enterprisecontract.dev/docs/ec-policies/release_policy.html#tasks_package
+pipeline-required-tasks:
+  fbc:
+    - effective_on: "2023-08-31T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - fbc-related-image-check
+        - fbc-validation
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - inspect-image
+        - sast-snyk-check
+        - sbom-json-check
+        - show-sbom
+        - summary
+  docker:
+    - effective_on: "2023-11-11T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - inspect-image
+        - sast-snyk-check
+        - sbom-json-check
+        - show-sbom
+        - summary
+  generic:
+    - effective_on: "2023-08-31T00:00:00Z"
+      tasks:
+        - buildah
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - inspect-image
+        - sast-snyk-check
+        - sbom-json-check
+        - show-sbom
+        - summary
+  java:
+    - effective_on: "2023-08-31T00:00:00Z"
+      tasks:
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - s2i-java
+        - inspect-image
+        - sast-snyk-check
+        - sbom-json-check
+        - show-sbom
+        - summary
+  nodejs:
+    - effective_on: "2023-08-31T00:00:00Z"
+      tasks:
+        - clair-scan
+        - clamav-scan
+        - deprecated-image-check
+        - git-clone
+        - init
+        - prefetch-dependencies
+        - s2i-nodejs
+        - inspect-image
+        - sast-snyk-check
+        - sbom-json-check
+        - show-sbom
+        - summary
+
+# Usage: https://enterprisecontract.dev/docs/ec-policies/release_policy.html#tasks_package
+required-tasks:
+  - effective_on: "2023-08-31T00:00:00Z"
+    tasks:
+      - clair-scan
+      - clamav-scan
+      - git-clone
+      - init
+      - inspect-image
+      - prefetch-dependencies
+      - sast-snyk-check
+      - summary

@@ -22,7 +22,7 @@ import data.lib
 #   rule will fail. By default, only CVEs of critical and high security level
 #   cause a failure. This is configurable by the rule data key
 #   `restrict_cve_security_levels`. The available levels are critical, high,
-#   medium, and low.
+#   medium, low, and unknown.
 # custom:
 #   short_name: cve_blockers
 #   failure_msg: Found %d CVE vulnerabilities of %s security level
@@ -48,7 +48,7 @@ deny contains result if {
 #   rule will raise a warning. By default, the list of CVE security levels used
 #   by this policy is empty. However, this is configurable by the rule data key
 #   `warn_cve_security_levels`. The available levels are critical, high,
-#   medium, and low.
+#   medium, low, and unknown.
 # custom:
 #   short_name: cve_warnings
 #   failure_msg: Found %d non-blocking CVE vulnerabilities of %s security level

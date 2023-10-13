@@ -1,0 +1,26 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: mock-scanner
+spec:
+  description: >-
+    This is a dummy task that emulates a task that scans source code. Its sole purpose is to
+    facilitate testing.
+  params:
+    - name: TEST_OUTPUT
+      description: The value to of the TEST_OUTPUT commit result.
+  results:
+    - name: TEST_OUTPUT
+      description: The summary scanner output.
+  steps:
+    - name: scan
+      image: registry.access.redhat.com/ubi9:latest
+      env:
+      - name: TEST_OUTPUT
+        value: "$(params.TEST_OUTPUT)"
+      script: |
+        #!/usr/bin/env sh
+        set -euo pipefail
+
+        echo -n "${TEST_OUTPUT}" > "$(results.TEST_OUTPUT.path)"

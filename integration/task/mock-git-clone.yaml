@@ -1,0 +1,40 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: mock-git-clone
+spec:
+  description: >-
+    This is a dummy task that emulates a task that performs a git clone. Its sole purpose is to
+    facilitate testing.
+  params:
+    - name: commit
+      description: The value to of the commit result.
+    - name: url
+      description: The value of the url result.
+    - name: committer-date
+      description: The value of the committer-date result.
+  results:
+    - name: commit
+      description: The precise commit SHA that was fetched by this Task.
+    - name: url
+      description: The precise URL that was fetched by this Task.
+    - name: committer-date
+      description: The epoch timestamp of the commit that was fetched by this Task.
+  steps:
+    - name: clone
+      image: registry.access.redhat.com/ubi9:latest
+      env:
+      - name: COMMIT
+        value: "$(params.commit)"
+      - name: URL
+        value: $(params.url)
+      - name: COMMITTER_DATE
+        value: $(params.committer-date)
+      script: |
+        #!/usr/bin/env sh
+        set -euo pipefail
+
+        echo -n "${COMMIT}" > "$(results.commit.path)"
+        echo -n "${URL}" > "$(results.url.path)"
+        echo -n "${COMMITTER_DATE}" > "$(results.committer-date.path)"

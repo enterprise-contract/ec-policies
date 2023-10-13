@@ -1,0 +1,33 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: mock-build
+spec:
+  description: >-
+    This is a dummy task that emulates a task that performs container build and push. Its sole
+    purpose is to facilitate testing.
+  params:
+    - name: IMAGE_URL
+      description: The value to of the IMAGE_URL commit result.
+    - name: IMAGE_DIGEST
+      description: The value of the IMAGE_DIGEST result.
+  results:
+    - name: IMAGE_URL
+      description: Image repository where the built image would be pushed to.
+    - name: IMAGE_DIGEST
+      description: Digest of the image just built.
+  steps:
+    - name: build-and-push
+      image: registry.access.redhat.com/ubi9:latest
+      env:
+      - name: IMAGE_URL
+        value: "$(params.IMAGE_URL)"
+      - name: IMAGE_DIGEST
+        value: $(params.IMAGE_DIGEST)
+      script: |
+        #!/usr/bin/env sh
+        set -euo pipefail
+
+        echo -n "${IMAGE_URL}" > "$(results.IMAGE_URL.path)"
+        echo -n "${IMAGE_DIGEST}" > "$(results.IMAGE_DIGEST.path)"

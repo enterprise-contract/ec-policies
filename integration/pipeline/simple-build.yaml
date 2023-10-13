@@ -1,0 +1,91 @@
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: simple-build
+spec:
+  params:
+    # mock-git-clone parameters
+    - name: commit
+    - name: url
+    - name: committer-date
+    # mock-build parameters
+    - name: IMAGE_URL
+    - name: IMAGE_DIGEST
+    # mock-scan parameters
+    - name: TEST_OUTPUT
+
+  tasks:
+    - name: git-clone
+      params:
+        - name: commit
+          value: "$(params.commit)"
+        - name: url
+          value: "$(params.url)"
+        - name: committer-date
+          value: "$(params.committer-date)"
+      taskRef:
+        resolver: git
+        params:
+          - name: url
+            value: dynamically populated
+          - name: revision
+            value: dynamically populated
+          - name: pathInRepo
+            value: integration/task/mock-git-clone.yaml
+
+    - name: scan
+      runAfter:
+        - git-clone
+      params:
+        - name: TEST_OUTPUT
+          value: $(params.TEST_OUTPUT)
+      taskSpec:
+        description: >-
+          This is a dummy task that emulates a task that scans source code. Its sole purpose is to
+          facilitate testing.
+        params:
+          - name: TEST_OUTPUT
+            description: The value to of the TEST_OUTPUT commit result.
+        results:
+          - name: TEST_OUTPUT
+            description: The summary scanner output.
+        steps:
+          - name: scan
+            image: registry.access.redhat.com/ubi9:latest
+            env:
+            - name: TEST_OUTPUT
+              value: "$(params.TEST_OUTPUT)"
+            script: |
+              #!/usr/bin/env sh
+              set -euo pipefail
+
+              echo -n "${TEST_OUTPUT}" > "$(results.TEST_OUTPUT.path)"
+
+    - name: build
+      runAfter:
+        - scan
+      params:
+        - name: IMAGE_URL
+          value: $(params.IMAGE_URL)
+        - name: IMAGE_DIGEST
+          value: "$(params.IMAGE_DIGEST)"
+      taskRef:
+        resolver: bundles
+        params:
+        - name: bundle
+          value: replaced by record.sh
+        - name: name
+          value: mock-build
+        - name: kind
+          value: task
+
+  results:
+    - name: IMAGE_URL
+      value: "$(tasks.build.results.IMAGE_URL)"
+    - name: IMAGE_DIGEST
+      value: "$(tasks.build.results.IMAGE_DIGEST)"
+    - name: CHAINS-GIT_URL
+      value: "$(tasks.git-clone.results.url)"
+    - name: CHAINS-GIT_COMMIT
+      value: "$(tasks.git-clone.results.commit)"

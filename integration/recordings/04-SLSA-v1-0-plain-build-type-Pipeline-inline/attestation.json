@@ -1,0 +1,298 @@
+{
+  "_type": "https://in-toto.io/Statement/v0.1",
+  "predicateType": "https://slsa.dev/provenance/v1",
+  "subject": [
+    {
+      "name": "quay.io/lucarval/test-policies-chains",
+      "digest": {
+        "sha256": "e9d4ce2b945e978c467247fef0c2d66338aebeda026ef3333e7745c1bb950849"
+      }
+    }
+  ],
+  "predicate": {
+    "buildDefinition": {
+      "buildType": "https://tekton.dev/chains/v2/slsa",
+      "externalParameters": {
+        "runSpec": {
+          "pipelineSpec": {
+            "tasks": [
+              {
+                "name": "git-clone",
+                "taskRef": {
+                  "kind": "Task",
+                  "resolver": "git",
+                  "params": [
+                    {
+                      "name": "url",
+                      "value": "https://github.com/lcarva/ec-policies.git"
+                    },
+                    {
+                      "name": "revision",
+                      "value": "67f9db6765692ac4a67c03d405a103b3d82ba6d6"
+                    },
+                    {
+                      "name": "pathInRepo",
+                      "value": "integration/task/mock-git-clone.yaml"
+                    }
+                  ]
+                },
+                "params": [
+                  {
+                    "name": "commit",
+                    "value": "$(params.commit)"
+                  },
+                  {
+                    "name": "url",
+                    "value": "$(params.url)"
+                  },
+                  {
+                    "name": "committer-date",
+                    "value": "$(params.committer-date)"
+                  }
+                ]
+              },
+              {
+                "name": "scan",
+                "taskSpec": {
+                  "spec": null,
+                  "metadata": {},
+                  "params": [
+                    {
+                      "name": "TEST_OUTPUT",
+                      "type": "string",
+                      "description": "The value to of the TEST_OUTPUT commit result."
+                    }
+                  ],
+                  "description": "This is a dummy task that emulates a task that scans source code. Its sole purpose is to facilitate testing.",
+                  "steps": [
+                    {
+                      "name": "scan",
+                      "image": "registry.access.redhat.com/ubi9:latest",
+                      "env": [
+                        {
+                          "name": "TEST_OUTPUT",
+                          "value": "$(params.TEST_OUTPUT)"
+                        }
+                      ],
+                      "resources": {},
+                      "script": "#!/usr/bin/env sh\nset -euo pipefail\n\necho -n \"${TEST_OUTPUT}\" > \"$(results.TEST_OUTPUT.path)\"\n"
+                    }
+                  ],
+                  "results": [
+                    {
+                      "name": "TEST_OUTPUT",
+                      "type": "string",
+                      "description": "The summary scanner output."
+                    }
+                  ]
+                },
+                "runAfter": [
+                  "git-clone"
+                ],
+                "params": [
+                  {
+                    "name": "TEST_OUTPUT",
+                    "value": "$(params.TEST_OUTPUT)"
+                  }
+                ]
+              },
+              {
+                "name": "build",
+                "taskRef": {
+                  "kind": "Task",
+                  "resolver": "bundles",
+                  "params": [
+                    {
+                      "name": "bundle",
+                      "value": "quay.io/lucarval/test-policies-chains@sha256:82c943aa76aae343406a50a96ffa03c57a546e46e7bd70f180949fd267250d4a"
+                    },
+                    {
+                      "name": "name",
+                      "value": "mock-build"
+                    },
+                    {
+                      "name": "kind",
+                      "value": "task"
+                    }
+                  ]
+                },
+                "runAfter": [
+                  "scan"
+                ],
+                "params": [
+                  {
+                    "name": "IMAGE_URL",
+                    "value": "$(params.IMAGE_URL)"
+                  },
+                  {
+                    "name": "IMAGE_DIGEST",
+                    "value": "$(params.IMAGE_DIGEST)"
+                  }
+                ]
+              }
+            ],
+            "params": [
+              {
+                "name": "commit",
+                "type": "string"
+              },
+              {
+                "name": "url",
+                "type": "string"
+              },
+              {
+                "name": "committer-date",
+                "type": "string"
+              },
+              {
+                "name": "IMAGE_URL",
+                "type": "string"
+              },
+              {
+                "name": "IMAGE_DIGEST",
+                "type": "string"
+              },
+              {
+                "name": "TEST_OUTPUT",
+                "type": "string"
+              }
+            ],
+            "results": [
+              {
+                "name": "IMAGE_URL",
+                "description": "",
+                "value": "$(tasks.build.results.IMAGE_URL)"
+              },
+              {
+                "name": "IMAGE_DIGEST",
+                "description": "",
+                "value": "$(tasks.build.results.IMAGE_DIGEST)"
+              },
+              {
+                "name": "CHAINS-GIT_URL",
+                "description": "",
+                "value": "$(tasks.git-clone.results.url)"
+              },
+              {
+                "name": "CHAINS-GIT_COMMIT",
+                "description": "",
+                "value": "$(tasks.git-clone.results.commit)"
+              }
+            ]
+          },
+          "params": [
+            {
+              "name": "IMAGE_DIGEST",
+              "value": "sha256:e9d4ce2b945e978c467247fef0c2d66338aebeda026ef3333e7745c1bb950849"
+            },
+            {
+              "name": "IMAGE_URL",
+              "value": "quay.io/lucarval/test-policies-chains"
+            },
+            {
+              "name": "TEST_OUTPUT",
+              "value": "missing"
+            },
+            {
+              "name": "commit",
+              "value": "206a38c7a6b37c8b4d10d79be7035904cac19a40"
+            },
+            {
+              "name": "committer-date",
+              "value": "1697488424"
+            },
+            {
+              "name": "url",
+              "value": "gitspam.spam/spam/spam"
+            }
+          ],
+          "serviceAccountName": "default",
+          "timeouts": {
+            "pipeline": "1h0m0s"
+          }
+        }
+      },
+      "internalParameters": {
+        "tekton-pipelines-feature-flags": {
+          "DisableAffinityAssistant": false,
+          "DisableCredsInit": false,
+          "RunningInEnvWithInjectedSidecars": true,
+          "RequireGitSSHSecretKnownHosts": false,
+          "EnableTektonOCIBundles": false,
+          "ScopeWhenExpressionsToTask": false,
+          "EnableAPIFields": "beta",
+          "SendCloudEventsForRuns": false,
+          "AwaitSidecarReadiness": true,
+          "EnforceNonfalsifiability": "none",
+          "VerificationNoMatchPolicy": "ignore",
+          "EnableProvenanceInStatus": true,
+          "ResultExtractionMethod": "termination-message",
+          "MaxResultSize": 4096,
+          "SetSecurityContext": false,
+          "Coschedule": "workspaces"
+        }
+      },
+      "resolvedDependencies": [
+        {
+          "uri": "git+https://github.com/lcarva/ec-policies.git",
+          "digest": {
+            "sha1": "67f9db6765692ac4a67c03d405a103b3d82ba6d6"
+          },
+          "name": "pipelineTask"
+        },
+        {
+          "uri": "oci://registry.access.redhat.com/ubi9",
+          "digest": {
+            "sha256": "20f695d2a91352d4eaa25107535126727b5945bff38ed36a3e59590f495046f0"
+          }
+        },
+        {
+          "uri": "quay.io/lucarval/test-policies-chains",
+          "digest": {
+            "sha256": "82c943aa76aae343406a50a96ffa03c57a546e46e7bd70f180949fd267250d4a"
+          },
+          "name": "pipelineTask"
+        },
+        {
+          "uri": "git+gitspam.spam/spam/spam.git",
+          "digest": {
+            "sha1": "206a38c7a6b37c8b4d10d79be7035904cac19a40"
+          },
+          "name": "inputs/result"
+        }
+      ]
+    },
+    "runDetails": {
+      "builder": {
+        "id": "https://tekton.dev/chains/v2"
+      },
+      "metadata": {
+        "invocationID": "4e1680ba-42c8-4ec7-b7f4-c32e15994042",
+        "startedOn": "2023-10-16T20:33:44Z",
+        "finishedOn": "2023-10-16T20:33:58Z"
+      },
+      "byproducts": [
+        {
+          "name": "pipelineRunResults/IMAGE_URL",
+          "mediaType": "application/json",
+          "content": "InF1YXkuaW8vbHVjYXJ2YWwvdGVzdC1wb2xpY2llcy1jaGFpbnMi"
+        },
+        {
+          "name": "pipelineRunResults/IMAGE_DIGEST",
+          "mediaType": "application/json",
+          "content": "InNoYTI1NjplOWQ0Y2UyYjk0NWU5NzhjNDY3MjQ3ZmVmMGMyZDY2MzM4YWViZWRhMDI2ZWYzMzMzZTc3NDVjMWJiOTUwODQ5Ig=="
+        },
+        {
+          "name": "pipelineRunResults/CHAINS-GIT_URL",
+          "mediaType": "application/json",
+          "content": "ImdpdHNwYW0uc3BhbS9zcGFtL3NwYW0i"
+        },
+        {
+          "name": "pipelineRunResults/CHAINS-GIT_COMMIT",
+          "mediaType": "application/json",
+          "content": "IjIwNmEzOGM3YTZiMzdjOGI0ZDEwZDc5YmU3MDM1OTA0Y2FjMTlhNDAi"
+        }
+      ]
+    }
+  }
+}

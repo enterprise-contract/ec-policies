@@ -4,12 +4,18 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: weekly
+      time: '15:00'
+      timezone: Etc/UTC
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: weekly
+      time: '15:00'
+      timezone: Etc/UTC
   - package-ecosystem: "npm"
     directory: "/antora/ec-policies-antora-extension"
     schedule:
-      interval: "daily"
+      interval: weekly
+      time: '15:00'
+      timezone: Etc/UTC

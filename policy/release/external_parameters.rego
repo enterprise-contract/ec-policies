@@ -1,6 +1,6 @@
 #
 # METADATA
-# title: external parameters
+# title: External parameters
 # description: >-
 #   Verify the attribute .predicate.buildDefinition.externalParameters of a
 #   SLSA Provenance v1.0 matches the expectation.

@@ -138,8 +138,8 @@ _expected_sources contains expected_source if {
 	some vcs_type, vcs_info in input.image.source
 
 	# e.g. git+https://github.com/...
-	expected_vcs_uri := sprintf("%s+%s", [vcs_type, vcs_info.url])
-	expected_revision := vcs_info.revision
+	expected_vcs_uri := sprintf("%s+%s", [vcs_type, object.get(vcs_info, ["url"], "")])
+	expected_revision := object.get(vcs_info, ["revision"], "")
 	expected_source := {
 		"expected_vcs_uri": expected_vcs_uri,
 		"expected_revision": expected_revision,

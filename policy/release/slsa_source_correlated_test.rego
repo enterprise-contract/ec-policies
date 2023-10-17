@@ -232,6 +232,22 @@ test_deny_expected_source_code_reference_v02 {
 			_source_material_attestation("git+https://unexpected.repository", "ref"),
 			_source_material_attestation("git+https://git.repository", "unexpected"),
 		]
+
+	# missing source revision in input.image SLSA Provenance v0.2
+	lib.assert_equal_results(slsa_source_correlated.deny, {{
+		"code": "slsa_source_correlated.expected_source_code_reference",
+		"msg": `The expected source code reference "git+https://git.repository@" is not attested`,
+		"term": "git+https://git.repository@sha1:ref",
+	}}) with input.image as {"source": {"git": {"url": "https://git.repository"}}}
+		with input.attestations as [_source_material_attestation("git+https://git.repository", "ref")]
+
+	# missing source url in input.image SLSA Provenance v0.2
+	lib.assert_equal_results(slsa_source_correlated.deny, {{
+		"code": "slsa_source_correlated.expected_source_code_reference",
+		"msg": `The expected source code reference "git+@ref" is not attested`,
+		"term": "git+https://git.repository@sha1:ref",
+	}}) with input.image as {"source": {"git": {"revision": "ref"}}}
+		with input.attestations as [_source_material_attestation("git+https://git.repository", "ref")]
 }
 
 # regal ignore:rule-length
@@ -285,6 +301,22 @@ test_deny_expected_source_code_reference_v10 {
 			_source_resolved_dependencies_attestation("git+https://unexpected.repository", "ref"),
 			_source_resolved_dependencies_attestation("git+https://git.repository", "unexpected"),
 		]
+
+	# missing source revision in input.image SLSA Provenance v1.0
+	lib.assert_equal_results(slsa_source_correlated.deny, {{
+		"code": "slsa_source_correlated.expected_source_code_reference",
+		"msg": `The expected source code reference "git+https://git.repository@" is not attested`,
+		"term": "git+https://git.repository@sha1:ref",
+	}}) with input.image as {"source": {"git": {"url": "https://git.repository"}}}
+		with input.attestations as [_source_resolved_dependencies_attestation("git+https://git.repository", "ref")]
+
+	# missing source url in input.image SLSA Provenance v1.0
+	lib.assert_equal_results(slsa_source_correlated.deny, {{
+		"code": "slsa_source_correlated.expected_source_code_reference",
+		"msg": `The expected source code reference "git+@ref" is not attested`,
+		"term": "git+https://git.repository@sha1:ref",
+	}}) with input.image as {"source": {"git": {"revision": "ref"}}}
+		with input.attestations as [_source_resolved_dependencies_attestation("git+https://git.repository", "ref")]
 }
 
 test_slsa_v02_source_references {

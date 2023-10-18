@@ -75,7 +75,7 @@ test_bundle_unpinned {
 
 test_bundle_reference_valid {
 	name := "my-task"
-	image := "quay.io/redhat-appstudio/hacbs-templates-bundle:latest@sha256:abc"
+	image := "reg.com/repo:latest@sha256:abc"
 	attestations := [
 		mock_data({
 			"name": name,
@@ -88,7 +88,57 @@ test_bundle_reference_valid {
 	]
 
 	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
+		with data["task-bundles"] as task_bundles
+
 	lib.assert_empty(attestation_task_bundle.deny) with input.attestations as attestations
+		with data["task-bundles"] as task_bundles
+}
+
+test_bundle_reference_digest_doesnt_match {
+	name := "my-task"
+	image := "reg.com/repo:latest@sha256:xyz"
+	attestations := [
+		mock_data({
+			"name": name,
+			"ref": {
+				"name": "my-task",
+				"bundle": image,
+			},
+		}),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle("my-task", image)]),
+	]
+
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
+		with data["task-bundles"] as task_bundles
+
+	lib.assert_equal_results(attestation_task_bundle.deny, {{
+		"code": "attestation_task_bundle.task_ref_bundles_acceptable",
+		"msg": "Pipeline task 'my-task' uses an unacceptable task bundle 'reg.com/repo:latest@sha256:xyz'",
+	}}) with input.attestations as attestations
+		with data["task-bundles"] as task_bundles
+}
+
+test_bundle_reference_repo_not_present {
+	name := "my-task"
+	image := "reg.com/super-custom-repo@sha256:abc"
+	attestations := [
+		mock_data({
+			"name": name,
+			"ref": {
+				"name": "my-task",
+				"bundle": image,
+			},
+		}),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle("my-task", image)]),
+	]
+
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
+		with data["task-bundles"] as task_bundles
+
+	lib.assert_equal_results(attestation_task_bundle.deny, {{
+		"code": "attestation_task_bundle.task_ref_bundles_acceptable",
+		"msg": "Pipeline task 'my-task' uses an unacceptable task bundle 'reg.com/super-custom-repo@sha256:abc'",
+	}}) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 }
 

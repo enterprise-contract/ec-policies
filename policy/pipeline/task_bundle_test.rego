@@ -42,7 +42,7 @@ test_bundle_unpinned {
 test_bundle_reference_valid {
 	tasks := [{
 		"name": "my-task",
-		"taskRef": {"bundle": "quay.io/redhat-appstudio/hacbs-templates-bundle:latest@sha256:abc"},
+		"taskRef": {"bundle": "reg.com/repo:latest@sha256:abc"},
 	}]
 
 	lib.assert_empty(task_bundle.deny) with input.spec.tasks as tasks with data["task-bundles"] as task_bundles

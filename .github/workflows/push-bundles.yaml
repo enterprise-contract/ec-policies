@@ -52,7 +52,7 @@ jobs:
       env:
         EC_AUTOMATION_KEY: ${{ secrets.EC_AUTOMATION_KEY }}
         APP_INSTALL_ID: 32872589
-        REPO_ORG: hacbs-contract
+        REPO_PREFIX: quay.io/hacbs-contract/
       run: hack/update-bundles.sh
 
     - name: Docker login (quay.io/enterprise-contract)

@@ -90,7 +90,8 @@ bundle(task) := refs.task_ref(task).bundle
 # _collection returns an array representing the full list of records to
 # be taken into consideration when evaluating policy rules for bundle
 # references. Any irrelevant records are filtered out from the array.
+# (The else condition is for when data["task-bundles"][ref.repo] doesn't exist.)
 _collection(ref) := items {
 	full_collection := data["task-bundles"][ref.repo]
 	items := time_lib.acceptable_items(full_collection)
-}
+} else := []

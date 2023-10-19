@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-DATA_DIR=./data
+DATA_DIR=./example/data
 CONFIG_DATA_FILE=$(DATA_DIR)/config.json
 
 POLICY_DIR=./policy
@@ -116,7 +116,7 @@ opa-check: ## Check Rego files with strict mode (https://www.openpolicyagent.org
 
 .PHONY: conventions-check
 conventions-check: ## Check Rego policy files for convention violations
-	@OUT=$$($(OPA) eval --data checks --data $(POLICY_DIR)/lib --data data --input <($(OPA) inspect . -a -f json) 'data.checks.violation[_]' --format raw); \
+	@OUT=$$($(OPA) eval --data checks --data $(POLICY_DIR)/lib --input <($(OPA) inspect . -a -f json) 'data.checks.violation[_]' --format raw); \
 	if [[ -n "$${OUT}" ]]; then echo "$${OUT}"; exit 1; fi
 
 .PHONY: ready

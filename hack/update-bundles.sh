@@ -24,7 +24,7 @@ set -o nounset
 
 REPO_PREFIX="${REPO_PREFIX-quay.io/enterprise-contract/}"
 ROOT_DIR=$( git rev-parse --show-toplevel )
-BUNDLES="release pipeline data task build_task"
+BUNDLES="release pipeline task build_task"
 CONFTEST="go run github.com/open-policy-agent/conftest"
 
 # For example:
@@ -35,40 +35,28 @@ DRY_RUN=${DRY_RUN:-""}
 DRY_RUN_ECHO=""
 [ "$DRY_RUN" == "1" ] && DRY_RUN_ECHO="echo #"
 
-# The data bundle is a little different to the other two.
-# Encapsulate the differences these little functions.
-#
 function bundle_src_dirs() {
-  [ $1 == "data" ] && echo "data" || echo "policy/lib policy/$1"
+  echo "policy/lib policy/$1"
 }
 
 function bundle_subdir() {
-  [ $1 == "data" ] && echo "data" || echo "policy"
+  echo "policy"
 }
 
 function exclusions() {
-  [ $1 == "data" ] && echo "config.json" || echo "artifacthub-pkg.yml"
+  echo "artifacthub-pkg.yml"
 }
 
 function repo_name() {
-  [ $1 == "data" ] && echo "ec-policy-data" || echo "ec-$1-policy"
+  echo "ec-$1-policy"
 }
 
 function conftest_push() {
-  if [ $1 == "data" ]; then
-    $DRY_RUN_ECHO ${CONFTEST} push --policy '' --data data $2
-  else
-    $DRY_RUN_ECHO ${CONFTEST} push --policy policy $2
-  fi
+  $DRY_RUN_ECHO ${CONFTEST} push --policy policy $2
 }
 
 function ensure_unique_file() {
-  if [ $1 == "data" ]; then
-    # It really is data/data here...
-    echo "data/data/rule_data.yml"
-  else
-    echo "policy/lib/rule_data.rego"
-  fi
+  echo "policy/lib/rule_data.rego"
 }
 
 tmp_oci_dirs=()

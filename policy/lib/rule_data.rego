@@ -85,7 +85,7 @@ rule_data(key_name) := value {
 	value := data.rule_data_custom[key_name]
 } else := value {
 	# Expected to be defined in a default data source accessed via
-	# an oci bundle or a maybe a git url. See data/rule_data.yml.
+	# an oci bundle or a maybe a git url. See example/data/rule_data.yml.
 	value := data.rule_data[key_name]
 } else := value {
 	# Default values defined in this file. See above.

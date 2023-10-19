@@ -15,7 +15,7 @@ test_acceptable_base_images {
 			"type": "string",
 			"value": concat("\n", [
 				"registry.redhat.io/ubi7:latest@sha256:abc",
-				"registry.access.redhat.com/ubi8:8.9@sha256:bcd",
+				"docker.io/library/registry:latest@sha256:bcd",
 				"", # Verify trailing new line is ignored
 			]),
 		}],
@@ -25,7 +25,7 @@ test_acceptable_base_images {
 			lib.build_base_images_digests_result_name,
 			concat("\n", [
 				"registry.redhat.io/ubi7:latest@sha256:abc",
-				"registry.access.redhat.com/ubi8:8.9@sha256:bcd",
+				"docker.io/library/registry:latest@sha256:bcd",
 				"", # Verify trailing new line is ignored
 			]),
 			"buildah-task-1",
@@ -66,8 +66,7 @@ test_unacceptable_base_images {
 			"type": "string",
 			"value": concat("\n", [
 				"registry.redhat.io/ubi7:latest@sha256:abc",
-				"docker.io/busybox:latest@sha256:bcd",
-				"registry.access.redhat.com/ubi8:8.9@sha256:cde",
+				"dockery.io/busybox:latest@sha256:bcd",
 				"registry.redhat.ioo/spam:latest@sha256:def",
 			]),
 		}],
@@ -77,8 +76,7 @@ test_unacceptable_base_images {
 			lib.build_base_images_digests_result_name,
 			concat("\n", [
 				"registry.redhat.io/ubi7:latest@sha256:abc",
-				"docker.io/busybox:latest@sha256:bcd",
-				"registry.access.redhat.com/ubi8:8.9@sha256:cde",
+				"dockery.io/busybox:latest@sha256:bcd",
 				"registry.redhat.ioo/spam:latest@sha256:def",
 			]),
 			"buildah-task-1",
@@ -89,7 +87,7 @@ test_unacceptable_base_images {
 	expected := {
 		{
 			"code": "base_image_registries.base_image_permitted",
-			"msg": "Base image \"docker.io/busybox:latest@sha256:bcd\" is from a disallowed registry",
+			"msg": "Base image \"dockery.io/busybox:latest@sha256:bcd\" is from a disallowed registry",
 		},
 		{
 			"code": "base_image_registries.base_image_permitted",

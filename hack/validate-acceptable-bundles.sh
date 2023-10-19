@@ -70,7 +70,7 @@ for ref in ${new_bundles}; do
     report="$(ec validate definition \
         --policy git::https://github.com/enterprise-contract/ec-policies//policy/lib?ref=main \
         --policy git::https://github.com/enterprise-contract/ec-policies//policy/pipeline?ref=main \
-        --data git::https://github.com/enterprise-contract/ec-policies//data?ref=main \
+        --data git::https://github.com/release-engineering/rhtap-ec-policy//data \
         --file <(${TKN} bundle list -o json "${ref}" 2> /dev/null) \
         || true)"
 

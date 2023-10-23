@@ -6,7 +6,7 @@ require (
 	github.com/open-policy-agent/conftest v0.46.0
 	github.com/open-policy-agent/opa v0.57.1
 	github.com/styrainc/regal v0.10.1
-	github.com/tektoncd/cli v0.32.0
+	github.com/tektoncd/cli v0.32.2
 )
 
 // address CVE-2023-2253 https://github.com/advisories/GHSA-hqxw-f8mx-cpmw
@@ -311,10 +311,10 @@ require (
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/syndtr/goleveldb v1.0.1-0.20220721030215-126854af5e6d // indirect
 	github.com/tchap/go-patricia/v2 v2.3.1 // indirect
-	github.com/tektoncd/chains v0.17.0 // indirect
-	github.com/tektoncd/hub v1.14.0 // indirect
-	github.com/tektoncd/pipeline v0.50.1 // indirect
-	github.com/tektoncd/triggers v0.25.0 // indirect
+	github.com/tektoncd/chains v0.17.1 // indirect
+	github.com/tektoncd/hub v1.14.2 // indirect
+	github.com/tektoncd/pipeline v0.50.3 // indirect
+	github.com/tektoncd/triggers v0.25.2 // indirect
 	github.com/thales-e-security/pool v0.0.2 // indirect
 	github.com/theupdateframework/go-tuf v0.6.1 // indirect
 	github.com/titanous/rocacheck v0.0.0-20171023193734-afe73141d399 // indirect
@@ -387,7 +387,7 @@ require (
 	k8s.io/klog/v2 v2.100.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20230515203736-54b630e78af5 // indirect
 	k8s.io/utils v0.0.0-20230505201702-9f6742963106 // indirect
-	knative.dev/pkg v0.0.0-20230612155445-74c4be5e935e // indirect
+	knative.dev/pkg v0.0.0-20231011201526-df28feae6d34 // indirect
 	muzzammil.xyz/jsonc v1.0.0 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
 	oras.land/oras-go/v2 v2.3.0 // indirect

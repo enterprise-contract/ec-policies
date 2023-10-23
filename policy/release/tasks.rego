@@ -218,7 +218,7 @@ _status(task) := status if {
 
 	# if task.status.conditions = [], we want ["MISSING"] returned
 	count(status) > 0
-} else = ["MISSING"]
+} else := ["MISSING"]
 
 _slsav1_status(condition) := status if {
 	condition.status == "True"

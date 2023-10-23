@@ -112,7 +112,7 @@ results_named(name) := [r |
 unmarshal(raw) := value if {
 	json.is_valid(raw)
 	value := json.unmarshal(raw)
-} else = raw
+} else := raw
 
 # (Don't call it test_results since test_ means a unit test)
 # First find results using the new task result name

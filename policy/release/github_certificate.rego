@@ -44,9 +44,7 @@ warn contains result if {
 #   collections:
 #   - github
 #
-deny contains result if {
-	result := _check_extension(rego.metadata.chain(), "allowed_gh_workflow_repos", _REPOSITORY)
-}
+deny contains _check_extension(rego.metadata.chain(), "allowed_gh_workflow_repos", _REPOSITORY)
 
 # METADATA
 # title: GitHub Workflow Repository
@@ -61,9 +59,7 @@ deny contains result if {
 #   collections:
 #   - github
 #
-deny contains result if {
-	result := _check_extension(rego.metadata.chain(), "allowed_gh_workflow_refs", _REF)
-}
+deny contains _check_extension(rego.metadata.chain(), "allowed_gh_workflow_refs", _REF)
 
 # METADATA
 # title: GitHub Workflow Name
@@ -78,9 +74,7 @@ deny contains result if {
 #   collections:
 #   - github
 #
-deny contains result if {
-	result := _check_extension(rego.metadata.chain(), "allowed_gh_workflow_names", _NAME)
-}
+deny contains _check_extension(rego.metadata.chain(), "allowed_gh_workflow_names", _NAME)
 
 # METADATA
 # title: GitHub Workflow Trigger
@@ -95,9 +89,7 @@ deny contains result if {
 #   collections:
 #   - github
 #
-deny contains result if {
-	result := _check_extension(rego.metadata.chain(), "allowed_gh_workflow_triggers", _TRIGGER)
-}
+deny contains _check_extension(rego.metadata.chain(), "allowed_gh_workflow_triggers", _TRIGGER)
 
 _check_extension(chain, key, extension) := result if {
 	value := _fulcio_extension_value(extension)

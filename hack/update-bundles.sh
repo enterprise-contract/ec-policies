@@ -22,7 +22,7 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-REPO_ORG="${REPO_ORG:-enterprise-contract}"
+REPO_PREFIX="${REPO_PREFIX-quay.io/enterprise-contract/}"
 ROOT_DIR=$( git rev-parse --show-toplevel )
 BUNDLES="release pipeline data task build_task"
 CONFTEST="go run github.com/open-policy-agent/conftest"
@@ -86,9 +86,16 @@ for b in $BUNDLES; do
   # Check if the bundle for that git sha exists already
   repo=$(repo_name $b)
   tag=git-$last_update_sha
-  push_repo=quay.io/$REPO_ORG/$repo
+  push_repo="${REPO_PREFIX}$repo"
 
-  if [ "$(skopeo list-tags "docker://${push_repo}" | jq 'any(.Tags[]; . == "'"${tag}"'")')" == "true" ] && [ "$ENSURE_UNIQUE" == "1" ]; then
+  skopeo_args=''
+  skopeo_cp_args=''
+  if [[ $push_repo == *'localhost:'* ]]; then
+    skopeo_args='--tls-verify=false'
+    skopeo_cp_args='--dest-tls-verify=false --src-tls-verify=false'
+  fi
+
+  if [ "$(skopeo list-tags ${skopeo_args} "docker://${push_repo}" | jq 'any(.Tags[]; . == "'"${tag}"'")')" == "true" ] && [ "$ENSURE_UNIQUE" == "1" ]; then
     # No push needed
     echo "Policy bundle $push_repo:$tag exists already, no push needed"
   else
@@ -130,13 +137,13 @@ for b in $BUNDLES; do
     # Add OCI annotations to the bundle image
     tmp_oci_dir="$(mktemp -d --tmpdir)"
     tmp_oci_dirs+=("${tmp_oci_dir}")
-    skopeo copy docker://"$push_repo:$tag" dir:"${tmp_oci_dir}"
+    skopeo copy docker://"$push_repo:$tag" dir:"${tmp_oci_dir}" ${skopeo_cp_args}
     manifest="$(jq -c '. += { "annotations": { "org.opencontainers.image.revision": "'"${last_update_sha}"'" } }' "${tmp_oci_dir}/manifest.json")"
     echo "${manifest}" > "${tmp_oci_dir}/manifest.json"
-    $DRY_RUN_ECHO skopeo copy dir:"${tmp_oci_dir}" docker://"$push_repo:$tag"
+    $DRY_RUN_ECHO skopeo copy dir:"${tmp_oci_dir}" docker://"$push_repo:$tag" ${skopeo_cp_args}
 
     # Set the 'latest' tag
-    $DRY_RUN_ECHO skopeo copy --quiet docker://$push_repo:$tag docker://$push_repo:latest
+    $DRY_RUN_ECHO skopeo copy --quiet docker://$push_repo:$tag docker://$push_repo:latest ${skopeo_cp_args}
 
     cd $ROOT_DIR
   fi

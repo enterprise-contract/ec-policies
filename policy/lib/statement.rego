@@ -8,4 +8,4 @@ import future.keywords.if
 # attestations.rego which would cause circular imports and make everyone sad.
 statement(att) := statement if {
 	statement := att.statement
-} else = att
+} else := att

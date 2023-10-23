@@ -69,7 +69,7 @@ future_items(items) := [i |
 # available, this function behaves just like future_items.
 acceptable_items(items) := some_items {
 	some_items := array.concat(future_items(items), [most_current(items)])
-} else = future_items(items)
+} else := future_items(items)
 
 # newest returns the newest item by `effective_on`. Assumes same date format and
 # time-zone for `effective_on` field.

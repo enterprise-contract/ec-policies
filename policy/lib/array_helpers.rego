@@ -11,7 +11,7 @@ _max_int := 9223372036854775807
 le(left, right) := is_le {
 	type_name(left) == type_name(right)
 	is_le := left <= right
-} else = is_le {
+} else := is_le {
 	is_le := to_number(left) <= to_number(right)
 }
 

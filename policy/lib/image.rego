@@ -34,11 +34,11 @@ str(d) := s1 {
 	d.digest != ""
 	d.tag != ""
 	s1 := sprintf("%s:%s@%s", [d.repo, d.tag, d.digest])
-} else = s2 {
+} else := s2 {
 	d.repo != ""
 	d.digest != ""
 	s2 := sprintf("%s@%s", [d.repo, d.digest])
-} else = s3 {
+} else := s3 {
 	d.repo != ""
 	d.tag != ""
 	s3 := sprintf("%s:%s", [d.repo, d.tag])
@@ -71,4 +71,4 @@ equal_ref(ref1, ref2) {
 
 _get(array, index, default_value) := value {
 	value := array[index]
-} else = default_value
+} else := default_value

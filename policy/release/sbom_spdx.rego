@@ -113,4 +113,4 @@ _is_valid(sbom) if {
 _predicate(statement) := predicate if {
 	json.is_valid(statement.predicate)
 	predicate := json.unmarshal(statement.predicate)
-} else = statement.predicate
+} else := statement.predicate

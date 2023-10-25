@@ -4,11 +4,15 @@ rule_data:
   allowed_registry_prefixes:
   - localhost:5000/
   - registry.local/namespace/repo/
+  - registry.redhat.io/
+  - docker.io/
 
   # Usage: https://enterprisecontract.dev/docs/ec-policies/release_policy.html#step_image_registries_package
   allowed_step_image_registry_prefixes:
   - localhost:5000/
   - registry.local/namespace/repo/
+  - registry.redhat.io/
+  - docker.io/
 
   # Usage: https://enterprisecontract.dev/docs/ec-policies/release_policy.html#java__no_foreign_dependencies
   # TODO: Document in the policy docs which values are expected here.

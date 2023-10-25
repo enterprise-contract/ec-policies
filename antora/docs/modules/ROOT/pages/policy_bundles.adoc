@@ -22,10 +22,6 @@ Used for validating Tekton Pipeline definitions. Contains the contents of
 https://github.com/enterprise-contract/ec-policies/tree/main/policy/pipeline[`policy/pipeline`]
 and https://github.com/enterprise-contract/ec-policies/tree/main/policy/lib[`policy/lib`].
 
-https://quay.io/repository/enterprise-contract/ec-policy-data?tab=tags[`quay.io/enterprise-contract/ec-policy-data`]::
-
-Contains the contents of https://github.com/enterprise-contract/ec-policies/tree/main/data[`data`] which is needed by both the policy bundles listed above.
-
 == Artifact Hub entries
 
 The bundles mentioned above are also listed in https://artifacthub.io/packages/search?org=enterprise-contract[Artifact Hub].

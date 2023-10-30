@@ -26,12 +26,14 @@ import data.lib
 #
 deny contains result if {
 	some provenance in lib.pipelinerun_attestations
+
 	param_names := {name |
-		some p in provenance.predicate.buildDefinition.externalParameters.runSpec.params
+		some p in provenance.statement.predicate.buildDefinition.externalParameters.runSpec.params
 		p.value != ""
 		name := p.name
 	}
 	expected_names := {n | some n in lib.rule_data("pipeline_run_params")}
+
 	expected_names != param_names
 	result := lib.result_helper(rego.metadata.chain(), [param_names, expected_names])
 }
@@ -48,7 +50,7 @@ deny contains result if {
 deny contains result if {
 	some provenance in lib.pipelinerun_attestations
 	shared_workspaces := {w |
-		some w in provenance.predicate.buildDefinition.externalParameters.runSpec.workspaces
+		some w in provenance.statement.predicate.buildDefinition.externalParameters.runSpec.workspaces
 		w.persistentVolumeClaim
 	}
 	count(shared_workspaces) > 0

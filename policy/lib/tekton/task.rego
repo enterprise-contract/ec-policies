@@ -4,7 +4,6 @@ import future.keywords.contains
 import future.keywords.if
 import future.keywords.in
 
-import data.lib
 import data.lib.refs
 import data.lib.time as ectime
 
@@ -39,7 +38,7 @@ _slsa_task(task) if {
 
 # _maybe_tasks returns a set of potential tasks.
 # Handle tasks from a PipelineRun attestation.
-_maybe_tasks(attestation) := lib.statement(attestation).predicate.buildConfig.tasks
+_maybe_tasks(attestation) := attestation.statement.predicate.buildConfig.tasks
 
 # Handle tasks from a Pipeline definition.
 _maybe_tasks(pipeline) := _tasks if {
@@ -53,7 +52,7 @@ _maybe_tasks(pipeline) := _tasks if {
 
 # handle tasks from a slsav1 attestation
 _maybe_tasks(slsav1) := _tasks if {
-	deps := lib.statement(slsav1).predicate.buildDefinition.resolvedDependencies
+	deps := slsav1.statement.predicate.buildDefinition.resolvedDependencies
 	_tasks := {json.unmarshal(base64.decode(dep.content)) |
 		some dep in deps
 		_slsav1_tekton(dep)

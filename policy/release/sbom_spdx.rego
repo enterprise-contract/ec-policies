@@ -92,9 +92,8 @@ deny contains result if {
 
 _sboms := [sbom |
 	some att in input.attestations
-	statement := att.statement
-	statement.predicateType == "https://spdx.dev/Document"
-	sbom := _predicate(statement)
+	att.statement.predicateType == "https://spdx.dev/Document"
+	sbom := _predicate(att)
 ]
 
 # _is_valid is true if the given SPDX SBOM has certain fields. This is
@@ -108,9 +107,9 @@ _is_valid(sbom) if {
 	is_array(sbom.packages)
 }
 
-# _predicate returns the predicate from the given statement. If the
+# _predicate returns the predicate from the given attestation. If the
 # predicate is JSON marshaled, it is unmarshaled.
-_predicate(statement) := predicate if {
-	json.is_valid(statement.predicate)
-	predicate := json.unmarshal(statement.predicate)
-} else := statement.predicate
+_predicate(att) := predicate if {
+	json.is_valid(att.statement.predicate)
+	predicate := json.unmarshal(att.statement.predicate)
+} else := att.statement.predicate

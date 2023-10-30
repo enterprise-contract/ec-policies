@@ -37,7 +37,7 @@ import data.lib
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations
-	not att.predicate.builder.id
+	not att.statement.predicate.builder.id
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -63,7 +63,7 @@ deny contains result if {
 deny contains result if {
 	allowed_builder_ids := lib.rule_data("allowed_builder_ids")
 	some att in lib.pipelinerun_attestations
-	builder_id := att.predicate.builder.id
+	builder_id := att.statement.predicate.builder.id
 	not builder_id in allowed_builder_ids
 	result := lib.result_helper(rego.metadata.chain(), [builder_id])
 }

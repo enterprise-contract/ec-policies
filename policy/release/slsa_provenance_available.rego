@@ -41,6 +41,9 @@ import data.lib
 deny contains result if {
 	some att in lib.pipelinerun_attestations
 	allowed_predicate_types := lib.rule_data("allowed_predicate_types")
-	not att.predicateType in allowed_predicate_types
-	result := lib.result_helper(rego.metadata.chain(), [att.predicateType, concat(", ", allowed_predicate_types)])
+	not att.statement.predicateType in allowed_predicate_types
+	result := lib.result_helper(
+		rego.metadata.chain(),
+		[att.statement.predicateType, concat(", ", allowed_predicate_types)],
+	)
 }

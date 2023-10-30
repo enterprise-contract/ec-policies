@@ -27,7 +27,7 @@ test_tasks_from_attestation if {
 	git_clone := {"name": "ignored", "ref": {"name": "git-clone"}}
 	buildah := {"name": "ignored", "ref": {"name": "buildah"}}
 
-	attestation := {"predicate": {"buildConfig": {"tasks": [git_clone, buildah]}}}
+	attestation := {"statement": {"predicate": {"buildConfig": {"tasks": [git_clone, buildah]}}}}
 	expected := {git_clone, buildah}
 	lib.assert_equal(expected, tkn.tasks(attestation))
 }
@@ -42,14 +42,14 @@ test_tasks_from_slsav1_tekton_attestation if {
 		"content": content,
 	}
 
-	attestation := {
+	attestation := {"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
 		"predicate": {"buildDefinition": {
 			"buildType": "https://tekton.dev/chains/v2/slsa-tekton",
 			"externalParameters": {"runSpec": {"pipelineSpec": {}}},
 			"resolvedDependencies": [task],
 		}},
-	}
+	}}
 	expected := {{
 		"params": [
 			{
@@ -120,14 +120,14 @@ test_tasks_from_slsav1_tekton_mixture_attestation if {
 		"content": task3,
 	}
 
-	attestation := {"predicate": {"buildDefinition": {
+	attestation := {"statement": {"predicate": {"buildDefinition": {
 		"buildType": "https://tekton.dev/chains/v2/slsa-tekton",
 		"resolvedDependencies": [
 			git_init,
 			git_init_pipeline,
 			git_init_bad,
 		],
-	}}}
+	}}}}
 	expected := {
 		{
 			"params": [
@@ -181,10 +181,10 @@ test_tasks_from_slsav1_attestation if {
 		"uri": "oci://gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init",
 		"digest": {"sha256": "28ff94e63e4058afc3f15b4c11c08cf3b54fa91faa646a4bbac90380cd7158df"},
 	}
-	attestation := {"predicate": {"buildDefinition": {
+	attestation := {"statement": {"predicate": {"buildDefinition": {
 		"buildType": "https://tekton.dev/chains/v2/slsa-tekton",
 		"resolvedDependencies": [git_init],
-	}}}
+	}}}}
 	lib.assert_equal(set(), tkn.tasks(attestation))
 }
 
@@ -253,7 +253,7 @@ test_tasks_from_attestation_with_spam if {
 		{"ref": {"name": "summary", "kind": "Task", "bundle": _bundle}},
 	}
 
-	attestation := {"predicate": {"buildConfig": {"tasks": expected_tasks}}}
+	attestation := {"statement": {"predicate": {"buildConfig": {"tasks": expected_tasks}}}}
 
 	lib.assert_equal(expected_tasks, tkn.tasks(attestation))
 
@@ -309,19 +309,19 @@ test_build_task if {
 test_build_task_not_found if {
 	missing_image_url := json.patch(_good_attestation, [{
 		"op": "add",
-		"path": "/predicate/buildConfig/tasks/0/results/0/name",
+		"path": "/statement/predicate/buildConfig/tasks/0/results/0/name",
 		"value": "IMAGE_URL_SKIP",
 	}])
 	not tkn.build_task(missing_image_url)
 
 	missing_image_digest := json.patch(_good_attestation, [{
 		"op": "add",
-		"path": "/predicate/buildConfig/tasks/0/results/1/name",
+		"path": "/statement/predicate/buildConfig/tasks/0/results/1/name",
 		"value": "IMAGE_DIGEST_SKIP",
 	}])
 	not tkn.build_task(missing_image_digest)
 
-	missing_results := json.remove(_good_attestation, ["/predicate/buildConfig/tasks/0/results"])
+	missing_results := json.remove(_good_attestation, ["/statement/predicate/buildConfig/tasks/0/results"])
 	not tkn.build_task(missing_results)
 }
 
@@ -333,19 +333,19 @@ test_git_clone_task if {
 test_git_clone_task_not_found if {
 	missing_url := json.patch(_good_attestation, [{
 		"op": "add",
-		"path": "/predicate/buildConfig/tasks/1/results/0/name",
+		"path": "/statement/predicate/buildConfig/tasks/1/results/0/name",
 		"value": "you-argh-el",
 	}])
 	not tkn.git_clone_task(missing_url)
 
 	missing_commit := json.patch(_good_attestation, [{
 		"op": "add",
-		"path": "/predicate/buildConfig/tasks/1/results/1/name",
+		"path": "/statement/predicate/buildConfig/tasks/1/results/1/name",
 		"value": "bachelor",
 	}])
 	not tkn.git_clone_task(missing_commit)
 
-	missing_results := json.remove(_good_attestation, ["/predicate/buildConfig/tasks/1/results"])
+	missing_results := json.remove(_good_attestation, ["/statement/predicate/buildConfig/tasks/1/results"])
 	not tkn.git_clone_task(missing_results)
 }
 
@@ -449,10 +449,10 @@ _good_git_clone_task := {
 	"ref": {"kind": "Task", "name": "git-clone", "bundle": _bundle},
 }
 
-_good_attestation := {"predicate": {
+_good_attestation := {"statement": {"predicate": {
 	"buildType": lib.tekton_pipeline_run,
 	"buildConfig": {"tasks": [_good_build_task, _good_git_clone_task]},
-}}
+}}}
 
 slsav1_attestation_local_spec := {
 	"params": [

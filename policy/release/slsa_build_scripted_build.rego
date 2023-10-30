@@ -95,7 +95,7 @@ deny contains result if {
 	some attestation in lib.pipelinerun_attestations
 	build_task := tkn.build_task(attestation)
 
-	some subject in attestation.subject
+	some subject in attestation.statement.subject
 
 	subject_image_ref := concat("@", [subject.name, subject_digest(subject)])
 	result_image_ref := concat("@", [

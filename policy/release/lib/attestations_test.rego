@@ -165,7 +165,7 @@ test_tasks_from_pipelinerun {
 
 test_pr_attestations {
 	lib.assert_equal(
-		[mock_pr_att.statement, mock_pr_att_legacy.statement],
+		[mock_pr_att, mock_pr_att_legacy],
 		lib.pipelinerun_attestations,
 	) with input.attestations as [
 		mock_tr_att,
@@ -173,18 +173,6 @@ test_pr_attestations {
 		mock_pr_att,
 		mock_pr_att_legacy,
 		garbage_att,
-	]
-
-	# Deprecate format should still work for now
-	lib.assert_equal(
-		[mock_pr_att.statement, mock_pr_att_legacy.statement],
-		lib.pipelinerun_attestations,
-	) with input.attestations as [
-		mock_tr_att.statement,
-		mock_tr_att_legacy.statement,
-		mock_pr_att.statement,
-		mock_pr_att_legacy.statement,
-		garbage_att.statement,
 	]
 
 	lib.assert_equal([], lib.pipelinerun_attestations) with input.attestations as [
@@ -243,26 +231,15 @@ test_pipelinerun_slsa_provenance_v1 {
 			"value": {"taskRef": {}},
 		}]),
 	]
-	expected := [provenance_with_pr_spec.statement, provenance_with_pr_ref.statement]
+	expected := [provenance_with_pr_spec, provenance_with_pr_ref]
 	lib.assert_equal(expected, lib.pipelinerun_slsa_provenance_v1) with input.attestations as attestations
-
-	# Deprecated format should still work for now
-	old_attestations := [att.statement | some att in attestations]
-	lib.assert_equal(expected, lib.pipelinerun_slsa_provenance_v1) with input.attestations as old_attestations
 }
 
 test_tr_attestations {
-	lib.assert_equal([mock_tr_att.statement], lib.taskrun_attestations) with input.attestations as [
+	lib.assert_equal([mock_tr_att], lib.taskrun_attestations) with input.attestations as [
 		mock_tr_att,
 		mock_pr_att,
 		garbage_att,
-	]
-
-	# Deprecated format should still work for now
-	lib.assert_equal([mock_tr_att.statement], lib.taskrun_attestations) with input.attestations as [
-		mock_tr_att.statement,
-		mock_pr_att.statement,
-		garbage_att.statement,
 	]
 
 	lib.assert_equal([], lib.taskrun_attestations) with input.attestations as [mock_pr_att, garbage_att]

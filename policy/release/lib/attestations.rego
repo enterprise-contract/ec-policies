@@ -3,7 +3,6 @@ package lib
 import future.keywords.if
 import future.keywords.in
 
-import data.lib
 import data.lib.tkn
 
 tekton_pipeline_run := "tekton.dev/v1beta1/PipelineRun"
@@ -49,33 +48,32 @@ pipelinerun_attestations := att if {
 	att := array.concat(v1_0, v0_2)
 }
 
-pipelinerun_slsa_provenance02 := [statement |
+pipelinerun_slsa_provenance02 := [att |
 	some att in input.attestations
-	statement := lib.statement(att)
-	statement.predicate.buildType in pipelinerun_att_build_types
+	att.statement.predicate.buildType in pipelinerun_att_build_types
 ]
 
 # TODO: Make this work with pipelinerun_attestations above so policy rules can be
 # written for either.
-pipelinerun_slsa_provenance_v1 := [statement |
+pipelinerun_slsa_provenance_v1 := [att |
 	some att in input.attestations
-	statement := lib.statement(att)
-	statement.predicateType == "https://slsa.dev/provenance/v1"
+	att.statement.predicateType == "https://slsa.dev/provenance/v1"
 
-	statement.predicate.buildDefinition.buildType in slsav1_pipelinerun_att_build_types
+	att.statement.predicate.buildDefinition.buildType in slsav1_pipelinerun_att_build_types
 
 	# TODO: Workaround to distinguish between taskrun and pipelinerun attestations
-	spec_keys := object.keys(statement.predicate.buildDefinition.externalParameters.runSpec)
+	spec_keys := object.keys(att.statement.predicate.buildDefinition.externalParameters.runSpec)
+
 	pipeline_keys := {"pipelineRef", "pipelineSpec"}
+
 	count(pipeline_keys - spec_keys) != count(pipeline_keys)
 ]
 
 # These ones we don't care about any more
-taskrun_attestations := [statement |
+taskrun_attestations := [att |
 	some att in input.attestations
-	statement := lib.statement(att)
 
-	statement.predicate.buildType in taskrun_att_build_types
+	att.statement.predicate.buildType in taskrun_att_build_types
 ]
 
 tasks_from_pipelinerun := [task |

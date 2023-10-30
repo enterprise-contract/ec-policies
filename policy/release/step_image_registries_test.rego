@@ -66,7 +66,7 @@ test_unexpected_image_ref if {
 	lib.assert_equal_results(step_image_registries.deny, {{
 		"code": "step_image_registries.task_step_images_permitted",
 		"msg": sprintf("Step 0 in task 'mytask' has disallowed image ref '%s'", [unexpected_image]),
-	}}) with input.attestations as mock_data(unexpected_image)
+	}}) with input.attestations as [mock_data(unexpected_image)]
 }
 
 test_step_image_registry_prefix_list_found if {

@@ -4,7 +4,6 @@ import future.keywords.contains
 import future.keywords.if
 import future.keywords.in
 
-import data.lib
 import data.lib.time as ectime
 
 pipeline_label := "pipelines.openshift.io/runtime"
@@ -38,10 +37,10 @@ pipeline_label_selector(pipeline) := value if {
 	value := build_task(pipeline).invocation.environment.labels[task_label]
 } else := value if {
 	# PipelineRun labels found in the SLSA Provenance v1.0
-	value := lib.statement(pipeline).predicate.buildDefinition.internalParameters.labels[pipeline_label]
+	value := pipeline.statement.predicate.buildDefinition.internalParameters.labels[pipeline_label]
 } else := value if {
 	# PipelineRun labels found in the SLSA Provenance v0.2
-	value := lib.statement(pipeline).predicate.invocation.environment.labels[pipeline_label]
+	value := pipeline.statement.predicate.invocation.environment.labels[pipeline_label]
 } else := value if {
 	# Labels from a Tekton Pipeline definition
 	value := pipeline.metadata.labels[pipeline_label]

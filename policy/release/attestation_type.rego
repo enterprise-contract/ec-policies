@@ -30,7 +30,7 @@ import data.lib
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations
-	att_type := att._type
+	att_type := att.statement._type
 	not att_type in lib.rule_data("known_attestation_types")
 	result := lib.result_helper(rego.metadata.chain(), [att_type])
 }

@@ -61,7 +61,7 @@ deny contains result if {
 	commit := tkn.task_result(t, "commit")
 
 	materials := [m |
-		some m in attestation.predicate.materials
+		some m in attestation.statement.predicate.materials
 		m.uri == url
 		m.digest.sha1 == commit
 	]

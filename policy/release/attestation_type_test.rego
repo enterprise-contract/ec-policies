@@ -43,10 +43,16 @@ test_deny_when_pipelinerun_attestation_founds {
 }
 
 test_deny_deprecated_policy_attestation_format {
-	expected := {{
-		"code": "attestation_type.deprecated_policy_attestation_format",
-		"msg": "Deprecated policy attestation format found",
-	}}
+	expected := {
+		{
+			"code": "attestation_type.deprecated_policy_attestation_format",
+			"msg": "Deprecated policy attestation format found",
+		},
+		{
+			"code": "attestation_type.pipelinerun_attestation_found",
+			"msg": "Missing pipelinerun attestation",
+		},
+	}
 	attestations := [{
 		"_type": good_type,
 		"predicate": {"buildType": lib.tekton_pipeline_run},

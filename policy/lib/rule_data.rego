@@ -67,6 +67,27 @@ rule_data_defaults := {
 	],
 }
 
+# The idea here is you can customize an existing list in a rule
+# data field by appending values to it
+#
+rule_data(key_name) := r {
+	# Only if the original data is an array
+	original_list := _rule_data(key_name)
+	is_array(original_list)
+
+	# See if there's any custom data to append
+	append_list := _append_rule_data(key_name)
+
+	# The custom data must also be a list
+	is_array(append_list)
+
+	# Return original list with custom extra values appended to it
+	r := array.concat(original_list, append_list)
+} else := r {
+	# Return the rule data value unmodified
+	r := _rule_data(key_name)
+}
+
 # Returns the "first found" of the following:
 #   data.rule_data__configuration__[key_name]
 #   data.rule_data_custom[key_name]
@@ -75,7 +96,7 @@ rule_data_defaults := {
 #
 # And falls back to an empty list if the key is not found anywhere.
 #
-rule_data(key_name) := value {
+_rule_data(key_name) := value {
 	# Expected to be defined under `configuration.rule_data` in the
 	# ECP configuration data being used when EC is run.
 	value := data.rule_data__configuration__[key_name]
@@ -93,4 +114,19 @@ rule_data(key_name) := value {
 } else := value {
 	# If the key is not found, default to an empty list
 	value := []
+}
+
+# Returns items found in
+#   data.append_rule_data_custom[key_name]
+#   data.append_rule_data__configuration__[key_name]
+#
+_append_rule_data(key_name) := value {
+	# If both `data.append_rule_data__configuration__[key_name]` and
+	# `data.append_rule_data_custom[key_name] are present then
+	# the user would reasonably expect them both to be appended
+	value := array.concat(data.append_rule_data_custom[key_name], data.append_rule_data__configuration__[key_name])
+} else := value {
+	value := data.append_rule_data_custom[key_name]
+} else := value {
+	value := data.append_rule_data__configuration__[key_name]
 }

@@ -24,6 +24,27 @@ test_rule_data {
 		with lib.rule_data_defaults as {"key3": 10}
 }
 
+test_appending_custom_rule_data {
+	lib.assert_equal(
+		[
+			["a", "b", "c", "d"],
+			["a", "d"],
+			["e"],
+			"zap",
+		],
+		[
+			# Test a few scenarios
+			lib.rule_data("foo"),
+			lib.rule_data("bar"),
+			lib.rule_data("baz"),
+			# Can't append to a non-array
+			lib.rule_data("zip"),
+		],
+	) with data.rule_data as {"foo": ["a", "b"], "bar": ["a"], "zip": "zap"}
+		with data.append_rule_data_custom as {"foo": ["c"], "baz": ["e"], "zip": ["zup"]}
+		with data.append_rule_data__configuration__ as {"foo": ["d"], "bar": ["d"]}
+}
+
 # Need this for 100% coverage
 test_rule_data_defaults {
 	lib.assert_not_empty(lib.rule_data_defaults)

@@ -332,6 +332,97 @@ test_invalid_status_conditions if {
 	lib.assert_equal(["MISSING"], tasks._status(given_task))
 }
 
+test_one_of_required_tasks if {
+	attestation_v02 := _attestations_with_tasks(["a", "b", "c1", "d2", "e", "f"], [])
+	data_required_tasks := {"generic": [{
+		"tasks": {"a", ["c1", "c2", "c3"], ["d1", "d2", "d3"], ["e"]},
+		"effective_on": "2009-01-02T00:00:00Z",
+	}]}
+	lib.assert_empty(tasks.deny) with data["pipeline-required-tasks"] as data_required_tasks
+		with input.attestations as attestation_v02
+
+	attestation_v1 := _slsav1_attestations_with_tasks(["a", "b", "c1", "d2", "e", "f"], [])
+	lib.assert_empty(tasks.deny) with data["pipeline-required-tasks"] as data_required_tasks
+		with input.attestations as attestation_v1
+}
+
+test_one_of_required_tasks_missing if {
+	attestation_v02 := _attestations_with_tasks(["a", "b", "d2", "e", "f"], [])
+
+	data_required_tasks := {"generic": [{
+		"tasks": {"a", ["c1", "c2", "c3"], ["d1", "d3"]},
+		"effective_on": "2009-01-02T00:00:00Z",
+	}]}
+
+	expected := {
+		{
+			"code": "tasks.required_tasks_found",
+			"msg": `One of "c1", "c2", "c3" tasks is missing`,
+			"term": ["c1", "c2", "c3"],
+		},
+		{
+			"code": "tasks.required_tasks_found",
+			"msg": `One of "d1", "d3" tasks is missing`,
+			"term": ["d1", "d3"],
+		},
+	}
+
+	lib.assert_equal_results(expected, tasks.deny) with data["pipeline-required-tasks"] as data_required_tasks
+		with input.attestations as attestation_v02
+
+	attestation_v1 := _slsav1_attestations_with_tasks(["a", "b", "d2", "e", "f"], [])
+	lib.assert_equal_results(expected, tasks.deny) with data["pipeline-required-tasks"] as data_required_tasks
+		with input.attestations as attestation_v1
+}
+
+test_future_one_of_required_tasks if {
+	attestation_v02 := _attestations_with_tasks(["a", "b", "c1", "d2", "e", "f"], [])
+	data_required_tasks := {"generic": [{
+		"tasks": {"a", ["c1", "c2", "c3"], ["d1", "d2", "d3"], ["e"]},
+		"effective_on": "2099-01-02T00:00:00Z",
+	}]}
+	lib.assert_empty(tasks.warn) with data["pipeline-required-tasks"] as data_required_tasks
+		with input.attestations as attestation_v02
+
+	attestation_v1 := _slsav1_attestations_with_tasks(["a", "b", "c1", "d2", "e", "f"], [])
+	lib.assert_empty(tasks.warn) with data["pipeline-required-tasks"] as data_required_tasks
+		with input.attestations as attestation_v1
+}
+
+test_future_one_of_required_tasks_missing if {
+	attestation_v02 := _attestations_with_tasks(["a", "b", "d2", "e", "f"], [])
+
+	data_required_tasks := {"generic": [{
+		"tasks": {"a", ["c1", "c2", "c3"], ["d1", "d3"]},
+		"effective_on": "2099-01-02T00:00:00Z",
+	}]}
+
+	expected := {
+		{
+			"code": "tasks.future_required_tasks_found",
+			"msg": `One of "c1", "c2", "c3" tasks is missing and will be required in the future`,
+			"term": ["c1", "c2", "c3"],
+		},
+		{
+			"code": "tasks.future_required_tasks_found",
+			"msg": `One of "d1", "d3" tasks is missing and will be required in the future`,
+			"term": ["d1", "d3"],
+		},
+	}
+	lib.assert_equal_results(
+		expected,
+		tasks.warn,
+	) with data["pipeline-required-tasks"] as data_required_tasks
+		with input.attestations as attestation_v02
+
+	attestation_v1 := _slsav1_attestations_with_tasks(["a", "b", "d2", "e", "f"], [])
+	lib.assert_equal_results(
+		expected,
+		tasks.warn,
+	) with data["pipeline-required-tasks"] as data_required_tasks
+		with input.attestations as attestation_v1
+}
+
 _attestations_with_tasks(names, add_tasks) := attestations if {
 	tasks := array.concat([t | some name in names; t := _task(name)], add_tasks)
 

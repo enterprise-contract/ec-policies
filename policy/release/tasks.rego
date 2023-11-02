@@ -78,7 +78,7 @@ deny contains result if {
 #   in the PipelineRun attestation.
 # custom:
 #   short_name: required_tasks_found
-#   failure_msg: Required task %q is missing
+#   failure_msg: '%s is missing'
 #   solution: >-
 #     Make sure all required tasks are in the build pipeline. The required task list
 #     is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'.
@@ -92,7 +92,7 @@ deny contains result if {
 
 	# Don't report an error if a task is required now, but not in the future
 	required_task in latest_required_tasks
-	result := lib.result_helper_with_term(rego.metadata.chain(), [required_task], required_task)
+	result := lib.result_helper_with_term(rego.metadata.chain(), [_format_missing(required_task, false)], required_task)
 }
 
 # METADATA
@@ -122,7 +122,7 @@ warn contains result if {
 #   was not included in the PipelineRun attestation.
 # custom:
 #   short_name: future_required_tasks_found
-#   failure_msg: Task %q is missing and will be required in the future
+#   failure_msg: '%s is missing and will be required in the future'
 #   solution: >-
 #     There is a task that will be required at a future date that is missing
 #     from the build pipeline.
@@ -137,7 +137,7 @@ warn contains result if {
 	# If the required_task is also part of the current_required_tasks, do
 	# not proceed with a warning since that's clearly a violation.
 	not required_task in current_required_tasks
-	result := lib.result_helper_with_term(rego.metadata.chain(), [required_task], required_task)
+	result := lib.result_helper_with_term(rego.metadata.chain(), [_format_missing(required_task, true)], required_task)
 }
 
 # METADATA
@@ -169,9 +169,30 @@ _missing_tasks(required_tasks) := {task |
 	some att in lib.pipelinerun_attestations
 	count(tkn.tasks(att)) > 0
 
-	some task in required_tasks
-	not task in tkn.tasks_names(att)
+	some required_task in required_tasks
+	some task in _any_missing(required_task, tkn.tasks_names(att))
 }
+
+_any_missing(required, tasks) := missing if {
+	# one of required tasks is required
+	is_array(required)
+
+	# convert arrays to sets so we can intersect below
+	req := lib.to_set(required)
+	tsk := lib.to_set(tasks)
+	count(req & tsk) == 0
+
+	# no required tasks are in tasks
+	missing := [required]
+} else := missing if {
+	# above could be false, so we need to doublecheck that we're not dealing
+	# with an array
+	not is_array(required)
+	missing := {required |
+		# a required task was not found in tasks
+		not required in tasks
+	}
+} else := {}
 
 # get the future tasks that are pipeline specific. If none exists
 # get the default list
@@ -229,3 +250,13 @@ _slsav1_status(condition) := status if {
 	condition.status == "False"
 	status := "Failed"
 }
+
+# given an array a nice message saying one of the elements of the array,
+# otherwise the quoted value
+_format_missing(o, opt) := desc if {
+	is_array(o)
+	desc := sprintf(`One of "%s" tasks`, [concat(`", "`, o)])
+} else := msg if {
+	opt
+	msg := sprintf("Task %q", [o])
+} else := sprintf("Required task %q", [o])

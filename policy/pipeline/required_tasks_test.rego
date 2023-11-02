@@ -229,6 +229,78 @@ test_missing_required_tasks_data if {
 		with input as pipeline
 }
 
+test_one_of_required_tasks if {
+	pipeline := _pipeline_with_tasks_and_label(["a", "b", "c1", "d2", "e", "f"], [], [])
+	data_required_tasks := {"fbc": [{
+		"tasks": {"a", ["c1", "c2", "c3"], ["d1", "d2", "d3"], ["e"]},
+		"effective_on": "2009-01-02T00:00:00Z",
+	}]}
+	lib.assert_empty(required_tasks.deny) with data["pipeline-required-tasks"] as data_required_tasks
+		with input as pipeline
+}
+
+test_one_of_required_tasks_missing if {
+	pipeline := _pipeline_with_tasks_and_label(["a", "b", "d2", "e", "f"], [], [])
+
+	data_required_tasks := {"fbc": [{
+		"tasks": {"a", ["c1", "c2", "c3"], ["d1", "d3"]},
+		"effective_on": "2009-01-02T00:00:00Z",
+	}]}
+
+	expected := {
+		{
+			"code": "required_tasks.missing_required_task",
+			"msg": `One of "c1", "c2", "c3" tasks is missing`,
+			"term": ["c1", "c2", "c3"],
+		},
+		{
+			"code": "required_tasks.missing_required_task",
+			"msg": `One of "d1", "d3" tasks is missing`,
+			"term": ["d1", "d3"],
+		},
+	}
+
+	lib.assert_equal_results(expected, required_tasks.deny) with data["pipeline-required-tasks"] as data_required_tasks
+		with input as pipeline
+}
+
+test_future_one_of_required_tasks if {
+	pipeline := _pipeline_with_tasks_and_label(["a", "b", "c1", "d2", "e", "f"], [], [])
+	data_required_tasks := {"fbc": [{
+		"tasks": {"a", ["c1", "c2", "c3"], ["d1", "d2", "d3"], ["e"]},
+		"effective_on": "2099-01-02T00:00:00Z",
+	}]}
+	lib.assert_empty(required_tasks.warn) with data["pipeline-required-tasks"] as data_required_tasks
+		with input as pipeline
+}
+
+test_future_one_of_required_tasks_missing if {
+	pipeline := _pipeline_with_tasks_and_label(["a", "b", "d2", "e", "f"], [], [])
+
+	data_required_tasks := {"fbc": [{
+		"tasks": {"a", ["c1", "c2", "c3"], ["d1", "d3"]},
+		"effective_on": "2099-01-02T00:00:00Z",
+	}]}
+
+	expected := {
+		{
+			"code": "required_tasks.missing_future_required_task",
+			"msg": `One of "c1", "c2", "c3" tasks is missing and will be required in the future`,
+			"term": ["c1", "c2", "c3"],
+		},
+		{
+			"code": "required_tasks.missing_future_required_task",
+			"msg": `One of "d1", "d3" tasks is missing and will be required in the future`,
+			"term": ["d1", "d3"],
+		},
+	}
+	lib.assert_equal_results(
+		expected,
+		required_tasks.warn,
+	) with data["pipeline-required-tasks"] as data_required_tasks
+		with input as pipeline
+}
+
 _pipeline_with_tasks_and_label(names, finally_names, add_tasks) := pipeline if {
 	tasks := array.concat([t | some name in names; t := _task(name)], add_tasks)
 	finally_tasks := [t | some name in finally_names; t := _task(name)]

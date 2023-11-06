@@ -45,7 +45,6 @@ import data.lib
 #     comes from the 'CHAINS-GIT_URL' and 'CHAINS-GIT_COMMIT' results in the 'git-clone' task.
 #   collections:
 #   - minimal
-#   - slsa2
 #   - slsa3
 #   - redhat
 #   depends_on:
@@ -71,7 +70,6 @@ deny contains result if {
 #     'git-clone' task.
 #   collections:
 #   - minimal
-#   - slsa2
 #   - slsa3
 #   - redhat
 #   depends_on:
@@ -97,7 +95,6 @@ deny contains result if {
 #     'git-clone' task.
 #   collections:
 #   - minimal
-#   - slsa2
 #   - slsa3
 #   - redhat
 #   depends_on:

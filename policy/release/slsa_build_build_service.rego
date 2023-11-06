@@ -29,7 +29,6 @@ import data.lib
 #     The builder id in the attestation is missing. Make sure the build system
 #     is setting the build id when generating an attestation.
 #   collections:
-#   - slsa2
 #   - slsa3
 #   - redhat
 #   depends_on:
@@ -54,7 +53,6 @@ deny contains result if {
 #     Make sure the build id is set to an expected value. The expected values
 #     are set in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
 #   collections:
-#   - slsa2
 #   - slsa3
 #   - redhat
 #   depends_on:

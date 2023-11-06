@@ -33,8 +33,6 @@ nul := base64.decode("AA==")
 #     Provide the expected source code reference in inputs.
 #   collections:
 #   - minimal
-#   - slsa1
-#   - slsa2
 #   - slsa3
 #   - redhat
 warn contains result if {
@@ -59,8 +57,6 @@ warn contains result if {
 #     supported VCS types in rule data (`supported_vcs` key).
 #   collections:
 #   - minimal
-#   - slsa1
-#   - slsa2
 #   - slsa3
 #   - redhat
 #   depends_on:
@@ -88,8 +84,6 @@ deny contains result if {
 #     explicit revision not to a symbolic identifier, e.g. a branch or tag name.
 #   collections:
 #   - minimal
-#   - slsa1
-#   - slsa2
 #   - slsa3
 #   - redhat
 #   depends_on:

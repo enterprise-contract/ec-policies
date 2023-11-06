@@ -31,8 +31,6 @@ import data.lib
 #     This field is set in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
 #   collections:
 #   - minimal
-#   - slsa1
-#   - slsa2
 #   - slsa3
 #   - redhat
 #   depends_on:

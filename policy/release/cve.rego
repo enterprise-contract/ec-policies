@@ -141,17 +141,73 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
+# METADATA
+# title: Deprecated CVE result name
+# description: >-
+#   The `CLAIR_SCAN_RESULT` result name has been deprecated, and has been
+#   replaced with `SCAN_OUTPUT`. If any task results with the old name are
+#   found, this rule will raise a warning.
+# custom:
+#   short_name: deprecated_cve_result_name
+#   failure_msg: CVE scan uses deprecated result name
+#   solution: >-
+#     Use the newer `SCAN_OUTPUT` result name.
+#   collections:
+#   - minimal
+#   - redhat
+#   depends_on:
+#   - attestation_type.known_attestation_type
+#
+warn contains result if {
+	_vulnerabilities_deprecated
+	result := lib.result_helper(rego.metadata.chain(), [])
+}
+
+# METADATA
+# title: Deprecated CVE result name for unpatched vulnerabilities
+# description: >-
+#   The `CLAIR_SCAN_RESULT` result name has been deprecated, and has been
+#   replaced with `SCAN_OUTPUT`. If any task results with the old name are
+#   found, this rule will raise a warning.
+# custom:
+#   short_name: deprecated_unpatched_cve_result_name
+#   failure_msg: CVE scan uses deprecated result name
+#   solution: >-
+#     Use the newer `SCAN_OUTPUT` result name, including for unpached vulnerabilities.
+#   collections:
+#   - minimal
+#   - redhat
+#   depends_on:
+#   - attestation_type.known_attestation_type
+#
+warn contains result if {
+	_unpatched_vulnerabilities_deprecated
+	result := lib.result_helper(rego.metadata.chain(), [])
+}
+
 _vulnerabilities := vulnerabilities if {
 	some result in lib.results_named(_result_name)
 	vulnerabilities := result.value.vulnerabilities
-}
+} else := _vulnerabilities_deprecated
 
 _unpatched_vulnerabilities := vulnerabilities if {
 	some result in lib.results_named(_result_name)
 	vulnerabilities := result.value.unpatched_vulnerabilities
+} else := _unpatched_vulnerabilities_deprecated
+
+_vulnerabilities_deprecated := vulnerabilities if {
+	some result in lib.results_named(_deprecated_result_name)
+	vulnerabilities := result.value.vulnerabilities
 }
 
-_result_name := "CLAIR_SCAN_RESULT"
+_unpatched_vulnerabilities_deprecated := vulnerabilities if {
+	some result in lib.results_named(_deprecated_result_name)
+	vulnerabilities := result.value.unpatched_vulnerabilities
+}
+
+_result_name := "SCAN_OUTPUT"
+
+_deprecated_result_name := "CLAIR_SCAN_RESULT"
 
 _non_zero_vulnerabilities(key) := _non_zero_levels(key, _vulnerabilities)
 

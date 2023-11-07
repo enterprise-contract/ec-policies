@@ -33,8 +33,6 @@ import data.lib.tkn
 #     tasks and that the build system is recording them properly when the attestation
 #     is generated.
 #   collections:
-#   - slsa1
-#   - slsa2
 #   - slsa3
 #   - redhat
 #   depends_on:
@@ -59,8 +57,6 @@ deny contains result if {
 #     Make sure the build pipeline contains a build task. The build task
 #     must contain results named 'IMAGE_DIGEST' and 'IMAGE_URL'.
 #   collections:
-#   - slsa1
-#   - slsa2
 #   - slsa3
 #   - redhat
 #   depends_on:
@@ -84,8 +80,6 @@ deny contains result if {
 #     Make sure the subject in the attestation matches the 'IMAGE_URL' and 'IMAGE_DIGEST'
 #     results from the build task. The format for the subject should be 'IMAGE_URL@IMAGE_DIGEST'.
 #   collections:
-#   - slsa1
-#   - slsa2
 #   - slsa3
 #   - redhat
 #   depends_on:

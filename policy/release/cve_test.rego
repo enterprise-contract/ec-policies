@@ -36,6 +36,27 @@ test_success if {
 	lib.assert_empty(cve.deny | cve.warn) with input.attestations as attestations
 }
 
+test_success_deprecated_name if {
+	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+		"clair-scan",
+		[{
+			"name": cve._deprecated_result_name,
+			"type": "string",
+			"value": {"vulnerabilities": _dummy_counts_zero_high},
+		}],
+	)
+	attestations := [
+		lib_test.att_mock_helper_ref(
+			cve._result_name,
+			{"vulnerabilities": _dummy_counts_zero_high},
+			"clair-scan",
+			_bundle,
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+	]
+	lib.assert_empty(cve.deny) with input.attestations as attestations
+}
+
 test_success_with_rule_data if {
 	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
 		"clair-scan",
@@ -65,6 +86,28 @@ test_success_with_rule_data if {
 		with data.rule_data.warn_unpatched_cve_security_levels as ["spam"]
 }
 
+test_success_with_rule_data_deprecated_name if {
+	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+		"clair-scan",
+		[{
+			"name": cve._deprecated_result_name,
+			"type": "string",
+			"value": {"vulnerabilities": _dummy_counts},
+		}],
+	)
+	attestations := [
+		lib_test.att_mock_helper_ref(
+			cve._result_name,
+			{"vulnerabilities": _dummy_counts},
+			"clair-scan",
+			_bundle,
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+	]
+	lib.assert_empty(cve.deny) with input.attestations as attestations
+		with data.rule_data.restrict_cve_security_levels as ["spam"]
+}
+
 test_failure if {
 	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
 		"clair-scan",
@@ -80,6 +123,45 @@ test_failure if {
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
+			{
+				"vulnerabilities": _dummy_counts,
+				"unpatched_vulnerabilities": _dummy_counts,
+			},
+			"clair-scan",
+			_bundle,
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+	]
+	expected_deny := {
+		{
+			"code": "cve.cve_blockers",
+			"term": "critical",
+			"msg": "Found 1 CVE vulnerabilities of critical security level",
+		},
+		{
+			"code": "cve.cve_blockers",
+			"term": "high",
+			"msg": "Found 10 CVE vulnerabilities of high security level",
+		},
+	}
+	lib.assert_equal_results(cve.deny, expected_deny) with input.attestations as attestations
+}
+
+test_failure_deprecated_name if {
+	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+		"clair-scan",
+		[{
+			"name": cve._deprecated_result_name,
+			"type": "string",
+			"value": {
+				"vulnerabilities": _dummy_counts,
+				"unpatched_vulnerabilities": _dummy_counts,
+			},
+		}],
+	)
+	attestations := [
+		lib_test.att_mock_helper_ref(
+			cve._deprecated_result_name,
 			{
 				"vulnerabilities": _dummy_counts,
 				"unpatched_vulnerabilities": _dummy_counts,
@@ -185,6 +267,55 @@ test_warn if {
 			"code": "cve.unpatched_cve_warnings",
 			"term": "critical",
 			"msg": "Found 1 non-blocking unpatched CVE vulnerabilities of critical security level",
+		},
+		{
+			"code": "cve.unpatched_cve_warnings",
+			"term": "high",
+			"msg": "Found 10 non-blocking unpatched CVE vulnerabilities of high security level",
+		},
+	}
+	lib.assert_equal_results(cve.warn, expected) with input.attestations as attestations
+}
+
+test_warn_deprecated_name if {
+	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+		"clair-scan",
+		[{
+			"name": cve._deprecated_result_name,
+			"type": "string",
+			"value": {
+				"vulnerabilities": _dummy_counts,
+				"unpatched_vulnerabilities": _dummy_counts,
+			},
+		}],
+	)
+	attestations := [
+		lib_test.att_mock_helper_ref(
+			cve._result_name,
+			{
+				"vulnerabilities": _dummy_counts,
+				"unpatched_vulnerabilities": _dummy_counts,
+			},
+			"clair-scan",
+			_bundle,
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+	]
+	expected := {
+		{
+			"code": "cve.deprecated_cve_result_name",
+			"collections": ["minimal", "redhat"],
+			"effective_on": "2022-01-01T00:00:00Z",
+			"msg": "CVE scan uses deprecated result name",
+		},
+		{
+			"code": "cve.deprecated_unpatched_cve_result_name",
+			"msg": "CVE scan uses deprecated result name",
+		},
+		{
+			"code": "cve.unpatched_cve_warnings",
+			"msg": "Found 1 non-blocking unpatched CVE vulnerabilities of critical security level",
+			"term": "critical",
 		},
 		{
 			"code": "cve.unpatched_cve_warnings",

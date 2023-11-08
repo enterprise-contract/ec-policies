@@ -91,18 +91,17 @@ deny contains result if {
 }
 
 # METADATA
-# title: All required tests passed
+# title: No tests failed
 # description: >-
-#   Confirm that all the tests in the test results
-#   have a successful result. A successful result is one that isn't a
-#   "FAILURE" or "ERROR". This will fail if any of the tests failed and
-#   the failure message will list the names of the failing tests.
+#   Produce a violation if any non-informative tests have their result set to "FAILED".
+#   The result type is configurable by the "failed_tests_results" key, and the list
+#   of informative tests is configurable by the "informative_tests" key in the rule data.
 # custom:
-#   short_name: required_tests_passed
-#   failure_msg: "Test %q did not complete successfully"
+#   short_name: no_failed_tests
+#   failure_msg: "Test %q failed"
 #   solution: >-
-#     There is a required test that did not pass. Make sure that any task
-#     in the build pipeline with a result named 'TEST_OUTPUT' passes.
+#     There is a test that failed. Make sure that any task in the build pipeline
+#     with a result named 'TEST_OUTPUT' does not fail.
 #   collections:
 #   - redhat
 #   depends_on:
@@ -110,13 +109,61 @@ deny contains result if {
 #
 deny contains result if {
 	some test in resulted_in(lib.rule_data("failed_tests_results"))
+	not test in lib.rule_data("informative_tests")
+	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
+}
+
+# METADATA
+# title: No informative tests failed
+# description: >-
+#   Produce a warning if any informative tests have their result set to "FAILED".
+#   The result type is configurable by the "failed_tests_results" key, and the list
+#   of informative tests is configurable by the "informative_tests" key in the rule data.
+# custom:
+#   short_name: no_failed_informative_tests
+#   failure_msg: "Informative test %q failed"
+#   solution: >-
+#     There is a test that failed. Make sure that any task in the build pipeline
+#     with a result named 'TEST_OUTPUT' does not fail.
+#   collections:
+#   - redhat
+#   depends_on:
+#   - test.test_data_found
+#
+warn contains result if {
+	some test in resulted_in(lib.rule_data("failed_tests_results"))
+	test in lib.rule_data("informative_tests")
+	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
+}
+
+# METADATA
+# title: No tests erred
+# description: >-
+#   Produce a violation if any tests have their result set to "ERROR".
+#   The result type is configurable by the "erred_tests_results" key in the rule data.
+# custom:
+#   short_name: no_erred_tests
+#   failure_msg: "Test %q erred"
+#   solution: >-
+#     There is a test that erred. Make sure that any task in the build pipeline
+#     with a result named 'TEST_OUTPUT' does not err.
+#   collections:
+#   - redhat
+#   depends_on:
+#   - test.test_data_found
+#
+deny contains result if {
+	some test in resulted_in(lib.rule_data("erred_tests_results"))
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
 
 # METADATA
 # title: No tests were skipped
 # description: >-
-#   Produce a warning if any tests have their result set to "SKIPPED".
+#   Produce a violation if any tests have their result set to "SKIPPED".
+#   A skipped result means a pre-requirement for executing the test was not met, e.g. a
+#   license key for executing a scanner was not provided.
+#   The result type is configurable by the "skipped_tests_results" key in the rule data.
 # custom:
 #   short_name: no_skipped_tests
 #   failure_msg: "Test %q was skipped"
@@ -128,8 +175,9 @@ deny contains result if {
 #   - redhat
 #   depends_on:
 #   - test.test_data_found
+#   effective_on: 2023-12-08T00:00:00Z
 #
-warn contains result if {
+deny contains result if {
 	some test in resulted_in(lib.rule_data("skipped_tests_results"))
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
@@ -138,6 +186,7 @@ warn contains result if {
 # title: No tests produced warnings
 # description: >-
 #   Produce a warning if any tests have their result set to "WARNING".
+#   The result type is configurable by the "warned_tests_results" key in the rule data.
 # custom:
 #   short_name: no_test_warnings
 #   failure_msg: "Test %q returned a warning"

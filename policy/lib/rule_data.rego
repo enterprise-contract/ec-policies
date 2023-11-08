@@ -22,10 +22,8 @@ rule_data_defaults := {
 		"SKIPPED",
 		"WARNING",
 	],
-	"failed_tests_results": [
-		"FAILURE",
-		"ERROR",
-	],
+	"failed_tests_results": ["FAILURE"],
+	"erred_tests_results": ["ERROR"],
 	"skipped_tests_results": ["SKIPPED"],
 	"warned_tests_results": ["WARNING"],
 	#

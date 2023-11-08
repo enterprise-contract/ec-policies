@@ -92,18 +92,37 @@ test_failure_data {
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([slsav1_task]),
 	]
+
+	lib.assert_empty(test.warn) with input.attestations as attestations
 	lib.assert_equal_results(test.deny, {
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"failed_1\" did not complete successfully",
+			"code": "test.no_failed_tests",
+			"msg": "Test \"failed_1\" failed",
 			"term": "failed_1",
 		},
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"task1\" did not complete successfully",
+			"code": "test.no_failed_tests",
+			"msg": "Test \"task1\" failed",
 			"term": "task1",
 		},
 	}) with input.attestations as attestations
+
+	# Failed informative tests cause warnings, not violations
+	lib.assert_empty(test.deny) with input.attestations as attestations
+		with data.rule_data.informative_tests as ["task1", "failed_1"]
+	lib.assert_equal_results(test.warn, {
+		{
+			"code": "test.no_failed_informative_tests",
+			"msg": "Informative test \"failed_1\" failed",
+			"term": "failed_1",
+		},
+		{
+			"code": "test.no_failed_informative_tests",
+			"msg": "Informative test \"task1\" failed",
+			"term": "task1",
+		},
+	}) with input.attestations as attestations
+		with data.rule_data.informative_tests as ["task1", "failed_1"]
 }
 
 mock_an_errored_test := lib_test.att_mock_helper_ref(
@@ -126,13 +145,13 @@ test_error_data {
 	]
 	lib.assert_equal_results(test.deny, {
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"errored_1\" did not complete successfully",
+			"code": "test.no_erred_tests",
+			"msg": "Test \"errored_1\" erred",
 			"term": "errored_1",
 		},
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"errored_2\" did not complete successfully",
+			"code": "test.no_erred_tests",
+			"msg": "Test \"errored_2\" erred",
 			"term": "errored_2",
 		},
 	}) with input.attestations as attestations
@@ -157,29 +176,29 @@ test_mix_data {
 	]
 	lib.assert_equal_results(test.deny, {
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"failed_1\" did not complete successfully",
+			"code": "test.no_failed_tests",
+			"msg": "Test \"failed_1\" failed",
 			"term": "failed_1",
 		},
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"errored_1\" did not complete successfully",
+			"code": "test.no_erred_tests",
+			"msg": "Test \"errored_1\" erred",
 			"term": "errored_1",
 		},
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"failed_2\" did not complete successfully",
+			"code": "test.no_failed_tests",
+			"msg": "Test \"failed_2\" failed",
 			"term": "failed_2",
 		},
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"errored_2\" did not complete successfully",
+			"code": "test.no_erred_tests",
+			"msg": "Test \"errored_2\" erred",
 			"term": "errored_2",
 		},
 	}) with input.attestations as attestations
 }
 
-test_skipped_is_not_deny {
+test_skipped_is_not_warning {
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			lib.task_test_result_name,
@@ -191,10 +210,10 @@ test_skipped_is_not_deny {
 			"value": {"result": "SKIPPED"},
 		}])]),
 	]
-	lib.assert_empty(test.deny) with input.attestations as attestations
+	lib.assert_empty(test.warn) with input.attestations as attestations
 }
 
-test_skipped_is_warning {
+test_skipped_is_deny {
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			lib.task_test_result_name,
@@ -206,7 +225,7 @@ test_skipped_is_warning {
 			"value": {"result": "SKIPPED"},
 		}])]),
 	]
-	lib.assert_equal_results(test.warn, {
+	lib.assert_equal_results(test.deny, {
 		{
 			"code": "test.no_skipped_tests",
 			"msg": "Test \"skipped_1\" was skipped",
@@ -287,38 +306,35 @@ test_mixed_statuses {
 
 	lib.assert_equal_results(test.deny, {
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"error_1\" did not complete successfully",
+			"code": "test.no_erred_tests",
+			"msg": "Test \"error_1\" erred",
 			"term": "error_1",
 		},
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"error_2\" did not complete successfully",
+			"code": "test.no_erred_tests",
+			"msg": "Test \"error_2\" erred",
 			"term": "error_2",
 		},
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"failure_1\" did not complete successfully",
+			"code": "test.no_failed_tests",
+			"msg": "Test \"failure_1\" failed",
 			"term": "failure_1",
 		},
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"failure_2\" did not complete successfully",
+			"code": "test.no_failed_tests",
+			"msg": "Test \"failure_2\" failed",
 			"term": "failure_2",
 		},
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"failure_20\" did not complete successfully",
+			"code": "test.no_failed_tests",
+			"msg": "Test \"failure_20\" failed",
 			"term": "failure_20",
 		},
 		{
-			"code": "test.required_tests_passed",
-			"msg": "Test \"error_20\" did not complete successfully",
+			"code": "test.no_erred_tests",
+			"msg": "Test \"error_20\" erred",
 			"term": "error_20",
 		},
-	}) with input.attestations as test_results
-
-	lib.assert_equal_results(test.warn, {
 		{
 			"code": "test.no_skipped_tests",
 			"msg": "Test \"skipped_1\" was skipped",
@@ -329,6 +345,14 @@ test_mixed_statuses {
 			"msg": "Test \"skipped_2\" was skipped",
 			"term": "skipped_2",
 		},
+		{
+			"code": "test.no_skipped_tests",
+			"msg": "Test \"skipped_20\" was skipped",
+			"term": "skipped_20",
+		},
+	}) with input.attestations as test_results
+
+	lib.assert_equal_results(test.warn, {
 		{
 			"code": "test.no_test_warnings",
 			"msg": "Test \"warning_1\" returned a warning",
@@ -343,11 +367,6 @@ test_mixed_statuses {
 			"code": "test.no_test_warnings",
 			"msg": "Test \"warning_20\" returned a warning",
 			"term": "warning_20",
-		},
-		{
-			"code": "test.no_skipped_tests",
-			"msg": "Test \"skipped_20\" was skipped",
-			"term": "skipped_20",
 		},
 	}) with input.attestations as test_results
 }

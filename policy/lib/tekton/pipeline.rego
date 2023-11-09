@@ -30,9 +30,13 @@ required_task_list(pipeline) := pipeline_data if {
 # pipeline_label_selector is a specialized function that returns the name of the
 # required tasks list that should be used.
 pipeline_label_selector(pipeline) := value if {
+	not is_fbc # given that the build task is shared between fbc and docker builds we can't rely on the task's label
+
 	# Labels of the build Task from the SLSA Provenance v1.0 of a PipelineRun
 	value := build_task(pipeline).metadata.labels[task_label]
 } else := value if {
+	not is_fbc # given that the build task is shared between fbc and docker builds we can't rely on the task's label
+
 	# Labels of the build Task from the SLSA Provenance v0.2 of a PipelineRun
 	value := build_task(pipeline).invocation.environment.labels[task_label]
 } else := value if {
@@ -44,6 +48,17 @@ pipeline_label_selector(pipeline) := value if {
 } else := value if {
 	# Labels from a Tekton Pipeline definition
 	value := pipeline.metadata.labels[pipeline_label]
+} else := value if {
+	# special handling for fbc pipelines, they're detected via image label
+	is_fbc
+
+	value := "fbc"
 }
 
 pipeline_name := input.metadata.name
+
+# evaluates to true for FBC image builds, for which we cannot rely on the build
+# task labels
+is_fbc if {
+	input.image.config.Labels["operators.operatorframework.io.index.configs.v1"]
+}

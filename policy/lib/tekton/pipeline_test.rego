@@ -93,3 +93,8 @@ test_pipeline_label_selector_pipeline_definition if {
 	pipeline := {"metadata": {"labels": {tkn.pipeline_label: "generic"}}}
 	lib.assert_equal(tkn.pipeline_label_selector(pipeline), "generic")
 }
+
+test_fbc_pipeline_label_selector if {
+	image := {"config": {"Labels": {"operators.operatorframework.io.index.configs.v1": "/configs"}}}
+	lib.assert_equal(tkn.pipeline_label_selector({}), "fbc") with input.image as image
+}

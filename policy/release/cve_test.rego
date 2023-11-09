@@ -15,19 +15,25 @@ test_success if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value": {"vulnerabilities": _dummy_counts_zero_high},
+			"value": {
+				"vulnerabilities": _dummy_counts_zero_high,
+				"unpatched_vulnerabilities": _dummy_counts_zero_high,
+			},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
-			{"vulnerabilities": _dummy_counts_zero_high},
+			{
+				"vulnerabilities": _dummy_counts_zero_high,
+				"unpatched_vulnerabilities": _dummy_counts_zero_high,
+			},
 			"clair-scan",
 			_bundle,
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
-	lib.assert_empty(cve.deny) with input.attestations as attestations
+	lib.assert_empty(cve.deny | cve.warn) with input.attestations as attestations
 }
 
 test_success_with_rule_data if {
@@ -36,20 +42,27 @@ test_success_with_rule_data if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value": {"vulnerabilities": _dummy_counts},
+			"value": {
+				"vulnerabilities": _dummy_counts,
+				"unpatched_vulnerabilities": _dummy_counts,
+			},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
-			{"vulnerabilities": _dummy_counts},
+			{
+				"vulnerabilities": _dummy_counts,
+				"unpatched_vulnerabilities": _dummy_counts,
+			},
 			"clair-scan",
 			_bundle,
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
-	lib.assert_empty(cve.deny) with input.attestations as attestations
+	lib.assert_empty(cve.deny | cve.warn) with input.attestations as attestations
 		with data.rule_data.restrict_cve_security_levels as ["spam"]
+		with data.rule_data.warn_unpatched_cve_security_levels as ["spam"]
 }
 
 test_failure if {
@@ -58,19 +71,25 @@ test_failure if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value": {"vulnerabilities": _dummy_counts},
+			"value": {
+				"vulnerabilities": _dummy_counts,
+				"unpatched_vulnerabilities": _dummy_counts,
+			},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
-			{"vulnerabilities": _dummy_counts},
+			{
+				"vulnerabilities": _dummy_counts,
+				"unpatched_vulnerabilities": _dummy_counts,
+			},
 			"clair-scan",
 			_bundle,
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
-	expected := {
+	expected_deny := {
 		{
 			"code": "cve.cve_blockers",
 			"term": "critical",
@@ -82,22 +101,29 @@ test_failure if {
 			"msg": "Found 10 CVE vulnerabilities of high security level",
 		},
 	}
-	lib.assert_equal_results(cve.deny, expected) with input.attestations as attestations
+	lib.assert_equal_results(cve.deny, expected_deny) with input.attestations as attestations
 }
 
 test_failure_with_rule_data if {
+	_custom_counts := {"spam": 1, "bacon": 2, "eggs": 3}
 	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value": {"vulnerabilities": {"spam": 1, "bacon": 2, "eggs": 3}},
+			"value": {
+				"vulnerabilities": _custom_counts,
+				"unpatched_vulnerabilities": _custom_counts,
+			},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
-			{"vulnerabilities": {"spam": 1, "bacon": 2, "eggs": 3}},
+			{
+				"vulnerabilities": _custom_counts,
+				"unpatched_vulnerabilities": _custom_counts,
+			},
 			"clair-scan",
 			_bundle,
 		),
@@ -114,9 +140,20 @@ test_failure_with_rule_data if {
 			"term": "bacon",
 			"msg": "Found 2 CVE vulnerabilities of bacon security level",
 		},
+		{
+			"code": "cve.unpatched_cve_blockers",
+			"term": "spam",
+			"msg": "Found 1 unpatched CVE vulnerabilities of spam security level",
+		},
+		{
+			"code": "cve.unpatched_cve_blockers",
+			"term": "bacon",
+			"msg": "Found 2 unpatched CVE vulnerabilities of bacon security level",
+		},
 	}
 	lib.assert_equal_results(cve.deny, expected) with input.attestations as attestations
 		with data.rule_data.restrict_cve_security_levels as ["spam", "bacon"]
+		with data.rule_data.restrict_unpatched_cve_security_levels as ["spam", "bacon"]
 }
 
 test_warn if {
@@ -125,19 +162,37 @@ test_warn if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value": {"vulnerabilities": _dummy_counts},
+			"value": {
+				"vulnerabilities": _dummy_counts,
+				"unpatched_vulnerabilities": _dummy_counts,
+			},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
-			{"vulnerabilities": _dummy_counts},
+			{
+				"vulnerabilities": _dummy_counts,
+				"unpatched_vulnerabilities": _dummy_counts,
+			},
 			"clair-scan",
 			_bundle,
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
-	lib.assert_empty(cve.warn) with input.attestations as attestations
+	expected := {
+		{
+			"code": "cve.unpatched_cve_warnings",
+			"term": "critical",
+			"msg": "Found 1 non-blocking unpatched CVE vulnerabilities of critical security level",
+		},
+		{
+			"code": "cve.unpatched_cve_warnings",
+			"term": "high",
+			"msg": "Found 10 non-blocking unpatched CVE vulnerabilities of high security level",
+		},
+	}
+	lib.assert_equal_results(cve.warn, expected) with input.attestations as attestations
 }
 
 test_warn_with_rule_data if {
@@ -146,13 +201,19 @@ test_warn_with_rule_data if {
 		[{
 			"name": cve._result_name,
 			"type": "string",
-			"value": {"vulnerabilities": _dummy_counts},
+			"value": {
+				"vulnerabilities": _dummy_counts,
+				"unpatched_vulnerabilities": _dummy_counts,
+			},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
-			{"vulnerabilities": _dummy_counts},
+			{
+				"vulnerabilities": _dummy_counts,
+				"unpatched_vulnerabilities": _dummy_counts,
+			},
 			"clair-scan",
 			_bundle,
 		),
@@ -174,9 +235,25 @@ test_warn_with_rule_data if {
 			"term": "unknown",
 			"msg": "Found 2 non-blocking CVE vulnerabilities of unknown security level",
 		},
+		{
+			"code": "cve.unpatched_cve_warnings",
+			"term": "medium",
+			"msg": "Found 20 non-blocking unpatched CVE vulnerabilities of medium security level",
+		},
+		{
+			"code": "cve.unpatched_cve_warnings",
+			"term": "low",
+			"msg": "Found 300 non-blocking unpatched CVE vulnerabilities of low security level",
+		},
+		{
+			"code": "cve.unpatched_cve_warnings",
+			"term": "unknown",
+			"msg": "Found 2 non-blocking unpatched CVE vulnerabilities of unknown security level",
+		},
 	}
 	lib.assert_equal_results(cve.warn, expected) with input.attestations as attestations
 		with data.rule_data.warn_cve_security_levels as ["medium", "low", "unknown"]
+		with data.rule_data.warn_unpatched_cve_security_levels as ["medium", "low", "unknown"]
 }
 
 test_missing_cve_scan_result if {

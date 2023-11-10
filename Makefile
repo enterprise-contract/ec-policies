@@ -5,7 +5,7 @@ CONFIG_DATA_FILE=$(DATA_DIR)/config.json
 
 POLICY_DIR=./policy
 
-OPA=go run github.com/open-policy-agent/opa
+OPA=go run github.com/enterprise-contract/ec-cli opa
 CONFTEST=go run github.com/open-policy-agent/conftest
 TKN=go run github.com/tektoncd/cli/cmd/tkn
 

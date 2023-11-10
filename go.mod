@@ -3,8 +3,8 @@ module github.com/enterprise-contract/ec-policies
 go 1.21.2
 
 require (
+	github.com/enterprise-contract/ec-cli v0.0.0-20231110093630-4a1afa30abc7
 	github.com/open-policy-agent/conftest v0.46.0
-	github.com/open-policy-agent/opa v0.58.0
 	github.com/styrainc/regal v0.11.0
 	github.com/tektoncd/cli v0.32.2
 )
@@ -137,7 +137,6 @@ require (
 	github.com/eapache/go-xerial-snappy v0.0.0-20230111030713-bf00bc1b83b6 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
-	github.com/enterprise-contract/ec-cli v0.0.0-20231110093630-4a1afa30abc7 // indirect
 	github.com/enterprise-contract/enterprise-contract-controller/api v0.0.0-20231027095011-f06fe20fb615 // indirect
 	github.com/evanphx/json-patch v5.7.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
@@ -274,6 +273,7 @@ require (
 	github.com/nsf/termbox-go v1.1.1 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
+	github.com/open-policy-agent/opa v0.58.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc5 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect

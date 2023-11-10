@@ -37,7 +37,7 @@ test_bundle_unpinned if {
 	lib.assert_equal_results(task_bundle.warn, {{
 		"code": "task_bundle.unpinned_task_bundle",
 		"msg": "Pipeline task 'my-task' uses an unpinned task bundle reference 'reg.com/repo:latest'",
-	}}) with input.spec.tasks as tasks
+	}}) with input.spec.tasks as tasks with data["task-bundles"] as []
 }
 
 test_bundle_reference_valid if {
@@ -61,6 +61,17 @@ test_acceptable_bundle_up_to_date if {
 		with data["task-bundles"] as task_bundles
 }
 
+# All good when the most recent bundle is used for a version that is still maintained
+test_acceptable_bundle_up_to_date_maintained_version if {
+	tasks := [{"name": "my-task", "taskRef": {"bundle": "reg.com/repo@sha256:ghi"}}]
+
+	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks
+		with data["task-bundles"] as task_bundles
+
+	lib.assert_empty(task_bundle.deny) with input.spec.tasks as tasks
+		with data["task-bundles"] as task_bundles
+}
+
 # Warn about out of date bundles that are still acceptable.
 test_acceptable_bundle_out_of_date_past if {
 	tasks := [
@@ -68,20 +79,16 @@ test_acceptable_bundle_out_of_date_past if {
 		{"name": "my-task-2", "taskRef": {"bundle": "reg.com/repo@sha256:cde"}},
 	]
 
-	lib.assert_equal_results(task_bundle.warn, {
-		{
-			"code": "task_bundle.out_of_date_task_bundle",
-			"msg": "Pipeline task 'my-task-1' uses an out of date task bundle 'reg.com/repo@sha256:bcd'",
-		},
-		{
-			"code": "task_bundle.out_of_date_task_bundle",
-			"msg": "Pipeline task 'my-task-2' uses an out of date task bundle 'reg.com/repo@sha256:cde'",
-		},
-	}) with input.spec.tasks as tasks
+	lib.assert_equal_results(task_bundle.warn, {{
+		"code": "task_bundle.out_of_date_task_bundle",
+		"msg": "Pipeline task 'my-task-1' uses an out of date task bundle 'reg.com/repo@sha256:bcd'",
+	}}) with input.spec.tasks as tasks
 		with data["task-bundles"] as task_bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2022-03-12T00:00:00Z")
 
 	lib.assert_empty(task_bundle.deny) with input.spec.tasks as tasks
 		with data["task-bundles"] as task_bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2022-03-12T00:00:00Z")
 }
 
 # Deny bundles that are no longer active.
@@ -108,27 +115,33 @@ test_missing_required_data if {
 
 task_bundles := {"reg.com/repo": [
 	{
-		# Latest bundle, allowed
+		# Latest v2
 		"digest": "sha256:abc",
-		"tag": "",
-		"effective_on": "2262-04-11T00:00:00Z",
+		"tag": "v2",
+		"effective_on": "2022-04-11T00:00:00Z",
 	},
 	{
-		# Recent bundle effective in the future, allowed but warn to upgrade
+		# Latest v3
+		"digest": "sha256:ghi",
+		"tag": "v3",
+		"effective_on": "2022-04-11T00:00:00Z",
+	},
+	{
+		# Older v2
 		"digest": "sha256:bcd",
-		"tag": "",
-		"effective_on": "2262-03-11T00:00:00Z",
+		"tag": "v2",
+		"effective_on": "2022-03-11T00:00:00Z",
 	},
 	{
-		# Recent bundle effective in the past, allowed but warn to upgrade
+		# Latest v1
 		"digest": "sha256:cde",
-		"tag": "",
+		"tag": "v1",
 		"effective_on": "2022-02-01T00:00:00Z",
 	},
 	{
-		# Old bundle, denied
+		# Older v1
 		"digest": "sha256:def",
-		"tag": "",
+		"tag": "v1",
 		"effective_on": "2021-01-01T00:00:00Z",
 	},
 ]}

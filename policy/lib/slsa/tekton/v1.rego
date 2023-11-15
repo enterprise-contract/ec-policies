@@ -11,12 +11,12 @@ import future.keywords.in
 # An example of how they look:
 # regal ignore:line-length
 # https://github.com/enterprise-contract/hacks/blob/main/provenance/recordings/05-SLSA-v1-0-tekton-build-type-Pipeline-in-cluster/decoded-content-att.json#L84
-_raw_tasks(predicate) := _tasks if {
+_raw_tasks(predicate, build_type) := _tasks if {
 	# Sanity check the buildType value
-	_build_type(predicate) == _expected_build_type
+	_build_type(predicate) == build_type
 
 	# Use the resolvedDependencies list
-	resolved_deps = predicate.buildDefinition.resolvedDependencies
+	resolved_deps := predicate.buildDefinition.resolvedDependencies
 
 	_tasks := [task |
 		some resolved_dep in resolved_deps
@@ -80,7 +80,7 @@ _cooked_task(raw_task) := {
 }
 
 tasks(predicate) := _tasks if {
-	raw_tasks := _raw_tasks(predicate)
+	raw_tasks := _raw_tasks(predicate, _expected_build_type)
 	_tasks := [cooked_task |
 		some raw_task in raw_tasks
 		cooked_task := _cooked_task(raw_task)

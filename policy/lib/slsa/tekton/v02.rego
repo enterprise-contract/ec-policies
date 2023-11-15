@@ -11,9 +11,9 @@ import future.keywords.in
 # An example of how they look:
 # regal ignore:line-length
 # https://github.com/enterprise-contract/hacks/blob/main/provenance/recordings/01-SLSA-v0-2-Pipeline-in-cluster/attestation.json#L35
-_raw_tasks(predicate) := _tasks if {
+_raw_tasks(predicate, build_type) := _tasks if {
 	# Sanity check the buildType value
-	_build_type(predicate) == _expected_build_type
+	_build_type(predicate) == build_type
 
 	# Return the list of tasks
 	_tasks := predicate.buildConfig.tasks
@@ -78,7 +78,7 @@ _cooked_task(raw_task) := {
 }
 
 tasks(predicate) := _tasks if {
-	raw_tasks := _raw_tasks(predicate)
+	raw_tasks := _raw_tasks(predicate, _expected_build_type)
 	_tasks := [cooked_task |
 		some raw_task in raw_tasks
 		cooked_task := _cooked_task(raw_task)

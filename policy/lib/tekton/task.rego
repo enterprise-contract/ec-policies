@@ -38,12 +38,12 @@ _slsa_task(task) if {
 
 # _maybe_tasks returns a set of potential tasks.
 # Handle tasks from a PipelineRun attestation.
-_maybe_tasks(attestation) := attestation.statement.predicate.buildConfig.tasks
+_maybe_tasks(given) := given.statement.predicate.buildConfig.tasks
 
 # Handle tasks from a Pipeline definition.
-_maybe_tasks(pipeline) := _tasks if {
-	pipeline.spec
-	spec := object.get(pipeline, "spec", {})
+_maybe_tasks(given) := _tasks if {
+	given.spec
+	spec := object.get(given, "spec", {})
 	_tasks := array.concat(
 		object.get(spec, "tasks", []),
 		object.get(spec, "finally", []),
@@ -51,8 +51,8 @@ _maybe_tasks(pipeline) := _tasks if {
 }
 
 # handle tasks from a slsav1 attestation
-_maybe_tasks(slsav1) := _tasks if {
-	deps := slsav1.statement.predicate.buildDefinition.resolvedDependencies
+_maybe_tasks(given) := _tasks if {
+	deps := given.statement.predicate.buildDefinition.resolvedDependencies
 	_tasks := {json.unmarshal(base64.decode(dep.content)) |
 		some dep in deps
 		_slsav1_tekton(dep)
@@ -61,13 +61,13 @@ _maybe_tasks(slsav1) := _tasks if {
 
 # check if a resolvedDependency is a pipeline task
 _slsav1_tekton(dep) if {
-	"pipelineTask" == dep.name
+	dep.name == "pipelineTask"
 	dep.content
 }
 
 # check if a resolvedDependency is a standalone task
 _slsav1_tekton(dep) if {
-	"task" == dep.name
+	dep.name == "task"
 	dep.content
 }
 

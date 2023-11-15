@@ -9,6 +9,7 @@ import future.keywords.in
 # In SLSA v0.2 the tasks are accessible in buildConfig.tasks.
 #
 # An example of how they look:
+# regal ignore:line-length
 # https://github.com/enterprise-contract/hacks/blob/main/provenance/recordings/01-SLSA-v0-2-Pipeline-in-cluster/attestation.json#L35
 _raw_tasks(predicate) := _tasks if {
 	# Sanity check the buildType value

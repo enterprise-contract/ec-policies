@@ -9,6 +9,7 @@ import future.keywords.in
 # In SLSA v1.0 we extract details about the tasks from the resolvedDependencies list.
 #
 # An example of how they look:
+# regal ignore:line-length
 # https://github.com/enterprise-contract/hacks/blob/main/provenance/recordings/05-SLSA-v1-0-tekton-build-type-Pipeline-in-cluster/decoded-content-att.json#L84
 _raw_tasks(predicate) := _tasks if {
 	# Sanity check the buildType value

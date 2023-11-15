@@ -163,7 +163,7 @@ fmt-check: ## Check formatting of Rego files
 
 .PHONY: lint
 lint: ## Runs Rego linter
-	@go run github.com/styrainc/regal lint . --ignore-files 'antora/docs/policy/**' $(if $(GITHUB_ACTIONS),--format=github)
+	@go run github.com/styrainc/regal lint . --ignore-files 'antora/docs/policy/**' --ignore-files 'policy/lib/slsa/tekton/test_data.rego' $(if $(GITHUB_ACTIONS),--format=github)
 
 .PHONY: ci
 ci: quiet-test opa-check conventions-check fmt-check lint ## Runs all checks and tests

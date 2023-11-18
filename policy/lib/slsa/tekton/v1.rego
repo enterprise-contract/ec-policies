@@ -66,6 +66,18 @@ _task_name(raw_task) := n if {
 	n := _labels(raw_task)["tekton.dev/task"]
 } else := ""
 
+# The list of steps in the task.
+# Note the steps themselves are different depending on the
+# format, but we aren't doing anything about that here (yet).
+_steps(raw_task) := ss if {
+	ss := raw_task.status.taskSpec.steps
+} else := []
+
+# Labels
+_labels(raw_task) := ls if {
+	ls := raw_task.metadata.labels
+} else := {}
+
 # Assemble all the above useful pieces in an internal format that we can use
 # in rules without caring about what the original SLSA format was.
 _cooked_task(raw_task) := {
@@ -73,6 +85,8 @@ _cooked_task(raw_task) := {
 	"results": _results(raw_task),
 	"ref": _ref(raw_task),
 	"params": _params(raw_task),
+	"steps": _steps(raw_task),
+	"labels": _labels(raw_task),
 	# Todo: This the same for both formats. Would be
 	# better if this wasn't duplicated
 	"pipeline_task_name": _pipeline_task_name(raw_task),

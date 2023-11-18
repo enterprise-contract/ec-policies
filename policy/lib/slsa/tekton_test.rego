@@ -40,6 +40,7 @@ test_edge_cases if {
 		"results": [],
 		"ref": {},
 		"params": [],
+		"steps": [],
 		"pipeline_task_name": "",
 		"task_name": "",
 	}

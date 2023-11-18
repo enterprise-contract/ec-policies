@@ -43,6 +43,7 @@ test_pipeline_label_selector_build_task_slsa_v0_2 if {
 	attestation := {"statement": {
 		"predicateType": "https://slsa.dev/provenance/v0.2",
 		"predicate": {
+			"buildType": "tekton.dev/v1beta1/PipelineRun",
 			"buildConfig": {"tasks": [task]},
 			"invocation": {"environment": {"labels": {tkn.pipeline_label: "ignored"}}},
 		},

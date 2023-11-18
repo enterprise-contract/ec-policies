@@ -32,13 +32,8 @@ required_task_list(pipeline) := pipeline_data if {
 pipeline_label_selector(pipeline) := value if {
 	not is_fbc # given that the build task is shared between fbc and docker builds we can't rely on the task's label
 
-	# Labels of the build Task from the SLSA Provenance v1.0 of a PipelineRun
-	value := build_task(pipeline).metadata.labels[task_label]
-} else := value if {
-	not is_fbc # given that the build task is shared between fbc and docker builds we can't rely on the task's label
-
-	# Labels of the build Task from the SLSA Provenance v0.2 of a PipelineRun
-	value := build_task(pipeline).invocation.environment.labels[task_label]
+	# Labels of the build Task from the SLSA Provenance, either format
+	value := build_task(pipeline).labels[task_label]
 } else := value if {
 	# PipelineRun labels found in the SLSA Provenance v1.0
 	value := pipeline.statement.predicate.buildDefinition.internalParameters.labels[pipeline_label]

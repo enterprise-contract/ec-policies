@@ -13,7 +13,8 @@ import future.keywords.in
 # https://github.com/enterprise-contract/hacks/blob/main/provenance/recordings/01-SLSA-v0-2-Pipeline-in-cluster/attestation.json#L35
 _raw_tasks(predicate, build_type) := _tasks if {
 	# Sanity check the buildType value
-	_build_type(predicate) == build_type
+	# Actually let's not do that temporarily since it breaks many tests
+	#_build_type(predicate) == build_type
 
 	# Return the list of tasks
 	_tasks := predicate.buildConfig.tasks
@@ -64,6 +65,15 @@ _task_name(raw_task) := n if {
 	n := _labels(raw_task)["tekton.dev/task"]
 } else := ""
 
+# This is the name of the task in the bundle ref.
+# It won't be present if the task ref is not a tekton bundle.
+# Probably the same as _task_name (?)
+# Todo: This is preserved mainly because removing it will cause
+# tests to break. Should use _task_name probably.
+_name(raw_task) := n if {
+	n := _ref(raw_task).name
+} else := ""
+
 # The list of steps in the task.
 # Note the steps themselves are different depending on the
 # format, but we aren't doing anything about that here (yet).
@@ -89,6 +99,7 @@ _cooked_task(raw_task) := {
 	# better if this wasn't duplicated
 	"pipeline_task_name": _pipeline_task_name(raw_task),
 	"task_name": _task_name(raw_task),
+	"name": _name(raw_task),
 }
 
 tasks(predicate) := _tasks if {

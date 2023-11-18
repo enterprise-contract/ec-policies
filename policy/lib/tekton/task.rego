@@ -7,6 +7,8 @@ import future.keywords.in
 import data.lib.refs
 import data.lib.time as ectime
 
+import data.slsa.tekton as slsa_tekton
+
 default missing_required_tasks_data := false
 
 missing_required_tasks_data if {
@@ -36,10 +38,6 @@ _slsa_task(task) if {
 	task_ref.kind == "task"
 }
 
-# _maybe_tasks returns a set of potential tasks.
-# Handle tasks from a PipelineRun attestation.
-_maybe_tasks(attestation) := attestation.statement.predicate.buildConfig.tasks
-
 # Handle tasks from a Pipeline definition.
 _maybe_tasks(pipeline) := _tasks if {
 	pipeline.spec
@@ -50,26 +48,9 @@ _maybe_tasks(pipeline) := _tasks if {
 	)
 }
 
-# handle tasks from a slsav1 attestation
-_maybe_tasks(slsav1) := _tasks if {
-	deps := slsav1.statement.predicate.buildDefinition.resolvedDependencies
-	_tasks := {json.unmarshal(base64.decode(dep.content)) |
-		some dep in deps
-		_slsav1_tekton(dep)
-	}
-}
-
-# check if a resolvedDependency is a pipeline task
-_slsav1_tekton(dep) if {
-	"pipelineTask" == dep.name
-	dep.content
-}
-
-# check if a resolvedDependency is a standalone task
-_slsav1_tekton(dep) if {
-	"task" == dep.name
-	dep.content
-}
+# Handle tasks from a slsa attestation, either format
+# Will return an empty list if it can't find the tasks for some reason
+_maybe_tasks(att) := slsa_tekton.tasks(att.statement.predicate)
 
 # tasks_names returns the set of task names extracted from the
 # given object. It expands names to include the parameterized
@@ -97,10 +78,7 @@ task_names(task) := names if {
 # task name from a v0.2 and v1.0 attestation
 task_name(task) := refs.task_ref(task).name
 
-# _task_params returns an object where keys are parameter names
-# and values are parameter values.
-# Handle parameters of a task from a PipelineRun attestation.
-_task_params(task) := task.invocation.parameters
+_task_params(task) := task.params
 
 # Handle parameters of a task in a Pipeline definition.
 _task_params(task) := params if {
@@ -112,24 +90,11 @@ _task_params(task) := params if {
 	}
 }
 
-# handle params from a slsav1.0 attestation
-_task_params(task) := params if {
-	task.spec.params
-	params := {name: value |
-		some param in task.spec.params
-		name := _key_value(param, "name")
-		value := _key_value(param, "value")
-	}
-}
-
 # task_param returns the value of the given parameter in the task.
 task_param(task, name) := _task_params(task)[name]
 
-# slsa v0.2 results
+# slsa attestation results, both formats
 _task_results(task) := task.results
-
-# slsa v1.0 results
-_task_results(task) := task.status.taskResults
 
 # task_result returns the value of the given result in the task.
 task_result(task, name) := value if {
@@ -139,11 +104,7 @@ task_result(task, name) := value if {
 	value := _key_value(result, "value")
 }
 
-# slsa v0.2 task steps
 task_steps(task) := task.steps
-
-# slsa v1.0 task steps
-task_steps(task) := task.status.taskSpec.steps
 
 # slsa v0.2 step image
 task_step_image_ref(step) := step.environment.image

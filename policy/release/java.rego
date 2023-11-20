@@ -6,6 +6,14 @@
 #   were rebuilt in house rather than imported directly from potentially
 #   untrusted respositories.
 #   If the result is missing no violation is reported.
+#   The rules depend on the configuration under the key
+#   'allowed_java_component_sources', the key lists all component sources that are
+#   allowed by the policy. The values of the list can be 'rebuilt' for
+#   dependencies that have been explicitly built from sources, or the name of the
+#   Maven repository names where the dependency artifact was retrieved from. The
+#   Maven repositories are configured using the 'JBSConfig' custom resources.
+#   Default configuration in RHTAP currently includes Maven repositories with
+#   names : 'jboss', 'confluent', 'redhat', 'jitpack' and 'gradle'.
 #
 package policy.release.java
 

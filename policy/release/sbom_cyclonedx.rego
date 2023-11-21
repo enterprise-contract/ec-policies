@@ -29,16 +29,19 @@ deny contains result if {
 
 # METADATA
 # title: Valid
-# description: Check the CycloneDX SBOM has the expected format.
+# description: >-
+#   Check the CycloneDX SBOM has the expected format. It verifies the CycloneDX SBOM matches the 1.5
+#   version of the schema.
 # custom:
 #   short_name: valid
-#   failure_msg: CycloneDX SBOM at index %d is not valid
+#   failure_msg: 'CycloneDX SBOM at index %d is not valid: %s'
 #   solution: Make sure the build process produces a valid CycloneDX SBOM.
 #
 deny contains result if {
 	some index, sbom in _sboms
-	not _is_valid(sbom)
-	result := lib.result_helper(rego.metadata.chain(), [index])
+	some violation in json.match_schema(sbom, schema_1_5)[1]
+	error := violation.error
+	result := lib.result_helper(rego.metadata.chain(), [index, error])
 }
 
 # METADATA
@@ -52,7 +55,7 @@ deny contains result if {
 #
 deny contains result if {
 	some sbom in _sboms
-	count(sbom.components) == 0
+	count(object.get(sbom, "components", [])) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -71,9 +74,3 @@ _sboms_from_attestations := [sbom |
 	statement.predicateType == "https://cyclonedx.org/bom"
 	sbom := statement.predicate
 ]
-
-# _is_valid is true if the given CycloneDX SBOM has certain fields. This is not an exhaustive schema
-# check. It mostly ensures the fields used by the policy rules in this package have been set.
-_is_valid(sbom) if {
-	is_array(sbom.components)
-}

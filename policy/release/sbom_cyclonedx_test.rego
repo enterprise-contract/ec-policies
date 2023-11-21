@@ -24,26 +24,16 @@ test_not_found if {
 }
 
 test_not_valid if {
-	attestations := [
-		# bad components
-		json.patch(_sbom_attestation, [{
-			"op": "add",
-			"path": "/statement/predicate/components",
-			"value": "spam",
-		}]),
-		# missing packages
-		json.remove(_sbom_attestation, ["/statement/predicate/components"]),
-	]
-
-	expected := {violation |
-		some i in numbers.range(0, count(attestations) - 1)
-		violation := {
-			"code": "sbom_cyclonedx.valid",
-			"msg": sprintf("CycloneDX SBOM at index %d is not valid", [i]),
-		}
-	}
-
-	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as attestations
+	expected := {{
+		"code": "sbom_cyclonedx.valid",
+		"msg": "CycloneDX SBOM at index 0 is not valid: components: Invalid type. Expected: array, given: string",
+	}}
+	att := json.patch(_sbom_attestation, [{
+		"op": "add",
+		"path": "/statement/predicate/components",
+		"value": "spam",
+	}])
+	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [att]
 		with input.image.ref as "registry.local/spam@sha256:123"
 }
 
@@ -57,6 +47,16 @@ test_empty_components if {
 		"path": "/statement/predicate/components",
 		"value": [],
 	}])
+	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [att]
+		with input.image.ref as "registry.local/spam@sha256:123"
+}
+
+test_missing_components if {
+	expected := {{
+		"code": "sbom_cyclonedx.contains_components",
+		"msg": "The list of components is empty",
+	}}
+	att := json.remove(_sbom_attestation, ["/statement/predicate/components"])
 	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [att]
 		with input.image.ref as "registry.local/spam@sha256:123"
 }

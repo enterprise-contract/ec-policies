@@ -19,6 +19,16 @@ rules:
       ignore:
         files:
           - "*_test.rego"
+    file-length:
+      ignore:
+        files:
+          # schemas can be quite large.
+          - "*_schema.rego"
+    line-length:
+      ignore:
+        files:
+          # schemas can have very long attribute values, e.g. description.
+          - "*_schema.rego"
   idiomatic:
     no-defined-entrypoint:
       level: ignore

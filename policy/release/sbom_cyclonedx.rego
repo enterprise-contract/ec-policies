@@ -21,6 +21,9 @@ import data.lib
 #   failure_msg: No CycloneDX SBOM found
 #   solution: >-
 #     Make sure the build process produces a CycloneDX SBOM.
+#   collections:
+#   - minimal
+#   - redhat
 #
 deny contains result if {
 	count(_sboms) == 0
@@ -36,6 +39,9 @@ deny contains result if {
 #   short_name: valid
 #   failure_msg: 'CycloneDX SBOM at index %d is not valid: %s'
 #   solution: Make sure the build process produces a valid CycloneDX SBOM.
+#   collections:
+#   - minimal
+#   - redhat
 #
 deny contains result if {
 	some index, sbom in _sboms
@@ -52,6 +58,9 @@ deny contains result if {
 #   failure_msg: The list of components is empty
 #   solution: >-
 #     Verify the SBOM is correctly identifying the components in the image.
+#   collections:
+#   - minimal
+#   - redhat
 #
 deny contains result if {
 	some sbom in _sboms

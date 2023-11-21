@@ -2,13 +2,14 @@ package policy.release.schedule_test
 
 import data.lib
 import data.policy.release.schedule
+import future.keywords.if
 
-test_no_restriction_by_default {
+test_no_restriction_by_default if {
 	lib.assert_empty(schedule.deny)
 }
 
 # regal ignore:rule-length
-test_weekday_restriction {
+test_weekday_restriction if {
 	disallowed := ["friday", "saturday", "sunday"]
 
 	lib.assert_empty(schedule.deny) with data.rule_data.disallowed_weekdays as disallowed
@@ -45,7 +46,7 @@ test_weekday_restriction {
 		with data.config.policy.when_ns as sunday
 }
 
-test_weekday_restriction_case_insensitive {
+test_weekday_restriction_case_insensitive if {
 	violation := {{
 		"code": "schedule.weekday_restriction",
 		"msg": "friday is a disallowed weekday: friday",
@@ -62,7 +63,7 @@ test_weekday_restriction_case_insensitive {
 		with data.config.policy.when_ns as monday
 }
 
-test_date_restriction {
+test_date_restriction if {
 	violation := {{
 		"code": "schedule.date_restriction",
 		"msg": "2023-01-01 is a disallowed date: 2023-01-01",

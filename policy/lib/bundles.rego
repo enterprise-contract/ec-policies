@@ -1,5 +1,6 @@
 package lib.bundles
 
+import future.keywords.if
 import future.keywords.in
 
 import data.lib.image
@@ -54,12 +55,12 @@ unacceptable_task_bundle(tasks) := {task |
 # Returns if the required task-bundles data is missing
 default missing_task_bundles_data := false
 
-missing_task_bundles_data {
+missing_task_bundles_data if {
 	count(data["task-bundles"]) == 0
 }
 
 # Returns true if the provided bundle reference is acceptable
-is_acceptable(bundle_ref) {
+is_acceptable(bundle_ref) if {
 	ref := image.parse(bundle_ref)
 	collection := _collection(ref)
 	matches := [r |
@@ -71,7 +72,7 @@ is_acceptable(bundle_ref) {
 }
 
 # Returns whether or not the ref matches the digest of the record.
-is_equal(record, ref) := match {
+is_equal(record, ref) := match if {
 	ref.digest != ""
 	match := record.digest == ref.digest
 }
@@ -80,7 +81,7 @@ is_equal(record, ref) := match {
 # in case the digest is blank for the ref. This is a weaker comparison as,
 # unlike digests, tags are not immutable entities. It is expected that a
 # missing digest results in a warning whenever possible.
-is_equal(record, ref) := match {
+is_equal(record, ref) := match if {
 	ref.digest == ""
 	match := record.tag == ref.tag
 }
@@ -91,7 +92,7 @@ bundle(task) := refs.task_ref(task).bundle
 # be taken into consideration when evaluating policy rules for bundle
 # references. Any irrelevant records are filtered out from the array.
 # (The else condition is for when data["task-bundles"][ref.repo] doesn't exist.)
-_collection(ref) := items {
+_collection(ref) := items if {
 	full_collection := data["task-bundles"][ref.repo]
 	items := time_lib.acceptable_items(full_collection)
 } else := []

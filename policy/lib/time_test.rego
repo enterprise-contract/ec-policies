@@ -6,21 +6,22 @@ package lib.time_test
 
 import data.lib
 import data.lib.time as lib_time
+import future.keywords.if
 
 future_timestamp := time.add_date(time.now_ns(), 0, 0, 1)
 
 # METADATA
 # custom:
 #   effective_on: 2004-05-06T00:00:00Z
-test_when_rule_precedence {
+test_when_rule_precedence if {
 	lib_time.when(rego.metadata.chain()) == "2004-05-06T00:00:00Z"
 }
 
-test_when_package_precedence {
+test_when_package_precedence if {
 	lib_time.when(rego.metadata.chain()) == "2001-02-03T00:00:00Z"
 }
 
-test_effective_current_time_ns {
+test_effective_current_time_ns if {
 	# with no config at all
 	lib.assert_equal(lib_time.effective_current_time_ns, time.now_ns())
 
@@ -36,7 +37,7 @@ test_effective_current_time_ns {
 }
 
 # regal ignore:rule-length
-test_most_current {
+test_most_current if {
 	# Ignore future item
 	lib.assert_equal(
 		lib_time.most_current([
@@ -69,7 +70,7 @@ test_most_current {
 }
 
 # regal ignore:rule-length
-test_future_items {
+test_future_items if {
 	# Ignore items in the past
 	lib.assert_equal(
 		lib_time.future_items([
@@ -111,7 +112,7 @@ test_future_items {
 }
 
 # regal ignore:rule-length
-test_acceptable_items {
+test_acceptable_items if {
 	# Include future items and most current
 	lib.assert_equal(
 		lib_time.acceptable_items([
@@ -147,7 +148,7 @@ test_acceptable_items {
 	lib.assert_equal(lib_time.future_items([]), [])
 }
 
-test_newest {
+test_newest if {
 	lib.assert_equal({"effective_on": "2262-04-11T00:00:00Z"}, lib_time.newest([
 		{"effective_on": "2199-01-01T00:00:00Z"},
 		{"effective_on": "2262-04-11T00:00:00Z"},

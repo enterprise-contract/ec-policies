@@ -2,6 +2,7 @@ package policy.release.attestation_type_test
 
 import data.lib
 import data.policy.release.attestation_type
+import future.keywords.if
 
 good_type := "https://in-toto.io/Statement/v0.1"
 
@@ -12,11 +13,11 @@ mock_data(att_type) := [{"statement": {
 	"predicate": {"buildType": lib.tekton_pipeline_run},
 }}]
 
-test_allow_when_permitted {
+test_allow_when_permitted if {
 	lib.assert_empty(attestation_type.deny) with input.attestations as mock_data(good_type)
 }
 
-test_deny_when_not_permitted {
+test_deny_when_not_permitted if {
 	expected_msg := sprintf("Unknown attestation type '%s'", [bad_type])
 	lib.assert_equal_results(attestation_type.deny, {{
 		"code": "attestation_type.known_attestation_type",
@@ -24,7 +25,7 @@ test_deny_when_not_permitted {
 	}}) with input.attestations as mock_data(bad_type)
 }
 
-test_deny_when_pipelinerun_attestation_founds {
+test_deny_when_pipelinerun_attestation_founds if {
 	expected := {{
 		"code": "attestation_type.pipelinerun_attestation_found",
 		"msg": "Missing pipelinerun attestation",
@@ -42,7 +43,7 @@ test_deny_when_pipelinerun_attestation_founds {
 	lib.assert_equal_results(attestation_type.deny, expected) with input.attestations as attestations
 }
 
-test_deny_deprecated_policy_attestation_format {
+test_deny_deprecated_policy_attestation_format if {
 	expected := {
 		{
 			"code": "attestation_type.deprecated_policy_attestation_format",

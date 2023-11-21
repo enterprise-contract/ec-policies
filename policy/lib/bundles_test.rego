@@ -1,5 +1,6 @@
 package lib.bundles_test
 
+import future.keywords.if
 import future.keywords.in
 
 import data.lib
@@ -15,7 +16,7 @@ bundle_data := {"registry.img/acceptable": [{
 # used as reference bundle data in tests
 acceptable_bundle_ref := "registry.img/acceptable@sha256:digest"
 
-test_disallowed_task_reference {
+test_disallowed_task_reference if {
 	tasks := [
 		{"name": "my-task-1", "taskRef": {}},
 		{"name": "my-task-2", "ref": {}},
@@ -25,7 +26,7 @@ test_disallowed_task_reference {
 	lib.assert_equal(bundles.disallowed_task_reference(tasks), expected)
 }
 
-test_empty_task_bundle_reference {
+test_empty_task_bundle_reference if {
 	tasks := [
 		{"name": "my-task-1", "taskRef": {"bundle": ""}},
 		{"name": "my-task-2", "ref": {"bundle": ""}},
@@ -35,7 +36,7 @@ test_empty_task_bundle_reference {
 	lib.assert_equal(bundles.empty_task_bundle_reference(tasks), expected)
 }
 
-test_unpinned_task_bundle {
+test_unpinned_task_bundle if {
 	tasks := [
 		{
 			"name": "my-task-1",
@@ -52,7 +53,7 @@ test_unpinned_task_bundle {
 }
 
 # All good when the most recent bundle is used.
-test_acceptable_bundle {
+test_acceptable_bundle if {
 	tasks := [
 		{"name": "my-task-1", "taskRef": {"bundle": "reg.com/repo@sha256:abc"}},
 		{"name": "my-task-2", "ref": {"bundle": "reg.com/repo@sha256:abc"}},
@@ -65,7 +66,7 @@ test_acceptable_bundle {
 	lib.assert_empty(bundles.unacceptable_task_bundle(tasks)) with data["task-bundles"] as task_bundles
 }
 
-test_out_of_date_task_bundle {
+test_out_of_date_task_bundle if {
 	tasks := [
 		{"name": "my-task-1", "taskRef": {"bundle": "reg.com/repo@sha256:bcd"}},
 		{"name": "my-task-2", "taskRef": {"bundle": "reg.com/repo@sha256:cde"}},
@@ -77,7 +78,7 @@ test_out_of_date_task_bundle {
 	lib.assert_equal(bundles.out_of_date_task_bundle(tasks), expected) with data["task-bundles"] as task_bundles
 }
 
-test_unacceptable_task_bundles {
+test_unacceptable_task_bundles if {
 	tasks := [
 		{"name": "my-task-1", "taskRef": {"bundle": "reg.com/repo@sha256:def"}},
 		{"name": "my-task-2", "ref": {"bundle": "reg.com/repo@sha256:def"}},
@@ -87,7 +88,7 @@ test_unacceptable_task_bundles {
 	lib.assert_equal(bundles.unacceptable_task_bundle(tasks), expected) with data["task-bundles"] as task_bundles
 }
 
-test_is_equal {
+test_is_equal if {
 	record := {"digest": "sha256:abc", "tag": "spam"}
 
 	# Exact match
@@ -132,15 +133,15 @@ task_bundles := {"reg.com/repo": [
 	},
 ]}
 
-test_acceptable_bundle_is_acceptable {
+test_acceptable_bundle_is_acceptable if {
 	bundles.is_acceptable(acceptable_bundle_ref) with data["task-bundles"] as bundle_data
 }
 
-test_unacceptable_bundle_is_unacceptable {
+test_unacceptable_bundle_is_unacceptable if {
 	not bundles.is_acceptable("registry.img/unacceptable@sha256:digest") with data["task-bundles"] as bundle_data
 }
 
-test_missing_required_data {
+test_missing_required_data if {
 	lib.assert_equal(bundles.missing_task_bundles_data, false) with data["task-bundles"] as task_bundles
 	lib.assert_equal(bundles.missing_task_bundles_data, true) with data["task-bundles"] as []
 }

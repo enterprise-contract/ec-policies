@@ -1,8 +1,9 @@
 package lib_test
 
 import data.lib
+import future.keywords.if
 
-test_assert_equal {
+test_assert_equal if {
 	lib.assert_equal("a", "a")
 	lib.assert_equal({"a": 10}, {"a": 10})
 	lib.assert_equal(["a"], ["a"])
@@ -13,7 +14,7 @@ test_assert_equal {
 	not lib.assert_equal({"a"}, {"b"})
 }
 
-test_assert_not_equal {
+test_assert_not_equal if {
 	lib.assert_not_equal("a", "b")
 	lib.assert_not_equal({"a": 10}, {"a", 11})
 	lib.assert_not_equal(["a"], ["b"])
@@ -24,7 +25,7 @@ test_assert_not_equal {
 	not lib.assert_not_equal({"a"}, {"a"})
 }
 
-test_assert_empty {
+test_assert_empty if {
 	lib.assert_empty([])
 	lib.assert_empty({})
 	lib.assert_empty(set())
@@ -33,7 +34,7 @@ test_assert_empty {
 	not lib.assert_empty({"a": "b"})
 }
 
-test_assert_not_empty {
+test_assert_not_empty if {
 	lib.assert_not_empty(["a"])
 	lib.assert_not_empty({"a"})
 	lib.assert_not_empty({"a": "b"})
@@ -43,7 +44,7 @@ test_assert_not_empty {
 }
 
 # regal ignore:rule-length
-test_assert_equal_results {
+test_assert_equal_results if {
 	# Empty results
 	lib.assert_equal_results(set(), set())
 	lib.assert_equal_results({{}}, {{}})

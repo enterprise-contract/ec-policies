@@ -6,13 +6,14 @@ import data.lib
 import data.lib.tkn_test
 import data.lib_test
 import data.policy.release.attestation_task_bundle
+import future.keywords.if
 
 mock_data(task) := {"statement": {"predicate": {
 	"buildConfig": {"tasks": [task]},
 	"buildType": lib.tekton_pipeline_run,
 }}}
 
-test_bundle_not_exists {
+test_bundle_not_exists if {
 	name := "my-task"
 	attestations := [
 		mock_data({
@@ -31,7 +32,7 @@ test_bundle_not_exists {
 	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
 }
 
-test_bundle_not_exists_empty_string {
+test_bundle_not_exists_empty_string if {
 	name := "my-task"
 	image := ""
 
@@ -52,7 +53,7 @@ test_bundle_not_exists_empty_string {
 	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
 }
 
-test_bundle_unpinned {
+test_bundle_unpinned if {
 	name := "my-task"
 	image := "reg.com/repo:latest"
 	attestations := [
@@ -73,7 +74,7 @@ test_bundle_unpinned {
 	}}) with input.attestations as attestations
 }
 
-test_bundle_reference_valid {
+test_bundle_reference_valid if {
 	name := "my-task"
 	image := "reg.com/repo:latest@sha256:abc"
 	attestations := [
@@ -94,7 +95,7 @@ test_bundle_reference_valid {
 		with data["task-bundles"] as task_bundles
 }
 
-test_bundle_reference_digest_doesnt_match {
+test_bundle_reference_digest_doesnt_match if {
 	name := "my-task"
 	image := "reg.com/repo:latest@sha256:xyz"
 	attestations := [
@@ -118,7 +119,7 @@ test_bundle_reference_digest_doesnt_match {
 		with data["task-bundles"] as task_bundles
 }
 
-test_bundle_reference_repo_not_present {
+test_bundle_reference_repo_not_present if {
 	name := "my-task"
 	image := "reg.com/super-custom-repo@sha256:abc"
 	attestations := [
@@ -143,7 +144,7 @@ test_bundle_reference_repo_not_present {
 }
 
 # All good when the most recent bundle is used.
-test_acceptable_bundle_up_to_date {
+test_acceptable_bundle_up_to_date if {
 	image := "reg.com/repo@sha256:abc"
 	attestations := [
 		lib_test.mock_slsav02_attestation_bundles([image]),
@@ -158,7 +159,7 @@ test_acceptable_bundle_up_to_date {
 }
 
 # Warn about out of date bundles that are still acceptable.
-test_acceptable_bundle_out_of_date_past {
+test_acceptable_bundle_out_of_date_past if {
 	images := ["reg.com/repo@sha256:bcd", "reg.com/repo@sha256:cde"]
 	attestations := [
 		lib_test.mock_slsav02_attestation_bundles(images),
@@ -182,7 +183,7 @@ test_acceptable_bundle_out_of_date_past {
 }
 
 # Deny bundles that are no longer active.
-test_acceptable_bundle_expired {
+test_acceptable_bundle_expired if {
 	image := ["reg.com/repo@sha256:def"]
 	attestations := [
 		lib_test.mock_slsav02_attestation_bundles(image),
@@ -198,7 +199,7 @@ test_acceptable_bundle_expired {
 		with data["task-bundles"] as task_bundles
 }
 
-test_acceptable_bundles_provided {
+test_acceptable_bundles_provided if {
 	expected := {{
 		"code": "attestation_task_bundle.acceptable_bundles_provided",
 		"msg": "Missing required task-bundles data",

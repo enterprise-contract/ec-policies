@@ -1,5 +1,6 @@
 package lib.refs
 
+import future.keywords.if
 import future.keywords.in
 
 # Return an object that represents the task "name", "kind", and "bundle". "bundle" is
@@ -13,7 +14,7 @@ import future.keywords.in
 # a bundle is not used in neither format. The "else" usage in this function ensures the
 # same precendence order is honored.
 # regal ignore:rule-length
-task_ref(task) := i {
+task_ref(task) := i if {
 	# Handle old-style bundle reference
 	r := _ref(task)
 	i := {
@@ -21,7 +22,7 @@ task_ref(task) := i {
 		"name": object.get(r, "name", ""),
 		"kind": lower(object.get(r, "kind", "task")),
 	}
-} else := i {
+} else := i if {
 	# Handle bundle-resolver reference
 	r := _ref(task)
 	r.resolver == "bundles"
@@ -30,7 +31,7 @@ task_ref(task) := i {
 		"name": _param(r, "name", ""),
 		"kind": lower(_param(r, "kind", "task")),
 	}
-} else := i {
+} else := i if {
 	r := _ref(task)
 	r.resolver == "git"
 	i := {
@@ -40,7 +41,7 @@ task_ref(task) := i {
 		"name": object.get(r, "name", ""),
 		"kind": lower(object.get(r, "kind", "task")),
 	}
-} else := i {
+} else := i if {
 	# Handle local reference
 	r := _ref(task)
 	i := {
@@ -49,19 +50,19 @@ task_ref(task) := i {
 	}
 }
 
-_param(taskRef, name, fallback) := value {
+_param(taskRef, name, fallback) := value if {
 	some param in taskRef.params
 	param.name == name
 	value := param.value
 } else := fallback
 
-_ref(task) := r {
+_ref(task) := r if {
 	# Reference from within a PipelineRun attestation
 	r := task.ref
-} else := r {
+} else := r if {
 	# Reference from within a Pipeline definition
 	r := task.taskRef
-} else := r {
+} else := r if {
 	# reference from a taskRun in a slsav1 attestation
 	r := task.spec.taskRef
 }

@@ -2,8 +2,9 @@ package policy.pipeline.task_bundle_test
 
 import data.lib
 import data.policy.pipeline.task_bundle
+import future.keywords.if
 
-test_bundle_not_exists {
+test_bundle_not_exists if {
 	tasks := [{"name": "my-task", "taskRef": {}}]
 
 	expected_msg := "Pipeline task 'my-task' does not contain a bundle reference"
@@ -15,7 +16,7 @@ test_bundle_not_exists {
 	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks
 }
 
-test_bundle_not_exists_empty_string {
+test_bundle_not_exists_empty_string if {
 	tasks := [{"name": "my-task", "taskRef": {"bundle": ""}}]
 
 	expected_msg := "Pipeline task 'my-task' uses an empty bundle image reference"
@@ -27,7 +28,7 @@ test_bundle_not_exists_empty_string {
 	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks
 }
 
-test_bundle_unpinned {
+test_bundle_unpinned if {
 	tasks := [{
 		"name": "my-task",
 		"taskRef": {"bundle": "reg.com/repo:latest"},
@@ -39,7 +40,7 @@ test_bundle_unpinned {
 	}}) with input.spec.tasks as tasks
 }
 
-test_bundle_reference_valid {
+test_bundle_reference_valid if {
 	tasks := [{
 		"name": "my-task",
 		"taskRef": {"bundle": "reg.com/repo:latest@sha256:abc"},
@@ -50,7 +51,7 @@ test_bundle_reference_valid {
 }
 
 # All good when the most recent bundle is used.
-test_acceptable_bundle_up_to_date {
+test_acceptable_bundle_up_to_date if {
 	tasks := [{"name": "my-task", "taskRef": {"bundle": "reg.com/repo@sha256:abc"}}]
 
 	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks
@@ -61,7 +62,7 @@ test_acceptable_bundle_up_to_date {
 }
 
 # Warn about out of date bundles that are still acceptable.
-test_acceptable_bundle_out_of_date_past {
+test_acceptable_bundle_out_of_date_past if {
 	tasks := [
 		{"name": "my-task-1", "taskRef": {"bundle": "reg.com/repo@sha256:bcd"}},
 		{"name": "my-task-2", "taskRef": {"bundle": "reg.com/repo@sha256:cde"}},
@@ -84,7 +85,7 @@ test_acceptable_bundle_out_of_date_past {
 }
 
 # Deny bundles that are no longer active.
-test_acceptable_bundle_expired {
+test_acceptable_bundle_expired if {
 	tasks := [{"name": "my-task", "taskRef": {"bundle": "reg.com/repo@sha256:def"}}]
 
 	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks
@@ -97,7 +98,7 @@ test_acceptable_bundle_expired {
 		with data["task-bundles"] as task_bundles
 }
 
-test_missing_required_data {
+test_missing_required_data if {
 	expected := {{
 		"code": "task_bundle.missing_required_data",
 		"msg": "Missing required task-bundles data",

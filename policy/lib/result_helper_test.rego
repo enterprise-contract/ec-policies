@@ -1,8 +1,9 @@
 package lib_test
 
 import data.lib
+import future.keywords.if
 
-test_result_helper {
+test_result_helper if {
 	expected_result := {
 		"code": "oh.Hey",
 		"effective_on": "2022-01-01T00:00:00Z",
@@ -22,7 +23,7 @@ test_result_helper {
 	lib.assert_equal(expected_result, lib.result_helper(chain, ["foo"]))
 }
 
-test_result_helper_with_collections {
+test_result_helper_with_collections if {
 	expected := {
 		"code": "oh.Hey",
 		"collections": ["spam"],
@@ -44,7 +45,7 @@ test_result_helper_with_collections {
 	lib.assert_equal(expected, lib.result_helper(chain, ["foo"]))
 }
 
-test_result_helper_with_term {
+test_result_helper_with_term if {
 	expected := {
 		"code": "oh.Hey",
 		"term": "ola",

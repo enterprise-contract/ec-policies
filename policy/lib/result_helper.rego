@@ -1,11 +1,13 @@
 package lib
 
+import future.keywords.if
+
 import data.lib.time as time_lib
 
-result_helper(chain, failure_sprintf_params) := result {
+result_helper(chain, failure_sprintf_params) := result if {
 	with_collections := {"collections": _rule_annotations(chain).custom.collections}
 	result := object.union(_basic_result(chain, failure_sprintf_params), with_collections)
-} else := result {
+} else := result if {
 	result := _basic_result(chain, failure_sprintf_params)
 }
 
@@ -20,7 +22,7 @@ _basic_result(chain, failure_sprintf_params) := {
 	"effective_on": time_lib.when(chain),
 }
 
-_code(chain) := code {
+_code(chain) := code if {
 	pkg_path := chain[count(chain) - 1].path
 	pkg_name := pkg_path[count(pkg_path) - 1]
 	rule_name := _rule_annotations(chain).custom.short_name

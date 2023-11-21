@@ -4,13 +4,14 @@ import future.keywords.in
 
 import data.lib
 import data.policy.release.slsa_provenance_available
+import future.keywords.if
 
-test_expected_predicate_type {
+test_expected_predicate_type if {
 	attestations := _mock_attestations(["https://slsa.dev/provenance/v0.2"])
 	lib.assert_empty(slsa_provenance_available.deny) with input.attestations as attestations
 }
 
-test_att_predicate_type {
+test_att_predicate_type if {
 	attestations := _mock_attestations(["spam"])
 	expected_deny := {{
 		"code": "slsa_provenance_available.attestation_predicate_type_accepted",

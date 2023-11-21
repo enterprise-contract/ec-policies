@@ -4,9 +4,10 @@ import data.lib
 import data.lib.tkn_test
 import data.lib_test
 import data.policy.release.test
+import future.keywords.if
 
 # Because TEST_OUTPUT isn't in the task results, the lib.results_from_tests will be empty
-test_needs_non_empty_data {
+test_needs_non_empty_data if {
 	slsav1_task := tkn_test.slsav1_task_result_ref("task2", [{"name": "NOT_TEST_OUTPUT", "type": "string", "value": {}}])
 	attestations := [
 		lib_test.att_mock_helper_ref("NOT_TEST_OUTPUT", {}, "task1", _bundle),
@@ -19,7 +20,7 @@ test_needs_non_empty_data {
 }
 
 # There is a test result, but the data inside it doesn't include the "result" key
-test_needs_tests_with_results {
+test_needs_tests_with_results if {
 	slsav1_task := tkn_test.slsav1_task_result_ref("task2", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
@@ -38,7 +39,7 @@ test_needs_tests_with_results {
 	}}) with input.attestations as attestations
 }
 
-test_needs_tests_with_results_mixed {
+test_needs_tests_with_results_mixed if {
 	slsav1_bad_task := tkn_test.slsav1_task_result_ref("task3", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
@@ -61,7 +62,7 @@ test_needs_tests_with_results_mixed {
 	}}) with input.attestations as attestations
 }
 
-test_success_data {
+test_success_data if {
 	slsav1_good_task := tkn_test.slsav1_task_result_ref("task1", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
@@ -79,7 +80,7 @@ mock_a_failing_test := lib_test.att_mock_helper_ref(
 	{"result": "FAILURE"}, "failed_1", _bundle,
 )
 
-test_failure_data {
+test_failure_data if {
 	slsav1_task := tkn_test.slsav1_task_result_ref("task1", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
@@ -130,7 +131,7 @@ mock_an_errored_test := lib_test.att_mock_helper_ref(
 	{"result": "ERROR"}, "errored_1", _bundle,
 )
 
-test_error_data {
+test_error_data if {
 	slsav1_task := tkn_test.slsav1_task_result_ref("errored_2", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
@@ -157,7 +158,7 @@ test_error_data {
 	}) with input.attestations as attestations
 }
 
-test_mix_data {
+test_mix_data if {
 	slsav1_errored_task := tkn_test.slsav1_task_result_ref("errored_2", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
@@ -198,7 +199,7 @@ test_mix_data {
 	}) with input.attestations as attestations
 }
 
-test_skipped_is_not_warning {
+test_skipped_is_not_warning if {
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			lib.task_test_result_name,
@@ -213,7 +214,7 @@ test_skipped_is_not_warning {
 	lib.assert_empty(test.warn) with input.attestations as attestations
 }
 
-test_skipped_is_deny {
+test_skipped_is_deny if {
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			lib.task_test_result_name,
@@ -239,7 +240,7 @@ test_skipped_is_deny {
 	}) with input.attestations as attestations
 }
 
-test_warning_is_warning {
+test_warning_is_warning if {
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			lib.task_test_result_name,
@@ -266,7 +267,7 @@ test_warning_is_warning {
 }
 
 # regal ignore:rule-length
-test_mixed_statuses {
+test_mixed_statuses if {
 	test_results := [
 		lib_test.att_mock_helper_ref(lib.task_test_result_name, {"result": "ERROR"}, "error_1", _bundle),
 		lib_test.att_mock_helper_ref(lib.task_test_result_name, {"result": "SUCCESS"}, "success_1", _bundle),
@@ -371,7 +372,7 @@ test_mixed_statuses {
 	}) with input.attestations as test_results
 }
 
-test_unsupported_test_result {
+test_unsupported_test_result if {
 	test_results := [
 		lib_test.att_mock_helper_ref(lib.task_test_result_name, {"result": "EROR"}, "error_1", _bundle),
 		lib_test.att_mock_helper_ref(lib.task_test_result_name, {"result": "SUCESS"}, "success_1", _bundle),
@@ -408,7 +409,7 @@ test_unsupported_test_result {
 	}) with input.attestations as test_results
 }
 
-test_missing_wrong_attestation_type {
+test_missing_wrong_attestation_type if {
 	pr := lib_test.att_mock_helper_ref("some-result", {"result": "value"}, "task1", _bundle)
 	tr := object.union(pr, {"statement": {"predicate": {"buildType": lib.tekton_task_run}}})
 	tr_result := {"name": lib.task_test_result_name, "type": "string", "value": {"result": "SKIPED"}}
@@ -421,7 +422,7 @@ test_missing_wrong_attestation_type {
 	lib.assert_empty(test.deny) with input.attestations as [tr, tr_slsav1]
 }
 
-test_wrong_attestation_type {
+test_wrong_attestation_type if {
 	pr := lib_test.att_mock_helper_ref(lib.task_test_result_name, {"result": "ERROR"}, "errored_1", _bundle)
 	tr := object.union(pr, {"statement": {"predicate": {"buildType": lib.tekton_task_run}}})
 	tr_result := {"name": lib.task_test_result_name, "type": "string", "value": {"result": "ERROR"}}

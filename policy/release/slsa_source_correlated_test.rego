@@ -1,15 +1,16 @@
 package policy.release.slsa_source_correlated_test
 
+import future.keywords.if
 import future.keywords.in
 
 import data.lib
 import data.policy.release.slsa_source_correlated
 
-test_warn_missing_source_code_happy_day {
+test_warn_missing_source_code_happy_day if {
 	lib.assert_empty(slsa_source_correlated.warn) with input.image as {"source": {"something": "here"}}
 }
 
-test_warn_missing_expected_source_code_reference {
+test_warn_missing_expected_source_code_reference if {
 	expected := {{
 		"code": "slsa_source_correlated.source_code_reference_provided",
 		"msg": "Expected source code reference was not provided for verification",
@@ -19,7 +20,7 @@ test_warn_missing_expected_source_code_reference {
 	lib.assert_equal_results(slsa_source_correlated.warn, expected) with input.image as {"source": {}}
 }
 
-test_deny_material_code_reference {
+test_deny_material_code_reference if {
 	# no source materials
 	lib.assert_equal_results(slsa_source_correlated.deny, {{
 		"code": "slsa_source_correlated.attested_source_code_reference",
@@ -43,7 +44,7 @@ test_deny_material_code_reference {
 }
 
 # regal ignore:rule-length
-test_deny_expected_source_code_reference_happy_day {
+test_deny_expected_source_code_reference_happy_day if {
 	# one material matches expected SLSA Provenance v0.2
 	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
 		with input.attestations as [_source_material_attestation("git+https://git.repository", "ref")]
@@ -184,7 +185,7 @@ test_deny_expected_source_code_reference_happy_day {
 }
 
 # regal ignore:rule-length
-test_deny_expected_source_code_reference_v02 {
+test_deny_expected_source_code_reference_v02 if {
 	# different scm SLSA Provenance v0.2
 	lib.assert_equal_results(slsa_source_correlated.deny, {{
 		"code": "slsa_source_correlated.expected_source_code_reference",
@@ -251,7 +252,7 @@ test_deny_expected_source_code_reference_v02 {
 }
 
 # regal ignore:rule-length
-test_deny_expected_source_code_reference_v10 {
+test_deny_expected_source_code_reference_v10 if {
 	# different scm SLSA Provenance v1.0
 	lib.assert_equal_results(slsa_source_correlated.deny, {{
 		"code": "slsa_source_correlated.expected_source_code_reference",
@@ -319,7 +320,7 @@ test_deny_expected_source_code_reference_v10 {
 		with input.attestations as [_source_resolved_dependencies_attestation("git+https://git.repository", "ref")]
 }
 
-test_slsa_v02_source_references {
+test_slsa_v02_source_references if {
 	lib.assert_empty(slsa_source_correlated._source_references)
 	lib.assert_empty(slsa_source_correlated._source_references) with input.attestations as [_material_attestation([])]
 	att1 = _source_material_attestation("https://something:somewhere", "cafe")
@@ -350,7 +351,7 @@ test_slsa_v02_source_references {
 }
 
 # regal ignore:rule-length
-test_slsa_v10_source_references {
+test_slsa_v10_source_references if {
 	att1 = _resolved_dependencies_attestation([])
 	lib.assert_empty(slsa_source_correlated._source_references) with input.attestations as [att1]
 	att2 = _source_resolved_dependencies_attestation("https://something:somewhere", "cafe")

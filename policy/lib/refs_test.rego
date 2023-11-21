@@ -2,15 +2,16 @@ package lib.refs_test
 
 import data.lib
 import data.lib.refs
+import future.keywords.if
 
-test_bundle_in_pipelinerun {
+test_bundle_in_pipelinerun if {
 	image := "registry.img/test@sha256:digest"
 	ref := {"ref": {"bundle": image, "kind": "Task", "name": "test"}}
 	info := {"bundle": image, "kind": "task", "name": "test"}
 	lib.assert_equal(refs.task_ref(ref), info)
 }
 
-test_bundle_resolver_in_pipelinerun {
+test_bundle_resolver_in_pipelinerun if {
 	image := "registry.img/test@sha256:digest"
 	ref := {"ref": {
 		"resolver": "bundles",
@@ -25,14 +26,14 @@ test_bundle_resolver_in_pipelinerun {
 	lib.assert_equal(refs.task_ref(ref), info)
 }
 
-test_bundle_in_pipeline {
+test_bundle_in_pipeline if {
 	image := "registry.img/test@sha256:digest"
 	ref := {"taskRef": {"bundle": image, "name": "test", "kind": "Task"}}
 	info := {"bundle": image, "kind": "task", "name": "test"}
 	lib.assert_equal(refs.task_ref(ref), info)
 }
 
-test_bundle_resolver_in_pipeline {
+test_bundle_resolver_in_pipeline if {
 	image := "registry.img/test@sha256:digest"
 	ref := {"taskRef": {
 		"resolver": "bundles",
@@ -47,14 +48,14 @@ test_bundle_resolver_in_pipeline {
 	lib.assert_equal(refs.task_ref(ref), info)
 }
 
-test_bundle_in_pipelinerun_with_defaults {
+test_bundle_in_pipelinerun_with_defaults if {
 	image := "registry.img/test@sha256:digest"
 	ref := {"ref": {"bundle": image}}
 	info := {"bundle": image, "kind": "task", "name": ""}
 	lib.assert_equal(refs.task_ref(ref), info)
 }
 
-test_bundle_resolver_in_pipelinerun_with_defaults {
+test_bundle_resolver_in_pipelinerun_with_defaults if {
 	image := "registry.img/test@sha256:digest"
 	ref := {"ref": {
 		"resolver": "bundles",
@@ -65,13 +66,13 @@ test_bundle_resolver_in_pipelinerun_with_defaults {
 	lib.assert_equal(refs.task_ref(ref), info)
 }
 
-test_slsav1_local_ref {
+test_slsav1_local_ref if {
 	ref := {"spec": {"taskRef": {"name": "task-name", "kind": "Task"}}}
 	info := {"kind": "task", "name": "task-name"}
 	lib.assert_equal(refs.task_ref(ref), info)
 }
 
-test_git_resolver_in_slsav1_pipelinerun {
+test_git_resolver_in_slsav1_pipelinerun if {
 	ref := {"spec": {"taskRef": {
 		"name": "git-clone",
 		"kind": "Task",

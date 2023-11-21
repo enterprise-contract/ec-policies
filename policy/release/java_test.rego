@@ -4,8 +4,9 @@ import data.lib
 import data.lib.tkn_test
 import data.lib_test
 import data.policy.release.java
+import future.keywords.if
 
-test_all_good {
+test_all_good if {
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			lib.java_sbom_component_count_result_name,
@@ -22,7 +23,7 @@ test_all_good {
 	lib.assert_empty(java.deny) with input.attestations as attestations
 }
 
-test_has_foreign {
+test_has_foreign if {
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			lib.java_sbom_component_count_result_name,
@@ -43,7 +44,7 @@ test_has_foreign {
 	lib.assert_equal_results(java.deny, expected) with input.attestations as attestations
 }
 
-test_trusted_dependency_source_list_provided {
+test_trusted_dependency_source_list_provided if {
 	expected := {{
 		"code": "java.trusted_dependencies_source_list_provided",
 		"msg": "Missing required allowed_java_component_sources rule data",

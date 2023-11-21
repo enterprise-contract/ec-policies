@@ -4,10 +4,11 @@ import data.lib
 import data.lib.tkn_test
 import data.lib_test
 import data.policy.release.base_image_registries
+import future.keywords.if
 
 mock_bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
 
-test_acceptable_base_images {
+test_acceptable_base_images if {
 	slsav1_task_with_result := tkn_test.slsav1_task_result(
 		"buildah-task-1",
 		[{
@@ -36,7 +37,7 @@ test_acceptable_base_images {
 	lib.assert_empty(base_image_registries.deny) with input.attestations as attestations
 }
 
-test_empty_base_images {
+test_empty_base_images if {
 	slsav1_task_with_result := tkn_test.slsav1_task_result(
 		"buildah-task-1",
 		[{
@@ -58,7 +59,7 @@ test_empty_base_images {
 	lib.assert_empty(base_image_registries.deny) with input.attestations as attestations
 }
 
-test_unacceptable_base_images {
+test_unacceptable_base_images if {
 	slsav1_task_with_result := tkn_test.slsav1_task_result(
 		"buildah-task-1",
 		[{
@@ -97,7 +98,7 @@ test_unacceptable_base_images {
 	lib.assert_equal_results(base_image_registries.deny, expected) with input.attestations as attestations
 }
 
-test_missing_result {
+test_missing_result if {
 	slsav1_task_with_result := tkn_test.slsav1_task_bundle(
 		tkn_test.slsav1_task_result(
 			"buildah-task-1",
@@ -126,7 +127,7 @@ test_missing_result {
 	lib.assert_equal_results(base_image_registries.deny, expected) with input.attestations as attestations
 }
 
-test_allowed_registries_provided {
+test_allowed_registries_provided if {
 	expected := {{
 		"code": "base_image_registries.allowed_registries_provided",
 		"msg": "Missing required allowed_registry_prefixes rule data",

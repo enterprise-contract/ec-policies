@@ -2,6 +2,7 @@ package checks_test
 
 import data.checks
 import data.lib
+import future.keywords.if
 
 opa_inspect_valid := {
 	"namespaces": {
@@ -67,7 +68,7 @@ opa_inspect_valid := {
 	],
 }
 
-test_required_annotations_valid {
+test_required_annotations_valid if {
 	lib.assert_empty(checks.violation) with input as opa_inspect_valid
 }
 
@@ -160,18 +161,18 @@ opa_inspect_duplicate := {
 	],
 }
 
-test_required_annotations_invalid {
+test_required_annotations_invalid if {
 	err = "ERROR: Missing annotation(s) custom.failure_msg, title at policy/release/attestation_task_bundle.rego:13"
 	lib.assert_equal({err}, checks.violation) with input as opa_inspect_missing_annotations
 }
 
-test_missing_dependency_invalid {
+test_missing_dependency_invalid if {
 	# regal ignore:line-length
 	err = `ERROR: Missing dependency rule "data.policy.release.attestation_type.known_attestation_type" at policy/release/attestation_task_bundle.rego:71`
 	lib.assert_equal({err}, checks.violation) with input as opa_inspect_missing_dependency
 }
 
-test_duplicate_rules {
+test_duplicate_rules if {
 	# regal ignore:line-length
 	err1 = `ERROR: Found non-unique code "data.policy.release.attestation_type.known_attestation_type" at policy/release/attestation_type.rego:30`
 

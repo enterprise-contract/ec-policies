@@ -1,5 +1,6 @@
 package lib_test
 
+import future.keywords.if
 import future.keywords.in
 
 import data.lib
@@ -39,13 +40,13 @@ valid_slsav1_att := {"statement": {
 # an attestation with a Task referenced from a Tekton Bundle image
 att_mock_helper(name, result_map, task_name) := att_mock_helper_ref(name, result_map, task_name, "")
 
-_task_ref(task_name, bundle_ref) := r {
+_task_ref(task_name, bundle_ref) := r if {
 	bundle_ref != ""
 	ref_data := {"kind": "Task", "name": task_name, "bundle": bundle_ref}
 	r := {"ref": ref_data}
 }
 
-_task_ref(_, bundle_ref) := r {
+_task_ref(_, bundle_ref) := r if {
 	bundle_ref == ""
 	r := {}
 }
@@ -123,7 +124,7 @@ mock_slsav1_attestation_with_tasks(tasks) := {"statement": {
 	}},
 }}
 
-mock_slsav1_attestation_bundles(bundles) := a {
+mock_slsav1_attestation_bundles(bundles) := a if {
 	tasks := [task |
 		some bundle in bundles
 		task := tkn_test.slsav1_task_bundle("my-task", bundle)
@@ -131,7 +132,7 @@ mock_slsav1_attestation_bundles(bundles) := a {
 	a := mock_slsav1_attestation_with_tasks(tasks)
 }
 
-mock_slsav02_attestation_bundles(bundles) := a {
+mock_slsav02_attestation_bundles(bundles) := a if {
 	tasks := [task |
 		some index, bundle in bundles
 		task := {
@@ -149,7 +150,7 @@ mock_slsav02_attestation_bundles(bundles) := a {
 	}}}
 }
 
-test_tasks_from_pipelinerun {
+test_tasks_from_pipelinerun if {
 	slsa1_task := tkn_test.slsav1_task("buildah")
 	slsa1_att := [json.patch(valid_slsav1_att, [{
 		"op": "replace",
@@ -163,7 +164,7 @@ test_tasks_from_pipelinerun {
 	lib.assert_equal([slsa02_task], lib.tasks_from_pipelinerun) with input.attestations as slsa02_att
 }
 
-test_pr_attestations {
+test_pr_attestations if {
 	lib.assert_equal(
 		[mock_pr_att, mock_pr_att_legacy],
 		lib.pipelinerun_attestations,
@@ -183,7 +184,7 @@ test_pr_attestations {
 }
 
 # regal ignore:rule-length
-test_pipelinerun_slsa_provenance_v1 {
+test_pipelinerun_slsa_provenance_v1 if {
 	provenance_with_pr_spec := {"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
 		"predicate": {"buildDefinition": {
@@ -235,7 +236,7 @@ test_pipelinerun_slsa_provenance_v1 {
 	lib.assert_equal(expected, lib.pipelinerun_slsa_provenance_v1) with input.attestations as attestations
 }
 
-test_tr_attestations {
+test_tr_attestations if {
 	lib.assert_equal([mock_tr_att], lib.taskrun_attestations) with input.attestations as [
 		mock_tr_att,
 		mock_pr_att,
@@ -245,7 +246,7 @@ test_tr_attestations {
 	lib.assert_equal([], lib.taskrun_attestations) with input.attestations as [mock_pr_att, garbage_att]
 }
 
-test_att_mock_helper {
+test_att_mock_helper if {
 	expected := {"statement": {"predicate": {
 		"buildType": lib.tekton_pipeline_run,
 		"buildConfig": {"tasks": [{"name": "mytask", "results": [{
@@ -257,7 +258,7 @@ test_att_mock_helper {
 	lib.assert_equal(expected, att_mock_helper("result-name", {"foo": "bar"}, "mytask"))
 }
 
-test_att_mock_helper_ref {
+test_att_mock_helper_ref if {
 	expected := {"statement": {"predicate": {
 		"buildType": lib.tekton_pipeline_run,
 		"buildConfig": {"tasks": [{
@@ -282,7 +283,7 @@ test_att_mock_helper_ref {
 	))
 }
 
-test_results_from_tests {
+test_results_from_tests if {
 	lib.assert_equal("TEST_OUTPUT", lib.task_test_result_name)
 
 	expected := {
@@ -324,14 +325,14 @@ test_results_from_tests {
 	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att3]
 }
 
-test_task_not_in_pipelinerun {
+test_task_not_in_pipelinerun if {
 	task_name := "bad-task"
 	d := att_mock_task_helper({"name": "my-task", "ref": {"kind": "task"}})
 
 	not lib.task_in_pipelinerun(task_name) with input.attestations as d
 }
 
-test_result_in_task {
+test_result_in_task if {
 	task_name := "my-task"
 	result_name := "IMAGE"
 	d := att_mock_task_helper({
@@ -346,7 +347,7 @@ test_result_in_task {
 	lib.result_in_task(task_name, result_name) with input.attestations as d
 }
 
-test_result_not_in_task {
+test_result_not_in_task if {
 	task_name := "my-task"
 	result_name := "BAD-RESULT"
 	d := att_mock_task_helper({
@@ -361,7 +362,7 @@ test_result_not_in_task {
 	not lib.result_in_task(task_name, result_name) with input.attestations as d
 }
 
-test_task_succeeded {
+test_task_succeeded if {
 	task_name := "my-task"
 	d := att_mock_task_helper({
 		"name": task_name,
@@ -372,7 +373,7 @@ test_task_succeeded {
 	lib.task_succeeded(task_name) with input.attestations as d
 }
 
-test_task_not_succeeded {
+test_task_not_succeeded if {
 	task_name := "my-task"
 	d := att_mock_task_helper({
 		"name": task_name,
@@ -383,7 +384,7 @@ test_task_not_succeeded {
 	not lib.task_succeeded(task_name) with input.attestations as d
 }
 
-test_unmarshall_json {
+test_unmarshall_json if {
 	lib.assert_equal({"a": 1, "b": "c"}, lib.unmarshal("{\"a\":1,\"b\":\"c\"}"))
 	lib.assert_equal("not JSON", lib.unmarshal("not JSON"))
 	lib.assert_equal("", lib.unmarshal(""))

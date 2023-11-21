@@ -2,9 +2,10 @@ package lib.image_test
 
 import data.lib
 import data.lib.image
+import future.keywords.if
 
 # regal ignore:rule-length
-test_parse {
+test_parse if {
 	repository := "registry.com/re/po"
 	repository_with_port := "registry.com:8443/re/po"
 	tag := "latest"
@@ -41,7 +42,7 @@ test_parse {
 	)
 }
 
-test_equal {
+test_equal if {
 	image.equal_ref("registry.com/re/po", "registry.com/re/po")
 	image.equal_ref("registry.com/re/po:tag", "registry.com/re/po:tag")
 	image.equal_ref("registry.com/re/po:tag@digest", "registry.com/re/po:tag@digest")
@@ -61,7 +62,7 @@ test_equal {
 	not image.equal_ref("registry.com/re/po@digest", "registry.com/re/different@digest")
 }
 
-test_str {
+test_str if {
 	lib.assert_equal(
 		"registry.io/repository:tag@digest",
 		image.str({"repo": "registry.io/repository", "tag": "tag", "digest": "digest"}),

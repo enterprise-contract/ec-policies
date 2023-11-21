@@ -1,5 +1,6 @@
 package lib.arrays
 
+import future.keywords.if
 import future.keywords.in
 
 _max_int := 9223372036854775807
@@ -8,17 +9,17 @@ _max_int := 9223372036854775807
 # native comparison in Rego if both left and right are of the same type, or by
 # comparing their numerical values if they're not. Undefined values are always
 # less or equal to any other value.
-le(left, right) := is_le {
+le(left, right) := is_le if {
 	type_name(left) == type_name(right)
 	is_le := left <= right
-} else := is_le {
+} else := is_le if {
 	is_le := to_number(left) <= to_number(right)
 }
 
 # Calculates the rank of an object by given key within an array ary. That is,
 # returns number of elements `o` of ary that have `o[key]` less than `obj[key]`
 # for a given object `obj`.
-rank(obj, key, ary) := count(less_or_eq) {
+rank(obj, key, ary) := count(less_or_eq) if {
 	less_or_eq := [o |
 		some o in ary
 		left := object.get(o, key, _max_int)

@@ -53,13 +53,15 @@ function oci_source() {
 }
 
 function update_ecp_resources() {
-  SOURCE_KEY="${1}" SOURCE_URL="${2}" yq e -i \
-    '(
-        select(.kind == "EnterpriseContractPolicy") |
-        .spec.sources[0][env(SOURCE_KEY)][0] |= env(SOURCE_URL) |
-        .
-      ) // .' \
-    components/enterprise-contract/ecp.yaml
+  for yaml_file in $(find . -type f \( -name "*.yaml" -o -name "*.yml" \)); do
+      SOURCE_KEY="${1}" SOURCE_URL="${2}" yq e -i \
+      '(
+          select(.kind == "EnterpriseContractPolicy") |
+          .spec.sources[0][env(SOURCE_KEY)][0] |= env(SOURCE_URL) |
+          .
+        ) // .' \
+      $yaml_file
+    done
 }
 
 echo 'Resolving bundle image references...'

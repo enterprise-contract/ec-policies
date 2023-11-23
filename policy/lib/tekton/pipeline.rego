@@ -4,6 +4,7 @@ import future.keywords.contains
 import future.keywords.if
 import future.keywords.in
 
+import data.lib
 import data.lib.time as ectime
 
 pipeline_label := "pipelines.openshift.io/runtime"
@@ -33,12 +34,16 @@ pipeline_label_selector(pipeline) := value if {
 	not is_fbc # given that the build task is shared between fbc and docker builds we can't rely on the task's label
 
 	# Labels of the build Task from the SLSA Provenance v1.0 of a PipelineRun
-	value := build_task(pipeline).metadata.labels[task_label]
+	values := [l | some build_task in build_tasks(pipeline); l := build_task.metadata.labels[task_label]]
+	count(lib.to_set(values)) == 1
+	value := values[0]
 } else := value if {
 	not is_fbc # given that the build task is shared between fbc and docker builds we can't rely on the task's label
 
 	# Labels of the build Task from the SLSA Provenance v0.2 of a PipelineRun
-	value := build_task(pipeline).invocation.environment.labels[task_label]
+	values := [l | some build_task in build_tasks(pipeline); l := build_task.invocation.environment.labels[task_label]]
+	count(lib.to_set(values)) == 1
+	value := values[0]
 } else := value if {
 	# PipelineRun labels found in the SLSA Provenance v1.0
 	value := pipeline.statement.predicate.buildDefinition.internalParameters.labels[pipeline_label]

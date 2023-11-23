@@ -303,7 +303,7 @@ test_tasks_from_pipeline_with_spam if {
 
 test_build_task if {
 	expected := _good_build_task
-	lib.assert_equal(expected, tkn.build_task(_good_attestation))
+	lib.assert_equal([expected], tkn.build_tasks(_good_attestation))
 }
 
 test_build_task_not_found if {
@@ -312,17 +312,17 @@ test_build_task_not_found if {
 		"path": "/statement/predicate/buildConfig/tasks/0/results/0/name",
 		"value": "IMAGE_URL_SKIP",
 	}])
-	not tkn.build_task(missing_image_url)
+	count(tkn.build_tasks(missing_image_url)) == 0
 
 	missing_image_digest := json.patch(_good_attestation, [{
 		"op": "add",
 		"path": "/statement/predicate/buildConfig/tasks/0/results/1/name",
 		"value": "IMAGE_DIGEST_SKIP",
 	}])
-	not tkn.build_task(missing_image_digest)
+	count(tkn.build_tasks(missing_image_digest)) == 0
 
 	missing_results := json.remove(_good_attestation, ["/statement/predicate/buildConfig/tasks/0/results"])
-	not tkn.build_task(missing_results)
+	count(tkn.build_tasks(missing_results)) == 0
 }
 
 test_git_clone_task if {

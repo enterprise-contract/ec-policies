@@ -31,14 +31,12 @@ import data.lib.tkn
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	hermetic_build != "true"
+	_hermetic_build != {"true"}
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
-default hermetic_build := "false"
-
-hermetic_build := value if {
+_hermetic_build contains value if {
 	some attestation in lib.pipelinerun_attestations
-	task := tkn.build_task(attestation)
+	some task in tkn.build_tasks(attestation)
 	value := tkn.task_param(task, "HERMETIC")
 }

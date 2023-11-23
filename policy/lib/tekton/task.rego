@@ -152,7 +152,7 @@ task_step_image_ref(step) := step.environment.image
 task_step_image_ref(step) := step.imageID
 
 # build_task returns the build task found in the attestation
-build_task(attestation) := task if {
+build_tasks(attestation) := [task |
 	some task in tasks(attestation)
 
 	image_url := task_result(task, "IMAGE_URL")
@@ -160,7 +160,7 @@ build_task(attestation) := task if {
 
 	image_digest := task_result(task, "IMAGE_DIGEST")
 	count(trim_space(image_digest)) > 0
-}
+]
 
 git_clone_task(attestation) := task if {
 	some task in tasks(attestation)

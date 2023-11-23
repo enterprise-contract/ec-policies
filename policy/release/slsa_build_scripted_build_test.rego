@@ -187,8 +187,7 @@ test_subject_mismatch if {
 
 	expected := {{
 		"code": "slsa_build_scripted_build.subject_build_task_matches",
-		# regal ignore:line-length
-		"msg": `The attestation subject, "some.image/foo:bar@sha256:123", does not match the build task image, "some.image/foo:bar@sha256:anotherdigest"`,
+		"msg": `The attestation subject, "some.image/foo:bar@sha256:123", does not match any of the images built`,
 	}}
 
 	lib.assert_equal_results(
@@ -254,7 +253,7 @@ test_subject_with_tag_and_digest_mismatch_digest_fails if {
 	expected := {{
 		"code": "slsa_build_scripted_build.subject_build_task_matches",
 		# regal ignore:line-length
-		"msg": `The attestation subject, "registry.io/repository/image@sha256:unexpected", does not match the build task image, "registry.io/repository/image:tag@sha256:digest"`,
+		"msg": `The attestation subject, "registry.io/repository/image@sha256:unexpected", does not match any of the images built`,
 	}}
 
 	lib.assert_equal_results(expected, slsa_build_scripted_build.deny) with input.attestations as [{"statement": {

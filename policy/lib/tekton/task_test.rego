@@ -327,7 +327,7 @@ test_build_task_not_found if {
 
 test_git_clone_task if {
 	expected := _good_git_clone_task
-	lib.assert_equal(expected, tkn.git_clone_task(_good_attestation))
+	lib.assert_equal([expected], tkn.git_clone_tasks(_good_attestation))
 }
 
 test_git_clone_task_not_found if {
@@ -336,17 +336,17 @@ test_git_clone_task_not_found if {
 		"path": "/statement/predicate/buildConfig/tasks/1/results/0/name",
 		"value": "you-argh-el",
 	}])
-	not tkn.git_clone_task(missing_url)
+	count(tkn.git_clone_tasks(missing_url)) == 0
 
 	missing_commit := json.patch(_good_attestation, [{
 		"op": "add",
 		"path": "/statement/predicate/buildConfig/tasks/1/results/1/name",
 		"value": "bachelor",
 	}])
-	not tkn.git_clone_task(missing_commit)
+	count(tkn.git_clone_tasks(missing_commit)) == 0
 
 	missing_results := json.remove(_good_attestation, ["/statement/predicate/buildConfig/tasks/1/results"])
-	not tkn.git_clone_task(missing_results)
+	count(tkn.git_clone_tasks(missing_results)) == 0
 }
 
 test_task_data_bundle_ref if {

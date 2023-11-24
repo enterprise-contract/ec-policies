@@ -154,6 +154,46 @@ test_commit_and_url_mismatch if {
 	lib.assert_equal_results(expected, provenance_materials.deny) with input.attestations as [_mock_attestation(tasks)]
 }
 
+test_provenance_many_git_clone_tasks if {
+	task := {
+		"results": [
+			{"name": "url", "value": _git_url},
+			{"name": "commit", "value": _git_commit},
+		],
+		"ref": {"bundle": _bundle},
+		"steps": [{"entrypoint": "/bin/bash"}],
+	}
+
+	task1 := json.patch(task, [{
+		"op": "add",
+		"path": "name",
+		"value": "git-clone-1",
+	}])
+
+	task2 := json.patch(task, [{
+		"op": "add",
+		"path": "name",
+		"value": "git-clone-2",
+	}])
+
+	attestation := _mock_attestation([task1, task2])
+
+	# all good
+	lib.assert_empty(provenance_materials.deny) with input.attestations as [attestation]
+
+	# one task's cloned digest doesn't match
+	expected := {{
+		"code": "provenance_materials.git_clone_source_matches_provenance",
+		# regal ignore:line-length
+		"msg": `Entry in materials for the git repo "git+https://gitforge/repo.git" and commit "big-bada-boom" not found`,
+	}}
+	lib.assert_equal_results(expected, provenance_materials.deny) with input.attestations as [json.patch(attestation, [{
+		"op": "replace",
+		"path": "/statement/predicate/buildConfig/tasks/0/results/1/value",
+		"value": "big-bada-boom",
+	}])]
+}
+
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
 
 _git_url := "https://gitforge/repo"

@@ -91,6 +91,73 @@ test_empty_task_steps if {
 	) with input.attestations as [_mock_attestation(tasks)]
 }
 
+test_build_script_used_many_build_tasks if {
+	tasks := [
+		{
+			"name": "build-1",
+			"results": [
+				{"name": "IMAGE_URL", "value": _image_url},
+				{"name": "IMAGE_DIGEST", "value": _image_digest},
+			],
+			"ref": {"bundle": mock_bundle},
+			"steps": [{"entrypoint": "/bin/bash"}],
+		},
+		{
+			"name": "build-2",
+			"results": [
+				{"name": "IMAGE_URL", "value": _image_url},
+				{"name": "IMAGE_DIGEST", "value": _image_digest},
+			],
+			"ref": {"bundle": mock_bundle},
+			"steps": [{"entrypoint": "/bin/bash"}],
+		},
+	]
+
+	# all good
+	lib.assert_empty(slsa_build_scripted_build.deny) with input.attestations as [_mock_attestation(tasks)]
+
+	# one of the build tasks doesn't have any steps
+	expected_scripted := {{
+		"code": "slsa_build_scripted_build.build_script_used",
+		"msg": "Build task \"build-2\" does not contain any steps",
+	}}
+	lib.assert_equal_results(
+		expected_scripted,
+		slsa_build_scripted_build.deny,
+	) with input.attestations as [_mock_attestation(json.patch(tasks, [{
+		"op": "remove",
+		"path": "1/steps",
+	}]))]
+
+	# one of the build tasks produces the expected results, the other one doesn't, this is ok
+	lib.assert_empty(slsa_build_scripted_build.deny) with input.attestations as [_mock_attestation(json.patch(tasks, [{
+		"op": "replace",
+		"path": "1/results/0/value",
+		"value": "something-else",
+	}]))]
+
+	# none of the build tasks produced the expected results
+	expected_results := {{
+		"code": "slsa_build_scripted_build.subject_build_task_matches",
+		"msg": `The attestation subject, "some.image/foo:bar@sha256:123", does not match any of the images built`,
+	}}
+	lib.assert_equal_results(
+		expected_results,
+		slsa_build_scripted_build.deny,
+	) with input.attestations as [_mock_attestation(json.patch(tasks, [
+		{
+			"op": "replace",
+			"path": "0/results/0/value",
+			"value": "something-else",
+		},
+		{
+			"op": "replace",
+			"path": "1/results/0/value",
+			"value": "something-else",
+		},
+	]))]
+}
+
 test_results_missing_value_url if {
 	tasks := [{
 		"results": [

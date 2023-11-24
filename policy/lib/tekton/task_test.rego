@@ -325,6 +325,40 @@ test_build_task_not_found if {
 	count(tkn.build_tasks(missing_results)) == 0
 }
 
+test_multiple_build_tasks if {
+	task1 := json.patch(_good_build_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "buildah-1",
+	}])
+
+	task2 := json.patch(_good_build_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "buildah-2",
+	}])
+
+	task3 := json.patch(_good_build_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "buildah-3",
+	}])
+
+	attestation3 := {"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": [task1, task2, task3]},
+	}}}
+
+	count(tkn.build_tasks(attestation3)) == 3
+
+	attestation2 := {"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": [task1, _good_git_clone_task, task3]},
+	}}}
+
+	count(tkn.build_tasks(attestation2)) == 2
+}
+
 test_git_clone_task if {
 	expected := _good_git_clone_task
 	lib.assert_equal([expected], tkn.git_clone_tasks(_good_attestation))
@@ -347,6 +381,40 @@ test_git_clone_task_not_found if {
 
 	missing_results := json.remove(_good_attestation, ["/statement/predicate/buildConfig/tasks/1/results"])
 	count(tkn.git_clone_tasks(missing_results)) == 0
+}
+
+test_multiple_git_clone_tasks if {
+	task1 := json.patch(_good_git_clone_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "git-clone-1",
+	}])
+
+	task2 := json.patch(_good_git_clone_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "git-clone-2",
+	}])
+
+	task3 := json.patch(_good_git_clone_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "git-clone-3",
+	}])
+
+	attestation3 := {"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": [task1, task2, task3]},
+	}}}
+
+	count(tkn.git_clone_tasks(attestation3)) == 3
+
+	attestation2 := {"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": [task1, _good_build_task, task3]},
+	}}}
+
+	count(tkn.git_clone_tasks(attestation2)) == 2
 }
 
 test_task_data_bundle_ref if {

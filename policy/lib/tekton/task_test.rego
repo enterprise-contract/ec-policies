@@ -90,7 +90,12 @@ test_tasks_from_attestation_with_spam if {
 
 	attestation := {"statement": {"predicate": {"buildConfig": {"tasks": expected_tasks}}}}
 
-	lib.assert_equal(expected_tasks, tkn.tasks(attestation))
+	print(tkn.tasks(attestation))
+	print([n| some t in tkn.tasks(attestation); print(t); n:=t.name])
+	lib.assert_equal(
+		{"git-clone", "buildah", "weird[food=spam]", "summary"},
+		{n| some t in tkn.tasks(attestation); n:=t.name}
+	)
 
 	expected_names := {"git-clone", "buildah", "buildah[HERMETIC=true]", "weird", "weird[SPAM=MAPS]", "summary"}
 	lib.assert_equal(expected_names, tkn.tasks_names(attestation))

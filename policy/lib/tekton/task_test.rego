@@ -303,7 +303,7 @@ test_tasks_from_pipeline_with_spam if {
 
 test_build_task if {
 	expected := _good_build_task
-	lib.assert_equal(expected, tkn.build_task(_good_attestation))
+	lib.assert_equal([expected], tkn.build_tasks(_good_attestation))
 }
 
 test_build_task_not_found if {
@@ -312,22 +312,56 @@ test_build_task_not_found if {
 		"path": "/statement/predicate/buildConfig/tasks/0/results/0/name",
 		"value": "IMAGE_URL_SKIP",
 	}])
-	not tkn.build_task(missing_image_url)
+	count(tkn.build_tasks(missing_image_url)) == 0
 
 	missing_image_digest := json.patch(_good_attestation, [{
 		"op": "add",
 		"path": "/statement/predicate/buildConfig/tasks/0/results/1/name",
 		"value": "IMAGE_DIGEST_SKIP",
 	}])
-	not tkn.build_task(missing_image_digest)
+	count(tkn.build_tasks(missing_image_digest)) == 0
 
 	missing_results := json.remove(_good_attestation, ["/statement/predicate/buildConfig/tasks/0/results"])
-	not tkn.build_task(missing_results)
+	count(tkn.build_tasks(missing_results)) == 0
+}
+
+test_multiple_build_tasks if {
+	task1 := json.patch(_good_build_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "buildah-1",
+	}])
+
+	task2 := json.patch(_good_build_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "buildah-2",
+	}])
+
+	task3 := json.patch(_good_build_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "buildah-3",
+	}])
+
+	attestation3 := {"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": [task1, task2, task3]},
+	}}}
+
+	count(tkn.build_tasks(attestation3)) == 3
+
+	attestation2 := {"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": [task1, _good_git_clone_task, task3]},
+	}}}
+
+	count(tkn.build_tasks(attestation2)) == 2
 }
 
 test_git_clone_task if {
 	expected := _good_git_clone_task
-	lib.assert_equal(expected, tkn.git_clone_task(_good_attestation))
+	lib.assert_equal([expected], tkn.git_clone_tasks(_good_attestation))
 }
 
 test_git_clone_task_not_found if {
@@ -336,17 +370,51 @@ test_git_clone_task_not_found if {
 		"path": "/statement/predicate/buildConfig/tasks/1/results/0/name",
 		"value": "you-argh-el",
 	}])
-	not tkn.git_clone_task(missing_url)
+	count(tkn.git_clone_tasks(missing_url)) == 0
 
 	missing_commit := json.patch(_good_attestation, [{
 		"op": "add",
 		"path": "/statement/predicate/buildConfig/tasks/1/results/1/name",
 		"value": "bachelor",
 	}])
-	not tkn.git_clone_task(missing_commit)
+	count(tkn.git_clone_tasks(missing_commit)) == 0
 
 	missing_results := json.remove(_good_attestation, ["/statement/predicate/buildConfig/tasks/1/results"])
-	not tkn.git_clone_task(missing_results)
+	count(tkn.git_clone_tasks(missing_results)) == 0
+}
+
+test_multiple_git_clone_tasks if {
+	task1 := json.patch(_good_git_clone_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "git-clone-1",
+	}])
+
+	task2 := json.patch(_good_git_clone_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "git-clone-2",
+	}])
+
+	task3 := json.patch(_good_git_clone_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "git-clone-3",
+	}])
+
+	attestation3 := {"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": [task1, task2, task3]},
+	}}}
+
+	count(tkn.git_clone_tasks(attestation3)) == 3
+
+	attestation2 := {"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": [task1, _good_build_task, task3]},
+	}}}
+
+	count(tkn.git_clone_tasks(attestation2)) == 2
 }
 
 test_task_data_bundle_ref if {

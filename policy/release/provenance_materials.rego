@@ -31,7 +31,7 @@ import data.lib.tkn
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	not tkn.git_clone_task(attestation)
+	count(tkn.git_clone_tasks(attestation)) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -56,9 +56,9 @@ deny contains result if {
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
 
-	t := tkn.git_clone_task(attestation)
-	url := _normalize_git_url(tkn.task_result(t, "url"))
-	commit := tkn.task_result(t, "commit")
+	some task in tkn.git_clone_tasks(attestation)
+	url := _normalize_git_url(tkn.task_result(task, "url"))
+	commit := tkn.task_result(task, "commit")
 
 	materials := [m |
 		some m in attestation.statement.predicate.materials

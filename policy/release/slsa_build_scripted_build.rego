@@ -40,7 +40,8 @@ import data.lib.tkn
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	build_task := tkn.build_task(attestation)
+	build_tasks := tkn.build_tasks(attestation)
+	some build_task in build_tasks
 	count(task_steps(build_task)) == 0
 	result := lib.result_helper(rego.metadata.chain(), [build_task.name])
 }
@@ -64,7 +65,7 @@ deny contains result if {
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	not tkn.build_task(attestation)
+	count(tkn.build_tasks(attestation)) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -75,7 +76,7 @@ deny contains result if {
 #   IMAGE_URL values from the build task.
 # custom:
 #   short_name: subject_build_task_matches
-#   failure_msg: The attestation subject, %q, does not match the build task image, %q
+#   failure_msg: The attestation subject, %q, does not match any of the images built
 #   solution: >-
 #     Make sure the subject in the attestation matches the 'IMAGE_URL' and 'IMAGE_DIGEST'
 #     results from the build task. The format for the subject should be 'IMAGE_URL@IMAGE_DIGEST'.
@@ -87,19 +88,28 @@ deny contains result if {
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	build_task := tkn.build_task(attestation)
-
 	some subject in attestation.statement.subject
 
+	build_tasks := tkn.build_tasks(attestation)
+
+	count(build_tasks) > 0
+
 	subject_image_ref := concat("@", [subject.name, subject_digest(subject)])
-	result_image_ref := concat("@", [
-		tkn.task_result(build_task, "IMAGE_URL"),
-		tkn.task_result(build_task, "IMAGE_DIGEST"),
-	])
 
-	not image.equal_ref(subject_image_ref, result_image_ref)
+	matched := [subject_image_ref |
+		some build_task in build_tasks
 
-	result := lib.result_helper(rego.metadata.chain(), [subject_image_ref, result_image_ref])
+		result_image_ref := concat("@", [
+			tkn.task_result(build_task, "IMAGE_URL"),
+			tkn.task_result(build_task, "IMAGE_DIGEST"),
+		])
+
+		image.equal_ref(subject_image_ref, result_image_ref)
+	]
+
+	count(matched) == 0
+
+	result := lib.result_helper(rego.metadata.chain(), [subject_image_ref])
 }
 
 task_steps(task) := steps if {

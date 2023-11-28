@@ -152,7 +152,7 @@ task_step_image_ref(step) := step.environment.image
 task_step_image_ref(step) := step.imageID
 
 # build_task returns the build task found in the attestation
-build_task(attestation) := task if {
+build_tasks(attestation) := [task |
 	some task in tasks(attestation)
 
 	image_url := task_result(task, "IMAGE_URL")
@@ -160,9 +160,9 @@ build_task(attestation) := task if {
 
 	image_digest := task_result(task, "IMAGE_DIGEST")
 	count(trim_space(image_digest)) > 0
-}
+]
 
-git_clone_task(attestation) := task if {
+git_clone_tasks(attestation) := [task |
 	some task in tasks(attestation)
 
 	commit := task_result(task, "commit")
@@ -170,7 +170,7 @@ git_clone_task(attestation) := task if {
 
 	url := task_result(task, "url")
 	count(trim_space(url)) > 0
-}
+]
 
 # task_data returns the data relating to the task. If the task is
 # referenced from a bundle, the "bundle" attribute is included.

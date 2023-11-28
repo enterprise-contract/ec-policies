@@ -54,13 +54,16 @@ function oci_source() {
 
 function update_ecp_resources() {
   for yaml_file in $(find . -type f \( -name "*.yaml" -o -name "*.yml" \)); do
+      # First, filter out irrelevant files. We could technically do this during the in-place update
+      # below, but if doing so, yq reformats the file even if there are no changes. This causes
+      # unnecessary noise.
+      yq e -e \
+          '(select(has("kind")) | select(.kind == "EnterpriseContractPolicy"))' \
+          $yaml_file || continue
+      # Finally, update the source references.
       SOURCE_KEY="${1}" SOURCE_URL="${2}" yq e -i \
-      '(
-          select(.kind == "EnterpriseContractPolicy") |
-          .spec.sources[0][env(SOURCE_KEY)][0] |= env(SOURCE_URL) |
-          .
-        ) // .' \
-      $yaml_file
+          '.spec.sources[0][env(SOURCE_KEY)][0] |= env(SOURCE_URL) | .' \
+          $yaml_file
     done
 }
 

@@ -12,6 +12,7 @@ import future.keywords.if
 import future.keywords.in
 
 import data.lib
+import data.lib.sbom
 
 # METADATA
 # title: Found
@@ -26,7 +27,7 @@ import data.lib
 #   - redhat
 #
 deny contains result if {
-	count(_sboms) == 0
+	count(sbom.cyclonedx_sboms) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -44,8 +45,8 @@ deny contains result if {
 #   - redhat
 #
 deny contains result if {
-	some index, sbom in _sboms
-	some violation in json.match_schema(sbom, schema_1_5)[1]
+	some index, s in sbom.cyclonedx_sboms
+	some violation in json.match_schema(s, schema_1_5)[1]
 	error := violation.error
 	result := lib.result_helper(rego.metadata.chain(), [index, error])
 }
@@ -63,23 +64,7 @@ deny contains result if {
 #   - redhat
 #
 deny contains result if {
-	some sbom in _sboms
-	count(object.get(sbom, "components", [])) == 0
+	some s in sbom.cyclonedx_sboms
+	count(object.get(s, "components", [])) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
-
-_sboms := array.concat(_sboms_from_image, _sboms_from_attestations)
-
-_sboms_from_image := [sbom |
-	some path in ["root/buildinfo/content_manifests/sbom-cyclonedx.json"]
-	sbom := input.image.files[path]
-]
-
-_sboms_from_attestations := [sbom |
-	some att in input.attestations
-	statement := att.statement
-
-	# https://cyclonedx.org/specification/overview/#recognized-predicate-type
-	statement.predicateType == "https://cyclonedx.org/bom"
-	sbom := statement.predicate
-]

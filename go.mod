@@ -1,9 +1,9 @@
 module github.com/enterprise-contract/ec-policies
 
-go 1.21.2
+go 1.21.4
 
 require (
-	github.com/enterprise-contract/ec-cli v0.0.0-20231110093630-4a1afa30abc7
+	github.com/enterprise-contract/ec-cli v0.0.0-20231127194641-1b0ff5216773
 	github.com/open-policy-agent/conftest v0.46.0
 	github.com/styrainc/regal v0.13.0
 	github.com/tektoncd/cli v0.33.0
@@ -276,6 +276,7 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc5 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
+	github.com/package-url/packageurl-go v0.1.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/peterh/liner v1.2.2 // indirect
@@ -399,7 +400,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/api v0.28.3 // indirect
 	k8s.io/apiextensions-apiserver v0.28.3 // indirect
-	k8s.io/apimachinery v0.28.3 // indirect
+	k8s.io/apimachinery v0.28.4 // indirect
 	k8s.io/cli-runtime v0.26.10 // indirect
 	k8s.io/client-go v0.28.3 // indirect
 	k8s.io/klog/v2 v2.110.1 // indirect

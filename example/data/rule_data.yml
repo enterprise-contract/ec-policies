@@ -74,3 +74,21 @@ rule_data:
   fbc_disallowed_inherited_labels:
   - name: description
   - name: summary
+
+  disallowed_packages:
+  # Any version of the package greater than or equal to v50.28.3 will not be allowed.
+  - purl: pkg:golang/k8s.io/client-go
+    # "semverv" is a made up name to describe golang's variation of the semver standard. The format
+    # "semver" is also supported. Both behave exactly the same.
+    format: semverv
+    min: v50.28.3
+  # Any version of the package lower than or equal to v50.28.3 will not be allowed.
+  - purl: pkg:golang/k8s.io/client-go
+    format: semverv
+    max: v50.28.3
+  # Any version of the package greater than or equal to v50.20.2, AND lower than or equal to
+  # v50.28.3 will be not allowed.
+  - purl: pkg:golang/k8s.io/client-go
+    format: semverv
+    min: v50.20.2
+    max: v50.28.3

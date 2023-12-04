@@ -71,7 +71,7 @@ test_bundle_unpinned if {
 	lib.assert_equal_results(attestation_task_bundle.warn, {{
 		"code": "attestation_task_bundle.task_ref_bundles_pinned",
 		"msg": expected_msg,
-	}}) with input.attestations as attestations
+	}}) with input.attestations as attestations with data["task-bundles"] as []
 }
 
 test_bundle_reference_valid if {
@@ -166,20 +166,16 @@ test_acceptable_bundle_out_of_date_past if {
 		lib_test.mock_slsav1_attestation_bundles(images),
 	]
 
-	lib.assert_equal_results(attestation_task_bundle.warn, {
-		{
-			"code": "attestation_task_bundle.task_ref_bundles_current",
-			"msg": "Pipeline task 'my-task' uses an out of date task bundle 'reg.com/repo@sha256:bcd'",
-		},
-		{
-			"code": "attestation_task_bundle.task_ref_bundles_current",
-			"msg": "Pipeline task 'my-task' uses an out of date task bundle 'reg.com/repo@sha256:cde'",
-		},
-	}) with input.attestations as attestations
+	lib.assert_equal_results(attestation_task_bundle.warn, {{
+		"code": "attestation_task_bundle.task_ref_bundles_current",
+		"msg": "Pipeline task 'my-task' uses an out of date task bundle 'reg.com/repo@sha256:bcd'",
+	}}) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2022-03-12T00:00:00Z")
 
 	lib.assert_empty(attestation_task_bundle.deny) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2022-03-12T00:00:00Z")
 }
 
 # Deny bundles that are no longer active.
@@ -207,29 +203,128 @@ test_acceptable_bundles_provided if {
 	lib.assert_equal_results(expected, attestation_task_bundle.deny) with data["task-bundles"] as []
 }
 
+test_warn_cases if {
+	bundles := {"q.io/r//task-buildah": [
+		{
+			"digest": "sha256:c37e54",
+			"effective_on": "2023-11-06T00:00:00Z",
+			"tag": "0.1",
+		},
+		{
+			"digest": "sha256:97f216",
+			"effective_on": "2023-10-25T00:00:00Z",
+			"tag": "0.1",
+		},
+		{
+			"digest": "sha256:487b82",
+			"effective_on": "2023-10-21T00:00:00Z",
+			"tag": "0.1",
+		},
+	]}
+
+	attestation_c37e54 := mock_data({"ref": {
+		"name": "buildah",
+		"bundle": "q.io/r//task-buildah@sha256:c37e54",
+	}})
+
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as [attestation_c37e54]
+		with data["task-bundles"] as bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-11-07T00:00:00Z")
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as [attestation_c37e54]
+		with data["task-bundles"] as bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-11-06T00:00:00Z")
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as [attestation_c37e54]
+		with data["task-bundles"] as bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-11-05T00:00:00Z")
+
+	attestation_97f216 := mock_data({"ref": {
+		"name": "buildah",
+		"bundle": "q.io/r//task-buildah@sha256:97f216",
+	}})
+
+	expected_97f216 := {{
+		"code": "attestation_task_bundle.task_ref_bundles_current",
+		"msg": "Pipeline task 'buildah' uses an out of date task bundle 'q.io/r//task-buildah@sha256:97f216'",
+	}}
+
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as [attestation_97f216]
+		with data["task-bundles"] as bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-11-07T00:00:00Z")
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as [attestation_97f216]
+		with data["task-bundles"] as bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-11-06T00:00:00Z")
+	lib.assert_equal_results(
+		expected_97f216,
+		attestation_task_bundle.warn,
+	) with input.attestations as [attestation_97f216]
+		with data["task-bundles"] as bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-11-05T00:00:00Z")
+	lib.assert_equal_results(
+		expected_97f216,
+		attestation_task_bundle.warn,
+	) with input.attestations as [attestation_97f216]
+		with data["task-bundles"] as bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-10-25T00:00:00Z")
+
+	attestation_487b82 := mock_data({"ref": {
+		"name": "buildah",
+		"bundle": "q.io/r//task-buildah@sha256:487b82",
+	}})
+
+	expected_487b82 := {{
+		"code": "attestation_task_bundle.task_ref_bundles_current",
+		"msg": "Pipeline task 'buildah' uses an out of date task bundle 'q.io/r//task-buildah@sha256:487b82'",
+	}}
+
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as [attestation_487b82]
+		with data["task-bundles"] as bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-11-07T00:00:00Z")
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as [attestation_487b82]
+		with data["task-bundles"] as bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-11-06T00:00:00Z")
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as [attestation_487b82]
+		with data["task-bundles"] as bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-11-05T00:00:00Z")
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as [attestation_487b82]
+		with data["task-bundles"] as bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-10-25T00:00:00Z")
+	lib.assert_equal_results(
+		expected_487b82,
+		attestation_task_bundle.warn,
+	) with input.attestations as [attestation_487b82]
+		with data["task-bundles"] as bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-10-21T00:00:00Z")
+	lib.assert_equal_results(
+		expected_487b82,
+		attestation_task_bundle.warn,
+	) with input.attestations as [attestation_487b82]
+		with data["task-bundles"] as bundles
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-10-22T00:00:00Z")
+}
+
 task_bundles := {"reg.com/repo": [
 	{
-		# Latest bundle, allowed
+		# Latest v2
 		"digest": "sha256:abc",
-		"tag": "",
-		"effective_on": "2262-04-11T00:00:00Z",
+		"tag": "v2",
+		"effective_on": "2022-04-11T00:00:00Z",
 	},
 	{
-		# Recent bundle effective in the future, allowed but attestation_task_bundle.warn to upgrade
+		# Older v2
 		"digest": "sha256:bcd",
-		"tag": "",
-		"effective_on": "2262-03-11T00:00:00Z",
+		"tag": "v2",
+		"effective_on": "2022-03-11T00:00:00Z",
 	},
 	{
-		# Recent bundle effective in the past, allowed but attestation_task_bundle.warn to upgrade
+		# Latest v1
 		"digest": "sha256:cde",
-		"tag": "",
+		"tag": "v1",
 		"effective_on": "2022-02-01T00:00:00Z",
 	},
 	{
-		# Old bundle, denied
+		# Older v1
 		"digest": "sha256:def",
-		"tag": "",
+		"tag": "v1",
 		"effective_on": "2021-01-01T00:00:00Z",
 	},
 ]}

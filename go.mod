@@ -7,6 +7,7 @@ require (
 	github.com/open-policy-agent/conftest v0.47.0
 	github.com/styrainc/regal v0.13.0
 	github.com/tektoncd/cli v0.33.0
+	oras.land/oras v1.1.0
 )
 
 // address CVE-2023-2253 https://github.com/advisories/GHSA-hqxw-f8mx-cpmw
@@ -276,6 +277,7 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc5 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
+	github.com/oras-project/oras-credentials-go v0.2.0 // indirect
 	github.com/package-url/packageurl-go v0.1.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.0 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect

@@ -24,8 +24,9 @@ set -o nounset
 
 REPO_PREFIX="${REPO_PREFIX-quay.io/enterprise-contract/}"
 ROOT_DIR=$( git rev-parse --show-toplevel )
-BUNDLES="release pipeline task build_task"
-CONFTEST="go run github.com/open-policy-agent/conftest"
+BUNDLES="beta release pipeline task build_task"
+OPA="go run github.com/enterprise-contract/ec-cli opa"
+ORAS="go run oras.land/oras/cmd/oras"
 
 # For example:
 #   ENSURE_UNIQUE=1 DRY_RUN=1 hack/update-bundles.sh
@@ -49,10 +50,6 @@ function exclusions() {
 
 function repo_name() {
   echo "ec-$1-policy"
-}
-
-function conftest_push() {
-  $DRY_RUN_ECHO ${CONFTEST} push --policy policy $2
 }
 
 function ensure_unique_file() {
@@ -119,16 +116,13 @@ for b in $BUNDLES; do
 
     # go.mod/go.sum files needs to be copied for go run to function
     cp "${ROOT_DIR}/go.mod" "${ROOT_DIR}/go.sum" "$tmp_dir"
-    # Now push
-    conftest_push $b "$push_repo:$tag"
 
-    # Add OCI annotations to the bundle image
-    tmp_oci_dir="$(mktemp -d --tmpdir)"
-    tmp_oci_dirs+=("${tmp_oci_dir}")
-    skopeo copy docker://"$push_repo:$tag" dir:"${tmp_oci_dir}" ${skopeo_cp_args}
-    manifest="$(jq -c '. += { "annotations": { "org.opencontainers.image.revision": "'"${last_update_sha}"'" } }' "${tmp_oci_dir}/manifest.json")"
-    echo "${manifest}" > "${tmp_oci_dir}/manifest.json"
-    $DRY_RUN_ECHO skopeo copy dir:"${tmp_oci_dir}" docker://"$push_repo:$tag" ${skopeo_cp_args}
+    # Verify the selected sources can be compiled as one unit, e.g. "policy/lib" is included
+    ${OPA} build ${src_dirs} --output /dev/null
+
+    # Now push
+    ${ORAS} push "$push_repo:$tag" ${src_dirs} \
+      --annotation "org.opencontainers.image.revision=${last_update_sha}"
 
     # Set the 'latest' tag
     $DRY_RUN_ECHO skopeo copy --quiet docker://$push_repo:$tag docker://$push_repo:latest ${skopeo_cp_args}

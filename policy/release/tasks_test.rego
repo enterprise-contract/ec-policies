@@ -472,6 +472,8 @@ _slsav1_attestations_with_tasks_no_label(names, add_tasks) := attestations if {
 
 _task(name) := task if {
 	parts := regex.split(`[\[\]=]`, name)
+
+	# regal ignore:redundant-existence-check
 	parts[1]
 	task_name := parts[0]
 	pipeline_task_name := sprintf("%s-p", [task_name])

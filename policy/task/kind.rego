@@ -23,7 +23,6 @@ expected_kind := "Task"
 #   failure_msg: Unexpected kind '%s' for task definition
 #
 deny contains result if {
-	input.kind
 	expected_kind != input.kind
 	result := lib.result_helper(rego.metadata.chain(), [input.kind])
 }

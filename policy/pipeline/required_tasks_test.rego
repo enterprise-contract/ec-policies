@@ -328,6 +328,8 @@ _pipeline_with_tasks(names, finally_names, add_tasks) := pipeline if {
 
 _task(name) := task if {
 	parts := regex.split(`[\[\]=]`, name)
+
+	# regal ignore:redundant-existence-check
 	parts[1]
 	task_name := parts[0]
 

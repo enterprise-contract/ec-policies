@@ -175,7 +175,7 @@ deny contains result if {
 #   - redhat
 #   depends_on:
 #   - test.test_data_found
-#   effective_on: 2023-12-08T00:00:00Z
+#   effective_on: 2024-01-14T00:00:00Z
 #
 deny contains result if {
 	some test in resulted_in(lib.rule_data("skipped_tests_results"))

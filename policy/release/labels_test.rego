@@ -131,6 +131,102 @@ test_fbc_disallowed_inherited_image_labels if {
 		with data.rule_data as _rule_data
 }
 
+test_rule_data_provided if {
+	d := {
+		"required_labels": [
+			# Wrong type
+			1,
+			# Duplicated items
+			{"name": "name", "description": "label-description"},
+			{"name": "name", "description": "label-description"},
+			# Additional properties
+			{"name": "name", "description": "label-description", "foo": "bar"},
+		],
+		"fbc_required_labels": [1],
+		"optional_labels": [1],
+		"fbc_optional_labels": [1],
+		"disallowed_inherited_labels": [
+			# Wrong type
+			1,
+			# Duplicated items
+			{"name": "name"},
+			{"name": "name"},
+			# Additional properties
+			{"name": "name", "foo": "bar"},
+		],
+		"fbc_disallowed_inherited_labels": [1],
+		"deprecated_labels": [
+			# Wrong type
+			1,
+			# Duplicated items
+			{"name": "deprecated-name", "replacement": "label-replacement"},
+			{"name": "deprecated-name", "replacement": "label-replacement"},
+			# Additional properties
+			{"name": "deprecated-name", "replacement": "label-description", "foo": "bar"},
+		],
+	}
+
+	expected := {
+		{
+			"code": "labels.rule_data_provided",
+			"msg": "Rule data deprecated_labels has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "labels.rule_data_provided",
+			"msg": "Rule data deprecated_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+		},
+		{
+			"code": "labels.rule_data_provided",
+			"msg": "Rule data deprecated_labels has unexpected format: 3: Additional property foo is not allowed",
+		},
+		{
+			"code": "labels.rule_data_provided",
+			"msg": "Rule data disallowed_inherited_labels has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "labels.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data disallowed_inherited_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+		},
+		{
+			"code": "labels.rule_data_provided",
+			"msg": "Rule data disallowed_inherited_labels has unexpected format: 3: Additional property foo is not allowed",
+		},
+		{
+			"code": "labels.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data fbc_disallowed_inherited_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+		},
+		{
+			"code": "labels.rule_data_provided",
+			"msg": "Rule data fbc_optional_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+		},
+		{
+			"code": "labels.rule_data_provided",
+			"msg": "Rule data fbc_required_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+		},
+		{
+			"code": "labels.rule_data_provided",
+			"msg": "Rule data optional_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+		},
+		{
+			"code": "labels.rule_data_provided",
+			"msg": "Rule data required_labels has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "labels.rule_data_provided",
+			"msg": "Rule data required_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+		},
+		{
+			"code": "labels.rule_data_provided",
+			"msg": "Rule data required_labels has unexpected format: 3: Additional property foo is not allowed",
+		},
+	}
+
+	lib.assert_equal_results(labels.deny, expected) with input.image as _image
+		with data.rule_data as d
+}
+
 _image := {
 	"config": {"Labels": {
 		"name": "test-image",

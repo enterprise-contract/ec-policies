@@ -91,6 +91,25 @@ deny contains _check_extension(rego.metadata.chain(), "allowed_gh_workflow_names
 #
 deny contains _check_extension(rego.metadata.chain(), "allowed_gh_workflow_triggers", _TRIGGER)
 
+# METADATA
+# title: Rule data provided
+# description: >-
+#   Confirm the expected rule data keys have been provided in the expected format. The keys are
+#   `allowed_gh_workflow_repos`, `allowed_gh_workflow_refs`, `allowed_gh_workflow_names`,
+#   and `allowed_gh_workflow_triggers`.
+# custom:
+#   short_name: rule_data_provided
+#   failure_msg: '%s'
+#   solution: If provided, ensure the rule data is in the expected format.
+#   collections:
+#   - github
+#   - policy_data
+#
+deny contains result if {
+	some error in _rule_data_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
 _check_extension(chain, key, extension) := result if {
 	value := _fulcio_extension_value(extension)
 	allowed := lib.rule_data(key)
@@ -128,3 +147,27 @@ _REPOSITORY := {"id": 5, "name": "GitHub Workflow Repository"}
 
 # regal ignore:prefer-snake-case
 _REF := {"id": 6, "name": "GitHub Workflow Ref"}
+
+_rule_data_errors contains msg if {
+	keys := [
+		"allowed_gh_workflow_repos",
+		"allowed_gh_workflow_refs",
+		"allowed_gh_workflow_names",
+		"allowed_gh_workflow_triggers",
+	]
+	some key in keys
+
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(key))
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"items": {"type": "string"},
+			"uniqueItems": true,
+		},
+	)[1]
+	msg := sprintf("Rule data %s has unexpected format: %s", [key, violation.error])
+}

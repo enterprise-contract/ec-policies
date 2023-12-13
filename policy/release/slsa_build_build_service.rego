@@ -59,9 +59,47 @@ deny contains result if {
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	allowed_builder_ids := lib.rule_data("allowed_builder_ids")
+	allowed_builder_ids := lib.rule_data(_rule_data_key)
 	some att in lib.pipelinerun_attestations
 	builder_id := att.statement.predicate.builder.id
 	not builder_id in allowed_builder_ids
 	result := lib.result_helper(rego.metadata.chain(), [builder_id])
 }
+
+# METADATA
+# title: Allowed builder IDs provided
+# description: >-
+#   Confirm the `allowed_builder_ids` rule data was provided, since it is required by the policy
+#   rules in this package.
+# custom:
+#   short_name: allowed_builder_ids_provided
+#   failure_msg: "%s"
+#   collections:
+#   - slsa3
+#   - redhat
+#   - policy_data
+#
+deny contains result if {
+	some error in _rule_data_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
+# Verify allowed_builder_ids is a non-empty list of strings
+_rule_data_errors contains msg if {
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(_rule_data_key))
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"items": {"type": "string"},
+			"uniqueItems": true,
+			"minItems": 1,
+		},
+	)[1]
+	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, violation.error])
+}
+
+_rule_data_key := "allowed_builder_ids"

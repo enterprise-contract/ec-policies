@@ -49,6 +49,35 @@ test_restrict_shared_volumes_existing_pvc if {
 	lib.assert_equal_results(external_parameters.deny, expected) with input.attestations as [provenance]
 }
 
+test_rule_data_validation if {
+	d := {"pipeline_run_params": [
+		# Wrong type
+		1,
+		# Duplicated items
+		"foo",
+		"foo",
+	]}
+
+	expected := {
+		{
+			"code": "external_parameters.pipeline_run_params_provided",
+			"msg": "Rule data pipeline_run_params has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "external_parameters.pipeline_run_params_provided",
+			"msg": "Rule data pipeline_run_params has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+	}
+
+	provenance := json.patch(good_provenance, [{
+		"op": "add",
+		"path": "/statement/predicate/buildDefinition/externalParameters/runSpec/params",
+		"value": [{"name": 1, "value": "one"}, {"name": "foo", "value": "oof"}],
+	}])
+	lib.assert_equal_results(external_parameters.deny, expected) with data.rule_data as d
+		with input.attestations as [provenance]
+}
+
 good_provenance := {"statement": {
 	"predicateType": "https://slsa.dev/provenance/v1",
 	"predicate": {"buildDefinition": {

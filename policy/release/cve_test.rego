@@ -58,14 +58,15 @@ test_success_deprecated_name if {
 }
 
 test_success_with_rule_data if {
+	counts := json.remove(_dummy_counts, ["/unknown"])
 	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._result_name,
 			"type": "string",
 			"value": {
-				"vulnerabilities": _dummy_counts,
-				"unpatched_vulnerabilities": _dummy_counts,
+				"vulnerabilities": counts,
+				"unpatched_vulnerabilities": counts,
 			},
 		}],
 	)
@@ -73,8 +74,8 @@ test_success_with_rule_data if {
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
 			{
-				"vulnerabilities": _dummy_counts,
-				"unpatched_vulnerabilities": _dummy_counts,
+				"vulnerabilities": counts,
+				"unpatched_vulnerabilities": counts,
 			},
 			"clair-scan",
 			_bundle,
@@ -82,30 +83,31 @@ test_success_with_rule_data if {
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	lib.assert_empty(cve.deny | cve.warn) with input.attestations as attestations
-		with data.rule_data.restrict_cve_security_levels as ["spam"]
-		with data.rule_data.warn_unpatched_cve_security_levels as ["spam"]
+		with data.rule_data.restrict_cve_security_levels as ["unknown"]
+		with data.rule_data.warn_unpatched_cve_security_levels as ["unknown"]
 }
 
 test_success_with_rule_data_deprecated_name if {
+	counts := json.remove(_dummy_counts, ["/unknown"])
 	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._deprecated_result_name,
 			"type": "string",
-			"value": {"vulnerabilities": _dummy_counts},
+			"value": {"vulnerabilities": counts},
 		}],
 	)
 	attestations := [
 		lib_test.att_mock_helper_ref(
 			cve._result_name,
-			{"vulnerabilities": _dummy_counts},
+			{"vulnerabilities": counts},
 			"clair-scan",
 			_bundle,
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	lib.assert_empty(cve.deny) with input.attestations as attestations
-		with data.rule_data.restrict_cve_security_levels as ["spam"]
+		with data.rule_data.restrict_cve_security_levels as ["unknown"]
 }
 
 test_failure if {
@@ -187,7 +189,7 @@ test_failure_deprecated_name if {
 }
 
 test_failure_with_rule_data if {
-	_custom_counts := {"spam": 1, "bacon": 2, "eggs": 3}
+	_custom_counts := {"unknown": 1, "low": 2, "medium": 3}
 	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
@@ -214,28 +216,28 @@ test_failure_with_rule_data if {
 	expected := {
 		{
 			"code": "cve.cve_blockers",
-			"term": "spam",
-			"msg": "Found 1 CVE vulnerabilities of spam security level",
+			"term": "unknown",
+			"msg": "Found 1 CVE vulnerabilities of unknown security level",
 		},
 		{
 			"code": "cve.cve_blockers",
-			"term": "bacon",
-			"msg": "Found 2 CVE vulnerabilities of bacon security level",
+			"term": "low",
+			"msg": "Found 2 CVE vulnerabilities of low security level",
 		},
 		{
 			"code": "cve.unpatched_cve_blockers",
-			"term": "spam",
-			"msg": "Found 1 unpatched CVE vulnerabilities of spam security level",
+			"term": "unknown",
+			"msg": "Found 1 unpatched CVE vulnerabilities of unknown security level",
 		},
 		{
 			"code": "cve.unpatched_cve_blockers",
-			"term": "bacon",
-			"msg": "Found 2 unpatched CVE vulnerabilities of bacon security level",
+			"term": "low",
+			"msg": "Found 2 unpatched CVE vulnerabilities of low security level",
 		},
 	}
 	lib.assert_equal_results(cve.deny, expected) with input.attestations as attestations
-		with data.rule_data.restrict_cve_security_levels as ["spam", "bacon"]
-		with data.rule_data.restrict_unpatched_cve_security_levels as ["spam", "bacon"]
+		with data.rule_data.restrict_cve_security_levels as ["unknown", "low"]
+		with data.rule_data.restrict_unpatched_cve_security_levels as ["unknown", "low"]
 }
 
 test_warn if {
@@ -435,6 +437,62 @@ test_missing_cve_scan_vulnerabilities if {
 		"msg": "Clair CVE scan results were not found",
 	}}
 	lib.assert_equal_results(cve.deny, expected) with input.attestations as attestations
+}
+
+test_rule_data_provided if {
+	d := {
+		"restrict_cve_security_levels": [
+			# Wrong type
+			1,
+			# Duplicated items
+			"high",
+			"high",
+		],
+		# We don't need to check the different errors for each key as they are processed the same
+		# way. But we do want to, at least, verify a single error.
+		"warn_cve_security_levels": [1],
+		"restrict_unpatched_cve_security_levels": [1],
+		"warn_unpatched_cve_security_levels": [1],
+	}
+
+	expected := {
+		{
+			"code": "cve.rule_data_provided",
+			"msg": "Rule data restrict_cve_security_levels has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "cve.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data restrict_cve_security_levels has unexpected format: 0: 0 must be one of the following: \"critical\", \"high\", \"medium\", \"low\", \"unknown\"",
+		},
+		{
+			"code": "cve.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data restrict_unpatched_cve_security_levels has unexpected format: 0: 0 must be one of the following: \"critical\", \"high\", \"medium\", \"low\", \"unknown\"",
+		},
+		{
+			"code": "cve.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data warn_cve_security_levels has unexpected format: 0: 0 must be one of the following: \"critical\", \"high\", \"medium\", \"low\", \"unknown\"",
+		},
+		{
+			"code": "cve.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data warn_unpatched_cve_security_levels has unexpected format: 0: 0 must be one of the following: \"critical\", \"high\", \"medium\", \"low\", \"unknown\"",
+		},
+	}
+
+	attestations := [lib_test.att_mock_helper_ref(
+		cve._result_name,
+		{
+			"vulnerabilities": _dummy_counts_zero_high,
+			"unpatched_vulnerabilities": _dummy_counts_zero_high,
+		},
+		"clair-scan",
+		_bundle,
+	)]
+	lib.assert_equal_results(cve.deny, expected) with input.attestations as attestations
+		with data.rule_data as d
 }
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"

@@ -31,8 +31,25 @@ import data.lib
 deny contains result if {
 	some att in lib.pipelinerun_attestations
 	att_type := att.statement._type
-	not att_type in lib.rule_data("known_attestation_types")
+	not att_type in lib.rule_data(_rule_data_key)
 	result := lib.result_helper(rego.metadata.chain(), [att_type])
+}
+
+# METADATA
+# title: Known attestation types provided
+# description: Confirm the `known_attestation_types` rule data was provided.
+# custom:
+#   short_name: known_attestation_types_provided
+#   failure_msg: '%s'
+#   solution: Provide a list of known attestation types.
+#   collections:
+#   - minimal
+#   - redhat
+#   - policy_data
+#
+deny contains result if {
+	some error in _rule_data_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
 }
 
 # METADATA
@@ -72,3 +89,23 @@ deny contains result if {
 	not att.statement
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
+
+# Verify known_attestation_types is a non-empty list of strings
+_rule_data_errors contains msg if {
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(_rule_data_key))
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"items": {"type": "string"},
+			"uniqueItems": true,
+			"minItems": 1,
+		},
+	)[1]
+	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, violation.error])
+}
+
+_rule_data_key := "known_attestation_types"

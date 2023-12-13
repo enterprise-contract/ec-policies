@@ -434,4 +434,69 @@ test_wrong_attestation_type if {
 	lib.assert_empty(test.deny) with input.attestations as [tr, tr_slsav1]
 }
 
+test_rule_data_provided if {
+	d := {
+		"supported_tests_results": [
+			# Wrong type
+			1,
+			# Duplicated items
+			"SUCCESS",
+			"SUCCESS",
+		],
+		"failed_tests_results": [1],
+		"erred_tests_results": [1],
+		"skipped_tests_results": [1],
+		"warned_tests_results": [1],
+		"informative_tests": [
+			# Wrong type
+			1,
+			# Duplicated items
+			"SUCCESS",
+			"SUCCESS",
+		],
+	}
+
+	expected := {
+		{
+			"code": "test.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data erred_tests_results has unexpected format: 0: 0 must be one of the following: \"SUCCESS\", \"FAILURE\", \"WARNING\", \"SKIPPED\", \"ERROR\"",
+		},
+		{
+			"code": "test.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data failed_tests_results has unexpected format: 0: 0 must be one of the following: \"SUCCESS\", \"FAILURE\", \"WARNING\", \"SKIPPED\", \"ERROR\"",
+		},
+		{
+			"code": "test.rule_data_provided",
+			"msg": "Rule data informative_tests has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "test.rule_data_provided",
+			"msg": "Rule data informative_tests has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "test.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data skipped_tests_results has unexpected format: 0: 0 must be one of the following: \"SUCCESS\", \"FAILURE\", \"WARNING\", \"SKIPPED\", \"ERROR\"",
+		},
+		{
+			"code": "test.rule_data_provided",
+			"msg": "Rule data supported_tests_results has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "test.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data supported_tests_results has unexpected format: 0: 0 must be one of the following: \"SUCCESS\", \"FAILURE\", \"WARNING\", \"SKIPPED\", \"ERROR\"",
+		},
+		{
+			"code": "test.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data warned_tests_results has unexpected format: 0: 0 must be one of the following: \"SUCCESS\", \"FAILURE\", \"WARNING\", \"SKIPPED\", \"ERROR\"",
+		},
+	}
+
+	lib.assert_equal_results(test.deny, expected) with data.rule_data as d
+}
+
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"

@@ -116,6 +116,25 @@ deny contains result if {
 	result := lib.result_helper_with_term(rego.metadata.chain(), [name], name)
 }
 
+# METADATA
+# title: Rule data provided
+# description: >-
+#   Confirm the expected rule data keys have been provided in the expected format. The keys are
+#   `required_labels`,	`fbc_required_labels`, `optional_labels`, `fbc_optional_labels`,
+#   `disallowed_inherited_labels`, `fbc_disallowed_inherited_labels`, and `deprecated_labels`.
+# custom:
+#   short_name: rule_data_provided
+#   failure_msg: '%s'
+#   solution: If provided, ensure the rule data is in the expected format.
+#   collections:
+#   - redhat
+#   - policy_data
+#
+deny contains result if {
+	some error in _rule_data_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
 labels contains label if {
 	some name, value in input.image.config.Labels
 	count(value) > 0
@@ -155,4 +174,70 @@ default is_fbc := false
 is_fbc if {
 	some label in labels
 	label.name == "operators.operatorframework.io.index.configs.v1"
+}
+
+_rule_data_errors contains msg if {
+	name_only := {
+		"$schema": "http://json-schema.org/draft-07/schema#",
+		"type": "array",
+		"items": {
+			"type": "object",
+			"properties": {"name": {"type": "string"}},
+			"additionalProperties": false,
+			"required": ["name"],
+		},
+		"uniqueItems": true,
+	}
+
+	name_and_description := {
+		"$schema": "http://json-schema.org/draft-07/schema#",
+		"type": "array",
+		"items": {
+			"type": "object",
+			"properties": {
+				"name": {"type": "string"},
+				"description": {"type": "string"},
+			},
+			"additionalProperties": false,
+			"required": ["name", "description"],
+		},
+		"uniqueItems": true,
+	}
+
+	deprecated := {
+		"$schema": "http://json-schema.org/draft-07/schema#",
+		"type": "array",
+		"items": {
+			"type": "object",
+			"properties": {
+				"name": {"type": "string"},
+				"replacement": {"type": "string"},
+			},
+			"additionalProperties": false,
+			"required": ["name", "replacement"],
+		},
+		"uniqueItems": true,
+	}
+
+	items := [
+		["required_labels", name_and_description],
+		["fbc_required_labels", name_and_description],
+		["optional_labels", name_and_description],
+		["fbc_optional_labels", name_and_description],
+		["disallowed_inherited_labels", name_only],
+		["fbc_disallowed_inherited_labels", name_only],
+		["deprecated_labels", deprecated],
+	]
+	some item in items
+	key := item[0]
+	schema := item[1]
+
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(key))
+	some violation in json.match_schema(
+		value,
+		schema,
+	)[1]
+	msg := sprintf("Rule data %s has unexpected format: %s", [key, violation.error])
 }

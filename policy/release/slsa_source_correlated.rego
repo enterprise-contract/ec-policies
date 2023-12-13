@@ -106,6 +106,24 @@ deny contains result if {
 	)
 }
 
+# METADATA
+# title: Rule data provided
+# description: >-
+#   Confirm the expected rule data keys have been provided in the expected format. The keys are
+#   `supported_vcs` and `supported_digests`.
+# custom:
+#   short_name: rule_data_provided
+#   failure_msg: '%s'
+#   collections:
+#   - minimal
+#   - slsa3
+#   - redhat
+#   - policy_data
+deny contains result if {
+	some error in _rule_data_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
 _refs(expected_vcs_uri, expected_revision) := {
 	sprintf("%s@sha1:%s", [expected_vcs_uri, expected_revision]),
 	# tolerate missing .git suffix
@@ -178,4 +196,22 @@ _source_references contains ref if {
 	# matches the expected reference
 	# regal ignore:prefer-snake-case
 	ref := sprintf("%s@%s:%s", [dep.uri, digest_alg, dep.digest[digest_alg]])
+}
+
+_rule_data_errors contains msg if {
+	some key in ["supported_vcs", "supported_digests"]
+
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(key))
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"items": {"type": "string"},
+			"uniqueItems": true,
+		},
+	)[1]
+	msg := sprintf("Rule data %s has unexpected format: %s", [key, violation.error])
 }

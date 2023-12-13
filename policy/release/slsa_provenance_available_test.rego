@@ -20,6 +20,30 @@ test_att_predicate_type if {
 	lib.assert_equal_results(slsa_provenance_available.deny, expected_deny) with input.attestations as attestations
 }
 
+test_rule_data_format if {
+	d := {"allowed_predicate_types": [
+		# Wrong type
+		1,
+		# Duplicated items
+		"foo",
+		"foo",
+	]}
+
+	expected := {
+		{
+			"code": "slsa_provenance_available.allowed_predicate_types_provided",
+			"msg": "Rule data allowed_predicate_types has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "slsa_provenance_available.allowed_predicate_types_provided",
+			"msg": "Rule data allowed_predicate_types has unexpected format: (Root): array items[1,2] must be unique",
+		},
+	}
+
+	lib.assert_equal_results(slsa_provenance_available.deny, expected) with data.rule_data as d
+		with input.attestations as _mock_attestations("foo")
+}
+
 _mock_attestations(types) := [attestation |
 	some type in types
 	attestation := {"statement": {

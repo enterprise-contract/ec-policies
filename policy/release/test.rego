@@ -204,6 +204,25 @@ warn contains result if {
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
 
+# METADATA
+# title: Rule data provided
+# description: >-
+#   Confirm the expected rule data keys have been provided in the expected format. The keys are
+#   `supported_tests_results`, `failed_tests_results`, `informative_tests`, `erred_tests_results`,
+#   `skipped_tests_results`, and `warned_tests_results`.
+# custom:
+#   short_name: rule_data_provided
+#   failure_msg: '%s'
+#   solution: If provided, ensure the rule data is in the expected format.
+#   collections:
+#   - redhat
+#   - policy_data
+#
+deny contains result if {
+	some error in _rule_data_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
 # Collect all tests that have resulted with one of the given
 # results and convert their name to "test:<name>" format
 resulted_in(results) := {r |
@@ -211,4 +230,39 @@ resulted_in(results) := {r |
 	test := result.value
 	test.result in results
 	r := result.name
+}
+
+_rule_data_errors contains msg if {
+	statuses := {
+		"$schema": "http://json-schema.org/draft-07/schema#",
+		"type": "array",
+		"items": {"enum": ["SUCCESS", "FAILURE", "WARNING", "SKIPPED", "ERROR"]},
+		"uniqueItems": true,
+	}
+
+	strings := {
+		"$schema": "http://json-schema.org/draft-07/schema#",
+		"type": "array",
+		"items": {"type": "string"},
+		"uniqueItems": true,
+	}
+
+	items := [
+		["supported_tests_results", statuses],
+		["failed_tests_results", statuses],
+		["erred_tests_results", statuses],
+		["skipped_tests_results", statuses],
+		["warned_tests_results", statuses],
+		["informative_tests", strings],
+	]
+
+	some item in items
+	key := item[0]
+	schema := item[1]
+
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(key))
+	some violation in json.match_schema(value, schema)[1]
+	msg := sprintf("Rule data %s has unexpected format: %s", [key, violation.error])
 }

@@ -36,7 +36,7 @@ import data.lib
 #
 deny contains result if {
 	some image_ref in _base_images
-	not _image_ref_permitted(image_ref, lib.rule_data("allowed_registry_prefixes"))
+	not _image_ref_permitted(image_ref, lib.rule_data(_rule_data_key))
 	result := lib.result_helper(rego.metadata.chain(), [image_ref])
 }
 
@@ -74,17 +74,18 @@ deny contains result if {
 #   required by the policy rules in this package.
 # custom:
 #   short_name: allowed_registries_provided
-#   failure_msg: Missing required allowed_registry_prefixes rule data
+#   failure_msg: "%s"
 #   solution: >-
 #     Make sure to configure a list of trusted registries as a
 #     xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
 #   collections:
 #   - minimal
 #   - redhat
+#   - policy_data
 #
 deny contains result if {
-	count(lib.rule_data("allowed_registry_prefixes")) == 0
-	result := lib.result_helper(rego.metadata.chain(), [])
+	some error in _rule_data_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
 }
 
 _image_ref_permitted(image_ref, allowed_prefixes) if {
@@ -101,3 +102,23 @@ _base_images contains name if {
 _base_images_results contains result if {
 	some result in lib.results_named(lib.build_base_images_digests_result_name)
 }
+
+# Verify allowed_registry_prefixes is a non-empty list of strings
+_rule_data_errors contains msg if {
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(_rule_data_key))
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"items": {"type": "string"},
+			"uniqueItems": true,
+			"minItems": 1,
+		},
+	)[1]
+	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, violation.error])
+}
+
+_rule_data_key := "allowed_registry_prefixes"

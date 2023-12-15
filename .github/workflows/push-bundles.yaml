@@ -38,23 +38,6 @@ jobs:
         go-version-file: go.mod
         cache: true
 
-    # TODO: Remove this once all references to quay.io/hacbs-contract are removed
-    - name: Docker login
-      uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
-      with:
-        # See also BUNDLE_REPO defined in Makefile
-        registry: quay.io
-        username: ${{ secrets.BUNDLE_PUSH_USER }}
-        password: ${{ secrets.BUNDLE_PUSH_PASS }}
-
-    # TODO: Remove this once all referecnes to quay.io/hacbs-contract are removed
-    - name: Push bundles
-      env:
-        EC_AUTOMATION_KEY: ${{ secrets.EC_AUTOMATION_KEY }}
-        APP_INSTALL_ID: 32872589
-        REPO_PREFIX: quay.io/hacbs-contract/
-      run: hack/update-bundles.sh
-
     - name: Docker login (quay.io/enterprise-contract)
       uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
       with:

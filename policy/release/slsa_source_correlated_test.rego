@@ -384,6 +384,40 @@ test_slsa_v10_source_references if {
 	]
 }
 
+test_rule_data_provided if {
+	d := {
+		"supported_digests": [
+			# Wrong type
+			1,
+			# Duplicated items
+			"sha1",
+			"sha1",
+		],
+		# We don't need to check the different errors for each key as they are processed the same
+		# way. But we do want to, at least, verify a single error.
+		"supported_vcs": [1, "git"],
+	}
+
+	violations := {
+		{
+			"code": "slsa_source_correlated.rule_data_provided",
+			"msg": "Rule data supported_digests has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "slsa_source_correlated.rule_data_provided",
+			"msg": "Rule data supported_digests has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "slsa_source_correlated.rule_data_provided",
+			"msg": "Rule data supported_vcs has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+	}
+
+	lib.assert_equal_results(slsa_source_correlated.deny, violations) with data.rule_data as d
+		with input.image as expected
+		with input.attestations as [_source_material_attestation("git+https://git.repository", "ref")]
+}
+
 expected := {"source": {"git": {"url": "https://git.repository", "revision": "ref"}}}
 
 # SLSA Provenance v0.2

@@ -32,10 +32,25 @@ deny contains result if {
 		p.value != ""
 		name := p.name
 	}
-	expected_names := {n | some n in lib.rule_data("pipeline_run_params")}
+	expected_names := {n | some n in lib.rule_data(_rule_data_key)}
 
 	expected_names != param_names
 	result := lib.result_helper(rego.metadata.chain(), [param_names, expected_names])
+}
+
+# METADATA
+# title: PipelineRun params provided
+# description: Confirm the `pipeline_run_params` rule data was provided.
+# custom:
+#   short_name: pipeline_run_params_provided
+#   failure_msg: '%s'
+#   solution: Provide a non-empty list of expected PipelineRun parameters.
+#   collections:
+#   - policy_data
+#
+deny contains result if {
+	some error in _rule_data_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
 }
 
 # METADATA
@@ -56,3 +71,23 @@ deny contains result if {
 	count(shared_workspaces) > 0
 	result := lib.result_helper(rego.metadata.chain(), [shared_workspaces])
 }
+
+# Verify pipeline_run_params is a non-empty list of strings
+_rule_data_errors contains msg if {
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(_rule_data_key))
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"items": {"type": "string"},
+			"uniqueItems": true,
+			"minItems": 1,
+		},
+	)[1]
+	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, violation.error])
+}
+
+_rule_data_key := "pipeline_run_params"

@@ -60,3 +60,27 @@ test_deny_deprecated_policy_attestation_format if {
 	}]
 	lib.assert_equal_results(attestation_type.deny, expected) with input.attestations as attestations
 }
+
+test_rule_data_validation if {
+	d := {"known_attestation_types": [
+		# Wrong type
+		1,
+		# Duplicated items
+		"foo",
+		"foo",
+	]}
+
+	expected := {
+		{
+			"code": "attestation_type.known_attestation_types_provided",
+			"msg": "Rule data known_attestation_types has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "attestation_type.known_attestation_types_provided",
+			"msg": "Rule data known_attestation_types has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+	}
+
+	lib.assert_equal_results(attestation_type.deny, expected) with data.rule_data as d
+		with input.attestations as mock_data("foo")
+}

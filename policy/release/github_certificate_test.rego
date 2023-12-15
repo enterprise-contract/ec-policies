@@ -116,6 +116,54 @@ test_missing_extensions if {
 	lib.assert_equal_results(github_certificate.warn, expected) with input.image.signatures as [{"certificate": bad_cert}]
 }
 
+test_rule_data_provided if {
+	d := {
+		"allowed_gh_workflow_repos": [
+			# Wrong type
+			1,
+			# Duplicated items
+			"lcarva/festoji",
+			"lcarva/festoji",
+		],
+		# We don't need to check the different errors for each key as they are processed the same
+		# way. But we do want to, at least, verify a single error.
+		"allowed_gh_workflow_refs": [1, "refs/heads/master"],
+		"allowed_gh_workflow_names": [1, "Package"],
+		"allowed_gh_workflow_triggers": [1, "push"],
+	}
+
+	expected := {
+		{
+			"code": "github_certificate.rule_data_provided",
+			"msg": "Rule data allowed_gh_workflow_repos has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "github_certificate.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data allowed_gh_workflow_repos has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "github_certificate.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data allowed_gh_workflow_refs has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "github_certificate.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data allowed_gh_workflow_names has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "github_certificate.rule_data_provided",
+			# regal ignore:line-length
+			"msg": "Rule data allowed_gh_workflow_triggers has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+	}
+
+	signatures := [{"certificate": good_cert}]
+	lib.assert_equal_results(github_certificate.deny, expected) with data.rule_data as d
+		with input.image.signatures as signatures
+}
+
 # This is a certificate used when signing an image on GitHub. It
 # contains all the expected Fulcio GitHub extensions.
 good_cert := `-----BEGIN CERTIFICATE-----

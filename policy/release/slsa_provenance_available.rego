@@ -38,10 +38,49 @@ import data.lib
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations
-	allowed_predicate_types := lib.rule_data("allowed_predicate_types")
+	allowed_predicate_types := lib.rule_data(_rule_data_key)
 	not att.statement.predicateType in allowed_predicate_types
 	result := lib.result_helper(
 		rego.metadata.chain(),
 		[att.statement.predicateType, concat(", ", allowed_predicate_types)],
 	)
 }
+
+# METADATA
+# title: Allowed predicate types provided
+# description: >-
+#   Confirm the `allowed_predicate_types` rule data was provided, since it is required by the policy
+#   rules in this package.
+# custom:
+#   short_name: allowed_predicate_types_provided
+#   failure_msg: "%s"
+#   collections:
+#   - minimal
+#   - slsa3
+#   - redhat
+#   - policy_data
+#
+deny contains result if {
+	some error in _rule_data_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
+# Verify allowed_predicate_types is a non-empty list of strings
+_rule_data_errors contains msg if {
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(_rule_data_key))
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"items": {"type": "string"},
+			"uniqueItems": true,
+			"minItems": 1,
+		},
+	)[1]
+	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, violation.error])
+}
+
+_rule_data_key := "allowed_predicate_types"

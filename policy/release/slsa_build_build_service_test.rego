@@ -41,6 +41,30 @@ test_accepted_slsa_builder_id if {
 	) with input.attestations as [_mock_attestation(builder_id)]
 }
 
+test_rule_data_format if {
+	d := {"allowed_builder_ids": [
+		# Wrong type
+		1,
+		# Duplicated items
+		"foo",
+		"foo",
+	]}
+
+	expected := {
+		{
+			"code": "slsa_build_build_service.allowed_builder_ids_provided",
+			"msg": "Rule data allowed_builder_ids has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "slsa_build_build_service.allowed_builder_ids_provided",
+			"msg": "Rule data allowed_builder_ids has unexpected format: (Root): array items[1,2] must be unique",
+		},
+	}
+
+	lib.assert_equal_results(slsa_build_build_service.deny, expected) with data.rule_data as d
+		with input.attestations as [_mock_attestation("foo")]
+}
+
 _mock_attestation(builder_id) := {"statement": {"predicate": {
 	"builder": {"id": builder_id},
 	"buildType": lib.tekton_pipeline_run,

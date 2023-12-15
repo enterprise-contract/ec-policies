@@ -185,6 +185,26 @@ warn contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
+# METADATA
+# title: Rule data provided
+# description: >-
+#   Confirm the expected rule data keys have been provided in the expected format. The keys are
+#   `restrict_cve_security_levels`,	`warn_cve_security_levels`,
+#   `restrict_unpatched_cve_security_levels`, and `warn_unpatched_cve_security_levels`.
+# custom:
+#   short_name: rule_data_provided
+#   failure_msg: '%s'
+#   solution: If provided, ensure the rule data is in the expected format.
+#   collections:
+#   - minimal
+#   - redhat
+#   - policy_data
+#
+deny contains result if {
+	some error in _rule_data_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
 _vulnerabilities := vulnerabilities if {
 	some result in lib.results_named(_result_name)
 	vulnerabilities := result.value.vulnerabilities
@@ -217,4 +237,28 @@ _non_zero_levels(key, vulnerabilities) := {level: amount |
 	some level in {a | some a in lib.rule_data(key)}
 	amount := vulnerabilities[level]
 	amount > 0
+}
+
+_rule_data_errors contains msg if {
+	keys := [
+		"restrict_cve_security_levels",
+		"warn_cve_security_levels",
+		"restrict_unpatched_cve_security_levels",
+		"warn_unpatched_cve_security_levels",
+	]
+	some key in keys
+
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(key))
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"items": {"enum": ["critical", "high", "medium", "low", "unknown"]},
+			"uniqueItems": true,
+		},
+	)[1]
+	msg := sprintf("Rule data %s has unexpected format: %s", [key, violation.error])
 }

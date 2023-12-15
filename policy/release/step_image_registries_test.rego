@@ -69,10 +69,36 @@ test_unexpected_image_ref if {
 	}}) with input.attestations as [mock_data(unexpected_image)]
 }
 
-test_step_image_registry_prefix_list_found if {
+test_step_image_registry_prefix_list_empty if {
 	expected := {{
 		"code": "step_image_registries.step_image_registry_prefix_list_provided",
-		"msg": "Missing required allowed_step_image_registry_prefixes rule data",
+		# regal ignore:line-length
+		"msg": "Rule data allowed_step_image_registry_prefixes has unexpected format: (Root): Array must have at least 1 items",
 	}}
 	lib.assert_equal_results(expected, step_image_registries.deny) with data.rule_data as {}
+}
+
+test_step_image_registry_prefix_list_format if {
+	d := {"allowed_step_image_registry_prefixes": [
+		# Wrong type
+		1,
+		# Duplicated items
+		"registry.local/",
+		"registry.local/",
+	]}
+
+	expected := {
+		{
+			"code": "step_image_registries.step_image_registry_prefix_list_provided",
+			# regal ignore:line-length
+			"msg": "Rule data allowed_step_image_registry_prefixes has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "step_image_registries.step_image_registry_prefix_list_provided",
+			# regal ignore:line-length
+			"msg": "Rule data allowed_step_image_registry_prefixes has unexpected format: (Root): array items[1,2] must be unique",
+		},
+	}
+
+	lib.assert_equal_results(expected, step_image_registries.deny) with data.rule_data as d
 }

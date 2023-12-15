@@ -44,12 +44,36 @@ test_has_foreign if {
 	lib.assert_equal_results(java.deny, expected) with input.attestations as attestations
 }
 
-test_trusted_dependency_source_list_provided if {
+test_trusted_dependency_source_list_provided_not_empty if {
 	expected := {{
 		"code": "java.trusted_dependencies_source_list_provided",
-		"msg": "Missing required allowed_java_component_sources rule data",
+		"msg": "Rule data allowed_java_component_sources has unexpected format: (Root): Array must have at least 1 items",
 	}}
 	lib.assert_equal_results(expected, java.deny) with data.rule_data as {}
+}
+
+test_trusted_dependency_source_list_provided_format if {
+	d := {"allowed_java_component_sources": [
+		# Wrong type
+		1,
+		# Duplicated items
+		"foo",
+		"foo",
+	]}
+
+	expected := {
+		{
+			"code": "java.trusted_dependencies_source_list_provided",
+			"msg": "Rule data allowed_java_component_sources has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "java.trusted_dependencies_source_list_provided",
+			# regal ignore:line-length
+			"msg": "Rule data allowed_java_component_sources has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+	}
+
+	lib.assert_equal_results(java.deny, expected) with data.rule_data as d
 }
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"

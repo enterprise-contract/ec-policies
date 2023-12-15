@@ -130,7 +130,31 @@ test_missing_result if {
 test_allowed_registries_provided if {
 	expected := {{
 		"code": "base_image_registries.allowed_registries_provided",
-		"msg": "Missing required allowed_registry_prefixes rule data",
+		"msg": "Rule data allowed_registry_prefixes has unexpected format: (Root): Array must have at least 1 items",
 	}}
 	lib.assert_equal_results(expected, base_image_registries.deny) with data.rule_data as {}
+}
+
+test_rule_data_validation if {
+	d := {"allowed_registry_prefixes": [
+		# Wrong type
+		1,
+		# Duplicated items
+		"foo",
+		"foo",
+	]}
+
+	expected := {
+		{
+			"code": "base_image_registries.allowed_registries_provided",
+			"msg": "Rule data allowed_registry_prefixes has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "base_image_registries.allowed_registries_provided",
+			# regal ignore:line-length
+			"msg": "Rule data allowed_registry_prefixes has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+	}
+
+	lib.assert_equal_results(base_image_registries.deny, expected) with data.rule_data as d
 }

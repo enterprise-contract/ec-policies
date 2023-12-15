@@ -110,6 +110,81 @@ assert_not_allowed(purl, disallowed_packages) if {
 		with data.rule_data.disallowed_packages as disallowed_packages
 }
 
+test_rule_data_validation if {
+	d := {"disallowed_packages": [
+		# Missing required attributes
+		{},
+		# Additional properties not allowed
+		{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0", "blah": "foo"},
+		# Bad types everywhere
+		{"purl": 1, "format": 2, "min": 3, "max": 4},
+		# Duplicated items
+		{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0"},
+		{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0"},
+		# Bad semver values
+		{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1"},
+		{"purl": "pkg:golang/k8s.io/client-go", "format": "semver", "max": "v0.1"},
+	]}
+
+	expected := {
+		{
+			"code": "packages.disallowed_packages_provided",
+			"msg": "Rule data disallowed_packages has unexpected format: 0: Must validate at least one schema (anyOf)",
+		},
+		{
+			"code": "packages.disallowed_packages_provided",
+			"msg": "Rule data disallowed_packages has unexpected format: 0: format is required",
+		},
+		{
+			"code": "packages.disallowed_packages_provided",
+			"msg": "Rule data disallowed_packages has unexpected format: 0: min is required",
+		},
+		{
+			"code": "packages.disallowed_packages_provided",
+			"msg": "Rule data disallowed_packages has unexpected format: 0: purl is required",
+		},
+		{
+			"code": "packages.disallowed_packages_provided",
+			"msg": "Rule data disallowed_packages has unexpected format: 1: Additional property blah is not allowed",
+		},
+		{
+			"code": "packages.disallowed_packages_provided",
+			# regal ignore:line-length
+			"msg": "Rule data disallowed_packages has unexpected format: 2.format: 2.format must be one of the following: \"semver\", \"semverv\"",
+		},
+		{
+			"code": "packages.disallowed_packages_provided",
+			"msg": "Rule data disallowed_packages has unexpected format: 2.max: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "packages.disallowed_packages_provided",
+			"msg": "Rule data disallowed_packages has unexpected format: 2.min: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "packages.disallowed_packages_provided",
+			"msg": "Rule data disallowed_packages has unexpected format: 2.purl: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "packages.disallowed_packages_provided",
+			"msg": "Item at index 2 in disallowed_packages does not have a valid PURL: '\\x01'",
+		},
+		{
+			"code": "packages.disallowed_packages_provided",
+			"msg": "Rule data disallowed_packages has unexpected format: (Root): array items[3,4] must be unique",
+		},
+		{
+			"code": "packages.disallowed_packages_provided",
+			"msg": "Item at index 5 in disallowed_packages does not have a valid min semver value: \"0.1\"",
+		},
+		{
+			"code": "packages.disallowed_packages_provided",
+			"msg": "Item at index 6 in disallowed_packages does not have a valid max semver value: \"0.1\"",
+		},
+	}
+
+	lib.assert_equal_results(packages.deny, expected) with data.rule_data as d
+}
+
 _sbom_attestation := {"statement": {
 	"predicateType": "https://cyclonedx.org/bom",
 	"predicate": {

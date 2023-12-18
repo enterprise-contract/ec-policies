@@ -31,6 +31,7 @@ manifest := {
 		"features.operators.openshift.io/token-auth-gcp": "false",
 	}},
 	"spec": {
+		"version": "0.1.3",
 		"relatedImages": [{"image": pinned}],
 		"install": {"spec": {"deployments": [{
 			"metadata": {"annotations": {"docket": sprintf("%s\n  %s", [pinned, pinned2])}},
@@ -228,4 +229,28 @@ test_required_olm_features_annotations_provided if {
 	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": manifest}
 		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
 		with data.rule_data as d
+}
+
+test_csv_semver_format_bad_semver if {
+	csv := json.patch(manifest, [{"op": "add", "path": "/spec/version", "value": "spam"}])
+
+	expected := {{
+		"code": "olm.csv_semver_format",
+		"msg": "The ClusterServiceVersion spec.version, \"spam\", is not a valid semver",
+	}}
+
+	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": csv}
+		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+}
+
+test_csv_semver_format_missing if {
+	csv := json.patch(manifest, [{"op": "remove", "path": "/spec/version"}])
+
+	expected := {{
+		"code": "olm.csv_semver_format",
+		"msg": "The ClusterServiceVersion spec.version, \"<MISSING>\", is not a valid semver",
+	}}
+
+	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": csv}
+		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
 }

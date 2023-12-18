@@ -15,6 +15,27 @@ import data.lib.image
 olm_manifestv1 := "operators.operatorframework.io.bundle.manifests.v1"
 
 # METADATA
+# title: ClusterServiceVersion semver format
+# description: >-
+#   Check the `spec.version` value in the ClusterServiceVersion manifest of the OLM bundle uses a
+#   properly formatted semver.
+# custom:
+#   short_name: csv_semver_format
+#   failure_msg: 'The ClusterServiceVersion spec.version, %q, is not a valid semver'
+#   solution: >-
+#     Update the ClusterServiceVersion manifest of the OLM bundle to set the spec.version value to
+#     a valid semver.
+#   collections:
+#   - redhat
+#
+deny contains result if {
+	some manifest in _csv_manifests
+	version := object.get(manifest, ["spec", "version"], "<MISSING>")
+	not semver.is_valid(version)
+	result := lib.result_helper(rego.metadata.chain(), [version])
+}
+
+# METADATA
 # title: Unpinned images in OLM bundle
 # description: >-
 #   Check the OLM bundle image for the presence of unpinned image references.

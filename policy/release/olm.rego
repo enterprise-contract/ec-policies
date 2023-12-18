@@ -32,24 +32,53 @@ olm_manifestv1 := "operators.operatorframework.io.bundle.manifests.v1"
 #   - redhat
 #
 deny contains result if {
-	manifest_dir := input.image.config.Labels[olm_manifestv1]
-
-	some path, manifest in input.image.files
-
-	# only consider files in the manifest path as determined by the OLM manifest v1 label
-	startswith(path, manifest_dir)
-
-	# only consider this API prefix, disregard the version
-	# regal ignore:prefer-snake-case
-	startswith(manifest.apiVersion, "operators.coreos.com/")
-
-	# only consider CSV manifests
-	manifest.kind == "ClusterServiceVersion"
+	some manifest in _csv_manifests
 
 	some i in all_image_ref(manifest)
 	i.ref.digest == "" # unpinned image references have no digest
 
 	result := lib.result_helper_with_term(rego.metadata.chain(), [image.str(i.ref), i.path], image.str(i.ref))
+}
+
+# METADATA
+# title: Feature annotations have expected value
+# description: >-
+#   Check the feature annotations in the ClusterServiceVersion manifest of the OLM bundle. All of
+#   required feature annotations must be present and set to either the string `"true"` or the string
+#   `"false"`. The list of feature annotations can be customize via the
+#   `required_olm_features_annotations` rule data.
+# custom:
+#   short_name: feature_annotations_format
+#   failure_msg: The annotation %q is either missing or has an unexpected value
+#   solution: >-
+#     Update the ClusterServiceVersion manifest of the OLM bundle to set the feature annotations
+#     to the expected value.
+#   collections:
+#   - redhat
+#
+deny contains result if {
+	some manifest in _csv_manifests
+	some annotation in lib.rule_data(_rule_data_key)
+	value := object.get(manifest.metadata.annotations, annotation, "")
+	not value in {"true", "false"}
+	result := lib.result_helper_with_term(rego.metadata.chain(), [annotation], annotation)
+}
+
+# METADATA
+# title: Required OLM feature annotations list provided
+# description: >-
+#   Confirm the `required_olm_features_annotations` rule data was provided, since it's
+#   required by the policy rules in this package.
+# custom:
+#   short_name: required_olm_features_annotations_provided
+#   failure_msg: "%s"
+#   collections:
+#   - redhat
+#   - policy_data
+#
+deny contains result if {
+	some error in _rule_data_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
 }
 
 _name(o) := n if {
@@ -154,3 +183,40 @@ all_image_ref(manifest) := [e |
 	some i in imgs
 	e := {"ref": i.ref, "path": i.path}
 ]
+
+# Returns the ClusterServiceVersion manifests found in the OLM bundle.
+_csv_manifests contains manifest if {
+	manifest_dir := input.image.config.Labels[olm_manifestv1]
+
+	some path, manifest in input.image.files
+
+	# only consider files in the manifest path as determined by the OLM manifest v1 label
+	startswith(path, manifest_dir)
+
+	# only consider this API prefix, disregard the version
+	# regal ignore:prefer-snake-case
+	startswith(manifest.apiVersion, "operators.coreos.com/")
+
+	# only consider CSV manifests
+	manifest.kind == "ClusterServiceVersion"
+}
+
+# Verify allowed_registry_prefixes is a non-empty list of strings
+_rule_data_errors contains msg if {
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(_rule_data_key))
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"items": {"type": "string"},
+			"uniqueItems": true,
+			"minItems": 1,
+		},
+	)[1]
+	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, violation.error])
+}
+
+_rule_data_key := "required_olm_features_annotations"

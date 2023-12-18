@@ -67,6 +67,19 @@ rule_data_defaults := {
 		"gitBlob",
 		"gitTag",
 	],
+	# Used in release/olm.rego
+	"required_olm_features_annotations": [
+		"features.operators.openshift.io/disconnected",
+		"features.operators.openshift.io/fips-compliant",
+		"features.operators.openshift.io/proxy-aware",
+		"features.operators.openshift.io/cnf",
+		"features.operators.openshift.io/cni",
+		"features.operators.openshift.io/csi",
+		"features.operators.openshift.io/tls-profiles",
+		"features.operators.openshift.io/token-auth-aws",
+		"features.operators.openshift.io/token-auth-azure",
+		"features.operators.openshift.io/token-auth-gcp",
+	],
 }
 
 # Returns the "first found" of the following:

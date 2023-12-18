@@ -19,6 +19,16 @@ manifest := {
 	"metadata": {"annotations": {
 		"containerImage": pinned,
 		"enclosurePicture": sprintf("%s,  %s", [pinned, pinned2]),
+		"features.operators.openshift.io/disconnected": "true",
+		"features.operators.openshift.io/fips-compliant": "true",
+		"features.operators.openshift.io/proxy-aware": "true",
+		"features.operators.openshift.io/cnf": "false",
+		"features.operators.openshift.io/cni": "false",
+		"features.operators.openshift.io/csi": "false",
+		"features.operators.openshift.io/tls-profiles": "false",
+		"features.operators.openshift.io/token-auth-aws": "false",
+		"features.operators.openshift.io/token-auth-azure": "false",
+		"features.operators.openshift.io/token-auth-gcp": "false",
 	}},
 	"spec": {
 		"relatedImages": [{"image": pinned}],
@@ -107,4 +117,115 @@ test_related_img_unpinned if {
 
 	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": unpinned_manifest}
 		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+}
+
+test_feature_annotations_format if {
+	bad_manifest := json.patch(manifest, [
+		{"op": "add", "path": "/metadata/annotations/features.operators.openshift.io~1disconnected", "value": false},
+		{"op": "add", "path": "/metadata/annotations/features.operators.openshift.io~1fips-compliant", "value": true},
+		{"op": "add", "path": "/metadata/annotations/features.operators.openshift.io~1proxy-aware", "value": 1},
+		{"op": "add", "path": "/metadata/annotations/features.operators.openshift.io~1cnf", "value": "True"},
+		{"op": "add", "path": "/metadata/annotations/features.operators.openshift.io~1cni", "value": null},
+		{"op": "remove", "path": "/metadata/annotations/features.operators.openshift.io~1tls-profiles"},
+	])
+
+	expected := {
+		{
+			"code": "olm.feature_annotations_format",
+			# regal ignore:line-length
+			"msg": "The annotation \"features.operators.openshift.io/disconnected\" is either missing or has an unexpected value",
+			"term": "features.operators.openshift.io/disconnected",
+		},
+		{
+			"code": "olm.feature_annotations_format",
+			# regal ignore:line-length
+			"msg": "The annotation \"features.operators.openshift.io/fips-compliant\" is either missing or has an unexpected value",
+			"term": "features.operators.openshift.io/fips-compliant",
+		},
+		{
+			"code": "olm.feature_annotations_format",
+			"msg": "The annotation \"features.operators.openshift.io/proxy-aware\" is either missing or has an unexpected value",
+			"term": "features.operators.openshift.io/proxy-aware",
+		},
+		{
+			"code": "olm.feature_annotations_format",
+			"msg": "The annotation \"features.operators.openshift.io/cnf\" is either missing or has an unexpected value",
+			"term": "features.operators.openshift.io/cnf",
+		},
+		{
+			"code": "olm.feature_annotations_format",
+			"msg": "The annotation \"features.operators.openshift.io/cni\" is either missing or has an unexpected value",
+			"term": "features.operators.openshift.io/cni",
+		},
+		{
+			"code": "olm.feature_annotations_format",
+			# regal ignore:line-length
+			"msg": "The annotation \"features.operators.openshift.io/tls-profiles\" is either missing or has an unexpected value",
+			"term": "features.operators.openshift.io/tls-profiles",
+		},
+	}
+
+	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": bad_manifest}
+		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+}
+
+test_feature_annotations_format_custom_rule_data if {
+	bad_manifest := json.patch(manifest, [
+		{"op": "add", "path": "/metadata/annotations", "value": {"foo": "bar"}},
+		{"op": "add", "path": "/metadata/annotations", "value": {"spam": "true"}},
+	])
+
+	expected := {{
+		"code": "olm.feature_annotations_format",
+		"msg": "The annotation \"foo\" is either missing or has an unexpected value", "term": "foo",
+	}}
+
+	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": bad_manifest}
+		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+		with data.rule_data.required_olm_features_annotations as ["foo", "spam"]
+}
+
+test_required_olm_features_annotations_provided if {
+	expected_empty := {{
+		"code": "olm.required_olm_features_annotations_provided",
+		# regal ignore:line-length
+		"msg": "Rule data required_olm_features_annotations has unexpected format: (Root): Array must have at least 1 items",
+	}}
+	lib.assert_equal_results(olm.deny, expected_empty) with input.image.files as {"manifests/csv.yaml": manifest}
+		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+		with data.rule_data.required_olm_features_annotations as []
+
+	d := {"required_olm_features_annotations": [
+		# Wrong type
+		1,
+		# Duplicated items
+		"foo",
+		"foo",
+	]}
+
+	expected := {
+		{
+			"code": "olm.feature_annotations_format",
+			"msg": "The annotation \"foo\" is either missing or has an unexpected value",
+			"term": "foo",
+		},
+		{
+			"code": "olm.feature_annotations_format",
+			"msg": "The annotation '\\x01' is either missing or has an unexpected value",
+			"term": 1,
+		},
+		{
+			"code": "olm.required_olm_features_annotations_provided",
+			"msg": "Rule data required_olm_features_annotations has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "olm.required_olm_features_annotations_provided",
+			# regal ignore:line-length
+			"msg": "Rule data required_olm_features_annotations has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+	}
+
+	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": manifest}
+		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+		with data.rule_data as d
 }

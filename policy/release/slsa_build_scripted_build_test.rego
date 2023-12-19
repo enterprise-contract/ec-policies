@@ -7,7 +7,11 @@ import future.keywords.in
 import data.lib
 import data.policy.release.slsa_build_scripted_build
 
-mock_bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
+mock_bundle_digest := "sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
+
+mock_bundle_repo := "registry.img/spam"
+
+mock_bundle := sprintf("%s@%s", [mock_bundle_repo, mock_bundle_digest])
 
 test_all_good if {
 	tasks := [{
@@ -19,7 +23,17 @@ test_all_good if {
 		"steps": [{"entrypoint": "/bin/bash"}],
 	}]
 
-	lib.assert_empty(slsa_build_scripted_build.deny) with input.attestations as [_mock_attestation(tasks)]
+	image := {"ref": _image_digest}
+
+	task_bundles := {mock_bundle_repo: [{
+		"digest": mock_bundle_digest,
+		"effective_on": "2023-11-06T00:00:00Z",
+		"tag": "0.1",
+	}]}
+
+	lib.assert_empty(slsa_build_scripted_build.deny) with input.image as image
+		with input.attestations as [_mock_attestation(tasks)]
+		with data["task-bundles"] as task_bundles
 }
 
 # It's unclear if this should be allowed or not. This unit test exists to
@@ -333,6 +347,62 @@ test_subject_with_tag_and_digest_mismatch_digest_fails if {
 			"buildConfig": {"tasks": tasks},
 		},
 	}}]
+}
+
+test_image_built_by_trusted_task_no_build_task if {
+	att := json.patch(
+		_mock_attestation([{
+			"results": [
+				{"name": "IMAGE_URL", "value": _image_url},
+				{"name": "IMAGE_DIGEST", "value": "sha256:abc"},
+			],
+			"ref": {"bundle": mock_bundle},
+			"steps": [{"entrypoint": "/bin/bash"}],
+		}]),
+		[{
+			"op": "add",
+			"path": "/statement/subject/0/digest/sha256",
+			"value": "abc",
+		}],
+	)
+
+	image := {"ref": _image_digest}
+
+	expected := {{
+		"code": "slsa_build_scripted_build.image_built_by_trusted_task",
+		"msg": "Image \"sha256:123\" not built by a trusted task: No Pipeline Tasks built the image",
+	}}
+
+	lib.assert_equal_results(expected, slsa_build_scripted_build.deny) with input.image as image
+		with input.attestations as [att]
+}
+
+test_image_built_by_trusted_task_not_trusted if {
+	tasks := [{
+		"results": [
+			{"name": "IMAGE_URL", "value": _image_url},
+			{"name": "IMAGE_DIGEST", "value": _image_digest},
+		],
+		"ref": {
+			"resolver": "bundles",
+			"params": [
+				{"name": "bundle", "value": mock_bundle},
+				{"name": "name", "value": "buildah"},
+				{"name": "kind", "value": "task"},
+			],
+		},
+		"steps": [{"entrypoint": "/bin/bash"}],
+	}]
+
+	image := {"ref": _image_digest}
+
+	expected := {{
+		"code": "slsa_build_scripted_build.image_built_by_trusted_task",
+		"msg": "Image \"sha256:123\" not built by a trusted task: Build Task \"buildah\" is not trusted",
+	}}
+
+	lib.assert_equal_results(expected, slsa_build_scripted_build.deny) with input.image as image
+		with input.attestations as [_mock_attestation(tasks)]
 }
 
 _image_url := "some.image/foo:bar"

@@ -33,7 +33,7 @@ unpinned_task_bundle(tasks) := {task |
 default missing_task_bundles_data := false
 
 missing_task_bundles_data if {
-	count(data["task-bundles"]) == 0
+	count(_task_bundles) == 0
 }
 
 # Returns a subset of tasks that use an acceptable bundle reference, but
@@ -41,7 +41,7 @@ missing_task_bundles_data if {
 out_of_date_task_bundle(tasks) := {task |
 	some task in tasks
 
-	ref := image.parse(_bundle_ref(task, data["task-bundles"]))
+	ref := image.parse(_bundle_ref(task, _task_bundles))
 
 	_newer_version_exists(ref)
 	not _is_unacceptable(ref)
@@ -51,7 +51,7 @@ out_of_date_task_bundle(tasks) := {task |
 unacceptable_task_bundle(tasks) := {task |
 	some task in tasks
 
-	ref := image.parse(_bundle_ref(task, data["task-bundles"]))
+	ref := image.parse(_bundle_ref(task, _task_bundles))
 
 	_is_unacceptable(ref)
 }
@@ -68,7 +68,7 @@ _is_unacceptable(ref) if {
 # acceptable bundles data
 _record_exists(ref) if {
 	# all records in acceptable task bundles for the given repository
-	records := data["task-bundles"][ref.repo]
+	records := _task_bundles[ref.repo]
 
 	some record in records
 
@@ -86,7 +86,7 @@ _record_exists(ref) if {
 # tag.
 _newer_in_effect_version_exists(ref) if {
 	# all records in acceptable task bundles for the given repository
-	records := data["task-bundles"][ref.repo]
+	records := _task_bundles[ref.repo]
 
 	some record in records
 
@@ -114,7 +114,7 @@ _newer_in_effect_version_exists(ref) if {
 # specific reference to belong to the same version.
 _newer_in_effect_version_exists(ref) if {
 	# all records in acceptable task bundles for the given repository
-	records := data["task-bundles"][ref.repo]
+	records := _task_bundles[ref.repo]
 
 	some record in records
 
@@ -147,7 +147,7 @@ _newer_in_effect_version_exists(ref) if {
 # version if they have the same tag.
 _newer_version_exists(ref) if {
 	# all records in acceptable task bundles for the given repository
-	records := data["task-bundles"][ref.repo]
+	records := _task_bundles[ref.repo]
 
 	some record in records
 
@@ -172,7 +172,7 @@ _newer_version_exists(ref) if {
 # version.
 _newer_version_exists(ref) if {
 	# all records in acceptable task bundles for the given repository
-	records := data["task-bundles"][ref.repo]
+	records := _task_bundles[ref.repo]
 
 	some record in records
 
@@ -223,3 +223,9 @@ _bundle_ref(task, acceptable) := ref if {
 } else := ref_no_tag if {
 	ref_no_tag := bundle(task)
 }
+
+# _task_bundles provides a safe way to access the list of acceptable task-bundles. It prevents a
+# policy rule from incorrectly not evaluating due to missing data.
+default _task_bundles := {}
+
+_task_bundles := data["task-bundles"]

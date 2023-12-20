@@ -72,6 +72,7 @@ test_out_of_date_task_bundle if {
 		{"name": "my-task-1", "taskRef": {"bundle": "reg.com/repo@sha256:bcd"}},
 		{"name": "my-task-3", "ref": {"bundle": "reg.com/repo@sha256:bcd"}},
 	]
+	lib.assert_empty(bundles.out_of_date_task_bundle(tasks))
 
 	lib.assert_empty(bundles.out_of_date_task_bundle(tasks)) with data["task-bundles"] as task_bundles
 
@@ -89,6 +90,9 @@ test_unacceptable_task_bundles if {
 
 	expected := lib.to_set(tasks)
 	lib.assert_equal(bundles.unacceptable_task_bundle(tasks), expected) with data["task-bundles"] as task_bundles
+
+	# By default, if a list of acceptable bundles is not provided, everything is is unacceptable.
+	lib.assert_equal(bundles.unacceptable_task_bundle(tasks), expected)
 }
 
 task_bundles := {"reg.com/repo": [
@@ -126,6 +130,7 @@ test_unacceptable_bundle_is_unacceptable if {
 test_missing_required_data if {
 	lib.assert_equal(bundles.missing_task_bundles_data, false) with data["task-bundles"] as task_bundles
 	lib.assert_equal(bundles.missing_task_bundles_data, true) with data["task-bundles"] as []
+	lib.assert_equal(bundles.missing_task_bundles_data, true)
 }
 
 test_newer_in_effect_version_exists_not_using_tags_newest if {

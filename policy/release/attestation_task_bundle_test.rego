@@ -163,12 +163,12 @@ test_acceptable_bundle_out_of_date_past if {
 	images := ["reg.com/repo@sha256:bcd", "reg.com/repo@sha256:cde"]
 	attestations := [
 		lib_test.mock_slsav02_attestation_bundles(images),
-		lib_test.mock_slsav1_attestation_bundles(images),
+		lib_test.mock_slsav1_attestation_bundles(images, "task-run-0"),
 	]
 
 	lib.assert_equal_results(attestation_task_bundle.warn, {{
 		"code": "attestation_task_bundle.task_ref_bundles_current",
-		"msg": "Pipeline task 'my-task' uses an out of date task bundle 'reg.com/repo@sha256:bcd'",
+		"msg": "Pipeline task 'task-run-0' uses an out of date task bundle 'reg.com/repo@sha256:bcd'",
 	}}) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 		with data.config.policy.when_ns as time.parse_rfc3339_ns("2022-03-12T00:00:00Z")
@@ -183,14 +183,14 @@ test_acceptable_bundle_expired if {
 	image := ["reg.com/repo@sha256:def"]
 	attestations := [
 		lib_test.mock_slsav02_attestation_bundles(image),
-		lib_test.mock_slsav1_attestation_bundles(image),
+		lib_test.mock_slsav1_attestation_bundles(image, "task-run-0"),
 	]
 	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 
 	lib.assert_equal_results(attestation_task_bundle.deny, {{
 		"code": "attestation_task_bundle.task_ref_bundles_acceptable",
-		"msg": "Pipeline task 'my-task' uses an unacceptable task bundle 'reg.com/repo@sha256:def'",
+		"msg": "Pipeline task 'task-run-0' uses an unacceptable task bundle 'reg.com/repo@sha256:def'",
 	}}) with input.attestations as attestations
 		with data["task-bundles"] as task_bundles
 }
@@ -237,7 +237,7 @@ test_warn_cases if {
 		with data["task-bundles"] as bundles
 		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-11-05T00:00:00Z")
 
-	attestation_97f216 := mock_data({"ref": {
+	attestation_97f216 := mock_data({"name": "buildah", "ref": {
 		"name": "buildah",
 		"bundle": "q.io/r//task-buildah@sha256:97f216",
 	}})
@@ -266,7 +266,7 @@ test_warn_cases if {
 		with data["task-bundles"] as bundles
 		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-10-25T00:00:00Z")
 
-	attestation_487b82 := mock_data({"ref": {
+	attestation_487b82 := mock_data({"name": "buildah", "ref": {
 		"name": "buildah",
 		"bundle": "q.io/r//task-buildah@sha256:487b82",
 	}})

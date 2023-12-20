@@ -124,10 +124,10 @@ mock_slsav1_attestation_with_tasks(tasks) := {"statement": {
 	}},
 }}
 
-mock_slsav1_attestation_bundles(bundles) := a if {
+mock_slsav1_attestation_bundles(bundles, task_name) := a if {
 	tasks := [task |
 		some bundle in bundles
-		task := tkn_test.slsav1_task_bundle("my-task", bundle)
+		task := tkn_test.slsav1_task_bundle(task_name, bundle)
 	]
 	a := mock_slsav1_attestation_with_tasks(tasks)
 }

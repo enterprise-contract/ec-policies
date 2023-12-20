@@ -476,7 +476,7 @@ _task(name) := task if {
 	# regal ignore:redundant-existence-check
 	parts[1]
 	task_name := parts[0]
-	pipeline_task_name := sprintf("%s-p", [task_name])
+	pipeline_task_name := sprintf("%s", [task_name])
 
 	task := {
 		"name": pipeline_task_name,
@@ -489,7 +489,7 @@ _task(name) := task if {
 _task(name) := task if {
 	parts := regex.split(`[\[\]=]`, name)
 	not parts[1]
-	pipeline_task_name := sprintf("%s-p", [name])
+	pipeline_task_name := sprintf("%s", [name])
 	task := {
 		"name": pipeline_task_name,
 		"status": "Succeeded",

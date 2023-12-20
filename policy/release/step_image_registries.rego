@@ -36,7 +36,7 @@ deny contains result if {
 	image_ref := tkn.task_step_image_ref(step)
 	allowed_registry_prefixes := lib.rule_data(_rule_data_key)
 	not image_ref_permitted(image_ref, allowed_registry_prefixes)
-	result := lib.result_helper(rego.metadata.chain(), [step_index, tkn.task_name(task), image_ref])
+	result := lib.result_helper(rego.metadata.chain(), [step_index, tkn.pipeline_task_name(task), image_ref])
 }
 
 # METADATA

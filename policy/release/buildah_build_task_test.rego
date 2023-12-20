@@ -87,7 +87,8 @@ test_dockerfile_param_http_source if {
 test_buildah_task_has_dockerfile_param if {
 	expected := {{
 		"code": "buildah_build_task.buildah_task_has_dockerfile_param",
-		"msg": "The DOCKERFILE param was not included in the buildah task(s): \"buildah\"",
+		# regal: ignore:line-length
+		"msg": "The pipeline task \"buildah\" does not contain the DOCKERFILE param. This is a requirement for the underlying task \"buildah\"",
 		"term": "buildah",
 	}}
 
@@ -173,19 +174,20 @@ test_multiple_buildah_tasks_one_without_params if {
 		"buildType": lib.tekton_pipeline_run,
 		"buildConfig": {"tasks": [
 			{
-				"name": "b1",
+				"name": "buildah",
 				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
 				"invocation": {"parameters": {"DOCKERFILE": "one/Dockerfile"}},
 			},
 			{
-				"name": "b2",
+				"name": "buildah",
 				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
 			},
 		]},
 	}}}
 	expected := {{
 		"code": "buildah_build_task.buildah_task_has_dockerfile_param",
-		"msg": "The DOCKERFILE param was not included in the buildah task(s): \"buildah\"",
+		# regal: ignore:line-length
+		"msg": "The pipeline task \"buildah\" does not contain the DOCKERFILE param. This is a requirement for the underlying task \"buildah\"",
 		"term": "buildah",
 	}}
 	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [attestation]
@@ -193,17 +195,17 @@ test_multiple_buildah_tasks_one_without_params if {
 	tasks := [
 		{
 			"name": "task",
-			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
-				"op": "add",
-				"path": "/taskRef/name",
-				"value": "task1",
+			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_task("buildah"), [{
+				"op": "replace",
+				"path": "/spec/taskRef/name",
+				"value": "buildah",
 			}]))),
 		},
 		{
 			"name": "pipelineTask",
-			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
-				"op": "add",
-				"path": "/params",
+			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_task("buildah"), [{
+				"op": "replace",
+				"path": "/spec/params",
 				"value": [{}],
 			}]))),
 		},
@@ -277,18 +279,11 @@ _attestation(task_name, params) := {"statement": {"predicate": {
 }}}
 
 _slsav1_attestation(task_name, params) := attestation if {
-	content := base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [
-		{
-			"op": "replace",
-			"path": "/params",
-			"value": params,
-		},
-		{
-			"op": "replace",
-			"path": "/taskRef/name",
-			"value": task_name,
-		},
-	])))
+	content := base64.encode(json.marshal(json.patch(tkn_test.slsav1_task(task_name), [{
+		"op": "replace",
+		"path": "/spec/params",
+		"value": params,
+	}])))
 	attestation := {"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
 		"predicate": {"buildDefinition": {

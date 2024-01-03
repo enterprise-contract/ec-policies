@@ -465,6 +465,35 @@ test_task_step_image_ref if {
 	)
 }
 
+test_pipeline_task_slsav1 if {
+	slsav1_task_spec := {"metadata": {
+		"name": "clone-build-push-run-cb7ch-build-push",
+		"labels": {
+			"app.kubernetes.io/managed-by": "tekton-pipelines",
+			"app.kubernetes.io/version": "0.5",
+			"tekton.dev/memberOf": "tasks",
+			"tekton.dev/pipeline": "clone-build-push-run-cb7ch",
+			"tekton.dev/pipelineRun": "clone-build-push-run-cb7ch",
+			"tekton.dev/pipelineTask": "build-push",
+			"tekton.dev/task": "buildah",
+		},
+	}}
+	lib.assert_equal(tkn.pipeline_task_name(slsav1_task_spec), "build-push")
+	lib.assert_equal(tkn.pipeline_task_name(slsav1_task("my-pipeline")), "my-pipeline")
+}
+
+test_pipeline_task_slsav02 if {
+	slsav02_inline_task_spec := {
+		"name": "copy-settings",
+		"after": ["clone-repository"],
+		"ref": {},
+	}
+	lib.assert_equal(tkn.pipeline_task_name(slsav02_inline_task_spec), "copy-settings")
+
+	task := {"name": "git-clone-p", "ref": {"name": "git-clone"}}
+	lib.assert_equal(tkn.pipeline_task_name(task), "git-clone-p")
+}
+
 _expected_latest := {
 	"effective_on": "2099-01-02T00:00:00Z",
 	"tasks": [
@@ -560,9 +589,12 @@ _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e
 slsav1_task(name) := task if {
 	parts := regex.split(`[\[\]=]`, name)
 	not parts[1]
-	pipeline_task_name := sprintf("%s-p", [name])
+	pipeline_task_name := sprintf("%s", [name])
 	unnamed_task := {
-		"metadata": {"name": pipeline_task_name},
+		"metadata": {
+			"name": pipeline_task_name,
+			"labels": {"tekton.dev/pipelineTask": pipeline_task_name},
+		},
 		"spec": slsav1_attestation_local_spec,
 		"status": {"conditions": [{
 			"type": "Succeeded",
@@ -582,9 +614,12 @@ slsav1_task(name) := task if {
 	# regal ignore:redundant-existence-check
 	parts[1]
 	task_name := parts[0]
-	pipeline_task_name := sprintf("%s-p", [task_name])
+	pipeline_task_name := sprintf("%s", [task_name])
 	unnamed_task := {
-		"metadata": {"name": pipeline_task_name},
+		"metadata": {
+			"name": pipeline_task_name,
+			"labels": {"tekton.dev/pipelineTask": pipeline_task_name},
+		},
 		"spec": slsav1_attestation_local_spec,
 		"status": {"conditions": [{
 			"type": "Succeeded",

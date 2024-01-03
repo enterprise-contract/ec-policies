@@ -68,7 +68,10 @@ deny contains result if {
 	some task in tkn.tasks(att)
 	some status in _status(task)
 	status != "Succeeded"
-	result := lib.result_helper_with_term(rego.metadata.chain(), [tkn.task_name(task), status], tkn.task_name(task))
+	result := lib.result_helper_with_term(
+		rego.metadata.chain(),
+		[tkn.pipeline_task_name(task), status], tkn.pipeline_task_name(task),
+	)
 }
 
 # METADATA

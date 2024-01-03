@@ -97,6 +97,19 @@ task_names(task) := names if {
 # task name from a v0.2 and v1.0 attestation
 task_name(task) := refs.task_ref(task).name
 
+# returns a slsav0.2 pipeline task name
+# the name field (which is the taskRun name) for slsav1.0 is metadata.name
+# so this only passes for slsav0.2
+pipeline_task_name(task) := task.name
+
+# returns a slsav1.0 pipeline task name
+pipeline_task_name(task) := name if {
+	not task.name
+	some label, value in task.metadata.labels
+	label == "tekton.dev/pipelineTask"
+	name := value
+}
+
 # _task_params returns an object where keys are parameter names
 # and values are parameter values.
 # Handle parameters of a task from a PipelineRun attestation.

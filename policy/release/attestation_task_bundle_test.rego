@@ -302,6 +302,51 @@ test_warn_cases if {
 		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-10-22T00:00:00Z")
 }
 
+test_ec316 if {
+	image_ref := "registry.io/repository/image:0.3@sha256:abc"
+	attestations := [
+		mock_data({
+			"name": "my-task",
+			"ref": {"name": "my-task", "bundle": image_ref},
+		}),
+		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle("my-task", image_ref)]),
+	]
+
+	acceptable_bundles := {"registry.io/repository/image": [
+		{
+			"digest": "sha256:abc",
+			"effective_on": "2024-02-02T00:00:00Z",
+			"tag": "0.1",
+		},
+		{
+			"digest": "sha256:abc",
+			"effective_on": "2024-02-02T00:00:00Z",
+			"tag": "0.2",
+		},
+		{
+			"digest": "sha256:abc",
+			"effective_on": "2024-02-02T00:00:00Z",
+			"tag": "0.3",
+		},
+		{
+			"digest": "sha256:abc",
+			"effective_on": "2024-01-21T00:00:00Z",
+			"tag": "0.3",
+		},
+		{
+			"digest": "sha256:abc",
+			"effective_on": "2024-01-21T00:00:00Z",
+			"tag": "0.3",
+		},
+	]}
+
+	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
+		with data["task-bundles"] as acceptable_bundles
+
+	lib.assert_empty(attestation_task_bundle.deny) with input.attestations as attestations
+		with data["task-bundles"] as acceptable_bundles
+}
+
 task_bundles := {"reg.com/repo": [
 	{
 		# Latest v2

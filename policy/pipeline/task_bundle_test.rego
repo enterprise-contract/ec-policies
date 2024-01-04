@@ -105,6 +105,47 @@ test_acceptable_bundle_expired if {
 		with data["task-bundles"] as task_bundles
 }
 
+test_ec316 if {
+	tasks := [{
+		"name": "my-task",
+		"taskRef": {"bundle": "registry.io/repository/image:0.3@sha256:abc"},
+	}]
+
+	acceptable_bundles := {"registry.io/repository/image": [
+		{
+			"digest": "sha256:abc",
+			"effective_on": "2024-02-02T00:00:00Z",
+			"tag": "0.1",
+		},
+		{
+			"digest": "sha256:abc",
+			"effective_on": "2024-02-02T00:00:00Z",
+			"tag": "0.2",
+		},
+		{
+			"digest": "sha256:abc",
+			"effective_on": "2024-02-02T00:00:00Z",
+			"tag": "0.3",
+		},
+		{
+			"digest": "sha256:abc",
+			"effective_on": "2024-01-21T00:00:00Z",
+			"tag": "0.3",
+		},
+		{
+			"digest": "sha256:abc",
+			"effective_on": "2024-01-21T00:00:00Z",
+			"tag": "0.3",
+		},
+	]}
+
+	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks
+		with data["task-bundles"] as acceptable_bundles
+
+	lib.assert_empty(task_bundle.deny) with input.spec.tasks as tasks
+		with data["task-bundles"] as acceptable_bundles
+}
+
 test_missing_required_data if {
 	expected := {{
 		"code": "task_bundle.missing_required_data",

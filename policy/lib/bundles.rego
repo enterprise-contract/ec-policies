@@ -3,6 +3,7 @@ package lib.bundles
 import future.keywords.if
 import future.keywords.in
 
+import data.lib.arrays
 import data.lib.image
 import data.lib.refs
 import data.lib.time as time_lib
@@ -149,12 +150,9 @@ _newer_version_exists(ref) if {
 	# all records in acceptable task bundles for the given repository
 	records := _task_bundles[ref.repo]
 
-	some record in records
-
-	# consider all records, if a match is found via exact digest and there
-	# exists a newer record for the same tag but it is newer, i.e. has greater
-	# effective_on value
-	record.digest == ref.digest
+	# find the record with the newest effective_on for the given digest
+	records_with_same_digest := arrays.sort_by("effective_on", [r | some r in records; r.digest == ref.digest])
+	record := records_with_same_digest[count(records_with_same_digest) - 1]
 
 	some other in records
 
@@ -174,12 +172,9 @@ _newer_version_exists(ref) if {
 	# all records in acceptable task bundles for the given repository
 	records := _task_bundles[ref.repo]
 
-	some record in records
-
-	# consider all records, if a match is found via exact digest and there
-	# exists a newer record for the same tag but it is newer, i.e. has greater
-	# effective_on value
-	record.digest == ref.digest
+	# find the record with the newest effective_on for the given digest
+	records_with_same_digest := arrays.sort_by("effective_on", [r | some r in records; r.digest == ref.digest])
+	record := records_with_same_digest[count(records_with_same_digest) - 1]
 
 	# No other record in acceptable bundles matches the tag from the record
 	# matched by the digest to the reference

@@ -8,18 +8,18 @@ import data.lib
 import data.lib.tkn
 
 test_latest_required_tasks if {
-	expected := {t | some t in _expected_latest.tasks}
+	expected := [t | some t in _expected_latest.tasks]
 	lib.assert_equal(
 		expected,
-		tkn.latest_required_default_tasks,
+		tkn.latest_required_default_tasks.tasks,
 	) with data["required-tasks"] as _time_based_required_tasks
 }
 
 test_current_required_tasks if {
-	expected := {t | some t in _expected_current.tasks}
+	expected := [t | some t in _expected_current.tasks]
 	lib.assert_equal(
 		expected,
-		tkn.current_required_default_tasks,
+		tkn.current_required_default_tasks.tasks,
 	) with data["required-tasks"] as _time_based_required_tasks
 }
 

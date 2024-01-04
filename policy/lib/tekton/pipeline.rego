@@ -13,12 +13,12 @@ task_label := "build.appstudio.redhat.com/build_type"
 
 latest_required_pipeline_tasks(pipeline) := pipeline_tasks if {
 	pipeline_data := required_task_list(pipeline)
-	pipeline_tasks := ectime.newest(pipeline_data).tasks
+	pipeline_tasks := ectime.newest(pipeline_data)
 }
 
 current_required_pipeline_tasks(pipeline) := pipeline_tasks if {
 	pipeline_data := required_task_list(pipeline)
-	pipeline_tasks := ectime.most_current(pipeline_data).tasks
+	pipeline_tasks := ectime.most_current(pipeline_data)
 }
 
 # get the label from the pipelineRun attestation and return the

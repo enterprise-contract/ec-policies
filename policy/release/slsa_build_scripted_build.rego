@@ -17,7 +17,9 @@ import future.keywords.if
 import future.keywords.in
 
 import data.lib
+import data.lib.bundles
 import data.lib.image
+import data.lib.refs
 import data.lib.tkn
 
 # METADATA
@@ -112,6 +114,37 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [subject_image_ref])
 }
 
+# METADATA
+# title: Image built by trusted Task
+# description: >-
+#   Verify the digest of the image being validated is reported by a trusted Task in its IMAGE_DIGEST
+#   result.
+# custom:
+#   short_name: image_built_by_trusted_task
+#   failure_msg: 'Image %q not built by a trusted task: %s'
+#   solution: Make sure the build Pipeline definition uses a trusted Task to build images.
+#   collections:
+#   - redhat
+#   depends_on:
+#   - attestation_type.known_attestation_type
+#
+deny contains result if {
+	expected_digest := input.image.ref
+
+	# Find all the Tekton Bundle references from the Tasks that claim to have built the image being
+	# validated.
+	bundles := {bundle |
+		some attestation in lib.pipelinerun_attestations
+		some build_task in tkn.build_tasks(attestation)
+		digest := tkn.task_result(build_task, "IMAGE_DIGEST")
+		digest == expected_digest
+		bundle := refs.task_ref(build_task).bundle
+	}
+
+	error := trusted_build_task_error(bundles)
+	result := lib.result_helper(rego.metadata.chain(), [expected_digest, error])
+}
+
 task_steps(task) := steps if {
 	steps := task.steps
 } else := []
@@ -119,4 +152,13 @@ task_steps(task) := steps if {
 subject_digest(subject) := digest if {
 	some algorithm, value in subject.digest
 	digest := concat(":", [algorithm, value])
+}
+
+trusted_build_task_error(build_task_bundles) := error if {
+	count(build_task_bundles) == 0
+	error := "No Pipeline Tasks built the image"
+} else := error if {
+	some task in bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)
+	refs.task_ref(task).bundle in build_task_bundles
+	error := sprintf("Build Task %q is not trusted", [tkn.task_name(task)])
 }

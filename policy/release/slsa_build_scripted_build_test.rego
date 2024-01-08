@@ -23,7 +23,7 @@ test_all_good if {
 		"steps": [{"entrypoint": "/bin/bash"}],
 	}]
 
-	image := {"ref": _image_digest}
+	image := {"ref": _image_ref}
 
 	task_bundles := {mock_bundle_repo: [{
 		"digest": mock_bundle_digest,
@@ -366,11 +366,11 @@ test_image_built_by_trusted_task_no_build_task if {
 		}],
 	)
 
-	image := {"ref": _image_digest}
+	image := {"ref": _image_ref}
 
 	expected := {{
 		"code": "slsa_build_scripted_build.image_built_by_trusted_task",
-		"msg": "Image \"sha256:123\" not built by a trusted task: No Pipeline Tasks built the image",
+		"msg": "Image \"some.image/foo:bar@sha256:123\" not built by a trusted task: No Pipeline Tasks built the image",
 	}}
 
 	lib.assert_equal_results(expected, slsa_build_scripted_build.deny) with input.image as image
@@ -394,11 +394,11 @@ test_image_built_by_trusted_task_not_trusted if {
 		"steps": [{"entrypoint": "/bin/bash"}],
 	}]
 
-	image := {"ref": _image_digest}
+	image := {"ref": _image_ref}
 
 	expected := {{
 		"code": "slsa_build_scripted_build.image_built_by_trusted_task",
-		"msg": "Image \"sha256:123\" not built by a trusted task: Build Task \"buildah\" is not trusted",
+		"msg": "Image \"some.image/foo:bar@sha256:123\" not built by a trusted task: Build Task \"buildah\" is not trusted",
 	}}
 
 	lib.assert_equal_results(expected, slsa_build_scripted_build.deny) with input.image as image
@@ -412,6 +412,8 @@ _image_digest_algorithm := "sha256"
 _image_digest_value := "123"
 
 _image_digest := concat(":", [_image_digest_algorithm, _image_digest_value])
+
+_image_ref := sprintf("%s@%s:%s", [_image_url, _image_digest_algorithm, _image_digest_value])
 
 _mock_attestation(original_tasks) := d if {
 	default_task := {

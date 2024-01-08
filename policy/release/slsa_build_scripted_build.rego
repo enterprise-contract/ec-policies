@@ -129,7 +129,8 @@ deny contains result if {
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	expected_digest := input.image.ref
+	expected_ref := input.image.ref
+	expected_digest := image.parse(expected_ref).digest
 
 	# Find all the Tekton Bundle references from the Tasks that claim to have built the image being
 	# validated.
@@ -142,7 +143,7 @@ deny contains result if {
 	}
 
 	error := trusted_build_task_error(bundles)
-	result := lib.result_helper(rego.metadata.chain(), [expected_digest, error])
+	result := lib.result_helper(rego.metadata.chain(), [expected_ref, error])
 }
 
 task_steps(task) := steps if {

@@ -413,7 +413,7 @@ _image_digest_value := "123"
 
 _image_digest := concat(":", [_image_digest_algorithm, _image_digest_value])
 
-_image_ref := sprintf("%s@%s:%s", [_image_url, _image_digest_algorithm, _image_digest_value])
+_image_ref := sprintf("%s@%s", [_image_url, _image_digest])
 
 _mock_attestation(original_tasks) := d if {
 	default_task := {

@@ -100,6 +100,36 @@ deny contains result if {
 }
 
 # METADATA
+# title: All required tasks are from acceptable bundles
+# description: >-
+#   Ensure that the all required tasks are resolved from acceptable bundles.
+# custom:
+#   short_name: required_task_unacceptable_found
+#   failure_msg: '%s is required and present but not from an acceptable bundle'
+#   solution: >-
+#     Make sure all required tasks in the build pipeline are resolved from
+#     acceptable bundles.
+#   collections:
+#   - redhat
+#   depends_on:
+#   - tasks.pipeline_has_tasks
+#
+warn contains result if {
+	some att in lib.pipelinerun_attestations
+
+	# only tasks that are unacceptable
+	some unacceptable_task in bundles.unacceptable_task_bundle(tkn.tasks(att))
+	some missing_required_name in _missing_tasks(current_required_tasks)
+	some unacceptable_task_name in tkn.task_names(unacceptable_task)
+
+	unacceptable_task_name == missing_required_name
+	result := lib.result_helper_with_term(
+		rego.metadata.chain(), [_format_missing(unacceptable_task_name, false)],
+		unacceptable_task_name,
+	)
+}
+
+# METADATA
 # title: Required tasks list for pipeline was provided
 # description: >-
 #   Produce a warning if the required tasks list rule data was not provided.

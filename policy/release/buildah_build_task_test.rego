@@ -87,7 +87,7 @@ test_dockerfile_param_http_source if {
 test_buildah_task_has_dockerfile_param if {
 	expected := {{
 		"code": "buildah_build_task.buildah_task_has_dockerfile_param",
-		# regal: ignore:line-length
+		# regal ignore:line-length
 		"msg": "The pipeline task \"buildah\" does not contain the DOCKERFILE param. This is a requirement for the underlying task \"buildah\"",
 		"term": "buildah",
 	}}
@@ -186,7 +186,7 @@ test_multiple_buildah_tasks_one_without_params if {
 	}}}
 	expected := {{
 		"code": "buildah_build_task.buildah_task_has_dockerfile_param",
-		# regal: ignore:line-length
+		# regal ignore:line-length
 		"msg": "The pipeline task \"buildah\" does not contain the DOCKERFILE param. This is a requirement for the underlying task \"buildah\"",
 		"term": "buildah",
 	}}

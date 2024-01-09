@@ -5,7 +5,7 @@ go 1.21.4
 require (
 	github.com/enterprise-contract/ec-cli v0.0.0-20231127194641-1b0ff5216773
 	github.com/open-policy-agent/conftest v0.48.0
-	github.com/styrainc/regal v0.14.0
+	github.com/styrainc/regal v0.15.0
 	github.com/tektoncd/cli v0.33.0
 	oras.land/oras v1.1.0
 )
@@ -156,7 +156,7 @@ require (
 	github.com/go-jose/go-jose/v3 v3.0.1 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
-	github.com/go-logr/logr v1.3.0 // indirect
+	github.com/go-logr/logr v1.4.0 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/analysis v0.21.4 // indirect
 	github.com/go-openapi/errors v0.20.4 // indirect
@@ -193,7 +193,7 @@ require (
 	github.com/google/go-jsonnet v0.20.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
-	github.com/google/pprof v0.0.0-20231023181126-ff6d637d2a7b // indirect
+	github.com/google/pprof v0.0.0-20231212022811-ec68065c825e // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/google/trillian v1.5.3 // indirect

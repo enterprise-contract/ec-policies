@@ -10,10 +10,12 @@ import data.policy.pipeline.required_tasks
 test_required_tasks_met if {
 	pipeline := _pipeline_with_tasks_and_label(_expected_required_tasks, [], [])
 	lib.assert_empty(required_tasks.deny) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 
 	pipeline_finally := _pipeline_with_tasks_and_label([], _expected_required_tasks, [])
 	lib.assert_empty(required_tasks.deny) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline_finally
 }
 
@@ -26,16 +28,19 @@ test_required_tasks_not_met if {
 		expected,
 		required_tasks.deny,
 	) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
 test_future_required_tasks_met if {
 	pipeline := _pipeline_with_tasks_and_label(_expected_future_required_tasks, [], [])
 	lib.assert_empty(required_tasks.warn) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 
 	pipeline_finally := _pipeline_with_tasks_and_label([], _expected_future_required_tasks, [])
 	lib.assert_empty(required_tasks.warn) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline_finally
 }
 
@@ -43,10 +48,12 @@ test_not_warn_if_only_future_required_tasks if {
 	tasks := _time_based_pipeline_required_tasks_future_only
 	pipeline := _pipeline_with_tasks_and_label(_expected_future_required_tasks, [], [])
 	lib.assert_empty(required_tasks.warn) with data["pipeline-required-tasks"] as tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 
 	pipeline_finally := _pipeline_with_tasks_and_label([], _expected_future_required_tasks, [])
 	lib.assert_empty(required_tasks.warn) with data["pipeline-required-tasks"] as tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline_finally
 }
 
@@ -59,6 +66,7 @@ test_future_required_tasks_not_met if {
 		expected,
 		required_tasks.warn,
 	) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
@@ -66,6 +74,7 @@ test_extra_tasks_ignored if {
 	pipeline := _pipeline_with_tasks_and_label(_expected_future_required_tasks | {"spam"}, [], [])
 	all := required_tasks.deny | required_tasks.warn
 	lib.assert_empty(all) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
@@ -79,20 +88,24 @@ test_missing_pipeline_label if {
 		expected,
 		required_tasks.warn,
 	) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
 test_default_required_task_met if {
 	pipeline := _pipeline_with_tasks(_expected_required_tasks, [], [])
 	lib.assert_empty(required_tasks.deny) with data["required-tasks"] as _time_based_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 
 	pipeline_finally := _pipeline_with_tasks([], _expected_required_tasks, [])
 	lib.assert_empty(required_tasks.deny) with data["required-tasks"] as _time_based_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline_finally
 
 	expected_warn := _missing_pipeline_tasks_warning("fbc")
 	lib.assert_equal_results(expected_warn, required_tasks.warn) with data["required-tasks"] as _expected_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
@@ -102,10 +115,12 @@ test_default_required_tasks_not_met if {
 
 	expected := _missing_default_tasks_violation(missing_tasks)
 	lib.assert_equal_results(expected, required_tasks.deny) with data["required-tasks"] as _time_based_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 
 	expected_warn := _missing_pipeline_tasks_warning("fbc")
 	lib.assert_equal_results(expected_warn, required_tasks.warn) with data["required-tasks"] as _expected_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
@@ -116,6 +131,7 @@ test_default_future_required_tasks_met if {
 		expected_warn,
 		required_tasks.warn,
 	) with data["required-tasks"] as _time_based_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 
 	pipeline_finally := _pipeline_with_tasks([], _expected_future_required_tasks, [])
@@ -123,6 +139,7 @@ test_default_future_required_tasks_met if {
 		expected_warn,
 		required_tasks.warn,
 	) with data["required-tasks"] as _time_based_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline_finally
 }
 
@@ -137,6 +154,7 @@ test_default_future_required_tasks_not_met if {
 		"term": "conftest-clair",
 	}}
 	lib.assert_equal_results(expected, required_tasks.warn) with data["required-tasks"] as _time_based_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
@@ -145,6 +163,7 @@ test_current_equal_latest if {
 	pipeline := _pipeline_with_tasks_and_label(_expected_future_required_tasks, [], [])
 
 	lib.assert_empty(required_tasks.deny | required_tasks.warn) with data["pipeline-required-tasks"] as req_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
@@ -153,6 +172,7 @@ test_current_equal_latest_also if {
 	pipeline := _pipeline_with_tasks_and_label(_expected_required_tasks, [], [])
 
 	lib.assert_empty(required_tasks.warn) with data["pipeline-required-tasks"] as req_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 
 	required_tasks_denies := {"fbc": [{
@@ -164,6 +184,7 @@ test_current_equal_latest_also if {
 		expected_denies,
 		required_tasks.deny,
 	) with data["pipeline-required-tasks"] as required_tasks_denies
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
@@ -177,18 +198,21 @@ test_no_tasks_present if {
 		expected,
 		required_tasks.deny,
 	) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as {"kind": "Pipeline"}
 
 	lib.assert_equal_results(
 		expected,
 		required_tasks.deny,
 	) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as {"kind": "Pipeline", "spec": {}}
 
 	lib.assert_equal_results(
 		expected,
 		required_tasks.deny,
 	) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as {"kind": "Pipeline", "spec": {"tasks": [], "finally": []}}
 }
 
@@ -215,6 +239,7 @@ test_parameterized if {
 
 	expected := _missing_default_tasks_violation({"label-check[POLICY_NAMESPACE=required_checks]"})
 	lib.assert_equal_results(expected, required_tasks.deny) with data["required-tasks"] as _time_based_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
@@ -236,6 +261,7 @@ test_one_of_required_tasks if {
 		"effective_on": "2009-01-02T00:00:00Z",
 	}]}
 	lib.assert_empty(required_tasks.deny) with data["pipeline-required-tasks"] as data_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
@@ -261,6 +287,7 @@ test_one_of_required_tasks_missing if {
 	}
 
 	lib.assert_equal_results(expected, required_tasks.deny) with data["pipeline-required-tasks"] as data_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
@@ -271,6 +298,7 @@ test_future_one_of_required_tasks if {
 		"effective_on": "2099-01-02T00:00:00Z",
 	}]}
 	lib.assert_empty(required_tasks.warn) with data["pipeline-required-tasks"] as data_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
@@ -298,6 +326,7 @@ test_future_one_of_required_tasks_missing if {
 		expected,
 		required_tasks.warn,
 	) with data["pipeline-required-tasks"] as data_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input as pipeline
 }
 
@@ -437,3 +466,9 @@ _time_based_required_tasks := [
 ]
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
+
+_expected_bundles := {"registry.img/spam": [{
+	"digest": "sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb",
+	"tag": "0.1",
+	"effective_on": "2000-01-01T00:00:00Z",
+}]}

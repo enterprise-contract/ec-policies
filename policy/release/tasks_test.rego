@@ -76,10 +76,12 @@ test_failed_tasks if {
 test_required_tasks_met if {
 	attestations := _attestations_with_tasks(_expected_required_tasks, [])
 	lib.assert_empty(tasks.deny) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestations
 
 	slsav1_attestations := _slsav1_attestations_with_tasks(_expected_required_tasks, [])
 	lib.assert_empty(tasks.deny) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as slsav1_attestations
 }
 
@@ -87,19 +89,23 @@ test_required_tasks_met_no_label if {
 	attestations := _attestations_with_tasks(_expected_required_tasks, [])
 	lib.assert_empty(tasks.deny) with data["required-tasks"] as _time_based_required_tasks
 		with data["pipeline-required-tasks"] as {}
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestations
 
 	attestations_no_label := _attestations_with_tasks_no_label(_expected_required_tasks, [])
 	lib.assert_empty(tasks.deny) with data["required-tasks"] as _time_based_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestations_no_label
 
 	slsav1_attestations := _slsav1_attestations_with_tasks(_expected_required_tasks, [])
 	lib.assert_empty(tasks.deny) with data["required-tasks"] as _time_based_required_tasks
 		with data["pipeline-required-tasks"] as {}
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as slsav1_attestations
 
 	slsav1_attestations_no_label := _slsav1_attestations_with_tasks_no_label(_expected_required_tasks, [])
 	lib.assert_empty(tasks.deny) with data["required-tasks"] as _time_based_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as slsav1_attestations_no_label
 }
 
@@ -132,6 +138,7 @@ test_required_tasks_not_met if {
 		expected,
 		tasks.deny,
 	) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestations
 
 	slsav1_attestations := _slsav1_attestations_with_tasks(_expected_required_tasks - missing_tasks, [])
@@ -139,16 +146,19 @@ test_required_tasks_not_met if {
 		expected,
 		tasks.deny,
 	) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as slsav1_attestations
 }
 
 test_future_required_tasks_met if {
 	attestations := _attestations_with_tasks(_expected_future_required_tasks, [])
 	lib.assert_empty(tasks.warn) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestations
 
 	slsav1_attestations := _slsav1_attestations_with_tasks(_expected_future_required_tasks, [])
 	lib.assert_empty(tasks.warn) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as slsav1_attestations
 }
 
@@ -161,6 +171,7 @@ test_future_required_tasks_not_met if {
 		expected,
 		tasks.warn,
 	) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestations
 
 	slsav1_attestations := _slsav1_attestations_with_tasks(_expected_future_required_tasks - missing_tasks, [])
@@ -168,20 +179,25 @@ test_future_required_tasks_not_met if {
 		expected,
 		tasks.warn,
 	) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as slsav1_attestations
 }
 
 test_extra_tasks_ignored if {
 	attestations := _attestations_with_tasks(_expected_future_required_tasks | {"spam"}, [])
 	lib.assert_empty(tasks.deny) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestations
 	lib.assert_empty(tasks.warn) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestations
 
 	slsav1_attestations := _slsav1_attestations_with_tasks(_expected_future_required_tasks | {"spam"}, [])
 	lib.assert_empty(tasks.deny) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as slsav1_attestations
 	lib.assert_empty(tasks.warn) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as slsav1_attestations
 }
 
@@ -193,6 +209,7 @@ test_current_equal_latest if {
 	attestations := _attestations_with_tasks(_expected_future_required_tasks, [])
 
 	lib.assert_empty(tasks.deny | tasks.warn) with data["pipeline-required-tasks"] as required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestations
 }
 
@@ -204,17 +221,21 @@ test_current_equal_latest_also if {
 	attestations := _attestations_with_tasks(_expected_required_tasks, [])
 
 	lib.assert_empty(tasks.warn) with data["pipeline-required-tasks"] as required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestations
 
 	expected_denies := _missing_tasks_violation(_expected_future_required_tasks - _expected_required_tasks)
 	lib.assert_equal_results(expected_denies, tasks.deny) with data["pipeline-required-tasks"] as required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestations
 
 	slsav1_attestations := _slsav1_attestations_with_tasks(_expected_required_tasks, [])
 	lib.assert_empty(tasks.warn) with data["pipeline-required-tasks"] as required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as slsav1_attestations
 
 	lib.assert_equal_results(expected_denies, tasks.deny) with data["pipeline-required-tasks"] as required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as slsav1_attestations
 }
 
@@ -247,9 +268,10 @@ test_parameterized if {
 		tasks.deny,
 		expected,
 	) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestations
 
-	slsav1_no_param := tkn_test.slsav1_task("label-check")
+	slsav1_no_param := tkn_test.slsav1_task_bundle("label-check", _bundle)
 	slsav1_task1 := json.patch(slsav1_no_param, [{
 		"op": "replace",
 		"path": "/spec/params",
@@ -266,6 +288,7 @@ test_parameterized if {
 		tasks.deny,
 		expected,
 	) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as slsav1_attestations
 }
 
@@ -339,10 +362,12 @@ test_one_of_required_tasks if {
 		"effective_on": "2009-01-02T00:00:00Z",
 	}]}
 	lib.assert_empty(tasks.deny) with data["pipeline-required-tasks"] as data_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestation_v02
 
 	attestation_v1 := _slsav1_attestations_with_tasks(["a", "b", "c1", "d2", "e", "f"], [])
 	lib.assert_empty(tasks.deny) with data["pipeline-required-tasks"] as data_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestation_v1
 }
 
@@ -368,10 +393,12 @@ test_one_of_required_tasks_missing if {
 	}
 
 	lib.assert_equal_results(expected, tasks.deny) with data["pipeline-required-tasks"] as data_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestation_v02
 
 	attestation_v1 := _slsav1_attestations_with_tasks(["a", "b", "d2", "e", "f"], [])
 	lib.assert_equal_results(expected, tasks.deny) with data["pipeline-required-tasks"] as data_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestation_v1
 }
 
@@ -382,10 +409,12 @@ test_future_one_of_required_tasks if {
 		"effective_on": "2099-01-02T00:00:00Z",
 	}]}
 	lib.assert_empty(tasks.warn) with data["pipeline-required-tasks"] as data_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestation_v02
 
 	attestation_v1 := _slsav1_attestations_with_tasks(["a", "b", "c1", "d2", "e", "f"], [])
 	lib.assert_empty(tasks.warn) with data["pipeline-required-tasks"] as data_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestation_v1
 }
 
@@ -413,6 +442,7 @@ test_future_one_of_required_tasks_missing if {
 		expected,
 		tasks.warn,
 	) with data["pipeline-required-tasks"] as data_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestation_v02
 
 	attestation_v1 := _slsav1_attestations_with_tasks(["a", "b", "d2", "e", "f"], [])
@@ -420,7 +450,30 @@ test_future_one_of_required_tasks_missing if {
 		expected,
 		tasks.warn,
 	) with data["pipeline-required-tasks"] as data_required_tasks
+		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestation_v1
+}
+
+test_required_task_from_unacceptable if {
+	attestations := _attestations_with_tasks(_expected_required_tasks - {"buildah"}, [{
+		"name": "buildah",
+		"ref": {"name": "buildah", "kind": "Task", "bundle": "registry.io/repository/unacceptable"},
+	}])
+	expected := {
+		{
+			"code": "tasks.future_required_tasks_found",
+			"msg": "Task \"conftest-clair\" is missing and will be required in the future",
+			"term": "conftest-clair",
+		},
+		{
+			"code": "tasks.required_task_unacceptable_found",
+			"msg": "Required task \"buildah\" is required and present but not from an acceptable bundle",
+			"term": "buildah",
+		},
+	}
+	lib.assert_equal_results(expected, tasks.warn) with data["pipeline-required-tasks"] as _required_pipeline_tasks
+		with data["task-bundles"] as _expected_bundles
+		with input.attestations as attestations
 }
 
 _attestations_with_tasks(names, add_tasks) := attestations if {
@@ -434,7 +487,7 @@ _attestations_with_tasks(names, add_tasks) := attestations if {
 }
 
 _slsav1_attestations_with_tasks(names, add_tasks) := attestations if {
-	slsav1_tasks := array.concat([t | some name in names; t := tkn_test.slsav1_task(name)], add_tasks)
+	slsav1_tasks := array.concat([t | some name in names; t := tkn_test.slsav1_task_bundle(name, _bundle)], add_tasks)
 
 	attestations := [{"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
@@ -457,7 +510,7 @@ _attestations_with_tasks_no_label(names, add_tasks) := attestations if {
 }
 
 _slsav1_attestations_with_tasks_no_label(names, add_tasks) := attestations if {
-	slsav1_tasks := array.concat([t | some name in names; t := tkn_test.slsav1_task(name)], add_tasks)
+	slsav1_tasks := array.concat([t | some name in names; t := tkn_test.slsav1_task_bundle(name, _bundle)], add_tasks)
 
 	attestations := [{"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
@@ -593,3 +646,9 @@ _time_based_required_tasks := [
 ]
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
+
+_expected_bundles := {"registry.img/spam": [{
+	"digest": "sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb",
+	"tag": "0.1",
+	"effective_on": "2000-01-01T00:00:00Z",
+}]}

@@ -19,6 +19,7 @@ import future.keywords.if
 import future.keywords.in
 
 import data.lib
+import data.lib.bundles
 import data.lib.tkn
 
 # METADATA
@@ -99,6 +100,36 @@ deny contains result if {
 }
 
 # METADATA
+# title: All required tasks are from acceptable bundles
+# description: >-
+#   Ensure that the all required tasks are resolved from acceptable bundles.
+# custom:
+#   short_name: required_task_unacceptable_found
+#   failure_msg: '%s is required and present but not from an acceptable bundle'
+#   solution: >-
+#     Make sure all required tasks in the build pipeline are resolved from
+#     acceptable bundles.
+#   collections:
+#   - redhat
+#   depends_on:
+#   - tasks.pipeline_has_tasks
+#
+warn contains result if {
+	some att in lib.pipelinerun_attestations
+
+	# only tasks that are unacceptable
+	some unacceptable_task in bundles.unacceptable_task_bundle(tkn.tasks(att))
+	some missing_required_name in _missing_tasks(current_required_tasks)
+	some unacceptable_task_name in tkn.task_names(unacceptable_task)
+
+	unacceptable_task_name == missing_required_name
+	result := lib.result_helper_with_term(
+		rego.metadata.chain(), [_format_missing(unacceptable_task_name, false)],
+		unacceptable_task_name,
+	)
+}
+
+# METADATA
 # title: Required tasks list for pipeline was provided
 # description: >-
 #   Produce a warning if the required tasks list rule data was not provided.
@@ -170,10 +201,21 @@ deny contains result if {
 # required_tasks, but not in the PipelineRun attestation.
 _missing_tasks(required_tasks) := {task |
 	some att in lib.pipelinerun_attestations
-	count(tkn.tasks(att)) > 0
+
+	# all tasks on a PipelineRun
+	tasks := tkn.tasks(att)
+	count(tasks) > 0
+
+	# only tasks that are acceptable, i.e. tasks that have a record in the
+	# acceptable bundles data
+	acceptable := [task_name |
+		some task in tasks
+		bundles.is_acceptable_task(task)
+		some task_name in tkn.task_names(task)
+	]
 
 	some required_task in required_tasks
-	some task in _any_missing(required_task, tkn.tasks_names(att))
+	some task in _any_missing(required_task, acceptable)
 }
 
 _any_missing(required, tasks) := missing if {

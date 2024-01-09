@@ -57,6 +57,13 @@ unacceptable_task_bundle(tasks) := {task |
 	_is_unacceptable(ref)
 }
 
+# Returns if the task uses an acceptable bundle reference
+is_acceptable_task(task) if {
+	ref := image.parse(_bundle_ref(task, _task_bundles))
+
+	_record_exists(ref)
+}
+
 _is_unacceptable(ref) if {
 	not _record_exists(ref)
 }

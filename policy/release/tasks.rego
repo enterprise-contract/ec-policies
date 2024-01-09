@@ -19,6 +19,7 @@ import future.keywords.if
 import future.keywords.in
 
 import data.lib
+import data.lib.bundles
 import data.lib.tkn
 
 # METADATA
@@ -170,10 +171,21 @@ deny contains result if {
 # required_tasks, but not in the PipelineRun attestation.
 _missing_tasks(required_tasks) := {task |
 	some att in lib.pipelinerun_attestations
-	count(tkn.tasks(att)) > 0
+
+	# all tasks on a PipelineRun
+	tasks := tkn.tasks(att)
+	count(tasks) > 0
+
+	# only tasks that are acceptable, i.e. tasks that have a record in the
+	# acceptable bundles data
+	acceptable := [task_name |
+		some task in tasks
+		bundles.is_acceptable_task(task)
+		some task_name in tkn.task_names(task)
+	]
 
 	some required_task in required_tasks
-	some task in _any_missing(required_task, tkn.tasks_names(att))
+	some task in _any_missing(required_task, acceptable)
 }
 
 _any_missing(required, tasks) := missing if {

@@ -13,6 +13,7 @@ import future.keywords.if
 import future.keywords.in
 
 import data.lib
+import data.lib.bundles
 import data.lib.tkn
 
 # METADATA
@@ -103,8 +104,14 @@ deny contains result if {
 # _missing_tasks returns a set of task names that are in the given
 # required_tasks, but not in the pipeline definition.
 _missing_tasks(required_tasks) := {task |
+	acceptable := [task_name |
+		some task in tkn.tasks(input)
+		bundles.is_acceptable_task(task)
+		some task_name in tkn.task_names(task)
+	]
+
 	some required_task in required_tasks
-	some task in _any_missing(required_task, tkn.tasks_names(input))
+	some task in _any_missing(required_task, acceptable)
 }
 
 _any_missing(required, tasks) := missing if {

@@ -308,3 +308,16 @@ test_newer_version_exists_tags_as_versions_older if {
 	]}
 	bundles._newer_version_exists(ref) with data["task-bundles"] as acceptable
 }
+
+test_is_acceptable if {
+	acceptable := {"registry.io/repository/image": [{
+		"digest": "sha256:digest",
+		"tag": "",
+		"effective_on": "1962-04-11T00:00:00Z",
+	}]}
+	acceptable_task := {"name": "my-task", "taskRef": {"bundle": "registry.io/repository/image:tag@sha256:digest"}}
+	bundles.is_acceptable_task(acceptable_task) with data["task-bundles"] as acceptable
+
+	unacceptable_task := {"name": "my-task", "taskRef": {"bundle": "registry.io/other/image:tag@sha256:digest"}}
+	not bundles.is_acceptable_task(unacceptable_task) with data["task-bundles"] as acceptable
+}

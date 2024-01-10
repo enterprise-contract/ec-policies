@@ -19,7 +19,6 @@ import future.keywords.in
 import data.lib
 import data.lib.bundles
 import data.lib.image
-import data.lib.refs
 import data.lib.tkn
 
 # METADATA
@@ -134,15 +133,14 @@ deny contains result if {
 
 	# Find all the Tekton Bundle references from the Tasks that claim to have built the image being
 	# validated.
-	bundles := {bundle |
+	tasks := {build_task |
 		some attestation in lib.pipelinerun_attestations
 		some build_task in tkn.build_tasks(attestation)
 		digest := tkn.task_result(build_task, "IMAGE_DIGEST")
 		digest == expected_digest
-		bundle := refs.task_ref(build_task).bundle
 	}
 
-	error := trusted_build_task_error(bundles)
+	error := _trusted_build_task_error(tasks)
 	result := lib.result_helper(rego.metadata.chain(), [expected_ref, error])
 }
 
@@ -155,11 +153,17 @@ subject_digest(subject) := digest if {
 	digest := concat(":", [algorithm, value])
 }
 
-trusted_build_task_error(build_task_bundles) := error if {
-	count(build_task_bundles) == 0
+_trusted_build_task_error(tasks) := error if {
+	count(tasks) == 0
 	error := "No Pipeline Tasks built the image"
 } else := error if {
-	some task in bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)
-	refs.task_ref(task).bundle in build_task_bundles
-	error := sprintf("Build Task %q is not trusted", [tkn.task_name(task)])
+	unacceptable_tasks := bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)
+	unacceptable_build_tasks = unacceptable_tasks & tasks
+	count(unacceptable_build_tasks) > 0
+
+	names := {name |
+		some task in unacceptable_build_tasks
+		name := tkn.task_name(task)
+	}
+	error := sprintf("Build Task(s) %q are not trusted", [concat(",", names)])
 }

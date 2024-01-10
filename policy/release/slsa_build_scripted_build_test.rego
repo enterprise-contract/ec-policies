@@ -398,7 +398,54 @@ test_image_built_by_trusted_task_not_trusted if {
 
 	expected := {{
 		"code": "slsa_build_scripted_build.image_built_by_trusted_task",
-		"msg": "Image \"some.image/foo:bar@sha256:123\" not built by a trusted task: Build Task \"buildah\" is not trusted",
+		# regal ignore:line-length
+		"msg": `Image "some.image/foo:bar@sha256:123" not built by a trusted task: Build Task(s) "buildah" are not trusted`,
+	}}
+
+	lib.assert_equal_results(expected, slsa_build_scripted_build.deny) with input.image as image
+		with input.attestations as [_mock_attestation(tasks)]
+}
+
+test_image_built_by_multiple_not_trusted_tasks if {
+	tasks := [
+		{
+			"results": [
+				{"name": "IMAGE_URL", "value": _image_url},
+				{"name": "IMAGE_DIGEST", "value": _image_digest},
+			],
+			"ref": {
+				"resolver": "bundles",
+				"params": [
+					{"name": "bundle", "value": mock_bundle},
+					{"name": "name", "value": "buildah-1"},
+					{"name": "kind", "value": "task"},
+				],
+			},
+			"steps": [{"entrypoint": "/bin/bash"}],
+		},
+		{
+			"results": [
+				{"name": "IMAGE_URL", "value": _image_url},
+				{"name": "IMAGE_DIGEST", "value": _image_digest},
+			],
+			"ref": {
+				"resolver": "bundles",
+				"params": [
+					{"name": "bundle", "value": mock_bundle},
+					{"name": "name", "value": "buildah-2"},
+					{"name": "kind", "value": "task"},
+				],
+			},
+			"steps": [{"entrypoint": "/bin/bash"}],
+		},
+	]
+
+	image := {"ref": _image_ref}
+
+	expected := {{
+		"code": "slsa_build_scripted_build.image_built_by_trusted_task",
+		# regal ignore:line-length
+		"msg": `Image "some.image/foo:bar@sha256:123" not built by a trusted task: Build Task(s) "buildah-1,buildah-2" are not trusted`,
 	}}
 
 	lib.assert_equal_results(expected, slsa_build_scripted_build.deny) with input.image as image

@@ -51,7 +51,7 @@ test_bundle_resolver_in_pipeline if {
 test_bundle_in_pipelinerun_with_defaults if {
 	image := "registry.img/test@sha256:digest"
 	ref := {"ref": {"bundle": image}}
-	info := {"bundle": image, "kind": "task", "name": ""}
+	info := {"bundle": image, "kind": "task", "name": refs._no_task_name}
 	lib.assert_equal(refs.task_ref(ref), info)
 }
 
@@ -62,7 +62,7 @@ test_bundle_resolver_in_pipelinerun_with_defaults if {
 		"params": [{"name": "bundle", "value": image}],
 	}}
 
-	info := {"bundle": image, "kind": "task", "name": ""}
+	info := {"bundle": image, "kind": "task", "name": refs._no_task_name}
 	lib.assert_equal(refs.task_ref(ref), info)
 }
 
@@ -99,4 +99,101 @@ test_git_resolver_in_slsav1_pipelinerun if {
 		"kind": "task",
 	}
 	lib.assert_equal(refs.task_ref(ref), info)
+}
+
+test_ref_name_slsa_v0_2 if {
+	# Local reference
+	lib.assert_equal(
+		refs.task_ref({
+			"name": "my-pipeline-task",
+			"status": "Succeeded",
+			"ref": {"name": "my-task", "kind": "Task"},
+		}).name,
+		"my-task",
+	)
+
+	# Git resolver
+	lib.assert_equal(
+		refs.task_ref({
+			"name": "my-pipeline-task",
+			"status": "Succeeded",
+			"ref": {
+				"kind": "Task",
+				"resolver": "git",
+				"params": [{"name": "revision", "value": "main"}],
+			},
+			"invocation": {"environment": {"labels": {"tekton.dev/task": "my-task"}}},
+		}).name,
+		"my-task",
+	)
+
+	# Bundles resolver
+	lib.assert_equal(
+		refs.task_ref({
+			"name": "my-pipeline-task",
+			"status": "Succeeded",
+			"ref": {
+				"kind": "Task",
+				"resolver": "bundles",
+				"params": [
+					{"name": "bundle", "value": "registry.local/test:latest"},
+					{"name": "name", "value": "my-task"},
+				],
+			},
+		}).name,
+		"my-task",
+	)
+
+	# Inlined definition
+	lib.assert_equal(
+		refs.task_ref({
+			"name": "pipeline-task-06",
+			"status": "Succeeded",
+			"ref": {},
+		}).name,
+		refs._no_task_name,
+	)
+}
+
+test_ref_name_slsa_v1_0 if {
+	# Local reference
+	lib.assert_equal(
+		refs.task_ref({"spec": {"taskRef": {
+			"name": "my-task",
+			"kind": "Task",
+		}}}).name,
+		"my-task",
+	)
+
+	# Git resolver
+	lib.assert_equal(
+		refs.task_ref({
+			"metadata": {"labels": {"tekton.dev/task": "my-task"}},
+			"spec": {"taskRef": {
+				"kind": "Task",
+				"resolver": "git",
+				"params": [{"name": "revision", "value": "main"}],
+			}},
+		}).name,
+		"my-task",
+	)
+
+	# Bundles resolver
+	lib.assert_equal(
+		refs.task_ref({"spec": {"taskRef": {
+			"kind": "Task",
+			"resolver": "bundles",
+			"params": [
+				{"name": "bundle", "value": "registry.local/test:latest"},
+				{"name": "name", "value": "my-task"},
+			],
+		}}}).name,
+		"my-task",
+	)
+
+	# Inlined definition
+	lib.assert_equal(
+		refs.task_ref({"spec": {"taskSpec": {"steps": [], "params": []}}}).name,
+		refs._no_task_name,
+	)
 }

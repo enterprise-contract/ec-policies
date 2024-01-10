@@ -277,7 +277,6 @@ test_tasks_from_pipeline_with_spam if {
 					"params": [{"name": "SPAM", "value": "MAPS"}],
 				},
 				{"taskRef": {"name": "ignored-bad-kind", "kind": "NotTask", "bundle": _bundle}},
-				{}, # Obviously, also ignored.
 			],
 			"finally": [{"taskRef": {"name": "summary", "kind": "Task", "bundle": _bundle}}],
 		},

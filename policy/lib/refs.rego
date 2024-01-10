@@ -19,7 +19,7 @@ task_ref(task) := i if {
 	r := _ref(task)
 	i := {
 		"bundle": r.bundle,
-		"name": object.get(r, "name", ""),
+		"name": _ref_name(task),
 		"kind": lower(object.get(r, "kind", "task")),
 	}
 } else := i if {
@@ -28,7 +28,7 @@ task_ref(task) := i if {
 	r.resolver == "bundles"
 	i := {
 		"bundle": _param(r, "bundle", ""),
-		"name": _param(r, "name", ""),
+		"name": _ref_name(task),
 		"kind": lower(_param(r, "kind", "task")),
 	}
 } else := i if {
@@ -38,14 +38,14 @@ task_ref(task) := i if {
 		"url": _param(r, "url", ""),
 		"revision": _param(r, "revision", ""),
 		"pathInRepo": _param(r, "pathInRepo", ""),
-		"name": object.get(r, "name", ""),
+		"name": _ref_name(task),
 		"kind": lower(object.get(r, "kind", "task")),
 	}
 } else := i if {
 	# Handle local reference
 	r := _ref(task)
 	i := {
-		"name": object.get(r, "name", ""),
+		"name": _ref_name(task),
 		"kind": lower(object.get(r, "kind", "task")),
 	}
 }
@@ -65,4 +65,31 @@ _ref(task) := r if {
 } else := r if {
 	# reference from a taskRun in a slsav1 attestation
 	r := task.spec.taskRef
-}
+} else := {}
+
+# _ref_name returns the name of the given Task. This is the name taken from the Task definition. It
+# tries to grab the name from the "tekton.dev/task" which is automatically added by the Tekton
+# Pipeline controller: https://tekton.dev/docs/pipelines/labels/#automatic-labeling
+# There are a few reasons the label may not be available. The first is due to incomplete data,
+# usually in the unit tests. The second is if this is processing a Pipeline/Task definition
+# directly. Finally, the last is if the Task is an inlined/embedded Task.
+_ref_name(task) := name if {
+	# Location of labels in SLSA Provenance v1.0
+	some label, value in task.metadata.labels
+	label == "tekton.dev/task"
+	name := value
+} else := name if {
+	# Location of labels in SLSA Provenance v0.2
+	some label, value in task.invocation.environment.labels
+	label == "tekton.dev/task"
+	name := value
+} else := name if {
+	# Some resolvers specify the name of the Task as a parameter, e.g. bundles and hub.
+	name := _param(_ref(task), "name", "")
+	name != ""
+} else := name if {
+	# Pipeline/Task definition
+	name := _ref(task).name
+} else := _no_task_name
+
+_no_task_name := "<NAMELESS>"

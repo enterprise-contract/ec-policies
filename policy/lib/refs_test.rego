@@ -4,196 +4,284 @@ import data.lib
 import data.lib.refs
 import future.keywords.if
 
-test_bundle_in_pipelinerun if {
-	image := "registry.img/test@sha256:digest"
-	ref := {"ref": {"bundle": image, "kind": "Task", "name": "test"}}
-	info := {"bundle": image, "kind": "task", "name": "test"}
-	lib.assert_equal(refs.task_ref(ref), info)
+_image := "registry.img/test@sha256:digest"
+
+_unpinned_image := "registry.img/test:latest"
+
+_git_path := "tasks/test.yaml"
+
+_git_commit := "48df630394794f28142224295851a45eea5c63ae"
+
+_git_branch := "main"
+
+_git_url := "git.local/repo.git"
+
+test_bundle_in_definition if {
+	lib.assert_equal(
+		refs.task_ref({"taskRef": {"bundle": _image, "name": "test", "kind": "Task"}}),
+		{"bundle": _image, "kind": "task", "name": "test", "pinned": true},
+	)
+
+	lib.assert_equal(
+		refs.task_ref({"taskRef": {"bundle": _unpinned_image, "name": "test", "kind": "Task"}}),
+		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false},
+	)
 }
 
-test_bundle_resolver_in_pipelinerun if {
-	image := "registry.img/test@sha256:digest"
-	ref := {"ref": {
-		"resolver": "bundles",
-		"params": [
-			{"name": "bundle", "value": image},
+test_bundle_in_slsa_v1_0 if {
+	lib.assert_equal(
+		refs.task_ref({"spec": {"taskRef": {"name": "test", "kind": "Task", "bundle": _image}}}),
+		{"bundle": _image, "kind": "task", "name": "test", "pinned": true},
+	)
+
+	lib.assert_equal(
+		refs.task_ref({"spec": {"taskRef": {"name": "test", "kind": "Task", "bundle": _unpinned_image}}}),
+		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false},
+	)
+}
+
+test_bundle_in_slsa_v0_2 if {
+	lib.assert_equal(
+		refs.task_ref({"ref": {"name": "test", "kind": "Task", "bundle": _image}}),
+		{"bundle": _image, "kind": "task", "name": "test", "pinned": true},
+	)
+
+	lib.assert_equal(
+		refs.task_ref({"ref": {"name": "test", "kind": "Task", "bundle": _unpinned_image}}),
+		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false},
+	)
+}
+
+test_bundles_resolver_in_definition if {
+	lib.assert_equal(
+		refs.task_ref({"taskRef": {"resolver": "bundles", "params": [
+			{"name": "bundle", "value": _image},
 			{"name": "name", "value": "test"},
 			{"name": "kind", "value": "task"},
-		],
-	}}
+		]}}),
+		{"bundle": _image, "kind": "task", "name": "test", "pinned": true},
+	)
 
-	info := {"bundle": image, "kind": "task", "name": "test"}
-	lib.assert_equal(refs.task_ref(ref), info)
-}
-
-test_bundle_in_pipeline if {
-	image := "registry.img/test@sha256:digest"
-	ref := {"taskRef": {"bundle": image, "name": "test", "kind": "Task"}}
-	info := {"bundle": image, "kind": "task", "name": "test"}
-	lib.assert_equal(refs.task_ref(ref), info)
-}
-
-test_bundle_resolver_in_pipeline if {
-	image := "registry.img/test@sha256:digest"
-	ref := {"taskRef": {
-		"resolver": "bundles",
-		"params": [
-			{"name": "bundle", "value": image},
+	lib.assert_equal(
+		refs.task_ref({"taskRef": {"resolver": "bundles", "params": [
+			{"name": "bundle", "value": _unpinned_image},
 			{"name": "name", "value": "test"},
 			{"name": "kind", "value": "task"},
-		],
-	}}
-
-	info := {"bundle": image, "kind": "task", "name": "test"}
-	lib.assert_equal(refs.task_ref(ref), info)
+		]}}),
+		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false},
+	)
 }
 
-test_bundle_in_pipelinerun_with_defaults if {
-	image := "registry.img/test@sha256:digest"
-	ref := {"ref": {"bundle": image}}
-	info := {"bundle": image, "kind": "task", "name": refs._no_task_name}
-	lib.assert_equal(refs.task_ref(ref), info)
+test_bundles_resolver_in_slsa_v1_0 if {
+	lib.assert_equal(
+		refs.task_ref({"spec": {"taskRef": {"resolver": "bundles", "params": [
+			{"name": "bundle", "value": _image},
+			{"name": "name", "value": "test"},
+			{"name": "kind", "value": "task"},
+		]}}}),
+		{"bundle": _image, "kind": "task", "name": "test", "pinned": true},
+	)
+
+	lib.assert_equal(
+		refs.task_ref({"spec": {"taskRef": {"resolver": "bundles", "params": [
+			{"name": "bundle", "value": _unpinned_image},
+			{"name": "name", "value": "test"},
+			{"name": "kind", "value": "task"},
+		]}}}),
+		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false},
+	)
 }
 
-test_bundle_resolver_in_pipelinerun_with_defaults if {
-	image := "registry.img/test@sha256:digest"
-	ref := {"ref": {
-		"resolver": "bundles",
-		"params": [{"name": "bundle", "value": image}],
-	}}
+test_bundles_resolver_in_slsa_v0_2 if {
+	lib.assert_equal(
+		refs.task_ref({"ref": {"resolver": "bundles", "params": [
+			{"name": "bundle", "value": _image},
+			{"name": "name", "value": "test"},
+			{"name": "kind", "value": "task"},
+		]}}),
+		{"bundle": _image, "kind": "task", "name": "test", "pinned": true},
+	)
 
-	info := {"bundle": image, "kind": "task", "name": refs._no_task_name}
-	lib.assert_equal(refs.task_ref(ref), info)
+	lib.assert_equal(
+		refs.task_ref({"ref": {"resolver": "bundles", "params": [
+			{"name": "bundle", "value": _unpinned_image},
+			{"name": "name", "value": "test"},
+			{"name": "kind", "value": "task"},
+		]}}),
+		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false},
+	)
 }
 
-test_slsav1_local_ref if {
-	ref := {"spec": {"taskRef": {"name": "task-name", "kind": "Task"}}}
-	info := {"kind": "task", "name": "task-name"}
-	lib.assert_equal(refs.task_ref(ref), info)
+test_git_resolver_in_definition if {
+	# NOTE: When using the git resolver, the name of the Task is only known when the Task/Pipeline
+	# is executed. Since we are testing a resource definition here, the Task reference name in
+	# always unknown.
+
+	lib.assert_equal(
+		refs.task_ref({"taskRef": {"resolver": "git", "params": [
+			{"name": "revision", "value": _git_commit},
+			{"name": "pathInRepo", "value": _git_path},
+			{"name": "url", "value": _git_url},
+		]}}),
+		{
+			"kind": "task",
+			"name": refs._no_task_name,
+			"pathInRepo": _git_path,
+			"revision": _git_commit,
+			"url": _git_url,
+			"pinned": true,
+		},
+	)
+
+	lib.assert_equal(
+		refs.task_ref({"taskRef": {"resolver": "git", "params": [
+			{"name": "revision", "value": _git_branch},
+			{"name": "pathInRepo", "value": _git_path},
+			{"name": "url", "value": _git_url},
+		]}}),
+		{
+			"kind": "task",
+			"name": refs._no_task_name,
+			"pathInRepo": _git_path,
+			"revision": _git_branch,
+			"url": _git_url,
+			"pinned": false,
+		},
+	)
 }
 
-test_git_resolver_in_slsav1_pipelinerun if {
-	ref := {"spec": {"taskRef": {
-		"name": "git-clone",
-		"kind": "Task",
-		"resolver": "git",
-		"params": [
-			{
-				"name": "url",
-				"value": "https://github.com/enterprise-contract/hacbs-docker-build.git",
-			},
-			{
-				"name": "revision",
-				"value": "main",
-			},
-			{
-				"name": "pathInRepo",
-				"value": "pipelines/git-clone.yaml",
-			},
-		],
-	}}}
-	info := {
-		"url": "https://github.com/enterprise-contract/hacbs-docker-build.git",
-		"revision": "main", "pathInRepo": "pipelines/git-clone.yaml",
-		"name": "git-clone",
-		"kind": "task",
-	}
-	lib.assert_equal(refs.task_ref(ref), info)
-}
-
-test_ref_name_slsa_v0_2 if {
-	# Local reference
+test_git_resolver_in_slsa_v1_0 if {
 	lib.assert_equal(
 		refs.task_ref({
-			"name": "my-pipeline-task",
-			"status": "Succeeded",
-			"ref": {"name": "my-task", "kind": "Task"},
-		}).name,
-		"my-task",
+			"metadata": {"labels": {"tekton.dev/task": "test"}},
+			"spec": {"taskRef": {"resolver": "git", "params": [
+				{"name": "revision", "value": _git_commit},
+				{"name": "pathInRepo", "value": _git_path},
+				{"name": "url", "value": _git_url},
+			]}},
+		}),
+		{
+			"kind": "task",
+			"name": "test",
+			"pathInRepo": _git_path,
+			"revision": _git_commit,
+			"url": _git_url,
+			"pinned": true,
+		},
 	)
 
-	# Git resolver
 	lib.assert_equal(
 		refs.task_ref({
-			"name": "my-pipeline-task",
-			"status": "Succeeded",
-			"ref": {
-				"kind": "Task",
-				"resolver": "git",
-				"params": [{"name": "revision", "value": "main"}],
-			},
-			"invocation": {"environment": {"labels": {"tekton.dev/task": "my-task"}}},
-		}).name,
-		"my-task",
-	)
-
-	# Bundles resolver
-	lib.assert_equal(
-		refs.task_ref({
-			"name": "my-pipeline-task",
-			"status": "Succeeded",
-			"ref": {
-				"kind": "Task",
-				"resolver": "bundles",
-				"params": [
-					{"name": "bundle", "value": "registry.local/test:latest"},
-					{"name": "name", "value": "my-task"},
-				],
-			},
-		}).name,
-		"my-task",
-	)
-
-	# Inlined definition
-	lib.assert_equal(
-		refs.task_ref({
-			"name": "pipeline-task-06",
-			"status": "Succeeded",
-			"ref": {},
-		}).name,
-		refs._no_task_name,
+			"metadata": {"labels": {"tekton.dev/task": "test"}},
+			"spec": {"taskRef": {"resolver": "git", "params": [
+				{"name": "revision", "value": _git_branch},
+				{"name": "pathInRepo", "value": _git_path},
+				{"name": "url", "value": _git_url},
+			]}},
+		}),
+		{
+			"kind": "task",
+			"name": "test",
+			"pathInRepo": _git_path,
+			"revision": _git_branch,
+			"url": _git_url,
+			"pinned": false,
+		},
 	)
 }
 
-test_ref_name_slsa_v1_0 if {
-	# Local reference
-	lib.assert_equal(
-		refs.task_ref({"spec": {"taskRef": {
-			"name": "my-task",
-			"kind": "Task",
-		}}}).name,
-		"my-task",
-	)
-
-	# Git resolver
+test_git_resolver_in_slsa_v0_2 if {
 	lib.assert_equal(
 		refs.task_ref({
-			"metadata": {"labels": {"tekton.dev/task": "my-task"}},
-			"spec": {"taskRef": {
-				"kind": "Task",
-				"resolver": "git",
-				"params": [{"name": "revision", "value": "main"}],
-			}},
-		}).name,
-		"my-task",
+			"invocation": {"environment": {"labels": {"tekton.dev/task": "test"}}},
+			"ref": {"resolver": "git", "params": [
+				{"name": "revision", "value": _git_commit},
+				{"name": "pathInRepo", "value": _git_path},
+				{"name": "url", "value": _git_url},
+			]},
+		}),
+		{
+			"kind": "task",
+			"name": "test",
+			"pathInRepo": _git_path,
+			"revision": _git_commit,
+			"url": _git_url,
+			"pinned": true,
+		},
 	)
 
-	# Bundles resolver
 	lib.assert_equal(
-		refs.task_ref({"spec": {"taskRef": {
-			"kind": "Task",
-			"resolver": "bundles",
-			"params": [
-				{"name": "bundle", "value": "registry.local/test:latest"},
-				{"name": "name", "value": "my-task"},
-			],
-		}}}).name,
-		"my-task",
+		refs.task_ref({
+			"invocation": {"environment": {"labels": {"tekton.dev/task": "test"}}},
+			"ref": {"resolver": "git", "params": [
+				{"name": "revision", "value": _git_branch},
+				{"name": "pathInRepo", "value": _git_path},
+				{"name": "url", "value": _git_url},
+			]},
+		}),
+		{
+			"kind": "task",
+			"name": "test",
+			"pathInRepo": _git_path,
+			"revision": _git_branch,
+			"url": _git_url,
+			"pinned": false,
+		},
 	)
+}
 
-	# Inlined definition
+test_inlined_task_in_definition if {
 	lib.assert_equal(
-		refs.task_ref({"spec": {"taskSpec": {"steps": [], "params": []}}}).name,
-		refs._no_task_name,
+		refs.task_ref({"taskSpec": {"params": [], "steps": []}}),
+		{"kind": "task", "name": refs._no_task_name, "pinned": true},
+	)
+}
+
+test_inlined_task_in_slsa_v1_0 if {
+	lib.assert_equal(
+		refs.task_ref({"spec": {"taskSpec": {"steps": [], "params": []}}}),
+		{"kind": "task", "name": refs._no_task_name, "pinned": true},
+	)
+}
+
+test_inlined_task_in_slsa_v0_2 if {
+	lib.assert_equal(
+		refs.task_ref({"ref": {}}),
+		{"kind": "task", "name": refs._no_task_name, "pinned": true},
+	)
+}
+
+test_local_task_in_definition if {
+	lib.assert_equal(
+		refs.task_ref({"taskRef": {"name": "test", "kind": "Task"}}),
+		{"kind": "task", "name": "test", "pinned": false},
+	)
+}
+
+test_local_task_in_slsa_v1_0 if {
+	lib.assert_equal(
+		refs.task_ref({"spec": {"taskRef": {"name": "test", "kind": "Task"}}}),
+		{"kind": "task", "name": "test", "pinned": false},
+	)
+}
+
+test_local_task_in_slsa_v0_2 if {
+	lib.assert_equal(
+		refs.task_ref({"ref": {"name": "test", "kind": "Task"}}),
+		{"kind": "task", "name": "test", "pinned": false},
+	)
+}
+
+test_bundle_with_defaults if {
+	lib.assert_equal(
+		refs.task_ref({"ref": {"bundle": _image}}),
+		{"bundle": _image, "kind": "task", "name": refs._no_task_name, "pinned": true},
+	)
+}
+
+test_bundle_resolver_with_defaults if {
+	lib.assert_equal(
+		refs.task_ref({"ref": {"resolver": "bundles", "params": [{"name": "bundle", "value": _image}]}}),
+		{"bundle": _image, "kind": "task", "name": refs._no_task_name, "pinned": true},
 	)
 }

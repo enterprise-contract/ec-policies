@@ -54,17 +54,35 @@ test_failed_tasks if {
 	}}}]
 
 	slsav1_tasks := [
-		tkn_test.slsav1_task("buildah"),
-		json.patch(tkn_test.slsav1_task("av-scanner"), [{
-			"op": "replace",
-			"path": "/status/conditions",
-			"value": [{"type": "Succeeded", "status": "False"}],
+		json.patch(tkn_test.slsav1_task("buildah"), [{
+			"op": "add",
+			"path": "/spec/taskRef/bundle",
+			"value": _bundle,
 		}]),
-		json.patch(tkn_test.slsav1_task("cve-scanner"), [{
-			"op": "replace",
-			"path": "/status/conditions",
-			"value": [],
-		}]),
+		json.patch(tkn_test.slsav1_task("av-scanner"), [
+			{
+				"op": "replace",
+				"path": "/status/conditions",
+				"value": [{"type": "Succeeded", "status": "False"}],
+			},
+			{
+				"op": "add",
+				"path": "/spec/taskRef/bundle",
+				"value": _bundle,
+			},
+		]),
+		json.patch(tkn_test.slsav1_task("cve-scanner"), [
+			{
+				"op": "replace",
+				"path": "/status/conditions",
+				"value": [],
+			},
+			{
+				"op": "add",
+				"path": "/spec/taskRef/bundle",
+				"value": _bundle,
+			},
+		]),
 	]
 
 	lib.assert_equal_results(
@@ -474,6 +492,94 @@ test_required_task_from_unacceptable if {
 	lib.assert_equal_results(expected, tasks.warn) with data["pipeline-required-tasks"] as _required_pipeline_tasks
 		with data["task-bundles"] as _expected_bundles
 		with input.attestations as attestations
+}
+
+test_pinned_task_refs_slsa_v0_2 if {
+	att := {"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": [
+			# Unpinned
+			{
+				"name": "pipeline-task-01",
+				"status": "Succeeded",
+				"ref": {
+					"kind": "Task",
+					"resolver": "git",
+					"params": [{"name": "revision", "value": "main"}],
+				},
+				"invocation": {"environment": {"labels": {"tekton.dev/task": "task-01"}}},
+			},
+			# Pinned
+			{
+				"name": "pipeline-task-02",
+				"status": "Succeeded",
+				"ref": {
+					"kind": "Task",
+					"resolver": "git",
+					"params": [{"name": "revision", "value": "48df630394794f28142224295851a45eea5c63ae"}],
+				},
+				"invocation": {"environment": {"labels": {"tekton.dev/task": "task-02"}}},
+			},
+		]},
+	}}}
+
+	expected := {{
+		"code": "tasks.pinned_task_refs",
+		"msg": "Task task-01 is used by pipeline task pipeline-task-01 via an unpinned reference.",
+		"term": "task-01",
+	}}
+
+	lib.assert_equal_results(tasks.deny, expected) with input.attestations as [att]
+}
+
+test_pinned_task_refs_slsa_v1 if {
+	att := {"statement": {
+		"predicateType": "https://slsa.dev/provenance/v1",
+		"predicate": {"buildDefinition": {
+			"buildType": lib.tekton_slsav1_pipeline_run,
+			"externalParameters": {"runSpec": {"pipelineRef": {"name": "pipeline1"}}},
+			"resolvedDependencies": [
+				{
+					"name": "pipelineTask", # Unpinned
+					"content": base64.encode(json.marshal({
+						"metadata": {"labels": {
+							"tekton.dev/task": "task-01",
+							"tekton.dev/pipelineTask": "pipeline-task-01",
+						}},
+						"spec": {"taskRef": {
+							"kind": "Task",
+							"resolver": "git",
+							"params": [{"name": "revision", "value": "main"}],
+						}},
+						"status": {"conditions": [{"type": "Succeeded", "status": "True"}]},
+					})),
+				},
+				{
+					"name": "pipelineTask", # Pinned
+					"content": base64.encode(json.marshal({
+						"metadata": {"labels": {
+							"tekton.dev/task": "task-02",
+							"tekton.dev/pipelineTask": "pipeline-task-02",
+						}},
+						"spec": {"taskRef": {
+							"kind": "Task",
+							"resolver": "git",
+							"params": [{"name": "revision", "value": "48df630394794f28142224295851a45eea5c63ae"}],
+						}},
+						"status": {"conditions": [{"type": "Succeeded", "status": "True"}]},
+					})),
+				},
+			],
+		}},
+	}}
+
+	expected := {{
+		"code": "tasks.pinned_task_refs",
+		"msg": "Task task-01 is used by pipeline task pipeline-task-01 via an unpinned reference.",
+		"term": "task-01",
+	}}
+
+	lib.assert_equal_results(tasks.deny, expected) with input.attestations as [att]
 }
 
 _attestations_with_tasks(names, add_tasks) := attestations if {

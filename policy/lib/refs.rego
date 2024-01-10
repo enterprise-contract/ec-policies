@@ -17,29 +17,45 @@ import future.keywords.in
 task_ref(task) := i if {
 	# Handle old-style bundle reference
 	r := _ref(task)
+	bundle := r.bundle
 	i := {
-		"bundle": r.bundle,
+		"bundle": bundle,
 		"name": _ref_name(task),
 		"kind": lower(object.get(r, "kind", "task")),
+		"pinned": _has_digest(bundle),
 	}
 } else := i if {
 	# Handle bundle-resolver reference
 	r := _ref(task)
 	r.resolver == "bundles"
+	bundle := _param(r, "bundle", "")
 	i := {
-		"bundle": _param(r, "bundle", ""),
+		"bundle": bundle,
 		"name": _ref_name(task),
 		"kind": lower(_param(r, "kind", "task")),
+		"pinned": _has_digest(bundle),
 	}
 } else := i if {
 	r := _ref(task)
 	r.resolver == "git"
+	revision := _param(r, "revision", "")
 	i := {
 		"url": _param(r, "url", ""),
-		"revision": _param(r, "revision", ""),
+		"revision": revision,
 		"pathInRepo": _param(r, "pathInRepo", ""),
 		"name": _ref_name(task),
 		"kind": lower(object.get(r, "kind", "task")),
+		"pinned": _is_sha1(revision),
+	}
+} else := i if {
+	# Handle inlined Task definitions
+	_ref(task) == {}
+	i := {
+		# The Task definition itself is inlined without a name. Use a special value here to
+		# distinguish from other reference types.
+		"name": _no_task_name,
+		"kind": "task",
+		"pinned": true,
 	}
 } else := i if {
 	# Handle local reference
@@ -47,8 +63,17 @@ task_ref(task) := i if {
 	i := {
 		"name": _ref_name(task),
 		"kind": lower(object.get(r, "kind", "task")),
+		"pinned": false,
 	}
 }
+
+default _is_sha1(_) := false
+
+_is_sha1(value) if regex.match(`^[0-9a-f]{40}$`, value)
+
+default _has_digest(_) := false
+
+_has_digest(value) if contains(value, "@sha256:")
 
 _param(taskRef, name, fallback) := value if {
 	some param in taskRef.params
@@ -57,10 +82,10 @@ _param(taskRef, name, fallback) := value if {
 } else := fallback
 
 _ref(task) := r if {
-	# Reference from within a PipelineRun attestation
+	# Reference from within a PipelineRun slsa v0.2 attestation
 	r := task.ref
 } else := r if {
-	# Reference from within a Pipeline definition
+	# Reference from within a Pipeline definition or a PipelineRun slsa v1.0 attestation
 	r := task.taskRef
 } else := r if {
 	# reference from a taskRun in a slsav1 attestation

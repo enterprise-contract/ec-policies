@@ -93,10 +93,10 @@ deny contains result if {
 #   - tasks.pipeline_has_tasks
 #
 deny contains result if {
-	some required_task in _missing_tasks(current_required_tasks)
+	some required_task in _missing_tasks(current_required_tasks.tasks)
 
 	# Don't report an error if a task is required now, but not in the future
-	required_task in latest_required_tasks
+	required_task in latest_required_tasks.tasks
 	result := lib.result_helper_with_term(rego.metadata.chain(), [_format_missing(required_task, false)], required_task)
 }
 
@@ -120,7 +120,7 @@ warn contains result if {
 
 	# only tasks that are unacceptable
 	some unacceptable_task in bundles.unacceptable_task_bundle(tkn.tasks(att))
-	some missing_required_name in _missing_tasks(current_required_tasks)
+	some missing_required_name in _missing_tasks(current_required_tasks.tasks)
 	some unacceptable_task_name in tkn.task_names(unacceptable_task)
 
 	unacceptable_task_name == missing_required_name
@@ -157,7 +157,7 @@ warn contains result if {
 #   was not included in the PipelineRun attestation.
 # custom:
 #   short_name: future_required_tasks_found
-#   failure_msg: '%s is missing and will be required in the future'
+#   failure_msg: '%s is missing and will be required on %s'
 #   solution: >-
 #     There is a task that will be required at a future date that is missing
 #     from the build pipeline.
@@ -167,12 +167,16 @@ warn contains result if {
 #   - tasks.pipeline_has_tasks
 #
 warn contains result if {
-	some required_task in _missing_tasks(latest_required_tasks)
+	some required_task in _missing_tasks(latest_required_tasks.tasks)
 
 	# If the required_task is also part of the current_required_tasks, do
 	# not proceed with a warning since that's clearly a violation.
-	not required_task in current_required_tasks
-	result := lib.result_helper_with_term(rego.metadata.chain(), [_format_missing(required_task, true)], required_task)
+	not required_task in current_required_tasks.tasks
+	result := lib.result_helper_with_term(
+		rego.metadata.chain(),
+		[_format_missing(required_task, true), latest_required_tasks.effective_on],
+		required_task,
+	)
 }
 
 # METADATA
@@ -269,6 +273,8 @@ _any_missing(required, tasks) := missing if {
 
 # get the future tasks that are pipeline specific. If none exists
 # get the default list
+default latest_required_tasks := {"tasks": []}
+
 latest_required_tasks := task_data if {
 	some att in lib.pipelinerun_attestations
 	count(tkn.tasks(att)) > 0
@@ -279,6 +285,8 @@ latest_required_tasks := task_data if {
 
 # get current required tasks. fall back to the default list if
 # no label exists in the attestation
+default current_required_tasks := {"tasks": []}
+
 current_required_tasks := task_data if {
 	some att in lib.pipelinerun_attestations
 	count(tkn.tasks(att)) > 0

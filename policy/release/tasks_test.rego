@@ -447,12 +447,12 @@ test_future_one_of_required_tasks_missing if {
 	expected := {
 		{
 			"code": "tasks.future_required_tasks_found",
-			"msg": `One of "c1", "c2", "c3" tasks is missing and will be required in the future`,
+			"msg": `One of "c1", "c2", "c3" tasks is missing and will be required on 2099-01-02T00:00:00Z`,
 			"term": ["c1", "c2", "c3"],
 		},
 		{
 			"code": "tasks.future_required_tasks_found",
-			"msg": `One of "d1", "d3" tasks is missing and will be required in the future`,
+			"msg": `One of "d1", "d3" tasks is missing and will be required on 2099-01-02T00:00:00Z`,
 			"term": ["d1", "d3"],
 		},
 	}
@@ -480,7 +480,7 @@ test_required_task_from_unacceptable if {
 	expected := {
 		{
 			"code": "tasks.future_required_tasks_found",
-			"msg": "Task \"conftest-clair\" is missing and will be required in the future",
+			"msg": "Task \"conftest-clair\" is missing and will be required on 2099-01-02T00:00:00Z",
 			"term": "conftest-clair",
 		},
 		{
@@ -669,7 +669,7 @@ _missing_tasks_warning(tasks) := {warning |
 	some task in tasks
 	warning := {
 		"code": "tasks.future_required_tasks_found",
-		"msg": sprintf("Task %q is missing and will be required in the future", [task]),
+		"msg": sprintf("Task %q is missing and will be required on 2099-01-02T00:00:00Z", [task]),
 		"term": task,
 	}
 }

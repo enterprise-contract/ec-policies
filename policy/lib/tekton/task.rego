@@ -15,14 +15,10 @@ missing_required_tasks_data if {
 
 # The latest set of required tasks. Tasks here are not required right now
 # but will be required in the future.
-latest_required_default_tasks contains task if {
-	some task in ectime.newest(data["required-tasks"]).tasks
-}
+latest_required_default_tasks := ectime.newest(data["required-tasks"])
 
 # The set of required tasks that are required right now.
-current_required_default_tasks contains task if {
-	some task in ectime.most_current(data["required-tasks"]).tasks
-}
+current_required_default_tasks := ectime.most_current(data["required-tasks"])
 
 # tasks returns the set of tasks found in the object.
 tasks(obj) := {task |

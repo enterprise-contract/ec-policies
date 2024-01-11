@@ -150,7 +150,7 @@ test_default_future_required_tasks_not_met if {
 	expected := _missing_pipeline_tasks_warning("fbc") | {{
 		"code": "required_tasks.missing_future_required_task",
 		"effective_on": "2022-01-01T00:00:00Z",
-		"msg": "Task \"conftest-clair\" is missing and will be required in the future",
+		"msg": "Task \"conftest-clair\" is missing and will be required on 2099-01-02T00:00:00Z",
 		"term": "conftest-clair",
 	}}
 	lib.assert_equal_results(expected, required_tasks.warn) with data["required-tasks"] as _time_based_required_tasks
@@ -313,12 +313,12 @@ test_future_one_of_required_tasks_missing if {
 	expected := {
 		{
 			"code": "required_tasks.missing_future_required_task",
-			"msg": `One of "c1", "c2", "c3" tasks is missing and will be required in the future`,
+			"msg": `One of "c1", "c2", "c3" tasks is missing and will be required on 2099-01-02T00:00:00Z`,
 			"term": ["c1", "c2", "c3"],
 		},
 		{
 			"code": "required_tasks.missing_future_required_task",
-			"msg": `One of "d1", "d3" tasks is missing and will be required in the future`,
+			"msg": `One of "d1", "d3" tasks is missing and will be required on 2099-01-02T00:00:00Z`,
 			"term": ["d1", "d3"],
 		},
 	}
@@ -396,7 +396,7 @@ _missing_tasks_warning(tasks) := {warning |
 	some task in tasks
 	warning := {
 		"code": "required_tasks.missing_future_required_task",
-		"msg": sprintf("Task %q is missing and will be required in the future", [task]),
+		"msg": sprintf("Task %q is missing and will be required on 2099-01-02T00:00:00Z", [task]),
 		"term": task,
 	}
 }

@@ -20,6 +20,7 @@ import future.keywords.in
 
 import data.lib
 import data.lib.bundles
+import data.lib.refs
 import data.lib.tkn
 
 # METADATA
@@ -195,6 +196,33 @@ deny contains result if {
 	tkn.missing_required_tasks_data
 	not required_pipeline_task_data
 	result := lib.result_helper(rego.metadata.chain(), [])
+}
+
+# METADATA
+# title: Pinned Task references
+# description: >-
+#   Ensure that all Tasks in the SLSA Provenance attestation use an immuntable reference to the
+#   Task definition.
+# custom:
+#   short_name: pinned_task_refs
+#   failure_msg: Task %s is used by pipeline task %s via an unpinned reference.
+#   solution: >-
+#     Make sure the build pipeline uses Tasks via pinned references. For example, if the git
+#     resolver is used, use a commit ID instead of a branch name.
+#   collections:
+#   - redhat
+#   depends_on:
+#   - tasks.pipeline_has_tasks
+#
+deny contains result if {
+	some att in lib.pipelinerun_attestations
+	some task in tkn.tasks(att)
+	not refs.task_ref(task).pinned
+	result := lib.result_helper_with_term(
+		rego.metadata.chain(),
+		[tkn.task_name(task), tkn.pipeline_task_name(task)],
+		tkn.task_name(task),
+	)
 }
 
 # _missing_tasks returns a set of task names that are in the given

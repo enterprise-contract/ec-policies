@@ -26,6 +26,40 @@ test_rule_data if {
 		with lib.rule_data_defaults as {"key3": 10}
 }
 
+test_rule_data_append_effective_on if {
+	lib.assert_equal(
+		[
+			{
+				"value": 10,
+				"effective_on": lib.time.default_effective_on,
+			},
+			{
+				"value": 20,
+				"effective_on": "2024-01-01T00:00:00Z",
+			},
+			{
+				"value": 30,
+				"effective_on": "9999-01-01T00:00:00Z",
+			},
+		],
+		[
+			lib.rule_data_append_effective_on("key0"),
+			lib.rule_data_append_effective_on("key1"),
+			lib.rule_data_append_effective_on("key2"),
+		],
+	) with data.rule_data as {
+			"key0": 10,
+			"key1": {
+				"value": 20,
+				"effective_on": "2024-01-01T00:00:00Z",
+			},
+			"key2": {
+				"value": 30,
+				"effective_on": "9999-01-01T00:00:00Z",
+			},
+		}
+}
+
 # Need this for 100% coverage
 test_rule_data_defaults if {
 	lib.assert_not_empty(lib.rule_data_defaults)

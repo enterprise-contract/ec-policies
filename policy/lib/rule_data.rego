@@ -1,5 +1,7 @@
 package lib
 
+import data.lib.time as lib_time
+
 import rego.v1
 
 # Values in data.rule_data_custom or data.rule_data
@@ -108,4 +110,23 @@ rule_data(key_name) := value if {
 } else := value if {
 	# If the key is not found, default to an empty list
 	value := []
+}
+
+
+# Wraps a value from rule_data in an object that contains an effective_on time, if not already present.
+#
+rule_data_append_effective_on(key_name) := value if {
+	# Retrieve original rule_data value
+	value := rule_data(key_name)
+
+	# Check whether the value is already formatted correctly with "value" and "effective_on" fields. If so, we're done
+	is_object(value)
+	value.effective_on
+	value.value
+} else := value if {
+	# If any of the above conditions fail, then wrap the original value with effective_on data.
+	value := {
+		"value": rule_data(key_name),
+		"effective_on": lib_time.default_effective_on,
+	}
 }

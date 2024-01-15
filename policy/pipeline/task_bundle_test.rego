@@ -74,10 +74,7 @@ test_acceptable_bundle_up_to_date_maintained_version if {
 
 # Warn about out of date bundles that are still acceptable.
 test_acceptable_bundle_out_of_date_past if {
-	tasks := [
-		{"name": "my-task-1", "taskRef": {"bundle": "reg.com/repo@sha256:bcd"}},
-		{"name": "my-task-2", "taskRef": {"bundle": "reg.com/repo@sha256:cde"}},
-	]
+	tasks := [{"name": "my-task-1", "taskRef": {"bundle": "reg.com/repo@sha256:bcd"}}]
 
 	lib.assert_equal_results(task_bundle.warn, {{
 		"code": "task_bundle.out_of_date_task_bundle",

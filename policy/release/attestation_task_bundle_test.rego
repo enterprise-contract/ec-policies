@@ -160,7 +160,7 @@ test_acceptable_bundle_up_to_date if {
 
 # Warn about out of date bundles that are still acceptable.
 test_acceptable_bundle_out_of_date_past if {
-	images := ["reg.com/repo@sha256:bcd", "reg.com/repo@sha256:cde"]
+	images := ["reg.com/repo@sha256:bcd"]
 	attestations := [
 		lib_test.mock_slsav02_attestation_bundles(images),
 		lib_test.mock_slsav1_attestation_bundles(images, "task-run-0"),

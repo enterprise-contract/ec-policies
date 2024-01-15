@@ -5,3 +5,4 @@ node_modules/
 .cache/
 *.swp
 coverage.json
+/acceptance/bin/ec

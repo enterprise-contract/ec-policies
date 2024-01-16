@@ -45,7 +45,7 @@ out_of_date_task_bundle(tasks) := {task |
 	ref := image.parse(_bundle_ref(task, _task_bundles))
 
 	_newer_version_exists(ref)
-	not _is_unacceptable(ref)
+	_is_acceptable(ref)
 }
 
 # Returns a subset of tasks that do not use an acceptable bundle reference.
@@ -54,18 +54,18 @@ unacceptable_task_bundle(tasks) := {task |
 
 	ref := image.parse(_bundle_ref(task, _task_bundles))
 
-	_is_unacceptable(ref)
+	not _is_acceptable(ref)
 }
 
 # Returns if the task uses an acceptable bundle reference
 is_acceptable_task(task) if {
 	ref := image.parse(_bundle_ref(task, _task_bundles))
 
-	_record_exists(ref)
+	_is_acceptable(ref)
 }
 
-_is_unacceptable(ref) if {
-	not _record_exists(ref)
+_is_acceptable(ref) if {
+	_record_exists(ref)
 }
 
 # Returns true if the provided bundle reference is recorded within the

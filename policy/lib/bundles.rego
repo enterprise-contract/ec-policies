@@ -68,10 +68,6 @@ _is_unacceptable(ref) if {
 	not _record_exists(ref)
 }
 
-_is_unacceptable(ref) if {
-	_newer_in_effect_version_exists(ref)
-}
-
 # Returns true if the provided bundle reference is recorded within the
 # acceptable bundles data
 _record_exists(ref) if {
@@ -84,67 +80,6 @@ _record_exists(ref) if {
 	# acceptable task bundles, this is done by matching it's digest; note no
 	# care is given to the expiry or freshness
 	record.digest == ref.digest
-}
-
-# Evaluates to true if the tasks bundle reference is found in the acceptable
-# task bundles data, but also in the data there is a newer version of the task
-# and it is effective, i.e. has a effective_on that is newer than the provided
-# reference's effective_on and older or equal to the current effective time; two
-# references are considered belonging to the same version if they have the same
-# tag.
-_newer_in_effect_version_exists(ref) if {
-	# all records in acceptable task bundles for the given repository
-	records := _task_bundles[ref.repo]
-
-	some record in records
-
-	# consider all records, if a match is found via exact digest and there
-	# exists a newer record for the same tag but it is newer, i.e. has greater
-	# effective_on value
-	record.digest == ref.digest
-
-	some other in records
-
-	# other record must be effective to be considered
-	time.parse_rfc3339_ns(other.effective_on) <= time_lib.effective_current_time_ns()
-
-	record.tag == other.tag
-
-	time.parse_rfc3339_ns(other.effective_on) > time.parse_rfc3339_ns(record.effective_on)
-}
-
-# Evaluates to true if the tasks bundle reference is found in the acceptable
-# task bundles data, but also there are no records in acceptable task bundles
-# data with the same tag and at least one record is newer and it is effective,
-# i.e. has a effective_on that is newer than the provided reference's
-# effective_on and older or equal to the current effective time. In this case we
-# cannot rely on the tags to signal versions so we take all records for a
-# specific reference to belong to the same version.
-_newer_in_effect_version_exists(ref) if {
-	# all records in acceptable task bundles for the given repository
-	records := _task_bundles[ref.repo]
-
-	some record in records
-
-	# consider all records, if a match is found via exact digest and there
-	# exists a newer record for the same tag but it is newer, i.e. has greater
-	# effective_on value
-	record.digest == ref.digest
-
-	# No other record in acceptable bundles matches the tag from the record
-	# matched by the digest to the reference
-	count([other |
-		some other in records
-		record.digest != other.digest # not the same record
-		record.tag == other.tag # we found at least one other tag equal to the one we want to compare with
-	]) == 0
-
-	# There are newer records
-	count([newer |
-		some newer in records
-		time.parse_rfc3339_ns(newer.effective_on) <= time_lib.effective_current_time_ns()
-		time.parse_rfc3339_ns(newer.effective_on) > time.parse_rfc3339_ns(record.effective_on)
-	]) > 0
 }
 
 # Evaluates to true if the tasks bundle reference is found in the acceptable
@@ -227,7 +162,27 @@ _bundle_ref(task, acceptable) := ref if {
 }
 
 # _task_bundles provides a safe way to access the list of acceptable task-bundles. It prevents a
-# policy rule from incorrectly not evaluating due to missing data.
-default _task_bundles := {}
+# policy rule from incorrectly not evaluating due to missing data. It also removes stale records.
+_task_bundles[repo] := pruned_records if {
+	some repo, records in data["task-bundles"]
+	threshold := _active_threshold(records)
+	pruned_records := [record |
+		some record in records
+		time.parse_rfc3339_ns(record.effective_on) >= threshold
+	]
+}
 
-_task_bundles := data["task-bundles"]
+# _active_threshold returns the time (represented in nanoseconds) where records are considered to be
+# active. Any record with an effective_on value older than this threshold MUST be ignored. The
+# threshold is defined as the most recent date that is not in the future. If all records are in the
+# future, this function returns a very old date, effectively marking all records as active.
+_active_threshold(records) := threshold if {
+	# In a sorted list of records, find all the records that are older than or equal to today.
+	maybe_inactive := [entry |
+		some entry in arrays.sort_by("effective_on", records)
+		time.parse_rfc3339_ns(entry.effective_on) <= time_lib.effective_current_time_ns()
+	]
+
+	# The last record in the list has the most recent date that is not in the future.
+	threshold := time.parse_rfc3339_ns(maybe_inactive[count(maybe_inactive) - 1].effective_on)
+} else := time.parse_rfc3339_ns("1800-01-01T00:00:00Z")

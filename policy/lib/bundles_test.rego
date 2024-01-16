@@ -133,94 +133,6 @@ test_missing_required_data if {
 	lib.assert_equal(bundles.missing_task_bundles_data, true)
 }
 
-test_newer_in_effect_version_exists_not_using_tags_newest if {
-	ref := image.parse("registry.io/repository/image:tag@sha256:digest")
-	acceptable := {"registry.io/repository/image": [{
-		"digest": "sha256:digest",
-		"tag": "",
-		"effective_on": "2262-04-11T00:00:00Z",
-	}]}
-	not bundles._newer_in_effect_version_exists(ref) with data["task-bundles"] as acceptable
-}
-
-test_newer_in_effect_version_exists_not_using_tags_older if {
-	ref := image.parse("registry.io/repository/image:tag@sha256:digest")
-	acceptable := {"registry.io/repository/image": [
-		{
-			"digest": "sha256:newer",
-			"tag": "",
-			"effective_on": "2022-04-11T00:00:00Z",
-		},
-		{
-			"digest": "sha256:digest",
-			"tag": "",
-			"effective_on": "1962-04-11T00:00:00Z",
-		},
-	]}
-	bundles._newer_in_effect_version_exists(ref) with data["task-bundles"] as acceptable
-}
-
-test_newer_in_effect_version_exists_tags_differ_newest if {
-	ref := image.parse("registry.io/repository/image:tag@sha256:digest")
-	acceptable := {"registry.io/repository/image": [{
-		"digest": "sha256:digest",
-		"tag": "different",
-		"effective_on": "2262-04-11T00:00:00Z",
-	}]}
-	not bundles._newer_in_effect_version_exists(ref) with data["task-bundles"] as acceptable
-}
-
-test_newer_in_effect_version_exists_tags_differ_older if {
-	ref := image.parse("registry.io/repository/image:tag@sha256:digest")
-	acceptable := {"registry.io/repository/image": [
-		{
-			"digest": "sha256:newer",
-			"tag": "newer",
-			"effective_on": "2022-04-11T00:00:00Z",
-		},
-		{
-			"digest": "sha256:digest",
-			"tag": "different",
-			"effective_on": "1962-04-11T00:00:00Z",
-		},
-	]}
-	bundles._newer_in_effect_version_exists(ref) with data["task-bundles"] as acceptable
-}
-
-test_newer_in_effect_version_exists_tags_as_versions_newest if {
-	ref := image.parse("registry.io/repository/image:v1@sha256:digest")
-	acceptable := {"registry.io/repository/image": [
-		{
-			"digest": "sha256:digest",
-			"tag": "v1",
-			"effective_on": "2262-04-11T00:00:00Z",
-		},
-		{
-			"digest": "sha256:different",
-			"tag": "v1",
-			"effective_on": "2162-04-11T00:00:00Z",
-		},
-	]}
-	not bundles._newer_in_effect_version_exists(ref) with data["task-bundles"] as acceptable
-}
-
-test_newer_in_effect_version_exists_tags_as_versions_older if {
-	ref := image.parse("registry.io/repository/image:v1@sha256:digest")
-	acceptable := {"registry.io/repository/image": [
-		{
-			"digest": "sha256:newer",
-			"tag": "v1",
-			"effective_on": "2022-04-11T00:00:00Z",
-		},
-		{
-			"digest": "sha256:digest",
-			"tag": "v1",
-			"effective_on": "1962-04-11T00:00:00Z",
-		},
-	]}
-	bundles._newer_in_effect_version_exists(ref) with data["task-bundles"] as acceptable
-}
-
 test_newer_version_exists_not_using_tags_newest if {
 	ref := image.parse("registry.io/repository/image:tag@sha256:digest")
 	acceptable := {"registry.io/repository/image": [{
@@ -320,4 +232,22 @@ test_is_acceptable if {
 
 	unacceptable_task := {"name": "my-task", "taskRef": {"bundle": "registry.io/other/image:tag@sha256:digest"}}
 	not bundles.is_acceptable_task(unacceptable_task) with data["task-bundles"] as acceptable
+}
+
+test_stale_entries_ignored if {
+	acceptable := {"registry.io/repository/image": [
+		{
+			"digest": "sha256:digest",
+			"effective_on": "2023-02-01T00:00:00Z",
+			"tag": "tag",
+		},
+		{
+			"digest": "sha256:digest",
+			"effective_on": "2023-01-01T00:00:00Z",
+			"tag": "tag",
+		},
+	]}
+
+	acceptable_task := {"name": "my-task", "taskRef": {"bundle": "registry.io/repository/image:tag@sha256:digest"}}
+	lib.assert_empty(bundles.unacceptable_task_bundle([acceptable_task])) with data["task-bundles"] as acceptable
 }

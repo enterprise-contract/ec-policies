@@ -6,6 +6,7 @@ rule_data:
   - registry.local/namespace/repo/
   - registry.redhat.io/
   - docker.io/
+  - registry.access.redhat.com
 
   # Usage: https://enterprisecontract.dev/docs/ec-policies/release_policy.html#step_image_registries_package
   allowed_step_image_registry_prefixes:

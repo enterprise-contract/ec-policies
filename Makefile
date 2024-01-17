@@ -166,7 +166,7 @@ lint: ## Runs Rego linter
 	@go run github.com/styrainc/regal lint . --ignore-files 'antora/docs/policy/**' $(if $(GITHUB_ACTIONS),--format=github)
 
 .PHONY: ci
-ci: quiet-test opa-check conventions-check fmt-check lint ## Runs all checks and tests
+ci: quiet-test acceptance opa-check conventions-check fmt-check lint ## Runs all checks and tests
 
 #--------------------------------------------------------------------
 
@@ -259,5 +259,14 @@ check: check-release
 
 update-bundles: ## Push policy bundles to quay.io and generate infra-deployments PRs if required
 	@hack/update-bundles.sh
+
+#--------------------------------------------------------------------
+
+##@ Acceptance Tests
+
+.PHONY: acceptance
+acceptance: ## Run acceptance tests
+	@go build -o acceptance/bin/ec github.com/enterprise-contract/ec-cli
+	@cd acceptance && go test ./...
 
 #--------------------------------------------------------------------

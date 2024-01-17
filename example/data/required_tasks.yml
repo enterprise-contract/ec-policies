@@ -13,7 +13,6 @@ pipeline-required-tasks:
         - git-clone
         - init
         - prefetch-dependencies
-        - inspect-image
         - sast-snyk-check
         - sbom-json-check
         - show-sbom
@@ -28,7 +27,6 @@ pipeline-required-tasks:
         - git-clone
         - init
         - prefetch-dependencies
-        - inspect-image
         - sast-snyk-check
         - sbom-json-check
         - show-sbom
@@ -43,7 +41,6 @@ pipeline-required-tasks:
         - git-clone
         - init
         - prefetch-dependencies
-        - inspect-image
         - sast-snyk-check
         - sbom-json-check
         - show-sbom
@@ -58,7 +55,6 @@ pipeline-required-tasks:
         - init
         - prefetch-dependencies
         - s2i-java
-        - inspect-image
         - sast-snyk-check
         - sbom-json-check
         - show-sbom
@@ -73,7 +69,6 @@ pipeline-required-tasks:
         - init
         - prefetch-dependencies
         - s2i-nodejs
-        - inspect-image
         - sast-snyk-check
         - sbom-json-check
         - show-sbom
@@ -87,7 +82,6 @@ required-tasks:
       - clamav-scan
       - git-clone
       - init
-      - inspect-image
       - prefetch-dependencies
       - sast-snyk-check
       - summary

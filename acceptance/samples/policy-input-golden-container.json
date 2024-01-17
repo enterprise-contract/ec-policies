@@ -1,0 +1,1546 @@
+{
+  "attestations": [
+    {
+      "statement": {
+        "_type": "https://in-toto.io/Statement/v0.1",
+        "predicateType": "https://slsa.dev/provenance/v0.2",
+        "subject": [
+          {
+            "name": "quay.io/redhat-appstudio/ec-golden-image",
+            "digest": {
+              "sha256": "6fa252a7df2735b84674e64b78ac66279af0f2cbbb7ed1dd6a534daf0a4b8738"
+            }
+          }
+        ],
+        "predicate": {
+          "builder": {
+            "id": "https://tekton.dev/chains/v2"
+          },
+          "buildType": "tekton.dev/v1beta1/PipelineRun",
+          "invocation": {
+            "configSource": {},
+            "parameters": {
+              "build-source-image": "false",
+              "dockerfile": "Containerfile",
+              "git-url": "https://github.com/enterprise-contract/golden-container",
+              "hermetic": "true",
+              "image-expires-after": "",
+              "java": "false",
+              "output-image": "quay.io/redhat-appstudio/ec-golden-image:68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+              "path-context": ".",
+              "prefetch-input": "",
+              "rebuild": "false",
+              "revision": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+              "skip-checks": "false",
+              "skip-optional": "true"
+            },
+            "environment": {
+              "annotations": {
+                "build.appstudio.openshift.io/repo": "https://github.com/enterprise-contract/golden-container?rev=68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                "build.appstudio.redhat.com/commit_sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                "build.appstudio.redhat.com/target_branch": "main",
+                "pipelinesascode.tekton.dev/branch": "main",
+                "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                "pipelinesascode.tekton.dev/event-type": "push",
+                "pipelinesascode.tekton.dev/git-auth-secret": "pac-gitauth-iiug",
+                "pipelinesascode.tekton.dev/git-provider": "github",
+                "pipelinesascode.tekton.dev/installation-id": "34493006",
+                "pipelinesascode.tekton.dev/log-url": "https://console.redhat.com/preview/application-pipeline",
+                "pipelinesascode.tekton.dev/max-keep-runs": "3",
+                "pipelinesascode.tekton.dev/on-cel-expression": "event == \"push\" && target_branch == \"main\"",
+                "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                "pipelinesascode.tekton.dev/repo-url": "https://github.com/enterprise-contract/golden-container",
+                "pipelinesascode.tekton.dev/repository": "golden-container",
+                "pipelinesascode.tekton.dev/sender": "renovate[bot]",
+                "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                "pipelinesascode.tekton.dev/sha-title": "Update quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1 Docker digest to 63b42c0",
+                "pipelinesascode.tekton.dev/sha-url": "https://github.com/enterprise-contract/golden-container/commit/68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                "pipelinesascode.tekton.dev/state": "started",
+                "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                "pipelinesascode.tekton.dev/url-repository": "golden-container"
+              },
+              "labels": {
+                "app.kubernetes.io/managed-by": "pipelinesascode.tekton.dev",
+                "app.kubernetes.io/version": "v0.22.4",
+                "appstudio.openshift.io/application": "golden-container",
+                "appstudio.openshift.io/component": "golden-container",
+                "pipelines.appstudio.openshift.io/type": "build",
+                "pipelinesascode.tekton.dev/branch": "main",
+                "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                "pipelinesascode.tekton.dev/event-type": "push",
+                "pipelinesascode.tekton.dev/git-provider": "github",
+                "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                "pipelinesascode.tekton.dev/repository": "golden-container",
+                "pipelinesascode.tekton.dev/sender": "renovate__bot",
+                "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                "pipelinesascode.tekton.dev/state": "started",
+                "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                "tekton.dev/pipeline": "golden-container-on-push-fdv54"
+              }
+            }
+          },
+          "buildConfig": {
+            "tasks": [
+              {
+                "name": "init",
+                "ref": {
+                  "kind": "Task",
+                  "resolver": "bundles",
+                  "params": [
+                    {
+                      "name": "name",
+                      "value": "init"
+                    },
+                    {
+                      "name": "bundle",
+                      "value": "quay.io/redhat-appstudio-tekton-catalog/task-init:0.2@sha256:3d8f01fa59596a998d30dc700fcf7377f09d60008337290eebaeaf604512ce2b"
+                    },
+                    {
+                      "name": "kind",
+                      "value": "task"
+                    }
+                  ]
+                },
+                "startedOn": "2024-01-16T17:03:22Z",
+                "finishedOn": "2024-01-16T17:03:29Z",
+                "status": "Succeeded",
+                "steps": [
+                  {
+                    "entryPoint": "#!/bin/bash\necho \"Build Initialize: $IMAGE_URL\"\necho\n\necho \"Determine if Image Already Exists\"\n# Build the image when image does not exists or rebuild is set to true\nif ! oc image info $IMAGE_URL &>/dev/null || [ \"$REBUILD\" == \"true\" ] || [ \"$SKIP_CHECKS\" == \"false\" ]; then\n  echo -n \"true\" > /tekton/results/build\nelse\n  echo -n \"false\" > /tekton/results/build\nfi\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "init",
+                      "image": "oci://registry.redhat.io/openshift4/ose-cli@sha256:73df37794ffff7de1101016c23dc623e4990810390ebdabcbbfa065214352c7c"
+                    },
+                    "annotations": null
+                  }
+                ],
+                "invocation": {
+                  "configSource": {},
+                  "parameters": {
+                    "image-url": "quay.io/redhat-appstudio/ec-golden-image:68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                    "pipelinerun-name": "golden-container-on-push-fdv54",
+                    "pipelinerun-uid": "45d81570-f6e7-4144-94d3-1aeff14fa750",
+                    "rebuild": "false",
+                    "skip-checks": "false",
+                    "skip-optional": "true"
+                  },
+                  "environment": {
+                    "annotations": {
+                      "build.appstudio.openshift.io/repo": "https://github.com/enterprise-contract/golden-container?rev=68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/commit_sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/target_branch": "main",
+                      "pipeline.tekton.dev/release": "876b81e",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-auth-secret": "pac-gitauth-iiug",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/installation-id": "34493006",
+                      "pipelinesascode.tekton.dev/log-url": "https://console.redhat.com/preview/application-pipeline",
+                      "pipelinesascode.tekton.dev/max-keep-runs": "3",
+                      "pipelinesascode.tekton.dev/on-cel-expression": "event == \"push\" && target_branch == \"main\"",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repo-url": "https://github.com/enterprise-contract/golden-container",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate[bot]",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/sha-title": "Update quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1 Docker digest to 63b42c0",
+                      "pipelinesascode.tekton.dev/sha-url": "https://github.com/enterprise-contract/golden-container/commit/68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/pipelines.minVersion": "0.12.1",
+                      "tekton.dev/tags": "appstudio, hacbs"
+                    },
+                    "labels": {
+                      "app.kubernetes.io/managed-by": "pipelinesascode.tekton.dev",
+                      "app.kubernetes.io/version": "v0.22.4",
+                      "appstudio.openshift.io/application": "golden-container",
+                      "appstudio.openshift.io/component": "golden-container",
+                      "pipelines.appstudio.openshift.io/type": "build",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate__bot",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/memberOf": "tasks",
+                      "tekton.dev/pipeline": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineRun": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineTask": "init",
+                      "tekton.dev/task": "init"
+                    }
+                  }
+                },
+                "results": [
+                  {
+                    "name": "build",
+                    "type": "string",
+                    "value": "true"
+                  }
+                ]
+              },
+              {
+                "name": "clone-repository",
+                "after": ["init"],
+                "ref": {
+                  "kind": "Task",
+                  "resolver": "bundles",
+                  "params": [
+                    {
+                      "name": "name",
+                      "value": "git-clone"
+                    },
+                    {
+                      "name": "bundle",
+                      "value": "quay.io/redhat-appstudio-tekton-catalog/task-git-clone:0.1@sha256:b8fddc2d36313a5cde93aba2491205f4a84e6853af6c34ede681f8339b147478"
+                    },
+                    {
+                      "name": "kind",
+                      "value": "task"
+                    }
+                  ]
+                },
+                "startedOn": "2024-01-16T17:03:29Z",
+                "finishedOn": "2024-01-16T17:03:44Z",
+                "status": "Succeeded",
+                "steps": [
+                  {
+                    "entryPoint": "#!/usr/bin/env sh\nset -eu\n\nif [ \"${PARAM_VERBOSE}\" = \"true\" ] ; then\n  set -x\nfi\n\nif [ \"${WORKSPACE_BASIC_AUTH_DIRECTORY_BOUND}\" = \"true\" ] ; then\n  if [ -f \"${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/.git-credentials\" ] && [ -f \"${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/.gitconfig\" ]; then\n    cp \"${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/.git-credentials\" \"${PARAM_USER_HOME}/.git-credentials\"\n    cp \"${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/.gitconfig\" \"${PARAM_USER_HOME}/.gitconfig\"\n  # Compatibility with kubernetes.io/basic-auth secrets\n  elif [ -f \"${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/username\" ] && [ -f \"${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/password\" ]; then\n    HOSTNAME=$(echo $PARAM_URL | awk -F/ '{print $3}')\n    echo \"https://$(cat ${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/username):$(cat ${WORKSPACE_BASIC_AUTH_DIRECTORY_PATH}/password)@$HOSTNAME\" > \"${PARAM_USER_HOME}/.git-credentials\"\n    echo -e \"[credential \\\"https://$HOSTNAME\\\"]\\n  helper = store\" > \"${PARAM_USER_HOME}/.gitconfig\"\n  else\n    echo \"Unknown basic-auth workspace format\"\n    exit 1\n  fi\n  chmod 400 \"${PARAM_USER_HOME}/.git-credentials\"\n  chmod 400 \"${PARAM_USER_HOME}/.gitconfig\"\nfi\n\nif [ \"${WORKSPACE_SSH_DIRECTORY_BOUND}\" = \"true\" ] ; then\n  cp -R \"${WORKSPACE_SSH_DIRECTORY_PATH}\" \"${PARAM_USER_HOME}\"/.ssh\n  chmod 700 \"${PARAM_USER_HOME}\"/.ssh\n  chmod -R 400 \"${PARAM_USER_HOME}\"/.ssh/*\nfi\n\nCHECKOUT_DIR=\"${WORKSPACE_OUTPUT_PATH}/${PARAM_SUBDIRECTORY}\"\n\ncleandir() {\n  # Delete any existing contents of the repo directory if it exists.\n  #\n  # We don't just \"rm -rf ${CHECKOUT_DIR}\" because ${CHECKOUT_DIR} might be \"/\"\n  # or the root of a mounted volume.\n  if [ -d \"${CHECKOUT_DIR}\" ] ; then\n    # Delete non-hidden files and directories\n    rm -rf \"${CHECKOUT_DIR:?}\"/*\n    # Delete files and directories starting with . but excluding ..\n    rm -rf \"${CHECKOUT_DIR}\"/.[!.]*\n    # Delete files and directories starting with .. plus any other character\n    rm -rf \"${CHECKOUT_DIR}\"/..?*\n  fi\n}\n\nif [ \"${PARAM_DELETE_EXISTING}\" = \"true\" ] ; then\n  cleandir\nfi\n\ntest -z \"${PARAM_HTTP_PROXY}\" || export HTTP_PROXY=\"${PARAM_HTTP_PROXY}\"\ntest -z \"${PARAM_HTTPS_PROXY}\" || export HTTPS_PROXY=\"${PARAM_HTTPS_PROXY}\"\ntest -z \"${PARAM_NO_PROXY}\" || export NO_PROXY=\"${PARAM_NO_PROXY}\"\n\n/ko-app/git-init \\\n  -url=\"${PARAM_URL}\" \\\n  -revision=\"${PARAM_REVISION}\" \\\n  -refspec=\"${PARAM_REFSPEC}\" \\\n  -path=\"${CHECKOUT_DIR}\" \\\n  -sslVerify=\"${PARAM_SSL_VERIFY}\" \\\n  -submodules=\"${PARAM_SUBMODULES}\" \\\n  -depth=\"${PARAM_DEPTH}\" \\\n  -sparseCheckoutDirectories=\"${PARAM_SPARSE_CHECKOUT_DIRECTORIES}\"\ncd \"${CHECKOUT_DIR}\"\nRESULT_SHA=\"$(git rev-parse HEAD)\"\nEXIT_CODE=\"$?\"\nif [ \"${EXIT_CODE}\" != 0 ] ; then\n  exit \"${EXIT_CODE}\"\nfi\nprintf \"%s\" \"${RESULT_SHA}\" > \"/tekton/results/commit\"\nprintf \"%s\" \"${PARAM_URL}\" > \"/tekton/results/url\"\n\nif [ \"${PARAM_FETCH_TAGS}\" = \"true\" ] ; then\n  echo \"Fetching tags\"\n  git fetch --tags\nfi\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "clone",
+                      "image": "oci://registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:2fa0b06d52b04f377c696412e19307a9eff27383f81d87aae0b4f71672a1cd0b"
+                    },
+                    "annotations": null
+                  },
+                  {
+                    "entryPoint": "#!/usr/bin/env bash\nset -euo pipefail\n\nCHECKOUT_DIR=\"${WORKSPACE_OUTPUT_PATH}/${PARAM_SUBDIRECTORY}\"\ncheck_symlinks() {\n  FOUND_SYMLINK_POINTING_OUTSIDE_OF_REPO=false\n  while read symlink\n  do\n    target=$(readlink -f \"$symlink\")\n    if ! [[ \"$target\" =~ ^$CHECKOUT_DIR ]]; then\n      echo \"The cloned repository contains symlink pointing outside of the cloned repository: $symlink\"\n      FOUND_SYMLINK_POINTING_OUTSIDE_OF_REPO=true\n    fi\n  done < <(find $CHECKOUT_DIR -type l -print)\n  if [ \"$FOUND_SYMLINK_POINTING_OUTSIDE_OF_REPO\" = true ] ; then\n    return 1\n  fi\n}\n\nif [ \"${PARAM_ENABLE_SYMLINK_CHECK}\" = \"true\" ] ; then\n  echo \"Running symlink check\"\n  check_symlinks\nfi\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "symlink-check",
+                      "image": "oci://registry.redhat.io/ubi9@sha256:089bd3b82a78ac45c0eed231bb58bfb43bfcd0560d9bba240fc6355502c92976"
+                    },
+                    "annotations": null
+                  }
+                ],
+                "invocation": {
+                  "configSource": {},
+                  "parameters": {
+                    "deleteExisting": "true",
+                    "depth": "1",
+                    "enableSymlinkCheck": "true",
+                    "fetchTags": "false",
+                    "gitInitImage": "registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8:v1.8.2-8@sha256:a538c423e7a11aae6ae582a411fdb090936458075f99af4ce5add038bb6983e8",
+                    "httpProxy": "",
+                    "httpsProxy": "",
+                    "noProxy": "",
+                    "refspec": "",
+                    "revision": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                    "sparseCheckoutDirectories": "",
+                    "sslVerify": "true",
+                    "subdirectory": "source",
+                    "submodules": "true",
+                    "url": "https://github.com/enterprise-contract/golden-container",
+                    "userHome": "/tekton/home",
+                    "verbose": "true"
+                  },
+                  "environment": {
+                    "annotations": {
+                      "build.appstudio.openshift.io/repo": "https://github.com/enterprise-contract/golden-container?rev=68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/commit_sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/target_branch": "main",
+                      "pipeline.tekton.dev/release": "876b81e",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-auth-secret": "pac-gitauth-iiug",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/installation-id": "34493006",
+                      "pipelinesascode.tekton.dev/log-url": "https://console.redhat.com/preview/application-pipeline",
+                      "pipelinesascode.tekton.dev/max-keep-runs": "3",
+                      "pipelinesascode.tekton.dev/on-cel-expression": "event == \"push\" && target_branch == \"main\"",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repo-url": "https://github.com/enterprise-contract/golden-container",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate[bot]",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/sha-title": "Update quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1 Docker digest to 63b42c0",
+                      "pipelinesascode.tekton.dev/sha-url": "https://github.com/enterprise-contract/golden-container/commit/68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/categories": "Git",
+                      "tekton.dev/displayName": "git clone",
+                      "tekton.dev/pipelines.minVersion": "0.21.0",
+                      "tekton.dev/platforms": "linux/amd64,linux/s390x,linux/ppc64le,linux/arm64",
+                      "tekton.dev/tags": "git"
+                    },
+                    "labels": {
+                      "app.kubernetes.io/managed-by": "pipelinesascode.tekton.dev",
+                      "app.kubernetes.io/version": "v0.22.4",
+                      "appstudio.openshift.io/application": "golden-container",
+                      "appstudio.openshift.io/component": "golden-container",
+                      "pipelines.appstudio.openshift.io/type": "build",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate__bot",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/memberOf": "tasks",
+                      "tekton.dev/pipeline": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineRun": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineTask": "clone-repository",
+                      "tekton.dev/task": "git-clone"
+                    }
+                  }
+                },
+                "results": [
+                  {
+                    "name": "commit",
+                    "type": "string",
+                    "value": "68b69547cad3c4ba856fe6b06154012f33dd8b5a"
+                  },
+                  {
+                    "name": "url",
+                    "type": "string",
+                    "value": "https://github.com/enterprise-contract/golden-container"
+                  }
+                ]
+              },
+              {
+                "name": "prefetch-dependencies",
+                "after": ["clone-repository"],
+                "ref": {
+                  "kind": "Task",
+                  "resolver": "bundles",
+                  "params": [
+                    {
+                      "name": "name",
+                      "value": "prefetch-dependencies"
+                    },
+                    {
+                      "name": "bundle",
+                      "value": "quay.io/redhat-appstudio-tekton-catalog/task-prefetch-dependencies:0.1@sha256:9630dd7d50002fdffb4a406fb0c538703ef98bf2f4318249ac3a2c229938dbea"
+                    },
+                    {
+                      "name": "kind",
+                      "value": "task"
+                    }
+                  ]
+                },
+                "startedOn": "2024-01-16T17:03:45Z",
+                "finishedOn": "2024-01-16T17:03:51Z",
+                "status": "Succeeded",
+                "steps": [
+                  {
+                    "entryPoint": "if [ -z \"${INPUT}\" ]\nthen\n  echo \"Build will be executed with network isolation, but no content was configured to be prefetched.\"\n  exit 0\nfi\n\ncachi2 fetch-deps \\\n--source=/workspace/source/source \\\n--output=/workspace/source/cachi2/output \\\n\"${INPUT}\"\n\ncachi2 generate-env /workspace/source/cachi2/output \\\n--format env \\\n--for-output-dir=/cachi2/output \\\n--output /workspace/source/cachi2/cachi2.env\n\ncachi2 inject-files /workspace/source/cachi2/output \\\n--for-output-dir=/cachi2/output\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "prefetch-dependencies",
+                      "image": "oci://quay.io/redhat-appstudio/cachi2@sha256:46097f22b57e4d48a3fce96d931e08ccfe3a3e6421362d5f9353961279078eef"
+                    },
+                    "annotations": null
+                  }
+                ],
+                "invocation": {
+                  "configSource": {},
+                  "parameters": {
+                    "input": ""
+                  },
+                  "environment": {
+                    "annotations": {
+                      "build.appstudio.openshift.io/repo": "https://github.com/enterprise-contract/golden-container?rev=68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/commit_sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/target_branch": "main",
+                      "pipeline.tekton.dev/release": "876b81e",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-auth-secret": "pac-gitauth-iiug",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/installation-id": "34493006",
+                      "pipelinesascode.tekton.dev/log-url": "https://console.redhat.com/preview/application-pipeline",
+                      "pipelinesascode.tekton.dev/max-keep-runs": "3",
+                      "pipelinesascode.tekton.dev/on-cel-expression": "event == \"push\" && target_branch == \"main\"",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repo-url": "https://github.com/enterprise-contract/golden-container",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate[bot]",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/sha-title": "Update quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1 Docker digest to 63b42c0",
+                      "pipelinesascode.tekton.dev/sha-url": "https://github.com/enterprise-contract/golden-container/commit/68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/pipelines.minVersion": "0.12.1",
+                      "tekton.dev/tags": "image-build, hacbs"
+                    },
+                    "labels": {
+                      "app.kubernetes.io/managed-by": "pipelinesascode.tekton.dev",
+                      "app.kubernetes.io/version": "v0.22.4",
+                      "appstudio.openshift.io/application": "golden-container",
+                      "appstudio.openshift.io/component": "golden-container",
+                      "pipelines.appstudio.openshift.io/type": "build",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate__bot",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/memberOf": "tasks",
+                      "tekton.dev/pipeline": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineRun": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineTask": "prefetch-dependencies",
+                      "tekton.dev/task": "prefetch-dependencies"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "build-container",
+                "after": ["prefetch-dependencies", "clone-repository", "init"],
+                "ref": {
+                  "kind": "Task",
+                  "resolver": "bundles",
+                  "params": [
+                    {
+                      "name": "name",
+                      "value": "buildah"
+                    },
+                    {
+                      "name": "bundle",
+                      "value": "quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.1@sha256:351af2c0e5eeb92a5d6d4083847c1559475b596cda7671f489756d5302a4c847"
+                    },
+                    {
+                      "name": "kind",
+                      "value": "task"
+                    }
+                  ]
+                },
+                "startedOn": "2024-01-16T17:03:52Z",
+                "finishedOn": "2024-01-16T17:05:03Z",
+                "status": "Succeeded",
+                "steps": [
+                  {
+                    "entryPoint": "SOURCE_CODE_DIR=source\nif [ -e \"$SOURCE_CODE_DIR/$CONTEXT/$DOCKERFILE\" ]; then\n  dockerfile_path=\"$SOURCE_CODE_DIR/$CONTEXT/$DOCKERFILE\"\nelif [ -e \"$SOURCE_CODE_DIR/$DOCKERFILE\" ]; then\n  dockerfile_path=\"$SOURCE_CODE_DIR/$DOCKERFILE\"\nelif echo \"$DOCKERFILE\" | grep -q \"^https\\?://\"; then\n  echo \"Fetch Dockerfile from $DOCKERFILE\"\n  dockerfile_path=$(mktemp --suffix=-Dockerfile)\n  http_code=$(curl -s -L -w \"%{http_code}\" --output \"$dockerfile_path\" \"$DOCKERFILE\")\n  if [ $http_code != 200 ]; then\n    echo \"No Dockerfile is fetched. Server responds $http_code\"\n    exit 1\n  fi\n  http_code=$(curl -s -L -w \"%{http_code}\" --output \"$dockerfile_path.dockerignore.tmp\" \"$DOCKERFILE.dockerignore\")\n  if [ $http_code = 200 ]; then\n    echo \"Fetched .dockerignore from $DOCKERFILE.dockerignore\"\n    mv \"$dockerfile_path.dockerignore.tmp\" $SOURCE_CODE_DIR/$CONTEXT/.dockerignore\n  fi\nelse\n  echo \"Cannot find Dockerfile $DOCKERFILE\"\n  exit 1\nfi\nif [ -n \"$JVM_BUILD_WORKSPACE_ARTIFACT_CACHE_PORT_80_TCP_ADDR\" ] && grep -q '^\\s*RUN \\(./\\)\\?mvn' \"$dockerfile_path\"; then\n  sed -i -e \"s|^\\s*RUN \\(\\(./\\)\\?mvn\\)\\(.*\\)|RUN echo \\\"<settings><mirrors><mirror><id>mirror.default</id><url>http://$JVM_BUILD_WORKSPACE_ARTIFACT_CACHE_PORT_80_TCP_ADDR/v1/cache/default/0/</url><mirrorOf>*</mirrorOf></mirror></mirrors></settings>\\\" > /tmp/settings.yaml; \\1 -s /tmp/settings.yaml \\3|g\" \"$dockerfile_path\"\n  touch /var/lib/containers/java\nfi\n\n# Fixing group permission on /var/lib/containers\nchown root:root /var/lib/containers\n\nsed -i 's/^\\s*short-name-mode\\s*=\\s*.*/short-name-mode = \"disabled\"/' /etc/containers/registries.conf\n\n# Setting new namespace to run buildah - 2^32-2\necho 'root:1:4294967294' | tee -a /etc/subuid >> /etc/subgid\n\nif [ \"${HERMETIC}\" == \"true\" ]; then\n  BUILDAH_ARGS=\"--pull=never\"\n  UNSHARE_ARGS=\"--net\"\n  for image in $(grep -i '^\\s*FROM' \"$dockerfile_path\" | sed 's/--platform=\\S*//' | awk '{print $2}'); do\n    if [ \"${image}\" != \"scratch\" ]; then\n      unshare -Ufp --keep-caps -r --map-users 1,1,65536 --map-groups 1,1,65536 -- buildah pull $image\n    fi\n  done\n  echo \"Build will be executed with network isolation\"\nfi\n\nif [ -n \"${PREFETCH_INPUT}\" ]; then\n  cp -r cachi2 /tmp/\n  chmod -R go+rwX /tmp/cachi2\n  VOLUME_MOUNTS=\"--volume /tmp/cachi2:/cachi2\"\n  sed -i 's|^\\s*run |RUN . /cachi2/cachi2.env \\&\\& \\\\\\n    |i' \"$dockerfile_path\"\n  echo \"Prefetched content will be made available\"\nfi\n\n# if yum repofiles stored in git, copy them to mount point outside the source dir\nif [ -d \"${SOURCE_CODE_DIR}/${YUM_REPOS_D_SRC}\" ]; then\n  mkdir -p ${YUM_REPOS_D_FETCHED}\n  cp -r ${SOURCE_CODE_DIR}/${YUM_REPOS_D_SRC}/* ${YUM_REPOS_D_FETCHED}\nfi\n\n# if anything in the repofiles mount point (either fetched or from git), mount it\nif [ -d \"${YUM_REPOS_D_FETCHED}\" ]; then\n  chmod -R go+rwX ${YUM_REPOS_D_FETCHED}\n  mount_point=$(realpath ${YUM_REPOS_D_FETCHED})\n  VOLUME_MOUNTS=\"${VOLUME_MOUNTS} --volume ${mount_point}:${YUM_REPOS_D_TARGET}\"\nfi\n\nLABELS=(\n  \"--label\" \"build-date=$(date -u +'%Y-%m-%dT%H:%M:%S')\"\n  \"--label\" \"architecture=$(uname -m)\"\n  \"--label\" \"vcs-type=git\"\n)\n[ -n \"$COMMIT_SHA\" ] && LABELS+=(\"--label\" \"vcs-ref=$COMMIT_SHA\")\n[ -n \"$IMAGE_EXPIRES_AFTER\" ] && LABELS+=(\"--label\" \"quay.expires-after=$IMAGE_EXPIRES_AFTER\")\n\nunshare -Uf $UNSHARE_ARGS --keep-caps -r --map-users 1,1,65536 --map-groups 1,1,65536 -- buildah build \\\n  $VOLUME_MOUNTS \\\n  $BUILDAH_ARGS \\\n  ${LABELS[@]} \\\n  --tls-verify=$TLSVERIFY --no-cache \\\n  --ulimit nofile=4096:4096 \\\n  -f \"$dockerfile_path\" -t $IMAGE $SOURCE_CODE_DIR/$CONTEXT\n\ncontainer=$(buildah from --pull-never $IMAGE)\nbuildah mount $container | tee /workspace/container_path\necho $container > /workspace/container_name\n\n# Save the SBOM produced by Cachi2 so it can be merged into the final SBOM later\nif [ -n \"${PREFETCH_INPUT}\" ]; then\n  cp /tmp/cachi2/output/bom.json ./sbom-cachi2.json\nfi\n\n# Expose base image digests\nbuildah images --format '{{ .Name }}:{{ .Tag }}@{{ .Digest }}' | grep -v $IMAGE > /tekton/results/BASE_IMAGES_DIGESTS\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "build",
+                      "image": "oci://quay.io/redhat-appstudio/buildah@sha256:017ec8d3e8e1fefcd47fc11bde655fa9c8f09a279b690be98397875bd542fb44"
+                    },
+                    "annotations": null
+                  },
+                  {
+                    "entryPoint": "syft dir:/workspace/source/source --output cyclonedx-json=/workspace/source/sbom-source.json\nfind $(cat /workspace/container_path) -xtype l -delete\nsyft dir:$(cat /workspace/container_path) --output cyclonedx-json=/workspace/source/sbom-image.json\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "sbom-syft-generate",
+                      "image": "oci://quay.io/redhat-appstudio/syft@sha256:4d3856e6a2622700b9a9d5d74d9aaf5d8a55671653f80bf6c636677658680ede"
+                    },
+                    "annotations": null
+                  },
+                  {
+                    "entryPoint": "if [ -f /var/lib/containers/java ]; then\n  /opt/jboss/container/java/run/run-java.sh analyse-dependencies path $(cat /workspace/container_path) -s /workspace/source/sbom-image.json --task-run-name golden-container-on-push-fdv54-build-container --publishers /tekton/results/SBOM_JAVA_COMPONENTS_COUNT\n  sed -i 's/^/ /' /tekton/results/SBOM_JAVA_COMPONENTS_COUNT # Workaround for SRVKP-2875\nelse\n  touch /tekton/results/JAVA_COMMUNITY_DEPENDENCIES\nfi\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "analyse-dependencies-java-sbom",
+                      "image": "oci://quay.io/redhat-appstudio/hacbs-jvm-build-request-processor@sha256:530d1932dc47d05da42a3a329a05eb30fe7105aa9e0d3f0d682dfa015e33b4ac"
+                    },
+                    "annotations": null
+                  },
+                  {
+                    "entryPoint": "#!/bin/python3\nimport json\n\n# load SBOMs\nwith open(\"./sbom-image.json\") as f:\n  image_sbom = json.load(f)\n\nwith open(\"./sbom-source.json\") as f:\n  source_sbom = json.load(f)\n\n# fetch unique components from available SBOMs\ndef get_identifier(component):\n  return component[\"name\"] + '@' + component.get(\"version\", \"\")\n\nimage_sbom_components = image_sbom.get(\"components\", [])\nexisting_components = [get_identifier(component) for component in image_sbom_components]\n\nsource_sbom_components = source_sbom.get(\"components\", [])\nfor component in source_sbom_components:\n  if get_identifier(component) not in existing_components:\n    image_sbom_components.append(component)\n    existing_components.append(get_identifier(component))\n\nimage_sbom_components.sort(key=lambda c: get_identifier(c))\n\n# write the CycloneDX unified SBOM\nwith open(\"./sbom-cyclonedx.json\", \"w\") as f:\n  json.dump(image_sbom, f, indent=4)\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "merge-syft-sboms",
+                      "image": "oci://registry.access.redhat.com/ubi9/python-39@sha256:65cab0cf8b364d56e4a70789b65cda83f49b321b11fff5b228c959f3c992c596"
+                    },
+                    "annotations": null
+                  },
+                  {
+                    "entryPoint": "if [ -n \"${PREFETCH_INPUT}\" ]; then\n  echo \"Merging contents of sbom-cachi2.json into sbom-cyclonedx.json\"\n  /src/utils/merge_syft_sbom.py sbom-cachi2.json sbom-cyclonedx.json > sbom-temp.json\n  mv sbom-temp.json sbom-cyclonedx.json\nelse\n  echo \"Skipping step since no Cachi2 SBOM was produced\"\nfi\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "merge-cachi2-sbom",
+                      "image": "oci://quay.io/redhat-appstudio/cachi2@sha256:001acfbad47e132a90998d45076a0dbe0d8beacf0bec12b4d9a5aa796f4a9cad"
+                    },
+                    "annotations": null
+                  },
+                  {
+                    "entryPoint": "#!/bin/python3\nimport json\n\nwith open(\"./sbom-cyclonedx.json\") as f:\n  cyclonedx_sbom = json.load(f)\n\npurls = [{\"purl\": component[\"purl\"]} for component in cyclonedx_sbom.get(\"components\", []) if \"purl\" in component]\npurl_content = {\"image_contents\": {\"dependencies\": purls}}\n\nwith open(\"sbom-purl.json\", \"w\") as output_file:\n  json.dump(purl_content, output_file, indent=4)\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "create-purl-sbom",
+                      "image": "oci://registry.access.redhat.com/ubi9/python-39@sha256:65cab0cf8b364d56e4a70789b65cda83f49b321b11fff5b228c959f3c992c596"
+                    },
+                    "annotations": null
+                  },
+                  {
+                    "entryPoint": "base_image_name=$(buildah inspect --format '{{ index .ImageAnnotations \"org.opencontainers.image.base.name\"}}' $IMAGE | cut -f1 -d'@')\nbase_image_digest=$(buildah inspect --format '{{ index .ImageAnnotations \"org.opencontainers.image.base.digest\"}}' $IMAGE)\ncontainer=$(buildah from --pull-never $IMAGE)\nbuildah copy $container sbom-cyclonedx.json sbom-purl.json /root/buildinfo/content_manifests/\nbuildah config -a org.opencontainers.image.base.name=${base_image_name} -a org.opencontainers.image.base.digest=${base_image_digest} $container\nbuildah commit $container $IMAGE\n\nstatus=-1\nmax_run=5\nsleep_sec=10\nfor run in $(seq 1 $max_run); do\n  status=0\n  [ \"$run\" -gt 1 ] && sleep $sleep_sec\n  echo \"Pushing sbom image to registry\"\n  buildah push \\\n    --tls-verify=$TLSVERIFY \\\n    --digestfile /workspace/source/image-digest $IMAGE \\\n    docker://$IMAGE && break || status=$?\ndone\nif [ \"$status\" -ne 0 ]; then\n    echo \"Failed to push sbom image to registry after ${max_run} tries\"\n    exit 1\nfi\n\ncat \"/workspace/source\"/image-digest | tee /tekton/results/IMAGE_DIGEST\necho -n \"$IMAGE\" | tee /tekton/results/IMAGE_URL\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "inject-sbom-and-push",
+                      "image": "oci://quay.io/redhat-appstudio/buildah@sha256:017ec8d3e8e1fefcd47fc11bde655fa9c8f09a279b690be98397875bd542fb44"
+                    },
+                    "annotations": null
+                  },
+                  {
+                    "entryPoint": "",
+                    "arguments": [
+                      "attach",
+                      "sbom",
+                      "--sbom",
+                      "sbom-cyclonedx.json",
+                      "--type",
+                      "cyclonedx",
+                      "quay.io/redhat-appstudio/ec-golden-image:68b69547cad3c4ba856fe6b06154012f33dd8b5a"
+                    ],
+                    "environment": {
+                      "container": "upload-sbom",
+                      "image": "oci://quay.io/redhat-appstudio/cosign@sha256:c883d6f8d39148f2cea71bff4622d196d89df3e510f36c140c097b932f0dd5d5"
+                    },
+                    "annotations": null
+                  }
+                ],
+                "invocation": {
+                  "configSource": {},
+                  "parameters": {
+                    "BUILDER_IMAGE": "quay.io/redhat-appstudio/buildah:v1.31.0@sha256:34f12c7b72ec2c28f1ded0c494b428df4791c909f1f174dd21b8ed6a57cf5ddb",
+                    "COMMIT_SHA": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                    "CONTEXT": ".",
+                    "DOCKERFILE": "Containerfile",
+                    "DOCKER_AUTH": "",
+                    "HERMETIC": "true",
+                    "IMAGE": "quay.io/redhat-appstudio/ec-golden-image:68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                    "IMAGE_EXPIRES_AFTER": "",
+                    "PREFETCH_INPUT": "",
+                    "TLSVERIFY": "true",
+                    "YUM_REPOS_D_FETCHED": "fetched.repos.d",
+                    "YUM_REPOS_D_SRC": "repos.d",
+                    "YUM_REPOS_D_TARGET": "/etc/yum.repos.d"
+                  },
+                  "environment": {
+                    "annotations": {
+                      "build.appstudio.openshift.io/repo": "https://github.com/enterprise-contract/golden-container?rev=68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/commit_sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/target_branch": "main",
+                      "pipeline.tekton.dev/release": "876b81e",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-auth-secret": "pac-gitauth-iiug",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/installation-id": "34493006",
+                      "pipelinesascode.tekton.dev/log-url": "https://console.redhat.com/preview/application-pipeline",
+                      "pipelinesascode.tekton.dev/max-keep-runs": "3",
+                      "pipelinesascode.tekton.dev/on-cel-expression": "event == \"push\" && target_branch == \"main\"",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repo-url": "https://github.com/enterprise-contract/golden-container",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate[bot]",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/sha-title": "Update quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1 Docker digest to 63b42c0",
+                      "pipelinesascode.tekton.dev/sha-url": "https://github.com/enterprise-contract/golden-container/commit/68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/pipelines.minVersion": "0.12.1",
+                      "tekton.dev/tags": "image-build, appstudio, hacbs"
+                    },
+                    "labels": {
+                      "app.kubernetes.io/managed-by": "pipelinesascode.tekton.dev",
+                      "app.kubernetes.io/version": "v0.22.4",
+                      "appstudio.openshift.io/application": "golden-container",
+                      "appstudio.openshift.io/component": "golden-container",
+                      "build.appstudio.redhat.com/build_type": "docker",
+                      "pipelines.appstudio.openshift.io/type": "build",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate__bot",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/memberOf": "tasks",
+                      "tekton.dev/pipeline": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineRun": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineTask": "build-container",
+                      "tekton.dev/task": "buildah"
+                    }
+                  }
+                },
+                "results": [
+                  {
+                    "name": "BASE_IMAGES_DIGESTS",
+                    "type": "string",
+                    "value": "registry.access.redhat.com/ubi9/ubi-micro:<none>@sha256:14a2cd49b11eb39586f5abdefc63739f47cd5b8099e0d6946d7ee24812e7e746\n"
+                  },
+                  {
+                    "name": "JAVA_COMMUNITY_DEPENDENCIES",
+                    "type": "string",
+                    "value": ""
+                  },
+                  {
+                    "name": "IMAGE_DIGEST",
+                    "type": "string",
+                    "value": "sha256:6fa252a7df2735b84674e64b78ac66279af0f2cbbb7ed1dd6a534daf0a4b8738"
+                  },
+                  {
+                    "name": "IMAGE_URL",
+                    "type": "string",
+                    "value": "quay.io/redhat-appstudio/ec-golden-image:68b69547cad3c4ba856fe6b06154012f33dd8b5a"
+                  }
+                ]
+              },
+              {
+                "name": "deprecated-base-image-check",
+                "after": ["build-container"],
+                "ref": {
+                  "kind": "Task",
+                  "resolver": "bundles",
+                  "params": [
+                    {
+                      "name": "name",
+                      "value": "deprecated-image-check"
+                    },
+                    {
+                      "name": "bundle",
+                      "value": "quay.io/redhat-appstudio-tekton-catalog/task-deprecated-image-check:0.3@sha256:d87f8c50a674f57527a0c4f3df6d9093941a2ae84739b55368b3c11702ce340c"
+                    },
+                    {
+                      "name": "kind",
+                      "value": "task"
+                    }
+                  ]
+                },
+                "startedOn": "2024-01-16T17:05:04Z",
+                "finishedOn": "2024-01-16T17:05:15Z",
+                "status": "Succeeded",
+                "steps": [
+                  {
+                    "entryPoint": "#!/usr/bin/env bash\nset -euo pipefail\nsource /utils.sh\ntrap 'handle_error /tekton/results/TEST_OUTPUT' EXIT\n\nsuccess_counter=0\nfailure_counter=0\nerror_counter=0\nwarnings_counter=0\n\nreadarray -t IMAGE_ARRAY < <(echo -n \"$BASE_IMAGES_DIGESTS\" | sed 's/\\\\n/\\'$'\\n''/g')\nfor BASE_IMAGE in ${IMAGE_ARRAY[@]};\ndo\n  IFS=:'/' read -r IMAGE_REGISTRY IMAGE_WITH_TAG <<< $BASE_IMAGE\n  IMAGE_REPOSITORY=`echo $IMAGE_WITH_TAG | cut -d \":\" -f1`\n\n  # Red Hat Catalog hack: registry.redhat.io must be queried as registry.access.redhat.com in Red Hat catalog\n  IMAGE_REGISTRY_CATALOG=$(echo \"${IMAGE_REGISTRY}\" | sed 's/^registry.redhat.io$/registry.access.redhat.com/')\n\n  export IMAGE_REPO_PATH=/tmp/${IMAGE_REPOSITORY}\n  mkdir -p ${IMAGE_REPO_PATH}\n  echo \"Querying Red Hat Catalog for $BASE_IMAGE.\"\n  http_code=$(curl -s -o ${IMAGE_REPO_PATH}/repository_data.json -w '%{http_code}' \"https://catalog.redhat.com/api/containers/v1/repositories/registry/${IMAGE_REGISTRY_CATALOG}/repository/${IMAGE_REPOSITORY}\")\n\n  if [ \"$http_code\" == \"200\" ];\n  then\n    echo \"Running conftest using $POLICY_DIR policy, $POLICY_NAMESPACE namespace.\"\n    /usr/bin/conftest test --no-fail ${IMAGE_REPO_PATH}/repository_data.json \\\n    --policy $POLICY_DIR --namespace $POLICY_NAMESPACE \\\n    --output=json | tee ${IMAGE_REPO_PATH}/deprecated_image_check_output.json\n\n    failures_num=$(jq -r '.[].failures|length' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)\n    if [[ \"${failures_num}\" -gt 0 ]]; then\n      echo \"[FAILURE] Image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY} has been deprecated\"\n    fi\n    failure_counter=$((failure_counter+failures_num))\n\n    successes_num=$(jq -r '.[].successes' ${IMAGE_REPO_PATH}/deprecated_image_check_output.json)\n    if [[ \"${successes_num}\" -gt 0 ]]; then\n      echo \"[SUCCESS] Image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY} is valid\"\n    fi\n    success_counter=$((success_counter+successes_num))\n\n  elif [ \"$http_code\" == \"404\" ];\n  then\n    echo \"[WARNING] Registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY} not found in Red Hat Catalog. Task cannot provide results if image is deprecated.\"\n    warnings_counter=$((warnings_counter+1))\n  else\n    echo \"[ERROR] Unexpected error (HTTP code: ${http_code}) occurred for registry/image ${IMAGE_REGISTRY}/${IMAGE_REPOSITORY}.\"\n    error_counter=$((error_counter+1))\n  fi\ndone\n\nnote=\"Task deprecated-image-check failed: Command conftest failed. For details, check Tekton task log.\"\nERROR_OUTPUT=$(make_result_json -r ERROR -n \"$POLICY_NAMESPACE\" -t \"$note\")\n\nnote=\"Task deprecated-image-check completed: Check result for task result.\"\nif [[ \"$error_counter\" == 0 ]];\nthen\n  if [[ \"${failure_counter}\" -gt 0 ]]; then\n    RES=\"FAILURE\"\n  elif [[ \"${warnings_counter}\" -gt 0 ]]; then\n    RES=\"WARNING\"\n  elif [[ \"${success_counter}\" -eq 0 ]]; then\n    # when all counters are 0, there are no base images to check\n    note=\"Task deprecated-image-check success: No base images to check.\"\n    RES=\"SUCCESS\"\n  else\n    RES=\"SUCCESS\"\n  fi\n  TEST_OUTPUT=$(make_result_json \\\n    -r \"${RES}\" -n \"$POLICY_NAMESPACE\" \\\n    -s \"${success_counter}\" -f \"${failure_counter}\" -w \"${warnings_counter}\" -t \"$note\")\nfi\necho \"${TEST_OUTPUT:-${ERROR_OUTPUT}}\" | tee /tekton/results/TEST_OUTPUT\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "check-images",
+                      "image": "oci://quay.io/redhat-appstudio/hacbs-test@sha256:2c9018dc080e969f013be4f5d25b207522005d236deedb1f8d1534af29ee5364"
+                    },
+                    "annotations": null
+                  }
+                ],
+                "invocation": {
+                  "configSource": {},
+                  "parameters": {
+                    "BASE_IMAGES_DIGESTS": "registry.access.redhat.com/ubi9/ubi-micro:<none>@sha256:14a2cd49b11eb39586f5abdefc63739f47cd5b8099e0d6946d7ee24812e7e746\n",
+                    "POLICY_DIR": "/project/repository/",
+                    "POLICY_NAMESPACE": "required_checks"
+                  },
+                  "environment": {
+                    "annotations": {
+                      "build.appstudio.openshift.io/repo": "https://github.com/enterprise-contract/golden-container?rev=68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/commit_sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/target_branch": "main",
+                      "pipeline.tekton.dev/release": "876b81e",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-auth-secret": "pac-gitauth-iiug",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/installation-id": "34493006",
+                      "pipelinesascode.tekton.dev/log-url": "https://console.redhat.com/preview/application-pipeline",
+                      "pipelinesascode.tekton.dev/max-keep-runs": "3",
+                      "pipelinesascode.tekton.dev/on-cel-expression": "event == \"push\" && target_branch == \"main\"",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repo-url": "https://github.com/enterprise-contract/golden-container",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate[bot]",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/sha-title": "Update quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1 Docker digest to 63b42c0",
+                      "pipelinesascode.tekton.dev/sha-url": "https://github.com/enterprise-contract/golden-container/commit/68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/pipelines.minVersion": "0.12.1",
+                      "tekton.dev/tags": "appstudio, hacbs"
+                    },
+                    "labels": {
+                      "app.kubernetes.io/managed-by": "pipelinesascode.tekton.dev",
+                      "app.kubernetes.io/version": "v0.22.4",
+                      "appstudio.openshift.io/application": "golden-container",
+                      "appstudio.openshift.io/component": "golden-container",
+                      "pipelines.appstudio.openshift.io/type": "build",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate__bot",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/memberOf": "tasks",
+                      "tekton.dev/pipeline": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineRun": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineTask": "deprecated-base-image-check",
+                      "tekton.dev/task": "deprecated-image-check"
+                    }
+                  }
+                },
+                "results": [
+                  {
+                    "name": "TEST_OUTPUT",
+                    "type": "string",
+                    "value": "{\"result\":\"SUCCESS\",\"timestamp\":\"1705424714\",\"note\":\"Task deprecated-image-check completed: Check result for task result.\",\"namespace\":\"required_checks\",\"successes\":1,\"failures\":0,\"warnings\":0}\n"
+                  }
+                ]
+              },
+              {
+                "name": "clair-scan",
+                "after": ["build-container"],
+                "ref": {
+                  "kind": "Task",
+                  "resolver": "bundles",
+                  "params": [
+                    {
+                      "name": "name",
+                      "value": "clair-scan"
+                    },
+                    {
+                      "name": "bundle",
+                      "value": "quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1@sha256:63b42c0fc23d05e26776a0e7c4f0ab00750096ebfe1eed9a7ba96f8b27713fbf"
+                    },
+                    {
+                      "name": "kind",
+                      "value": "task"
+                    }
+                  ]
+                },
+                "startedOn": "2024-01-16T17:05:04Z",
+                "finishedOn": "2024-01-16T17:05:13Z",
+                "status": "Succeeded",
+                "steps": [
+                  {
+                    "entryPoint": "#!/usr/bin/env bash\n\nimagewithouttag=$(echo $IMAGE_URL | sed \"s/\\(.*\\):.*/\\1/\" | tr -d '\\n')\n# strip new-line escape symbol from parameter and save it to variable\nimageanddigest=$(echo $imagewithouttag@$IMAGE_DIGEST)\n\nclair-action report --image-ref=$imageanddigest --db-path=/tmp/matcher.db --format=quay | tee /tekton/home/clair-result.json || true\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "get-vulnerabilities",
+                      "image": "oci://quay.io/redhat-appstudio/clair-in-ci@sha256:8d177929079a8a42046edd27e6c3f5c7c620b75f78bcaa8c4726428aa621edf2"
+                    },
+                    "annotations": null
+                  },
+                  {
+                    "entryPoint": "#!/usr/bin/env bash\nset -euo pipefail\n. /utils.sh\ntrap 'handle_error /tekton/results/TEST_OUTPUT' EXIT\n\nif [ ! -s /tekton/home/clair-result.json ]; then\n  echo \"Previous step [get-vulnerabilities] failed: /tekton/home/clair-result.json is empty.\"\nelse\n  /usr/bin/conftest test --no-fail /tekton/home/clair-result.json \\\n  --policy /project/clair/vulnerabilities-check.rego --namespace required_checks \\\n  --output=json | tee /tekton/home/clair-vulnerabilities.json || true\nfi\n\nif [[ ! -f /tekton/home/clair-vulnerabilities.json ]]; then\n  note=\"Task clair-scan failed: /tekton/home/clair-vulnerabilities.json did not generate. For details, check Tekton task log.\"\n  TEST_OUTPUT=$(make_result_json -r \"ERROR\" -t \"$note\")\n  echo \"/tekton/home/clair-vulnerabilities.json did not generate correctly. For details, check conftest command in Tekton task log.\"\n  echo \"${TEST_OUTPUT}\" | tee /tekton/results/TEST_OUTPUT\n  exit 0\nfi\n\njq -rce \\\n  '{vulnerabilities:{\n      critical: (.[] | .warnings? // [] | map(select(.metadata.details.name==\"clair_critical_vulnerabilities\").metadata.\"vulnerabilities_number\" // 0)| add // 0),\n      high: (.[] | .warnings? // [] | map(select(.metadata.details.name==\"clair_high_vulnerabilities\").metadata.\"vulnerabilities_number\" // 0)| add // 0),\n      medium: (.[] | .warnings? // [] | map(select(.metadata.details.name==\"clair_medium_vulnerabilities\").metadata.\"vulnerabilities_number\" // 0)| add // 0),\n      low: (.[] | .warnings? // [] | map(select(.metadata.details.name==\"clair_low_vulnerabilities\").metadata.\"vulnerabilities_number\" // 0)| add // 0),\n      unknown: (.[] | .warnings? // [] | map(select(.metadata.details.name==\"clair_unknown_vulnerabilities\").metadata.\"vulnerabilities_number\" // 0)| add // 0)\n    }}' /tekton/home/clair-vulnerabilities.json | tee /tekton/results/CLAIR_SCAN_RESULT\n\nnote=\"Task clair-scan completed: Refer to Tekton task result CLAIR_SCAN_RESULT for vulnerabilities scanned by Clair.\"\nTEST_OUTPUT=$(make_result_json -r \"SUCCESS\" -t \"$note\")\necho \"${TEST_OUTPUT}\" | tee /tekton/results/TEST_OUTPUT\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "conftest-vulnerabilities",
+                      "image": "oci://quay.io/redhat-appstudio/hacbs-test@sha256:866675ee3064cf4768691ecca478063ce12f0556fb9d4f24ca95c98664ffbd43"
+                    },
+                    "annotations": null
+                  }
+                ],
+                "invocation": {
+                  "configSource": {},
+                  "parameters": {
+                    "docker-auth": "",
+                    "image-digest": "sha256:6fa252a7df2735b84674e64b78ac66279af0f2cbbb7ed1dd6a534daf0a4b8738",
+                    "image-url": "quay.io/redhat-appstudio/ec-golden-image:68b69547cad3c4ba856fe6b06154012f33dd8b5a"
+                  },
+                  "environment": {
+                    "annotations": {
+                      "build.appstudio.openshift.io/repo": "https://github.com/enterprise-contract/golden-container?rev=68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/commit_sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/target_branch": "main",
+                      "pipeline.tekton.dev/release": "876b81e",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-auth-secret": "pac-gitauth-iiug",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/installation-id": "34493006",
+                      "pipelinesascode.tekton.dev/log-url": "https://console.redhat.com/preview/application-pipeline",
+                      "pipelinesascode.tekton.dev/max-keep-runs": "3",
+                      "pipelinesascode.tekton.dev/on-cel-expression": "event == \"push\" && target_branch == \"main\"",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repo-url": "https://github.com/enterprise-contract/golden-container",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate[bot]",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/sha-title": "Update quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1 Docker digest to 63b42c0",
+                      "pipelinesascode.tekton.dev/sha-url": "https://github.com/enterprise-contract/golden-container/commit/68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/pipelines.minVersion": "0.12.1",
+                      "tekton.dev/tags": "appstudio, hacbs"
+                    },
+                    "labels": {
+                      "app.kubernetes.io/managed-by": "pipelinesascode.tekton.dev",
+                      "app.kubernetes.io/version": "v0.22.4",
+                      "appstudio.openshift.io/application": "golden-container",
+                      "appstudio.openshift.io/component": "golden-container",
+                      "pipelines.appstudio.openshift.io/type": "build",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate__bot",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/memberOf": "tasks",
+                      "tekton.dev/pipeline": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineRun": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineTask": "clair-scan",
+                      "tekton.dev/task": "clair-scan"
+                    }
+                  }
+                },
+                "results": [
+                  {
+                    "name": "CLAIR_SCAN_RESULT",
+                    "type": "string",
+                    "value": "{\"vulnerabilities\":{\"critical\":0,\"high\":0,\"medium\":0,\"low\":0,\"unknown\":0}}\n"
+                  },
+                  {
+                    "name": "TEST_OUTPUT",
+                    "type": "string",
+                    "value": "{\"result\":\"SUCCESS\",\"timestamp\":\"1705424712\",\"note\":\"Task clair-scan completed: Refer to Tekton task result CLAIR_SCAN_RESULT for vulnerabilities scanned by Clair.\",\"namespace\":\"default\",\"successes\":0,\"failures\":0,\"warnings\":0}\n"
+                  }
+                ]
+              },
+              {
+                "name": "sast-snyk-check",
+                "after": ["clone-repository"],
+                "ref": {
+                  "kind": "Task",
+                  "resolver": "bundles",
+                  "params": [
+                    {
+                      "name": "name",
+                      "value": "sast-snyk-check"
+                    },
+                    {
+                      "name": "bundle",
+                      "value": "quay.io/redhat-appstudio-tekton-catalog/task-sast-snyk-check:0.1@sha256:eee508768b14655275fbcc2f42f9da1ab553b872dcbe113b0896aa9bcf7e1adf"
+                    },
+                    {
+                      "name": "kind",
+                      "value": "task"
+                    }
+                  ]
+                },
+                "startedOn": "2024-01-16T17:03:46Z",
+                "finishedOn": "2024-01-16T17:04:18Z",
+                "status": "Succeeded",
+                "steps": [
+                  {
+                    "entryPoint": "#!/usr/bin/env bash\nset -euo pipefail\n. /utils.sh\ntrap 'handle_error /tekton/results/TEST_OUTPUT' EXIT\n\nSNYK_TOKEN_PATH=\"/etc/secrets/snyk_token\"\n\nif [ -f \"${SNYK_TOKEN_PATH}\" ] && [ -s \"${SNYK_TOKEN_PATH}\" ]; then\n  # SNYK token is provided\n  SNYK_TOKEN=\"$(cat ${SNYK_TOKEN_PATH})\"\n  export SNYK_TOKEN\nelse\n  note=\"Task sast-snyk-check skipped: If you wish to use the Snyk code SAST task, please create a secret named snyk-secret with the key \"snyk_token\" containing the Snyk token.\"\n  TEST_OUTPUT=$(make_result_json -r SKIPPED -t \"$note\")\n  echo \"${TEST_OUTPUT}\" | tee \"/tekton/results/TEST_OUTPUT\"\n  exit 0\nfi\n\nSNYK_EXIT_CODE=0\nSOURCE_CODE_DIR=/workspace/workspace/source\nsnyk code test $ARGS $SOURCE_CODE_DIR --sarif-file-output=sast_snyk_check_out.json 1>&2>> stdout.txt || SNYK_EXIT_CODE=$?\ntest_not_skipped=0\nSKIP_MSG=\"We found 0 supported files\"\ngrep -q \"$SKIP_MSG\" stdout.txt || test_not_skipped=$?\n\nif [[ \"$SNYK_EXIT_CODE\" -eq 0 ]] || [[ \"$SNYK_EXIT_CODE\" -eq 1 ]]; then\n  cat sast_snyk_check_out.json\n  TEST_OUTPUT=\n  parse_test_output sast-snyk-check sarif sast_snyk_check_out.json  || true\n\n# When the test is skipped, the \"SNYK_EXIT_CODE\" is 3 and it can also be 3 in some other situation\nelif [[ \"$test_not_skipped\" -eq 0 ]]; then\n  note=\"Task sast-snyk-check success: Snyk code test found zero supported files.\"\n  ERROR_OUTPUT=$(make_result_json -r SUCCESS -t \"$note\")\nelse\n  echo \"sast-snyk-check test failed because of the following issues:\"\n  cat stdout.txt\n  note=\"Task sast-snyk-check failed: For details, check Tekton task log.\"\n  ERROR_OUTPUT=$(make_result_json -r ERROR -t \"$note\")\nfi\necho \"${TEST_OUTPUT:-${ERROR_OUTPUT}}\" | tee /tekton/results/TEST_OUTPUT\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "sast-snyk-check",
+                      "image": "oci://quay.io/redhat-appstudio/hacbs-test@sha256:2c9018dc080e969f013be4f5d25b207522005d236deedb1f8d1534af29ee5364"
+                    },
+                    "annotations": null
+                  }
+                ],
+                "invocation": {
+                  "configSource": {},
+                  "parameters": {
+                    "ARGS": "--all-projects --exclude=test*,vendor,deps",
+                    "SNYK_SECRET": "snyk-secret"
+                  },
+                  "environment": {
+                    "annotations": {
+                      "build.appstudio.openshift.io/repo": "https://github.com/enterprise-contract/golden-container?rev=68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/commit_sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/target_branch": "main",
+                      "pipeline.tekton.dev/release": "876b81e",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-auth-secret": "pac-gitauth-iiug",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/installation-id": "34493006",
+                      "pipelinesascode.tekton.dev/log-url": "https://console.redhat.com/preview/application-pipeline",
+                      "pipelinesascode.tekton.dev/max-keep-runs": "3",
+                      "pipelinesascode.tekton.dev/on-cel-expression": "event == \"push\" && target_branch == \"main\"",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repo-url": "https://github.com/enterprise-contract/golden-container",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate[bot]",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/sha-title": "Update quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1 Docker digest to 63b42c0",
+                      "pipelinesascode.tekton.dev/sha-url": "https://github.com/enterprise-contract/golden-container/commit/68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/pipelines.minVersion": "0.12.1",
+                      "tekton.dev/tags": "appstudio, hacbs"
+                    },
+                    "labels": {
+                      "app.kubernetes.io/managed-by": "pipelinesascode.tekton.dev",
+                      "app.kubernetes.io/version": "v0.22.4",
+                      "appstudio.openshift.io/application": "golden-container",
+                      "appstudio.openshift.io/component": "golden-container",
+                      "pipelines.appstudio.openshift.io/type": "build",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate__bot",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/memberOf": "tasks",
+                      "tekton.dev/pipeline": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineRun": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineTask": "sast-snyk-check",
+                      "tekton.dev/task": "sast-snyk-check"
+                    }
+                  }
+                },
+                "results": [
+                  {
+                    "name": "TEST_OUTPUT",
+                    "type": "string",
+                    "value": "{\"result\":\"SUCCESS\",\"timestamp\":\"1705424657\",\"note\":\"Task sast-snyk-check success: Snyk code test found zero supported files.\",\"namespace\":\"default\",\"successes\":0,\"failures\":0,\"warnings\":0}\n"
+                  }
+                ]
+              },
+              {
+                "name": "clamav-scan",
+                "after": ["build-container"],
+                "ref": {
+                  "kind": "Task",
+                  "resolver": "bundles",
+                  "params": [
+                    {
+                      "name": "name",
+                      "value": "clamav-scan"
+                    },
+                    {
+                      "name": "bundle",
+                      "value": "quay.io/redhat-appstudio-tekton-catalog/task-clamav-scan:0.1@sha256:d72cb58db88289559676676c3db43906718028e07279f70ddb12ed8bdc8e2860"
+                    },
+                    {
+                      "name": "kind",
+                      "value": "task"
+                    }
+                  ]
+                },
+                "startedOn": "2024-01-16T17:05:04Z",
+                "finishedOn": "2024-01-16T17:05:37Z",
+                "status": "Succeeded",
+                "steps": [
+                  {
+                    "entryPoint": "#!/usr/bin/env bash\nset -euo pipefail\n. /utils.sh\ntrap 'handle_error' EXIT\n\nimagewithouttag=$(echo $IMAGE_URL | sed \"s/\\(.*\\):.*/\\1/\" | tr -d '\\n')\n\n# strip new-line escape symbol from parameter and save it to variable\nimageanddigest=$(echo $imagewithouttag@$IMAGE_DIGEST)\n\n# check if image is attestation one, skip the clamav scan in such case\nif [[ $imageanddigest == *.att ]]\nthen\n    echo \"$imageanddigest is an attestation image. Skipping ClamAV scan.\"\n    exit 0\nfi\nmkdir content\ncd content\necho Extracting image.\nif ! oc image extract --registry-config ~/.docker/config.json $imageanddigest; then\n  echo \"Unable to extract image. Skipping ClamAV scan!\"\n  exit 0\nfi\n\necho \"Scanning image. This operation may take a while.\"\nclamscan -ri --max-scansize=4095M --max-filesize=4095M \\\n  --max-scantime=0 --max-files=0 --max-recursion=1000 --max-dir-recursion=20000 --max-embeddedpe=4095M \\\n  --max-htmlnormalize=4095M --max-htmlnotags=4095M --max-scriptnormalize=4095M --max-ziptypercg=4095M \\\n  --max-partitions=50000 --max-iconspe=100000 --max-rechwp3=20000 --pcre-match-limit=100000000 --pcre-recmatch-limit=2000000 \\\n  --pcre-max-filesize=4095M --alert-broken=yes --alert-exceeds-max=yes --alert-broken-media=yes \\\n  --alert-encrypted=yes --alert-encrypted-archive=yes --alert-encrypted-doc=yes --alert-macros=yes \\\n  --alert-phishing-ssl=yes --alert-phishing-cloak=yes --alert-partition-intersection=yes \\\n  | tee /tekton/home/clamscan-result.log || true\necho \"Executed-on: Scan was executed on version - $(clamscan --version)\" | tee -a /tekton/home/clamscan-result.log\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "extract-and-scan-image",
+                      "image": "oci://quay.io/redhat-appstudio/hacbs-test@sha256:2c9018dc080e969f013be4f5d25b207522005d236deedb1f8d1534af29ee5364"
+                    },
+                    "annotations": null
+                  },
+                  {
+                    "entryPoint": "#!/usr/bin/env python3.9\nimport json\nimport dateutil.parser as parser\nimport os\n\nclamscan_result = \"/tekton/home/clamscan-result.log\"\nif not os.path.exists(clamscan_result) or os.stat(clamscan_result).st_size == 0:\n    print(\"clamscan-result.log file is empty, so compiled code not extracted. Parsing skipped.\")\n    exit(0)\n\nwith open(clamscan_result, \"r\") as file:\n    clam_result_str = file.read()\n\ndef clam_result_str_to_json(clam_result_str):\n\n    clam_result_list = clam_result_str.split(\"\\n\")\n    clam_result_list.remove('')\n\n    results_marker = \\\n        clam_result_list.index(\"----------- SCAN SUMMARY -----------\")\n\n    hit_list = clam_result_list[:results_marker]\n    summary_list = clam_result_list[(results_marker + 1):]\n\n    r_dict = { \"hits\": hit_list }\n    for item in summary_list:\n        # in case of blank lines\n        if not item:\n            continue\n        split_index = [c == ':' for c in item].index(True)\n        key = item[:split_index].lower()\n        key = key.replace(\" \", \"_\")\n        value = item[(split_index + 1):].strip(\" \")\n        if (key == \"start_date\" or key == \"end_date\"):\n          isodate = parser.parse(value)\n          value = isodate.isoformat()\n        r_dict[key] = value\n    print(json.dumps(r_dict))\n    with open('/tekton/home/clamscan-result.json', 'w') as f:\n      print(json.dumps(r_dict), file=f)\n\ndef main():\n    clam_result_str_to_json(clam_result_str)\n\nif __name__ == \"__main__\":\n    main()\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "modify-clam-output-to-json",
+                      "image": "oci://quay.io/redhat-appstudio/hacbs-test@sha256:2c9018dc080e969f013be4f5d25b207522005d236deedb1f8d1534af29ee5364"
+                    },
+                    "annotations": null
+                  },
+                  {
+                    "entryPoint": "#!/usr/bin/env bash\nset -euo pipefail\nsource /utils.sh\ntrap 'handle_error /tekton/results/TEST_OUTPUT' EXIT\n\nif [ -f /tekton/home/clamscan-result.json ];\nthen\n  cat /tekton/home/clamscan-result.json\n  INFECTED_FILES=$(jq -r '.infected_files' /tekton/home/clamscan-result.json || true )\n  WARNING_FILES=$(jq -r '.hits|length' /tekton/home/clamscan-result.json || true )\n  if [ -z \"${INFECTED_FILES}\" ]; then\n    echo \"Failed to get number of infected files.\"\n    note=\"Task clamav-scan failed: Unable to get number of infected files from /tekton/home/clamscan-result.json. For details, check Tekton task log.\"\n  else\n    if [[ \"${INFECTED_FILES}\" -gt 0 ]]; then\n     RES=\"FAILURE\";\n    elif [[ \"${WARNING_FILES}\" -gt 0 ]]; then\n      RES=\"WARNING\";\n    else\n      RES=\"SUCCESS\";\n    fi\n    note=\"Task clamav-scan completed: Check result for antivirus scan result.\"\n    TEST_OUTPUT=$(make_result_json -r \"${RES}\" -s 1 -f \"${INFECTED_FILES}\" -w \"${WARNING_FILES}\" -t \"$note\")\n  fi\nelse\n  note=\"Task clamav-scan failed: /tekton/home/clamscan-result.json doesn't exist. For details, check Tekton task log.\"\nfi\n\nERROR_OUTPUT=$(make_result_json -r \"ERROR\" -t \"$note\")\necho \"${TEST_OUTPUT:-${ERROR_OUTPUT}}\" | tee /tekton/results/TEST_OUTPUT\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "store-hacbs-test-output-result",
+                      "image": "oci://quay.io/redhat-appstudio/hacbs-test@sha256:2c9018dc080e969f013be4f5d25b207522005d236deedb1f8d1534af29ee5364"
+                    },
+                    "annotations": null
+                  }
+                ],
+                "invocation": {
+                  "configSource": {},
+                  "parameters": {
+                    "docker-auth": "",
+                    "image-digest": "sha256:6fa252a7df2735b84674e64b78ac66279af0f2cbbb7ed1dd6a534daf0a4b8738",
+                    "image-url": "quay.io/redhat-appstudio/ec-golden-image:68b69547cad3c4ba856fe6b06154012f33dd8b5a"
+                  },
+                  "environment": {
+                    "annotations": {
+                      "build.appstudio.openshift.io/repo": "https://github.com/enterprise-contract/golden-container?rev=68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/commit_sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/target_branch": "main",
+                      "pipeline.tekton.dev/release": "876b81e",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-auth-secret": "pac-gitauth-iiug",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/installation-id": "34493006",
+                      "pipelinesascode.tekton.dev/log-url": "https://console.redhat.com/preview/application-pipeline",
+                      "pipelinesascode.tekton.dev/max-keep-runs": "3",
+                      "pipelinesascode.tekton.dev/on-cel-expression": "event == \"push\" && target_branch == \"main\"",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repo-url": "https://github.com/enterprise-contract/golden-container",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate[bot]",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/sha-title": "Update quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1 Docker digest to 63b42c0",
+                      "pipelinesascode.tekton.dev/sha-url": "https://github.com/enterprise-contract/golden-container/commit/68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/pipelines.minVersion": "0.12.1",
+                      "tekton.dev/tags": "virus, appstudio, hacbs"
+                    },
+                    "labels": {
+                      "app.kubernetes.io/managed-by": "pipelinesascode.tekton.dev",
+                      "app.kubernetes.io/version": "v0.22.4",
+                      "appstudio.openshift.io/application": "golden-container",
+                      "appstudio.openshift.io/component": "golden-container",
+                      "pipelines.appstudio.openshift.io/type": "build",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate__bot",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/memberOf": "tasks",
+                      "tekton.dev/pipeline": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineRun": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineTask": "clamav-scan",
+                      "tekton.dev/task": "clamav-scan"
+                    }
+                  }
+                },
+                "results": [
+                  {
+                    "name": "TEST_OUTPUT",
+                    "type": "string",
+                    "value": "{\"result\":\"SUCCESS\",\"timestamp\":\"1705424736\",\"note\":\"Task clamav-scan completed: Check result for antivirus scan result.\",\"namespace\":\"default\",\"successes\":1,\"failures\":0,\"warnings\":0}\n"
+                  }
+                ]
+              },
+              {
+                "name": "sbom-json-check",
+                "after": ["build-container"],
+                "ref": {
+                  "kind": "Task",
+                  "resolver": "bundles",
+                  "params": [
+                    {
+                      "name": "name",
+                      "value": "sbom-json-check"
+                    },
+                    {
+                      "name": "bundle",
+                      "value": "quay.io/redhat-appstudio-tekton-catalog/task-sbom-json-check:0.1@sha256:717e6e33f02dbe1a28fb743f32699e002c944680c251a50b644f27becb9208e9"
+                    },
+                    {
+                      "name": "kind",
+                      "value": "task"
+                    }
+                  ]
+                },
+                "startedOn": "2024-01-16T17:05:04Z",
+                "finishedOn": "2024-01-16T17:05:19Z",
+                "status": "Succeeded",
+                "steps": [
+                  {
+                    "entryPoint": "#!/usr/bin/env bash\nset -euo pipefail\nsource /utils.sh\ntrap 'handle_error /tekton/results/TEST_OUTPUT' EXIT\n\nmkdir /manifests/ && cd /manifests/\n\nimage_with_digest=\"${IMAGE_URL}@${IMAGE_DIGEST}\"\n\nif ! oc image extract --registry-config ~/.docker/config.json \"${image_with_digest}\" --path '/root/buildinfo/content_manifests/*:/manifests/'; then\n  echo \"Failed to extract manifests from image ${image_with_digest}.\"\n  note=\"Task sbom-json-check failed: Failed to extract manifests from image ${image_with_digest} with oc extract. For details, check Tekton task log.\"\n  ERROR_OUTPUT=$(make_result_json -r \"ERROR\" -t \"$note\")\nfi\n\ntouch fail_result.txt\nif [ -f \"sbom-cyclonedx.json\" ]\nthen\n  result=$(echo -n $(sbom-utility validate --input-file sbom-cyclonedx.json))\n  if [[ ! $result =~ \"SBOM valid against JSON schema: `true`\" ]]\n  then\n    echo \"sbom-cyclonedx.json: $result\" > fail_result.txt\n  fi\nelse\n  echo \"Cannot access sbom-cyclonedx.json: No such file or directory exists.\" > fail_result.txt\nfi\n\nFAIL_RESULTS=\"$(cat fail_result.txt)\"\nif [[ -z $FAIL_RESULTS ]]\nthen\n  note=\"Task sbom-json-check completed: Check result for JSON check result.\"\n  TEST_OUTPUT=$(make_result_json -r \"SUCCESS\" -s 1 -t \"$note\")\nelse\n  echo \"Failed to verify sbom-cyclonedx.json for image $IMAGE_URL with reason: $FAIL_RESULTS.\"\n  note=\"Task sbom-json-check failed: Failed to verify SBOM for image $IMAGE_URL.\"\n  ERROR_OUTPUT=$(make_result_json -r \"FAILURE\" -f 1 -t \"$note\")\nfi\n\necho \"${TEST_OUTPUT:-${ERROR_OUTPUT}}\" | tee /tekton/results/TEST_OUTPUT\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "sbom-json-check",
+                      "image": "oci://quay.io/redhat-appstudio/hacbs-test@sha256:2c9018dc080e969f013be4f5d25b207522005d236deedb1f8d1534af29ee5364"
+                    },
+                    "annotations": null
+                  }
+                ],
+                "invocation": {
+                  "configSource": {},
+                  "parameters": {
+                    "IMAGE_DIGEST": "sha256:6fa252a7df2735b84674e64b78ac66279af0f2cbbb7ed1dd6a534daf0a4b8738",
+                    "IMAGE_URL": "quay.io/redhat-appstudio/ec-golden-image:68b69547cad3c4ba856fe6b06154012f33dd8b5a"
+                  },
+                  "environment": {
+                    "annotations": {
+                      "build.appstudio.openshift.io/repo": "https://github.com/enterprise-contract/golden-container?rev=68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/commit_sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/target_branch": "main",
+                      "pipeline.tekton.dev/release": "876b81e",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-auth-secret": "pac-gitauth-iiug",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/installation-id": "34493006",
+                      "pipelinesascode.tekton.dev/log-url": "https://console.redhat.com/preview/application-pipeline",
+                      "pipelinesascode.tekton.dev/max-keep-runs": "3",
+                      "pipelinesascode.tekton.dev/on-cel-expression": "event == \"push\" && target_branch == \"main\"",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repo-url": "https://github.com/enterprise-contract/golden-container",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate[bot]",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/sha-title": "Update quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1 Docker digest to 63b42c0",
+                      "pipelinesascode.tekton.dev/sha-url": "https://github.com/enterprise-contract/golden-container/commit/68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container"
+                    },
+                    "labels": {
+                      "app.kubernetes.io/managed-by": "pipelinesascode.tekton.dev",
+                      "app.kubernetes.io/version": "v0.22.4",
+                      "appstudio.openshift.io/application": "golden-container",
+                      "appstudio.openshift.io/component": "golden-container",
+                      "pipelines.appstudio.openshift.io/type": "build",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate__bot",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/memberOf": "tasks",
+                      "tekton.dev/pipeline": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineRun": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineTask": "sbom-json-check",
+                      "tekton.dev/task": "sbom-json-check"
+                    }
+                  }
+                },
+                "results": [
+                  {
+                    "name": "TEST_OUTPUT",
+                    "type": "string",
+                    "value": "{\"result\":\"SUCCESS\",\"timestamp\":\"1705424718\",\"note\":\"Task sbom-json-check completed: Check result for JSON check result.\",\"namespace\":\"default\",\"successes\":1,\"failures\":0,\"warnings\":0}\n"
+                  }
+                ]
+              },
+              {
+                "name": "show-sbom",
+                "after": ["build-container"],
+                "ref": {
+                  "kind": "Task",
+                  "resolver": "bundles",
+                  "params": [
+                    {
+                      "name": "name",
+                      "value": "show-sbom"
+                    },
+                    {
+                      "name": "bundle",
+                      "value": "quay.io/redhat-appstudio-tekton-catalog/task-show-sbom:0.1@sha256:202d3c3385120ea847d8f0a82bd8d9d5e873d67f981d6f8a51fb1706caaf6bef"
+                    },
+                    {
+                      "name": "kind",
+                      "value": "task"
+                    }
+                  ]
+                },
+                "startedOn": "2024-01-16T17:05:37Z",
+                "finishedOn": "2024-01-16T17:05:43Z",
+                "status": "Succeeded",
+                "steps": [
+                  {
+                    "entryPoint": "#!/busybox/sh\ncosign download sbom $IMAGE_URL 2>err\nRET=$?\nif [ $RET -ne 0 ]; then\n  echo Failed to get SBOM >&2\n  cat err >&2\nfi\nexit $RET\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "show-sbom",
+                      "image": "oci://quay.io/redhat-appstudio/cosign@sha256:c883d6f8d39148f2cea71bff4622d196d89df3e510f36c140c097b932f0dd5d5"
+                    },
+                    "annotations": null
+                  }
+                ],
+                "invocation": {
+                  "configSource": {},
+                  "parameters": {
+                    "IMAGE_URL": "quay.io/redhat-appstudio/ec-golden-image:68b69547cad3c4ba856fe6b06154012f33dd8b5a"
+                  },
+                  "environment": {
+                    "annotations": {
+                      "build.appstudio.openshift.io/repo": "https://github.com/enterprise-contract/golden-container?rev=68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/commit_sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/target_branch": "main",
+                      "pipeline.tekton.dev/release": "876b81e",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-auth-secret": "pac-gitauth-iiug",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/installation-id": "34493006",
+                      "pipelinesascode.tekton.dev/log-url": "https://console.redhat.com/preview/application-pipeline",
+                      "pipelinesascode.tekton.dev/max-keep-runs": "3",
+                      "pipelinesascode.tekton.dev/on-cel-expression": "event == \"push\" && target_branch == \"main\"",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repo-url": "https://github.com/enterprise-contract/golden-container",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate[bot]",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/sha-title": "Update quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1 Docker digest to 63b42c0",
+                      "pipelinesascode.tekton.dev/sha-url": "https://github.com/enterprise-contract/golden-container/commit/68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/pipelines.minVersion": "0.12.1",
+                      "tekton.dev/tags": "appstudio, hacbs"
+                    },
+                    "labels": {
+                      "app.kubernetes.io/managed-by": "pipelinesascode.tekton.dev",
+                      "app.kubernetes.io/version": "v0.22.4",
+                      "appstudio.openshift.io/application": "golden-container",
+                      "appstudio.openshift.io/component": "golden-container",
+                      "pipelines.appstudio.openshift.io/type": "build",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate__bot",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/memberOf": "finally",
+                      "tekton.dev/pipeline": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineRun": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineTask": "show-sbom",
+                      "tekton.dev/task": "show-sbom"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "show-summary",
+                "after": ["clone-repository"],
+                "ref": {
+                  "kind": "Task",
+                  "resolver": "bundles",
+                  "params": [
+                    {
+                      "name": "name",
+                      "value": "summary"
+                    },
+                    {
+                      "name": "bundle",
+                      "value": "quay.io/redhat-appstudio-tekton-catalog/task-summary:0.1@sha256:f65a69aaf71cbab382eff685eee522ad35068a4d91d233e76cef7d42ff15a686"
+                    },
+                    {
+                      "name": "kind",
+                      "value": "task"
+                    }
+                  ]
+                },
+                "startedOn": "2024-01-16T17:05:37Z",
+                "finishedOn": "2024-01-16T17:05:43Z",
+                "status": "Succeeded",
+                "steps": [
+                  {
+                    "entryPoint": "#!/usr/bin/env bash\necho\necho \"Build Summary:\"\necho\necho \"Build repository: $GIT_URL\"\nif [ \"$BUILD_TASK_STATUS\" == \"Succeeded\" ]; then\n  echo \"Generated Image is in : $IMAGE_URL\"\nfi\necho\necho End Summary\n",
+                    "arguments": null,
+                    "environment": {
+                      "container": "appstudio-summary",
+                      "image": "oci://registry.access.redhat.com/ubi9/ubi-minimal@sha256:3e313209ac617a92b50350286752311d99ea2dafc429ef0e5311889294b0bc21"
+                    },
+                    "annotations": null
+                  }
+                ],
+                "invocation": {
+                  "configSource": {},
+                  "parameters": {
+                    "build-task-status": "Succeeded",
+                    "git-url": "https://github.com/enterprise-contract/golden-container?rev=68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                    "image-url": "quay.io/redhat-appstudio/ec-golden-image:68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                    "pipelinerun-name": "golden-container-on-push-fdv54"
+                  },
+                  "environment": {
+                    "annotations": {
+                      "build.appstudio.openshift.io/repo": "https://github.com/enterprise-contract/golden-container?rev=68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/commit_sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "build.appstudio.redhat.com/target_branch": "main",
+                      "pipeline.tekton.dev/release": "876b81e",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-auth-secret": "pac-gitauth-iiug",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/installation-id": "34493006",
+                      "pipelinesascode.tekton.dev/log-url": "https://console.redhat.com/preview/application-pipeline",
+                      "pipelinesascode.tekton.dev/max-keep-runs": "3",
+                      "pipelinesascode.tekton.dev/on-cel-expression": "event == \"push\" && target_branch == \"main\"",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repo-url": "https://github.com/enterprise-contract/golden-container",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate[bot]",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/sha-title": "Update quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1 Docker digest to 63b42c0",
+                      "pipelinesascode.tekton.dev/sha-url": "https://github.com/enterprise-contract/golden-container/commit/68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/pipelines.minVersion": "0.12.1",
+                      "tekton.dev/tags": "appstudio, hacbs"
+                    },
+                    "labels": {
+                      "app.kubernetes.io/managed-by": "pipelinesascode.tekton.dev",
+                      "app.kubernetes.io/version": "v0.22.4",
+                      "appstudio.openshift.io/application": "golden-container",
+                      "appstudio.openshift.io/component": "golden-container",
+                      "pipelines.appstudio.openshift.io/type": "build",
+                      "pipelinesascode.tekton.dev/branch": "main",
+                      "pipelinesascode.tekton.dev/check-run-id": "20539638032",
+                      "pipelinesascode.tekton.dev/event-type": "push",
+                      "pipelinesascode.tekton.dev/git-provider": "github",
+                      "pipelinesascode.tekton.dev/original-prname": "golden-container-on-push",
+                      "pipelinesascode.tekton.dev/repository": "golden-container",
+                      "pipelinesascode.tekton.dev/sender": "renovate__bot",
+                      "pipelinesascode.tekton.dev/sha": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+                      "pipelinesascode.tekton.dev/state": "started",
+                      "pipelinesascode.tekton.dev/url-org": "enterprise-contract",
+                      "pipelinesascode.tekton.dev/url-repository": "golden-container",
+                      "tekton.dev/memberOf": "finally",
+                      "tekton.dev/pipeline": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineRun": "golden-container-on-push-fdv54",
+                      "tekton.dev/pipelineTask": "show-summary",
+                      "tekton.dev/task": "summary"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "metadata": {
+            "buildStartedOn": "2024-01-16T17:03:17Z",
+            "buildFinishedOn": "2024-01-16T17:05:43Z",
+            "completeness": {
+              "parameters": false,
+              "environment": false,
+              "materials": false
+            },
+            "reproducible": false
+          },
+          "materials": [
+            {
+              "uri": "oci://registry.redhat.io/openshift4/ose-cli",
+              "digest": {
+                "sha256": "73df37794ffff7de1101016c23dc623e4990810390ebdabcbbfa065214352c7c"
+              }
+            },
+            {
+              "uri": "oci://registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8",
+              "digest": {
+                "sha256": "2fa0b06d52b04f377c696412e19307a9eff27383f81d87aae0b4f71672a1cd0b"
+              }
+            },
+            {
+              "uri": "oci://registry.redhat.io/ubi9",
+              "digest": {
+                "sha256": "089bd3b82a78ac45c0eed231bb58bfb43bfcd0560d9bba240fc6355502c92976"
+              }
+            },
+            {
+              "uri": "oci://quay.io/redhat-appstudio/cachi2",
+              "digest": {
+                "sha256": "46097f22b57e4d48a3fce96d931e08ccfe3a3e6421362d5f9353961279078eef"
+              }
+            },
+            {
+              "uri": "oci://quay.io/redhat-appstudio/buildah",
+              "digest": {
+                "sha256": "017ec8d3e8e1fefcd47fc11bde655fa9c8f09a279b690be98397875bd542fb44"
+              }
+            },
+            {
+              "uri": "oci://quay.io/redhat-appstudio/syft",
+              "digest": {
+                "sha256": "4d3856e6a2622700b9a9d5d74d9aaf5d8a55671653f80bf6c636677658680ede"
+              }
+            },
+            {
+              "uri": "oci://quay.io/redhat-appstudio/hacbs-jvm-build-request-processor",
+              "digest": {
+                "sha256": "530d1932dc47d05da42a3a329a05eb30fe7105aa9e0d3f0d682dfa015e33b4ac"
+              }
+            },
+            {
+              "uri": "oci://registry.access.redhat.com/ubi9/python-39",
+              "digest": {
+                "sha256": "65cab0cf8b364d56e4a70789b65cda83f49b321b11fff5b228c959f3c992c596"
+              }
+            },
+            {
+              "uri": "oci://quay.io/redhat-appstudio/cachi2",
+              "digest": {
+                "sha256": "001acfbad47e132a90998d45076a0dbe0d8beacf0bec12b4d9a5aa796f4a9cad"
+              }
+            },
+            {
+              "uri": "oci://quay.io/redhat-appstudio/cosign",
+              "digest": {
+                "sha256": "c883d6f8d39148f2cea71bff4622d196d89df3e510f36c140c097b932f0dd5d5"
+              }
+            },
+            {
+              "uri": "oci://quay.io/redhat-appstudio/hacbs-test",
+              "digest": {
+                "sha256": "2c9018dc080e969f013be4f5d25b207522005d236deedb1f8d1534af29ee5364"
+              }
+            },
+            {
+              "uri": "oci://quay.io/redhat-appstudio/clair-in-ci",
+              "digest": {
+                "sha256": "8d177929079a8a42046edd27e6c3f5c7c620b75f78bcaa8c4726428aa621edf2"
+              }
+            },
+            {
+              "uri": "oci://quay.io/redhat-appstudio/hacbs-test",
+              "digest": {
+                "sha256": "866675ee3064cf4768691ecca478063ce12f0556fb9d4f24ca95c98664ffbd43"
+              }
+            },
+            {
+              "uri": "oci://quay.io/redhat-appstudio/clamav-db",
+              "digest": {
+                "sha256": "75cdf3413409f5b48440269d41b38b5de4369e79bd82ae02d8033d160487256f"
+              }
+            },
+            {
+              "uri": "oci://registry.access.redhat.com/ubi9/ubi-minimal",
+              "digest": {
+                "sha256": "3e313209ac617a92b50350286752311d99ea2dafc429ef0e5311889294b0bc21"
+              }
+            },
+            {
+              "uri": "git+https://github.com/enterprise-contract/golden-container.git",
+              "digest": {
+                "sha1": "68b69547cad3c4ba856fe6b06154012f33dd8b5a"
+              }
+            }
+          ]
+        }
+      },
+      "signatures": [
+        {
+          "keyid": "SHA256:IhiN7gY+Z3uSSd7tmj6w5Zfhqafzdhm3DZjIvGc6iYY",
+          "sig": "MEQCIEWRzKvnzW5LgLFUUbBMAXWRCXF+3Z4iKMNg+ipLjZZYAiBFCTgswObTC7W7LJLZg/JWXzGWJ1My7k4yju0hAEjQUw=="
+        }
+      ]
+    }
+  ],
+  "image": {
+    "ref": "quay.io/redhat-appstudio/ec-golden-image@sha256:6fa252a7df2735b84674e64b78ac66279af0f2cbbb7ed1dd6a534daf0a4b8738",
+    "signatures": [
+      {
+        "keyid": "",
+        "sig": "MEUCIQD4UBVTUOCzIFPhA09e/aJGAj8pSZYKekAec31XO9XuyQIgJ9hqJ5+q7f0G0nP6jOOoJXeERqQgN3D/9ceLVfippP8="
+      }
+    ],
+    "config": {
+      "Cmd": ["/bin/sh", "-c", "/bin/sh"],
+      "Env": [
+        "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      ],
+      "Labels": {
+        "architecture": "x86_64",
+        "build-date": "2024-01-16T17:04:52",
+        "com.redhat.build-host": "somewhere.over.the.rainbow",
+        "com.redhat.component": "enterprise-contract-golden-container",
+        "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI",
+        "description": "Trivial image build in compliance with Enterprise Contract policy",
+        "distribution-scope": "public",
+        "io.buildah.version": "1.31.0",
+        "io.k8s.description": "Trivial image build in compliance with Enterprise Contract policy",
+        "io.k8s.display-name": "Enterprise Contract Contract Golden Container",
+        "io.openshift.expose-services": "",
+        "io.openshift.tags": "golden",
+        "maintainer": "hacbs-contract@redhat.com",
+        "name": "Enterprise Contract Golden Container",
+        "release": "1",
+        "summary": "Trivial image build in compliance with Enterprise Contract policy",
+        "url": "https://github.com/enterprise-contract/golden-container",
+        "vcs-ref": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
+        "vcs-type": "git",
+        "vendor": "Enterprise Contract",
+        "version": "1"
+      }
+    },
+    "parent": {
+      "ref": "registry.access.redhat.com/ubi9/ubi-micro@sha256:f9426baf6a67db59561e58d7ae098e7de22264adcaf5f9fdb882a4283be5a7ed",
+      "config": {
+        "Cmd": ["/bin/sh", "-c", "/bin/sh"],
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        ],
+        "Labels": {
+          "architecture": "x86_64",
+          "build-date": "2023-12-07T06:07:13",
+          "com.redhat.component": "ubi9-micro-container",
+          "com.redhat.license_terms": "https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI",
+          "description": "Very small image which doesn't install the package manager.",
+          "distribution-scope": "public",
+          "io.buildah.version": "1.29.0",
+          "io.k8s.description": "Very small image which doesn't install the package manager.",
+          "io.k8s.display-name": "Ubi9-micro",
+          "io.openshift.expose-services": "",
+          "maintainer": "Red Hat, Inc.",
+          "name": "ubi9/ubi-micro",
+          "release": "9",
+          "summary": "ubi9 micro image",
+          "url": "https://access.redhat.com/containers/#/registry.access.redhat.com/ubi9/ubi-micro/images/9.3-9",
+          "vcs-ref": "7c8efa4a6b572674bf941c8ad74c59eb3ac8b9df",
+          "vcs-type": "git",
+          "vendor": "Red Hat, Inc.",
+          "version": "9.3"
+        }
+      }
+    },
+    "source": {
+      "git": {
+        "url": "https://github.com/enterprise-contract/golden-container.git",
+        "revision": "68b69547cad3c4ba856fe6b06154012f33dd8b5a"
+      }
+    }
+  }
+}

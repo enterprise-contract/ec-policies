@@ -28,10 +28,8 @@ const (
 	policyConfigFilename = "policy.json"
 )
 
-var (
-	//go:embed samples/policy-input-golden-container.json
-	sampleGCPolicyInput string
-)
+//go:embed samples/policy-input-golden-container.json
+var sampleGCPolicyInput string
 
 type testState struct {
 	tempDir   string

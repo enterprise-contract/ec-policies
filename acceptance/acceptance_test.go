@@ -60,20 +60,17 @@ func thereIsASampleGCPolicyInput(ctx context.Context) (context.Context, error) {
 		return ctx, fmt.Errorf("thereIsASampleGCPolicyInput get test state: %w", err)
 	}
 
-	p := path.Join(ts.tempDir, policyInputFilename)
-	f, err := os.Create(p)
+	f, err := os.Create(ts.inputFileName)
 	if err != nil {
-		return ctx, fmt.Errorf("creating %s file: %w", p, err)
+		return ctx, fmt.Errorf("creating %s file: %w", ts.inputFileName, err)
 	}
 	defer f.Close()
 
 	if _, err := f.WriteString(sampleGCPolicyInput); err != nil {
-		return ctx, fmt.Errorf("writing %s file: %w", p, err)
+		return ctx, fmt.Errorf("writing %s file: %w", ts.inputFileName, err)
 	}
 
-	ts.inputFileName = p
-
-	return setTestState(ctx, ts), nil
+	return ctx, nil
 }
 
 func thereIsAPolicyConfig(ctx context.Context, config *godog.DocString) (context.Context, error) {
@@ -82,22 +79,19 @@ func thereIsAPolicyConfig(ctx context.Context, config *godog.DocString) (context
 		return ctx, fmt.Errorf("thereIsAPolicyConfig get test state: %w", err)
 	}
 
-	p := path.Join(ts.tempDir, policyConfigFilename)
-	f, err := os.Create(p)
+	f, err := os.Create(ts.configFileName)
 	if err != nil {
-		return ctx, fmt.Errorf("creating %s file: %w", p, err)
+		return ctx, fmt.Errorf("creating %s file: %w", ts.configFileName, err)
 	}
 	defer f.Close()
 
 	content := replaceVariables(config.Content, ts.variables)
 
 	if _, err := f.WriteString(content); err != nil {
-		return ctx, fmt.Errorf("writing %s file: %w", p, err)
+		return ctx, fmt.Errorf("writing %s file: %w", ts.configFileName, err)
 	}
 
-	ts.configFileName = p
-
-	return setTestState(ctx, ts), nil
+	return ctx, nil
 }
 
 func validateInputWithPolicyConfig(ctx context.Context) (context.Context, error) {
@@ -191,8 +185,10 @@ func setupScenario(ctx context.Context, sc *godog.Scenario) (context.Context, er
 	}
 
 	ts := testState{
-		cliPath: filepath.Join(gitroot, "acceptance/bin/ec"),
-		tempDir: tempDir,
+		cliPath:        filepath.Join(gitroot, "acceptance/bin/ec"),
+		tempDir:        tempDir,
+		inputFileName:  path.Join(tempDir, policyInputFilename),
+		configFileName: path.Join(tempDir, policyConfigFilename),
 		variables: map[string]string{
 			"GITROOT": gitroot,
 		},

@@ -190,7 +190,7 @@ func setupScenario(ctx context.Context, sc *godog.Scenario) (context.Context, er
 		return ctx, fmt.Errorf("setting up scenario: %w", err)
 	}
 
-	gitroot, err := guessGitRoot()
+	gitroot, err := filepath.Abs("..")
 	if err != nil {
 		return ctx, fmt.Errorf("getting gitroot: %w", err)
 	}
@@ -226,23 +226,6 @@ func getTestState(ctx context.Context) (testState, error) {
 
 func setTestState(ctx context.Context, ts testState) context.Context {
 	return context.WithValue(ctx, testStateKey{}, ts)
-}
-
-// guessGitRoot looks for a directory containing a .git directory. It starts from the current
-// working dirctory and walks up the directory tree.
-func guessGitRoot() (string, error) {
-	startingPath, err := os.Getwd()
-	if err != nil {
-		return "", fmt.Errorf("cannot get current working directory: %w", err)
-	}
-
-	for path := startingPath; path != "/"; path = filepath.Dir(path) {
-		gitpath := filepath.Join(path, ".git")
-		if _, err := os.Stat(gitpath); err == nil {
-			return path, nil
-		}
-	}
-	return "", fmt.Errorf("git root not found in %s", startingPath)
 }
 
 func InitializeScenario(sc *godog.ScenarioContext) {

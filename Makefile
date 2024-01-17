@@ -266,7 +266,6 @@ update-bundles: ## Push policy bundles to quay.io and generate infra-deployments
 
 .PHONY: acceptance
 acceptance: ## Run acceptance tests
-	@go build -o acceptance/bin/ec github.com/enterprise-contract/ec-cli
 	@cd acceptance && go test ./...
 
 #--------------------------------------------------------------------

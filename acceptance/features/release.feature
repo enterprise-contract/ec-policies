@@ -1,8 +1,8 @@
 Feature: Golden Container Image
 
     Scenario: Red Hat collection
-        Given there is a sample golden-container policy input
-        And there is a policy config
+        Given a sample policy input "golden-container"
+        And a policy config:
             """
             {
                 "sources": [

@@ -54,10 +54,10 @@ type (
 	}
 )
 
-func thereIsASampleGCPolicyInput(ctx context.Context) (context.Context, error) {
+func writeSampleGCPolicyInput(ctx context.Context, sampleName string) (context.Context, error) {
 	ts, err := getTestState(ctx)
 	if err != nil {
-		return ctx, fmt.Errorf("thereIsASampleGCPolicyInput get test state: %w", err)
+		return ctx, fmt.Errorf("writeSampleGCPolicyInput get test state: %w", err)
 	}
 
 	f, err := os.Create(ts.inputFileName)
@@ -66,17 +66,25 @@ func thereIsASampleGCPolicyInput(ctx context.Context) (context.Context, error) {
 	}
 	defer f.Close()
 
-	if _, err := f.WriteString(sampleGCPolicyInput); err != nil {
+	var content string
+	switch sampleName {
+	case "golden-container":
+		content = sampleGCPolicyInput
+	default:
+		return ctx, fmt.Errorf("%q is not a known sample name", sampleName)
+	}
+
+	if _, err := f.WriteString(content); err != nil {
 		return ctx, fmt.Errorf("writing %s file: %w", ts.inputFileName, err)
 	}
 
 	return ctx, nil
 }
 
-func thereIsAPolicyConfig(ctx context.Context, config *godog.DocString) (context.Context, error) {
+func writePolicyConfig(ctx context.Context, config *godog.DocString) (context.Context, error) {
 	ts, err := getTestState(ctx)
 	if err != nil {
-		return ctx, fmt.Errorf("thereIsAPolicyConfig get test state: %w", err)
+		return ctx, fmt.Errorf("writePolicyConfig get test state: %w", err)
 	}
 
 	f, err := os.Create(ts.configFileName)
@@ -222,8 +230,8 @@ func setTestState(ctx context.Context, ts testState) context.Context {
 func InitializeScenario(sc *godog.ScenarioContext) {
 	sc.Before(setupScenario)
 
-	sc.Step("^there is a sample golden-container policy input$", thereIsASampleGCPolicyInput)
-	sc.Step(`^there is a policy config$`, thereIsAPolicyConfig)
+	sc.Step(`^a sample policy input "([^"]*)"$`, writeSampleGCPolicyInput)
+	sc.Step(`^a policy config:$`, writePolicyConfig)
 	sc.Step(`^input is validated$`, validateInputWithPolicyConfig)
 	sc.Step(`^there should be no violations in the result$`, thereShouldBeNoViolationsInTheResult)
 	sc.Step(`^there should be no warnings in the result$`, thereShouldBeNoWarningsInTheResult)

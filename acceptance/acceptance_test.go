@@ -17,28 +17,24 @@ import (
 	"github.com/cucumber/godog"
 )
 
-type (
-	inputFileName  struct{}
-	configFileName struct{}
-	testStateKey   struct{}
-)
-
 const (
 	policyInputFilename  = "input.json"
 	policyConfigFilename = "policy.json"
 )
 
-var (
-	//go:embed samples/policy-input-golden-container.json
-	sampleGCPolicyInput string
-)
+//go:embed samples/policy-input-golden-container.json
+var sampleGCPolicyInput string
+
+type testStateKey struct{}
 
 type testState struct {
-	tempDir   string
-	variables map[string]string
-	cmd       *exec.Cmd
-	report    report
-	cliPath   string
+	tempDir        string
+	variables      map[string]string
+	cmd            *exec.Cmd
+	report         report
+	cliPath        string
+	inputFileName  string
+	configFileName string
 }
 
 // Types used for parsing violations and warnings from report
@@ -58,46 +54,52 @@ type (
 	}
 )
 
-func thereIsASampleGCPolicyInput(ctx context.Context) (context.Context, error) {
+func writeSampleGCPolicyInput(ctx context.Context, sampleName string) (context.Context, error) {
 	ts, err := getTestState(ctx)
 	if err != nil {
-		return ctx, fmt.Errorf("thereIsASampleGCPolicyInput get test state: %w", err)
+		return ctx, fmt.Errorf("writeSampleGCPolicyInput get test state: %w", err)
 	}
 
-	p := path.Join(ts.tempDir, policyInputFilename)
-	f, err := os.Create(p)
+	f, err := os.Create(ts.inputFileName)
 	if err != nil {
-		return ctx, fmt.Errorf("creating %s file: %w", p, err)
+		return ctx, fmt.Errorf("creating %s file: %w", ts.inputFileName, err)
 	}
 	defer f.Close()
 
-	if _, err := f.WriteString(sampleGCPolicyInput); err != nil {
-		return ctx, fmt.Errorf("writing %s file: %w", p, err)
+	var content string
+	switch sampleName {
+	case "golden-container":
+		content = sampleGCPolicyInput
+	default:
+		return ctx, fmt.Errorf("%q is not a known sample name", sampleName)
 	}
 
-	return context.WithValue(ctx, inputFileName{}, p), nil
+	if _, err := f.WriteString(content); err != nil {
+		return ctx, fmt.Errorf("writing %s file: %w", ts.inputFileName, err)
+	}
+
+	return ctx, nil
 }
 
-func thereIsAPolicyConfig(ctx context.Context, config *godog.DocString) (context.Context, error) {
+func writePolicyConfig(ctx context.Context, config *godog.DocString) (context.Context, error) {
 	ts, err := getTestState(ctx)
 	if err != nil {
-		return ctx, fmt.Errorf("thereIsAPolicyConfig get test state: %w", err)
+		return ctx, fmt.Errorf("writePolicyConfig get test state: %w", err)
 	}
 
-	p := path.Join(ts.tempDir, policyConfigFilename)
-	f, err := os.Create(p)
+	f, err := os.Create(ts.configFileName)
 	if err != nil {
-		return ctx, fmt.Errorf("creating %s file: %w", p, err)
+		return ctx, fmt.Errorf("creating %s file: %w", ts.configFileName, err)
 	}
 	defer f.Close()
 
 	content := replaceVariables(config.Content, ts.variables)
 
 	if _, err := f.WriteString(content); err != nil {
-		return ctx, fmt.Errorf("writing %s file: %w", p, err)
+		return ctx, fmt.Errorf("writing %s file: %w", ts.configFileName, err)
 	}
 
-	return context.WithValue(ctx, configFileName{}, p), nil
+	return ctx, nil
 }
 
 func validateInputWithPolicyConfig(ctx context.Context) (context.Context, error) {
@@ -106,18 +108,11 @@ func validateInputWithPolicyConfig(ctx context.Context) (context.Context, error)
 		return ctx, fmt.Errorf("validateInputWithPolicyConfig get test state: %w", err)
 	}
 
-	input, ok := ctx.Value(inputFileName{}).(string)
-	if !ok {
-		return ctx, fmt.Errorf("input file %q not found", input)
-	}
-
-	config, ok := ctx.Value(configFileName{}).(string)
-	if !ok {
-		return ctx, fmt.Errorf("config file %q not found", config)
-	}
-
 	cmd := exec.Command(
-		ts.cliPath, "validate", "input", "--file", input, "--policy", config, "--strict=false")
+		ts.cliPath, "validate", "input",
+		"--file", ts.inputFileName,
+		"--policy", ts.configFileName,
+		"--strict=false")
 	cmd.Dir = ts.tempDir
 
 	var stdout bytes.Buffer
@@ -192,14 +187,16 @@ func setupScenario(ctx context.Context, sc *godog.Scenario) (context.Context, er
 		return ctx, fmt.Errorf("setting up scenario: %w", err)
 	}
 
-	gitroot, err := guessGitRoot()
+	gitroot, err := filepath.Abs("..")
 	if err != nil {
 		return ctx, fmt.Errorf("getting gitroot: %w", err)
 	}
 
 	ts := testState{
-		cliPath: filepath.Join(gitroot, "acceptance/bin/ec"),
-		tempDir: tempDir,
+		cliPath:        filepath.Join(gitroot, "acceptance/bin/ec"),
+		tempDir:        tempDir,
+		inputFileName:  path.Join(tempDir, policyInputFilename),
+		configFileName: path.Join(tempDir, policyConfigFilename),
 		variables: map[string]string{
 			"GITROOT": gitroot,
 		},
@@ -230,29 +227,12 @@ func setTestState(ctx context.Context, ts testState) context.Context {
 	return context.WithValue(ctx, testStateKey{}, ts)
 }
 
-// guessGitRoot looks for a directory containing a .git directory. It starts from the current
-// working dirctory and walks up the directory tree.
-func guessGitRoot() (string, error) {
-	startingPath, err := os.Getwd()
-	if err != nil {
-		return "", fmt.Errorf("cannot get current working directory: %w", err)
-	}
-
-	for path := startingPath; path != "/"; path = filepath.Dir(path) {
-		gitpath := filepath.Join(path, ".git")
-		if _, err := os.Stat(gitpath); err == nil {
-			return path, nil
-		}
-	}
-	return "", fmt.Errorf("git root not found in %s", startingPath)
-}
-
 func InitializeScenario(sc *godog.ScenarioContext) {
 	sc.Before(setupScenario)
 
-	sc.Step("^there is a sample golden-container policy input$", thereIsASampleGCPolicyInput)
-	sc.Step(`^there is a policy config$`, thereIsAPolicyConfig)
-	sc.Step(`^input is validated with policy config$`, validateInputWithPolicyConfig)
+	sc.Step(`^a sample policy input "([^"]*)"$`, writeSampleGCPolicyInput)
+	sc.Step(`^a policy config:$`, writePolicyConfig)
+	sc.Step(`^input is validated$`, validateInputWithPolicyConfig)
 	sc.Step(`^there should be no violations in the result$`, thereShouldBeNoViolationsInTheResult)
 	sc.Step(`^there should be no warnings in the result$`, thereShouldBeNoWarningsInTheResult)
 

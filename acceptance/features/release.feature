@@ -1,8 +1,8 @@
 Feature: Golden Container Image
 
     Scenario: Red Hat collection
-        Given there is a sample golden-container policy input
-        And there is a policy config
+        Given a sample policy input "golden-container"
+        And a policy config:
             """
             {
                 "sources": [
@@ -28,6 +28,6 @@ Feature: Golden Container Image
                 ]
             }
             """
-        When input is validated with policy config
+        When input is validated
         Then there should be no violations in the result
         Then there should be no warnings in the result

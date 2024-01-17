@@ -252,7 +252,7 @@ func InitializeScenario(sc *godog.ScenarioContext) {
 
 	sc.Step("^there is a sample golden-container policy input$", thereIsASampleGCPolicyInput)
 	sc.Step(`^there is a policy config$`, thereIsAPolicyConfig)
-	sc.Step(`^input is validated with policy config$`, validateInputWithPolicyConfig)
+	sc.Step(`^input is validated$`, validateInputWithPolicyConfig)
 	sc.Step(`^there should be no violations in the result$`, thereShouldBeNoViolationsInTheResult)
 	sc.Step(`^there should be no warnings in the result$`, thereShouldBeNoWarningsInTheResult)
 

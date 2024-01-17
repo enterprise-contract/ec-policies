@@ -28,6 +28,6 @@ Feature: Golden Container Image
                 ]
             }
             """
-        When input is validated with policy config
+        When input is validated
         Then there should be no violations in the result
         Then there should be no warnings in the result

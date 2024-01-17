@@ -17,12 +17,6 @@ import (
 	"github.com/cucumber/godog"
 )
 
-type (
-	inputFileName  struct{}
-	configFileName struct{}
-	testStateKey   struct{}
-)
-
 const (
 	policyInputFilename  = "input.json"
 	policyConfigFilename = "policy.json"
@@ -31,12 +25,16 @@ const (
 //go:embed samples/policy-input-golden-container.json
 var sampleGCPolicyInput string
 
+type testStateKey struct{}
+
 type testState struct {
-	tempDir   string
-	variables map[string]string
-	cmd       *exec.Cmd
-	report    report
-	cliPath   string
+	tempDir        string
+	variables      map[string]string
+	cmd            *exec.Cmd
+	report         report
+	cliPath        string
+	inputFileName  string
+	configFileName string
 }
 
 // Types used for parsing violations and warnings from report
@@ -73,7 +71,9 @@ func thereIsASampleGCPolicyInput(ctx context.Context) (context.Context, error) {
 		return ctx, fmt.Errorf("writing %s file: %w", p, err)
 	}
 
-	return context.WithValue(ctx, inputFileName{}, p), nil
+	ts.inputFileName = p
+
+	return setTestState(ctx, ts), nil
 }
 
 func thereIsAPolicyConfig(ctx context.Context, config *godog.DocString) (context.Context, error) {
@@ -95,7 +95,9 @@ func thereIsAPolicyConfig(ctx context.Context, config *godog.DocString) (context
 		return ctx, fmt.Errorf("writing %s file: %w", p, err)
 	}
 
-	return context.WithValue(ctx, configFileName{}, p), nil
+	ts.configFileName = p
+
+	return setTestState(ctx, ts), nil
 }
 
 func validateInputWithPolicyConfig(ctx context.Context) (context.Context, error) {
@@ -104,18 +106,11 @@ func validateInputWithPolicyConfig(ctx context.Context) (context.Context, error)
 		return ctx, fmt.Errorf("validateInputWithPolicyConfig get test state: %w", err)
 	}
 
-	input, ok := ctx.Value(inputFileName{}).(string)
-	if !ok {
-		return ctx, fmt.Errorf("input file %q not found", input)
-	}
-
-	config, ok := ctx.Value(configFileName{}).(string)
-	if !ok {
-		return ctx, fmt.Errorf("config file %q not found", config)
-	}
-
 	cmd := exec.Command(
-		ts.cliPath, "validate", "input", "--file", input, "--policy", config, "--strict=false")
+		ts.cliPath, "validate", "input",
+		"--file", ts.inputFileName,
+		"--policy", ts.configFileName,
+		"--strict=false")
 	cmd.Dir = ts.tempDir
 
 	var stdout bytes.Buffer

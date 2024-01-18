@@ -15,6 +15,8 @@ import (
 	"testing"
 
 	"github.com/cucumber/godog"
+	// Neded so the "go run" command can execute.
+	_ "github.com/enterprise-contract/ec-cli/cmd"
 )
 
 const (
@@ -28,13 +30,13 @@ var sampleGCPolicyInput string
 type testStateKey struct{}
 
 type testState struct {
-	tempDir        string
-	variables      map[string]string
-	cmd            *exec.Cmd
-	report         report
-	cliPath        string
-	inputFileName  string
-	configFileName string
+	tempDir              string
+	variables            map[string]string
+	report               report
+	cliPath              string
+	inputFileName        string
+	configFileName       string
+	acceptanceModulePath string
 }
 
 // Types used for parsing violations and warnings from report
@@ -109,11 +111,18 @@ func validateInputWithPolicyConfig(ctx context.Context) (context.Context, error)
 	}
 
 	cmd := exec.Command(
-		ts.cliPath, "validate", "input",
-		"--file", ts.inputFileName,
-		"--policy", ts.configFileName,
-		"--strict=false")
-	cmd.Dir = ts.tempDir
+		"go",
+		"run",
+		"github.com/enterprise-contract/ec-cli",
+		"validate",
+		"input",
+		"--file",
+		ts.inputFileName,
+		"--policy",
+		ts.configFileName,
+		"--strict=false",
+	)
+	cmd.Dir = ts.acceptanceModulePath
 
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
@@ -123,8 +132,6 @@ func validateInputWithPolicyConfig(ctx context.Context) (context.Context, error)
 	if err := cmd.Run(); err != nil {
 		return ctx, fmt.Errorf("running ec validate input: %w\n%s", err, stderr.String())
 	}
-
-	ts.cmd = cmd
 
 	var r report
 	if err := json.Unmarshal(stdout.Bytes(), &r); err != nil {
@@ -187,16 +194,22 @@ func setupScenario(ctx context.Context, sc *godog.Scenario) (context.Context, er
 		return ctx, fmt.Errorf("setting up scenario: %w", err)
 	}
 
+	acceptanceModulePath, err := filepath.Abs(".")
+	if err != nil {
+		return ctx, fmt.Errorf("getting acceptance module path: %w", err)
+	}
+
 	gitroot, err := filepath.Abs("..")
 	if err != nil {
 		return ctx, fmt.Errorf("getting gitroot: %w", err)
 	}
 
 	ts := testState{
-		cliPath:        filepath.Join(gitroot, "acceptance/bin/ec"),
-		tempDir:        tempDir,
-		inputFileName:  path.Join(tempDir, policyInputFilename),
-		configFileName: path.Join(tempDir, policyConfigFilename),
+		cliPath:              filepath.Join(gitroot, "acceptance/bin/ec"),
+		tempDir:              tempDir,
+		acceptanceModulePath: acceptanceModulePath,
+		inputFileName:        path.Join(tempDir, policyInputFilename),
+		configFileName:       path.Join(tempDir, policyConfigFilename),
 		variables: map[string]string{
 			"GITROOT": gitroot,
 		},

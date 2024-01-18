@@ -14,6 +14,7 @@ rule_data:
   - registry.local/namespace/repo/
   - registry.redhat.io/
   - docker.io/
+  - quay.io/
 
   # Usage: https://enterprisecontract.dev/docs/ec-policies/release_policy.html#java__no_foreign_dependencies
   # TODO: Document in the policy docs which values are expected here.

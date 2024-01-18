@@ -659,22 +659,6 @@ slsav1_task_bundle(name, bundle) := task if {
 	}])
 }
 
-slsav1_task_steps(name, steps) := json.patch(
-	slsav1_task(name),
-	[
-		{
-			"op": "add",
-			"path": "/status/taskSpec",
-			"value": {},
-		},
-		{
-			"op": "add",
-			"path": "/status/taskSpec/steps",
-			"value": steps,
-		},
-	],
-)
-
 # results are an array of dictionaries with keys, "name", "type", "value"
 slsav1_task_result(name, results) := json.patch(
 	slsav1_task(name),

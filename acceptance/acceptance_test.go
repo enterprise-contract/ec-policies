@@ -24,8 +24,12 @@ const (
 	policyConfigFilename = "policy.json"
 )
 
-//go:embed samples/policy-input-golden-container.json
-var sampleGCPolicyInput string
+var (
+	//go:embed samples/policy-input-golden-container.json
+	sampleGCPolicyInput string
+	//go:embed samples/clamav-task.json
+	sampleClamAVTask string
+)
 
 type testStateKey struct{}
 
@@ -72,6 +76,8 @@ func writeSampleGCPolicyInput(ctx context.Context, sampleName string) (context.C
 	switch sampleName {
 	case "golden-container":
 		content = sampleGCPolicyInput
+	case "clamav-task":
+		content = sampleClamAVTask
 	default:
 		return ctx, fmt.Errorf("%q is not a known sample name", sampleName)
 	}

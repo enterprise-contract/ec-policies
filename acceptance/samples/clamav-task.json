@@ -1,0 +1,116 @@
+{
+  "apiVersion": "tekton.dev/v1",
+  "kind": "Task",
+  "metadata": {
+    "labels": {
+      "app.kubernetes.io/version": "0.1"
+    },
+    "annotations": {
+      "tekton.dev/pipelines.minVersion": "0.12.1",
+      "tekton.dev/tags": "virus, appstudio, hacbs"
+    },
+    "name": "clamav-scan"
+  },
+  "spec": {
+    "description": "Scans the content of container images for viruses, malware, and other malicious content using ClamAV antivirus scanner.",
+    "results": [
+      {
+        "name": "TEST_OUTPUT",
+        "description": "Tekton task test output."
+      }
+    ],
+    "params": [
+      {
+        "name": "image-digest",
+        "description": "Image digest to scan."
+      },
+      {
+        "name": "image-url",
+        "description": "Image URL."
+      },
+      {
+        "name": "docker-auth",
+        "description": "unused",
+        "default": ""
+      }
+    ],
+    "steps": [
+      {
+        "name": "extract-and-scan-image",
+        "image": "quay.io/redhat-appstudio/hacbs-test:v1.1.9@sha256:866675ee3064cf4768691ecca478063ce12f0556fb9d4f24ca95c98664ffbd43",
+        "workingDir": "/work",
+        "securityContext": {
+          "runAsUser": 1000
+        },
+        "env": [
+          {
+            "name": "HOME",
+            "value": "/work"
+          },
+          {
+            "name": "IMAGE_URL",
+            "value": "$(params.image-url)"
+          },
+          {
+            "name": "IMAGE_DIGEST",
+            "value": "$(params.image-digest)"
+          }
+        ],
+        "computeResources": {
+          "limits": {
+            "memory": "4Gi"
+          },
+          "requests": {
+            "memory": "512Mi",
+            "cpu": "10m"
+          }
+        },
+        "script": "#!/usr/bin/env bash\nset -euo pipefail\n. /utils.sh\ntrap 'handle_error' EXIT\n\nimagewithouttag=$(echo $IMAGE_URL | sed \"s/\\(.*\\):.*/\\1/\" | tr -d '\\n')\n\n# strip new-line escape symbol from parameter and save it to variable\nimageanddigest=$(echo $imagewithouttag@$IMAGE_DIGEST)\n\n# check if image is attestation one, skip the clamav scan in such case\nif [[ $imageanddigest == *.att ]]\nthen\n    echo \"$imageanddigest is an attestation image. Skipping ClamAV scan.\"\n    exit 0\nfi\nmkdir content\ncd content\necho Extracting image.\nif ! oc image extract --registry-config ~/.docker/config.json $imageanddigest; then\n  echo \"Unable to extract image. Skipping ClamAV scan!\"\n  exit 0\nfi\n\necho \"Scanning image. This operation may take a while.\"\nclamscan -ri --max-scansize=4095M --max-filesize=4095M \\\n  --max-scantime=0 --max-files=0 --max-recursion=1000 --max-dir-recursion=20000 --max-embeddedpe=4095M \\\n  --max-htmlnormalize=4095M --max-htmlnotags=4095M --max-scriptnormalize=4095M --max-ziptypercg=4095M \\\n  --max-partitions=50000 --max-iconspe=100000 --max-rechwp3=20000 --pcre-match-limit=100000000 --pcre-recmatch-limit=2000000 \\\n  --pcre-max-filesize=4095M --alert-exceeds-max=yes \\\n  --alert-encrypted=yes --alert-encrypted-archive=yes --alert-encrypted-doc=yes --alert-macros=yes \\\n  --alert-phishing-ssl=yes --alert-phishing-cloak=yes --alert-partition-intersection=yes \\\n  | tee /tekton/home/clamscan-result.log || true\necho \"Executed-on: Scan was executed on version - $(clamscan --version)\" | tee -a /tekton/home/clamscan-result.log\n",
+        "volumeMounts": [
+          {
+            "mountPath": "/var/lib/clamav",
+            "name": "dbfolder"
+          },
+          {
+            "mountPath": "/work",
+            "name": "work"
+          }
+        ]
+      },
+      {
+        "name": "modify-clam-output-to-json",
+        "image": "quay.io/redhat-appstudio/hacbs-test:v1.1.9@sha256:866675ee3064cf4768691ecca478063ce12f0556fb9d4f24ca95c98664ffbd43",
+        "script": "#!/usr/bin/env python3.9\nimport json\nimport dateutil.parser as parser\nimport os\n\nclamscan_result = \"/tekton/home/clamscan-result.log\"\nif not os.path.exists(clamscan_result) or os.stat(clamscan_result).st_size == 0:\n    print(\"clamscan-result.log file is empty, so compiled code not extracted. Parsing skipped.\")\n    exit(0)\n\nwith open(clamscan_result, \"r\") as file:\n    clam_result_str = file.read()\n\ndef clam_result_str_to_json(clam_result_str):\n\n    clam_result_list = clam_result_str.split(\"\\n\")\n    clam_result_list.remove('')\n\n    results_marker = \\\n        clam_result_list.index(\"----------- SCAN SUMMARY -----------\")\n\n    hit_list = clam_result_list[:results_marker]\n    summary_list = clam_result_list[(results_marker + 1):]\n\n    r_dict = { \"hits\": hit_list }\n    for item in summary_list:\n        # in case of blank lines\n        if not item:\n            continue\n        split_index = [c == ':' for c in item].index(True)\n        key = item[:split_index].lower()\n        key = key.replace(\" \", \"_\")\n        value = item[(split_index + 1):].strip(\" \")\n        if (key == \"start_date\" or key == \"end_date\"):\n          isodate = parser.parse(value)\n          value = isodate.isoformat()\n        r_dict[key] = value\n    print(json.dumps(r_dict))\n    with open('/tekton/home/clamscan-result.json', 'w') as f:\n      print(json.dumps(r_dict), file=f)\n\ndef main():\n    clam_result_str_to_json(clam_result_str)\n\nif __name__ == \"__main__\":\n    main()\n"
+      },
+      {
+        "name": "store-hacbs-test-output-result",
+        "image": "quay.io/redhat-appstudio/hacbs-test:v1.1.9@sha256:866675ee3064cf4768691ecca478063ce12f0556fb9d4f24ca95c98664ffbd43",
+        "script": "#!/usr/bin/env bash\nset -euo pipefail\nsource /utils.sh\ntrap 'handle_error $(results.TEST_OUTPUT.path)' EXIT\n\nif [ -f /tekton/home/clamscan-result.json ];\nthen\n  cat /tekton/home/clamscan-result.json\n  INFECTED_FILES=$(jq -r '.infected_files' /tekton/home/clamscan-result.json || true )\n  WARNING_FILES=$(jq -r '.hits|length' /tekton/home/clamscan-result.json || true )\n  if [ -z \"${INFECTED_FILES}\" ]; then\n    echo \"Failed to get number of infected files.\"\n    note=\"Task $(context.task.name) failed: Unable to get number of infected files from /tekton/home/clamscan-result.json. For details, check Tekton task log.\"\n  else\n    if [[ \"${INFECTED_FILES}\" -gt 0 ]]; then\n     RES=\"FAILURE\";\n    elif [[ \"${WARNING_FILES}\" -gt 0 ]]; then\n      RES=\"WARNING\";\n    else\n      RES=\"SUCCESS\";\n    fi\n    note=\"Task $(context.task.name) completed: Check result for antivirus scan result.\"\n    TEST_OUTPUT=$(make_result_json -r \"${RES}\" -s 1 -f \"${INFECTED_FILES}\" -w \"${WARNING_FILES}\" -t \"$note\")\n  fi\nelse\n  note=\"Task $(context.task.name) failed: /tekton/home/clamscan-result.json doesn't exist. For details, check Tekton task log.\"\nfi\n\nERROR_OUTPUT=$(make_result_json -r \"ERROR\" -t \"$note\")\necho \"${TEST_OUTPUT:-${ERROR_OUTPUT}}\" | tee $(results.TEST_OUTPUT.path)\n"
+      }
+    ],
+    "sidecars": [
+      {
+        "image": "quay.io/redhat-appstudio/clamav-db:v1",
+        "imagePullPolicy": "Always",
+        "name": "database",
+        "script": "#!/usr/bin/env bash\nclamscan --version\ncp -r /var/lib/clamav/* /tmp/clamdb\n",
+        "volumeMounts": [
+          {
+            "mountPath": "/tmp/clamdb",
+            "name": "dbfolder"
+          }
+        ]
+      }
+    ],
+    "volumes": [
+      {
+        "name": "dbfolder",
+        "emptydir": {}
+      },
+      {
+        "name": "work",
+        "emptydir": {}
+      }
+    ]
+  }
+}

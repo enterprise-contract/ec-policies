@@ -148,12 +148,6 @@ task_result(task, name) := value if {
 	value := _key_value(result, "value")
 }
 
-# slsa v0.2 task steps
-task_steps(task) := task.steps
-
-# slsa v1.0 task steps
-task_steps(task) := task.status.taskSpec.steps
-
 # slsa v0.2 step image
 task_step_image_ref(step) := step.environment.image
 

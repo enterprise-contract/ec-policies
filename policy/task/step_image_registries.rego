@@ -1,42 +1,41 @@
 #
 # METADATA
 # description: >-
-#   This package contains a rule to ensure that each task in the image's
-#   build pipeline ran using a container image from a known and presumably
-#   trusted source.
+#   This package ensures that a Task definition contains expected values for the image references
+#   used by the Task's steps.
 #
-package policy.release.step_image_registries
+package policy.task.step_image_registries
 
 import future.keywords.contains
 import future.keywords.if
 import future.keywords.in
 
 import data.lib
-import data.lib.tkn
 
 # METADATA
-# title: Task steps ran on permitted container images
+# title: Step images come from permitted registry
 # description: >-
-#   Confirm that each step in each TaskRun ran on a container image with a url that
-#   matches one of the prefixes in the provided list of allowed step image registry
-#   prefixes.
+#   Confirm that each step in the Task uses a container image with a URL that matches one of the
+#   prefixes in the provided list of allowed step image registry prefixes. The list is customizeable
+#   via the `allowed_step_image_registry_prefixes` rule data key.
 # custom:
-#   short_name: task_step_images_permitted
-#   failure_msg: Step %d in task '%s' has disallowed image ref '%s'
+#   short_name: step_images_permitted
+#   failure_msg: Step %d uses disallowed image ref '%s'
 #   solution: >-
-#     Make sure the container image used in each step of the build pipeline comes from
-#     an approved registry. The approved list is under 'allowed_step_image_registry_prefixes'
-#     in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
-#   depends_on:
-#   - attestation_type.known_attestation_type
+#     Make sure the container image used in each step of the Task comes from an approved registry.
+#   collections:
+#   - redhat
 #
 deny contains result if {
-	some task in lib.tasks_from_pipelinerun
-	some step_index, step in tkn.task_steps(task)
-	image_ref := tkn.task_step_image_ref(step)
 	allowed_registry_prefixes := lib.rule_data(_rule_data_key)
+
+	input.kind == "Task"
+
+	some step_index, step in input.spec.steps
+	image_ref := step.image
 	not image_ref_permitted(image_ref, allowed_registry_prefixes)
-	result := lib.result_helper(rego.metadata.chain(), [step_index, tkn.pipeline_task_name(task), image_ref])
+
+	result := lib.result_helper(rego.metadata.chain(), [step_index, image_ref])
 }
 
 # METADATA
@@ -53,6 +52,7 @@ deny contains result if {
 #     that can be used to run tasks in the build pipeline.
 #   collections:
 #   - policy_data
+#   - redhat
 #
 deny contains result if {
 	some error in _rule_data_errors
@@ -61,17 +61,7 @@ deny contains result if {
 
 image_ref_permitted(image_ref, allowed_prefixes) if {
 	some allowed_prefix in allowed_prefixes
-	startswith(_normalize_image_ref(image_ref), allowed_prefix)
-}
-
-_normalize_image_ref(image_ref) := normalized if {
-	parts := split(image_ref, "://")
-	parts[0] == "oci"
-	normalized := parts[1]
-} else := normalized if {
-	parts := split(image_ref, "://")
-	count(parts) == 1
-	normalized := image_ref
+	startswith(image_ref, allowed_prefix)
 }
 
 _rule_data_errors contains msg if {

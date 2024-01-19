@@ -27,3 +27,14 @@ $ cat images.json
 $ ec validate image --images images.json --output policy-input \
     --public-key cosign.pub --ignore-rekor --policy policy.json
 ```
+
+[clamav-task.json](./clamav-task.json) contains a Task definition. It is a direct copy of the
+[ClamAV Task](https://github.com/redhat-appstudio/build-definitions/tree/main/task/clamav-scan)
+found in the
+[build-definitions](https://github.com/redhat-appstudio/build-definitions) repository. To fetch the
+latest:
+
+```text
+curl -L https://raw.githubusercontent.com/redhat-appstudio/build-definitions/main/task/clamav-scan/0.1/clamav-scan.yaml | \
+  yq '.' -o json  > acceptance/samples/clamav-task.json
+```

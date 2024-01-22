@@ -23,8 +23,6 @@ import data.lib
 #   failure_msg: Step %d uses disallowed image ref '%s'
 #   solution: >-
 #     Make sure the container image used in each step of the Task comes from an approved registry.
-#   collections:
-#   - redhat
 #
 deny contains result if {
 	allowed_registry_prefixes := lib.rule_data(_rule_data_key)
@@ -50,9 +48,6 @@ deny contains result if {
 #     Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key
 #     'allowed_step_image_registry_prefixes' that contains a list of approved registries
 #     that can be used to run tasks in the build pipeline.
-#   collections:
-#   - policy_data
-#   - redhat
 #
 deny contains result if {
 	some error in _rule_data_errors

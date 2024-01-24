@@ -28,6 +28,7 @@ TARGET_DIR="${1}"
 cd "${TARGET_DIR}" || exit 1
 
 RELEASE_POLICY_REF='quay.io/enterprise-contract/ec-release-policy:latest'
+TASK_POLICY_REF='quay.io/enterprise-contract/ec-task-policy:latest'
 
 function oci_source() {
   img="${1}"
@@ -53,24 +54,31 @@ function oci_source() {
 }
 
 function update_ecp_resources() {
+  local source_matcher=$1
+  local source_url=$2
+
   for yaml_file in $(find . -type f \( -name "*.yaml" -o -name "*.yml" \)); do
-      # First, filter out irrelevant files. We could technically do this during the in-place update
-      # below, but if doing so, yq reformats the file even if there are no changes. This causes
-      # unnecessary noise.
+      # First, filter out irrelevant files. stderr is discarded because if the YAML file is not a
+      # match, then yq prints the error "no matches found" which is quite noisy given the amount of
+      # YAML files being ignored.
       yq e -e \
           '(select(has("kind")) | select(.kind == "EnterpriseContractPolicy"))' \
-          $yaml_file || continue
-      # Finally, update the source references.
-      SOURCE_KEY="${1}" SOURCE_URL="${2}" yq e -i \
-          '.spec.sources[0][env(SOURCE_KEY)][0] |= env(SOURCE_URL) | .' \
-          $yaml_file
+          $yaml_file 2> /dev/null || continue
+      # Finally, update the source references. A previous iteration used yq to perform a more
+      # precise update. However, making a conditional update is non-trivial. sed is simpler here.
+      sed -i 's%'${source_matcher}'%'${source_url}'%' $yaml_file
     done
 }
 
-echo 'Resolving bundle image references...'
+echo 'Resolving release bundle image references...'
 RELEASE_POLICY_REF_OCI="$(oci_source ${RELEASE_POLICY_REF})"
 echo "Resolved release policy is ${RELEASE_POLICY_REF_OCI}"
 
+echo 'Resolving task bundle image references...'
+TASK_POLICY_REF_OCI="$(oci_source ${TASK_POLICY_REF})"
+echo "Resolved task policy is ${TASK_POLICY_REF_OCI}"
+
 echo 'Updating infra-deployments...'
-update_ecp_resources policy "${RELEASE_POLICY_REF_OCI}"
+update_ecp_resources 'oci::.*/ec-release-policy:.*$' "${RELEASE_POLICY_REF_OCI}"
+update_ecp_resources 'oci::.*/ec-task-policy:.*$' "${TASK_POLICY_REF_OCI}"
 echo 'infra-deployments updated successfully'

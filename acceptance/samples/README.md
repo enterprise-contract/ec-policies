@@ -35,6 +35,18 @@ found in the
 latest:
 
 ```text
-curl -L https://raw.githubusercontent.com/redhat-appstudio/build-definitions/main/task/clamav-scan/0.1/clamav-scan.yaml | \
-  yq '.' -o json  > acceptance/samples/clamav-task.json
+make -B clamav-task.json
 ```
+
+[v02-sample-attestations.json](./v02-sample-attestations.json) and
+[v1-sample-attestation.json](./v1-sample-attestations.json) are sample attestations created using
+the [scripts here](https://github.com/enterprise-contract/hacks/tree/main/provenance).
+
+To fetch the latest:
+
+```text
+make -B v02-sample-attestation.json v1-sample-attestation.json
+```
+
+You can also refresh all three files sample files mentioned above with `make
+refresh`.

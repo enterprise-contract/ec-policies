@@ -1,0 +1,325 @@
+{
+  "_type": "https://in-toto.io/Statement/v0.1",
+  "predicateType": "https://slsa.dev/provenance/v0.2",
+  "subject": [
+    {
+      "name": "quay.io/lucarval/test-policies-chains",
+      "digest": {
+        "sha256": "2cfcb34dcaabc76e331dc9b28c3256a3d0508f6ddf6b3a9fee156c9bfce91c85"
+      }
+    }
+  ],
+  "predicate": {
+    "builder": {
+      "id": "https://tekton.dev/chains/v2"
+    },
+    "buildType": "tekton.dev/v1beta1/PipelineRun",
+    "invocation": {
+      "configSource": {},
+      "parameters": {
+        "IMAGE_DIGEST": "sha256:2cfcb34dcaabc76e331dc9b28c3256a3d0508f6ddf6b3a9fee156c9bfce91c85",
+        "IMAGE_URL": "quay.io/lucarval/test-policies-chains",
+        "TEST_OUTPUT": "missing",
+        "commit": "a95a628c6bb3de64fe3a56aea3d367a7fd1628a6",
+        "committer-date": "1704741370",
+        "url": "gitspam.spam/spam/spam"
+      },
+      "environment": {
+        "labels": {
+          "tekton.dev/pipeline": "simple-build"
+        }
+      }
+    },
+    "buildConfig": {
+      "tasks": [
+        {
+          "name": "git-clone",
+          "ref": {
+            "kind": "Task",
+            "resolver": "git",
+            "params": [
+              {
+                "name": "url",
+                "value": "https://github.com/enterprise-contract/hacks.git"
+              },
+              {
+                "name": "revision",
+                "value": "4fceb2416020011e794105f113a3913ef659c8ee"
+              },
+              {
+                "name": "pathInRepo",
+                "value": "provenance/task/mock-git-clone.yaml"
+              }
+            ]
+          },
+          "startedOn": "2024-01-08T19:16:11Z",
+          "finishedOn": "2024-01-08T19:16:15Z",
+          "status": "Succeeded",
+          "steps": [
+            {
+              "entryPoint": "#!/usr/bin/env sh\nset -euo pipefail\n\necho -n \"${COMMIT}\" > \"/tekton/results/commit\"\necho -n \"${URL}\" > \"/tekton/results/url\"\necho -n \"${COMMITTER_DATE}\" > \"/tekton/results/committer-date\"\n",
+              "arguments": null,
+              "environment": {
+                "container": "clone",
+                "image": "oci://registry.access.redhat.com/ubi9@sha256:fc300be6adbdf2ca812ad01efd0dee2a3e3f5d33958ad6cd99159e25e9ee1398"
+              },
+              "annotations": null
+            }
+          ],
+          "invocation": {
+            "configSource": {
+              "uri": "git+https://github.com/enterprise-contract/hacks.git",
+              "digest": {
+                "sha1": "4fceb2416020011e794105f113a3913ef659c8ee"
+              },
+              "entryPoint": "provenance/task/mock-git-clone.yaml"
+            },
+            "parameters": {
+              "commit": "a95a628c6bb3de64fe3a56aea3d367a7fd1628a6",
+              "committer-date": "1704741370",
+              "url": "gitspam.spam/spam/spam"
+            },
+            "environment": {
+              "annotations": {
+                "pipeline.tekton.dev/release": "e59ee42"
+              },
+              "labels": {
+                "app.kubernetes.io/managed-by": "tekton-pipelines",
+                "tekton.dev/memberOf": "tasks",
+                "tekton.dev/pipeline": "simple-build",
+                "tekton.dev/pipelineRun": "simple-build-run-a2595b597b",
+                "tekton.dev/pipelineTask": "git-clone",
+                "tekton.dev/task": "mock-git-clone"
+              }
+            }
+          },
+          "results": [
+            {
+              "name": "commit",
+              "type": "string",
+              "value": "a95a628c6bb3de64fe3a56aea3d367a7fd1628a6"
+            },
+            {
+              "name": "committer-date",
+              "type": "string",
+              "value": "1704741370"
+            },
+            {
+              "name": "url",
+              "type": "string",
+              "value": "gitspam.spam/spam/spam"
+            }
+          ]
+        },
+        {
+          "name": "scan",
+          "after": [
+            "git-clone"
+          ],
+          "ref": {},
+          "startedOn": "2024-01-08T19:16:15Z",
+          "finishedOn": "2024-01-08T19:16:19Z",
+          "status": "Succeeded",
+          "steps": [
+            {
+              "entryPoint": "#!/usr/bin/env sh\nset -euo pipefail\n\necho -n \"${TEST_OUTPUT}\" > \"/tekton/results/TEST_OUTPUT\"\n",
+              "arguments": null,
+              "environment": {
+                "container": "scan",
+                "image": "oci://registry.access.redhat.com/ubi9@sha256:fc300be6adbdf2ca812ad01efd0dee2a3e3f5d33958ad6cd99159e25e9ee1398"
+              },
+              "annotations": null
+            }
+          ],
+          "invocation": {
+            "configSource": {},
+            "parameters": {
+              "TEST_OUTPUT": "missing"
+            },
+            "environment": {
+              "annotations": {
+                "pipeline.tekton.dev/release": "e59ee42"
+              },
+              "labels": {
+                "app.kubernetes.io/managed-by": "tekton-pipelines",
+                "tekton.dev/memberOf": "tasks",
+                "tekton.dev/pipeline": "simple-build",
+                "tekton.dev/pipelineRun": "simple-build-run-a2595b597b",
+                "tekton.dev/pipelineTask": "scan"
+              }
+            }
+          },
+          "results": [
+            {
+              "name": "TEST_OUTPUT",
+              "type": "string",
+              "value": "missing"
+            }
+          ]
+        },
+        {
+          "name": "av-scan",
+          "after": [
+            "git-clone"
+          ],
+          "ref": {
+            "name": "mock-av-scanner",
+            "kind": "Task"
+          },
+          "startedOn": "2024-01-08T19:16:15Z",
+          "finishedOn": "2024-01-08T19:16:19Z",
+          "status": "Succeeded",
+          "steps": [
+            {
+              "entryPoint": "#!/usr/bin/env sh\nset -euo pipefail\n\necho -n \"${TEST_OUTPUT}\" > \"/tekton/results/TEST_OUTPUT\"\n",
+              "arguments": null,
+              "environment": {
+                "container": "scan",
+                "image": "oci://registry.access.redhat.com/ubi9@sha256:fc300be6adbdf2ca812ad01efd0dee2a3e3f5d33958ad6cd99159e25e9ee1398"
+              },
+              "annotations": null
+            }
+          ],
+          "invocation": {
+            "configSource": {},
+            "parameters": {
+              "TEST_OUTPUT": "missing"
+            },
+            "environment": {
+              "annotations": {
+                "pipeline.tekton.dev/release": "e59ee42"
+              },
+              "labels": {
+                "app.kubernetes.io/managed-by": "tekton-pipelines",
+                "tekton.dev/memberOf": "tasks",
+                "tekton.dev/pipeline": "simple-build",
+                "tekton.dev/pipelineRun": "simple-build-run-a2595b597b",
+                "tekton.dev/pipelineTask": "av-scan",
+                "tekton.dev/task": "mock-av-scanner"
+              }
+            }
+          },
+          "results": [
+            {
+              "name": "TEST_OUTPUT",
+              "type": "string",
+              "value": "missing"
+            }
+          ]
+        },
+        {
+          "name": "build",
+          "after": [
+            "scan"
+          ],
+          "ref": {
+            "kind": "Task",
+            "resolver": "bundles",
+            "params": [
+              {
+                "name": "bundle",
+                "value": "quay.io/lucarval/test-policies-chains@sha256:ae5952d5aac1664fbeae9191d9445244051792af903d28d3e0084e9d9b7cce61"
+              },
+              {
+                "name": "name",
+                "value": "mock-build"
+              },
+              {
+                "name": "kind",
+                "value": "task"
+              }
+            ]
+          },
+          "startedOn": "2024-01-08T19:16:19Z",
+          "finishedOn": "2024-01-08T19:16:23Z",
+          "status": "Succeeded",
+          "steps": [
+            {
+              "entryPoint": "#!/usr/bin/env sh\nset -euo pipefail\n\necho -n \"${IMAGE_URL}\" > \"/tekton/results/IMAGE_URL\"\necho -n \"${IMAGE_DIGEST}\" > \"/tekton/results/IMAGE_DIGEST\"\n",
+              "arguments": null,
+              "environment": {
+                "container": "build-and-push",
+                "image": "oci://registry.access.redhat.com/ubi9@sha256:fc300be6adbdf2ca812ad01efd0dee2a3e3f5d33958ad6cd99159e25e9ee1398"
+              },
+              "annotations": null
+            }
+          ],
+          "invocation": {
+            "configSource": {
+              "uri": "quay.io/lucarval/test-policies-chains",
+              "digest": {
+                "sha256": "ae5952d5aac1664fbeae9191d9445244051792af903d28d3e0084e9d9b7cce61"
+              },
+              "entryPoint": "mock-build"
+            },
+            "parameters": {
+              "IMAGE_DIGEST": "sha256:2cfcb34dcaabc76e331dc9b28c3256a3d0508f6ddf6b3a9fee156c9bfce91c85",
+              "IMAGE_URL": "quay.io/lucarval/test-policies-chains"
+            },
+            "environment": {
+              "annotations": {
+                "pipeline.tekton.dev/release": "e59ee42"
+              },
+              "labels": {
+                "app.kubernetes.io/managed-by": "tekton-pipelines",
+                "tekton.dev/memberOf": "tasks",
+                "tekton.dev/pipeline": "simple-build",
+                "tekton.dev/pipelineRun": "simple-build-run-a2595b597b",
+                "tekton.dev/pipelineTask": "build",
+                "tekton.dev/task": "mock-build"
+              }
+            }
+          },
+          "results": [
+            {
+              "name": "IMAGE_DIGEST",
+              "type": "string",
+              "value": "sha256:2cfcb34dcaabc76e331dc9b28c3256a3d0508f6ddf6b3a9fee156c9bfce91c85"
+            },
+            {
+              "name": "IMAGE_URL",
+              "type": "string",
+              "value": "quay.io/lucarval/test-policies-chains"
+            }
+          ]
+        }
+      ]
+    },
+    "metadata": {
+      "buildStartedOn": "2024-01-08T19:16:10Z",
+      "buildFinishedOn": "2024-01-08T19:16:23Z",
+      "completeness": {
+        "parameters": false,
+        "environment": false,
+        "materials": false
+      },
+      "reproducible": false
+    },
+    "materials": [
+      {
+        "uri": "oci://registry.access.redhat.com/ubi9",
+        "digest": {
+          "sha256": "fc300be6adbdf2ca812ad01efd0dee2a3e3f5d33958ad6cd99159e25e9ee1398"
+        }
+      },
+      {
+        "uri": "git+https://github.com/enterprise-contract/hacks.git",
+        "digest": {
+          "sha1": "4fceb2416020011e794105f113a3913ef659c8ee"
+        }
+      },
+      {
+        "uri": "quay.io/lucarval/test-policies-chains",
+        "digest": {
+          "sha256": "ae5952d5aac1664fbeae9191d9445244051792af903d28d3e0084e9d9b7cce61"
+        }
+      },
+      {
+        "uri": "git+gitspam.spam/spam/spam.git",
+        "digest": {
+          "sha1": "a95a628c6bb3de64fe3a56aea3d367a7fd1628a6"
+        }
+      }
+    ]
+  }
+}

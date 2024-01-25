@@ -24,11 +24,18 @@ const (
 	policyConfigFilename = "policy.json"
 )
 
+// Todo:
+// //go:embed samples/*
+// var samples embed.FS
 var (
 	//go:embed samples/policy-input-golden-container.json
 	sampleGCPolicyInput string
 	//go:embed samples/clamav-task.json
 	sampleClamAVTask string
+	//go:embed samples/v02-sample-attestation.json
+	sampleV02Attestation string
+	//go:embed samples/v1-sample-attestation.json
+	sampleV1Attestation string
 )
 
 type testStateKey struct{}
@@ -41,6 +48,7 @@ type testState struct {
 	inputFileName        string
 	configFileName       string
 	acceptanceModulePath string
+	stdout               string
 }
 
 // Types used for parsing violations and warnings from report
@@ -78,6 +86,10 @@ func writeSampleGCPolicyInput(ctx context.Context, sampleName string) (context.C
 		content = sampleGCPolicyInput
 	case "clamav-task":
 		content = sampleClamAVTask
+	case "v02-sample-attestation":
+		content = sampleV02Attestation
+	case "v1-sample-attestation":
+		content = sampleV1Attestation
 	default:
 		return ctx, fmt.Errorf("%q is not a known sample name", sampleName)
 	}
@@ -178,6 +190,87 @@ func thereShouldBeNoWarningsInTheResult(ctx context.Context) error {
 	return nil
 }
 
+func opaEval(ctx context.Context, evalString string) (context.Context, error) {
+	ts, err := getTestState(ctx)
+	if err != nil {
+		return ctx, fmt.Errorf("opaEval get test state: %w", err)
+	}
+
+	cmd := exec.Command(
+		"go",
+		"run",
+		"github.com/enterprise-contract/ec-cli",
+		"opa",
+		"eval",
+		"--data",
+		"./policy", // all the rego
+		"--input",
+		ts.inputFileName,
+		evalString,
+	)
+	cmd.Dir = ts.variables["GITROOT"]
+
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	if err := cmd.Run(); err != nil {
+		return ctx, fmt.Errorf("running ec opa eval: %w\n%s", err, stderr.String())
+	}
+
+	ts.stdout = string(stdout.Bytes())
+
+	return setTestState(ctx, ts), nil
+}
+
+func theOPAResultJSONShouldBe(ctx context.Context, expectedResult string) error {
+	ts, err := getTestState(ctx)
+	if err != nil {
+		return fmt.Errorf("reading test state: %w", err)
+	}
+
+	// Unmarshal the expected result from json so we don't need to worry
+	// about formatting diffs
+	var expectedResultData any
+	err = json.Unmarshal([]byte(expectedResult), &expectedResultData)
+	if err != nil {
+		return fmt.Errorf("parsing expected result json: %w", err)
+	}
+
+	// Marshal it back to consistently indented json
+	// Todo maybe: use github.com/yudai/gojsondiff or
+	// or github.com/google/go-cmp/cmp to produce helpful diffs
+	expected, err := json.MarshalIndent(expectedResultData, "", "  ")
+	if err != nil {
+		return fmt.Errorf("remarshalling expected result data: %w", err)
+	}
+
+	// Unmarshal the actual opa eval result
+	// We get something like this on stdout:
+	//   {"result":[{"expressions":[{"value": ...}]}]}
+	// I think we'll generally have just have one expression and one result,
+	// so let's pull that value up so the feature files are a little tidier
+	var parsedOutput map[string][]map[string][]map[string]any
+	err = json.Unmarshal([]byte(ts.stdout), &parsedOutput)
+	if err != nil {
+		return fmt.Errorf("unmarshalling opa eval output: %w", err)
+	}
+	value := parsedOutput["result"][0]["expressions"][0]["value"]
+
+	// Convert the value back to consistently indented json
+	actual, err := json.MarshalIndent(value, "", "  ")
+	if err != nil {
+		return fmt.Errorf("Problem marshalling opa result value: %w", err)
+	}
+
+	if string(expected) != string(actual) {
+		return fmt.Errorf("expected:\n%s\n\ngot:\n%s\n", expected, actual)
+	}
+
+	return nil
+}
+
 func prettifyResults(msg string, results []result) string {
 	for _, violation := range results {
 		code := violation.Metadata["code"].(string)
@@ -254,6 +347,9 @@ func InitializeScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^input is validated$`, validateInputWithPolicyConfig)
 	sc.Step(`^there should be no violations in the result$`, thereShouldBeNoViolationsInTheResult)
 	sc.Step(`^there should be no warnings in the result$`, thereShouldBeNoWarningsInTheResult)
+
+	sc.Step(`^we opa eval$`, opaEval)
+	sc.Step(`^the opa result json should be$`, theOPAResultJSONShouldBe)
 
 	sc.After(tearDownScenario)
 }

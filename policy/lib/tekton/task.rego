@@ -82,7 +82,7 @@ task_names(task) := names if {
 	raw_name := task_name(task)
 	name := split(raw_name, "[")[0] # don't allow smuggling task name with parameters
 	params := {n |
-		some k, v in _task_params(task)
+		some k, v in task_params(task)
 		n := sprintf("%s[%s=%s]", [name, k, v])
 	}
 	names := {name} | params
@@ -104,13 +104,13 @@ pipeline_task_name(task) := name if {
 	name := value
 }
 
-# _task_params returns an object where keys are parameter names
+# task_params returns an object where keys are parameter names
 # and values are parameter values.
 # Handle parameters of a task from a PipelineRun attestation.
-_task_params(task) := task.invocation.parameters
+task_params(task) := task.invocation.parameters
 
 # Handle parameters of a task in a Pipeline definition.
-_task_params(task) := params if {
+task_params(task) := params if {
 	task.params
 	params := {name: value |
 		some param in task.params
@@ -120,7 +120,7 @@ _task_params(task) := params if {
 }
 
 # handle params from a slsav1.0 attestation
-_task_params(task) := params if {
+task_params(task) := params if {
 	task.spec.params
 	params := {name: value |
 		some param in task.spec.params
@@ -130,24 +130,24 @@ _task_params(task) := params if {
 }
 
 # task_param returns the value of the given parameter in the task.
-task_param(task, name) := _task_params(task)[name]
+task_param(task, name) := task_params(task)[name]
 
 # slsa v0.2 results
-_task_results(task) := task.results
+task_results(task) := task.results
 
 # slsa v1.0 results
-_task_results(task) := task.status.taskResults
+task_results(task) := task.status.taskResults
 
 # task_result returns the value of the given result in the task.
 task_result(task, name) := value if {
-	some result in _task_results(task)
+	some result in task_results(task)
 	result_name := _key_value(result, "name")
 	result_name == name
 	value := _key_value(result, "value")
 }
 
 task_result_endswith(task, suffix) := value if {
-	some result in _task_results(task)
+	some result in task_results(task)
 	result_name := _key_value(result, "name")
 	endswith(result_name, suffix)
 	value := _key_value(result, "value")

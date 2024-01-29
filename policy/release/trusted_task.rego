@@ -26,8 +26,6 @@ import data.lib.tkn
 #   solution: >-
 #     Update the Pipeline definition so that all Task references have a pinned value as mentioned
 #     in the description.
-#   collections:
-#   - redhat
 #   effective_on: 2024-05-07T00:00:00Z
 #
 warn contains result if {
@@ -48,8 +46,6 @@ warn contains result if {
 #   failure_msg: Pipeline task %q uses an out of date task reference, %s
 #   solution: >-
 #     Update the Task reference to a newer version.
-#   collections:
-#   - redhat
 #   effective_on: 2024-05-07T00:00:00Z
 #
 warn contains result if {
@@ -71,8 +67,6 @@ warn contains result if {
 #   solution: >-
 #     For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
 #     a trusted task.
-#   collections:
-#   - redhat
 #   effective_on: 2024-05-07T00:00:00Z
 #
 deny contains result if {
@@ -94,8 +88,6 @@ deny contains result if {
 #   failure_msg: Missing required trusted_tasks data
 #   solution: >-
 #     Create a, or use an existing, trusted tasks list as a data source.
-#   collections:
-#   - redhat
 #   effective_on: 2024-05-07T00:00:00Z
 #
 deny contains result if {

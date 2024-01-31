@@ -1,0 +1,21 @@
+---
+trusted_tasks:
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/buildah/0.1/buildah.yaml:
+    - ref: 3672a457e3e89c0591369f609eba727b8e84108f
+      effective_on: 2024-02-16T00:00:00Z
+    - ref: 81185d669f543f5cd9114377f7ee0480e15a7ac1
+      effective_on: 2024-02-10T00:00:00Z
+
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/clair-scan/0.1/clair-scan.yaml:
+    - ref: 28b86c8b94c42995d98f843b0fc854c1cf2ae500
+      effective_on: 2024-02-15T00:00:00Z
+    - ref: 4efdfc8c8da9f78602b5a21bcd2b3cf5667503fc
+      effective_on: 2024-01-31T00:00:00Z
+
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-clamav-scan:0.1:
+    - ref: sha256:d72cb58db88289559676676c3db43906718028e07279f70ddb12ed8bdc8e2860
+      effective_on: "2023-11-01T00:00:00Z"
+
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-git-clone:0.1:
+    - ref: sha256:b8fddc2d36313a5cde93aba2491205f4a84e6853af6c34ede681f8339b147478
+      effective_on: "2023-11-01T00:00:00Z"

@@ -10,16 +10,6 @@ require (
 	oras.land/oras v1.1.0
 )
 
-// address CVE-2023-2253 https://github.com/advisories/GHSA-hqxw-f8mx-cpmw
-replace github.com/docker/distribution => github.com/docker/distribution v2.8.2-beta.2+incompatible
-
-// address CVE-2023-30551 https://github.com/advisories/GHSA-2h5h-59f5-c5x9
-// address CVE-2023-33199 https://github.com/advisories/GHSA-frqx-jfcm-6jjr
-replace github.com/sigstore/rekor => github.com/sigstore/rekor v1.2.0
-
-// address CVE-2023-1732 https://github.com/advisories/GHSA-2q89-485c-9j2x
-replace github.com/cloudflare/circl => github.com/cloudflare/circl v1.3.3
-
 require (
 	cloud.google.com/go v0.111.0 // indirect
 	cloud.google.com/go/compute v1.23.3 // indirect
@@ -145,7 +135,6 @@ require (
 	github.com/felixge/fgprof v0.9.3 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
 	github.com/gdamore/tcell v1.4.0 // indirect
 	github.com/gdamore/tcell/v2 v2.6.0 // indirect
@@ -169,9 +158,6 @@ require (
 	github.com/go-openapi/strfmt v0.21.8 // indirect
 	github.com/go-openapi/swag v0.22.4 // indirect
 	github.com/go-openapi/validate v0.22.3 // indirect
-	github.com/go-playground/locales v0.14.1 // indirect
-	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.15.5 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
@@ -197,7 +183,6 @@ require (
 	github.com/google/pprof v0.0.0-20231212022811-ec68065c825e // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
-	github.com/google/trillian v1.5.3 // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/google/wire v0.5.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
@@ -245,7 +230,6 @@ require (
 	github.com/ktr0731/go-ansisgr v0.1.0 // indirect
 	github.com/ktr0731/go-fuzzyfinder v0.8.0 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
-	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/letsencrypt/boulder v0.0.0-20231026200631-000cd05d5491 // indirect
 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de // indirect
 	github.com/logrusorgru/aurora v2.0.3+incompatible // indirect
@@ -312,7 +296,6 @@ require (
 	github.com/shteou/go-ignore v0.3.1 // indirect
 	github.com/sigstore/cosign/v2 v2.2.2 // indirect
 	github.com/sigstore/fulcio v1.4.3 // indirect
-	github.com/sigstore/protobuf-specs v0.1.0 // indirect
 	github.com/sigstore/rekor v1.3.4 // indirect
 	github.com/sigstore/sigstore v1.8.0 // indirect
 	github.com/sigstore/sigstore/pkg/signature/kms/aws v1.7.6 // indirect

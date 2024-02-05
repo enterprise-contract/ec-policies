@@ -5,7 +5,7 @@ go 1.21.4
 require (
 	github.com/enterprise-contract/ec-cli v0.0.0-20240201092321-c9e618b1e5e2
 	github.com/open-policy-agent/conftest v0.49.0
-	github.com/styrainc/regal v0.15.0
+	github.com/styrainc/regal v0.16.0
 	github.com/tektoncd/cli v0.34.0
 	oras.land/oras v1.1.0
 )
@@ -306,6 +306,7 @@ require (
 	github.com/sirupsen/logrus v1.9.4-0.20230606125235-dd1b4c2e81af // indirect
 	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
+	github.com/sourcegraph/jsonrpc2 v0.2.0 // indirect
 	github.com/spdx/tools-golang v0.5.3 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect

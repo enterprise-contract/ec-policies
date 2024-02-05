@@ -164,24 +164,5 @@ _bundle_ref(task, acceptable) := ref if {
 # policy rule from incorrectly not evaluating due to missing data. It also removes stale records.
 _task_bundles[repo] := pruned_records if {
 	some repo, records in data["task-bundles"]
-	threshold := _active_threshold(records)
-	pruned_records := [record |
-		some record in records
-		time.parse_rfc3339_ns(record.effective_on) >= threshold
-	]
+	pruned_records := time_lib.acceptable_items(records)
 }
-
-# _active_threshold returns the time (represented in nanoseconds) where records are considered to be
-# active. Any record with an effective_on value older than this threshold MUST be ignored. The
-# threshold is defined as the most recent date that is not in the future. If all records are in the
-# future, this function returns a very old date, effectively marking all records as active.
-_active_threshold(records) := threshold if {
-	# In a sorted list of records, find all the records that are older than or equal to today.
-	maybe_inactive := [entry |
-		some entry in arrays.sort_by("effective_on", records)
-		time.parse_rfc3339_ns(entry.effective_on) <= time_lib.effective_current_time_ns()
-	]
-
-	# The last record in the list has the most recent date that is not in the future.
-	threshold := time.parse_rfc3339_ns(maybe_inactive[count(maybe_inactive) - 1].effective_on)
-} else := time.parse_rfc3339_ns("1800-01-01T00:00:00Z")

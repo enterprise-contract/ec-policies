@@ -1,10 +1,11 @@
 package policy.release.base_image_registries_test
 
+import rego.v1
+
 import data.lib
 import data.lib.tkn_test
 import data.lib_test
 import data.policy.release.base_image_registries
-import future.keywords.if
 
 mock_bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
 

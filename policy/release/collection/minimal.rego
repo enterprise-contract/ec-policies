@@ -6,3 +6,5 @@
 #   functioning as expected, and able to produce signed attestations of the
 #   expected type.
 package policy.release.collection.minimal
+
+import rego.v1

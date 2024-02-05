@@ -1,7 +1,6 @@
 package lib
 
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 # Produce more useful output when a test fails
 

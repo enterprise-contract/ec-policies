@@ -1,12 +1,11 @@
 package policy.release.attestation_task_bundle_test
 
-import future.keywords.in
+import rego.v1
 
 import data.lib
 import data.lib.tkn_test
 import data.lib_test
 import data.policy.release.attestation_task_bundle
-import future.keywords.if
 
 mock_data(task) := {"statement": {"predicate": {
 	"buildConfig": {"tasks": [task]},

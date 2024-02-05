@@ -7,9 +7,7 @@
 #
 package policy.release.external_parameters
 
-import future.keywords.contains
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 import data.lib
 

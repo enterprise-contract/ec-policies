@@ -1,8 +1,9 @@
 package lib.refs_test
 
+import rego.v1
+
 import data.lib
 import data.lib.refs
-import future.keywords.if
 
 _image := "registry.img/test@sha256:digest"
 

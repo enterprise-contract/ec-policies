@@ -1,8 +1,7 @@
 # regal ignore:file-length
 package lib.tkn_test
 
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 import data.lib
 import data.lib.tkn

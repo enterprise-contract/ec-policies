@@ -1,7 +1,6 @@
 package lib.arrays
 
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 _max_int := 9223372036854775807
 

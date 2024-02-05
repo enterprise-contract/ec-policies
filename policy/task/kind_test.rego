@@ -1,8 +1,9 @@
 package policy.task.kind_test
 
+import rego.v1
+
 import data.lib
 import data.policy.task.kind
-import future.keywords.if
 
 test_unexpected_kind if {
 	lib.assert_equal_results(kind.deny, {{

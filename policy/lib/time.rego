@@ -1,7 +1,6 @@
 package lib.time
 
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 import data.lib.arrays
 

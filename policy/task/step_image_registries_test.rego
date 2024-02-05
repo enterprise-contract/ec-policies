@@ -1,6 +1,6 @@
 package policy.task.step_image_registries_test
 
-import future.keywords.if
+import rego.v1
 
 import data.lib
 import data.policy.task.step_image_registries

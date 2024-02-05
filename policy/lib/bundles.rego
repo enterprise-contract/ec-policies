@@ -1,7 +1,6 @@
 package lib.bundles
 
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 import data.lib.arrays
 import data.lib.image

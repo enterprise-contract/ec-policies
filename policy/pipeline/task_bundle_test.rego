@@ -1,8 +1,9 @@
 package policy.pipeline.task_bundle_test
 
+import rego.v1
+
 import data.lib
 import data.policy.pipeline.task_bundle
-import future.keywords.if
 
 test_bundle_not_exists if {
 	tasks := [{"name": "my-task", "taskRef": {}}]

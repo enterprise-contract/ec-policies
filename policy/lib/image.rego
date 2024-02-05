@@ -1,6 +1,6 @@
 package lib.image
 
-import future.keywords.if
+import rego.v1
 
 # parse returns a data structure representing the different portions
 # of the OCI image reference.

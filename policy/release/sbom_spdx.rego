@@ -5,9 +5,7 @@
 #
 package policy.release.sbom_spdx
 
-import future.keywords.contains
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 import data.lib
 import data.lib.image

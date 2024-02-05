@@ -1,8 +1,9 @@
 package policy.pipeline.basic_test
 
+import rego.v1
+
 import data.lib
 import data.policy.pipeline.basic
-import future.keywords.if
 
 test_unexpected_kind if {
 	lib.assert_equal_results(basic.deny, {{

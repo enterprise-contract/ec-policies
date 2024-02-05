@@ -6,8 +6,7 @@
 #
 package policy.pipeline.basic
 
-import future.keywords.contains
-import future.keywords.if
+import rego.v1
 
 import data.lib
 

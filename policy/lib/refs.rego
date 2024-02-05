@@ -1,7 +1,6 @@
 package lib.refs
 
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 # Return an object that represents the task "name", "kind", and "bundle". "bundle" is
 # omitted if a bundle is not used.

@@ -1,6 +1,6 @@
 package lib
 
-import future.keywords.if
+import rego.v1
 
 # Values in data.rule_data_custom or data.rule_data
 # will take precedence over these defaults.

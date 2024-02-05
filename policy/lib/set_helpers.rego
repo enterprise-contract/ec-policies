@@ -1,7 +1,6 @@
 package lib
 
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 # It's fairly idiomatic rego to just write this inline but still
 # I think this makes things a little more readable

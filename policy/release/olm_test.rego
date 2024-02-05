@@ -1,6 +1,6 @@
 package policy.release.olm_test
 
-import future.keywords.if
+import rego.v1
 
 import data.lib
 import data.policy.release.olm

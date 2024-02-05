@@ -1,8 +1,9 @@
 package policy.build_task.labels_test
 
+import rego.v1
+
 import data.lib
 import data.policy.build_task.labels
-import future.keywords.if
 
 test_build_label_found if {
 	# regal ignore:line-length

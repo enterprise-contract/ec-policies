@@ -1,13 +1,11 @@
 # regal ignore:file-length
 package policy.release.tasks_test
 
+import rego.v1
+
 import data.lib
 import data.lib.tkn_test
 import data.policy.release.tasks
-
-import future.keywords.contains
-import future.keywords.if
-import future.keywords.in
 
 test_no_tasks_present if {
 	expected := {{

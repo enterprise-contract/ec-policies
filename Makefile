@@ -78,7 +78,7 @@ quiet-test: ## Run all tests in quiet mode and check coverage
 live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` needs to be installed
 	@trap exit SIGINT; \
 	while true; do \
-	  git ls-files -c -o '*.rego' | entr -d -c $(MAKE) --no-print-directory quiet-test; \
+	  git ls-files -c -o '*.rego' | entr -r -d -c $(MAKE) --no-print-directory quiet-test; \
 	done
 
 ##

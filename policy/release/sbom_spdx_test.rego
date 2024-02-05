@@ -1,7 +1,6 @@
 package policy.release.sbom_spdx_test
 
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 import data.lib
 import data.policy.release.sbom_spdx

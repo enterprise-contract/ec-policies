@@ -1,8 +1,6 @@
 package lib.tkn
 
-import future.keywords.contains
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 import data.lib.refs
 import data.lib.time as ectime

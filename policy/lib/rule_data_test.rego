@@ -1,7 +1,8 @@
 package lib_test
 
+import rego.v1
+
 import data.lib
-import future.keywords.if
 
 test_rule_data if {
 	lib.assert_equal(

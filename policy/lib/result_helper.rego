@@ -1,6 +1,6 @@
 package lib
 
-import future.keywords.if
+import rego.v1
 
 import data.lib.time as time_lib
 

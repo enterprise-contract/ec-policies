@@ -1,6 +1,6 @@
 package lib.sbom
 
-import future.keywords.in
+import rego.v1
 
 cyclonedx_sboms := array.concat(_cyclonedx_sboms_from_image, _cyclonedx_sboms_from_attestations)
 

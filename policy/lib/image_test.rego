@@ -1,8 +1,9 @@
 package lib.image_test
 
+import rego.v1
+
 import data.lib
 import data.lib.image
-import future.keywords.if
 
 # regal ignore:rule-length
 test_parse if {

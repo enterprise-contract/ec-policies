@@ -4,9 +4,10 @@
 #   scope: package
 package lib.time_test
 
+import rego.v1
+
 import data.lib
 import data.lib.time as lib_time
-import future.keywords.if
 
 future_timestamp := time.add_date(time.now_ns(), 0, 0, 1)
 

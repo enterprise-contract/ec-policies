@@ -1,6 +1,6 @@
 package policy.release.hermetic_build_task_test
 
-import future.keywords.if
+import rego.v1
 
 import data.lib
 import data.policy.release.hermetic_build_task

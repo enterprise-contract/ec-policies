@@ -1,7 +1,6 @@
 package policy.release.slsa_source_correlated_test
 
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 import data.lib
 import data.policy.release.slsa_source_correlated

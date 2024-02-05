@@ -1,8 +1,6 @@
 package checks
 
-import future.keywords.contains
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 # Required annotations on policy rules
 required_annotations := {

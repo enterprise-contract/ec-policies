@@ -1,5 +1,7 @@
 package policy.release.sbom_cyclonedx
 
+import rego.v1
+
 # https://raw.githubusercontent.com/CycloneDX/specification/1.5/schema/bom-1.5.schema.json
 schema_1_5 := {
 	"$schema": "http://json-schema.org/draft-07/schema#",

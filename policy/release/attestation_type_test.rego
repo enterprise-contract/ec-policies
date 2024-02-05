@@ -1,8 +1,9 @@
 package policy.release.attestation_type_test
 
+import rego.v1
+
 import data.lib
 import data.policy.release.attestation_type
-import future.keywords.if
 
 good_type := "https://in-toto.io/Statement/v0.1"
 

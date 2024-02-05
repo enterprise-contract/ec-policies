@@ -7,10 +7,9 @@
 #
 package policy.release.test
 
+import rego.v1
+
 import data.lib
-import future.keywords.contains
-import future.keywords.if
-import future.keywords.in
 
 # METADATA
 # title: Test data found in task results

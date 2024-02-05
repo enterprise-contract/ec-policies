@@ -6,10 +6,7 @@
 #
 package policy.release.buildah_build_task
 
-import future.keywords.contains
-import future.keywords.every
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 import data.lib
 

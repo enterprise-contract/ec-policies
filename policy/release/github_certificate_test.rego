@@ -1,8 +1,6 @@
 package policy.release.github_certificate_test
 
-import future.keywords.contains
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 import data.lib
 import data.policy.release.github_certificate

@@ -1,10 +1,11 @@
 package policy.release.java_test
 
+import rego.v1
+
 import data.lib
 import data.lib.tkn_test
 import data.lib_test
 import data.policy.release.java
-import future.keywords.if
 
 test_all_good if {
 	attestations := [

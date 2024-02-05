@@ -1,6 +1,6 @@
 package lib.tkn.pipeline_test
 
-import future.keywords.if
+import rego.v1
 
 import data.lib
 import data.lib.tkn

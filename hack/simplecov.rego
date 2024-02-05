@@ -1,8 +1,7 @@
 # Copied from https://github.com/open-policy-agent/contrib/tree/main/simplecov/simplecov.rego
 package simplecov
 
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 from_opa := {"coverage": coverage}
 

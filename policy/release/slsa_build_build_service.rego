@@ -12,9 +12,7 @@
 #
 package policy.release.slsa_build_build_service
 
-import future.keywords.contains
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 import data.lib
 

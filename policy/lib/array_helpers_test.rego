@@ -1,8 +1,9 @@
 package lib.arrays_test
 
+import rego.v1
+
 import data.lib
 import data.lib.arrays
-import future.keywords.if
 
 ary := [{"x": 1, "z": "X"}, {"x": 2}, {"x": 6, "y": "B"}, {"x": 1, "z": "X"}, {"x": -1}]
 

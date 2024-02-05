@@ -26,9 +26,7 @@
 #
 package policy.release.slsa_source_version_controlled
 
-import future.keywords.contains
-import future.keywords.if
-import future.keywords.in
+import rego.v1
 
 import data.lib
 

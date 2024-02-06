@@ -115,6 +115,31 @@ deny contains result if {
 }
 
 # METADATA
+# title: Optional disallowed inherited labels
+# description: >-
+#   Check that certain labels on the image have different values than the labels
+#   from the parent image. If the label is inherited from the parent image but not
+#   redefined for the image, it will contain an incorrect value for the image.
+#   Use the rule data `optional_disallowed_inherited_labels` key to set the list of
+#   labels to check.
+# custom:
+#   short_name: optional_disallowed_inherited_labels
+#   failure_msg: >-
+#     The %q label should not be inherited from the parent image. This will be a
+#     violation in the future.
+#   solution: >-
+#     Update the image build process to overwrite the inherited labels.
+#   collections:
+#   - redhat
+#
+warn contains result if {
+	some inherited_label in lib.rule_data("optional_disallowed_inherited_labels")
+	name := inherited_label.name
+	_value(labels, name) == _value(parent_labels, name)
+	result := lib.result_helper_with_term(rego.metadata.chain(), [name], name)
+}
+
+# METADATA
 # title: Rule data provided
 # description: >-
 #   Confirm the expected rule data keys have been provided in the expected format. The keys are
@@ -223,6 +248,7 @@ _rule_data_errors contains msg if {
 		["optional_labels", name_and_description],
 		["fbc_optional_labels", name_and_description],
 		["disallowed_inherited_labels", name_only],
+		["optional_disallowed_inherited_labels", name_only],
 		["fbc_disallowed_inherited_labels", name_only],
 		["deprecated_labels", deprecated],
 	]

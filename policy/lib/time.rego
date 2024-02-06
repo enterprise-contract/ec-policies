@@ -64,12 +64,15 @@ future_items(items) := [i |
 	time.parse_rfc3339_ns(i.effective_on) > effective_current_time_ns
 ]
 
-# acceptable_items return a filtered list of the given items by only including
-# the future_items and the most_current item. If a most_current item is not
-# available, this function behaves just like future_items.
+# acceptable_items return a filtered list of the given items by only including the items with an
+# effective_on date newer than or equal to the active thresold.
 acceptable_items(items) := some_items if {
-	some_items := array.concat(future_items(items), [most_current(items)])
-} else := future_items(items)
+	threshold := _active_threshold(items)
+	some_items := [item |
+		some item in items
+		time.parse_rfc3339_ns(item.effective_on) >= threshold
+	]
+}
 
 # newest returns the newest item by `effective_on`. Assumes same date format and
 # time-zone for `effective_on` field.
@@ -78,3 +81,18 @@ newest(items) := item if {
 
 	item := ordered[count(ordered) - 1]
 }
+
+# _active_threshold returns the time (represented in nanoseconds) where items are considered to be
+# active. Any item with an effective_on value older than this threshold MUST be ignored. The
+# threshold is defined as the most recent date that is not in the future. If all items are in the
+# future, this function returns a very old date, effectively marking all items as active.
+_active_threshold(items) := threshold if {
+	# In a sorted list of items, find all the items that are older than or equal to today.
+	maybe_inactive := [entry |
+		some entry in arrays.sort_by("effective_on", items)
+		time.parse_rfc3339_ns(entry.effective_on) <= effective_current_time_ns()
+	]
+
+	# The last item in the list has the most recent date that is not in the future.
+	threshold := time.parse_rfc3339_ns(maybe_inactive[count(maybe_inactive) - 1].effective_on)
+} else := time.parse_rfc3339_ns("1800-01-01T00:00:00Z")

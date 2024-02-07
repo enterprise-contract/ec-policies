@@ -131,6 +131,35 @@ test_fbc_disallowed_inherited_image_labels if {
 		with data.rule_data as _rule_data
 }
 
+test_optional_disallowed_inherited_image_labels if {
+	expected := {{
+		"code": "labels.optional_disallowed_inherited_labels",
+		# regal ignore:line-length
+		"msg": "The \"optional.unique\" label should not be inherited from the parent image. This will be a violation in the future.",
+		"term": "optional.unique",
+	}}
+
+	image := json.patch(_image, [
+		{"op": "add", "path": "/config/Labels/optional.unique", "value": "spam"},
+		{"op": "add", "path": "/parent/config/Labels/optional.unique", "value": "spam"},
+	])
+	lib.assert_equal_results(labels.warn, expected) with input.image as image with data.rule_data as _rule_data
+
+	# A missing label on either image does not trigger a warning.
+	lib.assert_empty(labels.warn) with input.image as json.patch(_image, [{
+		"op": "add",
+		"path": "/config/Labels/optional.unique",
+		"value": "spam",
+	}])
+		with data.rule_data as _rule_data
+	lib.assert_empty(labels.warn) with input.image as json.patch(_image, [{
+		"op": "add",
+		"path": "/parent/config/Labels/optional.unique",
+		"value": "spam",
+	}])
+		with data.rule_data as _rule_data
+}
+
 test_rule_data_provided if {
 	d := {
 		"required_labels": [
@@ -268,4 +297,5 @@ _rule_data := {
 	"fbc_optional_labels": [{"name": "fbc.summary", "description": "A short description of the FBC image."}],
 	"disallowed_inherited_labels": [{"name": "unique"}],
 	"fbc_disallowed_inherited_labels": [{"name": "fbc.unique"}],
+	"optional_disallowed_inherited_labels": [{"name": "optional.unique"}],
 }

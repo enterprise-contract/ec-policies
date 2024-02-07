@@ -16,6 +16,8 @@ import rego.v1
 
 import data.lib
 import data.lib.bundles
+import data.lib.image
+import data.lib.refs
 import data.lib.tkn
 
 # METADATA
@@ -78,47 +80,54 @@ warn contains result if {
 }
 
 # METADATA
-# title: Task bundles are latest versions
-# description: >-
-#   For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
-#   the most recent xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle].
+# title: Acceptable
+# description: TODO
 # custom:
-#   short_name: task_ref_bundles_current
-#   failure_msg: Pipeline task '%s' uses an out of date task bundle '%s'
-#   solution: >-
-#     A task bundle used is not the most recent. The most recent task bundles are defined
-#     as in xref:acceptable_bundles.adoc#_task_bundles[acceptable bundles] list.
-#   collections:
-#   - redhat
-#   depends_on:
-#   - attestation_type.known_attestation_type
-#
-warn contains result if {
-	some task in bundles.out_of_date_task_bundle(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task), bundles.bundle(task)])
-}
-
-# METADATA
-# title: Task bundles are in acceptable bundles list
-# description: >-
-#   For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
-#   an xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle] given the tracked
-#   effective_on date.
-# custom:
-#   short_name: task_ref_bundles_acceptable
+#   short_name: acceptable
 #   failure_msg: Pipeline task '%s' uses an unacceptable task bundle '%s'
-#   solution: >-
-#     For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
-#     an xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle].
+#   solution: TODO
 #   collections:
 #   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	some task in bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task), bundles.bundle(task)])
+	some task in lib.tasks_from_pipelinerun
+	some record in _records_for_task(task)
+
+	# TODO: This can probably handle the task_ref_bundles_not_empty and tasks_defined_in_bundle. Further
+	# testing needed.
+
+	# If a record doesn't include an expiration date, it's always ok to use it.
+	record.expires_on != ""
+	result := _with_effective_on(
+		lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task), bundles.bundle(task)]),
+		record.expires_on,
+	)
 }
+
+_records_for_task(task) := records if {
+	ref := image.parse(refs.task_ref(task).bundle)
+	records := [record |
+		some record in data["task-bundles"][ref.repo]
+		record.tag == ref.tag
+		record.digest == ref.digest
+	]
+	count(records) > 0
+} else := [{"expires_on": _missing_record}]
+
+# TODO: This has a slightly different implementation than the one from the labels package. Good
+# enough for a POC but we should try to avoid such things.
+_with_effective_on(result, effective_on) := new_result if {
+	# A missing record is treated differently. It is a violation now regardless of the effective
+	# time.
+	effective_on != _missing_record
+	new_result := json.patch(result, [{"op": "add", "path": "/effective_on", "value": effective_on}])
+} else := result
+
+# Symbol to specify a record for a given bundle was not found.
+# TODO: Maybe there's a nicer way to handle this, but this doesn't seem too bad.
+_missing_record := "MISSING-RECORD"
 
 # METADATA
 # title: An acceptable Tekton bundles list was provided

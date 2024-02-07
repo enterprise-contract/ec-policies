@@ -111,33 +111,22 @@ deny contains result if {
 	some inherited_label in disallowed_inherited_labels
 	name := inherited_label.name
 	_value(labels, name) == _value(parent_labels, name)
-	result := lib.result_helper_with_term(rego.metadata.chain(), [name], name)
+	result := _with_effective_on(
+		lib.result_helper_with_term(rego.metadata.chain(), [name], name),
+		inherited_label,
+	)
 }
 
-# METADATA
-# title: Optional disallowed inherited labels
-# description: >-
-#   Check that certain labels on the image have different values than the labels
-#   from the parent image. If the label is inherited from the parent image but not
-#   redefined for the image, it will contain an incorrect value for the image.
-#   Use the rule data `optional_disallowed_inherited_labels` key to set the list of
-#   labels to check.
-# custom:
-#   short_name: optional_disallowed_inherited_labels
-#   failure_msg: >-
-#     The %q label should not be inherited from the parent image. This will be a
-#     violation in the future.
-#   solution: >-
-#     Update the image build process to overwrite the inherited labels.
-#   collections:
-#   - redhat
-#
-warn contains result if {
-	some inherited_label in lib.rule_data("optional_disallowed_inherited_labels")
-	name := inherited_label.name
-	_value(labels, name) == _value(parent_labels, name)
-	result := lib.result_helper_with_term(rego.metadata.chain(), [name], name)
-}
+# _with_effective_on annotates the result with the item's effective_on attribute. If the item does
+# not have the attribute, result is returned unmodified.
+# TODO: Move this to a shared location, or maybe create new result helper function.
+_with_effective_on(result, item) := new_result if {
+	# TODO: We may want to check if result already has effective_on set. And if so, compare it with
+	# the item's effective_on. Use the lowest or highest value? Lowest means the data could activate
+	# a policy rule that is not active. Unclear if that's intended - corner case? Highest probably
+	# better represents the intent.
+	new_result := json.patch(result, [{"op": "add", "path": "/effective_on", "value": item.effective_on}])
+} else := result
 
 # METADATA
 # title: Rule data provided
@@ -205,7 +194,7 @@ _rule_data_errors contains msg if {
 		"type": "array",
 		"items": {
 			"type": "object",
-			"properties": {"name": {"type": "string"}},
+			"properties": {"name": {"type": "string"}, "effective_on": {"type": "string"}},
 			"additionalProperties": false,
 			"required": ["name"],
 		},
@@ -220,6 +209,7 @@ _rule_data_errors contains msg if {
 			"properties": {
 				"name": {"type": "string"},
 				"description": {"type": "string"},
+				"effective_on": {"type": "string"},
 			},
 			"additionalProperties": false,
 			"required": ["name", "description"],
@@ -235,6 +225,7 @@ _rule_data_errors contains msg if {
 			"properties": {
 				"name": {"type": "string"},
 				"replacement": {"type": "string"},
+				"effective_on": {"type": "string"},
 			},
 			"additionalProperties": false,
 			"required": ["name", "replacement"],

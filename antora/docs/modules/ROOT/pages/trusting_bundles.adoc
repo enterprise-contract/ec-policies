@@ -91,3 +91,21 @@ definitions used by RHTAP. The CI/CD process on that repository performs the fol
    includes the new list of acceptable bundles.
 
 The new Tekton Bundles become acceptable bundles as soon as the pull request merges.
+
+== Adding a new acceptable bundle to the Red Hat Trusted Application Pipeline
+
+The process to add a new task defintion to the existing Red Hat acceptable task list is relatively uncomplicated and is detailed below.
+
+Before adding a new task, however, there are a few things to consider:
+
+* The added task should have a wide audience for usage. Tasks added to the build definitions repository should not be specific to a single product or team.
+* Submitting a task to the build-definitions repository has the practical effect of marking a task as "trusted" by Red Hat.
+* To discuss your idea for a new task, visit the #forum-konflux-build channel on the Red Hat Developer Slack.
+
+In order to add a new task to the existing set of Red Hat acceptable tasks, the process is as follows:
+
+* https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo[Fork] the https://github.com/redhat-appstudio/build-definitions[build defintions] repository.
+* Create and submit a https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request[pull request] with your new task.
+* Once the pull request is submitted and approvevd, the CI process will automatically build the new task and add it to the list of acceptable tasks.
+** You may view the acceptable bundles xref:{acceptable-bundles}[here].
+** Additionally, you can view the task bundle in the https://quay.io/redhat-appstudio-tekton-catalog[Red Hat AppStudio Tekton Catalog]

@@ -31,10 +31,13 @@ deny contains result if {
 	some label in labels
 	some deprecated_label in lib.rule_data("deprecated_labels")
 	label.name == deprecated_label.name
-	result := lib.result_helper_with_term(
-		rego.metadata.chain(),
-		[label.name, deprecated_label.replacement],
-		label.name,
+	result := _with_effective_on(
+		lib.result_helper_with_term(
+			rego.metadata.chain(),
+			[label.name, deprecated_label.replacement],
+			label.name,
+		),
+		deprecated_label,
 	)
 }
 
@@ -61,7 +64,10 @@ deny contains result if {
 	name := required_label.name
 	not name in found_labels
 	description := required_label.description
-	result := lib.result_helper_with_term(rego.metadata.chain(), [name, description], name)
+	result := _with_effective_on(
+		lib.result_helper_with_term(rego.metadata.chain(), [name, description], name),
+		required_label,
+	)
 }
 
 # METADATA
@@ -88,7 +94,10 @@ warn contains result if {
 	name := optional_label.name
 	not name in found_labels
 	description := optional_label.description
-	result := lib.result_helper_with_term(rego.metadata.chain(), [name, description], name)
+	result := _with_effective_on(
+		lib.result_helper_with_term(rego.metadata.chain(), [name, description], name),
+		optional_label,
+	)
 }
 
 # METADATA
@@ -111,32 +120,10 @@ deny contains result if {
 	some inherited_label in disallowed_inherited_labels
 	name := inherited_label.name
 	_value(labels, name) == _value(parent_labels, name)
-	result := lib.result_helper_with_term(rego.metadata.chain(), [name], name)
-}
-
-# METADATA
-# title: Optional disallowed inherited labels
-# description: >-
-#   Check that certain labels on the image have different values than the labels
-#   from the parent image. If the label is inherited from the parent image but not
-#   redefined for the image, it will contain an incorrect value for the image.
-#   Use the rule data `optional_disallowed_inherited_labels` key to set the list of
-#   labels to check.
-# custom:
-#   short_name: optional_disallowed_inherited_labels
-#   failure_msg: >-
-#     The %q label should not be inherited from the parent image. This will be a
-#     violation in the future.
-#   solution: >-
-#     Update the image build process to overwrite the inherited labels.
-#   collections:
-#   - redhat
-#
-warn contains result if {
-	some inherited_label in lib.rule_data("optional_disallowed_inherited_labels")
-	name := inherited_label.name
-	_value(labels, name) == _value(parent_labels, name)
-	result := lib.result_helper_with_term(rego.metadata.chain(), [name], name)
+	result := _with_effective_on(
+		lib.result_helper_with_term(rego.metadata.chain(), [name], name),
+		inherited_label,
+	)
 }
 
 # METADATA
@@ -188,6 +175,12 @@ disallowed_inherited_labels := lib.rule_data("disallowed_inherited_labels") if {
 	not is_fbc
 } else := lib.rule_data("fbc_disallowed_inherited_labels")
 
+# _with_effective_on annotates the result with the item's effective_on attribute. If the item does
+# not have the attribute, result is returned unmodified.
+_with_effective_on(result, item) := new_result if {
+	new_result := object.union(result, {"effective_on": item.effective_on})
+} else := result
+
 # A file-based catalog (FBC) image is just like a regular binary image, but
 # with a very specific application in the operator framework ecosystem. Here
 # we use heurisitics to determine whether or not the image is an FBC image.
@@ -205,7 +198,7 @@ _rule_data_errors contains msg if {
 		"type": "array",
 		"items": {
 			"type": "object",
-			"properties": {"name": {"type": "string"}},
+			"properties": {"name": {"type": "string"}, "effective_on": {"type": "string"}},
 			"additionalProperties": false,
 			"required": ["name"],
 		},
@@ -220,6 +213,7 @@ _rule_data_errors contains msg if {
 			"properties": {
 				"name": {"type": "string"},
 				"description": {"type": "string"},
+				"effective_on": {"type": "string"},
 			},
 			"additionalProperties": false,
 			"required": ["name", "description"],
@@ -235,6 +229,7 @@ _rule_data_errors contains msg if {
 			"properties": {
 				"name": {"type": "string"},
 				"replacement": {"type": "string"},
+				"effective_on": {"type": "string"},
 			},
 			"additionalProperties": false,
 			"required": ["name", "replacement"],

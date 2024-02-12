@@ -28,10 +28,6 @@ BUNDLES="release pipeline task build_task"
 OPA="go run github.com/enterprise-contract/ec-cli opa"
 ORAS="go run oras.land/oras/cmd/oras"
 
-# For example:
-#   ENSURE_UNIQUE=1 DRY_RUN=1 hack/update-bundles.sh
-#
-ENSURE_UNIQUE=${ENSURE_UNIQUE:-""}
 DRY_RUN=${DRY_RUN:-""}
 DRY_RUN_ECHO=""
 [ "$DRY_RUN" == "1" ] && DRY_RUN_ECHO="echo #"
@@ -50,10 +46,6 @@ function exclusions() {
 
 function repo_name() {
   echo "ec-$1-policy"
-}
-
-function ensure_unique_file() {
-  echo "policy/lib/rule_data.rego"
 }
 
 tmp_oci_dirs=()
@@ -80,7 +72,11 @@ for b in $BUNDLES; do
     skopeo_cp_args='--dest-tls-verify=false --src-tls-verify=false'
   fi
 
-  if [ "$(skopeo list-tags ${skopeo_args} "docker://${push_repo}" | jq 'any(.Tags[]; . == "'"${tag}"'")')" == "true" ] && [ "$ENSURE_UNIQUE" == "1" ]; then
+  tag_found="$(
+    skopeo list-tags ${skopeo_args} "docker://${push_repo}" |
+    jq --arg tag "${tag}" -r 'any(.Tags[]; . == $tag)'
+  )"
+  if [[ "$tag_found" == 'true' ]]; then
     # No push needed
     echo "Policy bundle $push_repo:$tag exists already, no push needed"
   else
@@ -101,14 +97,6 @@ for b in $BUNDLES; do
     for f in $exclude_files; do
       find $content_dir -name $f -delete
     done
-
-    if [ "$ENSURE_UNIQUE" == "1" ]; then
-      # Ensure the bundle has a brand new unique digest
-      unique_timestamp=$(date +%s%N)
-      timestamp_file=$(ensure_unique_file $b)
-      echo Adding timestamp ${unique_timestamp} to ${timestamp_file}
-      echo -e "\n# ${unique_timestamp}" >> $tmp_dir/$timestamp_file
-    fi
 
     # Show the content
     cd $tmp_dir || exit 1

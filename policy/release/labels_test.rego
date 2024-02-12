@@ -17,12 +17,17 @@ test_deprecated_image_labels if {
 		"term": "oldie",
 	}}
 
-	lib.assert_equal_results(labels.deny, expected) with input.image as json.patch(_image, [{
+	image := json.patch(_image, [{
 		"op": "add",
 		"path": "/config/Labels/oldie",
 		"value": "sudo rm -rf /",
 	}])
+
+	lib.assert_equal_results(labels.deny, expected) with input.image as image
 		with data.rule_data as _rule_data
+
+	_assert_effective_on_date(labels.deny) with input.image as image
+		with data.rule_data as _rule_data_with_date
 }
 
 test_required_image_labels if {
@@ -32,8 +37,13 @@ test_required_image_labels if {
 		"term": "name",
 	}}
 
-	lib.assert_equal_results(labels.deny, expected) with input.image as json.remove(_image, ["/config/Labels/name"])
+	image := json.remove(_image, ["/config/Labels/name"])
+
+	lib.assert_equal_results(labels.deny, expected) with input.image as image
 		with data.rule_data as _rule_data
+
+	_assert_effective_on_date(labels.deny) with input.image as image
+		with data.rule_data as _rule_data_with_date
 }
 
 test_fbc_required_image_labels if {
@@ -43,11 +53,13 @@ test_fbc_required_image_labels if {
 		"term": "fbc.name",
 	}}
 
-	lib.assert_equal_results(
-		labels.deny,
-		expected,
-	) with input.image as json.remove(_fbc_image, ["/config/Labels/fbc.name"])
+	image := json.remove(_fbc_image, ["/config/Labels/fbc.name"])
+
+	lib.assert_equal_results(labels.deny, expected) with input.image as image
 		with data.rule_data as _rule_data
+
+	_assert_effective_on_date(labels.deny) with input.image as image
+		with data.rule_data as _rule_data_with_date
 }
 
 test_optional_image_labels if {
@@ -57,8 +69,13 @@ test_optional_image_labels if {
 		"term": "summary",
 	}}
 
-	lib.assert_equal_results(labels.warn, expected) with input.image as json.remove(_image, ["/config/Labels/summary"])
+	image := json.remove(_image, ["/config/Labels/summary"])
+
+	lib.assert_equal_results(labels.warn, expected) with input.image as image
 		with data.rule_data as _rule_data
+
+	_assert_effective_on_date(labels.warn) with input.image as image
+		with data.rule_data as _rule_data_with_date
 }
 
 test_fbc_optional_image_labels if {
@@ -68,11 +85,13 @@ test_fbc_optional_image_labels if {
 		"term": "fbc.summary",
 	}}
 
-	lib.assert_equal_results(
-		labels.warn,
-		expected,
-	) with input.image as json.remove(_fbc_image, ["/config/Labels/fbc.summary"])
+	image := json.remove(_fbc_image, ["/config/Labels/fbc.summary"])
+
+	lib.assert_equal_results(labels.warn, expected) with input.image as image
 		with data.rule_data as _rule_data
+
+	_assert_effective_on_date(labels.warn) with input.image as image
+		with data.rule_data as _rule_data_with_date
 }
 
 test_disallowed_inherited_image_labels if {
@@ -86,7 +105,12 @@ test_disallowed_inherited_image_labels if {
 		{"op": "add", "path": "/config/Labels/unique", "value": "spam"},
 		{"op": "add", "path": "/parent/config/Labels/unique", "value": "spam"},
 	])
-	lib.assert_equal_results(labels.deny, expected) with input.image as image with data.rule_data as _rule_data
+
+	lib.assert_equal_results(labels.deny, expected) with input.image as image
+		with data.rule_data as _rule_data
+
+	_assert_effective_on_date(labels.deny) with input.image as image
+		with data.rule_data as _rule_data_with_date
 
 	# A missing label on either image does not trigger a violation.
 	lib.assert_empty(labels.deny) with input.image as json.patch(_image, [{
@@ -114,7 +138,12 @@ test_fbc_disallowed_inherited_image_labels if {
 		{"op": "add", "path": "/config/Labels/fbc.unique", "value": "spam"},
 		{"op": "add", "path": "/parent/config/Labels/fbc.unique", "value": "spam"},
 	])
-	lib.assert_equal_results(labels.deny, expected) with input.image as image with data.rule_data as _rule_data
+
+	lib.assert_equal_results(labels.deny, expected) with input.image as image
+		with data.rule_data as _rule_data
+
+	_assert_effective_on_date(labels.deny) with input.image as image
+		with data.rule_data as _rule_data_with_date
 
 	# A missing label on either image does not trigger a violation.
 	lib.assert_empty(labels.deny) with input.image as json.patch(_fbc_image, [{
@@ -126,35 +155,6 @@ test_fbc_disallowed_inherited_image_labels if {
 	lib.assert_empty(labels.deny) with input.image as json.patch(_fbc_image, [{
 		"op": "add",
 		"path": "/config/Labels/fbc.unique",
-		"value": "spam",
-	}])
-		with data.rule_data as _rule_data
-}
-
-test_optional_disallowed_inherited_image_labels if {
-	expected := {{
-		"code": "labels.optional_disallowed_inherited_labels",
-		# regal ignore:line-length
-		"msg": "The \"optional.unique\" label should not be inherited from the parent image. This will be a violation in the future.",
-		"term": "optional.unique",
-	}}
-
-	image := json.patch(_image, [
-		{"op": "add", "path": "/config/Labels/optional.unique", "value": "spam"},
-		{"op": "add", "path": "/parent/config/Labels/optional.unique", "value": "spam"},
-	])
-	lib.assert_equal_results(labels.warn, expected) with input.image as image with data.rule_data as _rule_data
-
-	# A missing label on either image does not trigger a warning.
-	lib.assert_empty(labels.warn) with input.image as json.patch(_image, [{
-		"op": "add",
-		"path": "/config/Labels/optional.unique",
-		"value": "spam",
-	}])
-		with data.rule_data as _rule_data
-	lib.assert_empty(labels.warn) with input.image as json.patch(_image, [{
-		"op": "add",
-		"path": "/parent/config/Labels/optional.unique",
 		"value": "spam",
 	}])
 		with data.rule_data as _rule_data
@@ -297,5 +297,22 @@ _rule_data := {
 	"fbc_optional_labels": [{"name": "fbc.summary", "description": "A short description of the FBC image."}],
 	"disallowed_inherited_labels": [{"name": "unique"}],
 	"fbc_disallowed_inherited_labels": [{"name": "fbc.unique"}],
-	"optional_disallowed_inherited_labels": [{"name": "optional.unique"}],
+}
+
+_mock_effective_on := "3000-01-01T00:00:00Z"
+
+_rule_data_with_date[category] := values_with_date if {
+	some category, values in _rule_data
+	values_with_date := [value_with_date |
+		some value in values
+		value_with_date := object.union(value, {"effective_on": _mock_effective_on})
+	]
+}
+
+_assert_effective_on_date(violations) if {
+	got_effective_on := {date |
+		some violation in violations
+		date := object.get(violation, "effective_on", "")
+	}
+	lib.assert_equal(got_effective_on, {_mock_effective_on})
 }

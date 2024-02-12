@@ -6,7 +6,7 @@ require (
 	github.com/enterprise-contract/ec-cli v0.0.0-20240201092321-c9e618b1e5e2
 	github.com/open-policy-agent/conftest v0.49.0
 	github.com/styrainc/regal v0.16.0
-	github.com/tektoncd/cli v0.34.0
+	github.com/tektoncd/cli v0.35.0
 	oras.land/oras v1.1.0
 )
 
@@ -118,9 +118,9 @@ require (
 	github.com/digitorus/pkcs7 v0.0.0-20230818184609-3a137a874352 // indirect
 	github.com/digitorus/timestamp v0.0.0-20231217203849-220c5c2851b7 // indirect
 	github.com/dimchansky/utfbom v1.1.1 // indirect
-	github.com/docker/cli v25.0.2+incompatible // indirect
+	github.com/docker/cli v25.0.3+incompatible // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect
-	github.com/docker/docker v25.0.2+incompatible // indirect
+	github.com/docker/docker v25.0.3+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.8.1 // indirect
 	github.com/docker/go-connections v0.5.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
@@ -323,7 +323,7 @@ require (
 	github.com/tektoncd/chains v0.20.0 // indirect
 	github.com/tektoncd/hub v1.16.0 // indirect
 	github.com/tektoncd/pipeline v0.56.0 // indirect
-	github.com/tektoncd/triggers v0.25.3 // indirect
+	github.com/tektoncd/triggers v0.26.0 // indirect
 	github.com/thales-e-security/pool v0.0.2 // indirect
 	github.com/theupdateframework/go-tuf v0.7.0 // indirect
 	github.com/titanous/rocacheck v0.0.0-20171023193734-afe73141d399 // indirect

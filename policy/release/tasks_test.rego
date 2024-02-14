@@ -580,6 +580,74 @@ test_pinned_task_refs_slsa_v1 if {
 	lib.assert_equal_results(tasks.deny, expected) with input.attestations as [att]
 }
 
+test_deprecated_slsa_v0_2 if {
+	attestation := _attestations_with_tasks({}, [object.union(
+		_task("task"),
+		{"invocation": {"environment": {"annotations": {tasks._expires_on_annotation: "2200-01-01T00:00:00Z"}}}},
+	)])
+
+	expected := {{
+		"code": "tasks.unsupported",
+		"msg": `Task "task" is used by pipeline task "task" is or will be unsupported as of 2200-01-01T00:00:00Z.`,
+		"term": "task",
+	}}
+
+	lib.assert_equal_results(tasks.deny, expected) with input.attestations as attestation
+		with data["pipeline-required-tasks"] as {"generic": []}
+		with data["task-bundles"] as _trusted_tasks
+}
+
+test_expired_slsa_v0_2 if {
+	attestation := _attestations_with_tasks({}, [object.union(
+		_task("task"),
+		{"invocation": {"environment": {"annotations": {tasks._expires_on_annotation: "2000-01-01T00:00:00Z"}}}},
+	)])
+
+	expected := {{
+		"code": "tasks.unsupported",
+		"msg": `Task "task" is used by pipeline task "task" is or will be unsupported as of 2000-01-01T00:00:00Z.`,
+		"term": "task",
+	}}
+
+	lib.assert_equal_results(tasks.deny, expected) with input.attestations as attestation
+		with data["pipeline-required-tasks"] as {"generic": []}
+		with data["task-bundles"] as _trusted_tasks
+}
+
+test_deprecated_slsa_v1 if {
+	attestation := _slsav1_attestations_with_tasks({}, [object.union(
+		_task("task"),
+		{"invocation": {"environment": {"annotations": {tasks._expires_on_annotation: "2200-01-01T00:00:00Z"}}}},
+	)])
+
+	expected := {{
+		"code": "tasks.unsupported",
+		"msg": `Task "task" is used by pipeline task "task" is or will be unsupported as of 2200-01-01T00:00:00Z.`,
+		"term": "task",
+	}}
+
+	lib.assert_equal_results(tasks.deny, expected) with input.attestations as attestation
+		with data["pipeline-required-tasks"] as {"generic": []}
+		with data["task-bundles"] as _trusted_tasks
+}
+
+test_expired_slsa_v1 if {
+	attestation := _slsav1_attestations_with_tasks({}, [object.union(
+		_task("task"),
+		{"invocation": {"environment": {"annotations": {tasks._expires_on_annotation: "2000-01-01T00:00:00Z"}}}},
+	)])
+
+	expected := {{
+		"code": "tasks.unsupported",
+		"msg": `Task "task" is used by pipeline task "task" is or will be unsupported as of 2000-01-01T00:00:00Z.`,
+		"term": "task",
+	}}
+
+	lib.assert_equal_results(tasks.deny, expected) with input.attestations as attestation
+		with data["pipeline-required-tasks"] as {"generic": []}
+		with data["task-bundles"] as _trusted_tasks
+}
+
 _attestations_with_tasks(names, add_tasks) := attestations if {
 	tasks := array.concat([t | some name in names; t := _task(name)], add_tasks)
 

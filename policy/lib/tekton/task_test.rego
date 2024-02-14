@@ -492,6 +492,38 @@ test_pipeline_task_slsav02 if {
 	lib.assert_equal(tkn.pipeline_task_name(task), "git-clone-p")
 }
 
+test_taskrun_labels_slsa02 if {
+	task := {"invocation": {"environment": {"labels": {
+		"l1": "v1",
+		"l2": "v2",
+	}}}}
+	lib.assert_equal(tkn.task_labels(task), {"l1": "v1", "l2": "v2"})
+}
+
+test_taskrun_annotations_slsa02 if {
+	task := {"invocation": {"environment": {"annotations": {
+		"a1": "v1",
+		"a2": "v2",
+	}}}}
+	lib.assert_equal(tkn.task_annotations(task), {"a1": "v1", "a2": "v2"})
+}
+
+test_taskrun_labels_slsa1 if {
+	task := {"metadata": {"labels": {
+		"l1": "v1",
+		"l2": "v2",
+	}}}
+	lib.assert_equal(tkn.task_labels(task), {"l1": "v1", "l2": "v2"})
+}
+
+test_taskrun_annotations_slsa1 if {
+	task := {"metadata": {"annotations": {
+		"a1": "v1",
+		"a2": "v2",
+	}}}
+	lib.assert_equal(tkn.task_annotations(task), {"a1": "v1", "a2": "v2"})
+}
+
 _expected_latest := {
 	"effective_on": "2099-01-02T00:00:00Z",
 	"tasks": [

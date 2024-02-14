@@ -23,7 +23,7 @@ build_label := "build.appstudio.redhat.com/build_type"
 #   failure_msg: The required build label '%s' is missing
 #
 deny contains result if {
-	not build_label in object.keys(tkn.task_labels)
+	not build_label in object.keys(tkn.task_labels(input))
 	result := lib.result_helper(rego.metadata.chain(), [build_label])
 }
 
@@ -36,6 +36,6 @@ deny contains result if {
 #   failure_msg: The task definition does not include any labels
 #
 deny contains result if {
-	not tkn.task_labels
+	not tkn.task_labels(input)
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

@@ -226,6 +226,41 @@ deny contains result if {
 	)
 }
 
+# METADATA
+# title: Task version unsupported
+# description: >-
+#   The Tekton Task used is or will be unsupported. The Task is annotated with
+#   `build.appstudio.redhat.com/expires-on` annotation marking it as unsupported
+#   after a certain date.
+# custom:
+#   short_name: unsupported
+#   failure_msg: >-
+#     Task %q is used by pipeline task %q is or will be unsupported as of %s.
+#   solution: >-
+#     Upgrade to a newer version of the Task.
+#   collections:
+#   - redhat
+#   depends_on:
+#   - tasks.pipeline_has_tasks
+#
+deny contains result if {
+	some att in lib.pipelinerun_attestations
+	some task in tkn.tasks(att)
+
+	annotations := tkn.task_annotations(task)
+
+	expires_on := annotations[_expires_on_annotation]
+
+	result := object.union(
+		lib.result_helper_with_term(
+			rego.metadata.chain(),
+			[tkn.task_name(task), tkn.pipeline_task_name(task), expires_on],
+			tkn.task_name(task),
+		),
+		{"effective_on": expires_on},
+	)
+}
+
 # _missing_tasks returns a set of task names that are in the given
 # required_tasks, but not in the PipelineRun attestation.
 _missing_tasks(required_tasks) := {task |
@@ -337,3 +372,5 @@ _format_missing(o, opt) := desc if {
 	opt
 	msg := sprintf("Task %q", [o])
 } else := sprintf("Required task %q", [o])
+
+_expires_on_annotation := "build.appstudio.redhat.com/expires-on"

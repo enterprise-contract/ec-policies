@@ -1,0 +1,36 @@
+= Task Authoring
+
+:numbered:
+
+This document is meant to assist Tekton Task authors in authoring and conforming
+with the xref:task_policy.adoc[Task policies] and
+xref:release_policy.adoc[Release Policies].
+
+== Task annotations
+
+Tasks can be annotated to influence the xref:release_policy.adoc[Release Policy]
+rules. These annotations are placed in the `annotations` section under the
+`metadata` key of the Task definition.
+
+=== Setting Task expiry
+
+A Task can be set to expire by setting the
+`build.appstudio.redhat.com/expires-on` annotation. The presence of the
+annotation means that the task is or will be unsupported by a certain date/time
+provided in the value of the annotation in the RFC3339 format.
+
+For example, this will set the Task to be unsupported after 2025-01-01 at
+midnight UTC; prior to that a warning will be emited by the
+xref:release_policy.adoc#tasks__unsupported[Task version unsupported] rule and
+following that date/time a violation will be reported instead:
+
+```yaml
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: my-task
+  annotations:
+    build.appstudio.redhat.com/expires-on: 2025-01-01T00:00:00Z
+spec:
+...
+```

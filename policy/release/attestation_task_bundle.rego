@@ -81,61 +81,65 @@ warn contains result if {
 # title: Task bundles are latest versions
 # description: >-
 #   For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
-#   the most recent xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle].
+#   the most recent.
 # custom:
 #   short_name: task_ref_bundles_current
 #   failure_msg: Pipeline task '%s' uses an out of date task bundle '%s'
 #   solution: >-
 #     A task bundle used is not the most recent. The most recent task bundles are defined
-#     as in xref:acceptable_bundles.adoc#_task_bundles[acceptable bundles] list.
+#     in the data source of your policy config.
 #   collections:
 #   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
 warn contains result if {
-	some task in bundles.out_of_date_task_bundle(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task), bundles.bundle(task)])
+	some task in tkn.out_of_date_task_refs(lib.tasks_from_pipelinerun)
+	bundle := bundles.bundle(task)
+	bundle != ""
+	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task), bundle])
 }
 
 # METADATA
-# title: Task bundles are in acceptable bundles list
+# title: Task bundles are in trusted tasks list
 # description: >-
 #   For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
-#   an xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle] given the tracked
-#   effective_on date.
+#   a trusted task.
 # custom:
 #   short_name: task_ref_bundles_acceptable
-#   failure_msg: Pipeline task '%s' uses an unacceptable task bundle '%s'
+#   failure_msg: Pipeline task '%s' uses an untrusted task bundle '%s'
 #   solution: >-
 #     For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
-#     an xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle].
+#     a trusted task.
 #   collections:
 #   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	some task in bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task), bundles.bundle(task)])
+	# some task in bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)
+	# result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task), bundles.bundle(task)])
+	some task in tkn.untrusted_task_refs(lib.tasks_from_pipelinerun)
+	bundle := bundles.bundle(task)
+	bundle != ""
+	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task), bundle])
 }
 
 # METADATA
 # title: An acceptable Tekton bundles list was provided
 # description: >-
-#   Confirm the `task-bundles` rule data was provided, since it's
+#   Confirm the `trusted_tasks` rule data was provided, since it's
 #   required by the policy rules in this package.
 # custom:
 #   short_name: acceptable_bundles_provided
-#   failure_msg: Missing required task-bundles data
+#   failure_msg: Missing required trusted_tasks data
 #   solution: >-
-#     Create an acceptable bundles list. This is a list of task bundles with a top-level key
-#     of 'task-bundles'. More information can be found at
-#     xref:acceptable_bundles.adoc#_task_bundles[acceptable bundles].
+#     Create a lsit of trusted tasks. This is a list of task bundles with a top-level key
+#     of 'trusted_tasks'.
 #   collections:
 #   - redhat
 #
 deny contains result if {
-	bundles.missing_task_bundles_data
+	tkn.missing_trusted_tasks_data
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

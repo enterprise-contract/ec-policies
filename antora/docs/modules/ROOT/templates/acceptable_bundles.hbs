@@ -33,20 +33,20 @@ example above, using b or c would result in such a warning.
 The process of adding bundles to the list of acceptable bundles is described
 xref:trusting_bundles.adoc[here].
 
-{{#each acceptableBundles}}
+{{#each trustedTasks}}
 
-=== link:{{ repoUrl @key }}[{{ @key }}, window="_blank"]
+=== {{ @key }}
 
 [cols="2,5,2"]
 |===
-|*Digest*
-|*Tag*
+|*Ref*
 |*Effective*
+|*Expires*
 
 {{#each .}}
-|link:{{ digestUrl }}[{{ shortDigest }}, window="_blank"]
-|link:{{ tagUrl }}[{{ tag }}, window="_blank"]
+|{{ ref }}
 |{{ effective_on }}
+|{{ expires_on }}
 
 {{/each}}
 |===

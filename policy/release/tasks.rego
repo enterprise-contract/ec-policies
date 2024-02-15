@@ -17,7 +17,6 @@ package policy.release.tasks
 import rego.v1
 
 import data.lib
-import data.lib.bundles
 import data.lib.refs
 import data.lib.tkn
 
@@ -99,15 +98,15 @@ deny contains result if {
 }
 
 # METADATA
-# title: All required tasks are from acceptable bundles
+# title: All required tasks are from trusted tasks
 # description: >-
-#   Ensure that the all required tasks are resolved from acceptable bundles.
+#   Ensure that the all required tasks are resolved from trusted tasks.
 # custom:
 #   short_name: required_task_unacceptable_found
-#   failure_msg: '%s is required and present but not from an acceptable bundle'
+#   failure_msg: '%s is required and present but not from a trusted task'
 #   solution: >-
 #     Make sure all required tasks in the build pipeline are resolved from
-#     acceptable bundles.
+#     trusted tasks.
 #   collections:
 #   - redhat
 #   depends_on:
@@ -116,15 +115,15 @@ deny contains result if {
 warn contains result if {
 	some att in lib.pipelinerun_attestations
 
-	# only tasks that are unacceptable
-	some unacceptable_task in bundles.unacceptable_task_bundle(tkn.tasks(att))
+	# only tasks that are not trusted
+	some untrusted_task in tkn.untrusted_task_refs(lib.tasks_from_pipelinerun)
 	some missing_required_name in _missing_tasks(current_required_tasks.tasks)
-	some unacceptable_task_name in tkn.task_names(unacceptable_task)
+	some untrusted_task_name in tkn.task_names(untrusted_task)
 
-	unacceptable_task_name == missing_required_name
+	untrusted_task_name == missing_required_name
 	result := lib.result_helper_with_term(
-		rego.metadata.chain(), [_format_missing(unacceptable_task_name, false)],
-		unacceptable_task_name,
+		rego.metadata.chain(), [_format_missing(untrusted_task_name, false)],
+		untrusted_task_name,
 	)
 }
 
@@ -184,7 +183,7 @@ warn contains result if {
 #   required by the policy rules in this package.
 # custom:
 #   short_name: required_tasks_list_provided
-#   failure_msg: Missing required task-bundles data
+#   failure_msg: Missing required required-tasks data
 #   solution: >-
 #     Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key
 #     'required-tasks' that contains a list of tasks that are required to run in the
@@ -236,16 +235,15 @@ _missing_tasks(required_tasks) := {task |
 	tasks := tkn.tasks(att)
 	count(tasks) > 0
 
-	# only tasks that are acceptable, i.e. tasks that have a record in the
-	# acceptable bundles data
-	acceptable := [task_name |
+	# only tasks that are trusted, i.e. tasks that have a record in the trusted_tasks data
+	trusted := [task_name |
 		some task in tasks
-		bundles.is_acceptable_task(task)
+		tkn.is_trusted_task(task)
 		some task_name in tkn.task_names(task)
 	]
 
 	some required_task in required_tasks
-	some task in _any_missing(required_task, acceptable)
+	some task in _any_missing(required_task, trusted)
 }
 
 _any_missing(required, tasks) := missing if {

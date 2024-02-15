@@ -108,7 +108,7 @@ For example to fetch a pipeline definition from your local cluster:
     make fetch-pipeline PIPELINE=<some-pipeline-name>
     more input/input.json # to look at it
 
-For a realistic Red Hat Trusted Application Pipeline pipeline definition that
+For a realistic Konflux pipeline definition that
 doesn't require cluster access, if you have the [build-definitions][builddefs]
 repo checked out nearby you can do something like this:
 

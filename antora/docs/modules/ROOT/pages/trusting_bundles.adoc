@@ -79,10 +79,10 @@ Be sure to include the `acceptable-bundles.yaml` file in a data source in your p
 
 == An Example
 
-Automation using the process described above manages the acceptable bundles used in Red Hat Trusted Application Pipeline, RHTAP. This section describes how.
+Automation using the process described above manages the acceptable bundles used in Konflux. This section describes how.
 
 The repository link:{build-definitions}[redhat-appstudio/build-definitions] contains all the Tekton
-definitions used by RHTAP. The CI/CD process on that repository performs the following actions:
+definitions used by Konflux. The CI/CD process on that repository performs the following actions:
 
 1. Determine which Tekton definitions have modifications.
 2. Build a new Tekton Bundle for each modified Tekton definition.
@@ -92,7 +92,7 @@ definitions used by RHTAP. The CI/CD process on that repository performs the fol
 
 The new Tekton Bundles become acceptable bundles as soon as the pull request merges.
 
-== Adding a new acceptable bundle to the Red Hat Trusted Application Pipeline
+== Adding a new acceptable bundle to Konflux
 
 The process to add a new task defintion to the existing Red Hat acceptable task list is relatively uncomplicated and is detailed below.
 

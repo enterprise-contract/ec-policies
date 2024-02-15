@@ -31,7 +31,11 @@ deny contains result if {
 	image_ref := step.image
 	not image_ref_permitted(image_ref, allowed_registry_prefixes)
 
-	result := lib.result_helper(rego.metadata.chain(), [step_index, image_ref])
+	result := lib.result_helper_with_term(
+		rego.metadata.chain(),
+		[step_index, image_ref],
+		_task_name_version(input),
+	)
 }
 
 # METADATA
@@ -75,3 +79,13 @@ _rule_data_errors contains msg if {
 }
 
 _rule_data_key := "allowed_step_image_registry_prefixes"
+
+_task_name_version(task) := sprintf("%s/%s", [_name(task), _version(task)])
+
+_name(task) := name if {
+	name := task.metadata.name
+} else := "noname"
+
+_version(task) := version if {
+	version := task.metadata.labels["app.kubernetes.io/version"]
+} else := "noversion"

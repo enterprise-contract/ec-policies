@@ -21,6 +21,7 @@ test_step_images_permitted_success if {
 test_step_images_permitted_failure if {
 	task := {
 		"kind": "Task",
+		"metadata": {"labels": {"app.kubernetes.io/version": "1.0"}, "name": "git-clone"},
 		"spec": {"steps": [{"image": bad_image}, {"image": good_image}, {"image": bad_image}]},
 	}
 
@@ -28,14 +29,53 @@ test_step_images_permitted_failure if {
 		{
 			"code": "step_image_registries.step_images_permitted",
 			"msg": "Step 0 uses disallowed image ref 'hackz.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:af7dd5b3b'",
+			"term": "git-clone/1.0",
 		},
 		{
 			"code": "step_image_registries.step_images_permitted",
 			"msg": "Step 2 uses disallowed image ref 'hackz.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:af7dd5b3b'",
+			"term": "git-clone/1.0",
 		},
 	}
 
 	lib.assert_equal_results(step_image_registries.deny, expected) with input as task
+}
+
+test_step_images_missing_name_version if {
+	task_no_name := {
+		"kind": "Task",
+		"metadata": {"labels": {"app.kubernetes.io/version": "1.0"}},
+		"spec": {"steps": [{"image": bad_image}]},
+	}
+
+	lib.assert_equal_results(step_image_registries.deny, {{
+		"code": "step_image_registries.step_images_permitted",
+		"msg": "Step 0 uses disallowed image ref 'hackz.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:af7dd5b3b'",
+		"term": "noname/1.0",
+	}}) with input as task_no_name
+
+	task_no_version := {
+		"kind": "Task",
+		"metadata": {"name": "git-clone"},
+		"spec": {"steps": [{"image": bad_image}]},
+	}
+
+	lib.assert_equal_results(step_image_registries.deny, {{
+		"code": "step_image_registries.step_images_permitted",
+		"msg": "Step 0 uses disallowed image ref 'hackz.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:af7dd5b3b'",
+		"term": "git-clone/noversion",
+	}}) with input as task_no_version
+
+	task_no_name_no_version := {
+		"kind": "Task",
+		"spec": {"steps": [{"image": bad_image}]},
+	}
+
+	lib.assert_equal_results(step_image_registries.deny, {{
+		"code": "step_image_registries.step_images_permitted",
+		"msg": "Step 0 uses disallowed image ref 'hackz.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:af7dd5b3b'",
+		"term": "noname/noversion",
+	}}) with input as task_no_name_no_version
 }
 
 test_step_images_permitted_skipped if {
@@ -50,6 +90,7 @@ test_step_images_permitted_skipped if {
 test_step_images_permitted_prefix_list_empty if {
 	task := {
 		"kind": "Task",
+		"metadata": {"labels": {"app.kubernetes.io/version": "1.0"}, "name": "git-clone"},
 		"spec": {"steps": [{"image": good_image}]},
 	}
 
@@ -63,6 +104,7 @@ test_step_images_permitted_prefix_list_empty if {
 			"code": "step_image_registries.step_images_permitted",
 			# regal ignore:line-length
 			"msg": "Step 0 uses disallowed image ref 'registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:af7dd5b3b'",
+			"term": "git-clone/1.0",
 		},
 	}
 

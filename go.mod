@@ -6,7 +6,7 @@ require (
 	github.com/enterprise-contract/ec-cli v0.0.0-20240201092321-c9e618b1e5e2
 	github.com/open-policy-agent/conftest v0.49.1
 	github.com/styrainc/regal v0.16.0
-	github.com/tektoncd/cli v0.35.0
+	github.com/tektoncd/cli v0.35.1
 	oras.land/oras v1.1.0
 )
 
@@ -323,7 +323,7 @@ require (
 	github.com/tektoncd/chains v0.20.0 // indirect
 	github.com/tektoncd/hub v1.16.0 // indirect
 	github.com/tektoncd/pipeline v0.56.0 // indirect
-	github.com/tektoncd/triggers v0.26.0 // indirect
+	github.com/tektoncd/triggers v0.26.1 // indirect
 	github.com/thales-e-security/pool v0.0.2 // indirect
 	github.com/theupdateframework/go-tuf v0.7.0 // indirect
 	github.com/titanous/rocacheck v0.0.0-20171023193734-afe73141d399 // indirect

@@ -102,3 +102,38 @@ test_assert_equal_results if {
 		{"spam": "maps", "collections": ["c", "d"], "effective_on": "1970-01-01T00:00:00Z"},
 	)
 }
+
+# regal ignore:rule-length
+test_assert_equal_results_no_collections if {
+	# Empty results
+	lib.assert_equal_results_no_collections(set(), set())
+	lib.assert_equal_results_no_collections({{}}, {{}})
+
+	# collections attribute is ignored
+	lib.assert_equal_results_no_collections({{"collections": ["a", "b"]}}, {{}})
+	lib.assert_equal_results_no_collections({{}}, {{"collections": ["a", "b"]}})
+	lib.assert_equal_results_no_collections({{"collections": ["a", "b"]}}, {{"collections": ["c", "d"]}})
+	lib.assert_equal_results_no_collections(
+		{{"spam": "maps", "collections": ["a", "b"]}},
+		{{"spam": "maps", "collections": ["c", "d"]}},
+	)
+
+	# missing attributes in one result is not ignored
+	not lib.assert_equal_results_no_collections(
+		{{"spam": "SPAM", "collections": ["a", "b"]}},
+		{{"collections": ["c", "d"]}},
+	)
+	not lib.assert_equal_results_no_collections(
+		{{"collections": ["c", "d"]}},
+		{{"spam": "SPAM", "collections": ["a", "b"]}},
+	)
+
+	# fallback for unexpected types
+	lib.assert_equal_results_no_collections({"spam", "maps"}, {"spam", "maps"})
+	not lib.assert_equal_results_no_collections({"spam", "maps"}, "spam")
+	not lib.assert_equal_results_no_collections(
+		# These are "objects" instead of the expected "set of objects"
+		{"spam": "maps", "collections": ["a", "b"]},
+		{"spam": "maps", "collections": ["c", "d"]},
+	)
+}

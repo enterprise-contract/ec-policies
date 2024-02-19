@@ -270,17 +270,20 @@ module.exports.register = function() {
     const [ buildTaskAnnotations, buildTaskCollections ]  = helpers.processAnnotationsData(rawAnnotationsData, "policy.build_task")
 
     //------------------------------------------------------------------
-    // Find and load the acceptable bundle and rule collection data
+    // Find and load the trusted tasks and rule collection data
     //
     const yaml = this.require('js-yaml')
 
-    const bundlesFile = helpers.firstFileMatching(ecContent, /\/acceptable_tekton_bundles.yml$/)
-    if (!bundlesFile) throw `Unable to find acceptable bundles file: (${__filename})`
-    const rawBundlesData = yaml.load(bundlesFile._contents.toString())
-    const acceptableBundles = helpers.processBundlesData(rawBundlesData)
+    const tasksFile = helpers.firstFileMatching(ecContent, /\/trusted_tekton_tasks.yml$/)
+    if (!tasksFile) throw `Unable to find trusted tasks file: (${__filename})`
+    const rawTasksData = yaml.load(tasksFile._contents.toString())
+    // TODO: Just use the raw data as is for now. In https://issues.redhat.com/browse/EC-389
+    // we'll properly document trusted tasks.
+    // const trustedTasks = helpers.processBundlesData(rawTasksData)
+    const trustedTasks = rawTasksData
 
     // Make the data available at higher scope
-    allData = { taskAnnotations, taskCollections, buildTaskAnnotations, buildTaskCollections, pipelineAnnotations, pipelineCollections, releaseAnnotations, releaseCollections, acceptableBundles }
+    allData = { taskAnnotations, taskCollections, buildTaskAnnotations, buildTaskCollections, pipelineAnnotations, pipelineCollections, releaseAnnotations, releaseCollections, trustedTasks }
 
     //------------------------------------------------------------------
     // Setup Handlebars helpers and partials

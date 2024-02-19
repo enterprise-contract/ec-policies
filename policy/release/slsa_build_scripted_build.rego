@@ -15,7 +15,6 @@ package policy.release.slsa_build_scripted_build
 import rego.v1
 
 import data.lib
-import data.lib.bundles
 import data.lib.image
 import data.lib.tkn
 
@@ -155,12 +154,12 @@ _trusted_build_task_error(tasks) := error if {
 	count(tasks) == 0
 	error := "No Pipeline Tasks built the image"
 } else := error if {
-	unacceptable_tasks := bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)
-	unacceptable_build_tasks = unacceptable_tasks & tasks
-	count(unacceptable_build_tasks) > 0
+	untrusted_tasks := tkn.untrusted_task_refs(lib.tasks_from_pipelinerun)
+	untrusted_build_tasks = untrusted_tasks & tasks
+	count(untrusted_build_tasks) > 0
 
 	names := {name |
-		some task in unacceptable_build_tasks
+		some task in untrusted_build_tasks
 		name := tkn.task_name(task)
 	}
 	error := sprintf("Build Task(s) %q are not trusted", [concat(",", names)])

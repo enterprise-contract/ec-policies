@@ -3,7 +3,6 @@ package lib_test
 import rego.v1
 
 import data.lib
-import data.lib.bundles_test
 import data.lib.tkn_test
 import data.lib_test
 
@@ -33,6 +32,8 @@ valid_slsav1_att := {"statement": {
 		"resolvedDependencies": [],
 	}},
 }}
+
+acceptable_bundle_ref := "registry.img/acceptable@sha256:digest"
 
 # This is used through the tests to generate an attestation of a PipelineRun
 # with an inline Task definition, look at using att_mock_helper_ref to generate
@@ -65,7 +66,7 @@ _task_ref(_, bundle_ref) := r if {
 #	"RESULT_NAME", "result_value", "task-name", bundles.acceptable_bundle_ref
 # )]
 # {...} == deny
-#	with data["task-bundles"] as bundles.bundle_data
+#	with data.trusted_tasks as trusted_tasks
 #	with input.attestations as attestations
 #
 # NOTE: In most cases, a task produces a result that is JSON encoded. When mocking results
@@ -96,7 +97,7 @@ att_mock_helper_ref_plain_result(name, result, task_name, bundle_ref) := {"state
 #	"RESULT_NAME", {...}, "task-name", bundles.acceptable_bundle_ref
 # )]
 # {...} == deny
-#	with data["task-bundles"] as bundles.bundle_data
+#	with data.trusted_tasks as trusted_tasks
 #	with input.attestations as attestations
 #
 # NOTE: If the task being mocked does not produced a JSON encoded result, use
@@ -296,7 +297,7 @@ test_results_from_tests if {
 			"result": "SUCCESS",
 			"foo": "bar",
 		},
-		"mytask", bundles_test.acceptable_bundle_ref,
+		"mytask", acceptable_bundle_ref,
 	)
 	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att1]
 
@@ -306,7 +307,7 @@ test_results_from_tests if {
 			"result": "SUCCESS",
 			"foo": "bar",
 		},
-		"mytask", bundles_test.acceptable_bundle_ref,
+		"mytask", acceptable_bundle_ref,
 	)
 	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att2]
 
@@ -319,7 +320,7 @@ test_results_from_tests if {
 				"value": json.marshal({"result": "SUCCESS", "foo": "bar"}),
 			}],
 		),
-		bundles_test.acceptable_bundle_ref,
+		acceptable_bundle_ref,
 	)])
 	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att3]
 }

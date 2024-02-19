@@ -7,7 +7,7 @@ import data.policy.release.slsa_build_scripted_build
 
 mock_bundle_digest := "sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
 
-mock_bundle_repo := "registry.img/spam"
+mock_bundle_repo := "registry.img/spam:v1"
 
 mock_bundle := sprintf("%s@%s", [mock_bundle_repo, mock_bundle_digest])
 
@@ -23,15 +23,12 @@ test_all_good if {
 
 	image := {"ref": _image_ref}
 
-	task_bundles := {mock_bundle_repo: [{
-		"digest": mock_bundle_digest,
-		"effective_on": "2023-11-06T00:00:00Z",
-		"tag": "0.1",
-	}]}
+	group := sprintf("oci://%s", [mock_bundle_repo])
+	trusted_tasks := {group: [{"ref": mock_bundle_digest, "effective_on": "2023-11-06T00:00:00Z"}]}
 
 	lib.assert_empty(slsa_build_scripted_build.deny) with input.image as image
 		with input.attestations as [_mock_attestation(tasks)]
-		with data["task-bundles"] as task_bundles
+		with data.trusted_tasks as trusted_tasks
 }
 
 # It's unclear if this should be allowed or not. This unit test exists to

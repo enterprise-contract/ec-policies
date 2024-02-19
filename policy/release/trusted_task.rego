@@ -66,7 +66,7 @@ warn contains result if {
 #   failure_msg: Pipeline task %q uses an untrusted task reference, %s
 #   solution: >-
 #     For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
-#     an xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle].
+#     a trusted task.
 #
 deny contains result if {
 	some task in tkn.untrusted_task_refs(lib.tasks_from_pipelinerun)

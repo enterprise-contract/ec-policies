@@ -11,7 +11,6 @@ package policy.pipeline.required_tasks
 import rego.v1
 
 import data.lib
-import data.lib.bundles
 import data.lib.tkn
 
 # METADATA
@@ -108,7 +107,7 @@ deny contains result if {
 _missing_tasks(required_tasks) := {task |
 	acceptable := [task_name |
 		some task in tkn.tasks(input)
-		bundles.is_acceptable_task(task)
+		tkn.is_trusted_task(task)
 		some task_name in tkn.task_names(task)
 	]
 

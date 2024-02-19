@@ -15,6 +15,7 @@ import rego.v1
 
 import data.lib
 import data.lib.bundles
+import data.lib.tkn
 
 # METADATA
 # title: Task bundle was not used or is not defined
@@ -61,40 +62,42 @@ warn contains result if {
 # title: Task bundle is out of date
 # description: >-
 #   For each Task in the Pipeline definition, check if the Tekton Bundle used is
-#   the most recent xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle].
+#   the most recent.
 # custom:
 #   short_name: out_of_date_task_bundle
 #   failure_msg: Pipeline task '%s' uses an out of date task bundle '%s'
 #
 warn contains result if {
-	some task in bundles.out_of_date_task_bundle(input.spec.tasks)
-	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
+	some task in tkn.out_of_date_task_refs(input.spec.tasks)
+	bundle := bundles.bundle(task)
+	bundle != ""
+	result := lib.result_helper(rego.metadata.chain(), [task.name, bundle])
 }
 
 # METADATA
 # title: Task bundle is not acceptable
 # description: >-
-#   For each Task in the Pipeline definition, check if the Tekton Bundle used is an
-#   xref:acceptable_bundles.adoc#_task_bundles[acceptable bundle] given the tracked
-#   effective_on date.
+#   For each Task in the Pipeline definition, check if the Tekton Bundle used is a trusted task.
 # custom:
 #   short_name: unacceptable_task_bundle
-#   failure_msg: Pipeline task '%s' uses an unacceptable task bundle '%s'
+#   failure_msg: Pipeline task '%s' uses an untrusted task bundle '%s'
 #
 deny contains result if {
-	some task in bundles.unacceptable_task_bundle(input.spec.tasks)
-	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
+	some task in tkn.untrusted_task_refs(input.spec.tasks)
+	bundle := bundles.bundle(task)
+	bundle != ""
+	result := lib.result_helper(rego.metadata.chain(), [task.name, bundle])
 }
 
 # METADATA
 # title: Missing required data
 # description: >-
-#   Confirm the `task-bundles` rule data was provided, since it's
+#   Confirm the `trusted_tasks` rule data was provided, since it's
 #   required by the policy rules in this package.
 # custom:
 #   short_name: missing_required_data
-#   failure_msg: Missing required task-bundles data
+#   failure_msg: Missing required trusted_tasks data
 deny contains result if {
-	bundles.missing_task_bundles_data
+	tkn.missing_trusted_tasks_data
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

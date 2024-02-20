@@ -2,8 +2,8 @@
 
 :numbered:
 
-The Enterprise Contract is a set of tools for verifing the provenance of container
-images built in Red Hat Trusted Application Pipeline and validating them against a
+The Enterprise Contract is a tool for verifing the provenance of container
+images built in Konflux CI, and validating them against a
 clearly defined Enterprise Contract policy.
 
 The Enterprise Contract policy is defined using the

@@ -12,7 +12,7 @@
 #   dependencies that have been explicitly built from sources, or the name of the
 #   Maven repository names where the dependency artifact was retrieved from. The
 #   Maven repositories are configured using the 'JBSConfig' custom resources.
-#   Default configuration in RHTAP currently includes Maven repositories with
+#   Default configuration in Konflux currently includes Maven repositories with
 #   names : 'jboss', 'confluent', 'redhat', 'jitpack' and 'gradle'.
 #
 package policy.release.java

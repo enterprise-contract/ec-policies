@@ -2,7 +2,7 @@
 # METADATA
 # title: Required tasks
 # description: >-
-#   RHTAP expects that certain Tekton tasks are executed during image builds.
+#   Konflux expects that certain Tekton tasks are executed during image builds.
 #   This package includes policy rules to confirm that the pipeline definition
 #   includes those required tasks.
 #

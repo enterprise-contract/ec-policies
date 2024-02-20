@@ -77,6 +77,16 @@ assert_equal_results(left_result, right_result) if {
 	)
 }
 
+# assert_equal_results_no_collections is successful if both results match.
+# The values of "collections" are ignored.
+assert_equal_results_no_collections(left_result, right_result) if {
+	ignore_paths := ["/collections"]
+	assert_equal(
+		_ignore_attributes(left_result, ignore_paths),
+		_ignore_attributes(right_result, ignore_paths),
+	)
+}
+
 _ignore_attributes(values, ignore_paths) := new_values if {
 	new_values := {new_value |
 		some value in values

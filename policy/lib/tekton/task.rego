@@ -188,4 +188,23 @@ _key_value(obj, name) := value if {
 }
 
 # task_labels returns the key/value pair of task labels
-task_labels := input.metadata.labels
+task_labels(task) := labels if {
+	# Task was the input, provided either as input to the task rules or SLSA v1
+	# tasks from resolvedDependencies.content decoded and unmarshalled by
+	# _maybe_tasks
+	labels := task.metadata.labels
+} else := labels if {
+	# SLSA 0.2
+	labels := task.invocation.environment.labels
+}
+
+# task_annotations returns the key/value pair of task annotations
+task_annotations(task) := annotations if {
+	# Task was the input, provided either as input to the task rules or SLSA v1
+	# tasks from resolvedDependencies.content decoded and unmarshalled by
+	# _maybe_tasks
+	annotations := task.metadata.annotations
+} else := annotations if {
+	# SLSA 0.2
+	annotations := task.invocation.environment.annotations
+}

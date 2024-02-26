@@ -161,9 +161,10 @@ fmt-check: ## Check formatting of Rego files
 	@$(OPA) fmt . --list | xargs -r -n1 echo 'FAIL: Incorrect formatting found in'
 	@$(OPA) fmt . --list --fail >/dev/null 2>&1
 
+# See config in .regal/config.yaml
 .PHONY: lint
 lint: ## Runs Rego linter
-	@go run github.com/styrainc/regal lint . --ignore-files 'antora/docs/policy/**' $(if $(GITHUB_ACTIONS),--format=github)
+	@go run github.com/styrainc/regal lint . $(if $(GITHUB_ACTIONS),--format=github)
 
 .PHONY: ci
 ci: quiet-test acceptance opa-check conventions-check fmt-check lint ## Runs all checks and tests

@@ -94,12 +94,12 @@ test_all_image_ref if {
 
 test_all_good if {
 	lib.assert_empty(olm.deny) with input.image.files as {"manifests/csv.yaml": manifest}
-		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 }
 
 test_all_good_custom_dir if {
 	lib.assert_empty(olm.deny) with input.image.files as {"other/csv.yaml": manifest}
-		with input.image.config.Labels as {olm.olm_manifestv1: "other/"}
+		with input.image.config.Labels as {olm.manifestv1: "other/"}
 }
 
 test_related_img_unpinned if {
@@ -117,7 +117,7 @@ test_related_img_unpinned if {
 	}}
 
 	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": unpinned_manifest}
-		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 }
 
 test_feature_annotations_format if {
@@ -167,7 +167,7 @@ test_feature_annotations_format if {
 	}
 
 	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": bad_manifest}
-		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 }
 
 test_feature_annotations_format_custom_rule_data if {
@@ -182,7 +182,7 @@ test_feature_annotations_format_custom_rule_data if {
 	}}
 
 	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": bad_manifest}
-		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 		with data.rule_data.required_olm_features_annotations as ["foo", "spam"]
 }
 
@@ -193,7 +193,7 @@ test_required_olm_features_annotations_provided if {
 		"msg": "Rule data required_olm_features_annotations has unexpected format: (Root): Array must have at least 1 items",
 	}}
 	lib.assert_equal_results(olm.deny, expected_empty) with input.image.files as {"manifests/csv.yaml": manifest}
-		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 		with data.rule_data.required_olm_features_annotations as []
 
 	d := {"required_olm_features_annotations": [
@@ -227,7 +227,7 @@ test_required_olm_features_annotations_provided if {
 	}
 
 	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": manifest}
-		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 		with data.rule_data as d
 }
 
@@ -240,7 +240,7 @@ test_csv_semver_format_bad_semver if {
 	}}
 
 	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": csv}
-		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 }
 
 test_csv_semver_format_missing if {
@@ -252,5 +252,5 @@ test_csv_semver_format_missing if {
 	}}
 
 	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": csv}
-		with input.image.config.Labels as {olm.olm_manifestv1: "manifests/"}
+		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 }

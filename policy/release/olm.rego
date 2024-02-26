@@ -10,7 +10,7 @@ import rego.v1
 import data.lib
 import data.lib.image
 
-olm_manifestv1 := "operators.operatorframework.io.bundle.manifests.v1"
+manifestv1 := "operators.operatorframework.io.bundle.manifests.v1"
 
 # METADATA
 # title: ClusterServiceVersion semver format
@@ -205,7 +205,7 @@ all_image_ref(manifest) := [e |
 
 # Returns the ClusterServiceVersion manifests found in the OLM bundle.
 _csv_manifests contains manifest if {
-	manifest_dir := input.image.config.Labels[olm_manifestv1]
+	manifest_dir := input.image.config.Labels[manifestv1]
 
 	some path, manifest in input.image.files
 

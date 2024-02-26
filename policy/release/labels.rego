@@ -28,7 +28,7 @@ import data.lib
 #   - redhat
 #
 deny contains result if {
-	some label in labels
+	some label in image_labels
 	some deprecated_label in lib.rule_data("deprecated_labels")
 	label.name == deprecated_label.name
 	result := _with_effective_on(
@@ -57,7 +57,7 @@ deny contains result if {
 #
 deny contains result if {
 	found_labels := {name |
-		some label in labels
+		some label in image_labels
 		name := label.name
 	}
 	some required_label in required_labels
@@ -87,7 +87,7 @@ deny contains result if {
 #
 warn contains result if {
 	found_labels := {name |
-		some label in labels
+		some label in image_labels
 		name := label.name
 	}
 	some optional_label in optional_labels
@@ -119,7 +119,7 @@ warn contains result if {
 deny contains result if {
 	some inherited_label in disallowed_inherited_labels
 	name := inherited_label.name
-	_value(labels, name) == _value(parent_labels, name)
+	_value(image_labels, name) == _value(parent_labels, name)
 	result := _with_effective_on(
 		lib.result_helper_with_term(rego.metadata.chain(), [name], name),
 		inherited_label,
@@ -145,7 +145,7 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [error])
 }
 
-labels contains label if {
+image_labels contains label if {
 	some name, value in input.image.config.Labels
 	count(value) > 0
 	label := {"name": name, "value": value}
@@ -188,7 +188,7 @@ _with_effective_on(result, item) := new_result if {
 default is_fbc := false
 
 is_fbc if {
-	some label in labels
+	some label in image_labels
 	label.name == "operators.operatorframework.io.index.configs.v1"
 }
 

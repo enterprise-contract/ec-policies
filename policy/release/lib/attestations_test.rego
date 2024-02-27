@@ -4,7 +4,6 @@ import rego.v1
 
 import data.lib
 import data.lib.tkn_test
-import data.lib_test
 
 pr_build_type := "tekton.dev/v1beta1/PipelineRun"
 
@@ -292,7 +291,7 @@ test_results_from_tests if {
 		"bundle": "registry.img/acceptable@sha256:digest",
 	}
 
-	att1 = lib_test.att_mock_helper_ref(
+	att1 = att_mock_helper_ref(
 		lib.task_test_result_name, {
 			"result": "SUCCESS",
 			"foo": "bar",
@@ -302,7 +301,7 @@ test_results_from_tests if {
 	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att1]
 
 	# An edge case that may never happen
-	att2 = lib_test.att_mock_helper_ref(
+	att2 = att_mock_helper_ref(
 		lib.task_test_result_name, {
 			"result": "SUCCESS",
 			"foo": "bar",

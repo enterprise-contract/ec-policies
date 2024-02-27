@@ -417,6 +417,39 @@ test_rule_data_provided if {
 		with input.attestations as [_source_material_attestation("git+https://git.repository", "ref")]
 }
 
+test_refs if {
+	some provided, expected in {
+		{"https://git.repository": "rev"}: {
+			"https://git.repository@sha1:rev",
+			"https://git.repository.git@sha1:rev",
+			"https://git.repository@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
+			"https://git.repository.git@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
+		},
+		{"https://git.repository.git": "rev"}: {
+			"https://git.repository.git@sha1:rev",
+			"https://git.repository.git.git@sha1:rev",
+			"https://git.repository@sha1:rev",
+			"https://git.repository.git@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
+			"https://git.repository.git.git@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
+			"https://git.repository@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
+		},
+		{"https://git.repository/": "rev"}: {
+			"https://git.repository/@sha1:rev",
+			"https://git.repository/.git@sha1:rev",
+			"https://git.repository@sha1:rev",
+			"https://git.repository.git@sha1:rev",
+			"https://git.repository/@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
+			"https://git.repository/.git@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
+			"https://git.repository@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
+			"https://git.repository.git@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
+		},
+	}
+
+	some uri, revision in provided
+
+	lib.assert_equal(slsa_source_correlated._refs(uri, revision), expected)
+}
+
 expected := {"source": {"git": {"url": "https://git.repository", "revision": "ref"}}}
 
 # SLSA Provenance v0.2

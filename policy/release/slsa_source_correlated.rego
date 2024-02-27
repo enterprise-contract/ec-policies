@@ -132,6 +132,10 @@ _refs(expected_vcs_uri, expected_revision) := {
 		expected_vcs_uri,
 		crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
 	]),
+	# tolerate slash at the end of the vcs URI
+	sprintf("%s@sha1:%s", [trim_suffix(expected_vcs_uri, "/"), expected_revision]),
+	# tolerate slash at the end of the vcs URI and append .git
+	sprintf("%s.git@sha1:%s", [trim_suffix(expected_vcs_uri, "/"), expected_revision]),
 	# tolerate missing .git suffix
 	sprintf("%s.git@gitCommit:%s", [
 		expected_vcs_uri,
@@ -140,6 +144,16 @@ _refs(expected_vcs_uri, expected_revision) := {
 	# tolerate extra or missing .git suffix
 	sprintf("%s@gitCommit:%s", [
 		trim_suffix(expected_vcs_uri, ".git"),
+		crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
+	]),
+	# tolerate slash at the end of the vcs URI
+	sprintf("%s@gitCommit:%s", [
+		trim_suffix(expected_vcs_uri, "/"),
+		crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
+	]),
+	# tolerate slash at the end of the vcs URI and append .git
+	sprintf("%s.git@gitCommit:%s", [
+		trim_suffix(expected_vcs_uri, "/"),
 		crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
 	]),
 }

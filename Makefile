@@ -5,8 +5,11 @@ CONFIG_DATA_FILE=$(DATA_DIR)/config.json
 
 POLICY_DIR=./policy
 
+# Use go run so we use the exact pinned versions from the mod file.
+# Use ec for the opa and conftest commands so that our custom rego
+# functions are available.
 OPA=go run github.com/enterprise-contract/ec-cli opa
-CONFTEST=go run github.com/open-policy-agent/conftest
+CONFTEST=EC_EXPERIMENTAL=1 go run github.com/enterprise-contract/ec-cli
 TKN=go run github.com/tektoncd/cli/cmd/tkn
 
 TEST_FILES = $(DATA_DIR)/rule_data.yml $(POLICY_DIR) checks
@@ -58,6 +61,7 @@ help: ## Display this help.
 
 ##@ Development
 
+# Todo maybe: Run tests with conftest verify instead
 .PHONY: test
 test: ## Run all tests in verbose mode and check coverage
 	@$(OPA) test $(TEST_FILES) -v
@@ -80,23 +84,6 @@ live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` ne
 	while true; do \
 	  git ls-files -c -o '*.rego' | entr -r -d -c $(MAKE) --no-print-directory quiet-test; \
 	done
-
-##
-## Fixme: Currently conftest verify produces a error:
-##   "rego_type_error: package annotation redeclared"
-## In these two files:
-##   policy/release/examples/time_based.rego
-##   policy/lib/time_test.rego:1
-## The error only appears when running the tests.
-##
-## Since the metadata support is a new feature in opa, it might be this
-## is a bug that will go away in a future release of conftest. So for now
-## we will ignore the error and not use conftest verify in the CI.
-##
-.PHONY: conftest-test
-conftest-test: ## Run all tests with conftest instead of opa
-	@$(CONFTEST) verify \
-	  --policy $(POLICY_DIR)
 
 .PHONY: fmt
 fmt: ## Apply default formatting to all rego files. Use before you commit

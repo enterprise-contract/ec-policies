@@ -8,8 +8,9 @@ POLICY_DIR=./policy
 # Use go run so we use the exact pinned versions from the mod file.
 # Use ec for the opa and conftest commands so that our custom rego
 # functions are available.
-OPA=go run github.com/enterprise-contract/ec-cli opa
-CONFTEST=EC_EXPERIMENTAL=1 go run github.com/enterprise-contract/ec-cli
+EC=go run github.com/enterprise-contract/ec-cli
+OPA=$(EC) opa
+CONFTEST=EC_EXPERIMENTAL=1 $(EC)
 TKN=go run github.com/tektoncd/cli/cmd/tkn
 
 TEST_FILES = $(DATA_DIR)/rule_data.yml $(POLICY_DIR) checks
@@ -211,32 +212,26 @@ clean-data: ## Removes ephemeral files from the `./data` directory
 dummy-config: ## Create an empty configuration
 	@echo '{"config":{"policy":{}}}' | jq > $(CONFIG_DATA_FILE)
 
-# Set IMAGE as required like this:
-#   make fetch-att IMAGE=<someimage>
+# Use ec's policy-input output format to produce an accurate input.json for use when
+# hacking on rego rules. Add jq for extra readability even though it's less correct.
+# A public key is required here because ec has no --ignore-sig option.
+#
+# Set IMAGE and KEY as required like this:
+#   make fetch-att IMAGE=<imageref> KEY=<publickeyfile>
 #
 ifndef IMAGE
   IMAGE="quay.io/redhat-appstudio/ec-golden-image:latest"
 endif
 
-# jq snippets to massage the various pieces of data into the shape we want.
-# Each part gets deep merged together into a single object similar to the
-# input that ec-cli would present to the conftest evaluator. (Note that it
-# doesn't include everything - the `attestations[].extra.signatures` and
-# `image.signatures` fields are missing.)
-#
-JQ_COSIGN={"attestations": [.[].payload | @base64d | fromjson]}
-JQ_SKOPEO={"image": {"ref": "\(.Name)@\(.Digest)"}}
-JQ_SKOPEO_CONFIG={"image": {"config": .config}}
-JQ_SKOPEO_RAW={"image": {"parent": {"ref": .annotations["org.opencontainers.image.base.name"]}}}
+ifndef KEY
+  KEY="../ec-cli/key.pub"
+endif
 
 .PHONY: fetch-att
-fetch-att: clean-input ## Fetches attestation data and metadata for IMAGE, use `make fetch-att IMAGE=<ref>`
-	jq -s '.[0] * .[1] * .[2] * .[3]' \
-	  <( cosign download attestation $(IMAGE)       | jq -s '$(JQ_COSIGN)'     ) \
-	  <( skopeo inspect --no-tags docker://$(IMAGE) | jq '$(JQ_SKOPEO)'        ) \
-	  <( skopeo inspect --config  docker://$(IMAGE) | jq '$(JQ_SKOPEO_CONFIG)' ) \
-	  <( skopeo inspect --raw     docker://$(IMAGE) | jq '$(JQ_SKOPEO_RAW)'    ) \
-	  > $(INPUT_FILE)
+fetch-att: clean-input ## Fetches attestation data and metadata for IMAGE, use `make fetch-att IMAGE=<ref> KEY=<keyfile>`
+	@$(EC) validate image --image $(IMAGE) \
+	  --public-key <(cat $(KEY)) --ignore-rekor \
+	  --output policy-input | jq > $(INPUT_FILE)
 
 #--------------------------------------------------------------------
 

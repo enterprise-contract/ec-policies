@@ -253,10 +253,16 @@ fetch-pipeline: clean-input ## Fetches pipeline data for PIPELINE from your loca
 INPUT_DIR=./input
 INPUT_FILE=$(INPUT_DIR)/input.json
 
+ifndef NAMESPACE
+	NAMESPACE_FLAG=--all-namespaces
+else
+	NAMESPACE_FLAG=--namespace $(NAMESPACE)
+endif
+
 .PHONY: check-release
 check-release: ## Run policy evaluation for release
 	@$(CONFTEST) test $(INPUT_FILE) \
-	  --all-namespaces \
+	  $(NAMESPACE_FLAG) \
 	  --policy $(POLICY_DIR) \
 	  --data $(DATA_DIR) \
 	  --no-fail \

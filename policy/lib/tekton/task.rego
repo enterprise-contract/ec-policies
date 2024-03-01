@@ -173,6 +173,16 @@ git_clone_tasks(attestation) := [task |
 	count(trim_space(url)) > 0
 ]
 
+source_build_tasks(attestation) := [task |
+	some task in tasks(attestation)
+
+	url := trim_space(task_result(task, "SOURCE_IMAGE_URL"))
+	count(url) > 0
+
+	digest := trim_space(task_result(task, "SOURCE_IMAGE_DIGEST"))
+	count(digest) > 0
+]
+
 # task_data returns the data relating to the task. If the task is
 # referenced from a bundle, the "bundle" attribute is included.
 task_data(task) := info if {

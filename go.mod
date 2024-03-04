@@ -3,7 +3,7 @@ module github.com/enterprise-contract/ec-policies
 go 1.21.4
 
 require (
-	github.com/enterprise-contract/ec-cli v0.0.0-20240201092321-c9e618b1e5e2
+	github.com/enterprise-contract/ec-cli v0.0.0-20240301112431-11d744f18ead
 	github.com/open-policy-agent/conftest v0.49.1
 	github.com/styrainc/regal v0.17.0
 	github.com/tektoncd/cli v0.35.1
@@ -21,7 +21,7 @@ require (
 	cloud.google.com/go/storage v1.37.0 // indirect
 	contrib.go.opencensus.io/exporter/ocagent v0.7.1-0.20200907061046-05415f1de66d // indirect
 	contrib.go.opencensus.io/exporter/prometheus v0.4.2 // indirect
-	cuelang.org/go v0.7.0 // indirect
+	cuelang.org/go v0.7.1 // indirect
 	dario.cat/mergo v1.0.0 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
@@ -129,7 +129,7 @@ require (
 	github.com/eapache/go-xerial-snappy v0.0.0-20230731223053-c322873962e3 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.2 // indirect
-	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.33 // indirect
+	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.35 // indirect
 	github.com/evanphx/json-patch v5.9.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
 	github.com/fatih/color v1.16.0 // indirect
@@ -363,14 +363,14 @@ require (
 	gocloud.dev v0.36.0 // indirect
 	gocloud.dev/docstore/mongodocstore v0.36.0 // indirect
 	gocloud.dev/pubsub/kafkapubsub v0.36.0 // indirect
-	golang.org/x/crypto v0.18.0 // indirect
+	golang.org/x/crypto v0.19.0 // indirect
 	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
 	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/net v0.20.0 // indirect
+	golang.org/x/net v0.21.0 // indirect
 	golang.org/x/oauth2 v0.16.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
-	golang.org/x/term v0.16.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
+	golang.org/x/term v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.17.0 // indirect
@@ -389,11 +389,11 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/api v0.29.1 // indirect
-	k8s.io/apiextensions-apiserver v0.29.1 // indirect
-	k8s.io/apimachinery v0.29.1 // indirect
+	k8s.io/api v0.29.2 // indirect
+	k8s.io/apiextensions-apiserver v0.29.2 // indirect
+	k8s.io/apimachinery v0.29.2 // indirect
 	k8s.io/cli-runtime v0.29.1 // indirect
-	k8s.io/client-go v0.29.1 // indirect
+	k8s.io/client-go v0.29.2 // indirect
 	k8s.io/klog/v2 v2.120.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20240126223410-2919ad4fcfec // indirect
 	k8s.io/utils v0.0.0-20240102154912-e7106e64919e // indirect

@@ -415,6 +415,64 @@ test_multiple_git_clone_tasks if {
 	count(tkn.git_clone_tasks(attestation2)) == 2
 }
 
+test_source_build_task if {
+	expected := _good_source_build_task
+	lib.assert_equal([expected], tkn.source_build_tasks(_good_attestation))
+}
+
+test_source_build_task_not_found if {
+	missing_image_url := json.patch(_good_attestation, [{
+		"op": "add",
+		"path": "/statement/predicate/buildConfig/tasks/2/results/0/name",
+		"value": "ee-mah-gee-you-argh-el",
+	}])
+	count(tkn.source_build_tasks(missing_image_url)) == 0
+
+	missing_image_digest := json.patch(_good_attestation, [{
+		"op": "add",
+		"path": "/statement/predicate/buildConfig/tasks/2/results/1/name",
+		"value": "still-raw",
+	}])
+	count(tkn.source_build_tasks(missing_image_digest)) == 0
+
+	missing_results := json.remove(_good_attestation, ["/statement/predicate/buildConfig/tasks/2/results"])
+	count(tkn.source_build_tasks(missing_results)) == 0
+}
+
+test_multiple_source_build_tasks if {
+	task1 := json.patch(_good_source_build_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "source-build-1",
+	}])
+
+	task2 := json.patch(_good_source_build_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "source-build-2",
+	}])
+
+	task3 := json.patch(_good_source_build_task, [{
+		"op": "replace",
+		"path": "/ref/name",
+		"value": "source-build-3",
+	}])
+
+	attestation_with_3 := {"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": [task1, task2, task3]},
+	}}}
+
+	count(tkn.source_build_tasks(attestation_with_3)) == 3
+
+	attestation_with_2 := {"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": [task1, _good_build_task, task3]},
+	}}}
+
+	count(tkn.source_build_tasks(attestation_with_2)) == 2
+}
+
 test_task_data_bundle_ref if {
 	lib.assert_equal(
 		{
@@ -576,9 +634,17 @@ _good_git_clone_task := {
 	"ref": {"kind": "Task", "name": "git-clone", "bundle": _bundle},
 }
 
+_good_source_build_task := {
+	"results": [
+		{"name": "SOURCE_IMAGE_URL", "value": "registry.local/repo"},
+		{"name": "SOURCE_IMAGE_DIGEST", "value": "250e77f12a5ab6972a0895d290c4792f0a326ea8"},
+	],
+	"ref": {"kind": "Task", "name": "source-build", "bundle": _bundle},
+}
+
 _good_attestation := {"statement": {"predicate": {
 	"buildType": lib.tekton_pipeline_run,
-	"buildConfig": {"tasks": [_good_build_task, _good_git_clone_task]},
+	"buildConfig": {"tasks": [_good_build_task, _good_git_clone_task, _good_source_build_task]},
 }}}
 
 slsav1_attestation_local_spec := {

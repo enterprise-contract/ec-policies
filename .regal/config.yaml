@@ -13,6 +13,10 @@ rules:
       # We use TODO comments through out the code base to indicate work that
       # needs further refinement.
       level: ignore
+    external-reference:
+      # Although not using external-references in some places is a good idea, it can
+      # quickly turn into a hot mess of parameters being passed around.
+      level: ignore
     rule-length:
       # The test rules can be quite verbose as most of them use hard-coded data
       # which is very useful in tests.

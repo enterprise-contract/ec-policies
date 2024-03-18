@@ -84,6 +84,27 @@ deny contains result if {
 }
 
 # METADATA
+# title: Subscription annotation has expected value
+# description: >-
+#   Check the value of the operators.openshift.io/valid-subscription annotation from the
+#   ClusterServiceVersion manifest is in the expected format, i.e. JSON encoded non-empty array of
+#   strings.
+# custom:
+#   short_name: subscriptions_annotation_format
+#   failure_msg: "%s"
+#   solution: >-
+#     Update the ClusterServiceVersion manifest of the OLM bundle to set the subscription
+#     annotation to the expected value.
+#   collections:
+#   - redhat
+#   effective_on: 2024-04-18T00:00:00Z
+#
+deny contains result if {
+	some error_msg in _subscriptions_errors
+	result := lib.result_helper(rego.metadata.chain(), [error_msg])
+}
+
+# METADATA
 # title: Required OLM feature annotations list provided
 # description: >-
 #   Confirm the `required_olm_features_annotations` rule data was provided, since it's
@@ -239,3 +260,34 @@ _rule_data_errors contains msg if {
 }
 
 _rule_data_key := "required_olm_features_annotations"
+
+_subscriptions_errors contains msg if {
+	some manifest in _csv_manifests
+	not manifest.metadata.annotations[_subscription_annotation]
+	msg := sprintf("Value of %s annotation is missing", [_subscription_annotation])
+}
+
+_subscriptions_errors contains msg if {
+	some manifest in _csv_manifests
+	subscription := manifest.metadata.annotations[_subscription_annotation]
+	not json.is_valid(subscription)
+	msg := sprintf("Value of %s annotation is not valid JSON", [_subscription_annotation])
+}
+
+_subscriptions_errors contains msg if {
+	some manifest in _csv_manifests
+	subscription := manifest.metadata.annotations[_subscription_annotation]
+	some violation in json.match_schema(
+		subscription,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"items": {"type": "string"},
+			"uniqueItems": true,
+			"minItems": 1,
+		},
+	)[1]
+	msg := sprintf("Value of %s annotation is invalid: %s", [_subscription_annotation, violation.error])
+}
+
+_subscription_annotation := "operators.openshift.io/valid-subscription"

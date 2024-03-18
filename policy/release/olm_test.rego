@@ -29,6 +29,7 @@ manifest := {
 		"features.operators.openshift.io/token-auth-aws": "false",
 		"features.operators.openshift.io/token-auth-azure": "false",
 		"features.operators.openshift.io/token-auth-gcp": "false",
+		"operators.openshift.io/valid-subscription": `["spam"]`,
 	}},
 	"spec": {
 		"version": "0.1.3",
@@ -253,4 +254,44 @@ test_csv_semver_format_missing if {
 
 	lib.assert_equal_results(olm.deny, expected) with input.image.files as {"manifests/csv.yaml": csv}
 		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
+}
+
+test_subscriptions_annotation_format if {
+	path := "/metadata/annotations/operators.openshift.io~1valid-subscription"
+	files := {
+		"m/csv-no-annotations.yaml": json.patch(manifest, [{"op": "remove", "path": "/metadata/annotations"}]),
+		"m/csv-invalid-json.yaml": json.patch(manifest, [{"op": "add", "path": path, "value": "invalid-json"}]),
+		"m/csv-empty.yaml": json.patch(manifest, [{"op": "add", "path": path, "value": "[]"}]),
+		"m/csv-dupes.yaml": json.patch(manifest, [{"op": "add", "path": path, "value": `["spam", "spam"]`}]),
+		"m/csv-bad-type.yaml": json.patch(manifest, [{"op": "add", "path": path, "value": "[1]"}]),
+	}
+
+	expected := {
+		{
+			"code": "olm.subscriptions_annotation_format",
+			"msg": "Value of operators.openshift.io/valid-subscription annotation is missing",
+		},
+		{
+			"code": "olm.subscriptions_annotation_format",
+			"msg": "Value of operators.openshift.io/valid-subscription annotation is not valid JSON",
+		},
+		{
+			"code": "olm.subscriptions_annotation_format",
+			# regal ignore:line-length
+			"msg": "Value of operators.openshift.io/valid-subscription annotation is invalid: (Root): Array must have at least 1 items",
+		},
+		{
+			"code": "olm.subscriptions_annotation_format",
+			# regal ignore:line-length
+			"msg": "Value of operators.openshift.io/valid-subscription annotation is invalid: (Root): array items[0,1] must be unique",
+		},
+		{
+			"code": "olm.subscriptions_annotation_format",
+			# regal ignore:line-length
+			"msg": "Value of operators.openshift.io/valid-subscription annotation is invalid: 0: Invalid type. Expected: string, given: integer",
+		},
+	}
+
+	lib.assert_equal_results(olm.deny, expected) with input.image.files as files
+		with input.image.config.Labels as {olm.manifestv1: "m/"}
 }

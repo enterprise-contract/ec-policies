@@ -172,8 +172,8 @@ test_feature_annotations_format if {
 
 test_feature_annotations_format_custom_rule_data if {
 	bad_manifest := json.patch(manifest, [
-		{"op": "add", "path": "/metadata/annotations", "value": {"foo": "bar"}},
-		{"op": "add", "path": "/metadata/annotations", "value": {"spam": "true"}},
+		{"op": "add", "path": "/metadata/annotations/foo", "value": "bar"},
+		{"op": "add", "path": "/metadata/annotations/spam", "value": "true"},
 	])
 
 	expected := {{

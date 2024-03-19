@@ -3,7 +3,7 @@ module github.com/enterprise-contract/ec-policies
 go 1.21.4
 
 require (
-	github.com/enterprise-contract/ec-cli v0.0.0-20240301112431-11d744f18ead
+	github.com/enterprise-contract/ec-cli v0.2.0
 	github.com/open-policy-agent/conftest v0.50.0
 	github.com/styrainc/regal v0.18.0
 	github.com/tektoncd/cli v0.35.1
@@ -128,7 +128,7 @@ require (
 	github.com/eapache/go-xerial-snappy v0.0.0-20230731223053-c322873962e3 // indirect
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.2 // indirect
-	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.35 // indirect
+	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.37 // indirect
 	github.com/evanphx/json-patch v5.9.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
 	github.com/fatih/color v1.16.0 // indirect
@@ -296,7 +296,7 @@ require (
 	github.com/sigstore/cosign/v2 v2.2.3 // indirect
 	github.com/sigstore/fulcio v1.4.3 // indirect
 	github.com/sigstore/rekor v1.3.4 // indirect
-	github.com/sigstore/sigstore v1.8.1 // indirect
+	github.com/sigstore/sigstore v1.8.2 // indirect
 	github.com/sigstore/sigstore/pkg/signature/kms/aws v1.8.1 // indirect
 	github.com/sigstore/sigstore/pkg/signature/kms/azure v1.8.1 // indirect
 	github.com/sigstore/sigstore/pkg/signature/kms/gcp v1.8.1 // indirect
@@ -314,7 +314,7 @@ require (
 	github.com/spf13/viper v1.18.2 // indirect
 	github.com/spiffe/go-spiffe/v2 v2.1.7 // indirect
 	github.com/stoewer/go-strcase v1.3.0 // indirect
-	github.com/stretchr/testify v1.8.4 // indirect
+	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/stuart-warren/yamlfmt v0.2.0 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/syndtr/goleveldb v1.0.1-0.20220721030215-126854af5e6d // indirect
@@ -366,7 +366,7 @@ require (
 	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/net v0.22.0 // indirect
-	golang.org/x/oauth2 v0.16.0 // indirect
+	golang.org/x/oauth2 v0.17.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/term v0.18.0 // indirect
@@ -400,7 +400,7 @@ require (
 	muzzammil.xyz/jsonc v1.0.0 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
 	oras.land/oras-go/v2 v2.4.0 // indirect
-	sigs.k8s.io/controller-runtime v0.17.0 // indirect
+	sigs.k8s.io/controller-runtime v0.17.2 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/kustomize/api v0.16.0 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.16.0 // indirect

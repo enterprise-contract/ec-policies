@@ -1,0 +1,212 @@
+= Trusting Tasks
+
+:trusted-tasks: trusted_tasks.adoc
+:attestation-task-bundle: release_policy#attestation_task_bundle_package
+:image-built-by-trusted-task: release_policy#slsa_build_scripted_build__image_built_by_trusted_task
+:build-definitions: https://github.com/redhat-appstudio/build-definitions
+:ec-policies: https://github.com/enterprise-contract/ec-policies
+:ec-track-bundle: https://enterprisecontract.dev/docs/ec-cli/main/ec_track_bundle.html
+:tekton-bundles: https://tekton.dev/docs/pipelines/pipelines/#tekton-bundles
+
+This document details the process of trusting a Task originating in a
+link:{tekton-bundles}[Tekton Bundle] or git repository. The term
+xref:{trusted-tasks}[trusted Task] refers to a Task that has its unique
+reference, a image digest or a git commit id listed in the Trusted Task list.
+
+[NOTE]
+.Former naming: Acceptable bundles
+====
+This functionality was previously named Acceptable bundles. Trusted task is the
+new name for a very similar approach of creating an allow list of Tasks by
+tracking their origin. To maintain backward compatibility the data formats for
+acceptable bundles (under the `task-bundles` key) and the new data formats for
+trusted tasks (under the `trusted-tasks` key) are generated. Here we focus
+solely on the new format.
+====
+
+When evaluating a certain input, certain policy rules enforce that only trusted
+tasks were used. The xref:{attestation-task-bundle}[Attestation Task Bundle]
+package and the xref:{:image-built-by-trusted-task:}[Image built by trusted
+Task], for example, performs this check on SLSA Provenance attestations.
+
+To reduce errors, use the link:{ec-track-bundle}[ec track bundle] command to
+manage entries in the list of trusted tasks. The command adds a list of Tekton
+Bundles and git repository information to an existing list of trusted tasks. It
+can also generate a new list of trusted tasks.
+
+For example, consider the two hypothetical Tekton Bundle,
+`example.com/org/bacon:v1.0` and  `example.com/org/spam:v2.0`. These Tekton
+Bundles each include one or more Tekton Tasks. Also let's consider a git
+repository hosted at `gitforge.io/org/tasks.git` with the Task definition in the
+`tasks/my-task/0.3/my-task.yaml` path within it. The snippet below illustrates
+how to generate a new list of trusted tasks containing these Tasks.
+
+[,bash]
+----
+$ date
+Thu Apr 13 02:21:56 PM EDT 2023
+
+$ ec track tekton-task \
+    --bundle example.com/org/bacon:v1.0 \
+    --bundle example.com/org/spam:v2.0 \
+    --git git+https://gitforge.io/org/tasks.git//tasks/my-task/0.3/my-task.yaml@7e364e56293bb98cae1b55fd835f5991c4e96e7d
+    --output trusted-tasks.yaml
+
+$ cat trusted-tasks.yaml
+---
+trusted_tasks:
+  oci://example.com/org/bacon:v1.0:
+    - effective_on: "2023-05-14T00:00:00Z"
+      ref: sha256:311fe3feed16b9cd8df0f8b1517be5cb86048707df4889ba8dc37d4d68866d02
+  oci://example.com/org/spam:v2.0:
+    - effective_on: "2023-05-14T00:00:00Z"
+      ref: sha256:5a2928bc8e2936d8885460d7b7f22e9d407bca1ed847d709b7fd4115a7679e3b
+  git+https://gitforge.io/org/tasks.git//tasks/my-task/0.3/my-task.yaml:
+    - effective_on: "2023-05-14T00:00:00Z"
+      ref: 7e364e56293bb98cae1b55fd835f5991c4e96e7d
+
+----
+
+NOTE: The `ec track tekton-task` command marks new entries as required in 30 days. This gives users a
+reasonable time-window to update.
+
+Now, imagine a new Tekton Bundle is available at `example.com/org/bacon:v1.1`. Add this new Tekton
+Bundle to the existing list of trusted Tasks like this:
+
+[,bash]
+----
+$ ec track tekton-task \
+    --bundle example.com/org/bacon:v1.1 \
+    --input trusted-tasks.yaml \
+    --replace
+
+$ cat trusted-tasks.yaml
+---
+trusted_tasks:
+  oci://example.com/org/bacon:v1.1:
+    - effective_on: "2023-05-14T00:00:00Z"
+      ref: sha256:9cca0703342e24806a9f64e08c053dca7f2cd90f10529af8ea872afb0a0c77d4
+  oci://example.com/org/bacon:v1.0:
+    - effective_on: "2023-05-14T00:00:00Z"
+      ref: sha256:311fe3feed16b9cd8df0f8b1517be5cb86048707df4889ba8dc37d4d68866d02
+  oci://example.com/org/spam:v2.0:
+    - effective_on: "2023-05-14T00:00:00Z"
+      ref: sha256:5a2928bc8e2936d8885460d7b7f22e9d407bca1ed847d709b7fd4115a7679e3b
+  git+https://gitforge.io/org/tasks.git//tasks/my-task/0.3/my-task.yaml:
+    - effective_on: "2023-05-14T00:00:00Z"
+      ref: 7e364e56293bb98cae1b55fd835f5991c4e96e7d
+----
+
+Be sure to include the `trusted-tasks.yaml` file in a data source in your policy configuration.
+
+== An Example
+
+Automation using the process described above manages the trusted Tasks used in
+Konflux. This section describes how.
+
+The repository link:{build-definitions}[redhat-appstudio/build-definitions]
+contains all the Tekton definitions used by Konflux. The CI/CD process on that
+repository performs the following actions:
+
+1. Determine which Tekton definitions have modifications.
+2. Build a new Tekton Bundle for each modified Tekton definition.
+3. Use the `ec track trusted-tesk` command to update the list of trusted Tasks
+   held in `quay.io/redhat-appstudio-tekton-catalog/data-acceptable-bundles` image.
+
+The new Tasks defined in that repository become trusted Tasks as soon as the
+pull request merges.
+
+== Adding a new trusted Task to Konflux
+
+The process to add a new task defintion to the existing Red Hat trusted task
+list is relatively uncomplicated and is detailed below.
+
+Before adding a new task, however, there are a few things to consider:
+
+* The added task should have a wide audience for usage. Tasks added to the build
+  definitions repository should not be specific to a single product or team.
+* Submitting a task to the build-definitions repository has the practical effect
+  of marking a task as "trusted" by Red Hat.
+* To discuss your idea for a new task, visit the #forum-konflux-build channel on
+  the Red Hat Developer Slack.
+
+In order to add a new task to the existing set of Red Hat trusted Tasks, the
+process is as follows:
+
+* https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo[Fork]
+  the https://github.com/redhat-appstudio/build-definitions[build defintions] repository.
+* Create and submit a https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request[pull request]
+  with your new task.
+* Once the pull request is submitted and approvevd, the CI process will
+  automatically build the new task and add it to the list of trusted Tasks.
+* Additionally, you can view the Task bundle in the
+   https://quay.io/redhat-appstudio-tekton-catalog[Red Hat AppStudio Tekton Catalog]
+
+== Adding a custom task to the trusted task list
+
+Some users may want to add a custom build task to the default trusted Task
+list without pushing that task to the upstream trusted Task list. Below is a
+possible approach to make that happen.
+
+EC requires a customized policy in order to accept a custom task. Such a policy
+must include an additional data source with task provenance information and
+digests relevant to the new custom task.
+
+For example, starting with
+https://github.com/enterprise-contract/config/blob/main/redhat-no-hermetic/policy.yaml[Red Hat's non-hermetic build policy],
+a new data source can be added under the `sources.data` key. See
+https://github.com/simonbaird/securesign-ec-config/blob/main/policy.yaml#L24[this policy] for a complete example.
+
+[,bash]
+---
+name: Secure Sign Custom Enterprise Contract Policy
+
+description: >-
+  Based on the standard Red Hat (non hermetic) policy
+  (see https://github.com/enterprise-contract/config/blob/main/redhat-no-hermetic/policy.yaml)
+  but with one additional data source.
+
+publicKey: "k8s://openshift-pipelines/public-key"
+
+sources:
+  - name: Default with extra source
+    policy:
+      - github.com/enterprise-contract/ec-policies//policy/lib
+      - github.com/enterprise-contract/ec-policies//policy/release
+
+    data:
+      - oci::quay.io/redhat-appstudio-tekton-catalog/data-acceptable-bundles:latest
+      - github.com/release-engineering/rhtap-ec-policy//data
+
+      # This is the one additional data source
+      # See https://github.com/simonbaird/securesign-ec-config/tree/main/policy-data
+      - github.com/simonbaird/securesign-ec-config//policy-data?ref=main
+
+    config:
+      include:
+        - '@redhat'
+      exclude:
+        - hermetic_build_task
+        - tasks.required_tasks_found:prefetch-dependencies
+----
+
+That custom data source should be kept updated as new Tekton task bundles are
+pushed, perhaps via some automation or using
+https://enterprisecontract.dev/docs/ec-cli/main/ec_track_bundle.html[`ec track tekton-task`].
+
+The customized policy can be provided to EC with the `--policy` parameter, and
+should allow custom tasks to validate using the new data source.
+
+To confirm it works as expected, you can run EC locally, for example:
+
+[,bash]
+----
+$ export IMAGE=quay.io/redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/rekor-server@sha256:7fb224c62e5ea5b43ad123529487f07553626e9cd1f908d515114ee414679d6b
+
+$ export POLICY=github.com/simonbaird/securesign-ec-config
+
+$ ec validate image --image $IMAGE --policy $POLICY --public-key <(cat key.pub) --ignore-rekor --output data=data.yaml --output policy-input=policy-input.json --output yaml | yq .components[].violations
+---
+
+Note that the `--output data` and `--output policy-input` flags are not strictly
+necessary, but may be helpful for troubleshooting.

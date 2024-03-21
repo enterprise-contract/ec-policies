@@ -34,7 +34,7 @@ manage entries in the list of trusted tasks. The command adds a list of Tekton
 Bundles and git repository information to an existing list of trusted tasks. It
 can also generate a new list of trusted tasks.
 
-For example, consider the two hypothetical Tekton Bundle,
+For example, consider the two hypothetical Tekton Bundles,
 `example.com/org/bacon:v1.0` and  `example.com/org/spam:v2.0`. These Tekton
 Bundles each include one or more Tekton Tasks. Also let's consider a git
 repository hosted at `gitforge.io/org/tasks.git` with the Task definition in the

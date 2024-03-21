@@ -60,7 +60,7 @@ trusted_tasks: <2>
 
 ----
 <1> Legacy format for tracking acceptable bundles, here only for backward
-compatibility
+compatibility. Will be removed entirely in future.
 <2> Trusted Tasks list in the new format, containing:
 <3> Provenance URI, i.e. where the Task can be retrieved from
 <4> The _effective on_ time

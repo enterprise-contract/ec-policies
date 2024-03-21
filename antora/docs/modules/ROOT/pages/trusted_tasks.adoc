@@ -14,7 +14,7 @@ used.
 The list of trusted Tasks is time based. A Task that is trusted today is not
 necessarily trusted tomorrow. The trusted Task list may contain bundles that are
 "too old" and no longer acceptable. The reason for this behavior is to allow
-users a  certain period of time to upgrade to a newer versio nof the Task.
+users a certain period of time to upgrade to a newer version of the Task.
 
 Any record in the trusted Task List with an effective date in the future, and
 the record with the most recent effective date *not* in the future are

@@ -48,14 +48,14 @@ pipelinerun_attestations := att if {
 }
 
 pipelinerun_slsa_provenance02 := [att |
-	some att in input.attestations
+	some att in _input_attestations
 	att.statement.predicate.buildType in pipelinerun_att_build_types
 ]
 
 # TODO: Make this work with pipelinerun_attestations above so policy rules can be
 # written for either.
 pipelinerun_slsa_provenance_v1 := [att |
-	some att in input.attestations
+	some att in _input_attestations
 	att.statement.predicateType == "https://slsa.dev/provenance/v1"
 
 	att.statement.predicate.buildDefinition.buildType in slsav1_pipelinerun_att_build_types
@@ -134,3 +134,48 @@ task_succeeded(name) if {
 	task := task_in_pipelinerun(name)
 	task.status == "Succeeded"
 }
+
+_input_attestations := atts if {
+	# For ec validate image.
+	# We might not want this in the long term, but let's try to detect
+	# how we're being called. This is the "normal" situation when user
+	# runs `ec validate image` - the attestations were fetched already and
+	# are available in the input.
+	atts := input.attestations
+} else := atts if {
+	# For ec validate input.
+	# This is the new experimental part - extract the attestations at
+	# evaluation time
+	_default_sigstore_opts := {
+		"certificate_identity": "",
+		"certificate_identity_regexp": "",
+		"certificate_oidc_issuer": "",
+		"certificate_oidc_issuer_regexp": "",
+		"ignore_rekor": false,
+		"public_key": "",
+		"rekor_url": "",
+	}
+
+	# See hack/builtin-experiments/demo.sh in the ec-cli repo
+	_sigstore_opts := object.union(_default_sigstore_opts, data.sigstore_opts)
+
+	# Coerce into string since I think that is required
+	_image_ref := sprintf("%s", [input.image.ref])
+
+	# Get the attestations
+	info := ec.sigstore.verify_attestation(_image_ref, _sigstore_opts)
+
+	# This doesn't work for some reason.
+	# Todo: Fix this and add more checks here probably.
+	#count(info.errors) == 0
+
+	atts := [a |
+		some att in info.attestations
+		a := {
+			"statement": att.statement,
+			# Fix me: I think the keys inside this are slightly different to
+			# what we're expecting, e.g. "signature" instead of "sig"
+			"signatures": att.signatures,
+		}
+	]
+} else := []

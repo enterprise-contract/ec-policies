@@ -5,7 +5,7 @@ go 1.21.4
 require (
 	github.com/enterprise-contract/ec-cli v0.2.0
 	github.com/open-policy-agent/conftest v0.50.0
-	github.com/styrainc/regal v0.18.0
+	github.com/styrainc/regal v0.19.0
 	github.com/tektoncd/cli v0.36.0
 	oras.land/oras v1.1.0
 )

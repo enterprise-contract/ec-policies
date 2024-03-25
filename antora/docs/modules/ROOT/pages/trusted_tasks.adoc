@@ -1,0 +1,69 @@
+= Trusted Tasks
+
+:numbered:
+
+== Task Provenance using trusted Task list
+
+The Enterprise Contract requires that all Konflux pipelines
+use only tasks with the recorded provenance in the trusted Task list. See also
+the "Task bundle is not acceptable"
+xref:release_policy#unacceptable_task_bundle[release] and
+xref:pipeline_policy#unacceptable_task_bundle[policy] rules where this list is
+used.
+
+The list of trusted Tasks is time based. A Task that is trusted today is not
+necessarily trusted tomorrow. The trusted Task list may contain bundles that are
+"too old" and no longer acceptable. The reason for this behavior is to allow
+users a certain period of time to upgrade to a newer version of the Task.
+
+Any record in the trusted Task List with an effective date in the future, and
+the record with the most recent effective date *not* in the future are
+trusted. For example, consider a list that includes the following acceptable
+tasks:
+
+* a, effective on 2022-10-23
+* b, effective on 2022-10-22
+* c, effective on 2022-10-20
+* d, effective on 2022-10-19
+
+If today is 2022-10-21, then the Tasks a, b, and c are acceptable, while d is not.
+
+Even when using a Task recorded in the trusted Task list, some policy rules may
+emit a warning if the reference used is not the latest one on the list. This is
+an attempt to notify users that although there are no violations today, an
+update is required for continued compliance. In the example above, using b or c
+would result in such a warning.
+
+The process of adding Tasks to the list of trusted Tasks is described
+xref:trusting_tasks.adoc[here].
+
+== Trusted Task list
+
+The structure of the trusted Task list is best illustrated by an example:
+
+[source,yaml]
+----
+task-bundles: <1>
+  registry.io/org/task-bundle:
+    - digest: sha256:...
+      effective_on: "2023-05-14T00:00:00Z"
+      tag: latest
+trusted_tasks: <2>
+  git+https://gitforge.io/org/tasks.git//tasks/my-task/0.1/my-task.yaml: <3>
+    - effective_on: "2023-05-14T00:00:00Z" <4>
+      expires_on: "2024-05-14T00:00:00Z" <5>
+      ref: 3672a... <6>
+  oci://registry.io/org/task-bundle:latest: <3>
+    - effective_on: "2023-05-14T00:00:00Z" <4>
+      expires_on: "2024-05-14T00:00:00Z" <5>
+      ref: sha256:... <6>
+
+----
+<1> Legacy format for tracking acceptable bundles, here only for backward
+compatibility. Will be removed entirely in future.
+<2> Trusted Tasks list in the new format, containing:
+<3> Provenance URI, i.e. where the Task can be retrieved from
+<4> The _effective on_ time
+<5> The _expires on_ time
+<6> Unique reference of the Task within the provenance URI (git commit id or
+image digest)

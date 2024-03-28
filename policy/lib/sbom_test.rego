@@ -24,3 +24,11 @@ test_cyclonedx_sboms if {
 	lib.assert_equal(sbom.cyclonedx_sboms, expected) with input.attestations as attestations
 		with input.image as image
 }
+
+test_opt_in_oci_sbom if {
+	lib.assert_equal(sbom._cyclonedx_sboms_from_oci, [])
+	lib.assert_equal(sbom.cyclonedx_sboms, [])
+
+	lib.assert_equal(sbom._cyclonedx_sboms_from_oci, [{}]) with sbom.oci._cyclonedx_sboms as [{}]
+	lib.assert_equal(sbom.cyclonedx_sboms, [{}]) with sbom.oci._cyclonedx_sboms as [{}]
+}

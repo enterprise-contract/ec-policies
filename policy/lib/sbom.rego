@@ -2,7 +2,10 @@ package lib.sbom
 
 import rego.v1
 
-cyclonedx_sboms := array.concat(_cyclonedx_sboms_from_image, _cyclonedx_sboms_from_attestations)
+cyclonedx_sboms := array.concat(
+	array.concat(_cyclonedx_sboms_from_image, _cyclonedx_sboms_from_attestations),
+	_cyclonedx_sboms_from_oci,
+)
 
 _cyclonedx_sboms_from_image := [sbom |
 	some path in ["root/buildinfo/content_manifests/sbom-cyclonedx.json"]
@@ -17,3 +20,7 @@ _cyclonedx_sboms_from_attestations := [sbom |
 	statement.predicateType == "https://cyclonedx.org/bom"
 	sbom := statement.predicate
 ]
+
+_cyclonedx_sboms_from_oci := s if {
+	s := data.lib.sbom.oci._cyclonedx_sboms
+} else := []

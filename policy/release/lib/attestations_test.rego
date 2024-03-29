@@ -32,7 +32,7 @@ valid_slsav1_att := {"statement": {
 	}},
 }}
 
-acceptable_bundle_ref := "registry.img/acceptable@sha256:digest"
+trusted_bundle_ref := "registry.img/acceptable@sha256:digest"
 
 # This is used through the tests to generate an attestation of a PipelineRun
 # with an inline Task definition, look at using att_mock_helper_ref to generate
@@ -56,17 +56,6 @@ _task_ref(_, bundle_ref) := r if {
 # Use:
 # att_mock_helper_ref_plain_result(
 #	"result_name", "result_value", "task_name", "registry.io/name:tag...")
-# Make note of `bundle_data` and `acceptable_bundle_ref` in the data.lib.bundles
-# package that helps setup the acceptable bundle, for example:
-#
-# import data.lib
-# import data.lib.bundles
-# attestations := [att_mock_helper_ref_plain_result(
-#	"RESULT_NAME", "result_value", "task-name", bundles.acceptable_bundle_ref
-# )]
-# {...} == deny
-#	with data.trusted_tasks as trusted_tasks
-#	with input.attestations as attestations
 #
 # NOTE: In most cases, a task produces a result that is JSON encoded. When mocking results
 # from such tasks, prefer the att_mock_helper_ref function instead.
@@ -87,17 +76,6 @@ att_mock_helper_ref_plain_result(name, result, task_name, bundle_ref) := {"state
 # Use:
 # att_mock_helper_ref(
 # 	"result_name", {"value1": 1, "value2", "b"}, "task_name", "registry.io/name:tag...")
-# Make note of `bundle_data` and `acceptable_bundle_ref` in the data.lib.bundles
-# package that helps setup the acceptable bundle, for example:
-#
-# import data.lib
-# import data.lib.bundles
-# attestations := [att_mock_helper_ref(
-#	"RESULT_NAME", {...}, "task-name", bundles.acceptable_bundle_ref
-# )]
-# {...} == deny
-#	with data.trusted_tasks as trusted_tasks
-#	with input.attestations as attestations
 #
 # NOTE: If the task being mocked does not produced a JSON encoded result, use
 # att_mock_helper_ref_plain_result instead.
@@ -296,7 +274,7 @@ test_results_from_tests if {
 			"result": "SUCCESS",
 			"foo": "bar",
 		},
-		"mytask", acceptable_bundle_ref,
+		"mytask", trusted_bundle_ref,
 	)
 	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att1]
 
@@ -306,7 +284,7 @@ test_results_from_tests if {
 			"result": "SUCCESS",
 			"foo": "bar",
 		},
-		"mytask", acceptable_bundle_ref,
+		"mytask", trusted_bundle_ref,
 	)
 	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att2]
 
@@ -319,7 +297,7 @@ test_results_from_tests if {
 				"value": json.marshal({"result": "SUCCESS", "foo": "bar"}),
 			}],
 		),
-		acceptable_bundle_ref,
+		trusted_bundle_ref,
 	)])
 	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att3]
 }

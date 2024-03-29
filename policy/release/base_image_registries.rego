@@ -3,7 +3,7 @@
 # title: Base image checks
 # description: >-
 #   This package is responsible for verifying the base (parent) images
-#   reported in the attestation are acceptable.
+#   reported in the attestation are allowed.
 #
 package policy.release.base_image_registries
 

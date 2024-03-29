@@ -52,7 +52,7 @@ test_bundle_reference_valid if {
 }
 
 # All good when the most recent bundle is used.
-test_acceptable_bundle_up_to_date if {
+test_trusted_bundle_up_to_date if {
 	tasks := [{"name": "my-task", "taskRef": {"bundle": "reg.com/repo:v2@sha256:abc"}}]
 
 	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks
@@ -63,7 +63,7 @@ test_acceptable_bundle_up_to_date if {
 }
 
 # All good when the most recent bundle is used for a version that is still maintained
-test_acceptable_bundle_up_to_date_maintained_version if {
+test_trusted_bundle_up_to_date_maintained_version if {
 	tasks := [{"name": "my-task", "taskRef": {"bundle": "reg.com/repo:v3@sha256:ghi"}}]
 
 	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks
@@ -73,8 +73,8 @@ test_acceptable_bundle_up_to_date_maintained_version if {
 		with data.trusted_tasks as trusted_tasks
 }
 
-# Warn about out of date bundles that are still acceptable.
-test_acceptable_bundle_out_of_date_past if {
+# Warn about out of date bundles that are still trusted.
+test_trusted_bundle_out_of_date_past if {
 	tasks := [{"name": "my-task-1", "taskRef": {"bundle": "reg.com/repo:v2@sha256:bcd"}}]
 
 	lib.assert_equal_results(task_bundle.warn, {{
@@ -90,14 +90,14 @@ test_acceptable_bundle_out_of_date_past if {
 }
 
 # Deny bundles that are no longer active.
-test_acceptable_bundle_expired if {
+test_trusted_bundle_expired if {
 	tasks := [{"name": "my-task", "taskRef": {"bundle": "reg.com/repo@sha256:def"}}]
 
 	lib.assert_empty(task_bundle.warn) with input.spec.tasks as tasks
 		with data.trusted_tasks as trusted_tasks
 
 	lib.assert_equal_results(task_bundle.deny, {{
-		"code": "task_bundle.unacceptable_task_bundle",
+		"code": "task_bundle.untrusted_task_bundle",
 		"msg": "Pipeline task 'my-task' uses an untrusted task bundle 'reg.com/repo@sha256:def'",
 	}}) with input.spec.tasks as tasks
 		with data.trusted_tasks as trusted_tasks

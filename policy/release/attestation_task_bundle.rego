@@ -106,7 +106,7 @@ warn contains result if {
 #   For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
 #   a trusted task.
 # custom:
-#   short_name: task_ref_bundles_acceptable
+#   short_name: task_ref_bundles_trusted
 #   failure_msg: Pipeline task '%s' uses an untrusted task bundle '%s'
 #   solution: >-
 #     For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
@@ -117,8 +117,6 @@ warn contains result if {
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	# some task in bundles.unacceptable_task_bundle(lib.tasks_from_pipelinerun)
-	# result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task), bundles.bundle(task)])
 	some task in tkn.untrusted_task_refs(lib.tasks_from_pipelinerun)
 	bundle := bundles.bundle(task)
 	bundle != ""
@@ -126,12 +124,12 @@ deny contains result if {
 }
 
 # METADATA
-# title: An acceptable Tekton bundles list was provided
+# title: A trusted Tekton bundles list was provided
 # description: >-
 #   Confirm the `trusted_tasks` rule data was provided, since it's
 #   required by the policy rules in this package.
 # custom:
-#   short_name: acceptable_bundles_provided
+#   short_name: trusted_bundles_provided
 #   failure_msg: Missing required trusted_tasks data
 #   solution: >-
 #     Create a lsit of trusted tasks. This is a list of task bundles with a top-level key

@@ -29,8 +29,8 @@ deny contains result if {
 # METADATA
 # title: Required tasks found in pipeline definition
 # description: >-
-#   Produce a warning if a task list does not exist in the acceptable
-#   bundles rule data.
+#   Produce a warning if a list of current or future required tasks does not exist
+#   in the rule data.
 # custom:
 #   short_name: required_tasks_found
 #   failure_msg: Required tasks do not exist for pipeline %q
@@ -105,14 +105,14 @@ deny contains result if {
 # _missing_tasks returns a set of task names that are in the given
 # required_tasks, but not in the pipeline definition.
 _missing_tasks(required_tasks) := {task |
-	acceptable := [task_name |
+	trusted := [task_name |
 		some task in tkn.tasks(input)
 		tkn.is_trusted_task(task)
 		some task_name in tkn.task_names(task)
 	]
 
 	some required_task in required_tasks
-	some task in _any_missing(required_task, acceptable)
+	some task in _any_missing(required_task, trusted)
 }
 
 _any_missing(required, tasks) := missing if {

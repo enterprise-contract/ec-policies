@@ -75,11 +75,11 @@ warn contains result if {
 }
 
 # METADATA
-# title: Task bundle is not acceptable
+# title: Task bundle is not trusted
 # description: >-
 #   For each Task in the Pipeline definition, check if the Tekton Bundle used is a trusted task.
 # custom:
-#   short_name: unacceptable_task_bundle
+#   short_name: untrusted_task_bundle
 #   failure_msg: Pipeline task '%s' uses an untrusted task bundle '%s'
 #
 deny contains result if {

@@ -42,6 +42,27 @@ _source_image_errors contains error if {
 	error := sprintf("Source image has no layers %q", [img])
 }
 
+# METADATA
+# title: Signed
+# description: Verify the source container image is signed.
+# custom:
+#   short_name: signed
+#   failure_msg: "%s"
+#   depends_on:
+#   - source_image.exists
+#
+deny contains result if {
+	some error in _source_image_sig_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
+_source_image_sig_errors contains error if {
+	some img in _source_images
+	info := ec.sigstore.verify_image(img, lib.sigstore_opts)
+	some raw_error in info.errors
+	error := sprintf("Image signature verification failed for %s: %s", [img, raw_error])
+}
+
 # _source_images is a set of image references. Each corresponding to the
 # SOURCE_IMAGE_URL@SOURCE_IMAGE_DIGEST parameter of a source-build Task.
 _source_images contains img if {

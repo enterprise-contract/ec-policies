@@ -17,6 +17,9 @@ import data.lib.tkn
 # custom:
 #   short_name: exists
 #   failure_msg: "%s"
+#   collections:
+#   - redhat
+#   effective_on: 2024-05-04T00:00:00Z
 #
 deny contains result if {
 	some error in _source_image_errors
@@ -50,6 +53,9 @@ _source_image_errors contains error if {
 #   failure_msg: "%s"
 #   depends_on:
 #   - source_image.exists
+#   collections:
+#   - redhat
+#   effective_on: 2024-05-04T00:00:00Z
 #
 deny contains result if {
 	some error in _source_image_sig_errors

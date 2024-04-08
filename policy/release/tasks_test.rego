@@ -470,7 +470,7 @@ test_future_one_of_required_tasks_missing if {
 		with input.attestations as attestation_v1
 }
 
-test_required_task_from_unacceptable if {
+test_required_task_from_untrusted if {
 	attestations := _attestations_with_tasks(_expected_required_tasks - {"buildah"}, [{
 		"name": "buildah",
 		"ref": {"name": "buildah", "kind": "Task", "bundle": "registry.io/repository/unacceptable:0.1"},
@@ -482,7 +482,7 @@ test_required_task_from_unacceptable if {
 			"term": "conftest-clair",
 		},
 		{
-			"code": "tasks.required_task_unacceptable_found",
+			"code": "tasks.required_untrusted_task_found",
 			"msg": "Required task \"buildah\" is required and present but not from a trusted task",
 			"term": "buildah",
 		},

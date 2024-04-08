@@ -112,7 +112,7 @@ test_bundle_reference_digest_doesnt_match if {
 		with data.trusted_tasks as trusted_tasks
 
 	lib.assert_equal_results(attestation_task_bundle.deny, {{
-		"code": "attestation_task_bundle.task_ref_bundles_acceptable",
+		"code": "attestation_task_bundle.task_ref_bundles_trusted",
 		"msg": "Pipeline task 'my-task' uses an untrusted task bundle 'reg.com/repo:latest@sha256:abc'",
 	}}) with input.attestations as attestations
 		with data.trusted_tasks as trusted_tasks
@@ -136,14 +136,14 @@ test_bundle_reference_repo_not_present if {
 		with data.trusted_tasks as trusted_tasks
 
 	lib.assert_equal_results(attestation_task_bundle.deny, {{
-		"code": "attestation_task_bundle.task_ref_bundles_acceptable",
+		"code": "attestation_task_bundle.task_ref_bundles_trusted",
 		"msg": "Pipeline task 'my-task' uses an untrusted task bundle 'reg.com/super-custom-repo:v1@sha256:abc'",
 	}}) with input.attestations as attestations
 		with data.trusted_tasks as trusted_tasks
 }
 
 # All good when the most recent bundle is used.
-test_acceptable_bundle_up_to_date if {
+test_trusted_bundle_up_to_date if {
 	image := "reg.com/repo:v2@sha256:abc"
 	attestations := [
 		lib_test.mock_slsav02_attestation_bundles([image]),
@@ -157,8 +157,8 @@ test_acceptable_bundle_up_to_date if {
 		with data.trusted_tasks as trusted_tasks
 }
 
-# Warn about out of date bundles that are still acceptable.
-test_acceptable_bundle_out_of_date_past if {
+# Warn about out of date bundles that are still trusted.
+test_trusted_bundle_out_of_date_past if {
 	images := ["reg.com/repo:v2@sha256:bcd"]
 	attestations := [
 		lib_test.mock_slsav02_attestation_bundles(images),
@@ -178,7 +178,7 @@ test_acceptable_bundle_out_of_date_past if {
 }
 
 # Deny bundles that are no longer active.
-test_acceptable_bundle_expired if {
+test_trusted_bundle_expired if {
 	image := ["reg.com/repo:v1@sha256:def"]
 	attestations := [
 		lib_test.mock_slsav02_attestation_bundles(image),
@@ -188,16 +188,15 @@ test_acceptable_bundle_expired if {
 		with data.trusted_tasks as trusted_tasks
 
 	lib.assert_equal_results(attestation_task_bundle.deny, {{
-		"code": "attestation_task_bundle.task_ref_bundles_acceptable",
+		"code": "attestation_task_bundle.task_ref_bundles_trusted",
 		"msg": "Pipeline task 'task-run-0' uses an untrusted task bundle 'reg.com/repo:v1@sha256:def'",
 	}}) with input.attestations as attestations
 		with data.trusted_tasks as trusted_tasks
 }
 
-# TODO: Re-enable this
-test_acceptable_bundles_provided if {
+test_trusted_bundles_provided if {
 	expected := {{
-		"code": "attestation_task_bundle.acceptable_bundles_provided",
+		"code": "attestation_task_bundle.trusted_bundles_provided",
 		"msg": "Missing required trusted_tasks data",
 	}}
 	lib.assert_equal_results(expected, attestation_task_bundle.deny) with data.trusted_tasks as {}

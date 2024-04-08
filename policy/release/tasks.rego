@@ -102,7 +102,7 @@ deny contains result if {
 # description: >-
 #   Ensure that the all required tasks are resolved from trusted tasks.
 # custom:
-#   short_name: required_task_unacceptable_found
+#   short_name: required_untrusted_task_found
 #   failure_msg: '%s is required and present but not from a trusted task'
 #   solution: >-
 #     Make sure all required tasks in the build pipeline are resolved from

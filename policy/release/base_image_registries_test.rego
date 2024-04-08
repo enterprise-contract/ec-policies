@@ -9,7 +9,7 @@ import data.policy.release.base_image_registries
 
 mock_bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
 
-test_acceptable_base_images if {
+test_allowed_base_images if {
 	slsav1_task_with_result := tkn_test.slsav1_task_result(
 		"buildah-task-1",
 		[{
@@ -60,7 +60,7 @@ test_empty_base_images if {
 	lib.assert_empty(base_image_registries.deny) with input.attestations as attestations
 }
 
-test_unacceptable_base_images if {
+test_disallowed_base_images if {
 	slsav1_task_with_result := tkn_test.slsav1_task_result(
 		"buildah-task-1",
 		[{

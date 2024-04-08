@@ -6,19 +6,18 @@
 
 The Enterprise Contract requires that all Konflux pipelines
 use only tasks with the recorded provenance in the trusted Task list. See also
-the "Task bundle is not acceptable"
-xref:release_policy#unacceptable_task_bundle[release] and
-xref:pipeline_policy#unacceptable_task_bundle[policy] rules where this list is
+the "Trusted Task" xref:release_policy#trusted_task_package[release] and
+xref:pipeline_policy#untrusted_task_bundle[policy] rules where this list is
 used.
 
 The list of trusted Tasks is time based. A Task that is trusted today is not
 necessarily trusted tomorrow. The trusted Task list may contain bundles that are
-"too old" and no longer acceptable. The reason for this behavior is to allow
+"too old" and no longer trusted. The reason for this behavior is to allow
 users a certain period of time to upgrade to a newer version of the Task.
 
 Any record in the trusted Task List with an effective date in the future, and
 the record with the most recent effective date *not* in the future are
-trusted. For example, consider a list that includes the following acceptable
+trusted. For example, consider a list that includes the following trusted
 tasks:
 
 * a, effective on 2022-10-23
@@ -26,7 +25,7 @@ tasks:
 * c, effective on 2022-10-20
 * d, effective on 2022-10-19
 
-If today is 2022-10-21, then the Tasks a, b, and c are acceptable, while d is not.
+If today is 2022-10-21, then the Tasks a, b, and c are trusted, while d is not.
 
 Even when using a Task recorded in the trusted Task list, some policy rules may
 emit a warning if the reference used is not the latest one on the list. This is

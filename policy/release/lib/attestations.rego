@@ -31,6 +31,8 @@ taskrun_att_build_types := {
 # with test_ is treated as though it was a test.)
 task_test_result_name := "TEST_OUTPUT"
 
+task_test_image_result_name := "IMAGES_PROCESSED"
+
 java_sbom_component_count_result_name := "SBOM_JAVA_COMPONENTS_COUNT"
 
 build_base_images_digests_result_name := "BASE_IMAGES_DIGESTS"
@@ -114,6 +116,8 @@ unmarshal(raw) := value if {
 # (Don't call it test_results since test_ means a unit test)
 # First find results using the new task result name
 results_from_tests := results_named(task_test_result_name)
+
+images_processed_results_from_tests := results_named(task_test_image_result_name)
 
 # Check for a task by name. Return the task if found
 task_in_pipelinerun(name) := task if {

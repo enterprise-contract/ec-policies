@@ -1,5 +1,7 @@
 SHELL := /bin/bash
 
+COPY:=The Enterprise Contract Contributors
+
 DATA_DIR=./example/data
 CONFIG_DATA_FILE=$(DATA_DIR)/config.json
 
@@ -190,7 +192,15 @@ fmt-check: ## Check formatting of Rego files
 # See config in .regal/config.yaml
 .PHONY: lint
 lint: ## Runs Rego linter
+# addlicense doesn't give us a nice explanation so we prefix it with one
+	@go run github.com/google/addlicense -c '$(COPY)' -y '' -s -check $(LICENSE_IGNORE) . | sed 's/^/Missing license header in: /g'
+# piping to sed above looses the exit code, luckily addlicense is fast so we invoke it for the second time to exit 1 in case of issues
+	@go run github.com/google/addlicense -c '$(COPY)' -y '' -s -check $(LICENSE_IGNORE) . >/dev/null 2>&1
 	@go run github.com/styrainc/regal lint . $(if $(GITHUB_ACTIONS),--format=github)
+
+.PHONY: lint-fix
+lint-fix: ## Fix linting issues automagically
+	@go run github.com/google/addlicense -c '$(COPY)' -y '' -s $(LICENSE_IGNORE) .
 
 .PHONY: ci
 ci: quiet-test acceptance opa-check conventions-check fmt-check lint ## Runs all checks and tests

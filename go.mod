@@ -4,6 +4,7 @@ go 1.21.4
 
 require (
 	github.com/enterprise-contract/ec-cli v0.0.0-20240329092744-ca3cf7bd6a86
+	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.51.0
 	github.com/styrainc/regal v0.20.0
 	github.com/tektoncd/cli v0.36.0
@@ -95,6 +96,7 @@ require (
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/blendle/zapdriver v1.3.1 // indirect
+	github.com/bmatcuk/doublestar/v4 v4.0.2 // indirect
 	github.com/bufbuild/protocompile v0.8.0 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/bytecodealliance/wasmtime-go/v3 v3.0.2 // indirect

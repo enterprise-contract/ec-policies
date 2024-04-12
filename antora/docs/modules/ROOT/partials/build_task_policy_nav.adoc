@@ -1,7 +1,4 @@
 * xref:build_task_policy.adoc[Build Task Policy]
-{{#each buildTaskAnnotations}}
-    ** xref:build_task_policy.adoc#{{this.0.packageInfo.shortName}}_package[{{this.0.packageInfo.title}}]
-    {{#each .}}
-        *** xref:build_task_policy.adoc#{{anchor}}[{{title}}]
-    {{/each}}
-{{/each}}
+** xref:build_task_policy.adoc#labels_package[Tekton task build type label checks]
+*** xref:build_task_policy.adoc#labels__build_type_label_set[Build task has build type label]
+*** xref:build_task_policy.adoc#labels__build_task_has_label[Build task has label]

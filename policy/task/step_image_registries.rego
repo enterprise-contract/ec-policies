@@ -1,5 +1,6 @@
 #
 # METADATA
+# title: Tekton Task Step image policies
 # description: >-
 #   This package ensures that a Task definition contains expected values for the image references
 #   used by the Task's steps.

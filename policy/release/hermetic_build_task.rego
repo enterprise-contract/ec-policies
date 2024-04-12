@@ -1,5 +1,6 @@
 #
 # METADATA
+# title: Hermetic build task
 # description: >-
 #   This package verifies the build task in the attestation was invoked
 #   with the expected parameters to perform a hermetic build.

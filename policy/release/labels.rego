@@ -1,5 +1,6 @@
 #
 # METADATA
+# title: Labels
 # description: >-
 #   Check if the image has the expected labels set. The rules in this package
 #   distinguish file-based catalog (FBC) images from all other images. When

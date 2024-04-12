@@ -160,29 +160,8 @@ annotations-opa:
 
 SHORT_SHA=$(shell git rev-parse --short HEAD)
 
-# (The git checkout is so we don't leave the preid diff in package.json)
-npm-publish: ## Publish the antora extension npm package. Requires a suitable NPM_TOKEN env var
-	cd antora/ec-policies-antora-extension && \
-	  npm version prerelease --preid $(SHORT_SHA) && \
-	  npm publish --access=public && \
-	  git checkout package.json
-
-EC_DOCS_DIR=../enterprise-contract.github.io
-EC_DOCS_REPO=git@github.com:enterprise-contract/enterprise-contract.github.io.git
-$(EC_DOCS_DIR):
-	mkdir $(EC_DOCS_DIR) && cd $(EC_DOCS_DIR) && git clone $(EC_DOCS_REPO) .
-
-# See also the hack/local-build.sh script in the
-# enterprise-contract.github.io repo which does something similar
-CURRENT_BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
-docs-preview: $(EC_DOCS_DIR) ## Build a preview of the documentation
-	cd antora/ec-policies-antora-extension && \
-	  npm ci
-	cd $(EC_DOCS_DIR)/antora && \
-	  yq e -i '.content.sources[] |= select(.url == "*ec-policies*").url |= "../../ec-policies"' antora-playbook.yml && \
-	  yq e -i '.content.sources[] |= select(.url == "*ec-policies*").branches |= "$(CURRENT_BRANCH)"' antora-playbook.yml && \
-	  yq e -i '.antora.extensions[] |= select(.require == "*ec-policies-antora-extension").require |= "../../ec-policies/antora/ec-policies-antora-extension"' antora-playbook.yml && \
-	  npm ci && npm run build
+generate-docs:
+	@cd docs && go run github.com/enterprise-contract/ec-policies/docs -adoc ../antora/docs/modules/ROOT -rego .. -rego "$$(go list -modfile ../go.mod -f '{{.Dir}}' github.com/enterprise-contract/ec-cli)/docs/policy/release"
 
 ##@ CI
 
@@ -205,7 +184,7 @@ lint-fix: ## Fix linting issues automagically
 	@go run github.com/google/addlicense -c '$(COPY)' -y '' -s $(LICENSE_IGNORE) .
 
 .PHONY: ci
-ci: quiet-test acceptance opa-check conventions-check fmt-check lint ## Runs all checks and tests
+ci: quiet-test acceptance opa-check conventions-check fmt-check lint generate-docs ## Runs all checks and tests
 
 #--------------------------------------------------------------------
 

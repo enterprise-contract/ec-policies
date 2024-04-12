@@ -1,5 +1,6 @@
 #
 # METADATA
+# title: Test
 # description: >-
 #   Enterprise Contract requires that each build was subjected
 #   to a set of tests and that those tests all passed. This package

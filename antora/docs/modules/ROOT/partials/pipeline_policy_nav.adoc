@@ -1,7 +1,16 @@
 * xref:pipeline_policy.adoc[Pipeline Policy]
-{{#each pipelineAnnotations}}
-    ** xref:pipeline_policy.adoc#{{this.0.packageInfo.shortName}}_package[{{this.0.packageInfo.title}}]
-    {{#each .}}
-        *** xref:pipeline_policy.adoc#{{anchor}}[{{title}}]
-    {{/each}}
-{{/each}}
+** xref:pipeline_policy.adoc#task_bundle_package[Pipeline definition Task bundle policies]
+*** xref:pipeline_policy.adoc#task_bundle__missing_required_data[Missing required data]
+*** xref:pipeline_policy.adoc#task_bundle__untrusted_task_bundle[Task bundle is not trusted]
+*** xref:pipeline_policy.adoc#task_bundle__out_of_date_task_bundle[Task bundle is out of date]
+*** xref:pipeline_policy.adoc#task_bundle__empty_task_bundle_reference[Task bundle reference is empty]
+*** xref:pipeline_policy.adoc#task_bundle__disallowed_task_reference[Task bundle was not used or is not defined]
+*** xref:pipeline_policy.adoc#task_bundle__unpinned_task_bundle[Unpinned task bundle reference]
+** xref:pipeline_policy.adoc#basic_package[Pipeline definition sanity checks]
+*** xref:pipeline_policy.adoc#basic__expected_kind[Pipeline definition has expected kind]
+** xref:pipeline_policy.adoc#required_tasks_package[Required tasks]
+*** xref:pipeline_policy.adoc#required_tasks__missing_future_required_task[Missing future required task]
+*** xref:pipeline_policy.adoc#required_tasks__missing_required_task[Missing required task]
+*** xref:pipeline_policy.adoc#required_tasks__tasks_found[Pipeline contains tasks]
+*** xref:pipeline_policy.adoc#required_tasks__required_tasks_list_present[Required task list is present in rule data]
+*** xref:pipeline_policy.adoc#required_tasks__required_tasks_found[Required tasks found in pipeline definition]

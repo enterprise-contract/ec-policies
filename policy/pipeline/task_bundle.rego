@@ -1,5 +1,6 @@
 #
 # METADATA
+# title: Pipeline definition Task bundle policies
 # description: >-
 #   To be able to reproduce and audit builds accurately it's important
 #   to know exactly what happens during the build. To do this

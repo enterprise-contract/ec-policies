@@ -1323,8 +1323,8 @@ github.com/stretchr/testify v1.9.0/go.mod h1:r2ic/lqez/lEtzL7wO/rwa5dbSLXVDPFyf8
 github.com/stuart-warren/yamlfmt v0.2.0 h1:/rs8d/QGZs6FaxVivpgexlUldOexyWQ/J/1xscmcrK0=
 github.com/stuart-warren/yamlfmt v0.2.0/go.mod h1:X5TuPH+hf4O0U1KBvNqygvHbvAnoi9Wyl9BbtPv8SZk=
 github.com/stvp/go-udp-testing v0.0.0-20201019212854-469649b16807/go.mod h1:7jxmlfBCDBXRzr0eAQJ48XC1hBu1np4CS5+cHEYfwpc=
-github.com/styrainc/regal v0.20.0 h1:R2ZbOyLbh3jQLJ1K4X4VHskbaDia23Q511P/ffMw4Tw=
-github.com/styrainc/regal v0.20.0/go.mod h1:IZxA24G/aOEIr55bvDdAMpWLGAh3iL5itXSE+BinlH4=
+github.com/styrainc/regal v0.20.1 h1:vq0KDAe4SS3JciKYsWJQPUsw5aSjcFKj5ED5mDpXDPU=
+github.com/styrainc/regal v0.20.1/go.mod h1:IZxA24G/aOEIr55bvDdAMpWLGAh3iL5itXSE+BinlH4=
 github.com/subosito/gotenv v1.6.0 h1:9NlTDc1FTs4qu0DDq7AEtTPNw6SVm7uBMsUCUjABIf8=
 github.com/subosito/gotenv v1.6.0/go.mod h1:Dk4QP5c2W3ibzajGcXpNraDfq2IrhjMIvMSWPKKo0FU=
 github.com/syndtr/goleveldb v1.0.1-0.20220721030215-126854af5e6d h1:vfofYNRScrDdvS342BElfbETmL1Aiz3i2t0zfRj16Hs=

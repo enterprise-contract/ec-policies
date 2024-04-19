@@ -3,13 +3,14 @@
 # title: Base image checks
 # description: >-
 #   This package is responsible for verifying the base (parent) images
-#   reported in the attestation are allowed.
+#   reported in the SLSA Provenace or the SBOM are allowed.
 #
 package policy.release.base_image_registries
 
 import rego.v1
 
 import data.lib
+import data.lib.sbom
 
 # METADATA
 # title: Base image comes from permitted registry
@@ -39,16 +40,19 @@ deny contains result if {
 }
 
 # METADATA
-# title: Base image task result was provided
+# title: Base images provided
 # description: >-
-#   Verify the attestation provides the expected information about which base images
-#   were used during the build process. The base image information is expected to
-#   be found in a task result called BASE_IMAGES_DIGESTS.
+#   Verify the expected information was provided about which base images were used during
+#   the build process.The list of base images is a combination of two sources. One is
+#   extracted from the SLSA Provenance in the form of Tekton Task result called
+#   BASE_IMAGES_DIGESTS. The other comes from the components in the `formulation` attribute
+#   of any associated CycloneDX SBOMs.
 # custom:
 #   short_name: base_image_info_found
-#   failure_msg: Base images result is missing
+#   failure_msg: Base images information is missing
 #   solution: >-
-#     A Tekton task must exist that emits a result named BASE_IMAGES_DIGESTS.
+#     Either a Tekton task must exist that emits a result named BASE_IMAGES_DIGESTS, or a
+#     CycloneDX SBOM must be associated with the image.
 #   collections:
 #   - minimal
 #   - redhat
@@ -56,12 +60,13 @@ deny contains result if {
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	count(lib.pipelinerun_attestations) > 0
+	# Some images are built "from scratch" and not have any base images, e.g. UBI.
+	# This check distinguishes such images by simply ensuring that either the expected
+	# Task result exists regardless of its value, or at least one SBOM is attached to
+	# the image.
+	count(lib.results_named(lib.build_base_images_digests_result_name)) == 0
+	count(sbom.cyclonedx_sboms) == 0
 
-	# Some images are built "from scratch" and do not have any base images, e.g. UBI.
-	# The missing check verifies that no results exists, not that no base
-	# images were used.
-	count(_base_images_results) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -92,13 +97,40 @@ _image_ref_permitted(image_ref, allowed_prefixes) if {
 }
 
 _base_images contains name if {
-	some _, image in _base_images_results
+	some _, image in lib.results_named(lib.build_base_images_digests_result_name)
 	some name in split(image.value, "\n")
-	count(name) > 0
+	name != ""
 }
 
-_base_images_results contains result if {
-	some result in lib.results_named(lib.build_base_images_digests_result_name)
+_base_images contains base_image if {
+	some s in sbom.cyclonedx_sboms
+	some formulation in s.formulation
+	some component in formulation.components
+	component.type == "container"
+	_is_base_image(component)
+	base_image := component.name
+}
+
+_is_base_image(component) if {
+	base_image_properties := [property |
+		some property in component.properties
+		_is_base_image_property(property)
+	]
+	count(base_image_properties) > 0
+}
+
+_is_base_image_property(property) if {
+	property.name == "konflux:container:is_base_image"
+	value := property.value
+	json.is_valid(value)
+	json.unmarshal(value) == true
+}
+
+_is_base_image_property(property) if {
+	property.name == "konflux:container:is_builder_image:for_stage"
+	value := property.value
+	json.is_valid(value)
+	type_name(json.unmarshal(value)) == "number"
 }
 
 # Verify allowed_registry_prefixes is a non-empty list of strings

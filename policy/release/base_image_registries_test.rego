@@ -35,10 +35,31 @@ test_allowed_base_images if {
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, mock_bundle)]),
 	]
+
+	sboms := [{"formulation": [
+		{"components": [{
+			"name": "registry.redhat.io/ubi7:latest@sha256:abc",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_base_image",
+				"value": "true",
+			}],
+		}]},
+		{"components": [{
+			"name": "docker.io/library/registry:latest@sha256:bcd",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_builder_image:for_stage",
+				"value": "0",
+			}],
+		}]},
+	]}]
+
 	lib.assert_empty(base_image_registries.deny) with input.attestations as attestations
+		with lib.sbom.cyclonedx_sboms as sboms
 }
 
-test_empty_base_images if {
+test_empty_base_images_result if {
 	slsav1_task_with_result := tkn_test.slsav1_task_result(
 		"buildah-task-1",
 		[{
@@ -67,9 +88,9 @@ test_disallowed_base_images if {
 			"name": lib.build_base_images_digests_result_name,
 			"type": "string",
 			"value": concat("\n", [
-				"registry.redhat.io/ubi7:latest@sha256:abc",
-				"dockery.io/busybox:latest@sha256:bcd",
-				"registry.redhat.ioo/spam:latest@sha256:def",
+				"registry.redhat.io/ubi7:latest@sha256:abc1",
+				"dockery.io/busybox:latest@sha256:bcd1",
+				"registry.redhat.ioo/spam:latest@sha256:def1",
 			]),
 		}],
 	)
@@ -77,26 +98,136 @@ test_disallowed_base_images if {
 		lib_test.att_mock_helper_ref_plain_result(
 			lib.build_base_images_digests_result_name,
 			concat("\n", [
-				"registry.redhat.io/ubi7:latest@sha256:abc",
-				"dockery.io/busybox:latest@sha256:bcd",
-				"registry.redhat.ioo/spam:latest@sha256:def",
+				"registry.redhat.io/ubi7:latest@sha256:abc2",
+				"dockery.io/busybox:latest@sha256:bcd2",
+				"registry.redhat.ioo/spam:latest@sha256:def2",
 			]),
 			"buildah-task-1",
 			mock_bundle,
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, mock_bundle)]),
 	]
+
+	sboms := [{"formulation": [
+		{"components": [{
+			"name": "registry.redhat.yo/ubi7/3",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_base_image",
+				"value": "true",
+			}],
+		}]},
+		{"components": [{
+			"name": "dockery.io/busybox/3",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_builder_image:for_stage",
+				"value": "0",
+			}],
+		}]},
+		{"components": [{
+			"name": "registry.redhat.ioo/spam/3",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_builder_image:for_stage",
+				"value": "1",
+			}],
+		}]},
+	]}]
+
 	expected := {
 		{
 			"code": "base_image_registries.base_image_permitted",
-			"msg": "Base image \"dockery.io/busybox:latest@sha256:bcd\" is from a disallowed registry",
+			"msg": "Base image \"dockery.io/busybox:latest@sha256:bcd1\" is from a disallowed registry",
 		},
 		{
 			"code": "base_image_registries.base_image_permitted",
-			"msg": "Base image \"registry.redhat.ioo/spam:latest@sha256:def\" is from a disallowed registry",
+			"msg": "Base image \"registry.redhat.ioo/spam:latest@sha256:def1\" is from a disallowed registry",
+		},
+		{
+			"code": "base_image_registries.base_image_permitted",
+			"msg": "Base image \"dockery.io/busybox:latest@sha256:bcd2\" is from a disallowed registry",
+		},
+		{
+			"code": "base_image_registries.base_image_permitted",
+			"msg": "Base image \"registry.redhat.ioo/spam:latest@sha256:def2\" is from a disallowed registry",
+		},
+		{
+			"code": "base_image_registries.base_image_permitted",
+			"msg": "Base image \"registry.redhat.yo/ubi7/3\" is from a disallowed registry",
+		},
+		{
+			"code": "base_image_registries.base_image_permitted",
+			"msg": "Base image \"registry.redhat.ioo/spam/3\" is from a disallowed registry",
+		},
+		{
+			"code": "base_image_registries.base_image_permitted",
+			"msg": "Base image \"dockery.io/busybox/3\" is from a disallowed registry",
 		},
 	}
 	lib.assert_equal_results(base_image_registries.deny, expected) with input.attestations as attestations
+		with lib.sbom.cyclonedx_sboms as sboms
+}
+
+test_sbom_base_image_selection if {
+	sboms := [{"formulation": [
+		{"components": [{
+			"name": "registry.ignore.me/no-properties",
+			"type": "container",
+		}]},
+		{"components": [{
+			"name": "registry.ignore.me/is_base_image/false/value",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_base_image",
+				"value": "false",
+			}],
+		}]},
+		{"components": [{
+			"name": "registry.ignore.me/is_base_image/0/value",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_base_image",
+				"value": "0",
+			}],
+		}]},
+		{"components": [{
+			"name": "registry.ignore.me/is_base_image/non-marshaled-json/value",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_base_image",
+				"value": true,
+			}],
+		}]},
+		{"components": [{
+			"name": "registry.ignore.me/is_base_image/missing/value",
+			"type": "container",
+			"properties": [{"name": "konflux:container:is_base_image"}],
+		}]},
+		{"components": [{
+			"name": "registry.ignore.me/for_stage/false/value",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_builder_image:for_stage",
+				"value": "false",
+			}],
+		}]},
+		{"components": [{
+			"name": "registry.ignore.me/for_stage/non-marshaled-json/value",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_builder_image:for_stage",
+				"value": 1,
+			}],
+		}]},
+		{"components": [{
+			"name": "registry.ignore.me/for_stage/missing/value",
+			"type": "container",
+			"properties": [{"name": "konflux:container:is_builder_image:for_stage"}],
+		}]},
+	]}]
+
+	lib.assert_empty(base_image_registries.deny) with lib.sbom.cyclonedx_sboms as sboms
 }
 
 test_missing_result if {
@@ -123,7 +254,7 @@ test_missing_result if {
 	]
 	expected := {{
 		"code": "base_image_registries.base_image_info_found",
-		"msg": "Base images result is missing",
+		"msg": "Base images information is missing",
 	}}
 	lib.assert_equal_results(base_image_registries.deny, expected) with input.attestations as attestations
 }
@@ -134,6 +265,7 @@ test_allowed_registries_provided if {
 		"msg": "Rule data allowed_registry_prefixes has unexpected format: (Root): Array must have at least 1 items",
 	}}
 	lib.assert_equal_results(expected, base_image_registries.deny) with data.rule_data as {}
+		with lib.sbom.cyclonedx_sboms as [{}]
 }
 
 test_rule_data_validation if {
@@ -158,4 +290,5 @@ test_rule_data_validation if {
 	}
 
 	lib.assert_equal_results(base_image_registries.deny, expected) with data.rule_data as d
+		with lib.sbom.cyclonedx_sboms as [{}]
 }

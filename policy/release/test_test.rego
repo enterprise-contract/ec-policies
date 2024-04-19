@@ -99,12 +99,12 @@ test_failure_data if {
 	lib.assert_equal_results(test.deny, {
 		{
 			"code": "test.no_failed_tests",
-			"msg": "Test \"failed_1\" failed",
+			"msg": "The Task \"failed_1\" from the build Pipeline reports a failed test",
 			"term": "failed_1",
 		},
 		{
 			"code": "test.no_failed_tests",
-			"msg": "Test \"task1\" failed",
+			"msg": "The Task \"task1\" from the build Pipeline reports a failed test",
 			"term": "task1",
 		},
 	}) with input.attestations as attestations
@@ -115,12 +115,12 @@ test_failure_data if {
 	lib.assert_equal_results(test.warn, {
 		{
 			"code": "test.no_failed_informative_tests",
-			"msg": "Informative test \"failed_1\" failed",
+			"msg": "The Task \"failed_1\" from the build Pipeline reports a failed informative test",
 			"term": "failed_1",
 		},
 		{
 			"code": "test.no_failed_informative_tests",
-			"msg": "Informative test \"task1\" failed",
+			"msg": "The Task \"task1\" from the build Pipeline reports a failed informative test",
 			"term": "task1",
 		},
 	}) with input.attestations as attestations
@@ -148,12 +148,12 @@ test_error_data if {
 	lib.assert_equal_results(test.deny, {
 		{
 			"code": "test.no_erred_tests",
-			"msg": "Test \"errored_1\" erred",
+			"msg": "The Task \"errored_1\" from the build Pipeline reports a test erred",
 			"term": "errored_1",
 		},
 		{
 			"code": "test.no_erred_tests",
-			"msg": "Test \"errored_2\" erred",
+			"msg": "The Task \"errored_2\" from the build Pipeline reports a test erred",
 			"term": "errored_2",
 		},
 	}) with input.attestations as attestations
@@ -179,22 +179,22 @@ test_mix_data if {
 	lib.assert_equal_results(test.deny, {
 		{
 			"code": "test.no_failed_tests",
-			"msg": "Test \"failed_1\" failed",
+			"msg": "The Task \"failed_1\" from the build Pipeline reports a failed test",
 			"term": "failed_1",
 		},
 		{
 			"code": "test.no_erred_tests",
-			"msg": "Test \"errored_1\" erred",
+			"msg": "The Task \"errored_1\" from the build Pipeline reports a test erred",
 			"term": "errored_1",
 		},
 		{
 			"code": "test.no_failed_tests",
-			"msg": "Test \"failed_2\" failed",
+			"msg": "The Task \"failed_2\" from the build Pipeline reports a failed test",
 			"term": "failed_2",
 		},
 		{
 			"code": "test.no_erred_tests",
-			"msg": "Test \"errored_2\" erred",
+			"msg": "The Task \"errored_2\" from the build Pipeline reports a test erred",
 			"term": "errored_2",
 		},
 	}) with input.attestations as attestations
@@ -230,12 +230,12 @@ test_skipped_is_deny if {
 	lib.assert_equal_results(test.deny, {
 		{
 			"code": "test.no_skipped_tests",
-			"msg": "Test \"skipped_1\" was skipped",
+			"msg": "The Task \"skipped_1\" from the build Pipeline reports a test was skipped",
 			"term": "skipped_1",
 		},
 		{
 			"code": "test.no_skipped_tests",
-			"msg": "Test \"skipped_2\" was skipped",
+			"msg": "The Task \"skipped_2\" from the build Pipeline reports a test was skipped",
 			"term": "skipped_2",
 		},
 	}) with input.attestations as attestations
@@ -256,12 +256,12 @@ test_warning_is_warning if {
 	lib.assert_equal_results(test.warn, {
 		{
 			"code": "test.no_test_warnings",
-			"msg": "Test \"warning_1\" returned a warning",
+			"msg": "The Task \"warning_1\" from the build Pipeline reports a test contains warnings",
 			"term": "warning_1",
 		},
 		{
 			"code": "test.no_test_warnings",
-			"msg": "Test \"warning_2\" returned a warning",
+			"msg": "The Task \"warning_2\" from the build Pipeline reports a test contains warnings",
 			"term": "warning_2",
 		},
 	}) with input.attestations as attestations
@@ -309,47 +309,47 @@ test_mixed_statuses if {
 	lib.assert_equal_results(test.deny, {
 		{
 			"code": "test.no_erred_tests",
-			"msg": "Test \"error_1\" erred",
+			"msg": "The Task \"error_1\" from the build Pipeline reports a test erred",
 			"term": "error_1",
 		},
 		{
 			"code": "test.no_erred_tests",
-			"msg": "Test \"error_2\" erred",
+			"msg": "The Task \"error_2\" from the build Pipeline reports a test erred",
 			"term": "error_2",
 		},
 		{
 			"code": "test.no_failed_tests",
-			"msg": "Test \"failure_1\" failed",
+			"msg": "The Task \"failure_1\" from the build Pipeline reports a failed test",
 			"term": "failure_1",
 		},
 		{
 			"code": "test.no_failed_tests",
-			"msg": "Test \"failure_2\" failed",
+			"msg": "The Task \"failure_2\" from the build Pipeline reports a failed test",
 			"term": "failure_2",
 		},
 		{
 			"code": "test.no_failed_tests",
-			"msg": "Test \"failure_20\" failed",
+			"msg": "The Task \"failure_20\" from the build Pipeline reports a failed test",
 			"term": "failure_20",
 		},
 		{
 			"code": "test.no_erred_tests",
-			"msg": "Test \"error_20\" erred",
+			"msg": "The Task \"error_20\" from the build Pipeline reports a test erred",
 			"term": "error_20",
 		},
 		{
 			"code": "test.no_skipped_tests",
-			"msg": "Test \"skipped_1\" was skipped",
+			"msg": "The Task \"skipped_1\" from the build Pipeline reports a test was skipped",
 			"term": "skipped_1",
 		},
 		{
 			"code": "test.no_skipped_tests",
-			"msg": "Test \"skipped_2\" was skipped",
+			"msg": "The Task \"skipped_2\" from the build Pipeline reports a test was skipped",
 			"term": "skipped_2",
 		},
 		{
 			"code": "test.no_skipped_tests",
-			"msg": "Test \"skipped_20\" was skipped",
+			"msg": "The Task \"skipped_20\" from the build Pipeline reports a test was skipped",
 			"term": "skipped_20",
 		},
 	}) with input.attestations as test_results
@@ -357,17 +357,17 @@ test_mixed_statuses if {
 	lib.assert_equal_results(test.warn, {
 		{
 			"code": "test.no_test_warnings",
-			"msg": "Test \"warning_1\" returned a warning",
+			"msg": "The Task \"warning_1\" from the build Pipeline reports a test contains warnings",
 			"term": "warning_1",
 		},
 		{
 			"code": "test.no_test_warnings",
-			"msg": "Test \"warning_2\" returned a warning",
+			"msg": "The Task \"warning_2\" from the build Pipeline reports a test contains warnings",
 			"term": "warning_2",
 		},
 		{
 			"code": "test.no_test_warnings",
-			"msg": "Test \"warning_20\" returned a warning",
+			"msg": "The Task \"warning_20\" from the build Pipeline reports a test contains warnings",
 			"term": "warning_20",
 		},
 	}) with input.attestations as test_results
@@ -389,23 +389,28 @@ test_unsupported_test_result if {
 	lib.assert_equal_results(test.deny, {
 		{
 			"code": "test.test_results_known",
-			"msg": "Test 'error_1' has unsupported result 'EROR'", "term": "error_1",
+			"msg": "The Task \"error_1\" from the build Pipeline has an unsupported test result \"EROR\"",
+			"term": "error_1",
 		},
 		{
 			"code": "test.test_results_known",
-			"msg": "Test 'failure_1' has unsupported result 'FAIL'", "term": "failure_1",
+			"msg": "The Task \"failure_1\" from the build Pipeline has an unsupported test result \"FAIL\"",
+			"term": "failure_1",
 		},
 		{
 			"code": "test.test_results_known",
-			"msg": "Test 'skipped_1' has unsupported result 'SKIPED'", "term": "skipped_1",
+			"msg": "The Task \"skipped_1\" from the build Pipeline has an unsupported test result \"SKIPED\"",
+			"term": "skipped_1",
 		},
 		{
 			"code": "test.test_results_known",
-			"msg": "Test 'success_1' has unsupported result 'SUCESS'", "term": "success_1",
+			"msg": "The Task \"success_1\" from the build Pipeline has an unsupported test result \"SUCESS\"",
+			"term": "success_1",
 		},
 		{
 			"code": "test.test_results_known",
-			"msg": "Test 'skipped_20' has unsupported result 'SKIPED'", "term": "skipped_20",
+			"msg": "The Task \"skipped_20\" from the build Pipeline has an unsupported test result \"SKIPED\"",
+			"term": "skipped_20",
 		},
 	}) with input.attestations as test_results
 }

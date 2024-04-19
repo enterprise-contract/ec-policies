@@ -15,6 +15,8 @@ OPA=$(EC) opa
 CONFTEST=EC_EXPERIMENTAL=1 $(EC)
 TKN=go run github.com/tektoncd/cli/cmd/tkn
 
+LICENSE_IGNORE=-ignore '.git/**'
+
 TEST_FILES = $(DATA_DIR)/rule_data.yml $(POLICY_DIR) checks
 define COVERAGE
 @$(OPA) test --coverage --format json $(TEST_FILES) | { \

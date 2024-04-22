@@ -63,7 +63,7 @@ deny contains result if {
 #   Ensure all test data result values are in the set of known/supported result values.
 # custom:
 #   short_name: test_results_known
-#   failure_msg: Test '%s' has unsupported result '%s'
+#   failure_msg: The Task %q from the build Pipeline has an unsupported test result %q
 #   solution: >-
 #     The test results should be of a known value. Values can be set as a
 #     xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
@@ -97,10 +97,11 @@ deny contains result if {
 #   of informative tests is configurable by the "informative_tests" key in the rule data.
 # custom:
 #   short_name: no_failed_tests
-#   failure_msg: "Test %q failed"
+#   failure_msg: The Task %q from the build Pipeline reports a failed test
 #   solution: >-
 #     There is a test that failed. Make sure that any task in the build pipeline
-#     with a result named 'TEST_OUTPUT' does not fail.
+#     with a result named 'TEST_OUTPUT' does not fail. More information about the test
+#     should be available in the logs for the build Pipeline.
 #   collections:
 #   - redhat
 #   depends_on:
@@ -120,10 +121,11 @@ deny contains result if {
 #   of informative tests is configurable by the "informative_tests" key in the rule data.
 # custom:
 #   short_name: no_failed_informative_tests
-#   failure_msg: "Informative test %q failed"
+#   failure_msg: The Task %q from the build Pipeline reports a failed informative test
 #   solution: >-
 #     There is a test that failed. Make sure that any task in the build pipeline
-#     with a result named 'TEST_OUTPUT' does not fail.
+#     with a result named 'TEST_OUTPUT' does not fail. More information about the test
+#     should be available in the logs for the build Pipeline.
 #   collections:
 #   - redhat
 #   depends_on:
@@ -142,10 +144,11 @@ warn contains result if {
 #   The result type is configurable by the "erred_tests_results" key in the rule data.
 # custom:
 #   short_name: no_erred_tests
-#   failure_msg: "Test %q erred"
+#   failure_msg: The Task %q from the build Pipeline reports a test erred
 #   solution: >-
 #     There is a test that erred. Make sure that any task in the build pipeline
-#     with a result named 'TEST_OUTPUT' does not err.
+#     with a result named 'TEST_OUTPUT' does not err. More information about the test
+#     should be available in the logs for the build Pipeline.
 #   collections:
 #   - redhat
 #   depends_on:
@@ -165,11 +168,12 @@ deny contains result if {
 #   The result type is configurable by the "skipped_tests_results" key in the rule data.
 # custom:
 #   short_name: no_skipped_tests
-#   failure_msg: "Test %q was skipped"
+#   failure_msg: The Task %q from the build Pipeline reports a test was skipped
 #   solution: >-
 #     There is a test that was skipped. Make sure that each
 #     task with a result named 'TEST_OUTPUT' was not skipped. You can find
-#     which test was skipped by examining the 'result' key in the 'TEST_OUTPUT'.
+#     which test was skipped by examining the 'result' key in the 'TEST_OUTPUT'. More
+#     information about the test should be available in the logs for the build Pipeline.
 #   collections:
 #   - redhat
 #   depends_on:
@@ -188,11 +192,12 @@ deny contains result if {
 #   The result type is configurable by the "warned_tests_results" key in the rule data.
 # custom:
 #   short_name: no_test_warnings
-#   failure_msg: "Test %q returned a warning"
+#   failure_msg: The Task %q from the build Pipeline reports a test contains warnings
 #   solution: >-
 #     There is a task with result 'TEST_OUTPUT' that returned a result of 'WARNING'.
 #     You can find which test resulted in 'WARNING' by examining the 'result' key
-#     in the 'TEST_OUTPUT'.
+#     in the 'TEST_OUTPUT'. More information about the test should be available in
+#     the logs for the build Pipeline.
 #   collections:
 #   - redhat
 #   depends_on:

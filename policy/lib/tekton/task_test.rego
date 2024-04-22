@@ -300,26 +300,43 @@ test_tasks_from_pipeline_with_spam if {
 }
 
 test_build_task if {
-	expected := _good_build_task
-	lib.assert_equal([expected], tkn.build_tasks(_good_attestation))
+	expected := [_good_build_task, _good_source_build_task]
+	lib.assert_equal(expected, tkn.build_tasks(_good_attestation))
 }
 
 test_build_task_not_found if {
-	missing_image_url := json.patch(_good_attestation, [{
-		"op": "add",
-		"path": "/statement/predicate/buildConfig/tasks/0/results/0/name",
-		"value": "IMAGE_URL_SKIP",
-	}])
+	missing_image_url := json.patch(_good_attestation, [
+		{
+			"op": "add",
+			"path": "/statement/predicate/buildConfig/tasks/0/results/0/name",
+			"value": "IMAGE_URL_SKIP",
+		},
+		{
+			"op": "add",
+			"path": "/statement/predicate/buildConfig/tasks/2/results/0/name",
+			"value": "IMAGE_URL_SKIP",
+		},
+	])
 	count(tkn.build_tasks(missing_image_url)) == 0
 
-	missing_image_digest := json.patch(_good_attestation, [{
-		"op": "add",
-		"path": "/statement/predicate/buildConfig/tasks/0/results/1/name",
-		"value": "IMAGE_DIGEST_SKIP",
-	}])
+	missing_image_digest := json.patch(_good_attestation, [
+		{
+			"op": "add",
+			"path": "/statement/predicate/buildConfig/tasks/0/results/1/name",
+			"value": "IMAGE_DIGEST_SKIP",
+		},
+		{
+			"op": "add",
+			"path": "/statement/predicate/buildConfig/tasks/2/results/1/name",
+			"value": "IMAGE_DIGEST_SKIP",
+		},
+	])
 	count(tkn.build_tasks(missing_image_digest)) == 0
 
-	missing_results := json.remove(_good_attestation, ["/statement/predicate/buildConfig/tasks/0/results"])
+	missing_results := json.remove(_good_attestation, [
+		"/statement/predicate/buildConfig/tasks/0/results",
+		"/statement/predicate/buildConfig/tasks/2/results",
+	])
 	count(tkn.build_tasks(missing_results)) == 0
 }
 

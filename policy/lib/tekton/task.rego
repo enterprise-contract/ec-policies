@@ -146,6 +146,13 @@ task_result(task, name) := value if {
 	value := _key_value(result, "value")
 }
 
+task_result_endswith(task, suffix) := value if {
+	some result in _task_results(task)
+	result_name := _key_value(result, "name")
+	endswith(result_name, suffix)
+	value := _key_value(result, "value")
+}
+
 # slsa v0.2 step image
 task_step_image_ref(step) := step.environment.image
 
@@ -156,10 +163,10 @@ task_step_image_ref(step) := step.imageID
 build_tasks(attestation) := [task |
 	some task in tasks(attestation)
 
-	image_url := task_result(task, "IMAGE_URL")
+	image_url := task_result_endswith(task, "IMAGE_URL")
 	count(trim_space(image_url)) > 0
 
-	image_digest := task_result(task, "IMAGE_DIGEST")
+	image_digest := task_result_endswith(task, "IMAGE_DIGEST")
 	count(trim_space(image_digest)) > 0
 ]
 

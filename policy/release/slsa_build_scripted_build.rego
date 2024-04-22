@@ -98,8 +98,8 @@ deny contains result if {
 		some build_task in build_tasks
 
 		result_image_ref := concat("@", [
-			tkn.task_result(build_task, "IMAGE_URL"),
-			tkn.task_result(build_task, "IMAGE_DIGEST"),
+			trim_space(tkn.task_result_endswith(build_task, "IMAGE_URL")),
+			trim_space(tkn.task_result_endswith(build_task, "IMAGE_DIGEST")),
 		])
 
 		image.equal_ref(subject_image_ref, result_image_ref)

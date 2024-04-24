@@ -1,5 +1,6 @@
 #
 # METADATA
+# title: Attestation type
 # description: >-
 #   Sanity checks related to the format of the image build's attestation.
 #

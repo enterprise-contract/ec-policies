@@ -1,5 +1,6 @@
 #
 # METADATA
+# title: SPDX SBOM
 # description: >-
 #   Checks different properties of the SPDX SBOM attestation.
 #

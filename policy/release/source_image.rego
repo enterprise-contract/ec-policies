@@ -1,5 +1,6 @@
 #
 # METADATA
+# title: Source image
 # description: >-
 #   This package is reponsible for verifying the source container image associated with the image
 #   being validated.

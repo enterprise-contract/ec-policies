@@ -1,5 +1,6 @@
 #
 # METADATA
+# title: Tasks
 # description: >-
 #   Enterprise Contract expects that a set of tasks were included
 #   in the pipeline build for each image to be released.

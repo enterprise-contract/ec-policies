@@ -1,5 +1,6 @@
 #
 # METADATA
+# title: OLM
 # description: >-
 #   Checks for Operator Lifecycle Manager (OLM) bundles.
 #

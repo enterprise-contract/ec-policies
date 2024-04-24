@@ -1,7 +1,9 @@
 * xref:task_policy.adoc[Task Policy]
-{{#each taskAnnotations}}
-    ** xref:task_policy.adoc#{{this.0.packageInfo.shortName}}_package[{{this.0.packageInfo.title}}]
-    {{#each .}}
-        *** xref:task_policy.adoc#{{anchor}}[{{title}}]
-    {{/each}}
-{{/each}}
+** xref:task_policy.adoc#step_image_registries_package[Tekton Task Step image policies]
+*** xref:task_policy.adoc#step_image_registries__step_image_registry_prefix_list_provided[Permitted step image registry prefix list provided]
+*** xref:task_policy.adoc#step_image_registries__step_images_permitted[Step images come from permitted registry]
+** xref:task_policy.adoc#annotation_package[Tekton Task annotations]
+*** xref:task_policy.adoc#annotation__expires_on_format[Task definition uses expires-on annotation in RFC3339 format]
+** xref:task_policy.adoc#kind_package[Tekton task kind checks]
+*** xref:task_policy.adoc#kind__kind_present[Kind field is present in task definition]
+*** xref:task_policy.adoc#kind__expected_kind[Task definition has expected kind]

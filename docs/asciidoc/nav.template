@@ -1,0 +1,17 @@
+{{- $doc := . }}
+{{- $lvl := "" -}}
+* xref:{{ .Qualifier }}_policy.adoc[{{ .Name }} Policy]
+{{- with .Collections }}
+    {{- $lvl = "*" }}
+** xref:_available_rule_collections[Rule Collections]
+    {{- range . }}
+*** xref:release_policy.adoc#{{ .Title }}[{{ .Title }}]
+    {{- end }}
+** {{ $doc.Name }} Rules
+{{- end }}{{/* .Collections */}}
+{{- range .Packages }}
+{{ $lvl }}** xref:{{ $doc.Qualifier }}_policy.adoc#{{ anchor .Annotations }}[{{ .Annotations.Title }}]
+    {{- range .Rules }}
+{{ $lvl }}*** xref:{{ $doc.Qualifier }}_policy.adoc#{{ anchor . }}[{{ .Title }}]
+    {{- end}}
+{{- end}}

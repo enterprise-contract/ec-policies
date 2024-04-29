@@ -124,6 +124,7 @@
 **** xref:release_policy.adoc#tasks__successful_pipeline_tasks[Successful pipeline tasks]
 **** xref:release_policy.adoc#tasks__unsupported[Task version unsupported]
 *** xref:release_policy.adoc#test_package[Test]
+**** xref:release_policy.adoc#test__test_all_images[Image digest is present in IMAGES_PROCESSED result]
 **** xref:release_policy.adoc#test__no_failed_informative_tests[No informative tests failed]
 **** xref:release_policy.adoc#test__no_erred_tests[No tests erred]
 **** xref:release_policy.adoc#test__no_failed_tests[No tests failed]

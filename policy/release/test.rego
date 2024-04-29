@@ -11,6 +11,7 @@ package policy.release.test
 import rego.v1
 
 import data.lib
+import data.lib.image
 
 # METADATA
 # title: Test data found in task results
@@ -226,6 +227,35 @@ warn contains result if {
 deny contains result if {
 	some error in _rule_data_errors
 	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
+# METADATA
+# title: Image digest is present in IMAGES_PROCESSED result
+# description: >-
+#   Ensure that task producing the IMAGES_PROCESSED result contains the
+#   digests of the built image.
+# custom:
+#   short_name: test_all_images
+#   failure_msg: Test '%s' did not process image with digest '%s'.
+#   solution: >-
+#     Found an image not processed by a task. Make sure that the task
+#     processes and includes the image digest of all images in the
+#     `IMAGES_PROCESSED` result.
+#   collections:
+#   - redhat
+#   effective_on: 2024-05-29T00:00:00Z
+#
+deny contains result if {
+	img := image.parse(input.image.ref)
+	img_digest := img.digest
+
+	some task in lib.images_processed_results_from_tests
+	not img_digest in object.get(task.value, ["image", "digests"], [])
+	result := lib.result_helper_with_term(
+		rego.metadata.chain(),
+		[task.name, img_digest],
+		task.name,
+	)
 }
 
 # Collect all tests that have resulted with one of the given

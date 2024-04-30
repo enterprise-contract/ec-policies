@@ -1,6 +1,6 @@
 module github.com/enterprise-contract/ec-policies/acceptance
 
-go 1.21.4
+go 1.22.2
 
 require (
 	github.com/cucumber/godog v0.13.0

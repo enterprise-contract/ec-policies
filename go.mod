@@ -1,6 +1,6 @@
 module github.com/enterprise-contract/ec-policies
 
-go 1.21.4
+go 1.22.2
 
 require (
 	github.com/enterprise-contract/ec-cli v0.4.2

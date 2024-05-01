@@ -2,16 +2,26 @@
 # METADATA
 # title: Tasks
 # description: >-
-#   Enterprise Contract expects that a set of tasks were included
-#   in the pipeline build for each image to be released.
-#   This package includes a set of rules to verify that the expected
-#   tasks ran in the pipeline when the image was built.
-#   Required tasks are listed by the names given to them within the Tekton
-#   Bundle image. Optionally invocation parameter of a Task can be also
-#   mandated by including the name and the value in square brackets following
-#   the name of the task. For example: ``name[PARAM=val]``. Only single parameter
-#   is supported, to assert multiple parameters repeat the required task
-#   definition for each parameter seperately.
+#   Enterprise Contract expects that a set of tasks were
+#   included in the pipeline build for each image to be
+#   released. This package includes a set of rules to verify
+#   that the expected tasks ran in the pipeline when the image
+#   was built.
+#   Required tasks for a pipeline are specified in a data source
+#   provided at runtime. This data source features two primary
+#   rule data keys: pipeline-required-tasks and required-tasks.
+#   The pipeline-required-tasks key lists all required tasks broken
+#   down by pipeline name, while required-tasks details a
+#   default or baseline set of tasks. If your pipeline corresponds
+#   to an entry under pipeline-required-tasks, those tasks will be prioritized;
+#   otherwise, the system will default to the tasks listed under
+#   required-tasks. Required tasks are listed by the names given to
+#   them within the task definition. Optionally invocation parameter
+#   of a Task can be also mandated by including the name and the value
+#   in square brackets following the name of the task. For example: name[PARAM=val].
+#   Only single parameter is supported, to assert multiple parameters repeat the
+#   required task definition for each parameter seperately.
+#
 #
 package policy.release.tasks
 

@@ -1384,7 +1384,7 @@ Check for the existence of a task bundle. This rule will fail if the task is not
 [#tasks_package]
 == link:#tasks_package[Tasks]
 
-Enterprise Contract expects that a set of tasks were included in the pipeline build for each image to be released. This package includes a set of rules to verify that the expected tasks ran in the pipeline when the image was built. Required tasks are listed by the names given to them within the Tekton Bundle image. Optionally invocation parameter of a Task can be also mandated by including the name and the value in square brackets following the name of the task. For example: ``name[PARAM=val]``. Only single parameter is supported, to assert multiple parameters repeat the required task definition for each parameter seperately.
+Enterprise Contract expects that a set of tasks were included in the pipeline build for each image to be released. This package includes a set of rules to verify that the expected tasks ran in the pipeline when the image was built. Required tasks for a pipeline are specified in a data source provided at runtime. This data source features two primary rule data keys: pipeline-required-tasks and required-tasks. The pipeline-required-tasks key lists all required tasks broken down by pipeline name, while required-tasks details a default or baseline set of tasks. If your pipeline corresponds to an entry under pipeline-required-tasks, those tasks will be prioritized; otherwise, the system will default to the tasks listed under required-tasks. Required tasks are listed by the names given to them within the task definition. Optionally invocation parameter of a Task can be also mandated by including the name and the value in square brackets following the name of the task. For example: name[PARAM=val]. Only single parameter is supported, to assert multiple parameters repeat the required task definition for each parameter seperately.
 
 * Package name: `tasks`
 * Package full path: `policy.release.tasks`
@@ -1399,7 +1399,7 @@ Ensure that the all required tasks are resolved from trusted tasks.
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `%s is required and present but not from a trusted task`
 * Code: `tasks.required_untrusted_task_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L101[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L111[Source, window="_blank"]
 
 [#tasks__required_tasks_found]
 === link:#tasks__required_tasks_found[All required tasks were included in the pipeline]
@@ -1411,7 +1411,7 @@ Ensure that the set of required tasks are included in the PipelineRun attestatio
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s is missing`
 * Code: `tasks.required_tasks_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L77[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L87[Source, window="_blank"]
 
 [#tasks__future_required_tasks_found]
 === link:#tasks__future_required_tasks_found[Future required tasks were found]
@@ -1423,7 +1423,7 @@ Produce a warning when a task that will be required in the future was not includ
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `%s is missing and will be required on %s`
 * Code: `tasks.future_required_tasks_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L151[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L161[Source, window="_blank"]
 
 [#tasks__pinned_task_refs]
 === link:#tasks__pinned_task_refs[Pinned Task references]
@@ -1435,7 +1435,7 @@ Ensure that all Tasks in the SLSA Provenance attestation use an immuntable refer
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Task %s is used by pipeline task %s via an unpinned reference.`
 * Code: `tasks.pinned_task_refs`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L203[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L213[Source, window="_blank"]
 
 [#tasks__pipeline_has_tasks]
 === link:#tasks__pipeline_has_tasks[Pipeline run includes at least one task]
@@ -1447,7 +1447,7 @@ Ensure that at least one Task is present in the PipelineRun attestation.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `No tasks found in PipelineRun attestation`
 * Code: `tasks.pipeline_has_tasks`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L24[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L34[Source, window="_blank"]
 
 [#tasks__pipeline_required_tasks_list_provided]
 === link:#tasks__pipeline_required_tasks_list_provided[Required tasks list for pipeline was provided]
@@ -1459,7 +1459,7 @@ Produce a warning if the required tasks list rule data was not provided.
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Required tasks do not exist for pipeline`
 * Code: `tasks.pipeline_required_tasks_list_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L131[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L141[Source, window="_blank"]
 
 [#tasks__required_tasks_list_provided]
 === link:#tasks__required_tasks_list_provided[Required tasks list was provided]
@@ -1471,7 +1471,7 @@ Confirm the `required-tasks` rule data was provided, since it's required by the 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Missing required required-tasks data`
 * Code: `tasks.required_tasks_list_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L180[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L190[Source, window="_blank"]
 
 [#tasks__successful_pipeline_tasks]
 === link:#tasks__successful_pipeline_tasks[Successful pipeline tasks]
@@ -1483,7 +1483,7 @@ Ensure that all of the Tasks in the Pipeline completed successfully. Note that s
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task %q did not complete successfully, %q`
 * Code: `tasks.successful_pipeline_tasks`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L48[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L58[Source, window="_blank"]
 
 [#tasks__unsupported]
 === link:#tasks__unsupported[Task version unsupported]
@@ -1495,7 +1495,7 @@ The Tekton Task used is or will be unsupported. The Task is annotated with `buil
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Task %q is used by pipeline task %q is or will be unsupported as of %s.`
 * Code: `tasks.unsupported`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L230[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L240[Source, window="_blank"]
 
 [#test_package]
 == link:#test_package[Test]

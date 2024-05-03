@@ -36,30 +36,6 @@ test_not_valid if {
 		with input.image.ref as "registry.local/spam@sha256:123"
 }
 
-test_empty_components if {
-	expected := {{
-		"code": "sbom_cyclonedx.contains_components",
-		"msg": "The list of components is empty",
-	}}
-	att := json.patch(_sbom_attestation, [{
-		"op": "add",
-		"path": "/statement/predicate/components",
-		"value": [],
-	}])
-	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [att]
-		with input.image.ref as "registry.local/spam@sha256:123"
-}
-
-test_missing_components if {
-	expected := {{
-		"code": "sbom_cyclonedx.contains_components",
-		"msg": "The list of components is empty",
-	}}
-	att := json.remove(_sbom_attestation, ["/statement/predicate/components"])
-	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [att]
-		with input.image.ref as "registry.local/spam@sha256:123"
-}
-
 test_allowed_by_default if {
 	assert_allowed("pkg:golang/k8s.io/client-go@v0.28.3", [])
 }

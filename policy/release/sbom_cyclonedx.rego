@@ -51,24 +51,6 @@ deny contains result if {
 }
 
 # METADATA
-# title: Contains components
-# description: Check the list of components in the CycloneDX SBOM is not empty.
-# custom:
-#   short_name: contains_components
-#   failure_msg: The list of components is empty
-#   solution: >-
-#     Verify the SBOM is correctly identifying the components in the image.
-#   collections:
-#   - minimal
-#   - redhat
-#
-deny contains result if {
-	some s in sbom.cyclonedx_sboms
-	count(object.get(s, "components", [])) == 0
-	result := lib.result_helper(rego.metadata.chain(), [])
-}
-
-# METADATA
 # title: Allowed
 # description: >-
 #   Confirm the CycloneDX SBOM contains only allowed packages. By default all packages are allowed.

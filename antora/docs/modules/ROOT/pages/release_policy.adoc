@@ -54,7 +54,6 @@ Rules included:
 * xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
 * xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]
 * xref:release_policy.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]
-* xref:release_policy.adoc#sbom_cyclonedx__contains_components[SBOM CycloneDX: Contains components]
 * xref:release_policy.adoc#sbom_cyclonedx__found[SBOM CycloneDX: Found]
 * xref:release_policy.adoc#sbom_cyclonedx__valid[SBOM CycloneDX: Valid]
 * xref:release_policy.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]
@@ -130,7 +129,6 @@ Rules included:
 * xref:release_policy.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]
 * xref:release_policy.adoc#redhat_manifests__redhat_manifests_missing[Red Hat manifests: Missing Red Hat manifests]
 * xref:release_policy.adoc#sbom_cyclonedx__allowed[SBOM CycloneDX: Allowed]
-* xref:release_policy.adoc#sbom_cyclonedx__contains_components[SBOM CycloneDX: Contains components]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_packages_provided[SBOM CycloneDX: Disallowed packages list is provided]
 * xref:release_policy.adoc#sbom_cyclonedx__found[SBOM CycloneDX: Found]
 * xref:release_policy.adoc#sbom_cyclonedx__valid[SBOM CycloneDX: Valid]
@@ -862,18 +860,6 @@ Confirm the CycloneDX SBOM contains only allowed packages. By default all packag
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package is not allowed: %s`
 * Code: `sbom_cyclonedx.allowed`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L71[Source, window="_blank"]
-
-[#sbom_cyclonedx__contains_components]
-=== link:#sbom_cyclonedx__contains_components[Contains components]
-
-Check the list of components in the CycloneDX SBOM is not empty.
-
-*Solution*: Verify the SBOM is correctly identifying the components in the image.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The list of components is empty`
-* Code: `sbom_cyclonedx.contains_components`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L53[Source, window="_blank"]
 
 [#sbom_cyclonedx__disallowed_packages_provided]
@@ -886,7 +872,7 @@ Confirm the `disallowed_packages` rule data was provided, since it is required b
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `sbom_cyclonedx.disallowed_packages_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L91[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L73[Source, window="_blank"]
 
 [#sbom_cyclonedx__found]
 === link:#sbom_cyclonedx__found[Found]

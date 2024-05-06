@@ -1275,7 +1275,7 @@ Verify the source container image exists.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `source_image.exists`
-* Effective from: `2024-05-04T00:00:00Z`
+* Effective from: `2024-06-05T00:00:00Z`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/source_image.rego#L15[Source, window="_blank"]
 
 [#source_image__signed]

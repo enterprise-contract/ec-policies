@@ -20,7 +20,7 @@ import data.lib.tkn
 #   failure_msg: "%s"
 #   collections:
 #   - redhat
-#   effective_on: 2024-05-04T00:00:00Z
+#   effective_on: 2024-06-05T00:00:00Z
 #
 deny contains result if {
 	some error in _source_image_errors

@@ -158,7 +158,7 @@ a new data source can be added under the `sources.data` key. See
 https://github.com/simonbaird/securesign-ec-config/blob/main/policy.yaml#L24[this policy] for a complete example.
 
 [,bash]
----
+----
 name: Secure Sign Custom Enterprise Contract Policy
 
 description: >-
@@ -206,7 +206,7 @@ $ export IMAGE=quay.io/redhat-user-workloads/rhtas-tenant/rhtas-stack-1-0-beta/r
 $ export POLICY=github.com/simonbaird/securesign-ec-config
 
 $ ec validate image --image $IMAGE --policy $POLICY --public-key <(cat key.pub) --ignore-rekor --output data=data.yaml --output policy-input=policy-input.json --output yaml | yq .components[].violations
----
+----
 
 Note that the `--output data` and `--output policy-input` flags are not strictly
 necessary, but may be helpful for troubleshooting.

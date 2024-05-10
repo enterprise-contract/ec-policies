@@ -64,6 +64,8 @@
 *** xref:release_policy.adoc#provenance_materials_package[Provenance Materials]
 **** xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Git clone source matches materials provenance]
 **** xref:release_policy.adoc#provenance_materials__git_clone_task_found[Git clone task found]
+*** xref:release_policy.adoc#quay_expiration_package[Quay expiration]
+**** xref:release_policy.adoc#quay_expiration__expires_label[Expires label]
 *** xref:release_policy.adoc#redhat_manifests_package[Red Hat manifests]
 **** xref:release_policy.adoc#redhat_manifests__redhat_manifests_missing[Missing Red Hat manifests]
 *** xref:release_policy.adoc#sbom_cyclonedx_package[SBOM CycloneDX]

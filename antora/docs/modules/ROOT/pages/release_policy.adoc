@@ -127,6 +127,7 @@ Rules included:
 * xref:release_policy.adoc#olm__unpinned_references[OLM: Unpinned images in OLM bundle]
 * xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]
 * xref:release_policy.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]
+* xref:release_policy.adoc#quay_expiration__expires_label[Quay expiration: Expires label]
 * xref:release_policy.adoc#redhat_manifests__redhat_manifests_missing[Red Hat manifests: Missing Red Hat manifests]
 * xref:release_policy.adoc#sbom_cyclonedx__allowed[SBOM CycloneDX: Allowed]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_packages_provided[SBOM CycloneDX: Disallowed packages list is provided]
@@ -823,6 +824,26 @@ Confirm that the attestation contains a git-clone task with `commit` and `url` t
 * FAILURE message: `Task git-clone not found`
 * Code: `provenance_materials.git_clone_task_found`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/provenance_materials.rego#L15[Source, window="_blank"]
+
+[#quay_expiration_package]
+== link:#quay_expiration_package[Quay expiration]
+
+Policies to prevent releasing an image to quay that has a quay expiration date. In Konflux images with an expiration date are produced by "on-pr" build pipelines, i.e. pre-merge CI builds, so this is intended to prevent accidentally releasing a CI build.
+
+* Package name: `quay_expiration`
+* Package full path: `policy.release.quay_expiration`
+
+[#quay_expiration__expires_label]
+=== link:#quay_expiration__expires_label[Expires label]
+
+Check the image metadata for the presence of a "quay.expires-after" label. If it's present then produce a violation. This check is enforced only for a "release" pipeline, as determined by the value of the `pipeline_intention` rule data.
+
+*Solution*: Make sure the image is built without setting the "quay.expires-after" label. This label is usually set if the container image was built by an "on-pr" pipeline during pre-merge CI.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The image has a 'quay.expires-after' label set to '%s'`
+* Code: `quay_expiration.expires_label`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/quay_expiration.rego#L16[Source, window="_blank"]
 
 [#redhat_manifests_package]
 == link:#redhat_manifests_package[Red Hat manifests]

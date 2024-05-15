@@ -21,12 +21,10 @@ import data.lib
 #   - redhat
 #
 deny contains result if {
-	wanted := {_sbom_purl_path, _sbom_cyclonedx_path}
+	wanted := {_sbom_purl_path}
 	found := {name | some name, content in input.image.files}
 	some missing in (wanted - found)
 	result := lib.result_helper_with_term(rego.metadata.chain(), [missing], missing)
 }
 
 _sbom_purl_path := "root/buildinfo/content_manifests/sbom-purl.json"
-
-_sbom_cyclonedx_path := "root/buildinfo/content_manifests/sbom-cyclonedx.json"

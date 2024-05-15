@@ -160,7 +160,7 @@ annotations-opa:
 
 SHORT_SHA=$(shell git rev-parse --short HEAD)
 
-generate-docs:
+generate-docs:  ## Generate static docs
 	@cd docs && go run github.com/enterprise-contract/ec-policies/docs -adoc ../antora/docs/modules/ROOT -rego .. -rego "$$(go list -modfile ../go.mod -f '{{.Dir}}' github.com/enterprise-contract/ec-cli)/docs/policy/release"
 
 ##@ CI

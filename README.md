@@ -165,3 +165,4 @@ See also
 [antora]: https://docs.antora.org/antora/latest/install-and-run-quickstart/
 [quay]: https://quay.io/
 [infradeployments]: https://github.com/redhat-appstudio/infra-deployments
+YOLO

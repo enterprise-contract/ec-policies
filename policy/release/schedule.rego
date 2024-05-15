@@ -14,7 +14,9 @@ import data.lib
 # title: Weekday Restriction
 # description: >-
 #   Check if the current weekday is allowed based on the rule data value from the key
-#   `disallowed_weekdays`. By default, the list is empty in which case *any* weekday is allowed.
+#   `disallowed_weekdays`. By default, the list is empty in which case *any* weekday is
+#   allowed. This check is enforced only for a "release" pipeline, as determined by
+#   the value of the `pipeline_intention` rule data.
 # custom:
 #   short_name: weekday_restriction
 #   failure_msg: '%s is a disallowed weekday: %s'
@@ -23,6 +25,7 @@ import data.lib
 #   - redhat
 #
 deny contains result if {
+	_schedule_restrictions_apply
 	today := lower(time.weekday(lib.time.effective_current_time_ns))
 	disallowed := {lower(w) | some w in lib.rule_data("disallowed_weekdays")}
 	count(disallowed) > 0
@@ -35,7 +38,8 @@ deny contains result if {
 # description: >-
 #   Check if the current date is not allowed based on the rule data value
 #   from the key `disallowed_dates`. By default, the list is empty in which
-#   case *any* day is allowed.
+#   case *any* day is allowed. This check is enforced only for a "release" pipeline,
+#   as determined by the value of the `pipeline_intention` rule data.
 # custom:
 #   short_name: date_restriction
 #   failure_msg: '%s is a disallowed date: %s'
@@ -44,6 +48,7 @@ deny contains result if {
 #   - redhat
 #
 deny contains result if {
+	_schedule_restrictions_apply
 	today := time.format([lib.time.effective_current_time_ns, "UTC", "2006-01-02"])
 	disallowed := lib.rule_data("disallowed_dates")
 	today in disallowed
@@ -64,8 +69,17 @@ deny contains result if {
 #   - policy_data
 #
 deny contains result if {
+	# (For this one let's do it always)
 	some error in _rule_data_errors
 	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
+# We want these checks to apply only if we're doing a release. Detect that by checking
+# the `pipeline_intention` value which is set to "release" for Konflux release pipelines.
+default _schedule_restrictions_apply := false
+
+_schedule_restrictions_apply if {
+	lib.rule_data("pipeline_intention") == "release"
 }
 
 _rule_data_errors contains msg if {

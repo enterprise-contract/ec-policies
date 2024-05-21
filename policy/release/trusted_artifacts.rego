@@ -24,7 +24,7 @@ import rego.v1
 import data.lib
 import data.lib.tkn
 
-_supported_uris_reg := {"oci:.*@sha256-[0-9a-f]{64}"}
+_supported_uris_reg := {"oci:.*@sha256:[0-9a-f]{64}"}
 
 # METADATA
 # title: Valid Trusted Artifact chain

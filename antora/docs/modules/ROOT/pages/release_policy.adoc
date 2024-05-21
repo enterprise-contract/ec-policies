@@ -65,8 +65,6 @@ Rules included:
 * xref:release_policy.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]
 * xref:release_policy.adoc#slsa_source_correlated__source_code_reference_provided[SLSA - Verification model - Source: Source code reference provided]
 * xref:release_policy.adoc#slsa_source_correlated__attested_source_code_reference[SLSA - Verification model - Source: Source reference]
-* xref:release_policy.adoc#attestation_task_bundle__task_ref_bundles_not_empty[Task bundle checks: Task bundle references not empty]
-* xref:release_policy.adoc#attestation_task_bundle__tasks_defined_in_bundle[Task bundle checks: Tasks defined using bundle references]
 * xref:release_policy.adoc#tasks__pipeline_has_tasks[Tasks: Pipeline run includes at least one task]
 * xref:release_policy.adoc#tasks__successful_pipeline_tasks[Tasks: Successful pipeline tasks]
 
@@ -154,12 +152,6 @@ Rules included:
 * xref:release_policy.adoc#schedule__weekday_restriction[Schedule related checks: Weekday Restriction]
 * xref:release_policy.adoc#source_image__exists[Source image: Exists]
 * xref:release_policy.adoc#source_image__signed[Source image: Signed]
-* xref:release_policy.adoc#attestation_task_bundle__trusted_bundles_provided[Task bundle checks: A trusted Tekton bundles list was provided]
-* xref:release_policy.adoc#attestation_task_bundle__task_ref_bundles_not_empty[Task bundle checks: Task bundle references not empty]
-* xref:release_policy.adoc#attestation_task_bundle__task_ref_bundles_pinned[Task bundle checks: Task bundle references pinned to digest]
-* xref:release_policy.adoc#attestation_task_bundle__task_ref_bundles_trusted[Task bundle checks: Task bundles are in trusted tasks list]
-* xref:release_policy.adoc#attestation_task_bundle__task_ref_bundles_current[Task bundle checks: Task bundles are latest versions]
-* xref:release_policy.adoc#attestation_task_bundle__tasks_defined_in_bundle[Task bundle checks: Tasks defined using bundle references]
 * xref:release_policy.adoc#tasks__required_untrusted_task_found[Tasks: All required tasks are from trusted tasks]
 * xref:release_policy.adoc#tasks__required_tasks_found[Tasks: All required tasks were included in the pipeline]
 * xref:release_policy.adoc#tasks__future_required_tasks_found[Tasks: Future required tasks were found]
@@ -179,8 +171,11 @@ Rules included:
 * xref:release_policy.adoc#test__rule_data_provided[Test: Rule data provided]
 * xref:release_policy.adoc#test__test_data_found[Test: Test data found in task results]
 * xref:release_policy.adoc#test__test_results_found[Test: Test data includes results key]
-* xref:release_policy.adoc#trusted_artifacts__valid_trusted_artifact_inputs[Trusted Artifacts: Trusted Artifact produced in pipeline]
-* xref:release_policy.adoc#trusted_artifacts__valid_trusted_artifact_chain[Trusted Artifacts: Valid Trusted Artifact chain]
+* xref:release_policy.adoc#trusted_task__current[Trusted Task checks: Current]
+* xref:release_policy.adoc#trusted_task__data[Trusted Task checks: Data]
+* xref:release_policy.adoc#trusted_task__pinned[Trusted Task checks: Pinned]
+* xref:release_policy.adoc#trusted_task__trusted[Trusted Task checks: Trusted]
+* xref:release_policy.adoc#trusted_task__valid_trusted_artifact_inputs[Trusted Task checks: Trusted Artifact produced in pipeline]
 * xref:release_policy.adoc#rpm_ostree_task__builder_image_param[rpm-ostree Task: Builder image parameter]
 * xref:release_policy.adoc#rpm_ostree_task__rule_data[rpm-ostree Task: Rule data]
 
@@ -1326,7 +1321,7 @@ Confirm the `trusted_tasks` rule data was provided, since it's required by the p
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Missing required trusted_tasks data`
 * Code: `attestation_task_bundle.trusted_bundles_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L126[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L114[Source, window="_blank"]
 
 [#attestation_task_bundle__task_ref_bundles_not_empty]
 === link:#attestation_task_bundle__task_ref_bundles_not_empty[Task bundle references not empty]
@@ -1338,7 +1333,7 @@ Check that a valid task bundle reference is being used.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' uses an empty bundle image reference`
 * Code: `attestation_task_bundle.task_ref_bundles_not_empty`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L40[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L37[Source, window="_blank"]
 
 [#attestation_task_bundle__task_ref_bundles_pinned]
 === link:#attestation_task_bundle__task_ref_bundles_pinned[Task bundle references pinned to digest]
@@ -1350,7 +1345,7 @@ Check if the Tekton Bundle used for the Tasks in the Pipeline definition is pinn
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Pipeline task '%s' uses an unpinned task bundle reference '%s'`
 * Code: `attestation_task_bundle.task_ref_bundles_pinned`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L60[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L54[Source, window="_blank"]
 
 [#attestation_task_bundle__task_ref_bundles_trusted]
 === link:#attestation_task_bundle__task_ref_bundles_trusted[Task bundles are in trusted tasks list]
@@ -1362,7 +1357,7 @@ For each Task in the SLSA Provenance attestation, check if the Tekton Bundle use
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' uses an untrusted task bundle '%s'`
 * Code: `attestation_task_bundle.task_ref_bundles_trusted`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L103[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L93[Source, window="_blank"]
 
 [#attestation_task_bundle__task_ref_bundles_current]
 === link:#attestation_task_bundle__task_ref_bundles_current[Task bundles are latest versions]
@@ -1374,7 +1369,7 @@ For each Task in the SLSA Provenance attestation, check if the Tekton Bundle use
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Pipeline task '%s' uses an out of date task bundle '%s'`
 * Code: `attestation_task_bundle.task_ref_bundles_current`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L80[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L72[Source, window="_blank"]
 
 [#attestation_task_bundle__tasks_defined_in_bundle]
 === link:#attestation_task_bundle__tasks_defined_in_bundle[Tasks defined using bundle references]
@@ -1632,40 +1627,6 @@ Each test result is expected to have a `results` key. Verify that the `results` 
 * Code: `test.test_results_found`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test.rego#L40[Source, window="_blank"]
 
-[#trusted_artifacts_package]
-== link:#trusted_artifacts_package[Trusted Artifacts]
-
-Trusted Artifacts ensure that only trusted Tasks were used from the origin of the source code to the produced image. The chain is constructed by linking specific parameters with results -- ones that are named `*_ARTIFACT` and have values in the form of `sha-256:<digest>`. If a chain of same-valued digests can be formed from the first Task result to the last Task by correlating the digest values of those and any tasks inbetween.
-Trusted Tasks should be producing and using only the files with the same digest. Given this assurance any code injection should be detected by observing a modified digest.
-This allows addition of Tasks on the Pipeline that do not need to be trusted, i.e. custom tasks.
-
-* Package name: `trusted_artifacts`
-* Package full path: `policy.release.trusted_artifacts`
-
-[#trusted_artifacts__valid_trusted_artifact_inputs]
-=== link:#trusted_artifacts__valid_trusted_artifact_inputs[Trusted Artifact produced in pipeline]
-
-All input trusted artifacts must be produced on the pipeline. If they are not the artifact could have been injected by a rouge task.
-
-*Solution*: Audit the pipeline to make sure all inputs are produced by the pipeline.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Code tampering detected, input %q for task %q was not produced by the pipeline as attested.`
-* Code: `trusted_artifacts.valid_trusted_artifact_inputs`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_artifacts.rego#L70[Source, window="_blank"]
-
-[#trusted_artifacts__valid_trusted_artifact_chain]
-=== link:#trusted_artifacts__valid_trusted_artifact_chain[Valid Trusted Artifact chain]
-
-The chain of Trusted Artifacts from the origin of the first artifact to the built artifact flows through trusted Tasks.
-
-*Solution*: Audit the pipeline to make sure no untrusted Tasks were added to the artifact-producing chain of Tasks.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Code tampering detected, untrusted task %q was included in build chain comprised of: %s`
-* Code: `trusted_artifacts.valid_trusted_artifact_chain`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_artifacts.rego#L29[Source, window="_blank"]
-
 [#trusted_task_package]
 == link:#trusted_task_package[Trusted Task checks]
 
@@ -1685,7 +1646,7 @@ Check if all Tekton Tasks use the latest known Task reference.
 * WARNING message: `Pipeline task %q uses an out of date task reference, %s`
 * Code: `trusted_task.current`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L40[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L44[Source, window="_blank"]
 
 [#trusted_task__data]
 === link:#trusted_task__data[Data]
@@ -1698,7 +1659,7 @@ Confirm the `trusted_tasks` rule data was provided, since it's required by the p
 * FAILURE message: `Missing required trusted_tasks data`
 * Code: `trusted_task.data`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L81[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L212[Source, window="_blank"]
 
 [#trusted_task__pinned]
 === link:#trusted_task__pinned[Pinned]
@@ -1711,20 +1672,32 @@ Check if all Tekton Tasks use a Task definition by a pinned reference. When usin
 * WARNING message: `Pipeline task %q uses an unpinned task reference, %s`
 * Code: `trusted_task.pinned`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L17[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L19[Source, window="_blank"]
 
 [#trusted_task__trusted]
 === link:#trusted_task__trusted[Trusted]
 
-Check if all Tekton Tasks use a trusted Task reference.
+Check the trust of the Tekton Tasks used in the build Pipeline. There are two modes in which trust is verified. The first mode is used if Trusted Artifacts are enabled. In this case, a chain of trust is established for all the Tasks involved in creating an artifact. If the chain contains an untrusted Task, then a violation is emitted. The second mode is used as a fallback when Trusted Artifacts are not enabled. In this case, **all** Tasks in the build Pipeline must be trusted.
 
-*Solution*: For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is a trusted task.
+*Solution*: If using Trusted Artifacts, be sure every Task in the build Pipeline responsible for producing a Trusted Artifact is trusted. Otherwise, ensure **all** Tasks in the build Pipeline are trusted. Note that trust is eventually revoked from Tasks when newer versions are made available.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Pipeline task %q uses an untrusted task reference, %s`
+* FAILURE message: `%s`
 * Code: `trusted_task.trusted`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L60[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L66[Source, window="_blank"]
+
+[#trusted_task__valid_trusted_artifact_inputs]
+=== link:#trusted_task__valid_trusted_artifact_inputs[Trusted Artifact produced in pipeline]
+
+All input trusted artifacts must be produced on the pipeline. If they are not the artifact could have been injected by a rouge task.
+
+*Solution*: Audit the pipeline to make sure all inputs are produced by the pipeline.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Code tampering detected, input %q for task %q was not produced by the pipeline as attested.`
+* Code: `trusted_task.valid_trusted_artifact_inputs`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L130[Source, window="_blank"]
 
 [#rpm_ostree_task_package]
 == link:#rpm_ostree_task_package[rpm-ostree Task]

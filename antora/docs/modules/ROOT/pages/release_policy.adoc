@@ -1659,7 +1659,7 @@ Confirm the `trusted_tasks` rule data was provided, since it's required by the p
 * FAILURE message: `Missing required trusted_tasks data`
 * Code: `trusted_task.data`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L212[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L213[Source, window="_blank"]
 
 [#trusted_task__pinned]
 === link:#trusted_task__pinned[Pinned]
@@ -1697,7 +1697,7 @@ All input trusted artifacts must be produced on the pipeline. If they are not th
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Code tampering detected, input %q for task %q was not produced by the pipeline as attested.`
 * Code: `trusted_task.valid_trusted_artifact_inputs`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L130[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L131[Source, window="_blank"]
 
 [#rpm_ostree_task_package]
 == link:#rpm_ostree_task_package[rpm-ostree Task]

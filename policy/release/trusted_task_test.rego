@@ -137,8 +137,8 @@ test_trusted_artifact_tampering if {
 	lib.assert_equal_results(trusted_task.deny, {{
 		"code": "trusted_task.trusted",
 		# regal ignore:line-length
-		"msg": `Code tampering detected, untrusted task "task_b" was included in build chain comprised of: task_a, task_b, task_c`,
-		"term": "task_b",
+		"msg": `Code tampering detected, untrusted PipelineTask "task_b" (Task "TaskB") was included in build chain comprised of: task_a, task_b, task_c`,
+		"term": "TaskB",
 	}}) with data.trusted_tasks as trusted_tasks_data
 		with input.attestations as [evil_attestation]
 }

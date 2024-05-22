@@ -26,9 +26,6 @@ import data.lib.tkn
 # custom:
 #   short_name: tasks_defined_in_bundle
 #   failure_msg: Pipeline task '%s' does not contain a bundle reference
-#   collections:
-#   - minimal
-#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -46,9 +43,6 @@ deny contains result if {
 #   failure_msg: Pipeline task '%s' uses an empty bundle image reference
 #   solution: >-
 #     Specify a task bundle with a reference as the full digest.
-#   collections:
-#   - minimal
-#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -67,8 +61,6 @@ deny contains result if {
 #   failure_msg: Pipeline task '%s' uses an unpinned task bundle reference '%s'
 #   solution: >-
 #     Specify the task bundle reference with a full digest rather than a tag.
-#   collections:
-#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -88,8 +80,6 @@ warn contains result if {
 #   solution: >-
 #     A task bundle used is not the most recent. The most recent task bundles are defined
 #     in the data source of your policy config.
-#   collections:
-#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -111,8 +101,6 @@ warn contains result if {
 #   solution: >-
 #     For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is
 #     a trusted task.
-#   collections:
-#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -134,8 +122,6 @@ deny contains result if {
 #   solution: >-
 #     Create a lsit of trusted tasks. This is a list of task bundles with a top-level key
 #     of 'trusted_tasks'.
-#   collections:
-#   - redhat
 #
 deny contains result if {
 	tkn.missing_trusted_tasks_data

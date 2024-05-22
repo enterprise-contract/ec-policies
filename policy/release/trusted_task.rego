@@ -104,12 +104,13 @@ _trust_errors contains error if {
 	]
 
 	some untrusted_task in tkn.untrusted_task_refs(chain)
-	untrusted_task_name := tkn.pipeline_task_name(untrusted_task)
+	untrusted_pipeline_task_name := tkn.pipeline_task_name(untrusted_task)
+	untrusted_task_name := tkn.task_name(untrusted_task)
 
 	error := {
 		"msg": sprintf(
-			"Code tampering detected, untrusted task %q was included in build chain comprised of: %s",
-			[untrusted_task_name, concat(", ", dependency_chain)],
+			"Code tampering detected, untrusted PipelineTask %q (Task %q) was included in build chain comprised of: %s",
+			[untrusted_pipeline_task_name, untrusted_task_name, concat(", ", dependency_chain)],
 		),
 		"term": untrusted_task_name,
 	}

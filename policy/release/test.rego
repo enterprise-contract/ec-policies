@@ -14,6 +14,53 @@ import data.lib
 import data.lib.image
 
 # METADATA
+# title: No informative tests failed
+# description: >-
+#   Produce a warning if any informative tests have their result set to "FAILED".
+#   The result type is configurable by the "failed_tests_results" key, and the list
+#   of informative tests is configurable by the "informative_tests" key in the rule data.
+# custom:
+#   short_name: no_failed_informative_tests
+#   failure_msg: The Task %q from the build Pipeline reports a failed informative test
+#   solution: >-
+#     There is a test that failed. Make sure that any task in the build pipeline
+#     with a result named 'TEST_OUTPUT' does not fail. More information about the test
+#     should be available in the logs for the build Pipeline.
+#   collections:
+#   - redhat
+#   depends_on:
+#   - test.test_data_found
+#
+warn contains result if {
+	some test in resulted_in(lib.rule_data("failed_tests_results"))
+	test in lib.rule_data("informative_tests")
+	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
+}
+
+# METADATA
+# title: No tests produced warnings
+# description: >-
+#   Produce a warning if any tests have their result set to "WARNING".
+#   The result type is configurable by the "warned_tests_results" key in the rule data.
+# custom:
+#   short_name: no_test_warnings
+#   failure_msg: The Task %q from the build Pipeline reports a test contains warnings
+#   solution: >-
+#     There is a task with result 'TEST_OUTPUT' that returned a result of 'WARNING'.
+#     You can find which test resulted in 'WARNING' by examining the 'result' key
+#     in the 'TEST_OUTPUT'. More information about the test should be available in
+#     the logs for the build Pipeline.
+#   collections:
+#   - redhat
+#   depends_on:
+#   - test.test_data_found
+#
+warn contains result if {
+	some test in resulted_in(lib.rule_data("warned_tests_results"))
+	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
+}
+
+# METADATA
 # title: Test data found in task results
 # description: >-
 #   Ensure that at least one of the tasks in the pipeline includes a
@@ -116,30 +163,6 @@ deny contains result if {
 }
 
 # METADATA
-# title: No informative tests failed
-# description: >-
-#   Produce a warning if any informative tests have their result set to "FAILED".
-#   The result type is configurable by the "failed_tests_results" key, and the list
-#   of informative tests is configurable by the "informative_tests" key in the rule data.
-# custom:
-#   short_name: no_failed_informative_tests
-#   failure_msg: The Task %q from the build Pipeline reports a failed informative test
-#   solution: >-
-#     There is a test that failed. Make sure that any task in the build pipeline
-#     with a result named 'TEST_OUTPUT' does not fail. More information about the test
-#     should be available in the logs for the build Pipeline.
-#   collections:
-#   - redhat
-#   depends_on:
-#   - test.test_data_found
-#
-warn contains result if {
-	some test in resulted_in(lib.rule_data("failed_tests_results"))
-	test in lib.rule_data("informative_tests")
-	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
-}
-
-# METADATA
 # title: No tests erred
 # description: >-
 #   Produce a violation if any tests have their result set to "ERROR".
@@ -184,29 +207,6 @@ deny contains result if {
 #
 deny contains result if {
 	some test in resulted_in(lib.rule_data("skipped_tests_results"))
-	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
-}
-
-# METADATA
-# title: No tests produced warnings
-# description: >-
-#   Produce a warning if any tests have their result set to "WARNING".
-#   The result type is configurable by the "warned_tests_results" key in the rule data.
-# custom:
-#   short_name: no_test_warnings
-#   failure_msg: The Task %q from the build Pipeline reports a test contains warnings
-#   solution: >-
-#     There is a task with result 'TEST_OUTPUT' that returned a result of 'WARNING'.
-#     You can find which test resulted in 'WARNING' by examining the 'result' key
-#     in the 'TEST_OUTPUT'. More information about the test should be available in
-#     the logs for the build Pipeline.
-#   collections:
-#   - redhat
-#   depends_on:
-#   - test.test_data_found
-#
-warn contains result if {
-	some test in resulted_in(lib.rule_data("warned_tests_results"))
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
 

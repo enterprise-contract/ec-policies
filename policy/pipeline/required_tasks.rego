@@ -14,19 +14,6 @@ import data.lib
 import data.lib.tkn
 
 # METADATA
-# title: Pipeline contains tasks
-# description: >-
-#   Confirm at least one task is present in the pipeline definition.
-# custom:
-#   short_name: tasks_found
-#   failure_msg: No tasks found in pipeline
-deny contains result if {
-	input.kind == "Pipeline"
-	count(tkn.tasks(input)) == 0
-	result := lib.result_helper(rego.metadata.chain(), [])
-}
-
-# METADATA
 # title: Required tasks found in pipeline definition
 # description: >-
 #   Produce a warning if a list of current or future required tasks does not exist
@@ -43,25 +30,6 @@ warn contains result if {
 	# check for future tasks
 	not tkn.latest_required_pipeline_tasks(input)
 	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_name])
-}
-
-# METADATA
-# title: Missing required task
-# description: >-
-#   Ensure that the set of required tasks is included
-#   in the Pipeline definition.
-# custom:
-#   short_name: missing_required_task
-#   failure_msg: '%s is missing'
-deny contains result if {
-	count(tkn.tasks(input)) > 0
-
-	# Get missing tasks by comparing with the default required task list
-	some required_task in _missing_tasks(current_required_tasks.tasks)
-
-	# Don't report an error if a task is required now, but not in the future
-	required_task in latest_required_tasks.tasks
-	result := lib.result_helper_with_term(rego.metadata.chain(), [_format_missing(required_task, false)], required_task)
 }
 
 # METADATA
@@ -86,6 +54,38 @@ warn contains result if {
 		[_format_missing(required_task, true), latest_required_tasks.effective_on],
 		required_task,
 	)
+}
+
+# METADATA
+# title: Pipeline contains tasks
+# description: >-
+#   Confirm at least one task is present in the pipeline definition.
+# custom:
+#   short_name: tasks_found
+#   failure_msg: No tasks found in pipeline
+deny contains result if {
+	input.kind == "Pipeline"
+	count(tkn.tasks(input)) == 0
+	result := lib.result_helper(rego.metadata.chain(), [])
+}
+
+# METADATA
+# title: Missing required task
+# description: >-
+#   Ensure that the set of required tasks is included
+#   in the Pipeline definition.
+# custom:
+#   short_name: missing_required_task
+#   failure_msg: '%s is missing'
+deny contains result if {
+	count(tkn.tasks(input)) > 0
+
+	# Get missing tasks by comparing with the default required task list
+	some required_task in _missing_tasks(current_required_tasks.tasks)
+
+	# Don't report an error if a task is required now, but not in the future
+	required_task in latest_required_tasks.tasks
+	result := lib.result_helper_with_term(rego.metadata.chain(), [_format_missing(required_task, false)], required_task)
 }
 
 # METADATA

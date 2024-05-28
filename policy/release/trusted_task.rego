@@ -89,6 +89,62 @@ deny contains result if {
 	result := lib.result_helper_with_term(rego.metadata.chain(), [err.msg], err.term)
 }
 
+# METADATA
+# title: Trusted Artifact produced in pipeline
+# description: >-
+#   All input trusted artifacts must be produced on the pipeline. If they are not
+#   the artifact could have been injected by a rouge task.
+# custom:
+#   short_name: valid_trusted_artifact_inputs
+#   failure_msg: >-
+#     Code tampering detected, input %q for task %q was not produced by the
+#     pipeline as attested.
+#   solution: >-
+#     Audit the pipeline to make sure all inputs are produced by the pipeline.
+#   collections:
+#   - redhat
+#   depends_on:
+#   - attestation_type.known_attestation_type
+#
+deny contains result if {
+	some attestation in lib.pipelinerun_attestations
+	some task in tkn.tasks(attestation)
+	some invalid_input in _trusted_artifact_inputs(task)
+	count({o |
+		some t in tkn.tasks(attestation)
+		some o in _trusted_artifact_outputs(t)
+
+		o == invalid_input
+	}) == 0
+
+	task_name = tkn.pipeline_task_name(task)
+
+	result := lib.result_helper_with_term(
+		rego.metadata.chain(),
+		[invalid_input, task_name],
+		invalid_input,
+	)
+}
+
+# METADATA
+# title: Data
+# description: >-
+#   Confirm the `trusted_tasks` rule data was provided, since it's required by the policy rules in
+#   this package.
+# custom:
+#   short_name: data
+#   failure_msg: Missing required trusted_tasks data
+#   solution: >-
+#     Create a, or use an existing, trusted tasks list as a data source.
+#   collections:
+#   - redhat
+#   effective_on: 2024-05-07T00:00:00Z
+#
+deny contains result if {
+	tkn.missing_trusted_tasks_data
+	result := lib.result_helper(rego.metadata.chain(), [])
+}
+
 _trust_errors contains error if {
 	_uses_trusted_artifacts
 	some attestation in lib.pipelinerun_attestations
@@ -126,43 +182,6 @@ _trust_errors contains error if {
 		),
 		"term": tkn.task_name(task),
 	}
-}
-
-# METADATA
-# title: Trusted Artifact produced in pipeline
-# description: >-
-#   All input trusted artifacts must be produced on the pipeline. If they are not
-#   the artifact could have been injected by a rouge task.
-# custom:
-#   short_name: valid_trusted_artifact_inputs
-#   failure_msg: >-
-#     Code tampering detected, input %q for task %q was not produced by the
-#     pipeline as attested.
-#   solution: >-
-#     Audit the pipeline to make sure all inputs are produced by the pipeline.
-#   collections:
-#   - redhat
-#   depends_on:
-#   - attestation_type.known_attestation_type
-#
-deny contains result if {
-	some attestation in lib.pipelinerun_attestations
-	some task in tkn.tasks(attestation)
-	some invalid_input in _trusted_artifact_inputs(task)
-	count({o |
-		some t in tkn.tasks(attestation)
-		some o in _trusted_artifact_outputs(t)
-
-		o == invalid_input
-	}) == 0
-
-	task_name = tkn.pipeline_task_name(task)
-
-	result := lib.result_helper_with_term(
-		rego.metadata.chain(),
-		[invalid_input, task_name],
-		invalid_input,
-	)
 }
 
 _artifact_chain[attestation][name] := dependencies if {
@@ -208,25 +227,6 @@ _uses_trusted_artifacts if {
 		total > 0
 	}
 	count(ta_tasks) > 0
-}
-
-# METADATA
-# title: Data
-# description: >-
-#   Confirm the `trusted_tasks` rule data was provided, since it's required by the policy rules in
-#   this package.
-# custom:
-#   short_name: data
-#   failure_msg: Missing required trusted_tasks data
-#   solution: >-
-#     Create a, or use an existing, trusted tasks list as a data source.
-#   collections:
-#   - redhat
-#   effective_on: 2024-05-07T00:00:00Z
-#
-deny contains result if {
-	tkn.missing_trusted_tasks_data
-	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
 _task_info(task) := info if {

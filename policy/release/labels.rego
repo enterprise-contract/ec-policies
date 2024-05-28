@@ -15,6 +15,36 @@ import rego.v1
 import data.lib
 
 # METADATA
+# title: Optional labels
+# description: >-
+#   Check the image for the presence of labels that are recommended,
+#   but not required. Use the rule data `optional_labels` key to set
+#   the list of labels to check, or the `fbc_optional_labels` key for
+#   fbc images.
+# custom:
+#   short_name: optional_labels
+#   failure_msg: 'The optional %q label is missing. Label description: %s'
+#   solution: >-
+#     Update the image build process to set the optional labels.
+#   collections:
+#   - redhat
+#
+warn contains result if {
+	found_labels := {name |
+		some label in image_labels
+		name := label.name
+	}
+	some optional_label in optional_labels
+	name := optional_label.name
+	not name in found_labels
+	description := optional_label.description
+	result := _with_effective_on(
+		lib.result_helper_with_term(rego.metadata.chain(), [name, description], name),
+		optional_label,
+	)
+}
+
+# METADATA
 # title: Deprecated labels
 # description: >-
 #   Check the image for the presence of labels that have been deprecated.
@@ -68,36 +98,6 @@ deny contains result if {
 	result := _with_effective_on(
 		lib.result_helper_with_term(rego.metadata.chain(), [name, description], name),
 		required_label,
-	)
-}
-
-# METADATA
-# title: Optional labels
-# description: >-
-#   Check the image for the presence of labels that are recommended,
-#   but not required. Use the rule data `optional_labels` key to set
-#   the list of labels to check, or the `fbc_optional_labels` key for
-#   fbc images.
-# custom:
-#   short_name: optional_labels
-#   failure_msg: 'The optional %q label is missing. Label description: %s'
-#   solution: >-
-#     Update the image build process to set the optional labels.
-#   collections:
-#   - redhat
-#
-warn contains result if {
-	found_labels := {name |
-		some label in image_labels
-		name := label.name
-	}
-	some optional_label in optional_labels
-	name := optional_label.name
-	not name in found_labels
-	description := optional_label.description
-	result := _with_effective_on(
-		lib.result_helper_with_term(rego.metadata.chain(), [name, description], name),
-		optional_label,
 	)
 }
 

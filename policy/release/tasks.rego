@@ -32,83 +32,6 @@ import data.lib.refs
 import data.lib.tkn
 
 # METADATA
-# title: Pipeline run includes at least one task
-# description: >-
-#   Ensure that at least one Task is present in the PipelineRun
-#   attestation.
-# custom:
-#   short_name: pipeline_has_tasks
-#   failure_msg: No tasks found in PipelineRun attestation
-#   solution: >-
-#     Make sure the build pipeline ran any tasks and that the build system is
-#     generating a proper attestation.
-#   collections:
-#   - minimal
-#   - redhat
-#   - slsa3
-#   depends_on:
-#   - attestation_type.known_attestation_type
-#
-deny contains result if {
-	some att in lib.pipelinerun_attestations
-	count(tkn.tasks(att)) == 0
-	result := lib.result_helper(rego.metadata.chain(), [])
-}
-
-# METADATA
-# title: Successful pipeline tasks
-# description: >-
-#   Ensure that all of the Tasks in the Pipeline completed successfully. Note that
-#   skipped Tasks are not taken into account and do not influence the outcome.
-# custom:
-#   short_name: successful_pipeline_tasks
-#   failure_msg: Pipeline task %q did not complete successfully, %q
-#   solution: >-
-#     Make sure the build pipeline is properly configured so all the tasks can be
-#     executed successfully.
-#   collections:
-#   - minimal
-#   - redhat
-#   - slsa3
-#   depends_on:
-#   - tasks.pipeline_has_tasks
-#
-deny contains result if {
-	some att in lib.pipelinerun_attestations
-	some task in tkn.tasks(att)
-	some status in _status(task)
-	status != "Succeeded"
-	result := lib.result_helper_with_term(
-		rego.metadata.chain(),
-		[tkn.pipeline_task_name(task), status], tkn.pipeline_task_name(task),
-	)
-}
-
-# METADATA
-# title: All required tasks were included in the pipeline
-# description: >-
-#   Ensure that the set of required tasks are included
-#   in the PipelineRun attestation.
-# custom:
-#   short_name: required_tasks_found
-#   failure_msg: '%s is missing'
-#   solution: >-
-#     Make sure all required tasks are in the build pipeline. The required task list
-#     is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'.
-#   collections:
-#   - redhat
-#   depends_on:
-#   - tasks.pipeline_has_tasks
-#
-deny contains result if {
-	some required_task in _missing_tasks(current_required_tasks.tasks)
-
-	# Don't report an error if a task is required now, but not in the future
-	required_task in latest_required_tasks.tasks
-	result := lib.result_helper_with_term(rego.metadata.chain(), [_format_missing(required_task, false)], required_task)
-}
-
-# METADATA
 # title: All required tasks are from trusted tasks
 # description: >-
 #   Ensure that the all required tasks are resolved from trusted tasks.
@@ -185,6 +108,83 @@ warn contains result if {
 		[_format_missing(required_task, true), latest_required_tasks.effective_on],
 		required_task,
 	)
+}
+
+# METADATA
+# title: Pipeline run includes at least one task
+# description: >-
+#   Ensure that at least one Task is present in the PipelineRun
+#   attestation.
+# custom:
+#   short_name: pipeline_has_tasks
+#   failure_msg: No tasks found in PipelineRun attestation
+#   solution: >-
+#     Make sure the build pipeline ran any tasks and that the build system is
+#     generating a proper attestation.
+#   collections:
+#   - minimal
+#   - redhat
+#   - slsa3
+#   depends_on:
+#   - attestation_type.known_attestation_type
+#
+deny contains result if {
+	some att in lib.pipelinerun_attestations
+	count(tkn.tasks(att)) == 0
+	result := lib.result_helper(rego.metadata.chain(), [])
+}
+
+# METADATA
+# title: Successful pipeline tasks
+# description: >-
+#   Ensure that all of the Tasks in the Pipeline completed successfully. Note that
+#   skipped Tasks are not taken into account and do not influence the outcome.
+# custom:
+#   short_name: successful_pipeline_tasks
+#   failure_msg: Pipeline task %q did not complete successfully, %q
+#   solution: >-
+#     Make sure the build pipeline is properly configured so all the tasks can be
+#     executed successfully.
+#   collections:
+#   - minimal
+#   - redhat
+#   - slsa3
+#   depends_on:
+#   - tasks.pipeline_has_tasks
+#
+deny contains result if {
+	some att in lib.pipelinerun_attestations
+	some task in tkn.tasks(att)
+	some status in _status(task)
+	status != "Succeeded"
+	result := lib.result_helper_with_term(
+		rego.metadata.chain(),
+		[tkn.pipeline_task_name(task), status], tkn.pipeline_task_name(task),
+	)
+}
+
+# METADATA
+# title: All required tasks were included in the pipeline
+# description: >-
+#   Ensure that the set of required tasks are included
+#   in the PipelineRun attestation.
+# custom:
+#   short_name: required_tasks_found
+#   failure_msg: '%s is missing'
+#   solution: >-
+#     Make sure all required tasks are in the build pipeline. The required task list
+#     is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'.
+#   collections:
+#   - redhat
+#   depends_on:
+#   - tasks.pipeline_has_tasks
+#
+deny contains result if {
+	some required_task in _missing_tasks(current_required_tasks.tasks)
+
+	# Don't report an error if a task is required now, but not in the future
+	required_task in latest_required_tasks.tasks
+	result := lib.result_helper_with_term(rego.metadata.chain(), [_format_missing(required_task, false)], required_task)
 }
 
 # METADATA

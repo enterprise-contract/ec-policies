@@ -19,39 +19,6 @@ import data.lib.bundles
 import data.lib.tkn
 
 # METADATA
-# title: Tasks defined using bundle references
-# description: >-
-#   Check for the existence of a task bundle. This rule will
-#   fail if the task is not called from a bundle.
-# custom:
-#   short_name: tasks_defined_in_bundle
-#   failure_msg: Pipeline task '%s' does not contain a bundle reference
-#   depends_on:
-#   - attestation_type.known_attestation_type
-#
-deny contains result if {
-	some task in bundles.disallowed_task_reference(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task)])
-}
-
-# METADATA
-# title: Task bundle references not empty
-# description: >-
-#   Check that a valid task bundle reference is being used.
-# custom:
-#   short_name: task_ref_bundles_not_empty
-#   failure_msg: Pipeline task '%s' uses an empty bundle image reference
-#   solution: >-
-#     Specify a task bundle with a reference as the full digest.
-#   depends_on:
-#   - attestation_type.known_attestation_type
-#
-deny contains result if {
-	some task in bundles.empty_task_bundle_reference(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task)])
-}
-
-# METADATA
 # title: Task bundle references pinned to digest
 # description: >-
 #   Check if the Tekton Bundle used for the Tasks in the Pipeline definition
@@ -88,6 +55,39 @@ warn contains result if {
 	bundle := bundles.bundle(task)
 	bundle != ""
 	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task), bundle])
+}
+
+# METADATA
+# title: Tasks defined using bundle references
+# description: >-
+#   Check for the existence of a task bundle. This rule will
+#   fail if the task is not called from a bundle.
+# custom:
+#   short_name: tasks_defined_in_bundle
+#   failure_msg: Pipeline task '%s' does not contain a bundle reference
+#   depends_on:
+#   - attestation_type.known_attestation_type
+#
+deny contains result if {
+	some task in bundles.disallowed_task_reference(lib.tasks_from_pipelinerun)
+	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task)])
+}
+
+# METADATA
+# title: Task bundle references not empty
+# description: >-
+#   Check that a valid task bundle reference is being used.
+# custom:
+#   short_name: task_ref_bundles_not_empty
+#   failure_msg: Pipeline task '%s' uses an empty bundle image reference
+#   solution: >-
+#     Specify a task bundle with a reference as the full digest.
+#   depends_on:
+#   - attestation_type.known_attestation_type
+#
+deny contains result if {
+	some task in bundles.empty_task_bundle_reference(lib.tasks_from_pipelinerun)
+	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task)])
 }
 
 # METADATA

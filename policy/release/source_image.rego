@@ -27,6 +27,23 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [error])
 }
 
+# METADATA
+# title: Signed
+# description: Verify the source container image is signed.
+# custom:
+#   short_name: signed
+#   failure_msg: "%s"
+#   depends_on:
+#   - source_image.exists
+#   collections:
+#   - redhat
+#   effective_on: 2024-05-04T00:00:00Z
+#
+deny contains result if {
+	some error in _source_image_sig_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
 _source_image_errors contains error if {
 	count(_source_images) == 0
 	error := "No source image references found"
@@ -44,23 +61,6 @@ _source_image_errors contains error if {
 	layers := object.get(manifest, "layers", [])
 	count(layers) == 0
 	error := sprintf("Source image has no layers %q", [img])
-}
-
-# METADATA
-# title: Signed
-# description: Verify the source container image is signed.
-# custom:
-#   short_name: signed
-#   failure_msg: "%s"
-#   depends_on:
-#   - source_image.exists
-#   collections:
-#   - redhat
-#   effective_on: 2024-05-04T00:00:00Z
-#
-deny contains result if {
-	some error in _source_image_sig_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
 }
 
 _source_image_sig_errors contains error if {

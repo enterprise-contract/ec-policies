@@ -6,7 +6,7 @@ require (
 	github.com/enterprise-contract/ec-cli v0.4.55
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.52.0
-	github.com/styrainc/regal v0.21.3
+	github.com/styrainc/regal v0.22.0
 	github.com/tektoncd/cli v0.37.0
 	oras.land/oras v1.1.0
 )
@@ -138,7 +138,7 @@ require (
 	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.46 // indirect
 	github.com/evanphx/json-patch v5.9.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
-	github.com/fatih/color v1.16.0 // indirect
+	github.com/fatih/color v1.17.0 // indirect
 	github.com/felixge/fgprof v0.9.3 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect

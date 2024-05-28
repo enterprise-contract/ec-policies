@@ -3,7 +3,7 @@ module github.com/enterprise-contract/ec-policies
 go 1.22.2
 
 require (
-	github.com/enterprise-contract/ec-cli v0.4.43
+	github.com/enterprise-contract/ec-cli v0.4.55
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.52.0
 	github.com/styrainc/regal v0.21.3
@@ -135,7 +135,7 @@ require (
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.2 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
-	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.44 // indirect
+	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.46 // indirect
 	github.com/evanphx/json-patch v5.9.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
 	github.com/fatih/color v1.16.0 // indirect
@@ -278,7 +278,7 @@ require (
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/oras-project/oras-credentials-go v0.4.0 // indirect
 	github.com/owenrumney/go-sarif/v2 v2.3.1 // indirect
-	github.com/package-url/packageurl-go v0.1.2 // indirect
+	github.com/package-url/packageurl-go v0.1.3 // indirect
 	github.com/pdevine/go-asciisprite v0.1.6 // indirect
 	github.com/pelletier/go-toml/v2 v2.1.1 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
@@ -406,11 +406,11 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/api v0.29.4 // indirect
-	k8s.io/apiextensions-apiserver v0.29.4 // indirect
-	k8s.io/apimachinery v0.29.4 // indirect
+	k8s.io/api v0.29.5 // indirect
+	k8s.io/apiextensions-apiserver v0.29.5 // indirect
+	k8s.io/apimachinery v0.29.5 // indirect
 	k8s.io/cli-runtime v0.29.1 // indirect
-	k8s.io/client-go v0.29.4 // indirect
+	k8s.io/client-go v0.29.5 // indirect
 	k8s.io/klog/v2 v2.120.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20240126223410-2919ad4fcfec // indirect
 	k8s.io/utils v0.0.0-20240102154912-e7106e64919e // indirect
@@ -418,7 +418,7 @@ require (
 	muzzammil.xyz/jsonc v1.0.0 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
 	oras.land/oras-go/v2 v2.4.0 // indirect
-	sigs.k8s.io/controller-runtime v0.17.3 // indirect
+	sigs.k8s.io/controller-runtime v0.17.4 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/kustomize/api v0.16.0 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.16.0 // indirect

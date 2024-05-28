@@ -469,13 +469,18 @@ _mock_attestation(original_tasks) := d if {
 	]
 
 	d := {"statement": {
-		"subject": [{
-			"name": _image_url,
-			"digest": {_image_digest_algorithm: _image_digest_value},
-		}],
+		"subject": generate_subjects(original_tasks),
 		"predicate": {
 			"buildType": lib.tekton_pipeline_run,
 			"buildConfig": {"tasks": tasks},
 		},
 	}}
 }
+
+generate_subjects(tasks) := [subject |
+	some task in tasks
+	subject := {
+		"name": _image_url,
+		"digest": {_image_digest_algorithm: _image_digest_value},
+	}
+]

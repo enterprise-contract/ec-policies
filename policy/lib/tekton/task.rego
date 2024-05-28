@@ -147,10 +147,13 @@ task_result(task, name) := value if {
 }
 
 task_result_endswith(task, suffix) := value if {
-	some result in task_results(task)
-	result_name := _key_value(result, "name")
-	endswith(result_name, suffix)
-	value := _key_value(result, "value")
+	value := [key_value |
+		some result in task_results(task)
+		result_name := _key_value(result, "name")
+		endswith(result_name, suffix)
+		key_value := _key_value(result, "value")
+	]
+	count(value) > 0
 }
 
 # slsa v0.2 step image
@@ -163,11 +166,11 @@ task_step_image_ref(step) := step.imageID
 build_tasks(attestation) := [task |
 	some task in tasks(attestation)
 
-	image_url := task_result_endswith(task, "IMAGE_URL")
-	count(trim_space(image_url)) > 0
+	image_url := task_result_artifact_url(task)
+	count(image_url) > 0
 
-	image_digest := task_result_endswith(task, "IMAGE_DIGEST")
-	count(trim_space(image_digest)) > 0
+	image_digest := task_result_artifact_digest(task)
+	count(image_digest) > 0
 ]
 
 git_clone_tasks(attestation) := [task |

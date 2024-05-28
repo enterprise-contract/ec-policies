@@ -304,6 +304,62 @@ test_build_task if {
 	lib.assert_equal(expected, tkn.build_tasks(_good_attestation))
 }
 
+test_build_task_with_artifact_uri if {
+	artifact_uri_result := json.patch(_good_attestation, [
+		{
+			"op": "replace",
+			"path": "/statement/predicate/buildConfig/tasks/0/results/0/name",
+			"value": "ARTIFACT_URI",
+		},
+		{
+			"op": "replace",
+			"path": "/statement/predicate/buildConfig/tasks/0/results/1/name",
+			"value": "ARTIFACT_DIGEST",
+		},
+	])
+	count(tkn.build_tasks(artifact_uri_result)) == 2
+}
+
+test_build_task_with_artifact_output if {
+	artifact_uri_result := json.patch(_good_attestation, [
+		{
+			"op": "replace",
+			"path": "/statement/predicate/buildConfig/tasks/0/results/0/name",
+			"value": "ARTIFACT_OUTPUTS",
+		},
+		{
+			"op": "replace",
+			"path": "/statement/predicate/buildConfig/tasks/0/results/0/value",
+			"value": {"uri": "img1", "digest": "1234"},
+		},
+		{
+			"op": "remove",
+			"path": "/statement/predicate/buildConfig/tasks/0/results/1",
+		},
+	])
+	count(tkn.build_tasks(artifact_uri_result)) == 2
+}
+
+test_build_task_with_images if {
+	artifact_uri_result := json.patch(_good_attestation, [
+		{
+			"op": "replace",
+			"path": "/statement/predicate/buildConfig/tasks/0/results/0/name",
+			"value": "IMAGES",
+		},
+		{
+			"op": "replace",
+			"path": "/statement/predicate/buildConfig/tasks/0/results/0/value",
+			"value": "img1@sha256:digest1, img2@sha256:digest2",
+		},
+		{
+			"op": "remove",
+			"path": "/statement/predicate/buildConfig/tasks/0/results/1",
+		},
+	])
+	count(tkn.build_tasks(artifact_uri_result)) == 2
+}
+
 test_build_task_not_found if {
 	missing_image_url := json.patch(_good_attestation, [
 		{
@@ -597,6 +653,29 @@ test_taskrun_annotations_slsa1 if {
 		"a2": "v2",
 	}}}
 	lib.assert_equal(tkn.task_annotations(task), {"a1": "v1", "a2": "v2"})
+}
+
+test_task_result_endswith if {
+	results := [
+		{
+			"name": "ARTIFACT_URI",
+			"value": "image1",
+		},
+		{
+			"name": "ARTIFACT_DIGEST",
+			"value": "1234",
+		},
+		{
+			"name": "1234_ARTIFACT_URI",
+			"value": "1234-image1",
+		},
+		{
+			"name": "1234_ARTIFACT_DIGEST",
+			"value": "1234-digest",
+		},
+	]
+	task1 := slsav1_task_result("task1", results)
+	lib.assert_equal(["image1", "1234-image1"], tkn.task_result_endswith(task1, "ARTIFACT_URI"))
 }
 
 _expected_latest := {

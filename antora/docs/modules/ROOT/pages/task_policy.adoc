@@ -22,7 +22,7 @@ Confirm the `allowed_step_image_registry_prefixes` rule data was provided, since
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `step_image_registries.step_image_registry_prefix_list_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/step_image_registries.rego#L42[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/step_image_registries.rego#L43[Source, window="_blank"]
 
 [#step_image_registries__step_images_permitted]
 === link:#step_image_registries__step_images_permitted[Step images come from permitted registry]
@@ -34,7 +34,7 @@ Confirm that each step in the Task uses a container image with a URL that matche
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Step %d uses disallowed image ref '%s'`
 * Code: `step_image_registries.step_images_permitted`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/step_image_registries.rego#L14[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/step_image_registries.rego#L15[Source, window="_blank"]
 
 [#annotation_package]
 == link:#annotation_package[Tekton Task annotations]
@@ -81,3 +81,31 @@ Confirm the task definition has the kind "Task".
 * FAILURE message: `Unexpected kind '%s' for task definition`
 * Code: `kind.expected_kind`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/kind.rego#L16[Source, window="_blank"]
+
+[#trusted_artifacts_package]
+== link:#trusted_artifacts_package[Trusted Artifacts Conventions]
+
+Policies to verify that a Tekton task definition conforms to the expected conventions required for using Trusted Artifacts.
+
+* Package name: `trusted_artifacts`
+* Package full path: `policy.task.trusted_artifacts`
+
+[#trusted_artifacts__parameter]
+=== link:#trusted_artifacts__parameter[Parameter]
+
+Trusted Artifact parameters follow the expected naming convention.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The parameter %q of the Task %q does not use the _ARTIFACT suffix`
+* Code: `trusted_artifacts.parameter`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/trusted_artifacts.rego#L15[Source, window="_blank"]
+
+[#trusted_artifacts__result]
+=== link:#trusted_artifacts__result[Result]
+
+Trusted Artifact results follow the expected naming convention.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The result %q of the Task %q does not use the _ARTIFACT suffix`
+* Code: `trusted_artifacts.result`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/trusted_artifacts.rego#L28[Source, window="_blank"]

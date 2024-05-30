@@ -7,3 +7,6 @@
 ** xref:task_policy.adoc#kind_package[Tekton task kind checks]
 *** xref:task_policy.adoc#kind__kind_present[Kind field is present in task definition]
 *** xref:task_policy.adoc#kind__expected_kind[Task definition has expected kind]
+** xref:task_policy.adoc#trusted_artifacts_package[Trusted Artifacts Conventions]
+*** xref:task_policy.adoc#trusted_artifacts__parameter[Parameter]
+*** xref:task_policy.adoc#trusted_artifacts__result[Result]

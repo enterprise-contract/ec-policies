@@ -10,6 +10,7 @@ package policy.task.step_image_registries
 import rego.v1
 
 import data.lib
+import data.lib.k8s
 
 # METADATA
 # title: Step images come from permitted registry
@@ -35,7 +36,7 @@ deny contains result if {
 	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
 		[step_index, image_ref],
-		_task_name_version(input),
+		k8s.name_version(input),
 	)
 }
 
@@ -80,13 +81,3 @@ _rule_data_errors contains msg if {
 }
 
 _rule_data_key := "allowed_step_image_registry_prefixes"
-
-_task_name_version(task) := sprintf("%s/%s", [_name(task), _version(task)])
-
-_name(task) := name if {
-	name := task.metadata.name
-} else := "noname"
-
-_version(task) := version if {
-	version := task.metadata.labels["app.kubernetes.io/version"]
-} else := "noversion"

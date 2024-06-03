@@ -148,7 +148,7 @@ param_values(value) := {value} if {
 	values := {v | some v in value}
 } else := values if {
 	is_object(value)
-	values := {v | some k, v in value}
+	values := {v | some v in value}
 }
 
 # result_values expands the value of the given result into a list of values. This is useful when
@@ -161,5 +161,5 @@ result_values(result) := value if {
 	value := {v | some v in result.value}
 } else := value if {
 	result.type == "object"
-	value := {v | some k, v in result.value}
+	value := {v | some v in result.value}
 }

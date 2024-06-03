@@ -217,6 +217,21 @@ test_trusted_artifact_outputs_from_results if {
 	)
 }
 
+test_trusted_parameters if {
+	evil_attestation := json.patch(attestation_ta, [{
+		"op": "add",
+		"path": "/statement/predicate/buildConfig/tasks/3/invocation/parameters/image",
+		"value": "registry.io/repository/image@sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+	}])
+
+	lib.assert_equal_results(trusted_task.deny, {{
+		"code": "trusted_task.trusted_parameters",
+		# regal ignore:line-length
+		"msg": `The "image" parameter of the "task_image_index" PipelineTask includes an untrusted digest: sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff`,
+	}}) with data.trusted_tasks as trusted_tasks_data
+		with input.attestations as [evil_attestation]
+}
+
 test_data_missing if {
 	expected := {{"code": "trusted_task.data", "msg": "Missing required trusted_tasks data"}}
 	lib.assert_equal_results(trusted_task.deny, expected) with data.trusted_tasks as []
@@ -350,7 +365,29 @@ artifact_c := "oci:registry.io/repository/image@sha256:ccccccccccccccccccccccccc
 
 artifact_d := "oci:registry.io/repository/image@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
 
+image_a_digest := "sha256:49a6fd43239ae41643426daefc5239857a1cc1a6f2c1595f88965d7de88efcb9"
+
+image_index_digest := "sha256:6e69e396950defe6ff7981636e30498f99128310a4ee37a87c48729888cb77b3"
+
 trusted_bundle := "registry.local/trusty:1.0@sha256:digest"
+
+task_image_index := {
+	"metadata": {"labels": {"tekton.dev/pipelineTask": "task_image_index"}},
+	"invocation": {"parameters": {"image": sprintf("registry.io/repository/image@%s", [image_a_digest])}},
+	"results": [
+		{
+			"name": "IMAGE_URL",
+			"value": "registry.io/repository/image",
+			"type": "string",
+		},
+		{
+			"name": "IMAGE_DIGEST",
+			"value": image_index_digest,
+			"type": "string",
+		},
+	],
+	"ref": {"name": "TaskA", "kind": "Task", "bundle": trusted_bundle},
+}
 
 task_a := {
 	"metadata": {"labels": {"tekton.dev/pipelineTask": "task_a"}},
@@ -363,7 +400,7 @@ task_a := {
 		},
 		{
 			"name": "IMAGE_DIGEST",
-			"value": "sha256-ghi",
+			"value": image_a_digest,
 			"type": "string",
 		},
 	],
@@ -400,7 +437,7 @@ task_c := {
 
 attestation_ta := {"statement": {"predicate": {
 	"buildType": lib.tekton_pipeline_run,
-	"buildConfig": {"tasks": [task_a, task_b, task_c]},
+	"buildConfig": {"tasks": [task_a, task_b, task_c, task_image_index]},
 }}}
 
 ######################

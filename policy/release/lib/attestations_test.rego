@@ -366,3 +366,19 @@ test_unmarshall_json if {
 	lib.assert_equal("not JSON", lib.unmarshal("not JSON"))
 	lib.assert_equal("", lib.unmarshal(""))
 }
+
+test_param_values if {
+	lib.assert_equal(lib.param_values("spam"), {"spam"})
+	lib.assert_equal(lib.param_values(["spam", "eggs"]), {"spam", "eggs"})
+	lib.assert_equal(lib.param_values({"maps": "spam", "sgge": "eggs"}), {"spam", "eggs"})
+
+	not lib.param_values(123)
+}
+
+test_result_values if {
+	lib.assert_equal(lib.result_values({"type": "string", "value": "spam"}), {"spam"})
+	lib.assert_equal(lib.result_values({"type": "array", "value": ["spam", "eggs"]}), {"spam", "eggs"})
+	lib.assert_equal(lib.result_values({"type": "object", "value": {"maps": "spam", "sgge": "eggs"}}), {"spam", "eggs"})
+
+	not lib.result_values(123)
+}

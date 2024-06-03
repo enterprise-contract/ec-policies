@@ -160,13 +160,14 @@ test_tampered_trusted_artifact_inputs if {
 }
 
 test_artifact_chain if {
-	expected := {attestation_ta: {
+	expected := {
 		"task_a": {"task_b", "task_c"},
 		"task_b": {"task_c"},
 		"task_c": set(),
-	}}
+		"task_image_index": set(),
+	}
 
-	lib.assert_equal(trusted_task._artifact_chain, expected) with input.attestations as [attestation_ta]
+	lib.assert_equal(trusted_task._artifact_chain[attestation_ta], expected) with input.attestations as [attestation_ta]
 }
 
 test_trusted_artifact_inputs_from_parameters if {

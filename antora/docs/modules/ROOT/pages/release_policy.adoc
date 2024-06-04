@@ -48,7 +48,6 @@ Rules included:
 * xref:release_policy.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]
 * xref:release_policy.adoc#cve__cve_results_found[CVE checks: CVE scan results found]
 * xref:release_policy.adoc#cve__deprecated_cve_result_name[CVE checks: Deprecated CVE result name]
-* xref:release_policy.adoc#cve__deprecated_unpatched_cve_result_name[CVE checks: Deprecated CVE result name for unpatched vulnerabilities]
 * xref:release_policy.adoc#cve__cve_warnings[CVE checks: Non-blocking CVE check]
 * xref:release_policy.adoc#cve__unpatched_cve_warnings[CVE checks: Non-blocking unpatched CVE check]
 * xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
@@ -106,7 +105,6 @@ Rules included:
 * xref:release_policy.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]
 * xref:release_policy.adoc#cve__cve_results_found[CVE checks: CVE scan results found]
 * xref:release_policy.adoc#cve__deprecated_cve_result_name[CVE checks: Deprecated CVE result name]
-* xref:release_policy.adoc#cve__deprecated_unpatched_cve_result_name[CVE checks: Deprecated CVE result name for unpatched vulnerabilities]
 * xref:release_policy.adoc#cve__cve_warnings[CVE checks: Non-blocking CVE check]
 * xref:release_policy.adoc#cve__unpatched_cve_warnings[CVE checks: Non-blocking unpatched CVE check]
 * xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
@@ -403,7 +401,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that h
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Found %d CVE vulnerabilities of %s security level`
 * Code: `cve.cve_blockers`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L110[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L89[Source, window="_blank"]
 
 [#cve__unpatched_cve_blockers]
 === link:#cve__unpatched_cve_blockers[Blocking unpatched CVE check]
@@ -415,7 +413,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that d
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Found %d unpatched CVE vulnerabilities of %s security level`
 * Code: `cve.unpatched_cve_blockers`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L135[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L114[Source, window="_blank"]
 
 [#cve__cve_results_found]
 === link:#cve__cve_results_found[CVE scan results found]
@@ -427,7 +425,7 @@ Confirm that clair-scan task results are present in the SLSA Provenance attestat
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Clair CVE scan results were not found`
 * Code: `cve.cve_results_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L161[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L140[Source, window="_blank"]
 
 [#cve__deprecated_cve_result_name]
 === link:#cve__deprecated_cve_result_name[Deprecated CVE result name]
@@ -440,18 +438,6 @@ The `CLAIR_SCAN_RESULT` result name has been deprecated, and has been replaced w
 * WARNING message: `CVE scan uses deprecated result name`
 * Code: `cve.deprecated_cve_result_name`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L66[Source, window="_blank"]
-
-[#cve__deprecated_unpatched_cve_result_name]
-=== link:#cve__deprecated_unpatched_cve_result_name[Deprecated CVE result name for unpatched vulnerabilities]
-
-The `CLAIR_SCAN_RESULT` result name has been deprecated, and has been replaced with `SCAN_OUTPUT`. If any task results with the old name are found, this rule will raise a warning.
-
-*Solution*: Use the newer `SCAN_OUTPUT` result name, including for unpached vulnerabilities.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `CVE scan uses deprecated result name`
-* Code: `cve.deprecated_unpatched_cve_result_name`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L88[Source, window="_blank"]
 
 [#cve__cve_warnings]
 === link:#cve__cve_warnings[Non-blocking CVE check]
@@ -487,7 +473,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `cve.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L186[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L165[Source, window="_blank"]
 
 [#external_parameters_package]
 == link:#external_parameters_package[External parameters]

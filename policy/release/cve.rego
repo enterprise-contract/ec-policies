@@ -81,29 +81,8 @@ warn contains result if {
 #   - attestation_type.known_attestation_type
 #
 warn contains result if {
-	_vulnerabilities_deprecated
-	result := lib.result_helper(rego.metadata.chain(), [])
-}
-
-# METADATA
-# title: Deprecated CVE result name for unpatched vulnerabilities
-# description: >-
-#   The `CLAIR_SCAN_RESULT` result name has been deprecated, and has been
-#   replaced with `SCAN_OUTPUT`. If any task results with the old name are
-#   found, this rule will raise a warning.
-# custom:
-#   short_name: deprecated_unpatched_cve_result_name
-#   failure_msg: CVE scan uses deprecated result name
-#   solution: >-
-#     Use the newer `SCAN_OUTPUT` result name, including for unpached vulnerabilities.
-#   collections:
-#   - minimal
-#   - redhat
-#   depends_on:
-#   - attestation_type.known_attestation_type
-#
-warn contains result if {
-	_unpatched_vulnerabilities_deprecated
+	count(lib.results_named(_result_name)) == 0
+	count(lib.results_named(_deprecated_result_name)) > 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 

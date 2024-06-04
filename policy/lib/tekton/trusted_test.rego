@@ -26,6 +26,7 @@ test_missing_trusted_tasks_data if {
 
 test_out_of_date_task_refs if {
 	tasks := [
+		same_date_trusted_bundle_task,
 		newest_trusted_bundle_task,
 		outdated_trusted_bundle_task,
 		newest_trusted_git_task,
@@ -70,6 +71,12 @@ trusted_bundle_task := {"spec": {"taskRef": {"resolver": "bundles", "params": [
 ]}}}
 
 newest_trusted_bundle_task := trusted_bundle_task
+
+same_date_trusted_bundle_task := {"spec": {"taskRef": {"resolver": "bundles", "params": [
+	{"name": "bundle", "value": "registry.local/trusty:1.0@sha256:same_date"},
+	{"name": "name", "value": "trusty"},
+	{"name": "kind", "value": "task"},
+]}}}
 
 outdated_trusted_bundle_task := {"spec": {"taskRef": {"resolver": "bundles", "params": [
 	{"name": "bundle", "value": "registry.local/trusty:1.0@sha256:outdated-digest"},
@@ -146,6 +153,10 @@ trusted_tasks := {
 	"oci://registry.local/trusty:1.0": [
 		{
 			"ref": "sha256:digest",
+			"effective_on": "2099-01-01T00:00:00Z",
+		},
+		{
+			"ref": "sha256:same_date",
 			"effective_on": "2099-01-01T00:00:00Z",
 		},
 		{

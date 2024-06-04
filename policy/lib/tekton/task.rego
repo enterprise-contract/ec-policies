@@ -2,6 +2,7 @@ package lib.tkn
 
 import rego.v1
 
+import data.lib.arrays
 import data.lib.refs
 import data.lib.time as ectime
 
@@ -146,14 +147,14 @@ task_result(task, name) := value if {
 	value := _key_value(result, "value")
 }
 
-task_result_endswith(task, suffix) := value if {
-	value := [key_value |
+task_result_endswith(task, suffix) := values if {
+	results := arrays.sort_by("name", [result |
 		some result in task_results(task)
 		result_name := _key_value(result, "name")
 		endswith(result_name, suffix)
-		key_value := _key_value(result, "value")
-	]
-	count(value) > 0
+	])
+	values := [result.value | some result in results]
+	count(values) > 0
 }
 
 # slsa v0.2 step image

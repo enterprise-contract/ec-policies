@@ -66,10 +66,47 @@ test_invalid_result_name if {
 }
 
 test_images_with_digests if {
-	results := [{
+	results_artifact_outputs := [{
 		"name": "ARTIFACT_OUTPUTS",
 		"value": {"uri": "img1", "digest": "1234"},
 	}]
-	tasks := [slsav1_task_result("task1", results), slsav1_task_result("task2", results)]
-	lib.assert_equal(["img1@1234", "img1@1234"], tkn.images_with_digests(tasks))
+	results_images := [
+		{
+			"name": "image1_IMAGE_URL",
+			"value": "img1",
+		},
+		{
+			"name": "image1_IMAGE_DIGEST",
+			"value": "1234",
+		},
+	]
+	results_images_unordered := [
+		{
+			"name": "image1_IMAGE_URL",
+			"value": "img1",
+		},
+		{
+			"name": "image2_IMAGE_DIGEST",
+			"value": "5678",
+		},
+		{
+			"name": "image2_IMAGE_URL",
+			"value": "img2",
+		},
+		{
+			"name": "image1_IMAGE_DIGEST",
+			"value": "1234",
+		},
+	]
+	tasks_artifacts := [
+		slsav1_task_result("task1", results_artifact_outputs),
+		slsav1_task_result("task2", results_artifact_outputs),
+	]
+	lib.assert_equal(["img1@1234", "img1@1234"], tkn.images_with_digests(tasks_artifacts))
+
+	tasks_images := [slsav1_task_result("task1", results_images), slsav1_task_result("task2", results_images)]
+	lib.assert_equal(["img1@1234", "img1@1234"], tkn.images_with_digests(tasks_images))
+
+	tasks_ordered := [slsav1_task_result("task1", results_images_unordered)]
+	lib.assert_equal(["img1@1234", "img2@5678"], tkn.images_with_digests(tasks_ordered))
 }

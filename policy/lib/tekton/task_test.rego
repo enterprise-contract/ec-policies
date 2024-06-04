@@ -675,7 +675,7 @@ test_task_result_endswith if {
 		},
 	]
 	task1 := slsav1_task_result("task1", results)
-	lib.assert_equal(["image1", "1234-image1"], tkn.task_result_endswith(task1, "ARTIFACT_URI"))
+	lib.assert_equal(["1234-image1", "image1"], tkn.task_result_endswith(task1, "ARTIFACT_URI"))
 }
 
 _expected_latest := {

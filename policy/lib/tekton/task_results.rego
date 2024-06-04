@@ -9,6 +9,8 @@ import rego.v1
 task_result_artifact_url(task) := value if {
 	value := [url |
 		some url in task_result_endswith(task, "IMAGE_URL")
+
+		# don't allow empty results
 		count(url) > 0
 	]
 	count(value) > 0
@@ -18,6 +20,8 @@ task_result_artifact_url(task) := value if {
 task_result_artifact_url(task) := value if {
 	value := [url |
 		some url in task_result_endswith(task, "ARTIFACT_URI")
+
+		# don't allow empty results
 		count(url) > 0
 	]
 	count(value) > 0
@@ -25,9 +29,8 @@ task_result_artifact_url(task) := value if {
 
 # returns the image url from the task result IMAGES
 task_result_artifact_url(task) := value if {
-	results := task_result_endswith(task, "IMAGES")
 	value := [v |
-		some result in results
+		some result in task_result_endswith(task, "IMAGES")
 		some image in split(result, ",")
 		split_item := split(image, "@")
 		v := trim_space(split_item[0])
@@ -38,9 +41,8 @@ task_result_artifact_url(task) := value if {
 # returns the image url from the task result ARTIFACT_OUTPUTS
 task_result_artifact_url(task) := value if {
 	value := [url |
-		outputs := task_result_endswith(task, "ARTIFACT_OUTPUTS")
-		some output in outputs
-		url := trim_space(output.uri)
+		some result in task_result_endswith(task, "ARTIFACT_OUTPUTS")
+		url := trim_space(result.uri)
 	]
 	count(value) > 0
 }
@@ -49,19 +51,28 @@ task_result_artifact_url(task) := value if {
 task_result_artifact_digest(task) := value if {
 	value := [digest |
 		some digest in task_result_endswith(task, "IMAGE_DIGEST")
+
+		# don't allow empty results
 		count(digest) > 0
 	]
 	count(value) > 0
 }
 
 # returns the value of a task result with name ARTIFACT_DIGEST
-task_result_artifact_digest(task) := task_result_endswith(task, "ARTIFACT_DIGEST")
+task_result_artifact_digest(task) := value if {
+	value := [digest |
+		some digest in task_result_endswith(task, "ARTIFACT_DIGEST")
+
+		# don't allow empty results
+		count(digest) > 0
+	]
+	count(value) > 0
+}
 
 # returns the image digest from the task result IMAGES
 task_result_artifact_digest(task) := value if {
-	results := task_result_endswith(task, "IMAGES")
 	value := [v |
-		some result in results
+		some result in task_result_endswith(task, "IMAGES")
 		some image in split(result, ",")
 		split_item := split(image, "@")
 		v := trim_space(split_item[1])
@@ -71,10 +82,9 @@ task_result_artifact_digest(task) := value if {
 
 # returns the image digest from the task result ARTIFACT_OUTPUTS
 task_result_artifact_digest(task) := value if {
-	value := [digest |
-		outputs := task_result_endswith(task, "ARTIFACT_OUTPUTS")
-		some output in outputs
-		digest := trim_space(output.digest)
+	value := [url |
+		some result in task_result_endswith(task, "ARTIFACT_OUTPUTS")
+		url := trim_space(result.digest)
 	]
 	count(value) > 0
 }

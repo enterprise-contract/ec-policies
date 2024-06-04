@@ -29,7 +29,6 @@
 **** xref:release_policy.adoc#cve__unpatched_cve_blockers[Blocking unpatched CVE check]
 **** xref:release_policy.adoc#cve__cve_results_found[CVE scan results found]
 **** xref:release_policy.adoc#cve__deprecated_cve_result_name[Deprecated CVE result name]
-**** xref:release_policy.adoc#cve__deprecated_unpatched_cve_result_name[Deprecated CVE result name for unpatched vulnerabilities]
 **** xref:release_policy.adoc#cve__cve_warnings[Non-blocking CVE check]
 **** xref:release_policy.adoc#cve__unpatched_cve_warnings[Non-blocking unpatched CVE check]
 **** xref:release_policy.adoc#cve__rule_data_provided[Rule data provided]

@@ -15,9 +15,17 @@ test_image_result if {
 			"name": "IMAGE_DIGEST",
 			"value": "1234",
 		},
+		{
+			"name": "OTHER_IMAGE_URL",
+			"value": "image2\n",
+		},
+		{
+			"name": "OTHER_IMAGE_DIGEST",
+			"value": "4321\n",
+		},
 	]
-	lib.assert_equal(["image1"], tkn.task_result_artifact_url(slsav1_task_result("task1", results)))
-	lib.assert_equal(["1234"], tkn.task_result_artifact_digest(slsav1_task_result("task1", results)))
+	lib.assert_equal(["image1", "image2"], tkn.task_result_artifact_url(slsav1_task_result("task1", results)))
+	lib.assert_equal(["1234", "4321"], tkn.task_result_artifact_digest(slsav1_task_result("task1", results)))
 }
 
 test_artifact_result if {
@@ -30,15 +38,23 @@ test_artifact_result if {
 			"name": "ARTIFACT_DIGEST",
 			"value": "1234",
 		},
+		{
+			"name": "OTEHR_ARTIFACT_URI",
+			"value": "image2\n",
+		},
+		{
+			"name": "OTHER_ARTIFACT_DIGEST",
+			"value": "4321\n",
+		},
 	]
-	lib.assert_equal(["image1"], tkn.task_result_artifact_url(slsav1_task_result("task1", results)))
-	lib.assert_equal(["1234"], tkn.task_result_artifact_digest(slsav1_task_result("task1", results)))
+	lib.assert_equal(["image1", "image2"], tkn.task_result_artifact_url(slsav1_task_result("task1", results)))
+	lib.assert_equal(["1234", "4321"], tkn.task_result_artifact_digest(slsav1_task_result("task1", results)))
 }
 
 test_images_result if {
 	results := [{
 		"name": "IMAGES",
-		"value": "img1@sha256:digest1, img2@sha256:digest2",
+		"value": "img1@sha256:digest1, img2@sha256:digest2\n",
 	}]
 	lib.assert_equal(["img1", "img2"], tkn.task_result_artifact_url(slsav1_task_result("task1", results)))
 	lib.assert_equal(
@@ -48,12 +64,18 @@ test_images_result if {
 }
 
 test_artifact_outputs_result if {
-	results := [{
-		"name": "ARTIFACT_OUTPUTS",
-		"value": {"uri": "img1", "digest": "1234"},
-	}]
-	lib.assert_equal(["img1"], tkn.task_result_artifact_url(slsav1_task_result("task1", results)))
-	lib.assert_equal(["1234"], tkn.task_result_artifact_digest(slsav1_task_result("task1", results)))
+	results := [
+		{
+			"name": "ARTIFACT_OUTPUTS",
+			"value": {"uri": "img1", "digest": "1234"},
+		},
+		{
+			"name": "OTHER_ARTIFACT_OUTPUTS",
+			"value": {"uri": "img2\n", "digest": "4321\n"},
+		},
+	]
+	lib.assert_equal(["img1", "img2"], tkn.task_result_artifact_url(slsav1_task_result("task1", results)))
+	lib.assert_equal(["1234", "4321"], tkn.task_result_artifact_digest(slsav1_task_result("task1", results)))
 }
 
 test_invalid_result_name if {
@@ -68,34 +90,34 @@ test_invalid_result_name if {
 test_images_with_digests if {
 	results_artifact_outputs := [{
 		"name": "ARTIFACT_OUTPUTS",
-		"value": {"uri": "img1", "digest": "1234"},
+		"value": {"uri": "img1\n", "digest": "1234\n"},
 	}]
 	results_images := [
 		{
 			"name": "image1_IMAGE_URL",
-			"value": "img1",
+			"value": "img1\n",
 		},
 		{
 			"name": "image1_IMAGE_DIGEST",
-			"value": "1234",
+			"value": "1234\n",
 		},
 	]
 	results_images_unordered := [
 		{
 			"name": "image1_IMAGE_URL",
-			"value": "img1",
+			"value": "img1\n",
 		},
 		{
 			"name": "image2_IMAGE_DIGEST",
-			"value": "5678",
+			"value": "5678\n",
 		},
 		{
 			"name": "image2_IMAGE_URL",
-			"value": "img2",
+			"value": "img2\n",
 		},
 		{
 			"name": "image1_IMAGE_DIGEST",
-			"value": "1234",
+			"value": "1234\n",
 		},
 	]
 	tasks_artifacts := [

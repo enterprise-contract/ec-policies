@@ -19,10 +19,8 @@ Feature: Golden Container Image
                                 "@redhat"
                             ],
                             "exclude": [
-                                "sbom_cyclonedx.found",
-                                "redhat_manifests.redhat_manifests_missing",
                                 "cve.deprecated_cve_result_name",
-                                "source_image.exists"
+                                "source_image"
                             ]
                         }
                     }

@@ -174,6 +174,7 @@ Rules included:
 * xref:release_policy.adoc#trusted_task__trusted[Trusted Task checks: Tasks are trusted]
 * xref:release_policy.adoc#trusted_task__current[Trusted Task checks: Tasks using the latest versions]
 * xref:release_policy.adoc#trusted_task__valid_trusted_artifact_inputs[Trusted Task checks: Trusted Artifact produced in pipeline]
+* xref:release_policy.adoc#trusted_task__trusted_parameters[Trusted Task checks: Trusted parameters]
 * xref:release_policy.adoc#rpm_ostree_task__builder_image_param[rpm-ostree Task: Builder image parameter]
 * xref:release_policy.adoc#rpm_ostree_task__rule_data[rpm-ostree Task: Rule data]
 
@@ -1632,7 +1633,7 @@ Check if all Tekton Tasks use a Task definition by a pinned reference. When usin
 * WARNING message: `Pipeline task %q uses an unpinned task reference, %s`
 * Code: `trusted_task.pinned`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L19[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L21[Source, window="_blank"]
 
 [#trusted_task__data]
 === link:#trusted_task__data[Task tracking data was provided]
@@ -1645,7 +1646,7 @@ Confirm the `trusted_tasks` rule data was provided, since it's required by the p
 * FAILURE message: `Missing required trusted_tasks data`
 * Code: `trusted_task.data`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L129[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L131[Source, window="_blank"]
 
 [#trusted_task__trusted]
 === link:#trusted_task__trusted[Tasks are trusted]
@@ -1658,7 +1659,7 @@ Check the trust of the Tekton Tasks used in the build Pipeline. There are two mo
 * FAILURE message: `%s`
 * Code: `trusted_task.trusted`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L66[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L68[Source, window="_blank"]
 
 [#trusted_task__current]
 === link:#trusted_task__current[Tasks using the latest versions]
@@ -1671,7 +1672,7 @@ Check if all Tekton Tasks use the latest known Task reference.
 * WARNING message: `Pipeline task %q uses an out of date task reference, %s`
 * Code: `trusted_task.current`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L44[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L46[Source, window="_blank"]
 
 [#trusted_task__valid_trusted_artifact_inputs]
 === link:#trusted_task__valid_trusted_artifact_inputs[Trusted Artifact produced in pipeline]
@@ -1683,7 +1684,20 @@ All input trusted artifacts must be produced on the pipeline. If they are not th
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Code tampering detected, input %q for task %q was not produced by the pipeline as attested.`
 * Code: `trusted_task.valid_trusted_artifact_inputs`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L92[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L94[Source, window="_blank"]
+
+[#trusted_task__trusted_parameters]
+=== link:#trusted_task__trusted_parameters[Trusted parameters]
+
+Confirm certain parameters provided to each builder Task have come from trusted Tasks.
+
+*Solution*: Update your build Pipeline to ensure all the parameters provided to your builder Tasks come from trusted Tasks.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q parameter of the %q PipelineTask includes an untrusted digest: %s`
+* Code: `trusted_task.trusted_parameters`
+* Effective from: `2021-07-04T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L150[Source, window="_blank"]
 
 [#rpm_ostree_task_package]
 == link:#rpm_ostree_task_package[rpm-ostree Task]

@@ -16,6 +16,8 @@ import data.lib.tkn
 
 _supported_ta_uris_reg := {"oci:.*@sha256:[0-9a-f]{64}"}
 
+_digest_patterns := {`sha256:[0-9a-f]{64}`}
+
 # METADATA
 # title: Task references are pinned
 # description: >-
@@ -145,6 +147,37 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
+# METADATA
+# title: Trusted parameters
+# description: >-
+#   Confirm certain parameters provided to each builder Task have come from trusted Tasks.
+# custom:
+#   short_name: trusted_parameters
+#   failure_msg: 'The %q parameter of the %q PipelineTask includes an untrusted digest: %s'
+#   solution: >-
+#     Update your build Pipeline to ensure all the parameters provided to your builder Tasks come
+#     from trusted Tasks.
+#   collections:
+#   - redhat
+#   effective_on: 2021-07-04T00:00:00Z
+#
+deny contains result if {
+	some attestation in lib.pipelinerun_attestations
+	some build_task in tkn.build_tasks(attestation)
+
+	some param_name, param_value in tkn.task_params(build_task)
+
+	# Trusted Artifacts are handled differently. Here we are concerned with all other parameters.
+	not endswith(param_name, "_ARTIFACT")
+	params_digests := _digests_from_values(lib.param_values(param_value))
+
+	some untrusted_digest in (params_digests - _trusted_build_digests)
+	result := lib.result_helper(
+		rego.metadata.chain(),
+		[param_name, tkn.pipeline_task_name(build_task), untrusted_digest],
+	)
+}
+
 _trust_errors contains error if {
 	_uses_trusted_artifacts
 	some attestation in lib.pipelinerun_attestations
@@ -232,4 +265,19 @@ _uses_trusted_artifacts if {
 _task_info(task) := info if {
 	ref := refs.task_ref(task)
 	info := sprintf("%s@%s", [object.get(ref, "key", ""), object.get(ref, "pinned_ref", "")])
+}
+
+# _trusted_build_digest is a set containing any digest found in one of the trusted builder Tasks.
+_trusted_build_digests contains digest if {
+	some attestation in lib.pipelinerun_attestations
+	some build_task in tkn.build_tasks(attestation)
+	tkn.is_trusted_task(build_task)
+	some result in tkn.task_results(build_task)
+	some digest in _digests_from_values(lib.result_values(result))
+}
+
+_digests_from_values(values) := {digest |
+	some value in values
+	some pattern in _digest_patterns
+	some digest in regex.find_n(pattern, value, -1)
 }

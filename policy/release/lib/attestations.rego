@@ -138,3 +138,28 @@ task_succeeded(name) if {
 	task := task_in_pipelinerun(name)
 	task.status == "Succeeded"
 }
+
+# param_values expands the value into a list of values as needed. This is useful when handling
+# parameters that could be of type string or an array of strings.
+param_values(value) := {value} if {
+	is_string(value)
+} else := values if {
+	is_array(value)
+	values := {v | some v in value}
+} else := values if {
+	is_object(value)
+	values := {v | some v in value}
+}
+
+# result_values expands the value of the given result into a list of values. This is useful when
+# handling results that could be of type string, array of strings, or an object.
+result_values(result) := value if {
+	result.type == "string"
+	value := {result.value}
+} else := value if {
+	result.type == "array"
+	value := {v | some v in result.value}
+} else := value if {
+	result.type == "object"
+	value := {v | some v in result.value}
+}

@@ -2,6 +2,7 @@ package lib.tkn
 
 import rego.v1
 
+import data.lib.arrays
 import data.lib.refs
 import data.lib.time as ectime
 
@@ -146,11 +147,14 @@ task_result(task, name) := value if {
 	value := _key_value(result, "value")
 }
 
-task_result_endswith(task, suffix) := value if {
-	some result in task_results(task)
-	result_name := _key_value(result, "name")
-	endswith(result_name, suffix)
-	value := _key_value(result, "value")
+task_result_endswith(task, suffix) := values if {
+	results := arrays.sort_by("name", [result |
+		some result in task_results(task)
+		result_name := _key_value(result, "name")
+		endswith(result_name, suffix)
+	])
+	values := [result.value | some result in results]
+	count(values) > 0
 }
 
 # slsa v0.2 step image
@@ -163,11 +167,11 @@ task_step_image_ref(step) := step.imageID
 build_tasks(attestation) := [task |
 	some task in tasks(attestation)
 
-	image_url := task_result_endswith(task, "IMAGE_URL")
-	count(trim_space(image_url)) > 0
+	image_url := task_result_artifact_url(task)
+	count(image_url) > 0
 
-	image_digest := task_result_endswith(task, "IMAGE_DIGEST")
-	count(trim_space(image_digest)) > 0
+	image_digest := task_result_artifact_digest(task)
+	count(image_digest) > 0
 ]
 
 git_clone_tasks(attestation) := [task |

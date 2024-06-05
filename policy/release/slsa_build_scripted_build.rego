@@ -86,26 +86,16 @@ deny contains result if {
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	some subject in attestation.statement.subject
+	subject_image_refs := collect_subjects(attestation)
 
 	build_tasks := tkn.build_tasks(attestation)
 
 	count(build_tasks) > 0
 
-	subject_image_ref := concat("@", [subject.name, subject_digest(subject)])
-
-	matched := [subject_image_ref |
-		some build_task in build_tasks
-
-		result_image_ref := concat("@", [
-			trim_space(tkn.task_result_endswith(build_task, "IMAGE_URL")),
-			trim_space(tkn.task_result_endswith(build_task, "IMAGE_DIGEST")),
-		])
-
-		image.equal_ref(subject_image_ref, result_image_ref)
-	]
-
-	count(matched) == 0
+	# all image results within all build tasks
+	result_image_refs := tkn.images_with_digests(build_tasks)
+	some subject_image_ref in subject_image_refs
+	not _contains_equal_ref(result_image_refs, subject_image_ref)
 
 	result := lib.result_helper(rego.metadata.chain(), [subject_image_ref])
 }
@@ -133,8 +123,8 @@ deny contains result if {
 	tasks := {build_task |
 		some attestation in lib.pipelinerun_attestations
 		some build_task in tkn.build_tasks(attestation)
-		digest := tkn.task_result(build_task, "IMAGE_DIGEST")
-		digest == expected_digest
+		digests := tkn.task_result_artifact_digest(build_task)
+		_contains_digest(digests, expected_digest)
 	}
 
 	error := _trusted_build_task_error(tasks)
@@ -150,6 +140,11 @@ subject_digest(subject) := digest if {
 	digest := concat(":", [algorithm, value])
 }
 
+collect_subjects(attestation) := [subject_image_ref |
+	some subject in attestation.statement.subject
+	subject_image_ref := concat("@", [subject.name, subject_digest(subject)])
+]
+
 _trusted_build_task_error(tasks) := error if {
 	count(tasks) == 0
 	error := "No Pipeline Tasks built the image"
@@ -163,4 +158,20 @@ _trusted_build_task_error(tasks) := error if {
 		name := tkn.task_name(task)
 	}
 	error := sprintf("Build Task(s) %q are not trusted", [concat(",", names)])
+}
+
+_contains_equal_ref(arr, item) := matched if {
+	matched := [match |
+		some match in arr
+		image.equal_ref(match, item)
+	]
+	count(matched) > 0
+}
+
+_contains_digest(arr, item) := matched if {
+	matched := [match |
+		some match in arr
+		match == item
+	]
+	count(matched) > 0
 }

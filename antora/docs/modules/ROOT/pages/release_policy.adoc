@@ -986,7 +986,7 @@ Verify the digest of the image being validated is reported by a trusted Task in 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image %q not built by a trusted task: %s`
 * Code: `slsa_build_scripted_build.image_built_by_trusted_task`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build.rego#L113[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build.rego#L103[Source, window="_blank"]
 
 [#slsa_build_scripted_build__subject_build_task_matches]
 === link:#slsa_build_scripted_build__subject_build_task_matches[Provenance subject matches build task image result]

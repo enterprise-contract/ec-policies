@@ -154,7 +154,6 @@ task_result_endswith(task, suffix) := values if {
 		endswith(result_name, suffix)
 	])
 	values := [result.value | some result in results]
-	count(values) > 0
 }
 
 # slsa v0.2 step image

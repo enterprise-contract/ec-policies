@@ -83,8 +83,8 @@ test_invalid_result_name if {
 		"name": "INVALID_OUTPUTS",
 		"value": {"uri": "img1", "digest": "1234"},
 	}]
-	not tkn.task_result_artifact_url(slsav1_task_result("task1", results))
-	not tkn.task_result_artifact_digest(slsav1_task_result("task1", results))
+	lib.assert_empty(tkn.task_result_artifact_url(slsav1_task_result("task1", results)))
+	lib.assert_empty(tkn.task_result_artifact_digest(slsav1_task_result("task1", results)))
 }
 
 test_images_with_digests if {
@@ -131,4 +131,70 @@ test_images_with_digests if {
 
 	tasks_ordered := [slsav1_task_result("task1", results_images_unordered)]
 	lib.assert_equal(["img1@1234", "img2@5678"], tkn.images_with_digests(tasks_ordered))
+}
+
+test_mixed_results if {
+	results := [
+		{
+			"name": "image1_IMAGE_URL",
+			"value": "image-url-img1",
+		},
+		{
+			"name": "image1_IMAGE_DIGEST",
+			"value": "2345",
+		},
+		{
+			"name": "image2_IMAGE_URL",
+			"value": "image-url-img2",
+		},
+		{
+			"name": "image2_IMAGE_DIGEST",
+			"value": "3456",
+		},
+		{
+			"name": "IMAGES",
+			"value": "images-1@sha256:4567,images-2@sha256:5678",
+		},
+		{
+			"name": "image1_ARTIFACT_URI",
+			"value": "image-artifact-1",
+		},
+		{
+			"name": "image1_ARTIFACT_DIGEST",
+			"value": "sha256:6789",
+		},
+		{
+			"name": "image2_ARTIFACT_URI",
+			"value": "image-artifact-1",
+		},
+		{
+			"name": "image2_ARTIFACT_DIGEST",
+			"value": "sha256:7890",
+		},
+		{
+			"name": "image1_ARTIFACT_OUTPUTS",
+			"value": {"uri": "artifact-outputs-img1", "digest": "sha256:1234"},
+		},
+		{
+			"name": "image2_ARTIFACT_OUTPUTS",
+			"value": {"uri": "artifact-outputs-img2", "digest": "sha256:9801"},
+		},
+	]
+
+	expected := [
+		"image-url-img1@2345",
+		"image-url-img2@3456",
+		"image-artifact-1@sha256:6789",
+		"image-artifact-1@sha256:7890",
+		"images-1@sha256:4567",
+		"images-2@sha256:5678",
+		"artifact-outputs-img1@sha256:1234",
+		"artifact-outputs-img2@sha256:9801",
+	]
+
+	lib.assert_equal(expected, tkn.images_with_digests([slsav1_task_result("task1", results)]))
+}
+
+test_no_results if {
+	lib.assert_empty(tkn.images_with_digests([slsav1_task_result("task1", [])]))
 }

@@ -17,7 +17,7 @@ import data.lib.tkn
 _supported_ta_uris_reg := {"oci:.*@sha256:[0-9a-f]{64}"}
 
 # METADATA
-# title: Pinned
+# title: Task references are pinned
 # description: >-
 #   Check if all Tekton Tasks use a Task definition by a pinned reference. When using the git
 #   resolver, a commit ID is expected for the revision parameter. When using the bundles resolver,
@@ -42,7 +42,7 @@ warn contains result if {
 }
 
 # METADATA
-# title: Current
+# title: Tasks using the latest versions
 # description: >-
 #   Check if all Tekton Tasks use the latest known Task reference.
 # custom:
@@ -64,7 +64,7 @@ warn contains result if {
 }
 
 # METADATA
-# title: Trusted
+# title: Tasks are trusted
 # description: >-
 #   Check the trust of the Tekton Tasks used in the build Pipeline. There are two modes in which
 #   trust is verified. The first mode is used if Trusted Artifacts are enabled. In this case, a
@@ -127,7 +127,7 @@ deny contains result if {
 }
 
 # METADATA
-# title: Data
+# title: Task tracking data was provided
 # description: >-
 #   Confirm the `trusted_tasks` rule data was provided, since it's required by the policy rules in
 #   this package.

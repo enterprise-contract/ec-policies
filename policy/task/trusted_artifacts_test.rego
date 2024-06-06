@@ -39,6 +39,22 @@ test_ignore_non_ta_tasks if {
 	lib.assert_empty(trusted_artifacts.deny) with input as task_not_ta_result
 }
 
+test_workspaces if {
+	add_workspace := {"op": "add", "path": "/spec/workspaces", "value": [{"name": "spam"}]}
+	ta_task_with_workspace := json.patch(_task, [add_workspace])
+	expected := {{
+		"code": "trusted_artifacts.workspace",
+		"msg": "General purpose workspace \"spam\" is not allowed",
+	}}
+	lib.assert_equal_results(trusted_artifacts.deny, expected) with input as ta_task_with_workspace
+
+	lib.assert_empty(trusted_artifacts.deny) with input as ta_task_with_workspace
+		with data.rule_data.allowed_trusted_artifacts_workspaces as ["spam"]
+
+	lib.assert_empty(trusted_artifacts.deny) with input as _non_ta_task
+	lib.assert_empty(trusted_artifacts.deny) with input as json.patch(_non_ta_task, [add_workspace])
+}
+
 _task := {
 	"apiVersion": "tekton.dev/v1",
 	"kind": "Task",
@@ -97,3 +113,24 @@ _task_bad_ta_result := json.patch(_task, [
 	{"op": "add", "path": "/spec/results/-", "value": {"name": "O3_ARTIFACTO"}},
 	{"op": "add", "path": "/spec/steps/2/args/-", "value": "$(results.O3_ARTIFACTO.path)=/var/workdir/output3"},
 ])
+
+_non_ta_task := {
+	"apiVersion": "tekton.dev/v1",
+	"kind": "Task",
+	"metadata": {
+		"labels": {"app.kubernetes.io/version": "0.1"},
+		"name": "spam",
+	},
+	"spec": {
+		"params": [
+			{"name": "input"},
+			{"name": "ociStorage"},
+		],
+		"results": [{"name": "TEST_OUTPUT"}],
+		"steps": [{
+			"image": "registry.local/sleeper:latest",
+			"name": "sleep",
+			"script": "sleep 5",
+		}],
+	},
+}

@@ -38,6 +38,26 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [result_name, k8s.name_version(input)])
 }
 
+# METADATA
+# title: Workspace
+# description: >-
+#   Tasks that implement the Trusted Artifacts pattern should not allow general purpose workspaces
+#   to share data. Instead, data should be passed around via Trusted Artifacts. Workspaces used for
+#   other purposes, e.g. provide auth credentials, are allowed. Use the rule data key
+#   `allowed_trusted_artifacts_workspaces` to specify which workspace names are allowed. By default
+#   this value is empty which effectively disallows any workspace.
+# custom:
+#   short_name: workspace
+#   failure_msg: General purpose workspace %q is not allowed
+#   effective_on: 2024-07-07T00:00:00Z
+#
+deny contains result if {
+	_uses_trusted_artifacts(input)
+	some workspace in input.spec.workspaces
+	not workspace.name in lib.rule_data("allowed_trusted_artifacts_workspaces")
+	result := lib.result_helper(rego.metadata.chain(), [workspace.name])
+}
+
 _ta_parameters contains param_name if {
 	some step in input.spec.steps
 	_is_ta_step(step)
@@ -59,3 +79,17 @@ _ta_results contains result_name if {
 _has_ta_suffix(name) if endswith(name, "_ARTIFACT")
 
 _is_ta_step(step) if contains(step.image, "trusted-artifacts")
+
+# _uses_trusted_artifacts relies on heuristics to determine if the given Task definition uses the
+# Trusted Artifacts pattern. It does so my looking for any parameters or results which have the
+# _ARTIFACT suffix in its name.
+_uses_trusted_artifacts(task) if {
+	params := {param.name | some param in task.spec.params}
+	results := {result.name | some result in task.spec.results}
+	all_names := params | results
+	ta_names := {name |
+		some name in all_names
+		_has_ta_suffix(name)
+	}
+	count(ta_names) > 0
+}

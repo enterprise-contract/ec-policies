@@ -10,3 +10,4 @@
 ** xref:task_policy.adoc#trusted_artifacts_package[Trusted Artifacts Conventions]
 *** xref:task_policy.adoc#trusted_artifacts__parameter[Parameter]
 *** xref:task_policy.adoc#trusted_artifacts__result[Result]
+*** xref:task_policy.adoc#trusted_artifacts__workspace[Workspace]

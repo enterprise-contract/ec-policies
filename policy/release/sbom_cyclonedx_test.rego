@@ -36,6 +36,50 @@ test_not_valid if {
 		with input.image.ref as "registry.local/spam@sha256:123"
 }
 
+test_attributes_not_allowed_all_good if {
+	lib.assert_empty(sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+
+	lib.assert_empty(sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [{"name": "attrX", "value": "valueX"}]}
+}
+
+test_attributes_not_allowed_pair if {
+	expected := {{
+		"code": "sbom_cyclonedx.disallowed_package_attributes",
+		# regal ignore:line-length
+		"msg": `Package pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3 has the attribute "attr1" set`,
+	}}
+
+	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [{"name": "attr1"}]}
+}
+
+test_attributes_not_allowed_value if {
+	expected := {{
+		"code": "sbom_cyclonedx.disallowed_package_attributes",
+		# regal ignore:line-length
+		"msg": `Package pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3 has the attribute "attr2" set to "value2"`,
+	}}
+
+	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [{"name": "attr2", "value": "value2"}]}
+}
+
+test_attributes_not_allowed_no_properties if {
+	att := json.patch(_sbom_attestation, [{
+		"op": "remove",
+		"path": "/statement/predicate/components/0/properties",
+	}])
+
+	lib.assert_empty(sbom_cyclonedx.deny) with input.attestations as [att]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [{"name": "attr", "value": "value"}]}
+}
+
 test_allowed_by_default if {
 	assert_allowed("pkg:golang/k8s.io/client-go@v0.28.3", [])
 }
@@ -145,20 +189,36 @@ assert_not_allowed(purl, disallowed_packages) if {
 }
 
 test_rule_data_validation if {
-	d := {"disallowed_packages": [
-		# Missing required attributes
-		{},
-		# Additional properties not allowed
-		{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0", "blah": "foo"},
-		# Bad types everywhere
-		{"purl": 1, "format": 2, "min": 3, "max": 4},
-		# Duplicated items
-		{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0"},
-		{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0"},
-		# Bad semver values
-		{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1"},
-		{"purl": "pkg:golang/k8s.io/client-go", "format": "semver", "max": "v0.1"},
-	]}
+	d := {
+		"disallowed_packages": [
+			# Missing required attributes
+			{},
+			# Additional properties not allowed
+			{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0", "blah": "foo"},
+			# Bad types everywhere
+			{"purl": 1, "format": 2, "min": 3, "max": 4},
+			# Duplicated items
+			{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0"},
+			{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0"},
+			# Bad semver values
+			{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1"},
+			{"purl": "pkg:golang/k8s.io/client-go", "format": "semver", "max": "v0.1"},
+		],
+		sbom_cyclonedx._rule_data_attributes_key: [
+			# ok
+			{"name": "some_attr", "value": "some_val"},
+			{"name": "no_val_attr"},
+			# Missing required attributes
+			{},
+			# Additional properties not allowed
+			{"name": "_name_", "value": "_value_", "something": "else"},
+			# Bad types everywhere
+			{"name": 1, "value": 2},
+			# Duplicated items
+			{"name": "_name_", "value": "_value_"},
+			{"name": "_name_", "value": "_value_"},
+		],
+	}
 
 	expected := {
 		{
@@ -214,10 +274,41 @@ test_rule_data_validation if {
 			"code": "sbom_cyclonedx.disallowed_packages_provided",
 			"msg": "Item at index 6 in disallowed_packages does not have a valid max semver value: \"0.1\"",
 		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			"msg": "Rule data dissalowed_attributes has unexpected format: 2: name is required",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			"msg": "Rule data dissalowed_attributes has unexpected format: 3: Additional property something is not allowed",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			# regal ignore:line-length
+			"msg": "Rule data dissalowed_attributes has unexpected format: 4.name: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			# regal ignore:line-length
+			"msg": "Rule data dissalowed_attributes has unexpected format: 4.value: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			"msg": "Rule data dissalowed_attributes has unexpected format: (Root): array items[5,6] must be unique",
+		},
 	}
 
 	lib.assert_equal_results(sbom_cyclonedx.deny, expected) with input.attestations as [_sbom_attestation]
 		with data.rule_data as d
+
+	# rule data keys are optional
+	lib.assert_empty(sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
+		with data.rule_data as {}
+	lib.assert_empty(sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
+		with data.rule_data as {
+			sbom_cyclonedx._rule_data_packages_key: [],
+			sbom_cyclonedx._rule_data_attributes_key: [],
+		}
 }
 
 _sbom_attestation := {"statement": {
@@ -252,6 +343,13 @@ _sbom_attestation := {"statement": {
 			"cpe": "cpe:2.3:a:coreutils-single:coreutils-single:8.32-34.el9:*:*:*:*:*:*:*",
 			# regal ignore:line-length
 			"purl": "pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3",
+			"properties": [
+				{"name": "attr1"},
+				{
+					"name": "attr2",
+					"value": "value2",
+				},
+			],
 		}],
 	},
 }}

@@ -173,7 +173,7 @@ _expected_sources contains expected_source if {
 
 # SLSA Provenance v0.2
 _source_references contains ref if {
-	some att in lib.pipelinerun_attestations
+	some att in lib.slsa_provenance_attestations
 	some material in att.statement.predicate.materials
 	some digest_alg in object.keys(material.digest)
 	some supported_vcs_type in lib.rule_data("supported_vcs")
@@ -191,7 +191,7 @@ _source_references contains ref if {
 
 # SLSA Provenance v1.0
 _source_references contains ref if {
-	some att in lib.pipelinerun_slsa_provenance_v1
+	some att in lib.slsa_provenance_attestations
 
 	# regal ignore:prefer-snake-case
 	some dep in att.statement.predicate.buildDefinition.resolvedDependencies

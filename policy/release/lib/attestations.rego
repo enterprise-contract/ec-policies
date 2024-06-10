@@ -4,6 +4,10 @@ import rego.v1
 
 import data.lib.tkn
 
+slsa_provenance_predicate_type_v1 := "https://slsa.dev/provenance/v1"
+
+slsa_provenance_predicate_type_v02 := "https://slsa.dev/provenance/v0.2"
+
 tekton_pipeline_run := "tekton.dev/v1beta1/PipelineRun"
 
 pipelinerun_att_build_types := {
@@ -37,6 +41,11 @@ java_sbom_component_count_result_name := "SBOM_JAVA_COMPONENTS_COUNT"
 
 build_base_images_digests_result_name := "BASE_IMAGES_DIGESTS"
 
+slsa_provenance_attestations := [att |
+	some att in input.attestations
+	att.statement.predicateType in {slsa_provenance_predicate_type_v1, slsa_provenance_predicate_type_v02}
+]
+
 # These are the ones we're interested in
 pipelinerun_attestations := att if {
 	v1_0 := [a |
@@ -58,7 +67,7 @@ pipelinerun_slsa_provenance02 := [att |
 # written for either.
 pipelinerun_slsa_provenance_v1 := [att |
 	some att in input.attestations
-	att.statement.predicateType == "https://slsa.dev/provenance/v1"
+	att.statement.predicateType == slsa_provenance_predicate_type_v1
 
 	att.statement.predicate.buildDefinition.buildType in slsav1_pipelinerun_att_build_types
 

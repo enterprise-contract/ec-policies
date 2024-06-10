@@ -383,6 +383,20 @@ test_slsa_v10_source_references if {
 	]
 }
 
+test_slsa_v02_ignore_irrelevant_attestations if {
+	good_att := _source_material_attestation("git+https://git.repository", "ref")
+	irrelevant_att := _material_attestation([])
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
+		with input.attestations as [good_att, irrelevant_att]
+}
+
+test_slsa_v10_ignore_irrelevant_attestations if {
+	good_att := _source_resolved_dependencies_attestation("git+https://git.repository", "ref")
+	irrelevant_att := _resolved_dependencies_attestation([])
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
+		with input.attestations as [good_att, irrelevant_att]
+}
+
 test_rule_data_provided if {
 	d := {
 		"supported_digests": [
@@ -453,10 +467,13 @@ test_refs if {
 expected := {"source": {"git": {"url": "https://git.repository", "revision": "ref"}}}
 
 # SLSA Provenance v0.2
-_material_attestation(materials) := {"statement": {"predicate": {
-	"buildType": lib.tekton_pipeline_run,
-	"materials": materials,
-}}}
+_material_attestation(materials) := {"statement": {
+	"predicateType": "https://slsa.dev/provenance/v0.2",
+	"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"materials": materials,
+	},
+}}
 
 # SLSA Provenance v0.2
 _source_material_attestation(uri, sha1) := _material_attestation([{

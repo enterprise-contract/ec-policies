@@ -13,15 +13,30 @@ tr_build_type := "tekton.dev/v1beta1/TaskRun"
 
 tr_build_type_legacy := "https://tekton.dev/attestations/chains@v2"
 
-mock_pr_att := {"statement": {"predicate": {"buildType": pr_build_type}}}
+mock_pr_att := {"statement": {
+	"predicateType": "https://slsa.dev/provenance/v1",
+	"predicate": {"buildType": pr_build_type},
+}}
 
-mock_pr_att_legacy := {"statement": {"predicate": {"buildType": pr_build_type_legacy}}}
+mock_pr_att_legacy := {"statement": {
+	"predicateType": "https://slsa.dev/provenance/v0.2",
+	"predicate": {"buildType": pr_build_type_legacy},
+}}
 
-mock_tr_att := {"statement": {"predicate": {"buildType": tr_build_type}}}
+mock_tr_att := {"statement": {
+	"predicateType": "https://slsa.dev/provenance/v1",
+	"predicate": {"buildType": tr_build_type},
+}}
 
-mock_tr_att_legacy := {"statement": {"predicate": {"buildType": tr_build_type_legacy}}}
+mock_tr_att_legacy := {"statement": {
+	"predicateType": "https://slsa.dev/provenance/v0.2",
+	"predicate": {"buildType": tr_build_type_legacy},
+}}
 
-garbage_att := {"statement": {"predicate": {"buildType": "garbage"}}}
+garbage_att := {"statement": {
+	"predicateType": "https://oscar.sesame/v1",
+	"predicate": {"buildType": "garbage"},
+}}
 
 valid_slsav1_att := {"statement": {
 	"predicateType": "https://slsa.dev/provenance/v1",
@@ -139,6 +154,25 @@ test_tasks_from_pipelinerun if {
 	slsa02_task := {"name": "my-task", "ref": {"kind": "task"}}
 	slsa02_att := att_mock_task_helper(slsa02_task)
 	lib.assert_equal([slsa02_task], lib.tasks_from_pipelinerun) with input.attestations as slsa02_att
+}
+
+test_slsa_provenance_attestations if {
+	lib.assert_equal(lib.slsa_provenance_attestations, []) with input.attestations as []
+
+	attestations := [
+		mock_pr_att,
+		mock_pr_att_legacy,
+		mock_tr_att,
+		mock_tr_att_legacy,
+		garbage_att,
+	]
+	expected := [
+		mock_pr_att,
+		mock_pr_att_legacy,
+		mock_tr_att,
+		mock_tr_att_legacy,
+	]
+	lib.assert_equal(lib.slsa_provenance_attestations, expected) with input.attestations as attestations
 }
 
 test_pr_attestations if {

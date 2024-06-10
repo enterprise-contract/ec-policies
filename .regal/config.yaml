@@ -59,7 +59,3 @@ rules:
       ignore:
         files:
           - "*_test.rego"
-ignore:
-  files:
-    # Avoid following the symlink to the top level policy dir
-    - antora/docs/policy/**

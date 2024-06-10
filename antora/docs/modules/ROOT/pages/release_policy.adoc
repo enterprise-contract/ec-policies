@@ -1127,12 +1127,12 @@ Confirm the expected rule data keys have been provided in the expected format. T
 [#slsa_source_correlated__source_code_reference_provided]
 === link:#slsa_source_correlated__source_code_reference_provided[Source code reference provided]
 
-Warn if the expected source code reference is not provided.
+Check if the expected source code reference is provided.
 
 *Solution*: Provide the expected source code reference in inputs.
 
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Expected source code reference was not provided for verification`
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Expected source code reference was not provided for verification`
 * Code: `slsa_source_correlated.source_code_reference_provided`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated.rego#L23[Source, window="_blank"]
 

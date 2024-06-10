@@ -5,18 +5,23 @@ import rego.v1
 import data.lib
 import data.policy.release.slsa_source_correlated
 
-test_warn_missing_source_code_happy_day if {
-	lib.assert_empty(slsa_source_correlated.warn) with input.image as {"source": {"something": "here"}}
+test_deny_missing_source_code_happy_day if {
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as {"source": {"something": "here"}}
+		with input.attestations as [_source_material_attestation("git+https://git.repository", "ref")]
 }
 
-test_warn_missing_expected_source_code_reference if {
+test_deny_missing_expected_source_code_reference if {
+	attestations := [_source_material_attestation("git+https://git.repository", "ref")]
 	expected := {{
 		"code": "slsa_source_correlated.source_code_reference_provided",
 		"msg": "Expected source code reference was not provided for verification",
 	}}
-	lib.assert_equal_results(slsa_source_correlated.warn, expected) with input as {}
-	lib.assert_equal_results(slsa_source_correlated.warn, expected) with input.image as {}
-	lib.assert_equal_results(slsa_source_correlated.warn, expected) with input.image as {"source": {}}
+	lib.assert_equal_results(slsa_source_correlated.deny, expected) with input as {}
+		with input.attestations as attestations
+	lib.assert_equal_results(slsa_source_correlated.deny, expected) with input.image as {}
+		with input.attestations as attestations
+	lib.assert_equal_results(slsa_source_correlated.deny, expected) with input.image as {"source": {}}
+		with input.attestations as attestations
 }
 
 test_deny_material_code_reference if {

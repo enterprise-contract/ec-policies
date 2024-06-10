@@ -23,7 +23,7 @@ nul := base64.decode("AA==")
 # METADATA
 # title: Source code reference provided
 # description: >-
-#   Warn if the expected source code reference is not provided.
+#   Check if the expected source code reference is provided.
 # custom:
 #   short_name: source_code_reference_provided
 #   failure_msg: Expected source code reference was not provided for verification
@@ -33,7 +33,7 @@ nul := base64.decode("AA==")
 #   - minimal
 #   - slsa3
 #   - redhat
-warn contains result if {
+deny contains result if {
 	source := object.get(input, ["image", "source"], {})
 	count(source) == 0
 

@@ -559,8 +559,8 @@ github.com/emicklei/proto v1.12.1 h1:6n/Z2pZAnBwuhU66Gs8160B8rrrYKo7h2F2sCOnNceE
 github.com/emicklei/proto v1.12.1/go.mod h1:rn1FgRS/FANiZdD2djyH7TMA9jdRDcYQ9IEN9yvjX0A=
 github.com/emirpasic/gods v1.18.1 h1:FXtiHYKDGKCW2KzwZKx0iC0PQmdlorYgdFG9jPXJ1Bc=
 github.com/emirpasic/gods v1.18.1/go.mod h1:8tpGGwCnJ5H4r6BWwaV6OrWmMoPhUl5jm/FMNAnJvWQ=
-github.com/enterprise-contract/ec-cli v0.4.64 h1:lB+7Dn0q5tKsjRrbS0cc/O9AJ0I1ULuqJffJysk2PTY=
-github.com/enterprise-contract/ec-cli v0.4.64/go.mod h1:whPbxL20fXwGWluLXgKcBMGjk5upgNUgHRIeu9clKYo=
+github.com/enterprise-contract/ec-cli v0.5.3 h1:rqeWAwC1gGpQaS6yoOJzPWOYrDv2qrDUQGw1bde3yeA=
+github.com/enterprise-contract/ec-cli v0.5.3/go.mod h1:J+UzpeXEZYzSdZTzWgxoNK11/q0pXPkBJVsZl7S9Vlg=
 github.com/enterprise-contract/enterprise-contract-controller/api v0.1.47 h1:wdvZTKHiCERcD4jPVWQsq2FqZF5TmvRb66hI8dLDaAg=
 github.com/enterprise-contract/enterprise-contract-controller/api v0.1.47/go.mod h1:QgUezi253+QIvTWVlMX+gqyfAek1eKV3qChzm++kpI8=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
@@ -1315,8 +1315,8 @@ github.com/spf13/pflag v1.0.3/go.mod h1:DYY7MBk1bdzusC3SYhjObp+wFpr4gzcvqqNjLnIn
 github.com/spf13/pflag v1.0.5 h1:iy+VFUOCP1a+8yFto/drg2CJ5u0yRoB7fZw3DKv/JXA=
 github.com/spf13/pflag v1.0.5/go.mod h1:McXfInJRrz4CZXVZOBLb0bTZqETkiAhM9Iw0y3An2Bg=
 github.com/spf13/viper v1.3.2/go.mod h1:ZiWeW+zYFKm7srdB9IoDzzZXaJaI5eL9QjNiN/DMA2s=
-github.com/spf13/viper v1.18.2 h1:LUXCnvUvSM6FXAsj6nnfc8Q2tp1dIgUfY9Kc8GsSOiQ=
-github.com/spf13/viper v1.18.2/go.mod h1:EKmWIqdnk5lOcmR72yw6hS+8OPYcwD0jteitLMVB+yk=
+github.com/spf13/viper v1.19.0 h1:RWq5SEjt8o25SROyN3z2OrDB9l7RPd3lwTWU8EcEdcI=
+github.com/spf13/viper v1.19.0/go.mod h1:GQUN9bilAbhU/jgc1bKs99f/suXKeUMct8Adx5+Ntkg=
 github.com/spiffe/go-spiffe/v2 v2.2.0 h1:9Vf06UsvsDbLYK/zJ4sYsIsHmMFknUD+feA7IYoWMQY=
 github.com/spiffe/go-spiffe/v2 v2.2.0/go.mod h1:Urzb779b3+IwDJD2ZbN8fVl3Aa8G4N/PiUe6iXC0XxU=
 github.com/stoewer/go-strcase v1.3.0 h1:g0eASXYtp+yvN9fK8sH94oCIk0fau9uV1/ZdJ0AVEzs=

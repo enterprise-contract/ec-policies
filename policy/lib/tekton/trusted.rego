@@ -51,6 +51,12 @@ _newer_record_exists(task) if {
 
 	newest_record := time_lib.newest(records)
 	newest_record.ref != ref.pinned_ref
+
+	# newest record could have the same effective_on as the record for the given
+	# task, in that case we can't claim that the newer record exists
+	some record in records
+	record.ref == ref.pinned_ref
+	newest_record.effective_on != record.effective_on
 }
 
 # _trusted_tasks provides a safe way to access the list of trusted tasks. It prevents a policy rule

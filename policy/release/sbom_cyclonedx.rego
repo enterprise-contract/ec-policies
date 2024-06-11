@@ -66,19 +66,21 @@ deny contains result if {
 deny contains result if {
 	some s in sbom.cyclonedx_sboms
 	some component in s.components
-	_contains(component.purl, lib.rule_data(_rule_data_key))
+	_contains(component.purl, lib.rule_data(_rule_data_packages_key))
 	result := lib.result_helper(rego.metadata.chain(), [component.purl])
 }
 
 # METADATA
 # title: Disallowed packages list is provided
 # description: >-
-#   Confirm the `disallowed_packages` rule data was provided, since it is required by the policy
-#   rules in this package.
+#   Confirm the `disallowed_packages` and `disallowed_attributes` rule data were
+#   provided, since they are required by the policy rules in this package.
 # custom:
 #   short_name: disallowed_packages_provided
 #   failure_msg: "%s"
-#   solution: Provide a list of disallowed packages in the expected format.
+#   solution: >-
+#     Provide a list of disallowed packages or package attributes in the
+#     expected format.
 #   collections:
 #   - redhat
 #   - policy_data
@@ -86,6 +88,35 @@ deny contains result if {
 deny contains result if {
 	some error in _rule_data_errors
 	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
+# METADATA
+# title: Disallowed package attributes
+# description: >-
+#   Confirm the CycloneDX SBOM contains only packages without disallowed
+#   attributes. By default all attributes are allowed. Use the
+#   "disallowed_attributes" rule data key to provide a list of key-value pairs
+#   that forbid the use of an attribute set to the given value.
+# custom:
+#   short_name: disallowed_package_attributes
+#   failure_msg: Package %s has the attribute %q set%s
+#   solution: Update the image to not use a disallowed package attributes.
+#   collections:
+#   - redhat
+#   - policy_data
+#   effective_on: 2024-07-31T00:00:00Z
+deny contains result if {
+	some s in sbom.cyclonedx_sboms
+	some component in s.components
+	some property in component.properties
+	some disallowed in lib.rule_data(_rule_data_attributes_key)
+
+	property.name == disallowed.name
+	object.get(property, "value", "") == object.get(disallowed, "value", "")
+
+	msg := regex.replace(object.get(property, "value", ""), `(.+)`, ` to "$1"`)
+
+	result := lib.result_helper(rego.metadata.chain(), [component.purl, property.name, msg])
 }
 
 _contains(needle, haystack) if {
@@ -124,7 +155,7 @@ _to_semver(v) := trim_prefix(v, "v")
 _rule_data_errors contains msg if {
 	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
 	# handle an Array directly.
-	value := json.marshal(lib.rule_data(_rule_data_key))
+	value := json.marshal(lib.rule_data(_rule_data_packages_key))
 	some violation in json.match_schema(
 		value,
 		{
@@ -147,20 +178,20 @@ _rule_data_errors contains msg if {
 			},
 		},
 	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, violation.error])
+	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_packages_key, violation.error])
 }
 
 # Verify each item in disallowed_packages has a parseable PURL
 _rule_data_errors contains msg if {
-	some index, pkg in lib.rule_data(_rule_data_key)
+	some index, pkg in lib.rule_data(_rule_data_packages_key)
 	purl := pkg.purl
 	not ec.purl.is_valid(purl)
-	msg := sprintf("Item at index %d in %s does not have a valid PURL: %q", [index, _rule_data_key, purl])
+	msg := sprintf("Item at index %d in %s does not have a valid PURL: %q", [index, _rule_data_packages_key, purl])
 }
 
 # Verify each item in disallowed_packages has a parseable min/max semver
 _rule_data_errors contains msg if {
-	some index, pkg in lib.rule_data(_rule_data_key)
+	some index, pkg in lib.rule_data(_rule_data_packages_key)
 	pkg.format in {"semver", "semverv"}
 	some attr in ["min", "max"]
 
@@ -171,8 +202,35 @@ _rule_data_errors contains msg if {
 
 	msg := sprintf(
 		"Item at index %d in %s does not have a valid %s semver value: %q",
-		[index, _rule_data_key, attr, version],
+		[index, _rule_data_packages_key, attr, version],
 	)
 }
 
-_rule_data_key := "disallowed_packages"
+# Verify disallowed_attributes is an array of name value pairs
+_rule_data_errors contains msg if {
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(_rule_data_attributes_key))
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"uniqueItems": true,
+			"items": {
+				"type": "object",
+				"properties": {
+					"name": {"type": "string"},
+					"value": {"type": "string"},
+				},
+				"additionalProperties": false,
+				"required": ["name"],
+			},
+		},
+	)[1]
+	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_attributes_key, violation.error])
+}
+
+_rule_data_packages_key := "disallowed_packages"
+
+_rule_data_attributes_key := "dissalowed_attributes"

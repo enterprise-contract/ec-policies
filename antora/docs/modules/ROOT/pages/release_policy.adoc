@@ -80,6 +80,7 @@ Rules included:
 * xref:release_policy.adoc#java__trusted_dependencies_source_list_provided[Java dependency checks: Trusted Java dependency source list was provided]
 * xref:release_policy.adoc#labels__rule_data_provided[Labels: Rule data provided]
 * xref:release_policy.adoc#olm__required_olm_features_annotations_provided[OLM: Required OLM feature annotations list provided]
+* xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_packages_provided[SBOM CycloneDX: Disallowed packages list is provided]
 * xref:release_policy.adoc#slsa_build_build_service__allowed_builder_ids_provided[SLSA - Build - Build Service: Allowed builder IDs provided]
 * xref:release_policy.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]
@@ -126,6 +127,7 @@ Rules included:
 * xref:release_policy.adoc#quay_expiration__expires_label[Quay expiration: Expires label]
 * xref:release_policy.adoc#redhat_manifests__redhat_manifests_missing[Red Hat manifests: Missing Red Hat manifests]
 * xref:release_policy.adoc#sbom_cyclonedx__allowed[SBOM CycloneDX: Allowed]
+* xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_packages_provided[SBOM CycloneDX: Disallowed packages list is provided]
 * xref:release_policy.adoc#sbom_cyclonedx__found[SBOM CycloneDX: Found]
 * xref:release_policy.adoc#sbom_cyclonedx__valid[SBOM CycloneDX: Valid]
@@ -863,12 +865,25 @@ Confirm the CycloneDX SBOM contains only allowed packages. By default all packag
 * Code: `sbom_cyclonedx.allowed`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L53[Source, window="_blank"]
 
+[#sbom_cyclonedx__disallowed_package_attributes]
+=== link:#sbom_cyclonedx__disallowed_package_attributes[Disallowed package attributes]
+
+Confirm the CycloneDX SBOM contains only packages without disallowed attributes. By default all attributes are allowed. Use the "disallowed_attributes" rule data key to provide a list of key-value pairs that forbid the use of an attribute set to the given value.
+
+*Solution*: Update the image to not use a disallowed package attributes.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Package %s has the attribute %q set%s`
+* Code: `sbom_cyclonedx.disallowed_package_attributes`
+* Effective from: `2024-07-31T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L93[Source, window="_blank"]
+
 [#sbom_cyclonedx__disallowed_packages_provided]
 === link:#sbom_cyclonedx__disallowed_packages_provided[Disallowed packages list is provided]
 
-Confirm the `disallowed_packages` rule data was provided, since it is required by the policy rules in this package.
+Confirm the `disallowed_packages` and `disallowed_attributes` rule data were provided, since they are required by the policy rules in this package.
 
-*Solution*: Provide a list of disallowed packages in the expected format.
+*Solution*: Provide a list of disallowed packages or package attributes in the expected format.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`

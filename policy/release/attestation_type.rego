@@ -29,6 +29,8 @@ import data.lib
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations
+
+	# regal ignore:leaked-internal-reference
 	att_type := att.statement._type
 	not att_type in lib.rule_data(_rule_data_key)
 	result := lib.result_helper(rego.metadata.chain(), [att_type])

@@ -54,7 +54,11 @@ rules:
   idiomatic:
     no-defined-entrypoint:
       level: ignore
-
+  bugs:
+    leaked-internal-reference:
+      ignore:
+        files:
+          - "*_test.rego"
 ignore:
   files:
     # Avoid following the symlink to the top level policy dir

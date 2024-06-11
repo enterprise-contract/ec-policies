@@ -5,18 +5,23 @@ import rego.v1
 import data.lib
 import data.policy.release.slsa_source_correlated
 
-test_warn_missing_source_code_happy_day if {
-	lib.assert_empty(slsa_source_correlated.warn) with input.image as {"source": {"something": "here"}}
+test_deny_missing_source_code_happy_day if {
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as {"source": {"something": "here"}}
+		with input.attestations as [_source_material_attestation("git+https://git.repository", "ref")]
 }
 
-test_warn_missing_expected_source_code_reference if {
+test_deny_missing_expected_source_code_reference if {
+	attestations := [_source_material_attestation("git+https://git.repository", "ref")]
 	expected := {{
 		"code": "slsa_source_correlated.source_code_reference_provided",
 		"msg": "Expected source code reference was not provided for verification",
 	}}
-	lib.assert_equal_results(slsa_source_correlated.warn, expected) with input as {}
-	lib.assert_equal_results(slsa_source_correlated.warn, expected) with input.image as {}
-	lib.assert_equal_results(slsa_source_correlated.warn, expected) with input.image as {"source": {}}
+	lib.assert_equal_results(slsa_source_correlated.deny, expected) with input as {}
+		with input.attestations as attestations
+	lib.assert_equal_results(slsa_source_correlated.deny, expected) with input.image as {}
+		with input.attestations as attestations
+	lib.assert_equal_results(slsa_source_correlated.deny, expected) with input.image as {"source": {}}
+		with input.attestations as attestations
 }
 
 test_deny_material_code_reference if {
@@ -383,6 +388,20 @@ test_slsa_v10_source_references if {
 	]
 }
 
+test_slsa_v02_ignore_irrelevant_attestations if {
+	good_att := _source_material_attestation("git+https://git.repository", "ref")
+	irrelevant_att := _material_attestation([])
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
+		with input.attestations as [good_att, irrelevant_att]
+}
+
+test_slsa_v10_ignore_irrelevant_attestations if {
+	good_att := _source_resolved_dependencies_attestation("git+https://git.repository", "ref")
+	irrelevant_att := _resolved_dependencies_attestation([])
+	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
+		with input.attestations as [good_att, irrelevant_att]
+}
+
 test_rule_data_provided if {
 	d := {
 		"supported_digests": [
@@ -453,10 +472,13 @@ test_refs if {
 expected := {"source": {"git": {"url": "https://git.repository", "revision": "ref"}}}
 
 # SLSA Provenance v0.2
-_material_attestation(materials) := {"statement": {"predicate": {
-	"buildType": lib.tekton_pipeline_run,
-	"materials": materials,
-}}}
+_material_attestation(materials) := {"statement": {
+	"predicateType": "https://slsa.dev/provenance/v0.2",
+	"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"materials": materials,
+	},
+}}
 
 # SLSA Provenance v0.2
 _source_material_attestation(uri, sha1) := _material_attestation([{

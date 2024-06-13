@@ -143,6 +143,27 @@ test_trusted_artifact_tampering if {
 		with input.attestations as [evil_attestation]
 }
 
+test_trusted_artifact_tampering_test_tasks if {
+	evil_attestation := json.patch(attestation_test_ta, [{
+		"op": "replace",
+		"path": "/statement/predicate/buildConfig/tasks/1/ref/bundle",
+		"value": "registry.io/evil/bundle@sha256:cde",
+	}])
+
+	lib.assert_equal_results(trusted_task.deny, {{
+		"code": "trusted_task.trusted",
+		# regal ignore:line-length
+		"msg": `Code tampering detected, untrusted PipelineTask "task_b" (Task "TaskB") was included in build chain comprised of: task_a, task_b, task_c`,
+		"term": "TaskB",
+	}}) with data.trusted_tasks as trusted_tasks_data
+		with input.attestations as [evil_attestation]
+}
+
+test_trusted_artifact_test_tasks if {
+	lib.assert_empty(trusted_task.deny) with data.trusted_tasks as trusted_tasks_data
+		with input.attestations as [attestation_test_ta]
+}
+
 test_tampered_trusted_artifact_inputs if {
 	evil_attestation := json.patch(attestation_ta, [{
 		"op": "add",
@@ -434,6 +455,24 @@ task_c := {
 	],
 	"ref": {"name": "TaskC", "kind": "Task", "bundle": trusted_bundle},
 }
+
+task_test_a := {
+	"metadata": {"labels": {"tekton.dev/pipelineTask": "task_a"}},
+	"invocation": {"parameters": {"B_ARTIFACT": artifact_b, "D_ARTIFACT": artifact_d}},
+	"results": [
+		{
+			"name": "TEST_OUTPUT",
+			"value": "{\"FAILED\": \"1\"}",
+			"type": "string",
+		},
+	],
+	"ref": {"name": "TaskA", "kind": "Task", "bundle": trusted_bundle},
+}
+
+attestation_test_ta := {"statement": {"predicate": {
+	"buildType": lib.tekton_pipeline_run,
+	"buildConfig": {"tasks": [task_test_a, task_b, task_c]},
+}}}
 
 attestation_ta := {"statement": {"predicate": {
 	"buildType": lib.tekton_pipeline_run,

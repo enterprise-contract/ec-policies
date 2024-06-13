@@ -10,7 +10,16 @@ POLICY_DIR=./policy
 # Use go run so we use the exact pinned versions from the mod file.
 # Use ec for the opa and conftest commands so that our custom rego
 # functions are available.
-EC=go run github.com/enterprise-contract/ec-cli
+ifndef EC_REF
+  EC_MOD=github.com/enterprise-contract/ec-cli
+else
+  # EC_REF can be set to use ec built from a particular ref, e.g.:
+  #   EC_REF=release-v0.2 make ec-version quiet-test
+  EC_MOD=github.com/enterprise-contract/ec-cli@$(EC_REF)
+endif
+
+EC=go run $(EC_MOD)
+
 OPA=$(EC) opa
 CONFTEST=EC_EXPERIMENTAL=1 $(EC)
 TKN=go run github.com/tektoncd/cli/cmd/tkn
@@ -65,6 +74,14 @@ help: ## Display this help.
 	} BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-18s\033[0m %s\n", "make " $$1, ww($$2) } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 ##@ Development
+
+ec-version:
+	@echo $(EC_MOD)
+	@# To confirm that EC_REF is doing what you think it's doing
+	@go list -m -json $(EC_MOD) | jq -r .Version
+	@# Actually we get "development" as the version and "0001-01-01"
+	@# as the change date but let's show it anyhow
+	@$(EC) version
 
 # Todo maybe: Run tests with conftest verify instead
 .PHONY: test

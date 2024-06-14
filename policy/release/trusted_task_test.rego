@@ -459,13 +459,11 @@ task_c := {
 task_test_a := {
 	"metadata": {"labels": {"tekton.dev/pipelineTask": "task_a"}},
 	"invocation": {"parameters": {"B_ARTIFACT": artifact_b, "D_ARTIFACT": artifact_d}},
-	"results": [
-		{
-			"name": "TEST_OUTPUT",
-			"value": "{\"FAILED\": \"1\"}",
-			"type": "string",
-		},
-	],
+	"results": [{
+		"name": "TEST_OUTPUT",
+		"value": "{\"FAILED\": \"1\"}",
+		"type": "string",
+	}],
 	"ref": {"name": "TaskA", "kind": "Task", "bundle": trusted_bundle},
 }
 

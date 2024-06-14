@@ -92,33 +92,6 @@ deny contains result if {
 }
 
 # METADATA
-# title: Test Tasks are trusted
-# description: >-
-#   Check the trust of the Tekton Tasks used for testing in the build Pipeline. This rule is used if 
-#   Trusted Artifacts are enabled. In this case, a chain of trust is established for all the Tasks 
-#   involved in creating an artifact. If the chain contains an untrusted Task, then a violation is emitted. 
-# custom:
-#   short_name: trusted
-#   failure_msg: "%s"
-#   solution: >-
-#     If using Trusted Artifacts, be sure every Task in the build Pipeline responsible for producing
-#     a Trusted Artifact is trusted. Otherwise, ensure **all** Tasks in the build Pipeline are
-#     trusted. Note that trust is eventually revoked from Tasks when newer versions are made
-#     available.
-#   collections:
-#   - redhat
-#   effective_on: 2024-07-12T00:00:00Z
-#
-deny contains result if {
-	_uses_trusted_artifacts
-	some attestation in lib.pipelinerun_attestations
-	some test_task in tkn.tasks_test_output(attestation)
-
-	err := _task_trust_error(attestation, test_task)
-	result := lib.result_helper_with_term(rego.metadata.chain(), [err.msg], err.term)
-}
-
-# METADATA
 # title: Trusted Artifact produced in pipeline
 # description: >-
 #   All input trusted artifacts must be produced on the pipeline. If they are not
@@ -205,8 +178,14 @@ deny contains result if {
 	)
 }
 
-_task_trust_error(attestation, task) := error if {
-	dependency_chain := graph.reachable(_artifact_chain[attestation], {tkn.pipeline_task_name(task)})
+_trust_errors contains error if {
+	_uses_trusted_artifacts
+	some attestation in lib.pipelinerun_attestations
+	build_tasks := tkn.build_tasks(attestation)
+	test_tasks := tkn.tasks_test_output(attestation)
+	some trust_task in array.concat(build_tasks, test_tasks)
+
+	dependency_chain := graph.reachable(_artifact_chain[attestation], {tkn.pipeline_task_name(trust_task)})
 	chain := [task |
 		some link in dependency_chain
 		some task in tkn.tasks(attestation)
@@ -225,14 +204,6 @@ _task_trust_error(attestation, task) := error if {
 		),
 		"term": untrusted_task_name,
 	}
-}
-
-_trust_errors contains error if {
-	_uses_trusted_artifacts
-	some attestation in lib.pipelinerun_attestations
-	some build_task in tkn.build_tasks(attestation)
-
-	error := _task_trust_error(attestation, build_task)
 }
 
 _trust_errors contains error if {

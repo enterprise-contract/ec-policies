@@ -182,9 +182,11 @@ _trust_errors contains error if {
 	_uses_trusted_artifacts
 	some attestation in lib.pipelinerun_attestations
 	build_tasks := tkn.build_tasks(attestation)
-	some build_task in build_tasks
+	test_tasks := tkn.tasks_output_result(attestation)
+	some build_or_test_task in array.concat(build_tasks, test_tasks)
 
-	dependency_chain := graph.reachable(_artifact_chain[attestation], {tkn.pipeline_task_name(build_task)})
+	dependency_chain := graph.reachable(_artifact_chain[attestation], {tkn.pipeline_task_name(build_or_test_task)})
+
 	chain := [task |
 		some link in dependency_chain
 		some task in tkn.tasks(attestation)

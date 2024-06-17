@@ -173,6 +173,13 @@ build_tasks(attestation) := [task |
 	count(image_digest) > 0
 ]
 
+# return the tasks that have "TEST_OUTPUT" as a result
+tasks_output_result(attestation) := [task |
+	some task in tasks(attestation)
+	test_output := task_result(task, "TEST_OUTPUT")
+	count(test_output) > 0
+]
+
 git_clone_tasks(attestation) := [task |
 	some task in tasks(attestation)
 

@@ -174,7 +174,7 @@ build_tasks(attestation) := [task |
 ]
 
 # return the tasks that have "TEST_OUTPUT" as a result
-tasks_test_output(attestation) := [task |
+tasks_output_result(attestation) := [task |
 	some task in tasks(attestation)
 	test_output := task_result(task, "TEST_OUTPUT")
 	count(test_output) > 0

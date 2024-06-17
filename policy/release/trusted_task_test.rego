@@ -134,34 +134,28 @@ test_trusted_artifact_tampering if {
 		"value": "registry.io/evil/bundle@sha256:cde",
 	}])
 
-	lib.assert_equal_results(trusted_task.deny, {{
-		"code": "trusted_task.trusted",
-		# regal ignore:line-length
-		"msg": `Code tampering detected, untrusted PipelineTask "task_b" (Task "TaskB") was included in build chain comprised of: task_a, task_b, task_c`,
-		"term": "TaskB",
-	}}) with data.trusted_tasks as trusted_tasks_data
-		with input.attestations as [evil_attestation]
-}
+	expected := {
+		{
+			"code": "trusted_task.trusted",
+			# regal ignore:line-length
+			"msg": "Code tampering detected, untrusted PipelineTask \"task_b\" (Task \"TaskB\") was included in build chain comprised of: task_a, task_b, task_c",
+			"term": "TaskB",
+		},
+		{
+			"code": "trusted_task.trusted",
+			# regal ignore:line-length
+			"msg": `Code tampering detected, untrusted PipelineTask "task_b" (Task "TaskB") was included in build chain comprised of: task_b, task_c, task_test_a`,
+			"term": "TaskB",
+		},
+	}
 
-test_trusted_artifact_tampering_test_tasks if {
-	evil_attestation := json.patch(attestation_test_ta, [{
-		"op": "replace",
-		"path": "/statement/predicate/buildConfig/tasks/1/ref/bundle",
-		"value": "registry.io/evil/bundle@sha256:cde",
-	}])
-
-	lib.assert_equal_results(trusted_task.deny, {{
-		"code": "trusted_task.trusted",
-		# regal ignore:line-length
-		"msg": `Code tampering detected, untrusted PipelineTask "task_b" (Task "TaskB") was included in build chain comprised of: task_a, task_b, task_c`,
-		"term": "TaskB",
-	}}) with data.trusted_tasks as trusted_tasks_data
+	lib.assert_equal_results(trusted_task.deny, expected) with data.trusted_tasks as trusted_tasks_data
 		with input.attestations as [evil_attestation]
 }
 
 test_trusted_artifact_test_tasks if {
 	lib.assert_empty(trusted_task.deny) with data.trusted_tasks as trusted_tasks_data
-		with input.attestations as [attestation_test_ta]
+		with input.attestations as [attestation_ta]
 }
 
 test_tampered_trusted_artifact_inputs if {
@@ -186,6 +180,7 @@ test_artifact_chain if {
 		"task_b": {"task_c"},
 		"task_c": set(),
 		"task_image_index": set(),
+		"task_test_a": {"task_b"},
 	}
 
 	lib.assert_equal(trusted_task._artifact_chain[attestation_ta], expected) with input.attestations as [attestation_ta]
@@ -457,24 +452,19 @@ task_c := {
 }
 
 task_test_a := {
-	"metadata": {"labels": {"tekton.dev/pipelineTask": "task_a"}},
-	"invocation": {"parameters": {"B_ARTIFACT": artifact_b, "D_ARTIFACT": artifact_d}},
+	"metadata": {"labels": {"tekton.dev/pipelineTask": "task_test_a"}},
+	"invocation": {"parameters": {"B_ARTIFACT": artifact_b}},
 	"results": [{
 		"name": "TEST_OUTPUT",
 		"value": "{\"FAILED\": \"1\"}",
 		"type": "string",
 	}],
-	"ref": {"name": "TaskA", "kind": "Task", "bundle": trusted_bundle},
+	"ref": {"name": "TaskTestA", "kind": "Task", "bundle": trusted_bundle},
 }
-
-attestation_test_ta := {"statement": {"predicate": {
-	"buildType": lib.tekton_pipeline_run,
-	"buildConfig": {"tasks": [task_test_a, task_b, task_c]},
-}}}
 
 attestation_ta := {"statement": {"predicate": {
 	"buildType": lib.tekton_pipeline_run,
-	"buildConfig": {"tasks": [task_a, task_b, task_c, task_image_index]},
+	"buildConfig": {"tasks": [task_a, task_b, task_c, task_image_index, task_test_a]},
 }}}
 
 ######################

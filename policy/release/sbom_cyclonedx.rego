@@ -233,4 +233,4 @@ _rule_data_errors contains msg if {
 
 _rule_data_packages_key := "disallowed_packages"
 
-_rule_data_attributes_key := "dissalowed_attributes"
+_rule_data_attributes_key := "disallowed_attributes"

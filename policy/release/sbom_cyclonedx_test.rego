@@ -276,25 +276,25 @@ test_rule_data_validation if {
 		},
 		{
 			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data dissalowed_attributes has unexpected format: 2: name is required",
+			"msg": "Rule data disallowed_attributes has unexpected format: 2: name is required",
 		},
 		{
 			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data dissalowed_attributes has unexpected format: 3: Additional property something is not allowed",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			# regal ignore:line-length
-			"msg": "Rule data dissalowed_attributes has unexpected format: 4.name: Invalid type. Expected: string, given: integer",
+			"msg": "Rule data disallowed_attributes has unexpected format: 3: Additional property something is not allowed",
 		},
 		{
 			"code": "sbom_cyclonedx.disallowed_packages_provided",
 			# regal ignore:line-length
-			"msg": "Rule data dissalowed_attributes has unexpected format: 4.value: Invalid type. Expected: string, given: integer",
+			"msg": "Rule data disallowed_attributes has unexpected format: 4.name: Invalid type. Expected: string, given: integer",
 		},
 		{
 			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data dissalowed_attributes has unexpected format: (Root): array items[5,6] must be unique",
+			# regal ignore:line-length
+			"msg": "Rule data disallowed_attributes has unexpected format: 4.value: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			"msg": "Rule data disallowed_attributes has unexpected format: (Root): array items[5,6] must be unique",
 		},
 	}
 

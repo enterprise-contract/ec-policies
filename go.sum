@@ -557,8 +557,8 @@ github.com/emicklei/proto v1.12.1 h1:6n/Z2pZAnBwuhU66Gs8160B8rrrYKo7h2F2sCOnNceE
 github.com/emicklei/proto v1.12.1/go.mod h1:rn1FgRS/FANiZdD2djyH7TMA9jdRDcYQ9IEN9yvjX0A=
 github.com/emirpasic/gods v1.18.1 h1:FXtiHYKDGKCW2KzwZKx0iC0PQmdlorYgdFG9jPXJ1Bc=
 github.com/emirpasic/gods v1.18.1/go.mod h1:8tpGGwCnJ5H4r6BWwaV6OrWmMoPhUl5jm/FMNAnJvWQ=
-github.com/enterprise-contract/ec-cli v0.5.3 h1:rqeWAwC1gGpQaS6yoOJzPWOYrDv2qrDUQGw1bde3yeA=
-github.com/enterprise-contract/ec-cli v0.5.3/go.mod h1:J+UzpeXEZYzSdZTzWgxoNK11/q0pXPkBJVsZl7S9Vlg=
+github.com/enterprise-contract/ec-cli v0.5.13 h1:q/JlmbCdFon+BJ1XSciLaEc/02n2MbsKO3eZH8IHmvw=
+github.com/enterprise-contract/ec-cli v0.5.13/go.mod h1:mAupsu5Qe5URy2GqZwCm4CuzwxJcedJeFQBjVJ+fO0E=
 github.com/enterprise-contract/enterprise-contract-controller/api v0.1.47 h1:wdvZTKHiCERcD4jPVWQsq2FqZF5TmvRb66hI8dLDaAg=
 github.com/enterprise-contract/enterprise-contract-controller/api v0.1.47/go.mod h1:QgUezi253+QIvTWVlMX+gqyfAek1eKV3qChzm++kpI8=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=

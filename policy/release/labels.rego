@@ -13,6 +13,7 @@ package policy.release.labels
 import rego.v1
 
 import data.lib
+import data.lib.image
 
 # METADATA
 # title: Optional labels
@@ -31,7 +32,7 @@ import data.lib
 #
 warn contains result if {
 	found_labels := {name |
-		some label in image_labels
+		some label in _image_labels
 		name := label.name
 	}
 	some optional_label in optional_labels
@@ -42,6 +43,47 @@ warn contains result if {
 		lib.result_helper_with_term(rego.metadata.chain(), [name, description], name),
 		optional_label,
 	)
+}
+
+# METADATA
+# title: Inaccessible image manifest
+# description: >-
+#   The image manifest is not accessible.
+# custom:
+#   short_name: inaccessible_manifest
+#   failure_msg: Manifest of the image %q is inaccessible
+#   solution: >-
+#     Check the provided authentication configuration and the credentials
+#     within it.
+#   collections:
+#   - redhat
+#
+deny contains result if {
+	manifest := ec.oci.image_manifest(input.image.ref)
+	is_null(manifest)
+	result := lib.result_helper(rego.metadata.chain(), [input.image.ref])
+}
+
+# METADATA
+# title: Inaccessible image config
+# description: >-
+#   The image config is not accessible.
+# custom:
+#   short_name: inaccessible_config
+#   failure_msg: Image config of the image %q is inaccessible
+#   solution: >-
+#     Check the provided authentication configuration and the credentials
+#     within it.
+#   collections:
+#   - redhat
+#
+deny contains result if {
+	manifest := ec.oci.image_manifest(input.image.ref)
+	digest := object.get(manifest, ["config", "digest"], "")
+	ref := image.parse(input.image.ref)
+	config := ec.oci.blob(sprintf("%s@%s", [ref.repo, digest]))
+	is_null(config)
+	result := lib.result_helper(rego.metadata.chain(), [input.image.ref])
 }
 
 # METADATA
@@ -59,7 +101,7 @@ warn contains result if {
 #   - redhat
 #
 deny contains result if {
-	some label in image_labels
+	some label in _image_labels
 	some deprecated_label in lib.rule_data("deprecated_labels")
 	label.name == deprecated_label.name
 	result := _with_effective_on(
@@ -87,8 +129,10 @@ deny contains result if {
 #   - redhat
 #
 deny contains result if {
+	is_set(_image_labels)
+
 	found_labels := {name |
-		some label in image_labels
+		some label in _image_labels
 		name := label.name
 	}
 	some required_label in required_labels
@@ -120,7 +164,7 @@ deny contains result if {
 deny contains result if {
 	some inherited_label in disallowed_inherited_labels
 	name := inherited_label.name
-	_value(image_labels, name) == _value(parent_labels, name)
+	_value(_image_labels, name) == _value(_parent_labels, name)
 	result := _with_effective_on(
 		lib.result_helper_with_term(rego.metadata.chain(), [name], name),
 		inherited_label,
@@ -146,15 +190,79 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [error])
 }
 
-image_labels contains label if {
-	some name, value in input.image.config.Labels
-	count(value) > 0
-	label := {"name": name, "value": value}
+# METADATA
+# title: Inaccessible parent image manifest
+# description: >-
+#   The parent image manifest is not accessible.
+# custom:
+#   short_name: inaccessible_parent_manifest
+#   failure_msg: Manifest of the image %q, parent of image %q is inaccessible
+#   solution: >-
+#     Check the provided authentication configuration and the credentials
+#     within it.
+#   collections:
+#   - redhat
+#
+deny contains result if {
+	is_null(_parent.manifest)
+	result := lib.result_helper(rego.metadata.chain(), [_parent.ref, input.image.ref])
 }
 
-parent_labels contains label if {
-	some name, value in input.image.parent.config.Labels
-	count(value) > 0
+# METADATA
+# title: Inaccessible parent image config
+# description: >-
+#   The parent image config is not accessible.
+# custom:
+#   short_name: inaccessible_parent_config
+#   failure_msg: Image config of the image %q, parent of image %q is inaccessible
+#   solution: >-
+#     Check the provided authentication configuration and the credentials
+#     within it.
+#   collections:
+#   - redhat
+#
+deny contains result if {
+	parent_ref := image.parse(_parent.ref)
+	is_null(_config(parent_ref.repo, _parent.manifest))
+	result := lib.result_helper(rego.metadata.chain(), [_parent.ref, input.image.ref])
+}
+
+_config(repository, manifest) := config if {
+	config_ref := sprintf("%s@%s", [repository, manifest.config.digest])
+
+	config = json.unmarshal(ec.oci.blob(config_ref))
+} else := null
+
+_image_labels := labels if {
+	manifest := ec.oci.image_manifest(input.image.ref)
+
+	ref := image.parse(input.image.ref)
+
+	config := _config(ref.repo, manifest)
+	not is_null(config)
+
+	labels := {label |
+		some name, value in object.get(config, ["config", "Labels"], [])
+		label = {"name": name, "value": value}
+	}
+}
+
+_parent := {"ref": ref, "manifest": manifest, "config": config} if {
+	image_manifest := ec.oci.image_manifest(input.image.ref)
+
+	name := image_manifest.annotations["org.opencontainers.image.base.name"]
+	digest := image_manifest.annotations["org.opencontainers.image.base.digest"]
+	ref = sprintf("%s@%s", [name, digest])
+
+	manifest = ec.oci.image_manifest(ref)
+
+	config = _config(name, manifest)
+}
+
+_parent_labels contains label if {
+	labels := object.get(_parent.config, ["config", "Labels"], [])
+
+	some name, value in labels
 	label := {"name": name, "value": value}
 }
 
@@ -189,7 +297,7 @@ _with_effective_on(result, item) := new_result if {
 default is_fbc := false
 
 is_fbc if {
-	some label in image_labels
+	some label in _image_labels
 	label.name == "operators.operatorframework.io.index.configs.v1"
 }
 

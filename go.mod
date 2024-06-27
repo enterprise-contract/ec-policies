@@ -3,7 +3,7 @@ module github.com/enterprise-contract/ec-policies
 go 1.22.2
 
 require (
-	github.com/enterprise-contract/ec-cli v0.5.13
+	github.com/enterprise-contract/ec-cli v0.5.17
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.53.0
 	github.com/styrainc/regal v0.23.1
@@ -21,7 +21,7 @@ require (
 	cloud.google.com/go/storage v1.39.1 // indirect
 	contrib.go.opencensus.io/exporter/ocagent v0.7.1-0.20200907061046-05415f1de66d // indirect
 	contrib.go.opencensus.io/exporter/prometheus v0.4.2 // indirect
-	cuelang.org/go v0.9.0 // indirect
+	cuelang.org/go v0.9.1 // indirect
 	dario.cat/mergo v1.0.0 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
@@ -186,7 +186,7 @@ require (
 	github.com/google/flatbuffers v24.3.25+incompatible // indirect
 	github.com/google/gnostic-models v0.6.9-0.20230804172637-c7be7c783f49 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/go-containerregistry v0.19.1 // indirect
+	github.com/google/go-containerregistry v0.19.2 // indirect
 	github.com/google/go-containerregistry/pkg/authn/k8schain v0.0.0-20240129192428-8dadbe76ff8c // indirect
 	github.com/google/go-containerregistry/pkg/authn/kubernetes v0.0.0-20240129192428-8dadbe76ff8c // indirect
 	github.com/google/go-github/v55 v55.0.0 // indirect
@@ -332,7 +332,7 @@ require (
 	github.com/spdx/tools-golang v0.5.4 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
-	github.com/spf13/cobra v1.8.0 // indirect
+	github.com/spf13/cobra v1.8.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.19.0 // indirect
 	github.com/spiffe/go-spiffe/v2 v2.2.0 // indirect
@@ -412,12 +412,12 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/api v0.29.5 // indirect
-	k8s.io/apiextensions-apiserver v0.29.5 // indirect
-	k8s.io/apimachinery v0.29.5 // indirect
+	k8s.io/api v0.29.6 // indirect
+	k8s.io/apiextensions-apiserver v0.29.6 // indirect
+	k8s.io/apimachinery v0.29.6 // indirect
 	k8s.io/cli-runtime v0.29.1 // indirect
-	k8s.io/client-go v0.29.5 // indirect
-	k8s.io/klog/v2 v2.120.1 // indirect
+	k8s.io/client-go v0.29.6 // indirect
+	k8s.io/klog/v2 v2.130.0 // indirect
 	k8s.io/kube-openapi v0.0.0-20240126223410-2919ad4fcfec // indirect
 	k8s.io/utils v0.0.0-20240102154912-e7106e64919e // indirect
 	knative.dev/pkg v0.0.0-20240201013110-e85c3cf6d5f1 // indirect

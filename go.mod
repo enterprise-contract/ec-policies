@@ -3,7 +3,7 @@ module github.com/enterprise-contract/ec-policies
 go 1.22.2
 
 require (
-	github.com/enterprise-contract/ec-cli v0.5.17
+	github.com/enterprise-contract/ec-cli v0.5.26
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.53.0
 	github.com/styrainc/regal v0.23.1
@@ -138,7 +138,7 @@ require (
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.2 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
-	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.47 // indirect
+	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.48 // indirect
 	github.com/evanphx/json-patch v5.9.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
 	github.com/fatih/color v1.17.0 // indirect
@@ -417,7 +417,7 @@ require (
 	k8s.io/apimachinery v0.29.6 // indirect
 	k8s.io/cli-runtime v0.29.1 // indirect
 	k8s.io/client-go v0.29.6 // indirect
-	k8s.io/klog/v2 v2.130.0 // indirect
+	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20240126223410-2919ad4fcfec // indirect
 	k8s.io/utils v0.0.0-20240102154912-e7106e64919e // indirect
 	knative.dev/pkg v0.0.0-20240201013110-e85c3cf6d5f1 // indirect

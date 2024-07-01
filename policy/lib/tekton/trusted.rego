@@ -5,6 +5,9 @@ import rego.v1
 import data.lib.refs
 import data.lib.time as time_lib
 
+# regal ignore:prefer-package-imports
+import data.lib.rule_data as lib_rule_data
+
 # Returns a subset of tasks that use unpinned Task references.
 unpinned_task_references(tasks) := {task |
 	some task in tasks
@@ -62,6 +65,9 @@ _newer_record_exists(task) if {
 # _trusted_tasks provides a safe way to access the list of trusted tasks. It prevents a policy rule
 # from incorrectly not evaluating due to missing data. It also removes stale records.
 _trusted_tasks[key] := pruned_records if {
-	some key, records in data.trusted_tasks
+	some key, records in _trusted_tasks_data
 	pruned_records := time_lib.acceptable_items(records)
 }
+
+# Merging in the trusted_tasks rule data makes it easier for users to customize their trusted tasks
+_trusted_tasks_data := object.union(data.trusted_tasks, lib_rule_data("trusted_tasks"))

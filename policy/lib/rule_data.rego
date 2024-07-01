@@ -85,6 +85,11 @@ rule_data_defaults := {
 	# Some checks are influenced by this value. Let's use null as a default instead
 	# of the usual empty list.
 	"pipeline_intention": null,
+	# The big list of trusted_tasks (from the acceptable tasks bundle) is at
+	# data.trusted_tasks but we want to allow people to add their own trusted_tasks
+	# using the ruleData key. Make this default to an empty dict so we can conveniently
+	# merge it with with `data.trusted_tasks`
+	"trusted_tasks": {},
 }
 
 # Returns the "first found" of the following:

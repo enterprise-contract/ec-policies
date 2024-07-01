@@ -64,6 +64,13 @@ test_is_trusted_task if {
 	tkn.is_trusted_task(newest_trusted_git_task) with data.trusted_tasks as future_trusted_tasks
 }
 
+test_rule_data_merging if {
+	lib.assert_equal(tkn._trusted_tasks_data.foo, "baz") with data.trusted_tasks as {"foo": "baz"}
+
+	lib.assert_equal(tkn._trusted_tasks_data.foo, "bar") with data.trusted_tasks as {"foo": "baz"}
+		with data.rule_data.trusted_tasks as {"foo": "bar"}
+}
+
 trusted_bundle_task := {"spec": {"taskRef": {"resolver": "bundles", "params": [
 	{"name": "bundle", "value": "registry.local/trusty:1.0@sha256:digest"},
 	{"name": "name", "value": "trusty"},

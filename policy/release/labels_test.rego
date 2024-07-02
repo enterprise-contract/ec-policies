@@ -5,9 +5,39 @@ import rego.v1
 import data.lib
 import data.policy.release.labels
 
+# For these tests builtin functions ec.oci.image_manifest and ec.oci.blob need
+# to be mocked. Both take a single parameter -- the image reference, for which
+# they return the manifest JSON or the bytes of the blob. In order to have the
+# mock implementations: _mock_image_manifest and _mock_blob return the data the
+# test requires the image reference is constructed such that it contains a
+# serialized array of JSON patches following the # sign in the image reference,
+# e.g.: registry.io/repository/image@sha256:digest#[{"op": ...}].
+# There are several helper functions to allow for readability and somewhat for
+# maintainability of the tests:
+#  * _test_ref_with_labels(labels)
+#  * _test_ref_with_labels_and_parent_labels(labels, parent_labels)
+# The mock functions also support returning null value if the image reference
+# starts with "fail" or contains "#fail".
+
 test_all_good if {
-	lib.assert_empty(labels.deny | labels.warn) with input.image as _image with data.rule_data as _rule_data
-	lib.assert_empty(labels.deny | labels.warn) with input.image as _fbc_image with data.rule_data as _rule_data
+	lib.assert_empty(labels.deny | labels.warn) with input.image.ref as _test_ref_with_labels({
+		"name": "test-image",
+		"description": "test image",
+		"summary": "test",
+	})
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+		with data.rule_data as _rule_data
+
+	lib.assert_empty(labels.deny | labels.warn) with input.image.ref as _test_ref_with_labels({
+		"fbc.name": "test-image",
+		"fbc.description": "test image",
+		"fbc.summary": "test",
+		"operators.operatorframework.io.index.configs.v1": "/config",
+	})
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+		with data.rule_data as _rule_data
 }
 
 test_deprecated_image_labels if {
@@ -17,16 +47,21 @@ test_deprecated_image_labels if {
 		"term": "oldie",
 	}}
 
-	image := json.patch(_image, [{
-		"op": "add",
-		"path": "/config/Labels/oldie",
-		"value": "sudo rm -rf /",
-	}])
+	ref := _test_ref_with_labels({
+		"name": "test-image",
+		"description": "test image",
+		"summary": "test",
+		"oldie": "sudo rm -rf /",
+	})
 
-	lib.assert_equal_results(labels.deny, expected) with input.image as image
+	lib.assert_equal_results(labels.deny, expected) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data
 
-	_assert_effective_on_date(labels.deny) with input.image as image
+	_assert_effective_on_date(labels.deny) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data_with_date
 }
 
@@ -37,12 +72,19 @@ test_required_image_labels if {
 		"term": "name",
 	}}
 
-	image := json.remove(_image, ["/config/Labels/name"])
+	ref := _test_ref_with_labels({
+		"description": "test image",
+		"summary": "test",
+	})
 
-	lib.assert_equal_results(labels.deny, expected) with input.image as image
+	lib.assert_equal_results(labels.deny, expected) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data
 
-	_assert_effective_on_date(labels.deny) with input.image as image
+	_assert_effective_on_date(labels.deny) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data_with_date
 }
 
@@ -53,12 +95,20 @@ test_fbc_required_image_labels if {
 		"term": "fbc.name",
 	}}
 
-	image := json.remove(_fbc_image, ["/config/Labels/fbc.name"])
+	ref := _test_ref_with_labels({
+		"fbc.description": "test image",
+		"fbc.summary": "test",
+		"operators.operatorframework.io.index.configs.v1": "/config",
+	})
 
-	lib.assert_equal_results(labels.deny, expected) with input.image as image
+	lib.assert_equal_results(labels.deny, expected) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data
 
-	_assert_effective_on_date(labels.deny) with input.image as image
+	_assert_effective_on_date(labels.deny) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data_with_date
 }
 
@@ -69,12 +119,19 @@ test_optional_image_labels if {
 		"term": "summary",
 	}}
 
-	image := json.remove(_image, ["/config/Labels/summary"])
+	ref := _test_ref_with_labels({
+		"name": "test-image",
+		"description": "test image",
+	})
 
-	lib.assert_equal_results(labels.warn, expected) with input.image as image
+	lib.assert_equal_results(labels.warn, expected) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data
 
-	_assert_effective_on_date(labels.warn) with input.image as image
+	_assert_effective_on_date(labels.warn) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data_with_date
 }
 
@@ -85,12 +142,20 @@ test_fbc_optional_image_labels if {
 		"term": "fbc.summary",
 	}}
 
-	image := json.remove(_fbc_image, ["/config/Labels/fbc.summary"])
+	ref := _test_ref_with_labels({
+		"fbc.name": "test-image",
+		"fbc.description": "test image",
+		"operators.operatorframework.io.index.configs.v1": "/config",
+	})
 
-	lib.assert_equal_results(labels.warn, expected) with input.image as image
+	lib.assert_equal_results(labels.warn, expected) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data
 
-	_assert_effective_on_date(labels.warn) with input.image as image
+	_assert_effective_on_date(labels.warn) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data_with_date
 }
 
@@ -101,29 +166,64 @@ test_disallowed_inherited_image_labels if {
 		"term": "unique",
 	}}
 
-	image := json.patch(_image, [
-		{"op": "add", "path": "/config/Labels/unique", "value": "spam"},
-		{"op": "add", "path": "/parent/config/Labels/unique", "value": "spam"},
-	])
+	ref := _test_ref_with_labels_and_parent_labels(
+		{
+			"name": "test-image",
+			"description": "test image",
+			"summary": "test",
+			"unique": "spam",
+		},
+		{
+			"name": "parent-image",
+			"description": "parent image",
+			"summary": "parent",
+			"unique": "spam",
+		},
+	)
 
-	lib.assert_equal_results(labels.deny, expected) with input.image as image
+	lib.assert_equal_results(labels.deny, expected) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data
 
-	_assert_effective_on_date(labels.deny) with input.image as image
+	_assert_effective_on_date(labels.deny) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data_with_date
 
 	# A missing label on either image does not trigger a violation.
-	lib.assert_empty(labels.deny) with input.image as json.patch(_image, [{
-		"op": "add",
-		"path": "/parent/config/Labels/unique",
-		"value": "spam",
-	}])
+	lib.assert_empty(labels.deny) with input.image.ref as _test_ref_with_labels_and_parent_labels(
+		{
+			"name": "test-image",
+			"description": "test image",
+			"summary": "test",
+		},
+		{
+			"name": "parent-image",
+			"description": "parent image",
+			"summary": "parent",
+			"unique": "spam",
+		},
+	)
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data
-	lib.assert_empty(labels.deny) with input.image as json.patch(_image, [{
-		"op": "add",
-		"path": "/config/Labels/unique",
-		"value": "spam",
-	}])
+
+	lib.assert_empty(labels.deny) with input.image.ref as _test_ref_with_labels_and_parent_labels(
+		{
+			"name": "test-image",
+			"description": "test image",
+			"summary": "test",
+			"unique": "spam",
+		},
+		{
+			"name": "parent-image",
+			"description": "parent image",
+			"summary": "parent",
+		},
+	)
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data
 }
 
@@ -134,29 +234,151 @@ test_fbc_disallowed_inherited_image_labels if {
 		"term": "fbc.unique",
 	}}
 
-	image := json.patch(_fbc_image, [
-		{"op": "add", "path": "/config/Labels/fbc.unique", "value": "spam"},
-		{"op": "add", "path": "/parent/config/Labels/fbc.unique", "value": "spam"},
-	])
+	ref := _test_ref_with_labels_and_parent_labels(
+		{
+			"fbc.name": "test-image",
+			"fbc.description": "test image",
+			"fbc.summary": "test",
+			"operators.operatorframework.io.index.configs.v1": "/config",
+			"fbc.unique": "spam",
+		},
+		{
+			"fbc.name": "test-parent-image",
+			"fbc.description": "test parent image",
+			"fbc.summary": "parent",
+			"fbc.unique": "spam",
+		},
+	)
 
-	lib.assert_equal_results(labels.deny, expected) with input.image as image
+	lib.assert_equal_results(labels.deny, expected) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data
 
-	_assert_effective_on_date(labels.deny) with input.image as image
+	_assert_effective_on_date(labels.deny) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data_with_date
 
 	# A missing label on either image does not trigger a violation.
-	lib.assert_empty(labels.deny) with input.image as json.patch(_fbc_image, [{
-		"op": "add",
-		"path": "/parent/config/Labels/fbc.unique",
-		"value": "spam",
-	}])
+	lib.assert_empty(labels.deny) with input.image.ref as _test_ref_with_labels_and_parent_labels(
+		{
+			"fbc.name": "test-image",
+			"fbc.description": "test image",
+			"fbc.summary": "test",
+			"operators.operatorframework.io.index.configs.v1": "/config",
+		},
+		{
+			"fbc.name": "test-parent-image",
+			"fbc.description": "test parent image",
+			"fbc.summary": "parent",
+			"fbc.unique": "spam",
+		},
+	)
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data
-	lib.assert_empty(labels.deny) with input.image as json.patch(_fbc_image, [{
+
+	lib.assert_empty(labels.deny) with input.image.ref as _test_ref_with_labels_and_parent_labels(
+		{
+			"fbc.name": "test-image",
+			"fbc.description": "test image",
+			"fbc.summary": "test",
+			"operators.operatorframework.io.index.configs.v1": "/config",
+			"fbc.unique": "spam",
+		},
+		{
+			"fbc.name": "test-parent-image",
+			"fbc.description": "test parent image",
+			"fbc.summary": "parent",
+		},
+	)
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+		with data.rule_data as _rule_data
+}
+
+test_image_manifest_inaccessible if {
+	expected := {{
+		"code": "labels.inaccessible_manifest",
+		"msg": `Manifest of the image "fail@" is inaccessible`,
+	}}
+
+	lib.assert_equal_results(labels.deny, expected) with input.image.ref as "fail@"
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+		with data.rule_data as _rule_data
+}
+
+test_image_config_inaccessible if {
+	ref := _test_ref_patches([{
 		"op": "add",
-		"path": "/config/Labels/fbc.unique",
-		"value": "spam",
+		"path": "/config/digest",
+		"value": "#fail",
 	}])
+
+	expected := {{
+		"code": "labels.inaccessible_config",
+		"msg": sprintf(`Image config of the image %q is inaccessible`, [ref]),
+	}}
+
+	lib.assert_equal_results(labels.deny, expected) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+		with data.rule_data as _rule_data
+}
+
+test_parent_image_manifest_inaccessible if {
+	ref := _test_ref_patches(array.concat(
+		_add_annotations({
+			"org.opencontainers.image.base.name": "fail",
+			"org.opencontainers.image.base.digest": "",
+		}),
+		[_config(_add_labels({
+			"name": "test-image",
+			"description": "test image",
+			"summary": "test",
+		}))],
+	))
+
+	expected := {{
+		"code": "labels.inaccessible_parent_manifest",
+		"msg": sprintf(`Manifest of the image "fail@", parent of image %q is inaccessible`, [ref]),
+	}}
+
+	lib.assert_equal_results(labels.deny, expected) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+		with data.rule_data as _rule_data
+}
+
+test_parent_image_config_inaccessible if {
+	parent_digest := _test_digest([{
+		"op": "add",
+		"path": "/config/digest",
+		"value": "#fail",
+	}])
+	parent_ref := sprintf("registry.io/repository/image@%s", [parent_digest])
+	ref := _test_ref_patches(array.concat(
+		_add_annotations({
+			"org.opencontainers.image.base.name": "registry.io/repository/image",
+			"org.opencontainers.image.base.digest": parent_digest,
+		}),
+		[_config(_add_labels({
+			"name": "test-image",
+			"description": "test image",
+			"summary": "test",
+		}))],
+	))
+
+	expected := {{
+		"code": "labels.inaccessible_parent_config",
+		"msg": sprintf(`Image config of the image %q, parent of image %q is inaccessible`, [parent_ref, ref]),
+	}}
+
+	lib.assert_equal_results(labels.deny, expected) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
 		with data.rule_data as _rule_data
 }
 
@@ -252,36 +474,82 @@ test_rule_data_provided if {
 		},
 	}
 
-	lib.assert_equal_results(labels.deny, expected) with input.image as _image
-		with data.rule_data as d
-}
-
-_image := {
-	"config": {"Labels": {
+	lib.assert_equal_results(labels.deny, expected) with input.image.ref as _test_ref_with_labels({
 		"name": "test-image",
 		"description": "test image",
 		"summary": "test",
-	}},
-	"parent": {"config": {"Labels": {
-		"name": "test-parent-image",
-		"description": "test parent image",
-		"summary": "parent",
-	}}},
+	})
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+		with data.rule_data as d
 }
 
-_fbc_image := {
-	"config": {"Labels": {
-		"fbc.name": "test-image",
-		"fbc.description": "test image",
-		"fbc.summary": "test",
-		"operators.operatorframework.io.index.configs.v1": "/config",
-	}},
-	"parent": {"config": {"Labels": {
-		"fbc.name": "test-parent-image",
-		"fbc.description": "test parent image",
-		"fbc.summary": "parent",
-	}}},
+_default_manifest := {
+	"schemaVersion": 2,
+	"mediaType": "application/vnd.oci.image.manifest.v1+json",
+	"config": {
+		"mediaType": "application/vnd.oci.image.config.v1+json",
+		"size": 8172,
+	},
+	"annotations": {},
 }
+
+_default_config := {"config": {"Labels": {}}}
+
+_p(ref) := json.unmarshal(regex.replace(ref, `^[^#]*#`, ""))
+
+_mock_image_manifest(ref) := manifest if {
+	not startswith(ref, "fail")
+	manifest = json.patch(_default_manifest, _p(ref))
+}
+
+_mock_image_manifest(ref) := null if {
+	startswith(ref, "fail")
+}
+
+_mock_blob(ref) := blob if {
+	not contains(ref, "#fail")
+	blob = json.marshal(json.patch(_default_config, _p(ref)))
+}
+
+_mock_blob(ref) := null if {
+	contains(ref, "#fail")
+}
+
+_test_ref_with_labels(labels) := _test_ref_patches([_config(_add_labels(labels))])
+
+_test_ref_with_labels_and_parent_labels(labels, parent_labels) := _test_ref_patches(array.concat(
+	_add_annotations({
+		"org.opencontainers.image.base.name": "registry.io/repository/parent_image",
+		"org.opencontainers.image.base.digest": _test_digest([_config(_add_labels(parent_labels))]),
+	}),
+	[_config(_add_labels(labels))],
+))
+
+_test_ref_patches(patches) := sprintf("%s@%s", [
+	"registry.io/repository/image",
+	_test_digest(patches),
+])
+
+_test_digest(patches) := sprintf("sha256:image_digest#%s", [json.marshal(patches)])
+
+_config(patches) := {
+	"op": "add",
+	"path": "/config/digest",
+	"value": sprintf("sha256:image_config#%s", [json.marshal(patches)]),
+}
+
+_add_labels(labels) := [p | some k, v in labels; p = {
+	"op": "add",
+	"path": sprintf("/config/Labels/%s", [k]),
+	"value": v,
+}]
+
+_add_annotations(annotations) := [p | some k, v in annotations; p = {
+	"op": "add",
+	"path": sprintf("/annotations/%s", [k]),
+	"value": v,
+}]
 
 _rule_data := {
 	"deprecated_labels": [{"name": "oldie", "replacement": "shiny"}],

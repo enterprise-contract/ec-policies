@@ -69,6 +69,21 @@ test_attributes_not_allowed_value if {
 		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [{"name": "attr2", "value": "value2"}]}
 }
 
+test_external_references_not_allowed_regex if {
+	expected := {{
+		"code": "sbom_cyclonedx.disallowed_package_external_references",
+		# regal ignore:line-length
+		"msg": `Package pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3 has reference "https://example.com/file.txt" of type "distribution" which is disallowed by pattern ".*example.com.*"`,
+	}}
+
+	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom_cyclonedx._rule_data_external_references_key: [{
+			"type": "distribution",
+			"url": ".*example.com.*",
+		}]}
+}
+
 test_attributes_not_allowed_no_properties if {
 	att := json.patch(_sbom_attestation, [{
 		"op": "remove",
@@ -350,6 +365,10 @@ _sbom_attestation := {"statement": {
 					"value": "value2",
 				},
 			],
+			"externalReferences": [{
+				"type": "distribution",
+				"url": "https://example.com/file.txt",
+			}],
 		}],
 	},
 }}

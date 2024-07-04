@@ -81,6 +81,7 @@ Rules included:
 * xref:release_policy.adoc#labels__rule_data_provided[Labels: Rule data provided]
 * xref:release_policy.adoc#olm__required_olm_features_annotations_provided[OLM: Required OLM feature annotations list provided]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]
+* xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_external_references[SBOM CycloneDX: Disallowed package external references]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_packages_provided[SBOM CycloneDX: Disallowed packages list is provided]
 * xref:release_policy.adoc#slsa_build_build_service__allowed_builder_ids_provided[SLSA - Build - Build Service: Allowed builder IDs provided]
 * xref:release_policy.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]
@@ -128,6 +129,7 @@ Rules included:
 * xref:release_policy.adoc#redhat_manifests__redhat_manifests_missing[Red Hat manifests: Missing Red Hat manifests]
 * xref:release_policy.adoc#sbom_cyclonedx__allowed[SBOM CycloneDX: Allowed]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]
+* xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_external_references[SBOM CycloneDX: Disallowed package external references]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_packages_provided[SBOM CycloneDX: Disallowed packages list is provided]
 * xref:release_policy.adoc#sbom_cyclonedx__found[SBOM CycloneDX: Found]
 * xref:release_policy.adoc#sbom_cyclonedx__valid[SBOM CycloneDX: Valid]
@@ -877,6 +879,19 @@ Confirm the CycloneDX SBOM contains only packages without disallowed attributes.
 * Code: `sbom_cyclonedx.disallowed_package_attributes`
 * Effective from: `2024-07-31T00:00:00Z`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L93[Source, window="_blank"]
+
+[#sbom_cyclonedx__disallowed_package_external_references]
+=== link:#sbom_cyclonedx__disallowed_package_external_references[Disallowed package external references]
+
+Confirm the CycloneDX SBOM contains only packages without disallowed external references. By default all external references are allowed. Use the "disallowed_external_references" rule data key to provide a list of type-pattern pairs that forbid the use of an external reference of the given type where the reference url matches the given pattern.
+
+*Solution*: Update the image to not use a package with a disallowed external reference.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Package %s has reference %q of type %q which is disallowed%s`
+* Code: `sbom_cyclonedx.disallowed_package_external_references`
+* Effective from: `2024-07-31T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L122[Source, window="_blank"]
 
 [#sbom_cyclonedx__disallowed_packages_provided]
 === link:#sbom_cyclonedx__disallowed_packages_provided[Disallowed packages list is provided]

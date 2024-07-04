@@ -119,6 +119,36 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [component.purl, property.name, msg])
 }
 
+# METADATA
+# title: Disallowed package external references
+# description: >-
+#   Confirm the CycloneDX SBOM contains only packages without disallowed
+#   external references. By default all external references are allowed. Use the
+#   "disallowed_external_references" rule data key to provide a list of type-pattern pairs
+#   that forbid the use of an external reference of the given type where the reference url
+#   matches the given pattern.
+# custom:
+#   short_name: disallowed_package_external_references
+#   failure_msg: Package %s has reference %q of type %q which is disallowed%s
+#   solution: Update the image to not use a package with a disallowed external reference.
+#   collections:
+#   - redhat
+#   - policy_data
+#   effective_on: 2024-07-31T00:00:00Z
+deny contains result if {
+	some s in sbom.cyclonedx_sboms
+	some component in s.components
+	some reference in component.externalReferences
+	some disallowed in lib.rule_data(_rule_data_external_references_key)
+
+	reference.type == disallowed.type
+	regex.match(object.get(disallowed, "url", ""), object.get(reference, "url", ""))
+
+	msg := regex.replace(object.get(disallowed, "url", ""), `(.+)`, ` by pattern "$1"`)
+
+	result := lib.result_helper(rego.metadata.chain(), [component.purl, reference.url, reference.type, msg])
+}
+
 _contains(needle, haystack) if {
 	needle_purl := ec.purl.parse(needle)
 
@@ -234,3 +264,5 @@ _rule_data_errors contains msg if {
 _rule_data_packages_key := "disallowed_packages"
 
 _rule_data_attributes_key := "disallowed_attributes"
+
+_rule_data_external_references_key := "disallowed_external_references"

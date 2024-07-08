@@ -122,6 +122,67 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [error])
 }
 
+# METADATA
+# title: Unable to access images in the input snapshot
+# description: >-
+#   Check the input snapshot and make sure all the images are accessible.
+# custom:
+#   short_name: inaccessible_snapshot_references
+#   failure_msg: The %q image reference is not accessible in the input snapshot.
+#   solution: >-
+#     Ensure all images in the input snapshot are valid.
+#   collections:
+#   - redhat
+#   effective_on: 2024-08-01T00:00:00Z
+#
+deny contains result if {
+	_release_restrictions_apply
+
+	components := input.snapshot.components
+	some component in components
+	not ec.oci.image_manifest(component.containerImage)
+	result := lib.result_helper_with_term(rego.metadata.chain(), [component.containerImage], component.containerImage)
+}
+
+# METADATA
+# title: Unmapped images in OLM bundle
+# description: >-
+#   Check the OLM bundle image for the presence of unmapped image references.
+#   Unmapped image pull references are references to images found in
+#   link:https://osbs.readthedocs.io/en/latest/users.html#pullspec-locations[varying
+#   locations] that are either not in the RPA about to be released or not accessible
+#   already.
+# custom:
+#   short_name: unmapped_references
+#   failure_msg: The %q CSV image reference is not in the snapshot or accessible.
+#   solution: >-
+#     Add the missing image to the snapshot or check if the CSV pullspec
+#     is valid and accessible.
+#   collections:
+#   - redhat
+#   effective_on: 2024-08-01T00:00:00Z
+#
+deny contains result if {
+	_release_restrictions_apply
+
+	snapshot_components := input.snapshot.components
+	component_images := [resolve_snapshot_component_image(component) | component := snapshot_components[_]]
+	component_images_digests := [component_image.digest | component_image := component_images[_]]
+
+	some manifest in _csv_manifests
+	all_image_refs := all_image_ref(manifest)
+	unmatched_image_refs := [image |
+		some image in all_image_refs
+		not image.ref.digest in component_images_digests
+	]
+
+	some unmatched_image in unmatched_image_refs
+	not ec.oci.image_manifest(image.str(unmatched_image.ref))
+
+	# regal ignore:line-length
+	result := lib.result_helper_with_term(rego.metadata.chain(), [image.str(unmatched_image.ref)], image.str(unmatched_image.ref))
+}
+
 _name(o) := n if {
 	n := o.name
 } else := "unnamed"
@@ -292,3 +353,25 @@ _subscriptions_errors contains msg if {
 }
 
 _subscription_annotation := "operators.openshift.io/valid-subscription"
+
+resolve_snapshot_component_image(component) := result if {
+	parsed_image := image.parse(component.containerImage)
+	parsed_image_digest := _get_image_digest(parsed_image, component.containerImage)
+	result := {
+		"digest": parsed_image_digest,
+		"repo": parsed_image.repo,
+		"tag": parsed_image.tag,
+	}
+}
+
+_get_image_digest(image_object, image_ref) := result if {
+	image_object.digest != ""
+	result := image_object.digest
+} else := ec.oci.image_manifest(image_ref).config.digest
+
+# We want these checks to apply only if we're doing a release.
+default _release_restrictions_apply := false
+
+_release_restrictions_apply if {
+	lib.rule_data("pipeline_intention") == "release"
+}

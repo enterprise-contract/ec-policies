@@ -120,6 +120,36 @@ deny contains result if {
 }
 
 # METADATA
+# title: Allowed package external references
+# description: >-
+#   Confirm the CycloneDX SBOM contains only packages with explicitly allowed
+#   external references. By default all external references are allowed unless the
+#   "allowed_external_references" rule data key provides a list of type-pattern pairs
+#   that forbid the use of any other external reference of the given type where the
+#   reference url matches the given pattern.
+# custom:
+#   short_name: allowed_package_external_references
+#   failure_msg: Package %s has reference %q of type %q which is not explicitly allowed%s
+#   solution: Update the image to use only packages with explicitly allowed external references.
+#   collections:
+#   - redhat
+#   - policy_data
+#
+deny contains result if {
+	some s in sbom.cyclonedx_sboms
+	some component in s.components
+	some reference in component.externalReferences
+	some allowed in lib.rule_data(_rule_data_allowed_external_references_key)
+
+	reference.type == allowed.type
+	not regex.match(object.get(allowed, "url", ""), object.get(reference, "url", ""))
+
+	msg := regex.replace(object.get(allowed, "url", ""), `(.+)`, ` by pattern "$1"`)
+
+	result := lib.result_helper(rego.metadata.chain(), [component.purl, reference.url, reference.type, msg])
+}
+
+# METADATA
 # title: Disallowed package external references
 # description: >-
 #   Confirm the CycloneDX SBOM contains only packages without disallowed
@@ -139,7 +169,7 @@ deny contains result if {
 	some s in sbom.cyclonedx_sboms
 	some component in s.components
 	some reference in component.externalReferences
-	some disallowed in lib.rule_data(_rule_data_external_references_key)
+	some disallowed in lib.rule_data(_rule_data_disallowed_external_references_key)
 
 	reference.type == disallowed.type
 	regex.match(object.get(disallowed, "url", ""), object.get(reference, "url", ""))
@@ -261,8 +291,62 @@ _rule_data_errors contains msg if {
 	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_attributes_key, violation.error])
 }
 
+# Verify allowed_external_references is an array of type/url pairs
+_rule_data_errors contains msg if {
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(_rule_data_allowed_external_references_key))
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"uniqueItems": true,
+			"items": {
+				"type": "object",
+				"properties": {
+					"type": {"type": "string"},
+					"url": {"type": "string"},
+				},
+				"additionalProperties": false,
+				"required": ["type", "url"],
+			},
+		},
+	)[1]
+	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_allowed_external_references_key, violation.error])
+}
+
+# Verify disallowed_external_references is an array of type/url pairs
+_rule_data_errors contains msg if {
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(lib.rule_data(_rule_data_disallowed_external_references_key))
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"uniqueItems": true,
+			"items": {
+				"type": "object",
+				"properties": {
+					"type": {"type": "string"},
+					"url": {"type": "string"},
+				},
+				"additionalProperties": false,
+				"required": ["type", "url"],
+			},
+		},
+	)[1]
+
+	# regal ignore:line-length
+	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_disallowed_external_references_key, violation.error])
+}
+
 _rule_data_packages_key := "disallowed_packages"
 
 _rule_data_attributes_key := "disallowed_attributes"
 
-_rule_data_external_references_key := "disallowed_external_references"
+_rule_data_allowed_external_references_key := "allowed_external_references"
+
+_rule_data_disallowed_external_references_key := "disallowed_external_references"

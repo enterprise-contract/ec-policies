@@ -69,7 +69,29 @@ test_attributes_not_allowed_value if {
 		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [{"name": "attr2", "value": "value2"}]}
 }
 
-test_external_references_not_allowed_regex if {
+test_external_references_allowed_regex_with_no_rules_is_allowed if {
+	expected := {}
+	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom_cyclonedx._rule_data_allowed_external_references_key: []}
+}
+
+test_external_references_allowed_regex if {
+	expected := {{
+		"code": "sbom_cyclonedx.allowed_package_external_references",
+		# regal ignore:line-length
+		"msg": `Package pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3 has reference "https://example.com/file.txt" of type "distribution" which is not explicitly allowed by pattern ".*allowed.net.*"`,
+	}}
+
+	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom_cyclonedx._rule_data_allowed_external_references_key: [{
+			"type": "distribution",
+			"url": ".*allowed.net.*",
+		}]}
+}
+
+test_external_references_disallowed_regex if {
 	expected := {{
 		"code": "sbom_cyclonedx.disallowed_package_external_references",
 		# regal ignore:line-length
@@ -78,7 +100,7 @@ test_external_references_not_allowed_regex if {
 
 	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
 		with input.image.ref as "registry.local/spam@sha256:123"
-		with data.rule_data as {sbom_cyclonedx._rule_data_external_references_key: [{
+		with data.rule_data as {sbom_cyclonedx._rule_data_disallowed_external_references_key: [{
 			"type": "distribution",
 			"url": ".*example.com.*",
 		}]}
@@ -233,6 +255,14 @@ test_rule_data_validation if {
 			{"name": "_name_", "value": "_value_"},
 			{"name": "_name_", "value": "_value_"},
 		],
+		sbom_cyclonedx._rule_data_allowed_external_references_key: [
+			{"type": "distribution", "url": "example.com"},
+			{"invalid": "foo"},
+		],
+		sbom_cyclonedx._rule_data_disallowed_external_references_key: [
+			{"type": "distribution", "url": "badurl"},
+			{"invalid": "foo"},
+		],
 	}
 
 	expected := {
@@ -309,7 +339,34 @@ test_rule_data_validation if {
 		},
 		{
 			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			# regal ignore:line-length
 			"msg": "Rule data disallowed_attributes has unexpected format: (Root): array items[5,6] must be unique",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			# regal ignore:line-length
+			"msg": "Rule data allowed_external_references has unexpected format: 1: Additional property invalid is not allowed",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			"msg": "Rule data allowed_external_references has unexpected format: 1: type is required",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			"msg": "Rule data allowed_external_references has unexpected format: 1: url is required",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			# regal ignore:line-length
+			"msg": "Rule data disallowed_external_references has unexpected format: 1: Additional property invalid is not allowed",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			"msg": "Rule data disallowed_external_references has unexpected format: 1: type is required",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			"msg": "Rule data disallowed_external_references has unexpected format: 1: url is required",
 		},
 	}
 

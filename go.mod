@@ -3,7 +3,7 @@ module github.com/enterprise-contract/ec-policies
 go 1.22.2
 
 require (
-	github.com/enterprise-contract/ec-cli v0.5.26
+	github.com/enterprise-contract/ec-cli v0.5.39
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.54.0
 	github.com/styrainc/regal v0.23.1
@@ -109,7 +109,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/chrismellard/docker-credential-acr-env v0.0.0-20230304212654-82a0ddb27589 // indirect
 	github.com/clbanning/mxj/v2 v2.7.0 // indirect
-	github.com/cloudflare/circl v1.3.7 // indirect
+	github.com/cloudflare/circl v1.3.8 // indirect
 	github.com/cockroachdb/apd/v3 v3.2.1 // indirect
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be // indirect
 	github.com/containerd/console v1.0.4 // indirect
@@ -120,7 +120,7 @@ require (
 	github.com/containerd/typeurl/v2 v2.1.1 // indirect
 	github.com/coreos/go-oidc/v3 v3.10.0 // indirect
 	github.com/cyberphone/json-canonicalization v0.0.0-20231217050601-ba74d44ecf5f // indirect
-	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
+	github.com/cyphar/filepath-securejoin v0.2.5 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dgraph-io/badger/v3 v3.2103.5 // indirect
 	github.com/dgraph-io/ristretto v0.1.1 // indirect
@@ -139,6 +139,20 @@ require (
 	github.com/emicklei/go-restful/v3 v3.11.2 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.48 // indirect
+	github.com/enterprise-contract/go-gather v0.0.3 // indirect
+	github.com/enterprise-contract/go-gather/expander v0.0.1 // indirect
+	github.com/enterprise-contract/go-gather/gather v0.0.2 // indirect
+	github.com/enterprise-contract/go-gather/gather/file v0.0.1 // indirect
+	github.com/enterprise-contract/go-gather/gather/git v0.0.3 // indirect
+	github.com/enterprise-contract/go-gather/gather/http v0.0.1 // indirect
+	github.com/enterprise-contract/go-gather/gather/oci v0.0.3 // indirect
+	github.com/enterprise-contract/go-gather/metadata v0.0.2 // indirect
+	github.com/enterprise-contract/go-gather/metadata/file v0.0.1 // indirect
+	github.com/enterprise-contract/go-gather/metadata/git v0.0.1 // indirect
+	github.com/enterprise-contract/go-gather/metadata/http v0.0.1 // indirect
+	github.com/enterprise-contract/go-gather/metadata/oci v0.0.2 // indirect
+	github.com/enterprise-contract/go-gather/saver v0.0.1 // indirect
+	github.com/enterprise-contract/go-gather/saver/file v0.0.1 // indirect
 	github.com/evanphx/json-patch v5.9.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
 	github.com/fatih/color v1.17.0 // indirect
@@ -244,6 +258,7 @@ require (
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/kevinburke/ssh_config v1.2.0 // indirect
 	github.com/klauspost/compress v1.17.7 // indirect
+	github.com/konflux-ci/application-api v0.0.0-20240527211352-be061932d497 // indirect
 	github.com/ktr0731/go-ansisgr v0.1.0 // indirect
 	github.com/ktr0731/go-fuzzyfinder v0.8.0 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
@@ -302,7 +317,6 @@ require (
 	github.com/prometheus/statsd_exporter v0.26.0 // indirect
 	github.com/qri-io/jsonpointer v0.1.1 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
-	github.com/redhat-appstudio/application-api v0.0.0-20240106104232-18f545e48a03 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
@@ -354,6 +368,7 @@ require (
 	github.com/transparency-dev/merkle v0.0.2 // indirect
 	github.com/ulikunitz/xz v0.5.11 // indirect
 	github.com/vbatts/tar-split v0.11.5 // indirect
+	github.com/whilp/git-urls v1.0.0 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
 	github.com/xanzy/go-gitlab v0.102.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect

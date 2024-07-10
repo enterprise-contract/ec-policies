@@ -127,6 +127,8 @@ Rules included:
 * xref:release_policy.adoc#olm__feature_annotations_format[OLM: Feature annotations have expected value]
 * xref:release_policy.adoc#olm__required_olm_features_annotations_provided[OLM: Required OLM feature annotations list provided]
 * xref:release_policy.adoc#olm__subscriptions_annotation_format[OLM: Subscription annotation has expected value]
+* xref:release_policy.adoc#olm__inaccessible_snapshot_references[OLM: Unable to access images in the input snapshot]
+* xref:release_policy.adoc#olm__unmapped_references[OLM: Unmapped images in OLM bundle]
 * xref:release_policy.adoc#olm__unpinned_references[OLM: Unpinned images in OLM bundle]
 * xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]
 * xref:release_policy.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]
@@ -818,6 +820,32 @@ Check the value of the operators.openshift.io/valid-subscription annotation from
 * Code: `olm.subscriptions_annotation_format`
 * Effective from: `2024-04-18T00:00:00Z`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm.rego#L87[Source, window="_blank"]
+
+[#olm__inaccessible_snapshot_references]
+=== link:#olm__inaccessible_snapshot_references[Unable to access images in the input snapshot]
+
+Check the input snapshot and make sure all the images are accessible.
+
+*Solution*: Ensure all images in the input snapshot are valid.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q image reference is not accessible in the input snapshot.`
+* Code: `olm.inaccessible_snapshot_references`
+* Effective from: `2024-08-01T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm.rego#L125[Source, window="_blank"]
+
+[#olm__unmapped_references]
+=== link:#olm__unmapped_references[Unmapped images in OLM bundle]
+
+Check the OLM bundle image for the presence of unmapped image references. Unmapped image pull references are references to images found in link:https://osbs.readthedocs.io/en/latest/users.html#pullspec-locations[varying locations] that are either not in the RPA about to be released or not accessible already.
+
+*Solution*: Add the missing image to the snapshot or check if the CSV pullspec is valid and accessible.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q CSV image reference is not in the snapshot or accessible.`
+* Code: `olm.unmapped_references`
+* Effective from: `2024-08-01T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm.rego#L147[Source, window="_blank"]
 
 [#olm__unpinned_references]
 === link:#olm__unpinned_references[Unpinned images in OLM bundle]

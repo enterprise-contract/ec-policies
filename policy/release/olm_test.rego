@@ -7,11 +7,37 @@ import data.policy.release.olm
 
 pinned := "registry.io/repository/image@sha256:cafe"
 
-pinned2 := "registry.io/repository/image2@sha256:cafe"
+pinned2 := "registry.io/repository/image2@sha256:tea"
 
 pinned_ref := {"digest": "sha256:cafe", "repo": "registry.io/repository/image", "tag": ""}
 
-pinned_ref2 := {"digest": "sha256:cafe", "repo": "registry.io/repository/image2", "tag": ""}
+pinned_ref2 := {"digest": "sha256:tea", "repo": "registry.io/repository/image2", "tag": ""}
+
+component1 := {
+	"name": "Unnamed",
+	"containerImage": pinned,
+	"source": {},
+}
+
+component2 := {
+	"name": "unpinned_image",
+	"containerImage": "registry.io/repo/msd:no_digest",
+	"source": {},
+}
+
+test_resolve_snapshot_component_image if {
+	lib.assert_equal(
+		{"digest": "sha256:cafe", "repo": "registry.io/repository/image", "tag": ""},
+		olm.resolve_snapshot_component_image(component1),
+	)
+}
+
+test_resolve_snapshot_component_image_unresolved_image if {
+	lib.assert_equal(
+		{"digest": "sha256:tea", "repo": "registry.io/repo/msd", "tag": "no_digest"},
+		olm.resolve_snapshot_component_image(component2),
+	) with ec.oci.image_manifest as {"config": {"digest": "sha256:tea"}}
+}
 
 manifest := {
 	"apiVersion": "operators.coreos.com/v1alpha1",
@@ -295,3 +321,38 @@ test_subscriptions_annotation_format if {
 	lib.assert_equal_results(olm.deny, expected) with input.image.files as files
 		with input.image.config.Labels as {olm.manifestv1: "m/"}
 }
+
+test_inaccessible_snapshot_references if {
+	expected := {{
+		"code": "olm.inaccessible_snapshot_references",
+		"msg": "The \"registry.io/repository/image@sha256:cafe\" image reference is not accessible in the input snapshot.",
+		"term": "registry.io/repository/image@sha256:cafe",
+	}}
+
+	lib.assert_equal_results(olm.deny, expected) with input.snapshot.components as [component1]
+		with data.rule_data as {"pipeline_intention": "release"}
+		with ec.oci.image_manifest as false
+}
+
+test_unmapped_references_in_operator if {
+	expected := {{
+		"code": "olm.unmapped_references",
+		"msg": "The \"registry.io/repository/image2@sha256:tea\" CSV image reference is not in the snapshot or accessible.",
+		"term": "registry.io/repository/image2@sha256:tea",
+	}}
+
+	lib.assert_equal_results(olm.deny, expected) with input.snapshot.components as [component1]
+		with input.image.files as {"manifests/csv.yaml": manifest}
+		with data.rule_data as {"pipeline_intention": "release"}
+		with ec.oci.image_manifest as mock_ec_oci_image_manifest
+		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
+}
+
+test_olm_ci_pipeline if {
+	# Make sure no violations are thrown if it isn't a release pipeline
+	lib.assert_equal(false, olm._release_restrictions_apply) with data.rule_data as {"pipeline_intention": null}
+}
+
+mock_ec_oci_image_manifest("registry.io/repository/image@sha256:cafe") := `{"config": {"digest": "sha256:cafe"}}`
+
+mock_ec_oci_image_manifest("registry.io/repository/image2@sha256:tea") := false

@@ -49,74 +49,45 @@ test_tasks_from_slsav1_tekton_attestation if {
 			"resolvedDependencies": [task],
 		}},
 	}}
-	expected := {{
-		"params": [
-			{
-				"name": "IMAGE",
-				"value": "quay.io/jstuart/hacbs-docker-build",
-			},
-			{
-				"name": "DOCKERFILE",
-				"value": "./image_with_labels/Dockerfile",
-			},
-		],
-		"podTemplate": {
-			"imagePullSecrets": [{"name": "docker-chains"}],
-			"securityContext": {"fsGroup": 65532},
-		},
-		"serviceAccountName": "default", "taskRef": {
-			"kind": "Task",
-			"name": "buildah",
-		},
-		"timeout": "1h0m0s", "workspaces": [
-			{
-				"name": "source",
-				"persistentVolumeClaim": {"claimName": "pvc-bf2ed289ae"},
-			},
-			{
-				"name": "dockerconfig",
-				"secret": {"secretName": "docker-credentials"},
-			},
-		],
-	}}
+	expected := {slsav1_attestation_local_spec}
 	lib.assert_equal(expected, tkn.tasks(attestation))
 }
 
 # regal ignore:rule-length
 test_tasks_from_slsav1_tekton_mixture_attestation if {
-	task1 := base64.encode(json.marshal(json.patch(slsav1_attestation_local_spec, [{
+	task1 := json.patch(slsav1_attestation_local_spec, [{
 		"op": "add",
 		"path": "/taskRef/name",
 		"value": "task1",
-	}])))
-	task2 := base64.encode(json.marshal(json.patch(slsav1_attestation_local_spec, [{
+	}])
+	task2 := json.patch(slsav1_attestation_local_spec, [{
 		"op": "add",
 		"path": "/taskRef/name",
 		"value": "task2",
-	}])))
-	task3 := base64.encode(json.marshal(json.patch(slsav1_attestation_local_spec, [{
+	}])
+	task3 := json.patch(slsav1_attestation_local_spec, [{
 		"op": "add",
 		"path": "/taskRef/name",
 		"value": "task3",
-	}])))
+	}])
 
 	git_init := {
 		"name": "task",
 		"uri": "oci://gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init",
 		"digest": {"sha256": "28ff94e63e4058afc3f15b4c11c08cf3b54fa91faa646a4bbac90380cd7158df"},
-		"content": task1,
+		"content": base64.encode(json.marshal(task1)),
 	}
 	git_init_pipeline := {
 		"name": "pipelineTask",
 		"uri": "oci://gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init",
 		"digest": {"sha256": "28ff94e63e4058afc3f15b4c11c08cf3b54fa91faa646a4bbac90380cd7158df"},
-		"content": task2,
+		"content": base64.encode(json.marshal(task2)),
 	}
 	git_init_bad := {
 		"name": "pipeline",
 		"uri": "oci://gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init",
 		"digest": {"sha256": "28ff94e63e4058afc3f15b4c11c08cf3b54fa91faa646a4bbac90380cd7158df"},
-		"content": task3,
+		"content": base64.encode(json.marshal(task3)),
 	}
 
 	attestation := {"statement": {"predicate": {"buildDefinition": {
@@ -128,48 +99,8 @@ test_tasks_from_slsav1_tekton_mixture_attestation if {
 		],
 	}}}}
 	expected := {
-		{
-			"params": [
-				{
-					"name": "IMAGE",
-					"value": "quay.io/jstuart/hacbs-docker-build",
-				},
-				{
-					"name": "DOCKERFILE",
-					"value": "./image_with_labels/Dockerfile",
-				},
-			],
-			"podTemplate": {
-				"imagePullSecrets": [{"name": "docker-chains"}],
-				"securityContext": {"fsGroup": 65532},
-			},
-			"serviceAccountName": "default", "taskRef": {
-				"kind": "Task",
-				"name": "task1",
-			},
-			"timeout": "1h0m0s", "workspaces": [
-				{"name": "source", "persistentVolumeClaim": {"claimName": "pvc-bf2ed289ae"}},
-				{"name": "dockerconfig", "secret": {"secretName": "docker-credentials"}},
-			],
-		},
-		{
-			"params": [
-				{
-					"name": "IMAGE",
-					"value": "quay.io/jstuart/hacbs-docker-build",
-				},
-				{"name": "DOCKERFILE", "value": "./image_with_labels/Dockerfile"},
-			],
-			"podTemplate": {
-				"imagePullSecrets": [{"name": "docker-chains"}],
-				"securityContext": {"fsGroup": 65532},
-			},
-			"serviceAccountName": "default",
-			"taskRef": {"kind": "Task", "name": "task2"}, "timeout": "1h0m0s", "workspaces": [
-				{"name": "source", "persistentVolumeClaim": {"claimName": "pvc-bf2ed289ae"}},
-				{"name": "dockerconfig", "secret": {"secretName": "docker-credentials"}},
-			],
-		},
+		task1,
+		task2,
 	}
 	lib.assert_equal(expected, tkn.tasks(attestation))
 }

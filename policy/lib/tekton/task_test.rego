@@ -695,6 +695,18 @@ slsav1_attestation_local_spec := {
 		"securityContext": {"fsGroup": 65532},
 		"imagePullSecrets": [{"name": "docker-chains"}],
 	},
+	"results": [
+		{
+			"name": "IMAGE_DIGEST",
+			"type": "string",
+			"value": "sha256:hash",
+		},
+		{
+			"name": "IMAGE_URL",
+			"type": "string",
+			"value": "quay.io/jstuart/hacbs-docker-build:tag@sha256:hash",
+		},
+	],
 	"workspaces": [
 		{
 			"name": "source",

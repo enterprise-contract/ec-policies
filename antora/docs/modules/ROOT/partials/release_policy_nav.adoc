@@ -17,7 +17,6 @@
 **** xref:release_policy.adoc#base_image_registries__base_image_permitted[Base image comes from permitted registry]
 **** xref:release_policy.adoc#base_image_registries__base_image_info_found[Base images provided]
 *** xref:release_policy.adoc#buildah_build_task_package[Buildah build task]
-**** xref:release_policy.adoc#buildah_build_task__buildah_task_has_dockerfile_param[Buildah task has Dockerfile param defined]
 **** xref:release_policy.adoc#buildah_build_task__buildah_uses_local_dockerfile[Buildah task uses a local Dockerfile]
 *** xref:release_policy.adoc#attestation_package[Builtin attestation policies]
 **** xref:release_policy.adoc#attestation__signature_check[Attestation signature]

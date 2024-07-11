@@ -9,33 +9,7 @@ package policy.release.buildah_build_task
 import rego.v1
 
 import data.lib
-
-# METADATA
-# title: Buildah task has Dockerfile param defined
-# description: >-
-#   Verify that a DOCKERFILE parameter was provided to
-#   the buildah task.
-# custom:
-#   short_name: buildah_task_has_dockerfile_param
-#   failure_msg: >-
-#     The pipeline task %q does not contain the DOCKERFILE param. This is a requirement for the underlying task %q
-#   solution: >-
-#     Make sure the buildah task has a parameter named 'DOCKERFILE'.
-#   collections:
-#   - redhat
-#   depends_on:
-#   - attestation_type.known_attestation_type
-#
-deny contains result if {
-	# Skip this rule if the buildah task is not present
-	buildah_tasks
-	some buildah_task in buildah_tasks
-	not lib.tkn.task_param(buildah_task, "DOCKERFILE")
-	result := lib.result_helper_with_term(
-		rego.metadata.chain(),
-		[lib.tkn.pipeline_task_name(buildah_task), lib.tkn.task_name(buildah_task)], lib.tkn.task_name(buildah_task),
-	)
-}
+import data.lib.tkn
 
 # METADATA
 # title: Buildah task uses a local Dockerfile
@@ -53,7 +27,7 @@ deny contains result if {
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	some dockerfile_param in dockerfile_params
+	some dockerfile_param in _dockerfile_params
 	_not_allowed_prefix(dockerfile_param)
 	result := lib.result_helper(rego.metadata.chain(), [dockerfile_param])
 }
@@ -64,13 +38,12 @@ _not_allowed_prefix(search) if {
 	startswith(search, not_allowed_prefix)
 }
 
-buildah_tasks contains task if {
+_buildah_tasks contains task if {
 	some att in lib.pipelinerun_attestations
-	some task in lib.tkn.tasks(att)
-	"buildah" in lib.tkn.task_names(task)
+	some task in tkn.build_tasks(att)
 }
 
-dockerfile_params contains param if {
-	some buildah_task in buildah_tasks
+_dockerfile_params contains param if {
+	some buildah_task in _buildah_tasks
 	param := lib.tkn.task_param(buildah_task, "DOCKERFILE")
 }

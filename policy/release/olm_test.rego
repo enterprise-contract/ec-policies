@@ -20,23 +20,15 @@ component1 := {
 }
 
 component2 := {
-	"name": "unpinned_image",
-	"containerImage": "registry.io/repo/msd:no_digest",
+	"name": "pinned_image2",
+	"containerImage": pinned2,
 	"source": {},
 }
 
-test_resolve_snapshot_component_image if {
-	lib.assert_equal(
-		{"digest": "sha256:cafe", "repo": "registry.io/repository/image", "tag": ""},
-		olm.resolve_snapshot_component_image(component1),
-	)
-}
-
-test_resolve_snapshot_component_image_unresolved_image if {
-	lib.assert_equal(
-		{"digest": "sha256:tea", "repo": "registry.io/repo/msd", "tag": "no_digest"},
-		olm.resolve_snapshot_component_image(component2),
-	) with ec.oci.image_manifest as {"config": {"digest": "sha256:tea"}}
+unpinned_component := {
+	"name": "unpinned_image",
+	"containerImage": "registry.io/repo/msd:no_digest",
+	"source": {},
 }
 
 manifest := {
@@ -322,6 +314,25 @@ test_subscriptions_annotation_format if {
 		with input.image.config.Labels as {olm.manifestv1: "m/"}
 }
 
+test_unpinned_snapshot_references_operator if {
+	expected := {{
+		"code": "olm.unpinned_snapshot_references",
+		"msg": "The \"registry.io/repo/msd:no_digest\" image reference is not pinned in the input snapshot.",
+		"term": "registry.io/repo/msd:no_digest",
+	}}
+	lib.assert_equal_results(olm.deny, expected) with input.snapshot.components as [unpinned_component, component1]
+		with data.rule_data as {"pipeline_intention": "release"}
+		with ec.oci.image_manifest as `{"config": {"digest": "sha256:goat"}}`
+		with input.image.ref as unpinned_component.containerImage
+}
+
+test_unpinned_snapshot_references_different_input if {
+	lib.assert_empty(olm.deny) with input.snapshot.components as [unpinned_component]
+		with data.rule_data as {"pipeline_intention": "release"}
+		with ec.oci.image_manifest as `{"config": {"digest": "sha256:goat"}}`
+		with input.image.ref as pinned2
+}
+
 test_inaccessible_snapshot_references if {
 	expected := {{
 		"code": "olm.inaccessible_snapshot_references",
@@ -348,11 +359,17 @@ test_unmapped_references_in_operator if {
 		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 }
 
+mock_ec_oci_image_manifest("registry.io/repository/image@sha256:cafe") := `{"config": {"digest": "sha256:cafe"}}`
+
+mock_ec_oci_image_manifest("registry.io/repository/image2@sha256:tea") := false
+
 test_olm_ci_pipeline if {
 	# Make sure no violations are thrown if it isn't a release pipeline
 	lib.assert_equal(false, olm._release_restrictions_apply) with data.rule_data as {"pipeline_intention": null}
 }
 
-mock_ec_oci_image_manifest("registry.io/repository/image@sha256:cafe") := `{"config": {"digest": "sha256:cafe"}}`
-
-mock_ec_oci_image_manifest("registry.io/repository/image2@sha256:tea") := false
+test_unmapped_references_none_found if {
+	lib.assert_empty(olm.deny) with input.snapshot.components as [component1, component2]
+		with input.image.files as {"manifests/csv.yaml": manifest}
+		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
+}

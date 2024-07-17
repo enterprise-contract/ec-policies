@@ -123,6 +123,36 @@ deny contains result if {
 }
 
 # METADATA
+# title: Unpinned images in input snapshot
+# description: >-
+#   Check the input snapshot for the presence of unpinned image references.
+#   Unpinned image pull references are references to images
+#   that do not contain a digest -- uniquely identifying the version of
+#   the image being pulled.
+# custom:
+#   short_name: unpinned_snapshot_references
+#   failure_msg: The %q image reference is not pinned in the input snapshot.
+#   solution: >-
+#     Update the input snapshot replacing the unpinned image reference with pinned image
+#     reference. Pinned image reference contains the image digest.
+#   collections:
+#   - redhat
+#   effective_on: 2024-08-15T00:00:00Z
+#
+deny contains result if {
+	_release_restrictions_apply
+
+	input_image = image.parse(input.image.ref)
+	components := input.snapshot.components
+	some component in components
+	parsed_image := image.parse(component.containerImage)
+	parsed_image.repo == input_image.repo
+	parsed_image.digest == "" # unpinned image references have no digest
+
+	result := lib.result_helper_with_term(rego.metadata.chain(), [image.str(parsed_image)], image.str(parsed_image))
+}
+
+# METADATA
 # title: Unable to access images in the input snapshot
 # description: >-
 #   Check the input snapshot and make sure all the images are accessible.
@@ -133,7 +163,7 @@ deny contains result if {
 #     Ensure all images in the input snapshot are valid.
 #   collections:
 #   - redhat
-#   effective_on: 2024-08-01T00:00:00Z
+#   effective_on: 2024-08-15T00:00:00Z
 #
 deny contains result if {
 	_release_restrictions_apply
@@ -160,13 +190,13 @@ deny contains result if {
 #     is valid and accessible.
 #   collections:
 #   - redhat
-#   effective_on: 2024-08-01T00:00:00Z
+#   effective_on: 2024-08-15T00:00:00Z
 #
 deny contains result if {
 	_release_restrictions_apply
 
 	snapshot_components := input.snapshot.components
-	component_images := [resolve_snapshot_component_image(component) | component := snapshot_components[_]]
+	component_images := [image.parse(component.containerImage) | component := snapshot_components[_]]
 	component_images_digests := [component_image.digest | component_image := component_images[_]]
 
 	some manifest in _csv_manifests
@@ -353,21 +383,6 @@ _subscriptions_errors contains msg if {
 }
 
 _subscription_annotation := "operators.openshift.io/valid-subscription"
-
-resolve_snapshot_component_image(component) := result if {
-	parsed_image := image.parse(component.containerImage)
-	parsed_image_digest := _get_image_digest(parsed_image, component.containerImage)
-	result := {
-		"digest": parsed_image_digest,
-		"repo": parsed_image.repo,
-		"tag": parsed_image.tag,
-	}
-}
-
-_get_image_digest(image_object, image_ref) := result if {
-	image_object.digest != ""
-	result := image_object.digest
-} else := ec.oci.image_manifest(image_ref).config.digest
 
 # We want these checks to apply only if we're doing a release.
 default _release_restrictions_apply := false

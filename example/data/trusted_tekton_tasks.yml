@@ -16,84 +16,2691 @@
 # SPDX-License-Identifier: Apache-2.0
 
 trusted_tasks:
+  git+https://github.com/konflux-ci/build-definitions.git//task/acs-deploy-check/0.1/acs-deploy-check.yaml:
+    - effective_on: "2024-07-18T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  git+https://github.com/konflux-ci/build-definitions.git//task/acs-image-check/0.1/acs-image-check.yaml:
+    - effective_on: "2024-07-18T00:00:00Z"
+      ref: f58ba64422b4d9bbcb4b296fbfe7b60f7793c3c1
+  git+https://github.com/konflux-ci/build-definitions.git//task/acs-image-scan/0.1/acs-image-scan.yaml:
+    - effective_on: "2024-07-18T00:00:00Z"
+      ref: f58ba64422b4d9bbcb4b296fbfe7b60f7793c3c1
+  git+https://github.com/konflux-ci/build-definitions.git//task/apply-tags/0.1/apply-tags.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 861b0b8581e43b1da3b3ad81290feb3c4d60484e
+  git+https://github.com/konflux-ci/build-definitions.git//task/build-image-manifest/0.1/build-image-manifest.yaml:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 874e649c27b1d726d02c8feaf3629adf3dfc2ef6
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 9707aeace2d3b18db621c79466f744efd1249650
+  git+https://github.com/konflux-ci/build-definitions.git//task/build-vm-image/0.1/build-vm-image.yaml:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 6e5906cda5d03e40d61d4dfce4cb8d79c7b9435d
+  git+https://github.com/konflux-ci/build-definitions.git//task/buildah-oci-ta/0.1/buildah-oci-ta.yaml:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: b2739ab714c96520eb7b021a1cc30b41d97035d1
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 8e60b9386f08819223305f5f6c49cd61e33e135b
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 874e649c27b1d726d02c8feaf3629adf3dfc2ef6
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: d31f90a31a47929f3e82d759fbc524d2f6df5b43
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 837142f897321f41d1fb89395ac060083051e5ec
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: 5ec32c4f398684d4c06a5f90a4fb36dfbfb6a7a4
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: bb8ded6745eae4955010fcce2055dc6ffac25c8c
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: ca6e878e5b0661952c9e03b606e84d251e548e1f
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: acecb34fa74730ab3f5806610058c41f2b706599
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: 1eae5a2c258729fe6f47848fec4f5c6ac2f156a7
+    - effective_on: "2024-07-14T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: 84f9441445d5cdf44f440b8b2562cd36b1d81390
+  git+https://github.com/konflux-ci/build-definitions.git//task/buildah-remote-oci-ta/0.1/buildah-remote-oci-ta.yaml:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: b2739ab714c96520eb7b021a1cc30b41d97035d1
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 8e60b9386f08819223305f5f6c49cd61e33e135b
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 874e649c27b1d726d02c8feaf3629adf3dfc2ef6
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: d31f90a31a47929f3e82d759fbc524d2f6df5b43
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 837142f897321f41d1fb89395ac060083051e5ec
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: 5ec32c4f398684d4c06a5f90a4fb36dfbfb6a7a4
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: bb8ded6745eae4955010fcce2055dc6ffac25c8c
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: ca6e878e5b0661952c9e03b606e84d251e548e1f
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: acecb34fa74730ab3f5806610058c41f2b706599
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: 1eae5a2c258729fe6f47848fec4f5c6ac2f156a7
+    - effective_on: "2024-07-14T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: 84f9441445d5cdf44f440b8b2562cd36b1d81390
+  git+https://github.com/konflux-ci/build-definitions.git//task/buildah-remote/0.1/buildah-remote.yaml:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: b2739ab714c96520eb7b021a1cc30b41d97035d1
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 8e60b9386f08819223305f5f6c49cd61e33e135b
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 874e649c27b1d726d02c8feaf3629adf3dfc2ef6
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 837142f897321f41d1fb89395ac060083051e5ec
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: 5ec32c4f398684d4c06a5f90a4fb36dfbfb6a7a4
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: bb8ded6745eae4955010fcce2055dc6ffac25c8c
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: ca6e878e5b0661952c9e03b606e84d251e548e1f
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: acecb34fa74730ab3f5806610058c41f2b706599
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: 1eae5a2c258729fe6f47848fec4f5c6ac2f156a7
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: 04c146b95c2859c3f236aea12c6edcb4788cfb84
+  git+https://github.com/konflux-ci/build-definitions.git//task/buildah-rhtap/0.1/buildah-rhtap.yaml:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: ca20407ccdd5a7eaed9072b85198f22582809228
+  git+https://github.com/konflux-ci/build-definitions.git//task/buildah/0.1/buildah.yaml:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: b2739ab714c96520eb7b021a1cc30b41d97035d1
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 8e60b9386f08819223305f5f6c49cd61e33e135b
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 874e649c27b1d726d02c8feaf3629adf3dfc2ef6
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 837142f897321f41d1fb89395ac060083051e5ec
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: 5ec32c4f398684d4c06a5f90a4fb36dfbfb6a7a4
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: bb8ded6745eae4955010fcce2055dc6ffac25c8c
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: ca6e878e5b0661952c9e03b606e84d251e548e1f
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: acecb34fa74730ab3f5806610058c41f2b706599
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: 1eae5a2c258729fe6f47848fec4f5c6ac2f156a7
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: 04c146b95c2859c3f236aea12c6edcb4788cfb84
+  git+https://github.com/konflux-ci/build-definitions.git//task/clair-scan/0.1/clair-scan.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/clamav-scan/0.1/clamav-scan.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 4673bc94d1e6eb1893186ab9ddb3fbe0a062bfce
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-26T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 83a22dc82f7ae6ce8868ad2594aec8641884505f
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-26T00:00:00Z"
+      ref: 7bead1f64d3053155cd3e28acb2d25bb67a19400
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/deprecated-image-check/0.1/deprecated-image-check.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/deprecated-image-check/0.2/deprecated-image-check.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/deprecated-image-check/0.3/deprecated-image-check.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/deprecated-image-check/0.4/deprecated-image-check.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-19T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: bf786b8298210ba9987e3b1aa320256da80a7022
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-19T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  ? git+https://github.com/konflux-ci/build-definitions.git//task/download-sbom-from-url-in-attestation/0.1/download-sbom-from-url-in-attestation.yaml
+  : - effective_on: "2024-07-18T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  ? git+https://github.com/konflux-ci/build-definitions.git//task/ecosystem-cert-preflight-checks/0.1/ecosystem-cert-preflight-checks.yaml
+  : - effective_on: "2024-07-18T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  git+https://github.com/konflux-ci/build-definitions.git//task/fbc-related-image-check/0.1/fbc-related-image-check.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-01T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 8501077f1bd07c31e62ebbfa6595db34f08e48c9
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-01T00:00:00Z"
+      ref: da60488814ff06ab832824cf1a6d4f1eab0bd031
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/fbc-validation/0.1/fbc-validation.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/gather-deploy-images/0.1/gather-deploy-images.yaml:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  git+https://github.com/konflux-ci/build-definitions.git//task/git-clone-oci-ta/0.1/git-clone-oci-ta.yaml:
+    - effective_on: "2024-08-09T00:00:00Z"
+      ref: d31f90a31a47929f3e82d759fbc524d2f6df5b43
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 002e460002eab103c75eb208b57344d3973d144c
+    - effective_on: "2024-08-01T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: 0d1223c91bc0d7d7e99979d4cf7830978cebda53
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-01T00:00:00Z"
+      ref: 127cb225072307e062ee037b8cb617571a49477b
+  git+https://github.com/konflux-ci/build-definitions.git//task/git-clone/0.1/git-clone.yaml:
+    - effective_on: "2024-08-08T00:00:00Z"
+      ref: 002e460002eab103c75eb208b57344d3973d144c
+    - effective_on: "2024-08-01T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: 0d1223c91bc0d7d7e99979d4cf7830978cebda53
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-01T00:00:00Z"
+      ref: 127cb225072307e062ee037b8cb617571a49477b
+  git+https://github.com/konflux-ci/build-definitions.git//task/init/0.1/init.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/init/0.2/init.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-06-30T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 35478a9051ca190ba121a57c280bdf09a817ba2b
+  git+https://github.com/konflux-ci/build-definitions.git//task/inspect-image/0.1/inspect-image.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/oci-copy-oci-ta/0.1/oci-copy-oci-ta.yaml:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: 489ec47c82f3da9c15d086d3107182de9fb18504
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: d31f90a31a47929f3e82d759fbc524d2f6df5b43
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 4673bc94d1e6eb1893186ab9ddb3fbe0a062bfce
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 25d5de7b8a1b7689ea82ec9fe8ae36fba56f4436
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: b70abf2cb668a4be946d47f7f33c3faec59e55ed
+    - effective_on: "2024-08-05T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: 3b51b71e76a91eda7a8631d3634b5d62dc4f7ee8
+    - effective_on: "2024-07-25T00:00:00Z"
+      expires_on: "2024-08-05T00:00:00Z"
+      ref: a028bc0643f1d817e555329740304ba1aefd1556
+    - effective_on: "2024-07-25T00:00:00Z"
+      expires_on: "2024-07-25T00:00:00Z"
+      ref: 17c058b8497e28c03522d8abe2fd5a89be22a252
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-25T00:00:00Z"
+      ref: 08fdf9296c6daf51d1f09b6c3fc1d1bf3198bed3
+  git+https://github.com/konflux-ci/build-definitions.git//task/oci-copy/0.1/oci-copy.yaml:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: 70e9e31fa267a40e6b282e2a66deaaf1090f8dad
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 4673bc94d1e6eb1893186ab9ddb3fbe0a062bfce
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 25d5de7b8a1b7689ea82ec9fe8ae36fba56f4436
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: b70abf2cb668a4be946d47f7f33c3faec59e55ed
+    - effective_on: "2024-08-05T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: 4ca2a7027fefdb7678a0f40bb046df3dc6774edd
+    - effective_on: "2024-07-25T00:00:00Z"
+      expires_on: "2024-08-05T00:00:00Z"
+      ref: a028bc0643f1d817e555329740304ba1aefd1556
+    - effective_on: "2024-07-25T00:00:00Z"
+      expires_on: "2024-07-25T00:00:00Z"
+      ref: 0a3eaf60dc132d7c24d43cd8376bdfb69bb0eddc
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-25T00:00:00Z"
+      ref: 08fdf9296c6daf51d1f09b6c3fc1d1bf3198bed3
+  git+https://github.com/konflux-ci/build-definitions.git//task/prefetch-dependencies-oci-ta/0.1/prefetch-dependencies-oci-ta.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: d31f90a31a47929f3e82d759fbc524d2f6df5b43
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: bd0468ce53328a913e0ec5338047f06869a61180
+    - effective_on: "2024-07-14T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: 84f9441445d5cdf44f440b8b2562cd36b1d81390
+  git+https://github.com/konflux-ci/build-definitions.git//task/prefetch-dependencies/0.1/prefetch-dependencies.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: bd0468ce53328a913e0ec5338047f06869a61180
+    - effective_on: "2024-06-21T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: 7f8a9fd3a0b471613954a617a5f92042cc330e15
+  ? git+https://github.com/konflux-ci/build-definitions.git//task/provision-env-with-ephemeral-namespace/0.1/provision-env-with-ephemeral-namespace.yaml
+  : - effective_on: "2024-06-29T00:00:00Z"
+      ref: 6fa633c8d41e1f885951bfc9d74a5ee9499af79e
+  git+https://github.com/konflux-ci/build-definitions.git//task/push-dockerfile-oci-ta/0.1/push-dockerfile-oci-ta.yaml:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: cc54e9bf757ec27c3d5e45a737ef43c2e0eb33ec
+  git+https://github.com/konflux-ci/build-definitions.git//task/push-dockerfile/0.1/push-dockerfile.yaml:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: cc54e9bf757ec27c3d5e45a737ef43c2e0eb33ec
+  git+https://github.com/konflux-ci/build-definitions.git//task/rpm-ostree/0.1/rpm-ostree.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 6bc8ac0dd72600f8f06c14d80058d9a02917430b
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/s2i-java/0.1/s2i-java.yaml:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/s2i-nodejs/0.1/s2i-nodejs.yaml:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/sast-snyk-check-oci-ta/0.1/sast-snyk-check-oci-ta.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: d31f90a31a47929f3e82d759fbc524d2f6df5b43
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 4673bc94d1e6eb1893186ab9ddb3fbe0a062bfce
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 4c8dfd687d22e099fc294c5a0ad3e25f4e0f4d0d
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: b0a7a9ff04b6e278fbd8773d5ff2651bfaaa460c
+  git+https://github.com/konflux-ci/build-definitions.git//task/sast-snyk-check/0.1/sast-snyk-check.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 4673bc94d1e6eb1893186ab9ddb3fbe0a062bfce
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 7bead1f64d3053155cd3e28acb2d25bb67a19400
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/sbom-json-check/0.1/sbom-json-check.yaml:
+    - effective_on: "2024-07-27T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/show-sbom-rhdh/0.1/show-sbom-rhdh.yaml:
+    - effective_on: "2024-07-18T00:00:00Z"
+      ref: a1f9483042523b54dfe4cd706c7198d05905fed0
+  git+https://github.com/konflux-ci/build-definitions.git//task/show-sbom/0.1/show-sbom.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  git+https://github.com/konflux-ci/build-definitions.git//task/slack-webhook-notification/0.1/slack-webhook-notification.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/source-build-oci-ta/0.1/source-build-oci-ta.yaml:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: a326151eb9bc540ed6c0a2c2cad0629c2ebf99df
+    - effective_on: "2024-08-15T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 5fd431487dfc859392b4f189c9c62527c924c7c6
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: f38b18592b26dab3f0a61b1f0848aafdb5f654de
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: d31f90a31a47929f3e82d759fbc524d2f6df5b43
+    - effective_on: "2024-08-04T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: a625895250e2e55bb37a2bf27fcb9cd7f113f991
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-08-04T00:00:00Z"
+      ref: 1981d6b28737e7e2ac165af439577118006da8f2
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: b0a7a9ff04b6e278fbd8773d5ff2651bfaaa460c
+  git+https://github.com/konflux-ci/build-definitions.git//task/source-build/0.1/source-build.yaml:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: 5fd431487dfc859392b4f189c9c62527c924c7c6
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: f38b18592b26dab3f0a61b1f0848aafdb5f654de
+    - effective_on: "2024-08-04T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: a625895250e2e55bb37a2bf27fcb9cd7f113f991
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-08-04T00:00:00Z"
+      ref: 1981d6b28737e7e2ac165af439577118006da8f2
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/summary/0.1/summary.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/konflux-ci/build-definitions.git//task/summary/0.2/summary.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  git+https://github.com/konflux-ci/build-definitions.git//task/tkn-bundle/0.1/tkn-bundle.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 9bac93b0282fabf15955572cabbb49ac4b6fe407
+  git+https://github.com/konflux-ci/build-definitions.git//task/update-deployment/0.1/update-deployment.yaml:
+    - effective_on: "2024-07-18T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  git+https://github.com/konflux-ci/build-definitions.git//task/update-infra-deployments/0.1/update-infra-deployments.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  ? git+https://github.com/konflux-ci/build-definitions.git//task/upload-sbom-to-trustification/0.1/upload-sbom-to-trustification.yaml
+  : - effective_on: "2024-07-06T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  git+https://github.com/konflux-ci/build-definitions.git//task/verify-signed-rpms/0.1/verify-signed-rpms.yaml:
+    - effective_on: "2024-07-27T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/acs-deploy-check/0.1/acs-deploy-check.yaml:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/acs-image-check/0.1/acs-image-check.yaml:
+    - effective_on: "2024-05-25T00:00:00Z"
+      ref: f58ba64422b4d9bbcb4b296fbfe7b60f7793c3c1
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/acs-image-scan/0.1/acs-image-scan.yaml:
+    - effective_on: "2024-05-25T00:00:00Z"
+      ref: f58ba64422b4d9bbcb4b296fbfe7b60f7793c3c1
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/apply-tags/0.1/apply-tags.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-06-13T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 861b0b8581e43b1da3b3ad81290feb3c4d60484e
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/buildah-oci-ta/0.1/buildah-oci-ta.yaml:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: b2739ab714c96520eb7b021a1cc30b41d97035d1
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 8e60b9386f08819223305f5f6c49cd61e33e135b
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 874e649c27b1d726d02c8feaf3629adf3dfc2ef6
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: d31f90a31a47929f3e82d759fbc524d2f6df5b43
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 837142f897321f41d1fb89395ac060083051e5ec
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: bb8ded6745eae4955010fcce2055dc6ffac25c8c
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: ca6e878e5b0661952c9e03b606e84d251e548e1f
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: acecb34fa74730ab3f5806610058c41f2b706599
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: 1eae5a2c258729fe6f47848fec4f5c6ac2f156a7
+    - effective_on: "2024-07-14T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: 84f9441445d5cdf44f440b8b2562cd36b1d81390
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/buildah-remote/0.1/buildah-remote.yaml:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: b2739ab714c96520eb7b021a1cc30b41d97035d1
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 8e60b9386f08819223305f5f6c49cd61e33e135b
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 874e649c27b1d726d02c8feaf3629adf3dfc2ef6
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 837142f897321f41d1fb89395ac060083051e5ec
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: bb8ded6745eae4955010fcce2055dc6ffac25c8c
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: ca6e878e5b0661952c9e03b606e84d251e548e1f
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: acecb34fa74730ab3f5806610058c41f2b706599
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: 1eae5a2c258729fe6f47848fec4f5c6ac2f156a7
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: 04c146b95c2859c3f236aea12c6edcb4788cfb84
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/buildah-rhtap/0.1/buildah-rhtap.yaml:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-06-20T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: ca20407ccdd5a7eaed9072b85198f22582809228
   git+https://github.com/redhat-appstudio/build-definitions.git//task/buildah/0.1/buildah.yaml:
-    - effective_on: "2024-02-16T00:00:00Z"
-      ref: 3672a457e3e89c0591369f609eba727b8e84108f
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: b2739ab714c96520eb7b021a1cc30b41d97035d1
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 8e60b9386f08819223305f5f6c49cd61e33e135b
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 874e649c27b1d726d02c8feaf3629adf3dfc2ef6
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 837142f897321f41d1fb89395ac060083051e5ec
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: bb8ded6745eae4955010fcce2055dc6ffac25c8c
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: ca6e878e5b0661952c9e03b606e84d251e548e1f
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: acecb34fa74730ab3f5806610058c41f2b706599
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: 1eae5a2c258729fe6f47848fec4f5c6ac2f156a7
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: 04c146b95c2859c3f236aea12c6edcb4788cfb84
   git+https://github.com/redhat-appstudio/build-definitions.git//task/clair-scan/0.1/clair-scan.yaml:
-    - effective_on: "2024-02-15T00:00:00Z"
-      ref: 28b86c8b94c42995d98f843b0fc854c1cf2ae500
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/clamav-scan/0.1/clamav-scan.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 4673bc94d1e6eb1893186ab9ddb3fbe0a062bfce
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-26T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 83a22dc82f7ae6ce8868ad2594aec8641884505f
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-26T00:00:00Z"
+      ref: 7bead1f64d3053155cd3e28acb2d25bb67a19400
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/deprecated-image-check/0.1/deprecated-image-check.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/deprecated-image-check/0.2/deprecated-image-check.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/deprecated-image-check/0.3/deprecated-image-check.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/deprecated-image-check/0.4/deprecated-image-check.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-19T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: bf786b8298210ba9987e3b1aa320256da80a7022
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-19T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  ? git+https://github.com/redhat-appstudio/build-definitions.git//task/ecosystem-cert-preflight-checks/0.1/ecosystem-cert-preflight-checks.yaml
+  : - effective_on: "2024-07-06T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/fbc-related-image-check/0.1/fbc-related-image-check.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-01T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 8501077f1bd07c31e62ebbfa6595db34f08e48c9
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-01T00:00:00Z"
+      ref: da60488814ff06ab832824cf1a6d4f1eab0bd031
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/fbc-validation/0.1/fbc-validation.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/gather-deploy-images/0.1/gather-deploy-images.yaml:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/generate-odcs-compose/0.1/generate-odcs-compose.yaml:
+    - effective_on: "2024-05-19T00:00:00Z"
+      ref: a4b8ee86392ae6d914c9741dd00349375c215e10
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/git-clone-oci-ta/0.1/git-clone-oci-ta.yaml:
+    - effective_on: "2024-08-09T00:00:00Z"
+      ref: d31f90a31a47929f3e82d759fbc524d2f6df5b43
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 002e460002eab103c75eb208b57344d3973d144c
+    - effective_on: "2024-08-01T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: 0d1223c91bc0d7d7e99979d4cf7830978cebda53
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-01T00:00:00Z"
+      ref: 127cb225072307e062ee037b8cb617571a49477b
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/git-clone/0.1/git-clone.yaml:
+    - effective_on: "2024-08-08T00:00:00Z"
+      ref: 002e460002eab103c75eb208b57344d3973d144c
+    - effective_on: "2024-08-01T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: 0d1223c91bc0d7d7e99979d4cf7830978cebda53
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-01T00:00:00Z"
+      ref: 127cb225072307e062ee037b8cb617571a49477b
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/init/0.1/init.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-06-20T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/init/0.2/init.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-06-30T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 35478a9051ca190ba121a57c280bdf09a817ba2b
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/inspect-image/0.1/inspect-image.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  ? git+https://github.com/redhat-appstudio/build-definitions.git//task/prefetch-dependencies-oci-ta/0.1/prefetch-dependencies-oci-ta.yaml
+  : - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: d31f90a31a47929f3e82d759fbc524d2f6df5b43
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: bd0468ce53328a913e0ec5338047f06869a61180
+    - effective_on: "2024-07-14T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: 84f9441445d5cdf44f440b8b2562cd36b1d81390
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/prefetch-dependencies/0.1/prefetch-dependencies.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: bd0468ce53328a913e0ec5338047f06869a61180
+    - effective_on: "2024-06-21T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: 7f8a9fd3a0b471613954a617a5f92042cc330e15
+  ? git+https://github.com/redhat-appstudio/build-definitions.git//task/provision-env-with-ephemeral-namespace/0.1/provision-env-with-ephemeral-namespace.yaml
+  : - effective_on: "2024-06-29T00:00:00Z"
+      ref: 6fa633c8d41e1f885951bfc9d74a5ee9499af79e
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/rpm-ostree/0.1/rpm-ostree.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 6bc8ac0dd72600f8f06c14d80058d9a02917430b
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/s2i-java/0.1/s2i-java.yaml:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/s2i-nodejs/0.1/s2i-nodejs.yaml:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: 9b1baf0551991fe57962f73386c48e0464568ffa
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/sast-snyk-check-oci-ta/0.1/sast-snyk-check-oci-ta.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: d31f90a31a47929f3e82d759fbc524d2f6df5b43
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 4673bc94d1e6eb1893186ab9ddb3fbe0a062bfce
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 4c8dfd687d22e099fc294c5a0ad3e25f4e0f4d0d
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-07-12T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: b0a7a9ff04b6e278fbd8773d5ff2651bfaaa460c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/sast-snyk-check/0.1/sast-snyk-check.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 4673bc94d1e6eb1893186ab9ddb3fbe0a062bfce
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 7bead1f64d3053155cd3e28acb2d25bb67a19400
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/sbom-json-check/0.1/sbom-json-check.yaml:
+    - effective_on: "2024-07-27T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/show-sbom-rhdh/0.1/show-sbom-rhdh.yaml:
+    - effective_on: "2024-06-20T00:00:00Z"
+      ref: a1f9483042523b54dfe4cd706c7198d05905fed0
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/show-sbom/0.1/show-sbom.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-06T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  ? git+https://github.com/redhat-appstudio/build-definitions.git//task/slack-webhook-notification/0.1/slack-webhook-notification.yaml
+  : - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/source-build-oci-ta/0.1/source-build-oci-ta.yaml:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: a326151eb9bc540ed6c0a2c2cad0629c2ebf99df
+    - effective_on: "2024-08-15T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: 5fd431487dfc859392b4f189c9c62527c924c7c6
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: f38b18592b26dab3f0a61b1f0848aafdb5f654de
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: d31f90a31a47929f3e82d759fbc524d2f6df5b43
+    - effective_on: "2024-08-04T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: a625895250e2e55bb37a2bf27fcb9cd7f113f991
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-08-04T00:00:00Z"
+      ref: 1981d6b28737e7e2ac165af439577118006da8f2
+    - effective_on: "2024-07-12T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: b0a7a9ff04b6e278fbd8773d5ff2651bfaaa460c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/source-build/0.1/source-build.yaml:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: 5fd431487dfc859392b4f189c9c62527c924c7c6
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: f38b18592b26dab3f0a61b1f0848aafdb5f654de
+    - effective_on: "2024-08-04T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: a625895250e2e55bb37a2bf27fcb9cd7f113f991
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-08-04T00:00:00Z"
+      ref: 1981d6b28737e7e2ac165af439577118006da8f2
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/summary/0.1/summary.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/summary/0.2/summary.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-06T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/tkn-bundle/0.1/tkn-bundle.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-06-06T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 9bac93b0282fabf15955572cabbb49ac4b6fe407
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/update-deployment/0.1/update-deployment.yaml:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: 3778abd242c09f1b19d67b46b1951d7c95849b9f
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/update-infra-deployments/0.1/update-infra-deployments.yaml:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: 9dffe5fa1ddf0642d206b3ca25cb12da71db6f1e
+    - effective_on: "2024-06-20T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: 833463f691475ca607ae119467a44ccd5a3bd93c
+  ? git+https://github.com/redhat-appstudio/build-definitions.git//task/verify-enterprise-contract/0.1/verify-enterprise-contract.yaml
+  : - effective_on: "2024-05-26T00:00:00Z"
+      ref: b404314d2a31c886d2106b4c7347f422d6f86439
+  git+https://github.com/redhat-appstudio/build-definitions.git//task/verify-signed-rpms/0.1/verify-signed-rpms.yaml:
+    - effective_on: "2024-07-27T00:00:00Z"
+      ref: 3274e3d9a2b0d5e1193f4615b85eada508d4765c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: 96a1045fd2b3ae3557730fe92931871caaf0c6cb
+    - effective_on: "2024-06-06T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: 9bac93b0282fabf15955572cabbb49ac4b6fe407
+  oci://quay.io/konflux-ci/tekton-catalog/task-acs-deploy-check:0.1:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: sha256:bba18b21869c1a5fb0371a4ae58efdf0def55909edf3771d4a84dbe539773ca8
+  oci://quay.io/konflux-ci/tekton-catalog/task-acs-image-check:0.1:
+    - effective_on: "2024-07-05T00:00:00Z"
+      ref: sha256:5a9dcbfe1bda7132c29bd50a34ee32b9186bb45b6e604b72c11cbbef9f2ada0a
+  oci://quay.io/konflux-ci/tekton-catalog/task-acs-image-scan:0.1:
+    - effective_on: "2024-07-05T00:00:00Z"
+      ref: sha256:5833fbcc8a425d036be3c05ff3b2d8c7267c874f797c056235fa4d841f6e4741
+  oci://quay.io/konflux-ci/tekton-catalog/task-apply-tags:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:516875845f2988848ebde5f3e9c717d6077af7bf9b3cb2b34a3c3f86b2609a14
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:175162b0a1c55e911d0d25ddef97e90932b5043f0b523cf83ed4824363840d74
+  oci://quay.io/konflux-ci/tekton-catalog/task-build-image-manifest:0.1:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: sha256:231b521c5443a750cfcb302b74633ebe140b5ab0333688c91d32745417cc23a3
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:ebd9cebdba6db945393103cc3554750e9415ccee540603b9790765e1d79ad4a1
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:b1eade26432a0fac101cd4feeeb3f1fa78c9e16767530989eecb06a6d9ba73ed
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:fee7a3f22fe6faa024d4c2f67668fc13bf8acd83c0faab1592478af7c99c6181
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: sha256:fd0a0cf019621d6b577f1b9ab774bb1832f7cba61b4ceee2fd1bffc96895abf9
+  oci://quay.io/konflux-ci/tekton-catalog/task-build-vm-image:0.1:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: sha256:111b63390feb53749c5fcd12a6a147fffdeccbc7f511270b9b3d1dc0e7fa9c08
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:8c052637ce412a097cc227755c340876b5883caea541bd1459cdeafa6a8e7737
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:64cc0c0d0bf5264848e18be2e70c21ed3a11ff9e10a5912107c2592af8936524
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:b10de6db8f718e0f67a253b8b2b09d885d359c2a052dc877081aed8d5fca90d2
+  oci://quay.io/konflux-ci/tekton-catalog/task-buildah-6gb:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:cd82653be3f5be59ba7c9e2988ccf015e735798fc1a3797499174b02d451f2ea
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:54e7f896b70e85b421f24c30185d7105375660d519252cb60b8e85289adbba75
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:40cb90fffd06567b30f1440db657df721587dbc48b219bfa79aaa1abc4bd5664
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:76850b4abdc5a482c51210dfea0fcd258f88db204dea31feae040c0d45f2b310
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:0f7f606503ae47be3c68844464d0e0b8905299de7140db07dfee7dace824fbee
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:7952dedbe3c1b7c8f203aff2da78f2c85c5c484640de40a0bc781bfcdaba33b0
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:8b53df3ff37b057384166b235e99b3b155960d044705e4b30ccf74c7a6cabcd2
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:ddf4ec55708203239cf7a3be35bd75b6cc2981872ac001a271cff85657ee04fa
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:692fa10204cae1a78488abafd53562aa76d917fe1fe0d390172df4d33b3aea10
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:9ddb6032dedadeacc0f9d830bb8742a77e7fea445f17b81e82173c9a0e5c2f0b
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:8c0ddaecba504aa0dc62330642c800933a5a1c416315fb49efdec15343ce5272
+  oci://quay.io/konflux-ci/tekton-catalog/task-buildah-8gb:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:20853ecd43e54a58d80e971cf03667f97e7bb40687af98b64d84423a514be2e2
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:905150372ebb5b681a38d5c0f2eaea31f2207bed62413277f9ec0e3a8749709f
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:073396efae65e4e0e63586c27b7928dde3a10f6ff4692e601b4e5e121d108bb9
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:fdb06dff1c54e10f6d23a5ca13be5e55a2e247dcc29d7f54ca78bfc01cd28c87
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:29aeddc7cdc3a84c6240a3ab9857870b11486fdb9bb26877bd94a951ae5907ae
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:3b959e0ae3486225538204403578b523f9b7554405425daaf2bce3b951343508
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:f43da571cacb1f3036891aa6558b141cc8cfb2d22e2a1791a3d443da0c8d7f3b
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:026234d56a98d1810bec90d525fdb9b74f774029bafde029e14709fdf24341da
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:64def83bd2ab8da19404095cc63012441d7445f1ec9e9bd7a8960afbf40cbd1d
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:8912fa3fce8fee78416b15d0a52ca57b37ff7cbf9bc0473c858d31f60aafd63b
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:8653b4eb7c3f3e28834bdb9821a2b9bf905714011d347168e019e94151147640
+  oci://quay.io/konflux-ci/tekton-catalog/task-buildah-10gb:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:f44df00cfa1dacca8b9974871aa9e70e00b11c43bc8aea638bfe2acd500f7c06
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:7ec57c7017b4e78d9a4af61afb75508aa1bd61a873bf84bbed3e2babdcb8f140
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:55eb8b150004fe6063f81500b1d39c139c01eb356f8bf1a486ca85425ae2b758
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:b1fadcb4afc752268e2520003f5d56c211398e33611d156be9fbe42ce77a7cea
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:d6a834365c464e9eb9a86bda7636a5ab8e705b4b73f2962e8b8fc3b1505703f2
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:6abbd3b1710daa418117dda29fba5498853b1bb55863af6482a3fa55bc064203
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:0f9c5b5c544fbf8895d10f48d151f5fb3758d2ed7ae4c511e8f014b99094695e
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:8a4f08813f7b9bdfe57e3e2a4d69fe4611e3d47f6a5a41d61348172528021285
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:15bd20ec2b3a87db17638d06b0a9d72d6e868ada3417df573c6b1b6c535bbef6
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:7671a251f72792e6a7921d36050df7e403717d9c23274cd7e699488297d5c742
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:22920a6a56458baac36ebe767f4a327936d213800fd05a654ed7c1f719cd137a
+  oci://quay.io/konflux-ci/tekton-catalog/task-buildah-20gb:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:0a3c3e4243daa1cb4e8988f0944d0cf5d7412e2a4f0e616ed6954485aabcb10d
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:26883991e165024934a6fd771385de53a3a3d93324d9cb648a51669e72f581bc
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:df67cd30917472396dbf10d40b38dd7914164491c62647cf56e4a4a9d4f6a855
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:a98789b74cf7660f48ff4b8ed896eed0838d35654dfeedf115bfa116447118da
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:98fa168b8cb6ebad158a124e9d44dbfec4474af315f94195eb930b45801c7b6a
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:c4e3dc57c847781b1600bd405ced66b816d4b6756119d0af91cbbadc96f606c8
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:2f893b0a56a3b4f2627abc2f6c86c403cb130e139f95586056c9d0d09037ee30
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:7d16f5d3b4d6040addc03f0849eb62a1c40ab8953b3f9d2651087d8d70d739c9
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:bf991ab014d78c313caf48d7dc4fa666ae44329f25138c364e063692bbf8e733
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:b8c5968d598dfb738fad85549a3d9514bfd8b403cd340b30d547c7d4a6f73567
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:eb25fe186ded46d6e35935a55c46ea48338f02238de50aa0def9c6f922b88ced
+  oci://quay.io/konflux-ci/tekton-catalog/task-buildah-24gb:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:a98adb24ba9bf3679a73f1a35876623e7968ab7faa80668629b17c6d19366796
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:a0e346aac53b8fe492fe1103161fdef7b5bdc6e9dc3a1e09d9feb471aa1aed07
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:5c5b95e7033adb1d7f5500cd30bcda0ff771304004e6d8cf1fb3d909213ad056
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:41ff0b32a6543a8cf677814a05528515863b3a0acaa19bf854abf18887e38822
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:8eb05f43297247c86a1469f51e6419eb7bbe67f9977a9674dce67b2646a4988e
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:4a9c20da356cdcf1522eda77ff633813a108777fc646939a705e22c2db0a9910
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:989cd31b7b2a645122feeebd9be00e465493a7ba5b324ef632bcb1f6e26e997f
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:39b5a665a5bc62d3b5414d3643d5c22850bb9f3d25d2fd219d59e970db1d0e4c
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:17ab8982a3def3c20611d0f25a67aa5ba1cf63b4c2b1436997a7281389306ec7
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:db2cc23c436906b34a8b58eb406425278e65121e8741c5f6b3078742ec80ce15
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:365b7a07d42846b91d518c8267f329c91897b9b186c674b9860937f732fffcee
+  oci://quay.io/konflux-ci/tekton-catalog/task-buildah-oci-ta:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:b37740beb1c9b9755d0693f9affe97177ad272d5305a09962943365ccb54072b
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:bf8b7419f1f5871ceaa10d6decc4e4d922eab066b46a779207506af0008e4132
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:e6d015107e82db5d8fa8de30ca623e831af4260021cd2b6f6f3ddf34ddd2467b
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:89ef565ecd2950b66e8a50e25a811da0d4c1950e43e5c813be1f2d2b44c49b2a
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:1a99482d6ea9825fb5a9b3b87e8159d44e9ceab5c7a1e8a7c077d4c400e2c5b3
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:3b038af79ea43fdd8d327ec881a427cf2b074546364653f59d1091bd5b58d9ad
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:c9c6bfdbdcfa9603070d6904f1d9a0eeb3105be983d7b6ca823d444411ef5eb3
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:b9932f8a35e08c51cacc3f9112940378dc6b0a55abe5d2fb59e5bec70e5e2977
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:3e70dd7f117767fad2b3da4c830ec18f4c486768f0516ebc2cbcd4055faa5753
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:d2afe2d1578300e19e098c38126ed931af3ce5c67f4a3c96a438288c5bfea0bd
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:2a6348b9cb5bab5c591db3cfc30430ebce1e6ce8aeba9770a05b47a9b667a61d
+    - effective_on: "2024-07-14T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:b6721707cbeb4e5f0c5164e3171b5e0c0e6dd597a2c5e094e9d4a8cdf15d85a3
+  oci://quay.io/konflux-ci/tekton-catalog/task-buildah-remote-oci-ta:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:35f4898d5637e6b300a87c0ffa9c5a642340b24f85cfe7bef26058e130e7b7f3
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:35b51e2ba7fdd0d19ec76fcba27d978805c429de3df941f7323d8921b4f67758
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:32114713d24fa3f8a6fb5185a45054c5280df52b478518e2c4b3570070bf63cd
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:a638e6ab04dbcbacaa661df39f2c4ca93fa7c79b750fc9b0d4b95765a4183483
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:7afbbaeacdb9f32d2307f6b7ea275c8197b5fcc97e8156db92b13d6bec22fca6
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:be45d85c6ebda9b6005549783ca576b808bead8357e0f9a5893364cc223606fb
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:36d811c6439e497a73cd4797542c5afb50f3f496891188348000b5536d1bed0d
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:ecef0089d06267a6fc2f9f31ec2dbc46d348eb9039c085940a291062e67058b1
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:876f30a03605b242f2ae46381160cd3270e035bb91327cf9f4ded7c5fdf8ec7e
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:d4a156d82e94de1008dc605ce0a34c4f3de92cf1393397006457d9f85234e56f
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:9504a09023ff1bf49716be1f5d8c1a3f776edb973f432bffeffb5e05ad89aea0
+    - effective_on: "2024-07-14T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:41c88db0846e951864ba5a2091adf8a291e18122dae6c5abd8cec357f9480f00
+  oci://quay.io/konflux-ci/tekton-catalog/task-buildah-remote:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:d81e85e64eafa38dd11742b9d343143f425f79f581456294f644bf23eb7e3bee
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:fe4742be8a511f799cfac7ca492ae32ab4e34ecc78e2698cda5910ad19ba565b
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:1b2b74c6753583a702887e88d59172d46bd3df0a178b813552d065ad4212da1b
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:d584bec3160188a0f8b7cd14e21913d65bb9152c18ec784c780be928ef8c586d
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:d900770f28f873f6b279bab65f2fb070e6d1f2456093b6f8bf69f4f0f8ddd299
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:dac5ab56a2af6a1c3297c18f5d6e10f6b6465bb6752e5b294981939a630a4dc4
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:67d02e497ab6924f5adfa95e743a42d60bc29e0faf727ac27b2413636e549474
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:5c7766c1ff9f0e0300478e7a8443b0e503468feef38f126c813b462ba7ef76c7
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:89a6867a336fbf578de0e4a569a662b55811d31ab59060bef4c0ab4c2e7cb0f4
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:12ee7d099f19e885d174c5ef09e2df15806d030fd3e4fbf0a43083e03ae7fb59
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:04e44f7b59d04e99c39851495fcfd288c28127951851c8adcd1dc30617b78e23
+  oci://quay.io/konflux-ci/tekton-catalog/task-buildah-rhtap:0.1:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: sha256:28fe330d8c97a9a1918726ad47eebad8a6f0f2cbf7d73de4c4dbb41a2024c5b5
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:589ce3b849ea14c41ca651c13379291daa8de632368368f2fe3c1e5443333220
+  oci://quay.io/konflux-ci/tekton-catalog/task-buildah:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:71270c342a02cf661fbe02ce4814f0c5f10e7d59e55ac8f01b9cc8636c904958
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:f7e431e0219856652ad57f9ed72a859466708130c16cfb012cca5fd7a9b191f7
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:0dc30879d75a11974620a71867b3cbeb7052dc082d9bc49b1f98c5b3a255d4bc
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:4769650d076ab36694847090c83c49996e257520e3d0b9e7e0bc91a9bcc7f4d3
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:478fd49c9a573b716b22fcf75d37ccee2e52181f825d18b0f8ab64b74780e831
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:942c8b62ad30c614035fc3a6321f3389d0ee4075c2db36923e4a7412c482c8fa
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:83ebc213730389a562ffca79da477c9b239d076f17b320e7cb9ae105e14c6ff3
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:357206f5a7ca31e7c604df60722ba9122de10b86b136c3c871dea447b58a4085
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:c0622e2fdae8372532763f9a095614713f8042802fbf12de38e45e55c255560f
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:cdcb8b80c3071b226b6a688f4735b4e3ae888841601b32ac681b5a74a992e11b
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:045cf147a1562de2ab5dd00301899d099c3d8c0fbaeba9406b7dd3605da3f4a0
+  oci://quay.io/konflux-ci/tekton-catalog/task-clair-scan:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:a13278c3ee419db573a3919d8f86091497d2e7b52b5a800c2767c265df51c58a
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:48a051b5d9cb93f722a9fa2eca0e1d28eb3a28118cfff74a6448b2ee956d95f9
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:f38e2740eceadac1dd3c131f093d6f87feecf31cfa9d3765fb3fa3a25ed804c8
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:eed371ce8d1473e31a0befaa60134dedce47debe9527df0932f7fdea6a0c73b9
+  oci://quay.io/konflux-ci/tekton-catalog/task-clamav-scan:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:a5742024c2755d3636110aea0b86d298660bb8b7708894674baec16bb90b7106
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:b23db866fe41e900023d43bb32ab0bf518f1e6a5420a8e82d55f6e24e03b2084
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:b7f9f87a275d47e8076ee759145865575364c2eb44a834cd111cb373a10da0c2
+    - effective_on: "2024-07-26T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:46fcff23fd21772572c5fd62f6bbaf8fa2913d3d464c685bf7a2d0da05a448c0
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-26T00:00:00Z"
+      ref: sha256:75ca59e3e1c81090c7ea273506a7bfd98b9ad1c8f4bbad85242f20eb56210019
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:110ecfa4656ece3241336e434ded12aa4191a96ff1d0d6ca6deebba59be50f40
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:ee0a3a13bc62b4f5cbd3d6adbe351bb414bf4d3b0d8d8d1829878103cfbe2656
+  oci://quay.io/konflux-ci/tekton-catalog/task-deprecated-image-check:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:374901f673cf4b462daccca1bad83c84d57faff66cc67e65bb2425116f38fc30
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:e1394018a5dff915c07d28be99174809c010094411eb08da712a7cd8c4860eb6
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:6b3960271e1ded2cba882e27a7efcac9deacf66d70bb729fc90b355fc4ea3e00
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:6db12fccd5255c065dfd33072f1279020c5295908cbeacb127e897e7f90edc00
+  oci://quay.io/konflux-ci/tekton-catalog/task-deprecated-image-check:0.2:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:205cc671a574b1e04edffe79093f4d7f6e3cd22c4a5320e51e2c8be11423237c
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:5f24ac0ca630de6b13d131076f7223bf4b69302bd9e46aa6f6e0f821c6a8f492
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:216d5df8237d8974be1c80c4af83820917938427e5d118bfc633de6503210a01
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:cd361e4c55d02f8177b829f48a9b4bf18d14069710aba8a3f74ee306117bae60
+  oci://quay.io/konflux-ci/tekton-catalog/task-deprecated-image-check:0.3:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:dcd676dd6611ec8c8dd5d30ca11108775bc633306bd2ab416a04233f47f04d05
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:579598e8bf43167f0fd680c23d4cba2f98f8574a38249b9fbb43931a829572b7
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:0d247eb347c13b6ecf764364cf5eea245a729ab84d832800f91157ea6715435a
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:5713096440a3872d5baea9e09529592588ce5e7a2833f3a91acd2835b3915cd7
+  oci://quay.io/konflux-ci/tekton-catalog/task-deprecated-image-check:0.4:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:ea275aeb7d204ef203a67e6a45a4902479afc1d906d2120f0d8c77d9541ea850
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:0d61c9a7d3f7df8ae4989fa09cd387b2e88234876b2eca527a9b5b7e8ce78ad0
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:d70d970e689a26f1c9e6a1db69580a06cde989c7278c402316278d78c17d2927
+    - effective_on: "2024-07-19T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:66da5fd95296d41e16467c4bb6dfaa51fc572baf6af3066dc401afa1e66ad964
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-19T00:00:00Z"
+      ref: sha256:9d33c7dbb67c8d6580959792cb395790c3bde1ad877d120c9fd62161fc0452a7
+  oci://quay.io/konflux-ci/tekton-catalog/task-download-sbom-from-url-in-attestation:0.1:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: sha256:32ca2ff534b38d2a5da870aa4dc769d8f06ca88ee7036a691dd3643603ffea43
+  oci://quay.io/konflux-ci/tekton-catalog/task-eaas-provision-space:0.1:
+    - effective_on: "2024-07-19T00:00:00Z"
+      ref: sha256:2b4e9953b12824bd4a59bc0d5a0cdfa9ed25a6c9a0184ef27d5c5485a9181da1
+  oci://quay.io/konflux-ci/tekton-catalog/task-ecosystem-cert-preflight-checks:0.1:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: sha256:8838d3e1628dbe61f4851b3640d2e3a9a3079d3ff3da955f4a3e4c2c95a013df
+  oci://quay.io/konflux-ci/tekton-catalog/task-fbc-related-image-check:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:02e8efbb04783d19e0f1f48a4261770625b20e2fdfe0515336570aab9bdf7ecc
+    - effective_on: "2024-08-01T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:538f508e1b6c26e23c971631ffd522c345edb71102b313a7e232af34c27c6ae3
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-01T00:00:00Z"
+      ref: sha256:ce5cb2f1a8fe0d74f216e3eb284c251c81ad9dbf7916371ca51d04dfb3b3724f
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:593297e7304545fde37ba17f08a0bc8af0367c44fc0c7138013d7777a060b270
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:4360edfa706df5499f973f7291c522ff4e1aa0bfd2e5d16c03691cc9b2995e1f
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:28566ed883cced07689bfa5bc12173b3e11a459964b9f25e913c8e2ac765f0d9
+  oci://quay.io/konflux-ci/tekton-catalog/task-fbc-validation:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:37af0ac519e093860b1ba5f88f0beea87d768d402a71e41c214705f33ffd535e
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:13e938bf2acb4a44e28c2b03bdb863ab91185709deaf8e6b9213cf32f57511f2
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:7b3de9a661334dd5c3fae793ae16408d7ea8510d6928ab6b60ce543849f35757
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:99463740d0ee36bc8882e8153fff8056e043264206b11b1bedcb798ae596b05b
+  oci://quay.io/konflux-ci/tekton-catalog/task-gather-deploy-images:0.1:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: sha256:a6c2d69fdd1b289b46a460dfeec63ca7bff6965f50c5ed622a13f73d420196e7
+  oci://quay.io/konflux-ci/tekton-catalog/task-generate-odcs-compose:0.1:
+    - effective_on: "2024-07-05T00:00:00Z"
+      ref: sha256:e56f6043d109766e3cad5a36c8475d09a97a9f8e20ba9ca6c72693768ad7b5af
+  oci://quay.io/konflux-ci/tekton-catalog/task-git-clone-oci-ta:0.1:
+    - effective_on: "2024-08-09T00:00:00Z"
+      ref: sha256:b44ea49656037376056e62cb39d4ed73e5215814556be832f2a425eec31204ab
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:8e6a8aabf591c46dc46ac343d390a719422d8160871848c20df4e9fb1faa01a2
+    - effective_on: "2024-08-01T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: sha256:0c16d8e001d177d632cf0f0f4d4d248fadaebc840e7916e3fbbd737498e2fba3
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-01T00:00:00Z"
+      ref: sha256:3b491d66c808946434743b901d7651c83ca87b34e4340196abae899145301aa2
+  oci://quay.io/konflux-ci/tekton-catalog/task-git-clone:0.1:
+    - effective_on: "2024-08-08T00:00:00Z"
+      ref: sha256:de0ca8872c791944c479231e21d68379b54877aaf42e5f766ef4a8728970f8b3
+    - effective_on: "2024-08-01T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: sha256:07b21ee2a46298d28edf561451f8550c3ae8024c546316765988d02c602827a4
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-01T00:00:00Z"
+      ref: sha256:9ea6101d110d96dd95216ee5fb73213c394ee62280f2bf1d61bb460f56dac027
+  oci://quay.io/konflux-ci/tekton-catalog/task-init:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:1951fbe4f897673f18b57cf6e9423c534d4673481d2caa4b9da83723062dc6f7
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:72790ec7c0e7ffea4b3c2ace667eac09db8b51c3b87a1a2765cebd950dd84599
+  oci://quay.io/konflux-ci/tekton-catalog/task-init:0.2:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:99c98d3e5195e9920482f2187590d6f9150c4b8a2001b1ce5dcd5077abda9481
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:83b7df553a736def52dd47bca2a3614c8fa2c88d112d691a4834289cf8c2abf5
+  oci://quay.io/konflux-ci/tekton-catalog/task-inspect-image:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:081686425a7e37356da5806eb348bceee47964f2a588f760a14e454aba1fd56f
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:dd61ff95a3ee52ad3e63622108d96548b908802a18ca77545337a9321b028117
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:bde078ebc6e6af6f3c0b5712a7853cd03a6adec50133bd3490f47c120cba0ab0
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:01dc43dd7fd6cc32d946bad0610c507459c6c7024712391e39dced727708360f
+  oci://quay.io/konflux-ci/tekton-catalog/task-oci-copy-oci-ta:0.1:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: sha256:83ed35abecfc0af41a20b816af6ecf4672e955a547c654e449b077a0b33e058d
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: sha256:48a31df14230b035c1cfb658f228795ab37e99764d778d68388c5081895cab02
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:adcddcb8daa4f09b62499dfbd1436cfc27c4d7a7ff45cf8dca988a011509bd03
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:6f9d2b8fd58f3a3ad7c468c991ed3ed59f2a70386e4ebdba319b643a276d51ef
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:680cf022ec208effb85ae27617e5a2768948b65564418668a15e4231b2d2c4d9
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: sha256:a8c701de44a0124e0b2c96536fad7a32f26ed4f163e125d50c1b758b53062f93
+    - effective_on: "2024-08-05T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: sha256:67fae99beece6361126941e02e7034f65c11ba776e4c811f533cd04e9a68c5a7
+    - effective_on: "2024-07-25T00:00:00Z"
+      expires_on: "2024-08-05T00:00:00Z"
+      ref: sha256:ddb43ae9d73712d8179723f50effefd0a17a4407c712e42a845f6f90251ac991
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-25T00:00:00Z"
+      ref: sha256:b58e963a86a0e767c69495caefbbb4a5c391dc3c9d954a4bbc4a645ae08fd58a
+  oci://quay.io/konflux-ci/tekton-catalog/task-oci-copy:0.1:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: sha256:dbedac36bcef28d60a2b8482c78161e643fd8edc4b65e72e867c22229ad9a400
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: sha256:8c9f3105af31b59a95f315e80e175f86d4fab764425017bb6e7fda80881e10f0
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:bb6264d9fccd02d014adbaa7881f61453bc1669a3d35e558e4a7c0d928bc9742
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:f7f8819e843105ef0cc1140098b6fcd9ac84a8361f70b1495416afdc07d4c7d4
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: sha256:561a4b75c6d5377fe6132643382f716a1fb9dadc7797d1d6f84d8cbd668016aa
+    - effective_on: "2024-08-05T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: sha256:95302f7dea2bf10a212057607a1c5813ad9ca464460d160f6b87c60bf9e8c521
+    - effective_on: "2024-07-25T00:00:00Z"
+      expires_on: "2024-08-05T00:00:00Z"
+      ref: sha256:3b72388c4ae0955d6a2ab8ef7a2195e205a8cfd9db7371f1bc83d8febb9a8bf9
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-25T00:00:00Z"
+      ref: sha256:5e533b08d817cdf94f9a1493766647d9e322b2e3e1de95147e76f24bca56c827
+  oci://quay.io/konflux-ci/tekton-catalog/task-prefetch-dependencies-oci-ta:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:d7dd772489f276aca89aeb0080410f7112418db838c8f3bde6f672ccda6d8fdc
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:e560be3237f9a5e8d74880427784139fddcfc543e5541e723b0a6b1ad55e562f
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:74b5c30fec6600f53e92e9a35637bf67ec718794166312da45175f01b17e0215
+    - effective_on: "2024-07-14T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:f7e3a9d65b4a21e3e2b51cd0759c3696ea5b5f0505d47ae143386519c26d4c66
+  oci://quay.io/konflux-ci/tekton-catalog/task-prefetch-dependencies:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:9f1dd115789528ed0d9f8469828d180724efb0dca244d17c9ac99663edf5bcda
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:80e4ec86cda6bbb2b4b6787ca3b306a5a80a51d8fd4a498a8464f0005151d7be
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:c22f2537b73add9b9cef0c1ac92187abb8d265756eaa1e6e568a4f4215720cc3
+  oci://quay.io/konflux-ci/tekton-catalog/task-provision-env-with-ephemeral-namespace:0.1:
+    - effective_on: "2024-07-05T00:00:00Z"
+      ref: sha256:2cb481184d31f9eff4549c18908b6a29949baad2bb7ed9494e35f13bfe32f09b
+  oci://quay.io/konflux-ci/tekton-catalog/task-push-dockerfile-oci-ta:0.1:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: sha256:d5c0576c1220c406bfc06816f0cdfd3ce2b8747cbb0ff992347fef2a66132f28
+  oci://quay.io/konflux-ci/tekton-catalog/task-push-dockerfile:0.1:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: sha256:e2c8fa67da036cef81e407e28c14b6a2034c6564009e084c368005a4640c554c
+  oci://quay.io/konflux-ci/tekton-catalog/task-rpm-ostree:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:a9ea542a34ff80d55b82b8f440c86a4d9382fb2529b83bf19df3198ef43e31a6
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:9f9a81b0b267bdaa73c871e5b76a84de92a63a4b0192c00b3af6269331d328e5
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:23041da2b857b92bbfd4feb57bc4bfc3c0e11059621cc332e9c98825b99527d1
+  oci://quay.io/konflux-ci/tekton-catalog/task-s2i-java:0.1:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: sha256:2ccfa9605a376c93ad46e802c6e8ec2242c691a9c66a0dc1fec19ce24c0e8444
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:de31e4fe308659c28159829e275b440a64a87789c4075864d718b875330048e6
+  oci://quay.io/konflux-ci/tekton-catalog/task-s2i-nodejs:0.1:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: sha256:d303eabd11fcaa09f3c0e749f69d3138b065c1a3606a47dbcc9a7be963c031d5
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:d86633422b4bd6307da28c2846d6329ed3a600796388004a779e5b4e64afddc9
+  oci://quay.io/konflux-ci/tekton-catalog/task-sast-snyk-check-oci-ta:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:e531f06bdb9323889417d5649f544d423c1217e72ada0bc3f1b07a29f4a3c1f1
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:903c91b808ddcc2ab27f5973e45759172b76d164126135f9d207ab809831d858
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:3b3f7062a12050076672a74501263d9647c66df506deea47d1ca9227908cf2a0
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:4a91bd7797d2c67678693c5d1f662c97fc72ec1577a9795404b9fb66bea80b87
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:25450d52f9c2fbd2b7c86dbc4f30a812bb5bca7f122064aa64d74bbcddd28c0c
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:034394d6677f218fdbede21ab3c00a0ffe0ee4027b748cf96e8753abfdee40e4
+    - effective_on: "2024-07-12T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:3dbb7fe03431d6e7b102f376d0ac652f3f84838cce152f2f5529bc74790c74b8
+  oci://quay.io/konflux-ci/tekton-catalog/task-sast-snyk-check:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:d68390c8d771a50dcc99841ae224d18f36b677d9da6ad9bf8972878bde5f0f8f
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:d193dbbfa0ab9c96a8c3ad7a875aba798acaf7dcffca088e01a46d190a937837
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:962fbf053705d38ed5c81ea6379eebee32b22fad4a7971183614610e33e8e0f9
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:a74dae0d2a7914c64adb07fe5e4187576f4e8686698612c8792f7c4517c188ea
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:4c672aeda06ed1b9997a3c003153e1764c258195aa46a5f227ab521a81823a84
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:30b59fff49f73b8b4aa2e622ad095970674b2fd46924f12d26e32ca39443ba8e
+  oci://quay.io/konflux-ci/tekton-catalog/task-sbom-json-check:0.1:
+    - effective_on: "2024-07-27T00:00:00Z"
+      ref: sha256:acc9cb8a714f33c0e48d6ca219b6bd0191f09cdd767af4ef3a35d0a5cac53b5d
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:fe6e910cf25664dc6c192023f178a4066e20307d7f888f6d0fe0304c5c11a3c4
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:5e0f1de336f7ba7c2e15729787d77074911a5fb659419afc9f1cd461ef194625
+  oci://quay.io/konflux-ci/tekton-catalog/task-show-sbom-rhdh:0.1:
+    - effective_on: "2024-07-05T00:00:00Z"
+      ref: sha256:1d65efabc1f664050e39d58ba690aa38f8784a1cd84c6ce95edd02c2e5cf9c4d
+  oci://quay.io/konflux-ci/tekton-catalog/task-show-sbom:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:7f8b5499a21de9aca718d0cf2e170949af6b30cacf882d64983471a2c673b1da
+    - effective_on: "2024-07-06T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:bb6de6584cc47524ac69d2fb0bc310e546696b707e4052a465966e2446e33a15
+  oci://quay.io/konflux-ci/tekton-catalog/task-slack-webhook-notification:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:49de41b163c3978d6bcff82b8faa49fc4e702e41f484c9773c040973c170c815
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:e64b572619bc74c10b76b135ab6c2d5494dcbabeb344c3b4e2e88c135c80a275
+  oci://quay.io/konflux-ci/tekton-catalog/task-source-build-oci-ta:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:823b0b7aef15d283252dc3b5c684ae0d6adbf213067b72a5dd08a9b8af1244b6
+    - effective_on: "2024-08-15T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:246daa99f268ee68d3d4f06217273ebe33e243d8a690e389cc386b25cbbf9de2
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: sha256:cb973115016d514c8188a886146a96702a8c4bf9d6233f79b89159b8039d77ec
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:cedd3c2b935df296e99a4d0b4ce0c70c2fddc0e9dc1a9234d4893162f3a3b900
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:7dc607d2d5e81eafcc86cafabbd78c8ae3da49ddd8f501ce7cef34bcbd666d4e
+    - effective_on: "2024-08-04T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:5dbbbf00f813b41c101dfae310c3eaee7654ce114fbcdbbf094092317eeb83ea
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-08-04T00:00:00Z"
+      ref: sha256:3c1ddfff7799dc8224f8e1c3a0989b9e803ca4ac276c8bc80ad736b23cbd73de
+    - effective_on: "2024-07-12T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:f700119afdb2c184b8b369d9d89dab1a11af571ccd152ba14da13267f6f89009
+  oci://quay.io/konflux-ci/tekton-catalog/task-source-build:0.1:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: sha256:9eee3cf280d33106ea5a0a25f48ca54478d4120594c0e1b5a7849d3566cef670
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: sha256:5e34db0e73dcb92495b918119818cd02e57d22dfa112fad45464e57547766478
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:78fad294762e8dc328c12dafb3e5a2b3a6820a7d056b7a4ad19b0a86dd12a5bb
+    - effective_on: "2024-08-04T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:bc4b2f86e4b0f01dc58ebf77f12357b1d73b78f8ddb989383e8d0cfab81b1731
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-08-04T00:00:00Z"
+      ref: sha256:6e1815b51294e897474c2b09bea84cbb11ddbaf8028d7e10cf95a0181c565cc9
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:eacb3f49a4fefc112e5d68f67f9418584e1f942e33b027aaf80612d7eff332d0
+  oci://quay.io/konflux-ci/tekton-catalog/task-summary:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:edec21b38b96b1e3bdd5bfc1c4bd5c57d6b7ddbe2983d1396c2c5116f9303413
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:594a6dc7e331e7e5f2500940fb7197afb479d7f6d1650213d1bd58ce874e1500
+  oci://quay.io/konflux-ci/tekton-catalog/task-summary:0.2:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:d97c04ab42f277b1103eb6f3a053b247849f4f5b3237ea302a8ecada3b24e15b
+    - effective_on: "2024-07-06T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:fc1b0a4efc83c91cd4a24020daabb874b3f33a87c34cd157cda0b7e6d4b7779a
+  oci://quay.io/konflux-ci/tekton-catalog/task-tkn-bundle:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:e2d3916f4cbdae887acef2f4cc9bd4d87929fd2f366f754f8977aff6c4c199dc
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:391e4bbe7a89ad834efabb7a04cac453572e93b572f30785ac58ae7fb60f7777
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:2a29b71cdc156af8995c089437feeb052776b1f43e597a5308b092aa798692e8
+  oci://quay.io/konflux-ci/tekton-catalog/task-update-deployment:0.1:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: sha256:fda5fd942490efed58a344f1ef02abdf5ed97b7ecaa03b82fe561f93d4c87eae
+  oci://quay.io/konflux-ci/tekton-catalog/task-update-infra-deployments:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:cbfb838fe7f227c6d3b7a272867878064430a038e198ca59d6189aed54ad861d
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:b196e8c5a626e881a78b6d3d23a250b4e76d3e0e0008515d7f7f396f360aee27
+  oci://quay.io/konflux-ci/tekton-catalog/task-upload-sbom-to-trustification:0.1:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: sha256:9daed6dd1af92af7239542ac54d070ca741fdcf347f44b34b41295ab5b225fb2
+  oci://quay.io/konflux-ci/tekton-catalog/task-verify-enterprise-contract:0.1:
+    - effective_on: "2024-07-05T00:00:00Z"
+      ref: sha256:de833e529daa6d03586a4ce61c18672da9da83cee25e6d10f5b7ff338fe19e09
+  oci://quay.io/konflux-ci/tekton-catalog/task-verify-signed-rpms:0.1:
+    - effective_on: "2024-07-27T00:00:00Z"
+      ref: sha256:bebcc48920f03a39f9d377763397a617b2b43eceae1c0810be11969a41a0cf0b
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:eecd7b05c7cff0b2d02ad93daa8473f7ce3108696d7cd2d6d541f2e383882d77
+    - effective_on: "2024-07-05T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:6e239e5b9de274c817cdf9b2d55283f6210d9582ae8405ec19398041bf3f96b7
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-acs-deploy-check:0.1:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: sha256:de98e17de2f1b00baa2796afc406416c7db78324213b4431daab9dbdbdcad5cc
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-acs-image-check:0.1:
+    - effective_on: "2024-05-25T00:00:00Z"
+      ref: sha256:6d9d2bca90066dad8bfd306b3e099c49686c56daa12512db547177256c0d7596
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-acs-image-scan:0.1:
+    - effective_on: "2024-05-25T00:00:00Z"
+      ref: sha256:803fbb6a1a4204ebb8b411cb8386ff1c3faabd33fa2f0d400aa8dfc939d4c9ce
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-apply-tags:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:7cf2482a7f50a4c493af0604ff388ff5cc2e2579cb3bf889cfa2587c723aa312
+    - effective_on: "2024-06-13T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:29add9a49a2281a3755a9b580d2b9c5cb110231b14cccf8ade2fd7895a9b4b4a
   oci://quay.io/redhat-appstudio-tekton-catalog/task-build-image-manifest:0.1:
-    - effective_on: "2024-07-06T00:00:00Z"
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: sha256:5bb579a8def39173b2da04d7e090987a2e7736a40e57d39c40383a38d97ad5d7
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:b9d72b13a28a22d07df1226a0b15d22539e849e090186e5ac553c67235350f01
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:081bc8acbbdcd6ae82125c8d19de97353ae18ad2a9f3930bd20addf0ecaab5a4
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:9974b460aec6816d90a56797d36cadd36db42daaad8bdfda34170032805699b9
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
       ref: sha256:e064b63b2311d23d6bf6538347cb4eb18c980d61883f48149bc9c728f76b276c
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-build-vm-image:0.1:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: sha256:89dc51ab324856f80fccce57fee63b6ae5546e110b47954087c98ba78c9ae4d2
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:8177339a5a5c2fc82726f9ac48a8513c22974f9beb3e709f64e916316378bbe8
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:f29fc4bf6006094c1778d117b7fb564c545ff66b8e5486ac1d45550933efc448
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:3223356069d58e23bcbbd2b69dabf28d01c999f36b37b8fe3a7401143befecbe
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-buildah-6gb:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:4b6661d67325265bb0233d30e530e3c65a58556407b3a38206d3d9bef949045d
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:12482715dfa5bf0e8bb412688bf7061ed8a70d259dd8e33cee992c97f2f9876e
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:4c620850b7189fd5339bcdbde6ef5f75109951cb61ed6a43c35934783f6286b1
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:66647def276a1dc06caa3ed356de8ac82f647059e60af2befb1473b6bc8aad2e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:59090e0213c2d43cfe44c7ed969138487963ac0b73bcf602c64e967f1e261bb2
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:1a1261054fd7527d7be2b36f0a08dee89d459ced3a5f2701b96d53cd4b519f27
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:cad3a076717a899400de8ba1d75830b987758cfc84f35408877752d6cbf42b6f
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:4686025d83c43eac48f9d9142d503737deeac62247ca552abdf51f9d458829ff
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:d4cedc59c887f6526448b9819e66a086935e00e53dbcff36584ac8f6687f7488
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:c91a1875953de3300422d83c98d986819057ea86d47d1b256478fb86264a846c
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:8344c378ef1f174191a631cd04d73a112f5530d6039fcc23a5f847d8b9fec621
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-buildah-8gb:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:198677011962e3d459570836cc137b608124dbda8655fc406f0c26c067e55d36
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:f03e4be43eaf5ed80154670539520ce4c7375d489a6d6a3b24340850535cd376
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:27faa2c076f600d6368be6c19ae7a87a6fa98f2a52fa21605b21a00e264882a4
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:65f5efea5c7f33d1cda3605d0fdef5bd7e1a92358986e317c3a347656ab9c067
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:03ab3f73f45366bb0468f1c6ee5472a91f4707193b2166578bf9f33182ee9a6d
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:63b169d8e8948ebf6cd0bcb21aa82c2757bd75fba8e52cb4f1eb9fd55d8c008c
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:c43d7627898e3aade1aa2a9704af9dfb3e99a54262840e9250aebf9ec1f518d9
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:fce9f36cbc06e0a58163106e013bd62a65da956555f94eb75dd1e795421820a2
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:f936f8b662db5e1a6a089fe46cdf67441d90be8eee4c25f69fa97998b13f2d60
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:df76e431c7f85787724cc48a1b7de3b1f3f72c10dec38902d22fbb6364a0b291
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:3dbec109b54aaec4ea7265f008155109a8a70426cab4a8a040b7c92d5360b463
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-buildah-10gb:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:fa80361cedbd370dabda0a6ec3c143e5be35e99ff808b59d14caae1d8231d6cf
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:2cbf50ae138e857813ec5a67d9252f599d9718e7c17fd6c8d1f108b5ac0085ed
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:60b702748ef401c080c68bdc3912ba3cfba638a86203389f9fe26b2a5b932d8e
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:374aa5368e2769434d479c1f61b8037d0c41b4cad7133f0e204d7cc6c1d099a1
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:197778e261e3ecc9b9613d1f5ebfeb74d05d2f9e53646772ef0e2a0277af985b
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:d712140e7a9d441a276bb375a3445b3c360b5cbc6b802f069e06117094cb651b
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:633839d048ae328c93cfacb9b6018aa40526455b0af7e678bb3ed56b7114f379
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:48d7f168116f776d965f228dc7471b33983f6293bf64c2f2166f778e6c5c0877
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:3c97af1dcc25017fe8ed22c506918dca64bbd4a2f59a450febadacda5190dc15
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:d124af266b2401ae33a8f4eedbd0719b30db46db57ab7735ae0db31cb61dff82
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:4145702abe170cb9c1f41b086a130f22927611d4f7384567977237cf8bae0d05
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-buildah-20gb:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:cd0c5c9eba91b083591726a7185bac7c121390061b2a047c5e0b79ff9a580e23
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:ea927de469ccf5b87a61ce1695a69c1d3f7249c267f44b3eb6f5ba2d0dae27f9
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:8c73ed064f7a1f6b9b62633dce39831fc16020d948d71adf25924e2785f3e312
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:af71fe92573bcc62aa1a799d71bf5ed5384526b29a09e6f6718a1916ef386f6b
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:410cdac3bc49e80834e63e4c8c9040f056d1d2a6c8bab672e0806359a166b850
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:db8b6bfce72206ce81d24cadbc8491fa230e5dd822cc752104b71cf71fa50fdd
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:e8b047dbef8655a1c89eecb4a75f8103db3466cdcbe2edfb7a7e1885d586b0ad
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:a2a393db7475bd7a95c02f83c935d4923244a02152c1a83b214c02b47dfa37a4
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:da1352763f012516dd8bdb0c621fe76c51f03a7832ba3eba115d124fa10028d9
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:04089f5d925d1632938c26062d49c95f75375b7b448ee777809d06af407ec79b
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:390dc98bd7be32f131aa78479844c7087e54ea94f3285640138e1134a9dce230
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-buildah-24gb:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:eb19102ea419184d9581176d2a699aeaa3cd38a9ab69f0dd48455c6ca81027e9
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:502ad3b7a3a4f904630bcf1552ea91a4fc6e810d9a4c57655c566959be9e0fc2
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:93780bfdc52cca35fbe10fe38445061d5bb8ddf34cfd21150c38e78364ad5b14
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:7bb478f447b88fc54d54214992127c41bc1aefb29fc545daf786fd6ed25d1114
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:da9c1c203285f32743c0dcb119a3eeb684e84e85c60c0f35b32f1370008c3987
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:348b7f91dbfa8d1dd5fd6ec0cb5c7295eec8c4456913d1000b780d1f38ceaac7
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:d1d9f1beb72738f7b1cc3d7fe86799a4c68a58349c93d0a56a56c9caa1b85ee3
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:4a66148e8c470f5fea794124645cad5cd18d67a23cde4ced83a11ef56e76e3b7
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:b45dda2f40f46436d7d1c6598fd06329eb97e47904c58fc6368f3565b4c091c0
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:256344f770779d7f7622ef2b183dcb1812f1d7d87adf4b2a6e38751b29f05026
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:9b81c58f36822c7ac35b515febe953dd9f063c614ed6c1abed8a1518f2f5f057
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-buildah-oci-ta:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:f34210f5eb1361bc730da98797f872f646855b70a325b0154ea3efaa76e62ee8
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:1c5e2d28da915777efb03a12a5aa45f49f9576875f471dbc20c916e922aca7e3
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:1a5cbca94459d81f7a4a4ea9b8031455534ba02b018dfc3433121f6332b3c735
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:6aa2c19b4eac30a4188a1d7da7dab732054131a4945c2f2c47cf554605835190
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:a907898a5585ac52ec27c2fda1acff97361e01f994b1ef647d8289c7b4efce5d
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:12fb32f70bb223924178f19c3ab974c58c828e57354b3c868b3f2fb16fd95ea7
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:7276d2340f60a21b69dc3719b8fee7239410582cc213e4a50d132defc69c50ef
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:529220cf8efadebf79c314c17789766cbfcc6e597b0ee22b28482c204ac3383b
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:758581be5819cf82c86259ab07503499f134654e8137bda6743b599379cc2cec
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:53c761b5f7a11782ee9d4d5fd3e8c09e1290ae9787111558ad8f96fd02a7714b
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:01c9fd06cdbee17594eed8aba423a93ebb52deb625016ca34c07008abb0aa866
+    - effective_on: "2024-07-14T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:2a42822363c83b95a84c2f6a10c4d957835431d812b1e4a045b51fab1cca9769
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-buildah-remote-oci-ta:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:463e79626dac1ba4fc73c69cc72aea76914dd6649541289c5d93367d8208fb34
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:9bdb07648497e27d7b743e13c27a6e2b82ec6aa388e0654465814e4e1c526e4d
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:87e9f2ccd6f50de0454390b8e61d421784a031d232befdffa7c2a1a0805de71f
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:f9d671edabfb5ee27f2c44908810cd21f92ae0e12c88ed3595d8b8e9a876fbc3
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:215feef4870773bd3f58e5f314f85cc6699ccad161319670bbab141be6e2bcd9
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:b4353484ffc56b668fdf57644591bbe917aeaf95009e1ae6c31e9da3141843d3
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:25dc0ffc99970438db92e8014fca240315e2e4dc1918a6d22626354413d04eb8
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:1b1ce5d54dd04a7d9ffa1e03f507886262eccedf8f49c08c785033a8563629c4
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:64e3fa26187897986df9c824e834e905dd189b156a93fd502398f81c14d13e57
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:9ffd23276895920b4e0a71f94ae6f0231db993a59fcac24fde4d70fc0c74cb12
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:13a84d601276f2cf670cb18e93360c193bff7983203e81ee6947d3d7ec5612c0
+    - effective_on: "2024-07-14T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:5adbcd948912e366089597e60780b1235071e2923ec049c4dd7473a5c27cc764
   oci://quay.io/redhat-appstudio-tekton-catalog/task-buildah-remote:0.1:
-    - effective_on: "2024-07-06T00:00:00Z"
-      ref: sha256:09ad5680c2b9ed61abb40c2f0071b7e889f799a47e1ece546299617d79e299f1
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:191e1c99c7b27d7ccac2c65760b2aa61c9da2f31fb528a9f14f4ad06e0dc6525
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:e1fa8239b03cb1af4f43de542e9a8f443a5ccf46edb451f9bc1b368f1d72ddda
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:bfbd8bf92a28a4892db20e3e311f50da07944e9a9e6151661c8669a937659cba
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:f459481bb0210bf1f68256ec065552d4f9b7dd1d49a467e8e7e288b88b2e0b3d
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:ab5a8cea04a799f65beba0114227f07cad5aeac42e00fc066ea0d5772bfb9454
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:d6794083bde924839178ddec14c656e4dc62e9ca884cf520f1e0710b4947a1d8
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:7eefbb6b2eb16acff64aabb6ec5dd1d5301e1078df2dbb205b7824ae477961de
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:a67bce9fd766d9c325724ee7eb014e5859a391083265d5ff1ef29c54bf9509b5
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:a602b49cc5cb48e4be5fca06acf7828ae4e1f9ae19d4122078b3020bcf946734
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:335318f418303aeb8ee9bb2f973b7ceb98483c3e75e369e050821ba0668d4654
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:690ee3e8a3f4c230e0e862b0122b43abee11e21a9df91055fa0610a6ffe59d7c
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-buildah-rhtap:0.1:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: sha256:1720293c5820a701973a77875f9866d1b4b067de254a9129f1f17d9574cf58b3
+    - effective_on: "2024-06-20T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:4431096003308b2afa60ac489315877dd5631da5af6f696bbc682df328eb1457
   oci://quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.1:
-    - effective_on: "2024-07-06T00:00:00Z"
-      ref: sha256:b8d50716c01160be5deb27dd30f79ae33cc89c72952285cd850323fa0a88b8db
-    - effective_on: "2023-11-06T00:00:00Z"
-      expires_on: "2024-07-06T00:00:00Z"
-      ref: sha256:351af2c0e5eeb92a5d6d4083847c1559475b596cda7671f489756d5302a4c847
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:9d557883a03945eac95311a04f865cb7f075cad9061d0e5b774b93e3b835e9fc
+    - effective_on: "2024-08-16T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:376664724e11256a6e3dccc5e8dc635964363cedcf9fef8632f22d54b88378aa
+    - effective_on: "2024-08-14T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:9b1d2c87f5a6f5a9586e09316d251e1a24f3e7ff93f017bb531c0de4e4eaa258
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:231d49db42729dece0fae11180b619cca55540d5b9f1679d06eb4416c199238c
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:c30eb06767b75be1f9030525e2689fc4686f5e33fc00fc81998f4dd6783fa24f
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:1473e72a7e191a2480767616257f9dc72d3a189628897991b6255f2bf8f1bf69
+    - effective_on: "2024-08-03T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:28262a88872cd0cb586486f6f256ce7c72d80e2f9e64c2c72f4fbd6107c7a208
+    - effective_on: "2024-08-02T00:00:00Z"
+      expires_on: "2024-08-03T00:00:00Z"
+      ref: sha256:4cb5ccd6ab579eb8f81fe4b111006ed6a9d50ca8eaeabc40e5d2fb8151228f16
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-02T00:00:00Z"
+      ref: sha256:b2d7986b918a77b328864bcdd25526ef59e781f098aa2f35b1db806fd893ed41
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:021f7029d0d8a1834bc45a4cd3cc451c03d0f87a5793eb19e1902f8b00dd3d4c
+    - effective_on: "2024-07-10T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:102500165339bc08791775cf2c4dcae3dd4bde557a9009d44dc590ef66dde384
   oci://quay.io/redhat-appstudio-tekton-catalog/task-clair-scan:0.1:
-    - effective_on: "2024-07-06T00:00:00Z"
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:3d9d05162d5807cde4431e80f0f126f4c19994c0c1633629a62ece9a43b966cd
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:4545291a178d5643d64b51424dffb2a48fe35e9918d7385707d7407522a8a7e0
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:de7d372d90939db203072a024f1b13869dd11fac9b196e2a485bdf2a20099902
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
       ref: sha256:44d0df70080e082e72d2694b14130ff512e5e7f2611190161a9b016b4df9fb22
-    - effective_on: "2023-11-01T00:00:00Z"
-      expires_on: "2024-07-06T00:00:00Z"
-      ref: sha256:63b42c0fc23d05e26776a0e7c4f0ab00750096ebfe1eed9a7ba96f8b27713fbf
   oci://quay.io/redhat-appstudio-tekton-catalog/task-clamav-scan:0.1:
-    - effective_on: "2024-07-06T00:00:00Z"
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:559d281b58584386a6faaf0e6641c814f9d877432d1a13bd03076745fffffaf1
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:f026c963ba380d8b0c8d96a075b3b636c047d530b2d12a435966bfc97466a488
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:3d175c521a65a8c00f509e67e62def03ab28911f70868399619c9804b81e38a0
+    - effective_on: "2024-07-26T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:fa168cd63bdebfbefc8392fbf0f5226ff6d12a8692306261a9372ddacb5ccb2c
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-26T00:00:00Z"
+      ref: sha256:fc4f8cd9826cb0eef863237fdb15240a13c075f624f0c6f8433d1ba8e53725ac
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:a6d6d640a5bb33df23e3ae6b1c52589fe5de86144d44e6b4dd6d8ed3a0e89fa4
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
       ref: sha256:5dbe6c646c3502ddc7fbe6016b8584bed6ce3ab7028b0c405ebaabc7e6e9e64c
-    - effective_on: "2023-11-01T00:00:00Z"
-      expires_on: "2024-07-06T00:00:00Z"
-      ref: sha256:d72cb58db88289559676676c3db43906718028e07279f70ddb12ed8bdc8e2860
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-cleanup-build-directories:0.1:
+    - effective_on: "2022-12-31T00:00:00Z"
+      ref: sha256:210a761586251e1db8fb31cb56e1182a7e6e478092efd63e796121b217c01c46
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-configure-build-no-shared:0.1:
+    - effective_on: "2022-11-25T00:00:00Z"
+      ref: sha256:bad106ff77a7a932de04006512052ee8e7b31becdd95ad84fded98e6100c2234
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-configure-build:0.1:
+    - effective_on: "2023-03-05T00:00:00Z"
+      ref: sha256:81ac1aca1901c3385cbc8c500b3a69f4a12485e295cb7003fab1f068632cf9b4
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-conftest-clair:0.1:
+    - effective_on: "2022-12-31T00:00:00Z"
+      ref: sha256:afd12c004c1e4f0a86f117fc1fee85ab19c9f090e281e2e0db0c0c14adecff35
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-deprecated-image-check:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:1c27d69c17cc8b466605c85db5dff7a11920b4e2a4717f3ff5553fa24fad007c
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:f6e137a8f9feb8acf4d7974254f4836dcd7e7598e235d7b96a8b3cdf63fca8f0
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:6d06478edf84017e80577cb1cc2e01e27f42a10706daf19254baee9267549b68
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:0e3622fcf073d1a8cbd646078ea2e3baf2057cbe5485aea545709bc2011bdd70
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-deprecated-image-check:0.2:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:519446046f51d4c6df96b95945ded672184b53c4005fe50a30629d8b013bea9c
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:6015d0a59023119efa692a3211e9132baaece415125f9ece990a6f2ee97a37b7
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:f58f26abf187b06b6144582642292a35363a977dc1012dfc1d8475ee62833e62
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:dca2c68ed8a95a43ea1f7a15ab91542e353937801d330b04eaa5592b425a0495
   oci://quay.io/redhat-appstudio-tekton-catalog/task-deprecated-image-check:0.3:
-    - effective_on: "2023-11-01T00:00:00Z"
-      ref: sha256:d87f8c50a674f57527a0c4f3df6d9093941a2ae84739b55368b3c11702ce340c
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:a74fe4382444f16153ebe696c35f7265aec2c6215a56823e5ff46e36eda901f8
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:78fd1a3ebf5c39ae58b23b0a44b25fc4b94c3593bfacb3d97153a55cbf954629
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:c2eb2f5278cb01665ea533a9d4719b3aa54c09724926240cc34d19354a2c6182
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:29113c9f778fd5cf9332a1ad91a90f6e3483f36355d7fd909affcc13612bf2ce
   oci://quay.io/redhat-appstudio-tekton-catalog/task-deprecated-image-check:0.4:
-    - effective_on: "2024-07-06T00:00:00Z"
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:3f956e0cd9b0a183e4fd95e010aa668a788ef564d3af1f7aecaaf6e2ccc2ce93
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:54bbf968893823622cfbab2dd5a6e08e66ec7649673e21f5a4ebb8944e23535b
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:aaf998c36c66d2330cf45894f9cca52486fcdd73e030620e7107e28da247ed87
+    - effective_on: "2024-07-19T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:ff44cf318e78da9bbc690f41bfb89c38a6265c4903470e75a9834c0d9e4ddd28
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-19T00:00:00Z"
       ref: sha256:3793fbf59e7dadff9d1f7e7ea4cc430c69a2de620b20c7fd69d71bdd5f6c4a60
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-download-sbom-from-url-in-attestation:0.1:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: sha256:5bee2751e97d70aa637cc076b7a6fbbb181c74ea61704a2f9cc4030f644b5f9a
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-eaas-provision-space:0.1:
+    - effective_on: "2024-07-19T00:00:00Z"
+      ref: sha256:54a18b984543da840338ae8c140170fdc93266c5309124ab75fe3bae188a8648
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-ecosystem-cert-preflight-checks:0.1:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: sha256:d468554fb6bede46f828db315eec8d8213a71cfd5bc37e934830759db7065b65
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-fbc-related-image-check:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:38c00986958dae13f64ee4cde7c0873438223d2b94503febc0502ce03c1d59f8
+    - effective_on: "2024-08-01T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:96090b16f81f16b5fc25e1ee090b2330e2faed0da0523e9523489b652cade210
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-01T00:00:00Z"
+      ref: sha256:ef5085c98669ecf8af56b90b9a52355f3039562e99fd4039ca3161b9818cb0f4
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:90cda62ce74690096311ce664549e6d65c0b0fd35b589900c71a4db48ed7ca5d
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:59abc2d781c5a2186e0c5162ed8b63e5a9290f46e91bffa4bc73645abb7a63f8
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:0686e642a2c6d6ef4a893bc0f83454aac8a5a322b6385f6038451c0741ad7c64
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-fbc-validation:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:3cbc576fdac334af9d9439171d21e58bdb6f455435a5495b2ec720fb862f8df6
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:d80637776988af032fb8fa4731e87824924d471b60340e7e0bc7e20b63ff3d43
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:b25174c49dbdb7d551c0d9b5d723062f4bf820507147d4f82d4c723a5972d0ee
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:f6a9dc0edcd1c2ad0058bb7dedc48b20069e2dc0032e9bded426c1909442b734
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-gather-deploy-images:0.1:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: sha256:89f0d52b9531976606eb5c015fb490267113bcf1a7834e7f502b53e4fcd07cba
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-generate-odcs-compose:0.1:
+    - effective_on: "2024-05-18T00:00:00Z"
+      ref: sha256:5517a5b5eb0029beddea08740d57beb649a517368fb57644b9b2bf0ebef81275
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-get-clair-scan:0.1:
+    - effective_on: "2022-12-31T00:00:00Z"
+      ref: sha256:f5259b6194f73e43f8f1d8ec8f7cd7466209fbf8aaf8b8ac4cf653fc54fc6b3b
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-git-clone-oci-ta:0.1:
+    - effective_on: "2024-08-09T00:00:00Z"
+      ref: sha256:75ea089fefa3c81a5afd7d94ebf3674f76bd683f4e60191411dfd8adeb6c9e4b
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:75e36b62271314d1c591b67ab863188d78e3c08c433c8fbd413cfadab6af056b
+    - effective_on: "2024-08-01T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: sha256:0b6344e429581545b8a79b6a8170b87a6bb5638033c5f7935b8daa10898fc30d
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-01T00:00:00Z"
+      ref: sha256:f1e58dcdb32efa9ca5b6f44e3600814624b9a8cfd59a1701379c789eeb8eef5b
   oci://quay.io/redhat-appstudio-tekton-catalog/task-git-clone:0.1:
-    - effective_on: "2024-07-06T00:00:00Z"
-      ref: sha256:ae1249aa49e82da5f99cc23b256172dce8f7c7951ece68ca0419240c4ecb52e2
-    - effective_on: "2023-11-01T00:00:00Z"
-      expires_on: "2024-07-06T00:00:00Z"
-      ref: sha256:b8fddc2d36313a5cde93aba2491205f4a84e6853af6c34ede681f8339b147478
+    - effective_on: "2024-08-08T00:00:00Z"
+      ref: sha256:e1f7a275d722bc3147a65fcd772b16b54ccb6ce81c76939bc1052b2438dd2ccf
+    - effective_on: "2024-08-01T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: sha256:a5fd411406ea3614c583aa57cf4bb4b2d7f024ac98c7fb966343ede3790d64e6
+    - effective_on: "2024-07-18T00:00:00Z"
+      expires_on: "2024-08-01T00:00:00Z"
+      ref: sha256:2be7c9c83159c5247f1f9aab8fa1a2cb29d0df66f6c5bb48a012320bdcb03c7d
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-hacbs-test-evaluation:0.1:
+    - effective_on: "2022-12-01T00:00:00Z"
+      ref: sha256:b80e94aef1440f5e7f002d4d9d928ea6c890d005d2468d9a2bff1ead7606c265
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-init:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:7a477ac988c161759dc43550458ab5f0066fd5ac4f01b36f1776c72100db3f1b
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:b46d189ad3fe12b1048592a1e62c6be92005cb8ce496be89bd26c180e451fc3f
   oci://quay.io/redhat-appstudio-tekton-catalog/task-init:0.2:
-    - effective_on: "2024-07-06T00:00:00Z"
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:61f1202766cd66242c8472b16aa7fa1a20f8d9a5d674cbad27ffd4b3d067e936
+    - effective_on: "2024-06-30T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
       ref: sha256:b23c7a924f303a67b3a00b32a6713ae1a4fccbc5327daa76a6edd250501ea7a3
-    - effective_on: "2023-11-01T00:00:00Z"
-      expires_on: "2024-07-06T00:00:00Z"
-      ref: sha256:3d8f01fa59596a998d30dc700fcf7377f09d60008337290eebaeaf604512ce2b
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-inspect-image:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:e8a2baa6f56a019d2c89c25d7546f0563b1632d4fbc28ff129aaf9a8df35c7f5
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:d28289b4f74eb1cb8748cb259aee7492a84e0828d7f0789016e253ac2fdf9138
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:11ce91b0dfa8d33357bda856fcc019b4abb522824a4367d42c9c5ae9580e7d2b
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:dd1b6273ad4171dd8055af7e4fb6fe5e92b808badb2845726e9704ea3d04ccf2
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-label-check:0.1:
+    - effective_on: "2023-07-24T00:00:00Z"
+      ref: sha256:0c0739fdda24cd1e3587bbab9b07d4493efc21884baac7723f4b446e95bf1fd3
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-oci-copy-oci-ta:0.1:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: sha256:04aee2ba1b58957a52637a981733c4e97b61d9af60e53cc2328d3170ae5102e3
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: sha256:4c3c6ddf300fc4abd9fbeb31f12c7151e2c89f5e2e69b352d8312c8c200d8683
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:d1596397eff56d6f7084fb031d3321e38f3be4c00d7aa6181e8b73d558849272
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:1ba81aecb21350e153e5ea5aca8c4f9101fa994f6c6e0e4e82ff12ef2aca1c2e
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:d53e6b3253009d8158642a1c377d8bfb609cb588f8ee907d4f3c7f1680c22cad
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: sha256:881cb0be19816319cf2ed81b1e075ce03eb9cb12edf6758d1bb88613d7c53364
+    - effective_on: "2024-08-05T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: sha256:3b3ac7ffaa01576e90bf460cc00a7d32706cb09187913b8ca7134149651af9c0
+    - effective_on: "2024-07-25T00:00:00Z"
+      expires_on: "2024-08-05T00:00:00Z"
+      ref: sha256:924a85aebdfdb1faa682f6e91eb5a21c37d0f2721745c5c27836836fad0f4819
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-25T00:00:00Z"
+      ref: sha256:fbc5da5cc98e67117d89343176f1fa24d037aaea6fc8c1812e1eac723624ab45
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-oci-copy:0.1:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: sha256:1053dc0e689cc39a59f2bf10bf3fa3b3ed47b0ef8932d8740ebc7774811bcc0f
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: sha256:c544cf5800cc3fac4822bbe3b98fbccec1ac570aa50423d64b480f76e6d030e6
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:ffd40b4d32c75a651255d4fc694d6190845b1ea24c6750f41355522319982e1f
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:88e3743e75a2931a8dff07da2f6d1b20ff2e208d678a04f30626a64f78a21844
+    - effective_on: "2024-08-08T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: sha256:290404abf450e5586af52e00236c7cf2bc20def16edc92a7406314ea201219fb
+    - effective_on: "2024-08-05T00:00:00Z"
+      expires_on: "2024-08-08T00:00:00Z"
+      ref: sha256:56b5afbd237c9efc726edf23b18955e27946f784e7e2b747c89f1ac45f73fd05
+    - effective_on: "2024-07-25T00:00:00Z"
+      expires_on: "2024-08-05T00:00:00Z"
+      ref: sha256:e129fccac38c8eb1b7552e292d953875d584be81d581503c659986d23fa51d1a
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-25T00:00:00Z"
+      ref: sha256:b1974cf48490861030f8281953774a4c0b403b645c6fa3649d84fd4059f4bc19
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-prefetch-dependencies-oci-ta:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:e179426b46bc44e083ae4b44a4c707dc61a964734e64ee1bc5f2aa6430cd8418
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:922508907b87e640b6ac06317e1062329e1745b3f508f2fc90419bc69a309aac
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:0fd1a00b42875b81b61feb5e45998483134bea10c64e918e3c40cb2c606693d1
+    - effective_on: "2024-07-14T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
+      ref: sha256:a977d1a1b8cb79f29056e20a2e225b1018d84daad8b546de82f30b6326afee22
   oci://quay.io/redhat-appstudio-tekton-catalog/task-prefetch-dependencies:0.1:
-    - effective_on: "2024-07-06T00:00:00Z"
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:fc03e91c047948f1e4906a82a7ad43c3ca35e66c9468c180f405e08affa73bbf
+    - effective_on: "2024-07-29T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:e253dd708ec9520a0286e7abdb4fa1c2ff3f78eba28c22d32f8861fd8a5761d5
+    - effective_on: "2024-06-21T00:00:00Z"
+      expires_on: "2024-07-29T00:00:00Z"
       ref: sha256:9aec3ae9f0f50a05abdc739faf4cbc82832cff16c77ac74e1d54072a882c0503
-    - effective_on: "2023-11-01T00:00:00Z"
-      expires_on: "2024-07-06T00:00:00Z"
-      ref: sha256:9630dd7d50002fdffb4a406fb0c538703ef98bf2f4318249ac3a2c229938dbea
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-provision-env-with-ephemeral-namespace:0.1:
+    - effective_on: "2024-06-29T00:00:00Z"
+      ref: sha256:797c6d82722cc65b3f24fb6b2ca9075268b52b6ce4ef3f9086c9411e8f623d71
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-push-dockerfile-oci-ta:0.1:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: sha256:89fc2b5af1b4e6ad02351fa648a38f795d3b283c339d30331ba6dfd473bfdebd
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-push-dockerfile:0.1:
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: sha256:a1af1b9d836a25f0def8b2814d476e8b44b2ab2408a5ebf9ba26ade761c80100
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-rpm-ostree:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:915360941b7102f7572954b10554ffa0d518b0a11bb91cee0d8b30aa5b566b97
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:7ed15aafb076ab0ac938e6bc1a533e7772040c961da6022a66445e1550f7bb92
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:631ca5decadd324147335440e9bf9985ab944df1cbdae117a42dbf7e8ccd35fd
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-s2i-java:0.1:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: sha256:819c9a7068489dcf493bbdb48f3ff9a0ed72d10b56f257f5dd5bb224d741827e
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:83e5e4383f9c359e3d47944b53ab1d0b99f797fdf3fcc63de671e936b5082cd6
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-s2i-nodejs:0.1:
+    - effective_on: "2024-08-14T00:00:00Z"
+      ref: sha256:dd0466bc1774b6ede277c8e5e320c77312bd16977e54e2ace429692509121c10
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-08-14T00:00:00Z"
+      ref: sha256:9dc3df4bb559f9dacbe14c0de802b091b81b30fae29ad580b374f47e3f8b318d
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-sanity-inspect-image:0.1:
+    - effective_on: "2023-08-17T00:00:00Z"
+      ref: sha256:b9ad0ed56be21c9e3c8e2e636275f92d887e57681c718cd36f117eb6fa547824
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-sanity-label-check:0.1:
+    - effective_on: "2023-08-17T00:00:00Z"
+      ref: sha256:dd49667be76c81264a7fb28e3b43f72c527507e5691720c6262575255cb60689
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-sast-go:0.1:
+    - effective_on: "2023-08-17T00:00:00Z"
+      ref: sha256:fb3ee7e051c11ff688e5c4d7ed682dacd013d7c37c204869a3fcff9d03da200d
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-sast-java-sec-check:0.1:
+    - effective_on: "2023-08-17T00:00:00Z"
+      ref: sha256:75d28da4b817885309bb8f71682e75cf9fbb2d4f0ed7988a94b4aa29dd458bd5
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-sast-snyk-check-oci-ta:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:ef3b7feac8fac3851913b1ef1eedf53f5ee37c5a2e8a0a6eb9cc7a0fe064f995
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:ed5f2b284c46c3c7119e34a46678c921a6deebb79e057a18911e679fcfbc1899
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:1651eefc9f39ecf4dc6fe4eef3ac3b4c27440166d3fdf88c9de1788ba4803b51
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:45f7edd80cde6c303d0bc7060ad2a98f2d84d96dc19e9973cdb6179d0e6ae7eb
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:491b07915c49c8a8dccf32a63e4d89446b61a44f9700db47e5fb62943902a771
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:68909cda016a12853a778a8f9548f348ac9a70c77f58d0ceca8cd31c208a34a5
+    - effective_on: "2024-07-12T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:80f44bd76a16a687681420f04b1d3e5ee974856eee2b5853311660e6fb0422bf
   oci://quay.io/redhat-appstudio-tekton-catalog/task-sast-snyk-check:0.1:
-    - effective_on: "2024-07-06T00:00:00Z"
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:e6acf744313561b376b44724e81188f354b84cf3b0b3875e75efe7e0209637a2
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:00508cb0c2599254085dd58045c8560933c066ce415363886d82f6acb9e6857b
+    - effective_on: "2024-07-27T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:60774c68333a34579d4f5044d395ee8edf87738a7d56205bfb1b83e93dbe0a41
+    - effective_on: "2024-07-22T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:5aa816e7d7f5e03448d658edfeb26e086aa8a2102c4c3c1113651cf5ccfe55b1
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-22T00:00:00Z"
+      ref: sha256:2265f4d38353a931bad027f5b0c1a27e46eb44e555238fc4e0680f7d805abcce
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
       ref: sha256:242acc527a06a11fac9dd6524467f62f3a086c186c5f885973e5780a04d4289c
-    - effective_on: "2023-11-01T00:00:00Z"
-      expires_on: "2024-07-06T00:00:00Z"
-      ref: sha256:eee508768b14655275fbcc2f42f9da1ab553b872dcbe113b0896aa9bcf7e1adf
   oci://quay.io/redhat-appstudio-tekton-catalog/task-sbom-json-check:0.1:
-    - effective_on: "2024-07-06T00:00:00Z"
+    - effective_on: "2024-07-27T00:00:00Z"
+      ref: sha256:d34362be8843715b1bcdaf55fcbf1be315094e0dc840562c5cec22716a37a1fe
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:1f7ae5f2660ddfd447727cdc4a8311ce4d991e5fd8f0a23f1b13d6968d8a97e1
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
       ref: sha256:f9cc253c3a07594bfb51e09c78b46598591cb353e19b16ef514f8312a8b0bada
-    - effective_on: "2023-11-01T00:00:00Z"
-      expires_on: "2024-07-06T00:00:00Z"
-      ref: sha256:717e6e33f02dbe1a28fb743f32699e002c944680c251a50b644f27becb9208e9
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-show-sbom-rhdh:0.1:
+    - effective_on: "2024-04-27T00:00:00Z"
+      ref: sha256:b9be5584d3d9d7ade254f2b4d0bf9a3d1938f226e803d2644ab0b67c3c33ec6a
   oci://quay.io/redhat-appstudio-tekton-catalog/task-show-sbom:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:3ea2255c6ad2dd1074de45227deab51b69dba57901f44dbca80fe1c57646b107
     - effective_on: "2024-07-06T00:00:00Z"
-      ref: sha256:1f1504c5d8b135864111a993ac6f9ab1212907fa0c609223714cdd7bd825e2ca
-    - effective_on: "2023-11-01T00:00:00Z"
-      expires_on: "2024-07-06T00:00:00Z"
-      ref: sha256:202d3c3385120ea847d8f0a82bd8d9d5e873d67f981d6f8a51fb1706caaf6bef
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:9cd4bf015b18621834f40ed02c8dccda1f7834c7d989521a8314bdb3a596e96b
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-slack-webhook-notification:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:666152b2c20e010e97418ffa243a61d9c031101bc8e6332137551dc0b88a49c0
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:3fec4fc12bad3c694645adf00a454e7c0efca271a1ad4c431c1f2c7171185140
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-source-build-oci-ta:0.1:
+    - effective_on: "2024-08-16T00:00:00Z"
+      ref: sha256:49a4c8ee7f38b89e2a0808bd308737f9dafdb35d43b7dc4a766b63df00d887b3
+    - effective_on: "2024-08-15T00:00:00Z"
+      expires_on: "2024-08-16T00:00:00Z"
+      ref: sha256:b133f5a2c36870048d1be80bdf6d8b5311790e960759ae7403657529ccc2049a
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: sha256:d6e92bd97844fef4c4edf529248fa3cbc61a45a9df77a413b52e5521fe3b7498
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:3915ac4415041f08b45eb308e640fe0a274706322e4960141d124871331701ab
+    - effective_on: "2024-08-09T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:ded03faf86d14a17280c062562885bec0f0b7ef6159230d0ffa5ef6e645ffd3d
+    - effective_on: "2024-08-04T00:00:00Z"
+      expires_on: "2024-08-09T00:00:00Z"
+      ref: sha256:5c6dc24cf684eb3ebf6ba1443824cabcc715eee9ab92ba7dc1cf64c1bbdf2f43
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-08-04T00:00:00Z"
+      ref: sha256:3f4b47cea9595acb4281530d39f5eb4d14ca2753b877a385ab87a40e631bcdb8
+    - effective_on: "2024-07-12T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:eae2e52027120286bcd3c1e3a48bf3f1281d9718549b9cd4098dcf11b06b71b8
   oci://quay.io/redhat-appstudio-tekton-catalog/task-source-build:0.1:
-    - effective_on: "2024-07-06T00:00:00Z"
+    - effective_on: "2024-08-15T00:00:00Z"
+      ref: sha256:b1e5a49fed40f9736242f5601d2accb6dba26669dfa1470d6c8d691b3ac46e81
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-15T00:00:00Z"
+      ref: sha256:6e738fbec2ff670b98e2442cde19c8b1234efd96eca557c0b0103ff2021708e8
+    - effective_on: "2024-08-10T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:f28e922dbd3ee8384728e096042a165010b5ff826c3943ed84022789a0594d69
+    - effective_on: "2024-08-04T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:08843a0508f6121e715d69f7aca71bc61a5af680ddd461b4c22bac6b817c6f0f
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-08-04T00:00:00Z"
+      ref: sha256:83ee909cb8f7d659fac380a2521fb60f30c309e5ecb91f3aad2433936e690d98
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
       ref: sha256:1a976a35adee9163e455d0c5aee5d9bf9cb3c6a770656ae347558f8c54977709
   oci://quay.io/redhat-appstudio-tekton-catalog/task-summary:0.1:
-    - effective_on: "2023-11-01T00:00:00Z"
-      ref: sha256:f65a69aaf71cbab382eff685eee522ad35068a4d91d233e76cef7d42ff15a686
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:195a8a2bdf1c06b5632f804caaeba33cb41b0c54c22db4b7870d3916d6bdea7d
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:b0a88232e631c7dafe02a1a3201b4b4f2e03fa7f2dc19f2c8b8b1825fa600adc
   oci://quay.io/redhat-appstudio-tekton-catalog/task-summary:0.2:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:abdf426424f1331c27be80ed98a0fbcefb8422767d1724308b9d57b37f977155
     - effective_on: "2024-07-06T00:00:00Z"
-      ref: sha256:c718319bd57c4f0ab1843cf98d813d0a26a73e0c8ce66218079c3c865508b0fb
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:51d5aaa4e13e9fb4303f667e38d07e758820040032ed9fb3ab5f6afaaffc60d8
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-tkn-bundle:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:7a4887500175075414ccbb3cd4350060aa9d5efa3afaf0d181f99492d3b144ce
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:ecb7335cba0461e42ec9e01153e02b159ffcf825d176d490b4394cb23fe3862a
+    - effective_on: "2024-06-06T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:82fa2140c6ad3dffd5a670cac79589cda5273140ac5e83bd7b4b8ab291997259
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-update-deployment:0.1:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: sha256:5d5c2a0e27a972791b9a5a3e754cfc2b25be739c9654ce9ee7497db4b4d5561c
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-update-infra-deployments:0.1:
+    - effective_on: "2024-08-10T00:00:00Z"
+      ref: sha256:0b935a4b0b7ddb6e27c4930f2d015189c8b1791eb5ab46609407b1884c19ad20
+    - effective_on: "2024-06-15T00:00:00Z"
+      expires_on: "2024-08-10T00:00:00Z"
+      ref: sha256:c26ff9955cb87b47fe36d386aa24fc94996825bb6f6c7f6ff6f72857ebd4c1cb
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-upload-sbom-to-trustification:0.1:
+    - effective_on: "2024-07-06T00:00:00Z"
+      ref: sha256:2813e2bf5bbd5ebb4edd502b69d553e52d1af139a653f57878336684275e4d99
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-utils-task:0.1:
+    - effective_on: "2022-12-31T00:00:00Z"
+      ref: sha256:ae74f2593d5b8f4366ca6a6753e63a3817810a3fce921e0cfe90b65713f7fd2c
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-verify-enterprise-contract-v2:0.2:
+    - effective_on: "2024-07-18T00:00:00Z"
+      ref: sha256:e588654024332fec94e4d70def9d72b3590fe47a0c1686e6700bd5836fe027ab
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-verify-enterprise-contract:0.1:
+    - effective_on: "2024-05-26T00:00:00Z"
+      ref: sha256:f83f0d96a10de1dec20249ac8373a9c9d1fd1d6277ffff514457b3b2dfc83506
+  oci://quay.io/redhat-appstudio-tekton-catalog/task-verify-signed-rpms:0.1:
+    - effective_on: "2024-07-27T00:00:00Z"
+      ref: sha256:ab8ca2ae16c145712e5621e185eb7302fc7f96c25f19f1961fb373737dcc0ba5
+    - effective_on: "2024-07-20T00:00:00Z"
+      expires_on: "2024-07-27T00:00:00Z"
+      ref: sha256:b5c229f461376546990ccfe57aa977fd6f9dbb8516dc29f88e069ce90d665ad9
+    - effective_on: "2024-06-06T00:00:00Z"
+      expires_on: "2024-07-20T00:00:00Z"
+      ref: sha256:2f23673b6d6fb0000f395ae32d2ffa9464824695a0ad7c426f42d6d6eefbfaca

@@ -102,7 +102,6 @@ Rules included:
 * xref:release_policy.adoc#base_image_registries__allowed_registries_provided[Base image checks: Allowed base image registry prefixes list was provided]
 * xref:release_policy.adoc#base_image_registries__base_image_permitted[Base image checks: Base image comes from permitted registry]
 * xref:release_policy.adoc#base_image_registries__base_image_info_found[Base image checks: Base images provided]
-* xref:release_policy.adoc#buildah_build_task__buildah_task_has_dockerfile_param[Buildah build task: Buildah task has Dockerfile param defined]
 * xref:release_policy.adoc#buildah_build_task__buildah_uses_local_dockerfile[Buildah build task: Buildah task uses a local Dockerfile]
 * xref:release_policy.adoc#cve__cve_blockers[CVE checks: Blocking CVE check]
 * xref:release_policy.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]
@@ -324,18 +323,6 @@ This package is responsible for verifying the buildah build task
 * Package name: `buildah_build_task`
 * Package full path: `policy.release.buildah_build_task`
 
-[#buildah_build_task__buildah_task_has_dockerfile_param]
-=== link:#buildah_build_task__buildah_task_has_dockerfile_param[Buildah task has Dockerfile param defined]
-
-Verify that a DOCKERFILE parameter was provided to the buildah task.
-
-*Solution*: Make sure the buildah task has a parameter named 'DOCKERFILE'.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The pipeline task %q does not contain the DOCKERFILE param. This is a requirement for the underlying task %q`
-* Code: `buildah_build_task.buildah_task_has_dockerfile_param`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task.rego#L13[Source, window="_blank"]
-
 [#buildah_build_task__buildah_uses_local_dockerfile]
 === link:#buildah_build_task__buildah_uses_local_dockerfile[Buildah task uses a local Dockerfile]
 
@@ -346,7 +333,7 @@ Verify the Dockerfile used in the buildah task was not fetched from an external 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `DOCKERFILE param value (%s) is an external source`
 * Code: `buildah_build_task.buildah_uses_local_dockerfile`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task.rego#L40[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task.rego#L14[Source, window="_blank"]
 
 [#attestation_package]
 == link:#attestation_package[Builtin attestation policies]

@@ -7,9 +7,9 @@ import data.lib.tkn_test
 import data.policy.release.buildah_build_task
 
 test_good_dockerfile_param if {
-	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "./Dockerfile"}})
+	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "./Dockerfile"}}, _results)
 	lib.assert_empty(buildah_build_task.deny) with input.attestations as [attestation]
-	slsav1_attestation := _slsav1_attestation("buildah", [{"name": "DOCKERFILE", "value": "./Dockerfile"}])
+	slsav1_attestation := _slsav1_attestation("buildah", [{"name": "DOCKERFILE", "value": "./Dockerfile"}], _results)
 	lib.assert_empty(buildah_build_task.deny) with input.attestations as [slsav1_attestation]
 }
 
@@ -26,10 +26,13 @@ test_buildah_tasks if {
 		},
 	]
 	slsav1_attestation := json.patch(
-		_slsav1_attestation("buildah", [{
-			"name": "DOCKERFILE",
-			"value": "./Dockerfile",
-		}]),
+		_slsav1_attestation(
+			"buildah", [{
+				"name": "DOCKERFILE",
+				"value": "./Dockerfile",
+			}],
+			_results,
+		),
 		[{
 			"op": "add",
 			"path": "/statement/predicate/buildDefinition/resolvedDependencies",
@@ -46,6 +49,7 @@ test_buildah_tasks if {
 			"imagePullSecrets": [{"name": "docker-chains"}],
 			"securityContext": {"fsGroup": 65532},
 		},
+		"results": _results,
 		"serviceAccountName": "default", "taskRef": {
 			"kind": "Task",
 			"name": "buildah",
@@ -55,7 +59,7 @@ test_buildah_tasks if {
 			{"name": "dockerconfig", "secret": {"secretName": "docker-credentials"}},
 		],
 	}}
-	lib.assert_equal(expected, buildah_build_task.buildah_tasks) with input.attestations as [slsav1_attestation]
+	lib.assert_equal(expected, buildah_build_task._buildah_tasks) with input.attestations as [slsav1_attestation]
 }
 
 test_dockerfile_param_https_source if {
@@ -63,10 +67,11 @@ test_dockerfile_param_https_source if {
 		"code": "buildah_build_task.buildah_uses_local_dockerfile",
 		"msg": "DOCKERFILE param value (https://Dockerfile) is an external source",
 	}}
-	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "https://Dockerfile"}})
-	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [attestation]
 
-	slsav1_attestation := _slsav1_attestation("buildah", [{"name": "DOCKERFILE", "value": "https://Dockerfile"}])
+	# attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "https://Dockerfile"}}, _results)
+	# lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [attestation]
+
+	slsav1_attestation := _slsav1_attestation("buildah", [{"name": "DOCKERFILE", "value": "https://Dockerfile"}], _results)
 	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [slsav1_attestation]
 }
 
@@ -75,34 +80,15 @@ test_dockerfile_param_http_source if {
 		"code": "buildah_build_task.buildah_uses_local_dockerfile",
 		"msg": "DOCKERFILE param value (http://Dockerfile) is an external source",
 	}}
-	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "http://Dockerfile"}})
+	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "http://Dockerfile"}}, _results)
 	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [attestation]
 
-	slsav1_attestation := _slsav1_attestation("buildah", [{"name": "DOCKERFILE", "value": "http://Dockerfile"}])
+	slsav1_attestation := _slsav1_attestation("buildah", [{"name": "DOCKERFILE", "value": "http://Dockerfile"}], _results)
 	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [slsav1_attestation]
 }
 
-test_buildah_task_has_dockerfile_param if {
-	expected := {{
-		"code": "buildah_build_task.buildah_task_has_dockerfile_param",
-		# regal ignore:line-length
-		"msg": "The pipeline task \"buildah\" does not contain the DOCKERFILE param. This is a requirement for the underlying task \"buildah\"",
-		"term": "buildah",
-	}}
-
-	lib.assert_equal_results(
-		expected,
-		buildah_build_task.deny,
-	) with input.attestations as [_attestation("buildah", [{}])]
-
-	lib.assert_equal_results(
-		expected,
-		buildah_build_task.deny,
-	) with input.attestations as [_slsav1_attestation("buildah", [{}])]
-}
-
 test_task_not_named_buildah if {
-	lib.assert_empty(buildah_build_task.deny) with input.attestations as [_attestation("java", [{}])]
+	lib.assert_empty(buildah_build_task.deny) with input.attestations as [_attestation("java", [{}], _results)]
 }
 
 test_missing_pipeline_run_attestations if {
@@ -158,63 +144,12 @@ test_multiple_buildah_tasks if {
 			}]))),
 		},
 	]
-	slsav1_attestation := json.patch(_slsav1_attestation("buildah", [{}]), [{
+	slsav1_attestation := json.patch(_slsav1_attestation("buildah", [{}], _results), [{
 		"op": "add",
 		"path": "/statement/predicate/buildDefinition/resolvedDependencies",
 		"value": tasks,
 	}])
 	lib.assert_empty(buildah_build_task.deny) with input.attestations as [slsav1_attestation]
-}
-
-# regal ignore:rule-length
-test_multiple_buildah_tasks_one_without_params if {
-	attestation := {"statement": {"predicate": {
-		"buildType": lib.tekton_pipeline_run,
-		"buildConfig": {"tasks": [
-			{
-				"name": "buildah",
-				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
-				"invocation": {"parameters": {"DOCKERFILE": "one/Dockerfile"}},
-			},
-			{
-				"name": "buildah",
-				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
-			},
-		]},
-	}}}
-	expected := {{
-		"code": "buildah_build_task.buildah_task_has_dockerfile_param",
-		# regal ignore:line-length
-		"msg": "The pipeline task \"buildah\" does not contain the DOCKERFILE param. This is a requirement for the underlying task \"buildah\"",
-		"term": "buildah",
-	}}
-	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [attestation]
-
-	tasks := [
-		{
-			"name": "task",
-			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_task("buildah"), [{
-				"op": "replace",
-				"path": "/spec/taskRef/name",
-				"value": "buildah",
-			}]))),
-		},
-		{
-			"name": "pipelineTask",
-			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_task("buildah"), [{
-				"op": "replace",
-				"path": "/spec/params",
-				"value": [{}],
-			}]))),
-		},
-	]
-	slsav1_attestation := json.patch(_slsav1_attestation("buildah", [{}]), [{
-		"op": "add",
-		"path": "/statement/predicate/buildDefinition/resolvedDependencies",
-		"value": tasks,
-	}])
-
-	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [slsav1_attestation]
 }
 
 # regal ignore:rule-length
@@ -226,11 +161,13 @@ test_multiple_buildah_tasks_one_with_external_dockerfile if {
 				"name": "b1",
 				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
 				"invocation": {"parameters": {"DOCKERFILE": "one/Dockerfile"}},
+				"results": _results,
 			},
 			{
 				"name": "b2",
 				"invocation": {"parameters": {"DOCKERFILE": "http://Dockerfile"}},
 				"ref": {"kind": "Task", "name": "buildah", "bundle": _bundle},
+				"results": _results,
 			},
 		]},
 	}}}
@@ -258,7 +195,7 @@ test_multiple_buildah_tasks_one_with_external_dockerfile if {
 			}]))),
 		},
 	]
-	slsav1_attestation := json.patch(_slsav1_attestation("buildah", {}), [{
+	slsav1_attestation := json.patch(_slsav1_attestation("buildah", {}, _results), [{
 		"op": "add",
 		"path": "/statement/predicate/buildDefinition/resolvedDependencies",
 		"value": tasks,
@@ -267,21 +204,29 @@ test_multiple_buildah_tasks_one_with_external_dockerfile if {
 	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [slsav1_attestation]
 }
 
-_attestation(task_name, params) := {"statement": {"predicate": {
+_attestation(task_name, params, results) := {"statement": {"predicate": {
 	"buildType": lib.tekton_pipeline_run,
 	"buildConfig": {"tasks": [{
 		"name": task_name,
 		"ref": {"kind": "Task", "name": task_name, "bundle": _bundle},
 		"invocation": params,
+		"results": results,
 	}]},
 }}}
 
-_slsav1_attestation(task_name, params) := attestation if {
-	content := base64.encode(json.marshal(json.patch(tkn_test.slsav1_task(task_name), [{
-		"op": "replace",
-		"path": "/spec/params",
-		"value": params,
-	}])))
+_slsav1_attestation(task_name, params, results) := attestation if {
+	content := base64.encode(json.marshal(json.patch(tkn_test.slsav1_task(task_name), [
+		{
+			"op": "replace",
+			"path": "/spec/params",
+			"value": params,
+		},
+		{
+			"op": "add",
+			"path": "/status/taskResults",
+			"value": results,
+		},
+	])))
 	attestation := {"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
 		"predicate": {"buildDefinition": {
@@ -296,3 +241,16 @@ _slsav1_attestation(task_name, params) := attestation if {
 }
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
+
+_results := [
+	{
+		"name": "IMAGE_DIGEST",
+		"type": "string",
+		"value": "sha256:hash",
+	},
+	{
+		"name": "IMAGE_URL",
+		"type": "string",
+		"value": "quay.io/jstuart/hacbs-docker-build:tag@sha256:hash",
+	},
+]

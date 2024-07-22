@@ -196,8 +196,10 @@ deny contains result if {
 	_release_restrictions_apply
 
 	snapshot_components := input.snapshot.components
-	component_images := [image.parse(component.containerImage) | component := snapshot_components[_]]
-	component_images_digests := [component_image.digest | component_image := component_images[_]]
+	component_images_digests := [component_image.digest |
+		some component in snapshot_components
+		component_image := image.parse(component.containerImage)
+	]
 
 	some manifest in _csv_manifests
 	all_image_refs := all_image_ref(manifest)

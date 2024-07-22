@@ -116,11 +116,10 @@ _ref(task) := r if {
 # There are a few reasons the label may not be available. The first is due to incomplete data,
 # usually in the unit tests. The second is if this is processing a Pipeline/Task definition
 # directly. Finally, the last is if the Task is an inlined/embedded Task.
-_ref_name(task) := name if {
+_ref_name(task) := value if {
 	# Location of labels in SLSA Provenance v1.0
 	some label, value in task.metadata.labels
 	label == "tekton.dev/task"
-	name := value
 } else := name if {
 	# Location of labels in SLSA Provenance v0.2
 	some label, value in task.invocation.environment.labels
@@ -161,9 +160,8 @@ _pinned_ref_for_bundle(bundle) := digest if {
 	digest := parts.digest
 } else := ""
 
-_pinned_ref_for_git(revision) := commit if {
+_pinned_ref_for_git(revision) := revision if {
 	_is_sha1(revision)
-	commit := revision
 } else := ""
 
 _with_pinned_ref(obj, pinned_ref) := new_obj if {

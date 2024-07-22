@@ -6,7 +6,7 @@ require (
 	github.com/enterprise-contract/ec-cli v0.5.56
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.54.0
-	github.com/styrainc/regal v0.23.1
+	github.com/styrainc/regal v0.24.0
 	github.com/tektoncd/cli v0.37.0
 	oras.land/oras v1.2.0
 )
@@ -299,7 +299,7 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
-	github.com/owenrumney/go-sarif/v2 v2.3.1 // indirect
+	github.com/owenrumney/go-sarif/v2 v2.3.3 // indirect
 	github.com/package-url/packageurl-go v0.1.3 // indirect
 	github.com/pdevine/go-asciisprite v0.1.6 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.2 // indirect

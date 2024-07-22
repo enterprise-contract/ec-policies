@@ -275,7 +275,7 @@ _rule_data_errors contains msg if {
 		"uniqueItems": true,
 	}
 
-	strings := {
+	strings_array := {
 		"$schema": "http://json-schema.org/draft-07/schema#",
 		"type": "array",
 		"items": {"type": "string"},
@@ -288,7 +288,7 @@ _rule_data_errors contains msg if {
 		["erred_tests_results", statuses],
 		["skipped_tests_results", statuses],
 		["warned_tests_results", statuses],
-		["informative_tests", strings],
+		["informative_tests", strings_array],
 	]
 
 	some item in items

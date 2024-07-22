@@ -70,8 +70,8 @@ test_future_required_tasks_not_met if {
 
 test_extra_tasks_ignored if {
 	pipeline := _pipeline_with_tasks_and_label(_expected_future_required_tasks | {"spam"}, [], [])
-	all := required_tasks.deny | required_tasks.warn
-	lib.assert_empty(all) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
+	results := required_tasks.deny | required_tasks.warn
+	lib.assert_empty(results) with data["pipeline-required-tasks"] as _time_based_pipeline_required_tasks
 		with data.trusted_tasks as _trusted_tasks
 		with input as pipeline
 }

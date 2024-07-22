@@ -98,11 +98,10 @@ task_name(task) := refs.task_ref(task).name
 pipeline_task_name(task) := task.name
 
 # returns a slsav1.0 pipeline task name
-pipeline_task_name(task) := name if {
+pipeline_task_name(task) := value if {
 	not task.name
 	some label, value in task.metadata.labels
 	label == "tekton.dev/pipelineTask"
-	name := value
 }
 
 # task_params returns an object where keys are parameter names

@@ -71,11 +71,9 @@ _non_empty_strings(values) := [trimmed_value |
 	count(trimmed_value) > 0
 ]
 
-images_with_digests(tasks) := [sprintf("%v@%v", [i, d]) |
-	some y
+images_with_digests(tasks) := [sprintf("%v@%v", [image, digest]) |
 	some task in tasks
-	images := task_result_artifact_url(task)
-	digests := task_result_artifact_digest(task)
-	i := images[y]
-	d := digests[y]
+	some image_index, image in task_result_artifact_url(task)
+	some digest_index, digest in task_result_artifact_digest(task)
+	image_index == digest_index
 ]

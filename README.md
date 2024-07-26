@@ -168,7 +168,7 @@ See also
 * [Policy rule documentation][policydocs]
 * ["Verify Enterprise Contract" task definition][taskdef]
 * [github.com/enterprise-contract][contract]
-* [github.com/redhat-appstudio][appstudio]
+* [github.com/konflux-ci][konflux-ci]
 
 [rego]: https://www.openpolicyagent.org/docs/latest/policy-language/
 [conftest]: https://www.conftest.dev/
@@ -181,8 +181,8 @@ See also
 [taskdef]: https://github.com/enterprise-contract/ec-cli/blob/main/tasks/verify-enterprise-contract/0.1/verify-enterprise-contract.yaml
 [contract]: https://github.com/enterprise-contract
 [ec-cli]: https://github.com/enterprise-contract/ec-cli
-[appstudio]: https://github.com/redhat-appstudio
-[builddefs]: https://github.com/redhat-appstudio/build-definitions
+[konflux-ci]: https://github.com/konflux-ci
+[builddefs]: https://github.com/konflux-ci/build-definitions
 [authoring]: https://enterprisecontract.dev/docs/ec-policies/authoring.html
 [antora]: https://docs.antora.org/antora/latest/install-and-run-quickstart/
 [quay]: https://quay.io/

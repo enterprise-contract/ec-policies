@@ -16,7 +16,7 @@ $ cat images.json
 {
   "components": [
     {
-      "containerImage": "quay.io/redhat-appstudio/ec-golden-image:latest",
+      "containerImage": "quay.io/konflux-ci/ec-golden-image:latest",
       "source": {
         "git": {
           "revision": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
@@ -32,12 +32,12 @@ $ ec validate image --images images.json --output policy-input \
 ```
 
 [clamav-task.json](./clamav-task.json) contains a Task definition. It is a direct copy of the
-[ClamAV Task](https://github.com/redhat-appstudio/build-definitions/tree/main/task/clamav-scan)
+[ClamAV Task](https://github.com/konflux-ci/build-definitions/tree/main/task/clamav-scan)
 found in the
-[build-definitions](https://github.com/redhat-appstudio/build-definitions) repository. To fetch the
+[build-definitions](https://github.com/konflux-ci/build-definitions) repository. To fetch the
 latest:
 
 ```text
-curl -L https://raw.githubusercontent.com/redhat-appstudio/build-definitions/main/task/clamav-scan/0.1/clamav-scan.yaml | \
+curl -L https://raw.githubusercontent.com/konflux-ci/build-definitions/main/task/clamav-scan/0.1/clamav-scan.yaml | \
   yq '.' -o json  > acceptance/samples/clamav-task.json
 ```

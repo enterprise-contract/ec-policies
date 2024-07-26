@@ -118,6 +118,27 @@ Then to verify the pipeline definition using the defined policies:
 
     make check-pipeline
 
+### Running policies against local [ec-cli] build
+
+Build a local version of `ec-cli` in your local ec-cli repo:
+
+    make build
+
+Create a `policy.yaml` file in your local `ec-cli` repo with something like:
+
+    ---
+    sources:
+      - policy:
+        - <path-to>/ec-policies/policy/lib
+        - <path-to>/ec-policies/policy/release
+      data:
+        - oci::quay.io/konflux-ci/tekton-catalog/data-acceptable-bundles:latest
+        - github.com/release-engineering/rhtap-ec-policy//data
+
+Run the locally built `ec-cli` command
+
+    dist/ec_<arch> validate image --verbose --images '{"components": [{"containerImage": "<container-image>", "name":"my-image", "source":{"git":{"url":"<repository-url>","revision":"<commit-id>"}}}]}' --policy 'policy.yaml' --public-key <public-key-to-verify-the-image> --strict false  --ignore-rekor --verbose --output=text
+
 
 Policy bundles
 --------------
@@ -159,6 +180,7 @@ See also
 [policydocs]: https://enterprisecontract.dev/docs/ec-policies/release_policy.html
 [taskdef]: https://github.com/enterprise-contract/ec-cli/blob/main/tasks/verify-enterprise-contract/0.1/verify-enterprise-contract.yaml
 [contract]: https://github.com/enterprise-contract
+[ec-cli]: https://github.com/enterprise-contract/ec-cli
 [appstudio]: https://github.com/redhat-appstudio
 [builddefs]: https://github.com/redhat-appstudio/build-definitions
 [authoring]: https://enterprisecontract.dev/docs/ec-policies/authoring.html

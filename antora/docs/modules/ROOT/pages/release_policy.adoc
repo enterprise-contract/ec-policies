@@ -912,6 +912,38 @@ Check the image metadata for the presence of a "quay.expires-after" label. If it
 * Code: `quay_expiration.expires_label`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/quay_expiration.rego#L16[Source, window="_blank"]
 
+[#rhtap_jenkins_package]
+== link:#rhtap_jenkins_package[RHTAP Jenkins Pipeline Build Checks]
+
+Some initial checks for images built using an RHTAP Jenkins pipeline. Note that the RHTAP Jenkins pipeline is WIP currently, but will be shipped in an upcoming release of RHTAP. This is bare-bones currently but it's expected more useful checks will be added later. RHTAP Jenkins pipelines are defined in https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
+
+* Package name: `rhtap_jenkins`
+* Package full path: `policy.release.rhtap_jenkins`
+
+[#rhtap_jenkins__invocation_id_found]
+=== link:#rhtap_jenkins__invocation_id_found[RHTAP Jenkins SLSA Invocation ID present]
+
+Confirm that an invocation ID was found in the attestation in the expected location.
+
+*Solution*: For some reason the invocation id was missing or empty in the build provenance. It should be located at `predicate.runDetails.metadata.invocationID` in the attestation statement.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The build provenance metadata did not contain an invocation id.`
+* Code: `rhtap_jenkins.invocation_id_found`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_jenkins.rego#L37[Source, window="_blank"]
+
+[#rhtap_jenkins__attestation_found]
+=== link:#rhtap_jenkins__attestation_found[RHTAP Jenkins SLSA Provenance Attestation Found]
+
+Verify an attestation created by the RHTAP Jenkins build pipeline is present.
+
+*Solution*: It appears the build pipeline did not create a SLSA provenance attestation. Check the logs in Jenkins for the cosign-sign-attest stage to see if you can find out why.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The expected SLSA v1.0 provenance with build type %s was not found.`
+* Code: `rhtap_jenkins.attestation_found`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_jenkins.rego#L18[Source, window="_blank"]
+
 [#redhat_manifests_package]
 == link:#redhat_manifests_package[Red Hat manifests]
 

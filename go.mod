@@ -3,7 +3,7 @@ module github.com/enterprise-contract/ec-policies
 go 1.22.2
 
 require (
-	github.com/enterprise-contract/ec-cli v0.5.56
+	github.com/enterprise-contract/ec-cli v0.5.68
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.54.0
 	github.com/styrainc/regal v0.24.0
@@ -427,11 +427,11 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/api v0.29.6 // indirect
-	k8s.io/apiextensions-apiserver v0.29.6 // indirect
-	k8s.io/apimachinery v0.29.6 // indirect
+	k8s.io/api v0.29.7 // indirect
+	k8s.io/apiextensions-apiserver v0.29.7 // indirect
+	k8s.io/apimachinery v0.29.7 // indirect
 	k8s.io/cli-runtime v0.29.1 // indirect
-	k8s.io/client-go v0.29.6 // indirect
+	k8s.io/client-go v0.29.7 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20240126223410-2919ad4fcfec // indirect
 	k8s.io/utils v0.0.0-20240102154912-e7106e64919e // indirect

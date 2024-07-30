@@ -190,6 +190,14 @@ Rules included:
 * xref:release_policy.adoc#rpm_ostree_task__builder_image_param[rpm-ostree Task: Builder image parameter]
 * xref:release_policy.adoc#rpm_ostree_task__rule_data[rpm-ostree Task: Rule data]
 
+| [#rhtap-jenkins]`rhtap-jenkins`
+a| A set of policy rules to validate artifacts built using RHTAP Jenkins pipelines.
+
+Rules included:
+
+* xref:release_policy.adoc#rhtap_jenkins__invocation_id_found[RHTAP Jenkins: RHTAP Jenkins SLSA Invocation ID present]
+* xref:release_policy.adoc#rhtap_jenkins__attestation_found[RHTAP Jenkins: RHTAP Jenkins SLSA Provenance Attestation Found]
+
 | [#slsa3]`slsa3`
 a| Includes policy rules required to meet SLSA Level 3.
 

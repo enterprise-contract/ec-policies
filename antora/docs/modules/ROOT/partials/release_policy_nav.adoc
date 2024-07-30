@@ -5,6 +5,7 @@
 *** xref:release_policy.adoc#minimal[minimal]
 *** xref:release_policy.adoc#policy_data[policy_data]
 *** xref:release_policy.adoc#redhat[redhat]
+*** xref:release_policy.adoc#rhtap-jenkins[rhtap-jenkins]
 *** xref:release_policy.adoc#slsa3[slsa3]
 ** Release Rules
 *** xref:release_policy.adoc#attestation_type_package[Attestation type]

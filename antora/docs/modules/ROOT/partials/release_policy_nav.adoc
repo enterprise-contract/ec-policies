@@ -62,6 +62,7 @@
 *** xref:release_policy.adoc#olm_package[OLM]
 **** xref:release_policy.adoc#olm__csv_semver_format[ClusterServiceVersion semver format]
 **** xref:release_policy.adoc#olm__feature_annotations_format[Feature annotations have expected value]
+**** xref:release_policy.adoc#olm__allowed_registries[Images referenced by OLM bundle are from allowed registries]
 **** xref:release_policy.adoc#olm__required_olm_features_annotations_provided[Required OLM feature annotations list provided]
 **** xref:release_policy.adoc#olm__subscriptions_annotation_format[Subscription annotation has expected value]
 **** xref:release_policy.adoc#olm__inaccessible_snapshot_references[Unable to access images in the input snapshot]

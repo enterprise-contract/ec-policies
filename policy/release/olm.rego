@@ -78,7 +78,7 @@ deny contains result if {
 #
 deny contains result if {
 	some manifest in _csv_manifests
-	some annotation in lib.rule_data(_rule_data_key)
+	some annotation in lib.rule_data("required_olm_features_annotations")
 	value := object.get(manifest.metadata.annotations, annotation, "")
 	not value in {"true", "false"}
 	result := lib.result_helper_with_term(rego.metadata.chain(), [annotation], annotation)
@@ -215,6 +215,39 @@ deny contains result if {
 	result := lib.result_helper_with_term(rego.metadata.chain(), [image.str(unmatched_image.ref)], image.str(unmatched_image.ref))
 }
 
+# METADATA
+# title: Images referenced by OLM bundle are from allowed registries
+# description: >-
+#   Each image referenced by the OLM bundle should match an entry in the list of prefixes
+#   defined by the rule data key `allowed_registry_prefixes` in your policy configuration.
+# custom:
+#   short_name: allowed_registries
+#   failure_msg: The %q CSV image reference is not from an allowed registry.
+#   solution: >-
+#     Use image from an allowed registry, or modify your
+#     xref:ec-cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
+#   collections:
+#   - redhat
+#   effective_on: 2024-09-01T00:00:00Z
+#
+deny contains result if {
+	# The presence of expected rule_data verified in _rule_data_errors
+	allowed_registry_prefixes := lib.rule_data("allowed_registry_prefixes")
+
+	# Parse manifests from snapshot
+	some csv_manifest in _csv_manifests
+
+	# Parse image references from each manifest
+	all_csv_images := all_image_ref(csv_manifest)
+
+	some img in all_csv_images
+	not _image_registry_allowed(img.ref.repo, allowed_registry_prefixes)
+
+	img_str := image.str(img.ref)
+
+	result := lib.result_helper_with_term(rego.metadata.chain(), [img_str], img.ref.repo)
+}
+
 _name(o) := n if {
 	n := o.name
 } else := "unnamed"
@@ -335,11 +368,12 @@ _csv_manifests contains manifest if {
 	manifest.kind == "ClusterServiceVersion"
 }
 
-# Verify allowed_registry_prefixes is a non-empty list of strings
+# Verify allowed_registry_prefixes & required_olm_features_annotations are non-empty list of strings
 _rule_data_errors contains msg if {
 	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
 	# handle an Array directly.
-	value := json.marshal(lib.rule_data(_rule_data_key))
+	some rule_data_key in _rule_data_keys
+	value := json.marshal(lib.rule_data(rule_data_key))
 	some violation in json.match_schema(
 		value,
 		{
@@ -350,10 +384,13 @@ _rule_data_errors contains msg if {
 			"minItems": 1,
 		},
 	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, violation.error])
+	msg := sprintf("Rule data %s has unexpected format: %s", [rule_data_key, violation.error])
 }
 
-_rule_data_key := "required_olm_features_annotations"
+_rule_data_keys := [
+	"required_olm_features_annotations",
+	"allowed_registry_prefixes",
+]
 
 _subscriptions_errors contains msg if {
 	some manifest in _csv_manifests
@@ -391,4 +428,10 @@ default _release_restrictions_apply := false
 
 _release_restrictions_apply if {
 	lib.rule_data("pipeline_intention") == "release"
+}
+
+# Used by allowed_registries
+_image_registry_allowed(image_repo, allowed_prefixes) if {
+	some allowed_prefix in allowed_prefixes
+	startswith(image_repo, allowed_prefix)
 }

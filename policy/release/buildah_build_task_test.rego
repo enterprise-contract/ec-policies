@@ -204,6 +204,19 @@ test_multiple_buildah_tasks_one_with_external_dockerfile if {
 	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [slsav1_attestation]
 }
 
+test_add_capabilities_param if {
+	expected := {{
+		"code": "buildah_build_task.add_capabilities_param",
+		"msg": "ADD_CAPABILITIES parameter is not allowed",
+	}}
+
+	attestation := _slsav1_attestation("buildah", [{"name": "ADD_CAPABILITIES", "value": "spam"}], _results)
+	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [attestation]
+
+	attestation_spaces := _slsav1_attestation("buildah", [{"name": "ADD_CAPABILITIES", "value": "   "}], _results)
+	lib.assert_empty(buildah_build_task.deny) with input.attestations as [attestation_spaces]
+}
+
 _attestation(task_name, params, results) := {"statement": {"predicate": {
 	"buildType": lib.tekton_pipeline_run,
 	"buildConfig": {"tasks": [{

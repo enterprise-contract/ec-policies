@@ -32,6 +32,29 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [dockerfile_param])
 }
 
+# METADATA
+# title: ADD_CAPABILITIES parameter
+# description: >-
+#   Verify the ADD_CAPABILITIES parameter of a builder Tasks was not used.
+# custom:
+#   short_name: add_capabilities_param
+#   failure_msg: ADD_CAPABILITIES parameter is not allowed
+#   solution: >-
+#     The ADD_CAPABILITIES parameter is not allowed for most container image builds. This, however,
+#     might be required for certain build types, e.g. flatpaks. Either unset the parameter or use a
+#     policy config that excludes this policy rule.
+#   collections:
+#   - redhat
+#   effective_on: 2024-08-31T00:00:00Z
+#   depends_on:
+#   - attestation_type.known_attestation_type
+#
+deny contains result if {
+	some param in _add_capabilities_params
+	trim_space(param) != ""
+	result := lib.result_helper(rego.metadata.chain(), [])
+}
+
 _not_allowed_prefix(search) if {
 	not_allowed_prefixes := ["http://", "https://"]
 	some not_allowed_prefix in not_allowed_prefixes
@@ -46,4 +69,9 @@ _buildah_tasks contains task if {
 _dockerfile_params contains param if {
 	some buildah_task in _buildah_tasks
 	param := lib.tkn.task_param(buildah_task, "DOCKERFILE")
+}
+
+_add_capabilities_params contains param if {
+	some buildah_task in _buildah_tasks
+	param := lib.tkn.task_param(buildah_task, "ADD_CAPABILITIES")
 }

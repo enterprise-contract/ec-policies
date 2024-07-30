@@ -71,7 +71,7 @@
 **** xref:release_policy.adoc#provenance_materials__git_clone_task_found[Git clone task found]
 *** xref:release_policy.adoc#quay_expiration_package[Quay expiration]
 **** xref:release_policy.adoc#quay_expiration__expires_label[Expires label]
-*** xref:release_policy.adoc#rhtap_jenkins_package[RHTAP Jenkins Pipeline Build Checks]
+*** xref:release_policy.adoc#rhtap_jenkins_package[RHTAP Jenkins]
 **** xref:release_policy.adoc#rhtap_jenkins__invocation_id_found[RHTAP Jenkins SLSA Invocation ID present]
 **** xref:release_policy.adoc#rhtap_jenkins__attestation_found[RHTAP Jenkins SLSA Provenance Attestation Found]
 *** xref:release_policy.adoc#redhat_manifests_package[Red Hat manifests]

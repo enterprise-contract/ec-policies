@@ -74,13 +74,12 @@ warn contains result if {
 #   failure_msg: CVE scan uses deprecated result name
 #   solution: >-
 #     Use the newer `SCAN_OUTPUT` result name.
-#   collections:
-#   - minimal
-#   - redhat
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
 warn contains result if {
+	# NOTE: This policy rule is purposely not added to any collection because the new result name
+	# has not been widely adopted yet. See https://issues.redhat.com/browse/STONEINTG-660
 	count(lib.results_named(_result_name)) == 0
 	count(lib.results_named(_deprecated_result_name)) > 0
 	result := lib.result_helper(rego.metadata.chain(), [])

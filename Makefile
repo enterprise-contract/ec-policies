@@ -107,6 +107,10 @@ live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` ne
 	  git ls-files -c -o '*.rego' | entr -r -d -c $(MAKE) --no-print-directory quiet-test; \
 	done
 
+.PHONY: watch
+watch: ## Run tests in watch mode, use TEST=package/test to focus on single package or test
+	@$(OPA) test $(TEST_FILES) --verbose --watch $(if $(TEST),--run=$(TEST))
+
 .PHONY: fmt
 fmt: ## Apply default formatting to all rego files. Use before you commit
 	@$(OPA) fmt . --write

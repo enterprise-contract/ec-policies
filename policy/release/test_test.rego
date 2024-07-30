@@ -536,4 +536,52 @@ test_rule_data_provided if {
 	lib.assert_equal_results(test.deny, expected) with data.rule_data as d
 }
 
+test_results_and_counts if {
+	task1 := tkn_test.slsav1_task_result_ref("task1", [{
+		"name": lib.task_test_result_name,
+		"type": "string",
+		"value": {"result": "ERROR", "failures": 1, "warnings": 2, "successes": 3},
+	}])
+	task2 := tkn_test.slsav1_task_result_ref("task2", [{
+		"name": lib.task_test_result_name,
+		"type": "string",
+		"value": {"result": "FAILURE", "failures": 1, "warnings": 0, "successes": 3},
+	}])
+	task3 := tkn_test.slsav1_task_result_ref("task3", [{
+		"name": lib.task_test_result_name,
+		"type": "string",
+		"value": {"result": "SUCCESS", "failures": 0, "warnings": 2, "successes": 3},
+	}])
+	attestations := [lib_test.mock_slsav1_attestation_with_tasks([task1, task2, task3])]
+	lib.assert_equal_results(test.deny, {
+		{
+			"code": "test.no_erred_tests",
+			"msg": `The Task "task1" from the build Pipeline reports a test erred`,
+			"term": "task1",
+		},
+		{
+			"code": "test.no_failed_tests",
+			"msg": `The Task "task1" from the build Pipeline reports a failed test`,
+			"term": "task1",
+		},
+		{
+			"code": "test.no_failed_tests",
+			"msg": `The Task "task2" from the build Pipeline reports a failed test`,
+			"term": "task2",
+		},
+	}) with input.attestations as attestations
+	lib.assert_equal_results(test.warn, {
+		{
+			"code": "test.no_test_warnings",
+			"msg": `The Task "task1" from the build Pipeline reports a test contains warnings`,
+			"term": "task1",
+		},
+		{
+			"code": "test.no_test_warnings",
+			"msg": `The Task "task3" from the build Pipeline reports a test contains warnings`,
+			"term": "task3",
+		},
+	}) with input.attestations as attestations
+}
+
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"

@@ -32,7 +32,7 @@ import data.lib.image
 #   - test.test_data_found
 #
 warn contains result if {
-	some test in resulted_in(lib.rule_data("failed_tests_results"))
+	some test in _resulted_in(lib.rule_data("failed_tests_results"), "failures")
 	test in lib.rule_data("informative_tests")
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
@@ -56,7 +56,7 @@ warn contains result if {
 #   - test.test_data_found
 #
 warn contains result if {
-	some test in resulted_in(lib.rule_data("warned_tests_results"))
+	some test in _resulted_in(lib.rule_data("warned_tests_results"), "warnings")
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
 
@@ -157,7 +157,7 @@ deny contains result if {
 #   - test.test_data_found
 #
 deny contains result if {
-	some test in resulted_in(lib.rule_data("failed_tests_results"))
+	some test in _resulted_in(lib.rule_data("failed_tests_results"), "failures")
 	not test in lib.rule_data("informative_tests")
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
@@ -180,7 +180,7 @@ deny contains result if {
 #   - test.test_data_found
 #
 deny contains result if {
-	some test in resulted_in(lib.rule_data("erred_tests_results"))
+	some test in _resulted_in(lib.rule_data("erred_tests_results"), "n/a")
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
 
@@ -206,7 +206,7 @@ deny contains result if {
 #   effective_on: 2023-12-08T00:00:00Z
 #
 deny contains result if {
-	some test in resulted_in(lib.rule_data("skipped_tests_results"))
+	some test in _resulted_in(lib.rule_data("skipped_tests_results"), "n/a")
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
 
@@ -258,12 +258,20 @@ deny contains result if {
 	)
 }
 
+_did_result(test, results, _) if {
+	test.result in results
+}
+
+_did_result(test, _, key) if {
+	test[key] > 0
+}
+
 # Collect all tests that have resulted with one of the given
 # results and convert their name to "test:<name>" format
-resulted_in(results) := {r |
+_resulted_in(results, key) := {r |
 	some result in lib.results_from_tests
 	test := result.value
-	test.result in results
+	_did_result(test, results, key)
 	r := result.name
 }
 

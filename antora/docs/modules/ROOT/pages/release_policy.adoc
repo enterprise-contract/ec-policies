@@ -73,6 +73,7 @@ Rules included:
 
 * xref:release_policy.adoc#attestation_type__known_attestation_types_provided[Attestation type: Known attestation types provided]
 * xref:release_policy.adoc#base_image_registries__allowed_registries_provided[Base image checks: Allowed base image registry prefixes list was provided]
+* xref:release_policy.adoc#buildah_build_task__disallowed_platform_patterns_pattern[Buildah build task: disallowed_platform_patterns format]
 * xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
 * xref:release_policy.adoc#external_parameters__pipeline_run_params_provided[External parameters: PipelineRun params provided]
 * xref:release_policy.adoc#github_certificate__rule_data_provided[GitHub Certificate Checks: Rule data provided]
@@ -103,6 +104,8 @@ Rules included:
 * xref:release_policy.adoc#base_image_registries__base_image_info_found[Base image checks: Base images provided]
 * xref:release_policy.adoc#buildah_build_task__add_capabilities_param[Buildah build task: ADD_CAPABILITIES parameter]
 * xref:release_policy.adoc#buildah_build_task__buildah_uses_local_dockerfile[Buildah build task: Buildah task uses a local Dockerfile]
+* xref:release_policy.adoc#buildah_build_task__platform_param[Buildah build task: PLATFORM parameter]
+* xref:release_policy.adoc#buildah_build_task__disallowed_platform_patterns_pattern[Buildah build task: disallowed_platform_patterns format]
 * xref:release_policy.adoc#cve__cve_blockers[CVE checks: Blocking CVE check]
 * xref:release_policy.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]
 * xref:release_policy.adoc#cve__cve_results_found[CVE checks: CVE scan results found]
@@ -346,6 +349,29 @@ Verify the Dockerfile used in the buildah task was not fetched from an external 
 * FAILURE message: `DOCKERFILE param value (%s) is an external source`
 * Code: `buildah_build_task.buildah_uses_local_dockerfile`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task.rego#L14[Source, window="_blank"]
+
+[#buildah_build_task__platform_param]
+=== link:#buildah_build_task__platform_param[PLATFORM parameter]
+
+Verify the value of the PLATFORM parameter of a builder Task is allowed by matching against a list of disallowed patterns. The list of patterns can be customized via the `disallowed_platform_patterns` rule data key. If empty, all values are allowed.
+
+*Solution*: Use a different PLATFORM value that is not disallowed by the policy config.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `PLATFORM parameter value %q is disallowed by regex %q`
+* Code: `buildah_build_task.platform_param`
+* Effective from: `2024-09-01T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task.rego#L58[Source, window="_blank"]
+
+[#buildah_build_task__disallowed_platform_patterns_pattern]
+=== link:#buildah_build_task__disallowed_platform_patterns_pattern[disallowed_platform_patterns format]
+
+Confirm the `disallowed_platform_patterns` rule data, if provided matches the expected format.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `buildah_build_task.disallowed_platform_patterns_pattern`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task.rego#L81[Source, window="_blank"]
 
 [#attestation_package]
 == link:#attestation_package[Builtin attestation policies]

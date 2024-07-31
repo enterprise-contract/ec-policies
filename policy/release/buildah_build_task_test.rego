@@ -217,6 +217,55 @@ test_add_capabilities_param if {
 	lib.assert_empty(buildah_build_task.deny) with input.attestations as [attestation_spaces]
 }
 
+test_platform_param if {
+	expected := {{
+		"code": "buildah_build_task.platform_param",
+		"msg": "PLATFORM parameter value \"linux-root/arm64\" is disallowed by regex \".*root.*\"",
+	}}
+
+	attestations := [
+		_slsav1_attestation("buildah", [{"name": "PLATFORM", "value": "linux-root/arm64"}], _results),
+		_slsav1_attestation("buildah", [{"name": "PLATFORM", "value": "linux/arm64"}], _results),
+	]
+
+	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as attestations
+		with data.rule_data.disallowed_platform_patterns as [".*root.*"]
+}
+
+test_plat_patterns_rule_data_validation if {
+	d := {"disallowed_platform_patterns": [
+		# Wrong type and invalid regex
+		1,
+		# Duplicated items
+		".*foo",
+		".*foo",
+		# Invalid regex in rego
+		"(?=a)?b",
+	]}
+
+	expected := {
+		{
+			"code": "buildah_build_task.disallowed_platform_patterns_pattern",
+			# regal ignore:line-length
+			"msg": "Rule data disallowed_platform_patterns has unexpected format: 0: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "buildah_build_task.disallowed_platform_patterns_pattern",
+			"msg": "'\\x01' is not a valid regular expression in rego",
+		},
+		{
+			"code": "buildah_build_task.disallowed_platform_patterns_pattern",
+			"msg": "Rule data disallowed_platform_patterns has unexpected format: (Root): array items[1,2] must be unique",
+		},
+		{
+			"code": "buildah_build_task.disallowed_platform_patterns_pattern",
+			"msg": "\"(?=a)?b\" is not a valid regular expression in rego",
+		},
+	}
+
+	lib.assert_equal_results(buildah_build_task.deny, expected) with data.rule_data as d
+}
+
 _attestation(task_name, params, results) := {"statement": {"predicate": {
 	"buildType": lib.tekton_pipeline_run,
 	"buildConfig": {"tasks": [{

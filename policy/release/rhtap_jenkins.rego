@@ -1,12 +1,11 @@
 #
 # METADATA
-# title: RHTAP Jenkins Pipeline Build Checks
+# title: RHTAP Jenkins
 # description: >-
-#   Some initial checks for images built using an RHTAP Jenkins
-#   pipeline. Note that the RHTAP Jenkins pipeline is WIP currently,
-#   but will be shipped in an upcoming release of RHTAP.
-#   This is bare-bones currently but it's expected more useful checks
-#   will be added later. RHTAP Jenkins pipelines are defined in
+#   Some initial checks for images built using an RHTAP Jenkins build pipeline. Note
+#   that the RHTAP Jenkins pipeline is WIP currently, but will be shipped in an upcoming
+#   release of RHTAP. It's expected more useful checks will be added in future. RHTAP
+#   Jenkins pipelines are defined under
 #   https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
 #
 package policy.release.rhtap_jenkins

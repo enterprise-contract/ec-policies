@@ -156,7 +156,7 @@ deny contains result if {
 deny contains result if {
 	# NOTE: unpatched vulnerabilities are defined as an optional attribute. The lack of them should
 	# not be considered a violation nor a warning. See details in:
-	# https://redhat-appstudio.github.io/book/ADR/0030-tekton-results-naming-convention.html
+	# https://github.com/konflux-ci/architecture/blob/main/ADR/0030-tekton-results-naming-convention.md
 	not _vulnerabilities
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

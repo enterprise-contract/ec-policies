@@ -33,7 +33,7 @@ can also use them with conftest directly. The input should include a top level k
 attestations for the image being validated. For example:
 
 ```
-cosign download attestation quay.io/redhat-appstudio/ec-golden-image:latest | jq --slurp '{"attestations":[.[].payload|@base64d|fromjson]}' > input.json
+cosign download attestation quay.io/konflux-ci/ec-golden-image:latest | jq --slurp '{"attestations":[.[].payload|@base64d|fromjson]}' > input.json
 conftest pull -p . quay.io/enterprise-contract/ec-release-policy quay.io/enterprise-contract/ec-policy-data
 conftest test input.json -d data -p policy --all-namespaces -o json | yq -P
 ```

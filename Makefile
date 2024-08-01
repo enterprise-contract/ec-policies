@@ -232,7 +232,7 @@ dummy-config: ## Create an empty configuration
 #   make fetch-att IMAGE=<imageref> KEY=<publickeyfile>
 #
 ifndef IMAGE
-  IMAGE="quay.io/redhat-appstudio/ec-golden-image:latest"
+  IMAGE="quay.io/konflux-ci/ec-golden-image:latest"
 endif
 
 ifndef KEY
@@ -251,7 +251,7 @@ fetch-att: clean-input ## Fetches attestation data and metadata for IMAGE, use `
 # Specify PIPELINE as an environment var to use something other than the default.
 #
 ifndef PIPELINE
-  PIPELINE=quay.io/redhat-appstudio-tekton-catalog/pipeline-docker-build:devel
+  PIPELINE=quay.io/konflux-ci/tekton-catalog/pipeline-docker-build:devel
 endif
 
 .PHONY: fetch-pipeline

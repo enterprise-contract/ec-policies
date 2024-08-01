@@ -22,7 +22,7 @@ set -o pipefail
 set -o nounset
 
 ROOT_DIR=$(git rev-parse --show-toplevel)
-IMAGE=quay.io/redhat-appstudio/ec-golden-image:latest
+IMAGE=quay.io/konflux-ci/ec-golden-image:latest
 REPOSITORY=https://github.com/enterprise-contract/golden-container.git
 PUBLIC_KEY='-----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEZP/0htjhVt2y0ohjgtIIgICOtQtA

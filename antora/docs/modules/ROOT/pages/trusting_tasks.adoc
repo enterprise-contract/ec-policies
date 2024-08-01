@@ -3,7 +3,7 @@
 :trusted-tasks: trusted_tasks.adoc
 :attestation-task-bundle: release_policy#attestation_task_bundle_package
 :image-built-by-trusted-task: release_policy#slsa_build_scripted_build__image_built_by_trusted_task
-:build-definitions: https://github.com/redhat-appstudio/build-definitions
+:build-definitions: https://github.com/konflux-ci/build-definitions
 :ec-policies: https://github.com/enterprise-contract/ec-policies
 :ec-track-bundle: https://enterprisecontract.dev/docs/ec-cli/main/ec_track_bundle.html
 :tekton-bundles: https://tekton.dev/docs/pipelines/pipelines/#tekton-bundles
@@ -104,14 +104,14 @@ Be sure to include the `trusted-tasks.yaml` file in a data source in your policy
 Automation using the process described above manages the trusted Tasks used in
 Konflux. This section describes how.
 
-The repository link:{build-definitions}[redhat-appstudio/build-definitions]
+The repository link:{build-definitions}[konflux-ci/build-definitions]
 contains all the Tekton definitions used by Konflux. The CI/CD process on that
 repository performs the following actions:
 
 1. Determine which Tekton definitions have modifications.
 2. Build a new Tekton Bundle for each modified Tekton definition.
 3. Use the `ec track trusted-tesk` command to update the list of trusted Tasks
-   held in `quay.io/redhat-appstudio-tekton-catalog/data-acceptable-bundles` image.
+   held in `quay.io/konflux-ci/tekton-catalog/data-acceptable-bundles` image.
 
 The new Tasks defined in that repository become trusted Tasks as soon as the
 pull request merges.
@@ -134,13 +134,11 @@ In order to add a new task to the existing set of Red Hat trusted Tasks, the
 process is as follows:
 
 * https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo[Fork]
-  the https://github.com/redhat-appstudio/build-definitions[build defintions] repository.
+  the https://github.com/konflux-ci/build-definitions[build defintions] repository.
 * Create and submit a https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request[pull request]
   with your new task.
 * Once the pull request is submitted and approvevd, the CI process will
   automatically build the new task and add it to the list of trusted Tasks.
-* Additionally, you can view the Task bundle in the
-   https://quay.io/redhat-appstudio-tekton-catalog[Red Hat AppStudio Tekton Catalog]
 
 == Adding a custom task to the trusted task list
 
@@ -175,7 +173,7 @@ sources:
       - github.com/enterprise-contract/ec-policies//policy/release
 
     data:
-      - oci::quay.io/redhat-appstudio-tekton-catalog/data-acceptable-bundles:latest
+      - oci::quay.io/konflux-ci/tekton-catalog/data-acceptable-bundles:latest
       - github.com/release-engineering/rhtap-ec-policy//data
 
       # This is the one additional data source

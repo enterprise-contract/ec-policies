@@ -13,13 +13,12 @@ xref:pipeline_policy.adoc[Pipeline Policy].
 
 == Additional Documentation
 
-* https://redhat-appstudio.github.io/appstudio.docs.ui.io/[Stonesoup Documentation]
+* https://konflux-ci.dev/docs/[Konflux Documentation]
 * xref:main@ec-cli::index.adoc[EC CLI Documentation]
 
 == Code
 
-* https://github.com/redhat-appstudio/build-definitions/blob/main/tasks/verify-enterprise-contract-v2.yaml["Verify Enterprise Contract" task definition]
 * https://github.com/enterprise-contract/ec-policies[github.com/enterprise-contract/ec-policies]
 * https://github.com/enterprise-contract/ec-cli[github.com/enterprise-contract/ec-cli]
 * https://github.com/enterprise-contract[github.com/enterprise-contract]
-* https://github.com/redhat-appstudio[github.com/redhat-appstudio]
+* https://github.com/konflux-ci[github.com/konflux-ci]

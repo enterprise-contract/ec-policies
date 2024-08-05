@@ -561,10 +561,10 @@ github.com/emicklei/proto v1.12.1 h1:6n/Z2pZAnBwuhU66Gs8160B8rrrYKo7h2F2sCOnNceE
 github.com/emicklei/proto v1.12.1/go.mod h1:rn1FgRS/FANiZdD2djyH7TMA9jdRDcYQ9IEN9yvjX0A=
 github.com/emirpasic/gods v1.18.1 h1:FXtiHYKDGKCW2KzwZKx0iC0PQmdlorYgdFG9jPXJ1Bc=
 github.com/emirpasic/gods v1.18.1/go.mod h1:8tpGGwCnJ5H4r6BWwaV6OrWmMoPhUl5jm/FMNAnJvWQ=
-github.com/enterprise-contract/ec-cli v0.5.68 h1:Sg6gp1MprX1v9u/hQAFq0dq3xzx3uSUqx7f1XA8PSzI=
-github.com/enterprise-contract/ec-cli v0.5.68/go.mod h1:OPbBGo8z5xodgsYqTOL+L8ahMSakCkSH8gfp7IfYJiQ=
-github.com/enterprise-contract/enterprise-contract-controller/api v0.1.49 h1:sCgecUVogFj/RXyVlDGar3DJw6jRLrDMA4rpzE0lWWc=
-github.com/enterprise-contract/enterprise-contract-controller/api v0.1.49/go.mod h1:cGzA0UrPmcVADvE6LM0GJG+EDneK+Dtv7J63OV5mJyk=
+github.com/enterprise-contract/ec-cli v0.5.84 h1:fGjOGBWn2qNo7o0f0lEzVmvVMTaTL2bMqockev6l3cM=
+github.com/enterprise-contract/ec-cli v0.5.84/go.mod h1:c59q49YmD2VnW6KgkVykpybSvkr3DsIAbY60aYODmaQ=
+github.com/enterprise-contract/enterprise-contract-controller/api v0.1.50 h1:o9THYT2RjAxh2AaoqbSbct0u75bMuH0WIL6ZmNvTwUc=
+github.com/enterprise-contract/enterprise-contract-controller/api v0.1.50/go.mod h1:8hj9T31RfHUY3Wyn2KXfQy69hvi1nmwsw+P6xdOUIiI=
 github.com/enterprise-contract/go-gather v0.0.3 h1:Qh4CJhOPdMit4Z/BK3rv7S3GkZ5XLzAlAus1eMKLDA4=
 github.com/enterprise-contract/go-gather v0.0.3/go.mod h1:gXqnYRW9uTD06xli3pE+9cwtPVcIdqyPIqBcKQ+kK8I=
 github.com/enterprise-contract/go-gather/expander v0.0.1 h1:CRJX7crqNyuuo82DtFbyIpJB/2hV62zWof4t1dOmCC0=
@@ -638,8 +638,8 @@ github.com/gkampitakis/ciinfo v0.3.0 h1:gWZlOC2+RYYttL0hBqcoQhM7h1qNkVqvRCV1fOvp
 github.com/gkampitakis/ciinfo v0.3.0/go.mod h1:1NIwaOcFChN4fa/B0hEBdAb6npDlFL8Bwx4dfRLRqAo=
 github.com/gkampitakis/go-diff v1.3.2 h1:Qyn0J9XJSDTgnsgHRdz9Zp24RaJeKMUHg2+PDZZdC4M=
 github.com/gkampitakis/go-diff v1.3.2/go.mod h1:LLgOrpqleQe26cte8s36HTWcTmMEur6OPYerdAAS9tk=
-github.com/gkampitakis/go-snaps v0.5.5 h1:FZ01SXOE/uIsD8lZGUjUAxTevz9tf7c1QGIgezv2KNM=
-github.com/gkampitakis/go-snaps v0.5.5/go.mod h1:ZABkO14uCuVxBHAXAfKG+bqNz+aa1bGPAg8jkI0Nk8Y=
+github.com/gkampitakis/go-snaps v0.5.6 h1:kAal5JbqTycI+6xeS3K0nPqvNDAxqKX5W3dRXKxIJpA=
+github.com/gkampitakis/go-snaps v0.5.6/go.mod h1:ZABkO14uCuVxBHAXAfKG+bqNz+aa1bGPAg8jkI0Nk8Y=
 github.com/gliderlabs/ssh v0.3.7 h1:iV3Bqi942d9huXnzEF2Mt+CY9gLu8DNM4Obd+8bODRE=
 github.com/gliderlabs/ssh v0.3.7/go.mod h1:zpHEXBstFnQYtGnB8k8kQLol82umzn/2/snG7alWVD8=
 github.com/go-akka/configuration v0.0.0-20200606091224-a002c0330665 h1:Iz3aEheYgn+//VX7VisgCmF/wW3BMtXCLbvHV4jMQJA=

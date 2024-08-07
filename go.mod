@@ -3,7 +3,7 @@ module github.com/enterprise-contract/ec-policies
 go 1.22.2
 
 require (
-	github.com/enterprise-contract/ec-cli v0.5.68
+	github.com/enterprise-contract/ec-cli v0.5.84
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.55.0
 	github.com/styrainc/regal v0.24.0
@@ -139,7 +139,7 @@ require (
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.2 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
-	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.49 // indirect
+	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.50 // indirect
 	github.com/enterprise-contract/go-gather v0.0.3 // indirect
 	github.com/enterprise-contract/go-gather/expander v0.0.1 // indirect
 	github.com/enterprise-contract/go-gather/gather v0.0.2 // indirect

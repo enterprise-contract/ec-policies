@@ -24,6 +24,7 @@ test_all_good if {
 		"name": "test-image",
 		"description": "test image",
 		"summary": "test",
+		"vendor": "Acme, Inc.",
 	})
 		with ec.oci.image_manifest as _mock_image_manifest
 		with ec.oci.blob as _mock_blob
@@ -33,6 +34,7 @@ test_all_good if {
 		"fbc.name": "test-image",
 		"fbc.description": "test image",
 		"fbc.summary": "test",
+		"fbc.vendor": "Acme, Inc.",
 		"operators.operatorframework.io.index.configs.v1": "/config",
 	})
 		with ec.oci.image_manifest as _mock_image_manifest
@@ -52,6 +54,7 @@ test_deprecated_image_labels if {
 		"description": "test image",
 		"summary": "test",
 		"oldie": "sudo rm -rf /",
+		"vendor": "Acme, Inc.",
 	})
 
 	lib.assert_equal_results(labels.deny, expected) with input.image.ref as ref
@@ -75,6 +78,7 @@ test_required_image_labels if {
 	ref := _test_ref_with_labels({
 		"description": "test image",
 		"summary": "test",
+		"vendor": "Acme, Inc.",
 	})
 
 	lib.assert_equal_results(labels.deny, expected) with input.image.ref as ref
@@ -98,6 +102,59 @@ test_fbc_required_image_labels if {
 	ref := _test_ref_with_labels({
 		"fbc.description": "test image",
 		"fbc.summary": "test",
+		"fbc.vendor": "Acme, Inc.",
+		"operators.operatorframework.io.index.configs.v1": "/config",
+	})
+
+	lib.assert_equal_results(labels.deny, expected) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+		with data.rule_data as _rule_data
+
+	_assert_effective_on_date(labels.deny) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+		with data.rule_data as _rule_data_with_date
+}
+
+test_required_image_labels_with_values if {
+	expected := {{
+		"code": "labels.required_labels",
+		"msg": "The \"vendor\" label has an unexpected \"DeVille, Inc.\" value. Must be one of: Acme, Inc., Goodfellas, Inc.",
+		"term": "vendor",
+	}}
+
+	ref := _test_ref_with_labels({
+		"name": "test-image",
+		"description": "test image",
+		"summary": "test",
+		"vendor": "DeVille, Inc.",
+	})
+
+	lib.assert_equal_results(labels.deny, expected) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+		with data.rule_data as _rule_data
+
+	_assert_effective_on_date(labels.deny) with input.image.ref as ref
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+		with data.rule_data as _rule_data_with_date
+}
+
+test_fbc_required_image_labels_with_values if {
+	expected := {{
+		"code": "labels.required_labels",
+		# regal ignore:line-length
+		"msg": "The \"fbc.vendor\" label has an unexpected \"DeVille, Inc.\" value. Must be one of: Acme, Inc., Goodfellas, Inc.",
+		"term": "fbc.vendor",
+	}}
+
+	ref := _test_ref_with_labels({
+		"fbc.name": "test-image",
+		"fbc.description": "test image",
+		"fbc.summary": "test",
+		"fbc.vendor": "DeVille, Inc.",
 		"operators.operatorframework.io.index.configs.v1": "/config",
 	})
 
@@ -122,6 +179,7 @@ test_optional_image_labels if {
 	ref := _test_ref_with_labels({
 		"name": "test-image",
 		"description": "test image",
+		"vendor": "Acme, Inc.",
 	})
 
 	lib.assert_equal_results(labels.warn, expected) with input.image.ref as ref
@@ -145,6 +203,7 @@ test_fbc_optional_image_labels if {
 	ref := _test_ref_with_labels({
 		"fbc.name": "test-image",
 		"fbc.description": "test image",
+		"fbc.vendor": "Acme, Inc.",
 		"operators.operatorframework.io.index.configs.v1": "/config",
 	})
 
@@ -172,12 +231,14 @@ test_disallowed_inherited_image_labels if {
 			"description": "test image",
 			"summary": "test",
 			"unique": "spam",
+			"vendor": "Acme, Inc.",
 		},
 		{
 			"name": "parent-image",
 			"description": "parent image",
 			"summary": "parent",
 			"unique": "spam",
+			"vendor": "Acme, Inc.",
 		},
 	)
 
@@ -197,12 +258,14 @@ test_disallowed_inherited_image_labels if {
 			"name": "test-image",
 			"description": "test image",
 			"summary": "test",
+			"vendor": "Acme, Inc.",
 		},
 		{
 			"name": "parent-image",
 			"description": "parent image",
 			"summary": "parent",
 			"unique": "spam",
+			"vendor": "Acme, Inc.",
 		},
 	)
 		with ec.oci.image_manifest as _mock_image_manifest
@@ -215,11 +278,13 @@ test_disallowed_inherited_image_labels if {
 			"description": "test image",
 			"summary": "test",
 			"unique": "spam",
+			"vendor": "Acme, Inc.",
 		},
 		{
 			"name": "parent-image",
 			"description": "parent image",
 			"summary": "parent",
+			"vendor": "Acme, Inc.",
 		},
 	)
 		with ec.oci.image_manifest as _mock_image_manifest
@@ -241,12 +306,14 @@ test_fbc_disallowed_inherited_image_labels if {
 			"fbc.summary": "test",
 			"operators.operatorframework.io.index.configs.v1": "/config",
 			"fbc.unique": "spam",
+			"fbc.vendor": "Acme, Inc.",
 		},
 		{
 			"fbc.name": "test-parent-image",
 			"fbc.description": "test parent image",
 			"fbc.summary": "parent",
 			"fbc.unique": "spam",
+			"fbc.vendor": "Acme, Inc.",
 		},
 	)
 
@@ -267,12 +334,14 @@ test_fbc_disallowed_inherited_image_labels if {
 			"fbc.description": "test image",
 			"fbc.summary": "test",
 			"operators.operatorframework.io.index.configs.v1": "/config",
+			"fbc.vendor": "Acme, Inc.",
 		},
 		{
 			"fbc.name": "test-parent-image",
 			"fbc.description": "test parent image",
 			"fbc.summary": "parent",
 			"fbc.unique": "spam",
+			"fbc.vendor": "Acme, Inc.",
 		},
 	)
 		with ec.oci.image_manifest as _mock_image_manifest
@@ -286,11 +355,13 @@ test_fbc_disallowed_inherited_image_labels if {
 			"fbc.summary": "test",
 			"operators.operatorframework.io.index.configs.v1": "/config",
 			"fbc.unique": "spam",
+			"fbc.vendor": "Acme, Inc.",
 		},
 		{
 			"fbc.name": "test-parent-image",
 			"fbc.description": "test parent image",
 			"fbc.summary": "parent",
+			"fbc.vendor": "Acme, Inc.",
 		},
 	)
 		with ec.oci.image_manifest as _mock_image_manifest
@@ -338,6 +409,7 @@ test_parent_image_manifest_inaccessible if {
 			"name": "test-image",
 			"description": "test image",
 			"summary": "test",
+			"vendor": "Acme, Inc.",
 		}))],
 	))
 
@@ -368,6 +440,7 @@ test_parent_image_config_inaccessible if {
 			"name": "test-image",
 			"description": "test image",
 			"summary": "test",
+			"vendor": "Acme, Inc.",
 		}))],
 	))
 
@@ -392,6 +465,8 @@ test_rule_data_provided if {
 			{"name": "name", "description": "label-description"},
 			# Additional properties
 			{"name": "name", "description": "label-description", "foo": "bar"},
+			# Bad type for values
+			{"name": "vendor", "description": "label-description", "values": [1]},
 		],
 		"fbc_required_labels": [1],
 		"optional_labels": [1],
@@ -472,12 +547,17 @@ test_rule_data_provided if {
 			"code": "labels.rule_data_provided",
 			"msg": "Rule data required_labels has unexpected format: 3: Additional property foo is not allowed",
 		},
+		{
+			"code": "labels.rule_data_provided",
+			"msg": "Rule data required_labels has unexpected format: 4.values.0: Invalid type. Expected: string, given: integer",
+		},
 	}
 
 	lib.assert_equal_results(labels.deny, expected) with input.image.ref as _test_ref_with_labels({
 		"name": "test-image",
 		"description": "test image",
 		"summary": "test",
+		"vendor": "Acme, Inc.",
 	})
 		with ec.oci.image_manifest as _mock_image_manifest
 		with ec.oci.blob as _mock_blob
@@ -556,10 +636,12 @@ _rule_data := {
 	"required_labels": [
 		{"name": "name", "description": "Name of the image."},
 		{"name": "description", "description": "Detailed description of the image."},
+		{"name": "vendor", "description": "Image provider", "values": ["Acme, Inc.", "Goodfellas, Inc."]},
 	],
 	"fbc_required_labels": [
 		{"name": "fbc.name", "description": "Name of the FBC image."},
 		{"name": "fbc.description", "description": "Detailed description of the FBC image."},
+		{"name": "fbc.vendor", "description": "Image provider", "values": ["Acme, Inc.", "Goodfellas, Inc."]},
 	],
 	"optional_labels": [{"name": "summary", "description": "A short description of the image."}],
 	"fbc_optional_labels": [{"name": "fbc.summary", "description": "A short description of the FBC image."}],

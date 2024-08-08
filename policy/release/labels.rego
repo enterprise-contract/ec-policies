@@ -122,7 +122,7 @@ deny contains result if {
 #   to check, or the `fbc_required_labels` key for fbc images.
 # custom:
 #   short_name: required_labels
-#   failure_msg: 'The required %q label is missing. Label description: %s'
+#   failure_msg: '%s'
 #   solution: >-
 #     Update the image build process to set the required labels.
 #   collections:
@@ -131,18 +131,8 @@ deny contains result if {
 deny contains result if {
 	is_set(_image_labels)
 
-	found_labels := {name |
-		some label in _image_labels
-		name := label.name
-	}
-	some required_label in required_labels
-	name := required_label.name
-	not name in found_labels
-	description := required_label.description
-	result := _with_effective_on(
-		lib.result_helper_with_term(rego.metadata.chain(), [name, description], name),
-		required_label,
-	)
+	some err in _required_labels_errors
+	result := object.union(lib.result_helper(rego.metadata.chain(), []), err)
 }
 
 # METADATA
@@ -301,6 +291,44 @@ is_fbc if {
 	label.name == "operators.operatorframework.io.index.configs.v1"
 }
 
+_required_labels_errors contains err if {
+	label_names := {label.name | some label in _image_labels}
+	some required_label in required_labels
+	name := required_label.name
+	not name in label_names
+	description := required_label.description
+	err := _with_effective_on(
+		{
+			"msg": sprintf("The required %q label is missing. Label description: %s", [name, description]),
+			"term": name,
+		},
+		required_label,
+	)
+}
+
+_required_labels_errors contains err if {
+	some label in _image_labels
+	some required_label in required_labels
+	label.name == required_label.name
+	name := label.name
+	value := label.value
+
+	allowed_values := {v | some v in required_label.values}
+	count(allowed_values) > 0
+	not value in allowed_values
+
+	err := _with_effective_on(
+		{
+			"msg": sprintf(
+				"The %q label has an unexpected %q value. Must be one of: %s",
+				[name, value, concat(", ", allowed_values)],
+			),
+			"term": name,
+		},
+		required_label,
+	)
+}
+
 _rule_data_errors contains msg if {
 	name_only := {
 		"$schema": "http://json-schema.org/draft-07/schema#",
@@ -330,6 +358,26 @@ _rule_data_errors contains msg if {
 		"uniqueItems": true,
 	}
 
+	name_description_and_values := {
+		"$schema": "http://json-schema.org/draft-07/schema#",
+		"type": "array",
+		"items": {
+			"type": "object",
+			"properties": {
+				"name": {"type": "string"},
+				"description": {"type": "string"},
+				"effective_on": {"type": "string"},
+				"values": {
+					"type": "array",
+					"items": {"type": "string"},
+				},
+			},
+			"additionalProperties": false,
+			"required": ["name", "description"],
+		},
+		"uniqueItems": true,
+	}
+
 	deprecated := {
 		"$schema": "http://json-schema.org/draft-07/schema#",
 		"type": "array",
@@ -347,8 +395,8 @@ _rule_data_errors contains msg if {
 	}
 
 	items := [
-		["required_labels", name_and_description],
-		["fbc_required_labels", name_and_description],
+		["required_labels", name_description_and_values],
+		["fbc_required_labels", name_description_and_values],
 		["optional_labels", name_and_description],
 		["fbc_optional_labels", name_and_description],
 		["disallowed_inherited_labels", name_only],

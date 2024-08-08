@@ -715,7 +715,7 @@ Check that certain labels on the image have different values than the labels fro
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The %q label should not be inherited from the parent image`
 * Code: `labels.disallowed_inherited_labels`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L148[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L138[Source, window="_blank"]
 
 [#labels__inaccessible_config]
 === link:#labels__inaccessible_config[Inaccessible image config]
@@ -751,7 +751,7 @@ The parent image config is not accessible.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image config of the image %q, parent of image %q is inaccessible`
 * Code: `labels.inaccessible_parent_config`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L211[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L201[Source, window="_blank"]
 
 [#labels__inaccessible_parent_manifest]
 === link:#labels__inaccessible_parent_manifest[Inaccessible parent image manifest]
@@ -763,7 +763,7 @@ The parent image manifest is not accessible.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Manifest of the image %q, parent of image %q is inaccessible`
 * Code: `labels.inaccessible_parent_manifest`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L193[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L183[Source, window="_blank"]
 
 [#labels__optional_labels]
 === link:#labels__optional_labels[Optional labels]
@@ -785,7 +785,7 @@ Check the image for the presence of labels that are required. Use the rule data 
 *Solution*: Update the image build process to set the required labels.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The required %q label is missing. Label description: %s`
+* FAILURE message: `%s`
 * Code: `labels.required_labels`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L117[Source, window="_blank"]
 
@@ -799,7 +799,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `labels.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L174[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L164[Source, window="_blank"]
 
 [#olm_package]
 == link:#olm_package[OLM]

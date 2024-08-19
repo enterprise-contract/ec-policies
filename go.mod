@@ -3,7 +3,7 @@ module github.com/enterprise-contract/ec-policies
 go 1.22.2
 
 require (
-	github.com/enterprise-contract/ec-cli v0.5.95
+	github.com/enterprise-contract/ec-cli v0.5.111
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.55.0
 	github.com/styrainc/regal v0.24.0
@@ -109,7 +109,7 @@ require (
 	github.com/chainguard-dev/git-urls v1.0.2 // indirect
 	github.com/chrismellard/docker-credential-acr-env v0.0.0-20230304212654-82a0ddb27589 // indirect
 	github.com/clbanning/mxj/v2 v2.7.0 // indirect
-	github.com/cloudflare/circl v1.3.8 // indirect
+	github.com/cloudflare/circl v1.3.9 // indirect
 	github.com/cockroachdb/apd/v3 v3.2.1 // indirect
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be // indirect
 	github.com/containerd/console v1.0.4 // indirect
@@ -128,7 +128,7 @@ require (
 	github.com/digitorus/pkcs7 v0.0.0-20230818184609-3a137a874352 // indirect
 	github.com/digitorus/timestamp v0.0.0-20231217203849-220c5c2851b7 // indirect
 	github.com/dimchansky/utfbom v1.1.1 // indirect
-	github.com/docker/cli v27.0.3+incompatible // indirect
+	github.com/docker/cli v27.1.1+incompatible // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect
 	github.com/docker/docker v27.1.1+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.8.2 // indirect
@@ -142,11 +142,11 @@ require (
 	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.51 // indirect
 	github.com/enterprise-contract/go-gather v0.0.3 // indirect
 	github.com/enterprise-contract/go-gather/expander v0.0.1 // indirect
-	github.com/enterprise-contract/go-gather/gather v0.0.2 // indirect
+	github.com/enterprise-contract/go-gather/gather v0.0.3 // indirect
 	github.com/enterprise-contract/go-gather/gather/file v0.0.1 // indirect
-	github.com/enterprise-contract/go-gather/gather/git v0.0.4 // indirect
-	github.com/enterprise-contract/go-gather/gather/http v0.0.1 // indirect
-	github.com/enterprise-contract/go-gather/gather/oci v0.0.3 // indirect
+	github.com/enterprise-contract/go-gather/gather/git v0.0.5 // indirect
+	github.com/enterprise-contract/go-gather/gather/http v0.0.2 // indirect
+	github.com/enterprise-contract/go-gather/gather/oci v0.0.4 // indirect
 	github.com/enterprise-contract/go-gather/metadata v0.0.2 // indirect
 	github.com/enterprise-contract/go-gather/metadata/file v0.0.1 // indirect
 	github.com/enterprise-contract/go-gather/metadata/git v0.0.2 // indirect
@@ -295,7 +295,7 @@ require (
 	github.com/nsf/termbox-go v1.1.1 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/open-policy-agent/opa v0.67.0 // indirect
+	github.com/open-policy-agent/opa v0.67.1 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
@@ -320,7 +320,7 @@ require (
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/ryanuber/go-glob v1.0.0 // indirect
-	github.com/sagikazarmark/locafero v0.4.0 // indirect
+	github.com/sagikazarmark/locafero v0.6.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
 	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1 // indirect
 	github.com/sassoftware/relic v7.2.1+incompatible // indirect
@@ -403,15 +403,15 @@ require (
 	gocloud.dev v0.37.0 // indirect
 	gocloud.dev/docstore/mongodocstore v0.36.0 // indirect
 	gocloud.dev/pubsub/kafkapubsub v0.36.0 // indirect
-	golang.org/x/crypto v0.25.0 // indirect
-	golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
-	golang.org/x/mod v0.17.0 // indirect
-	golang.org/x/net v0.27.0 // indirect
+	golang.org/x/crypto v0.26.0 // indirect
+	golang.org/x/exp v0.0.0-20240613232115-7f521ea00fb8 // indirect
+	golang.org/x/mod v0.18.0 // indirect
+	golang.org/x/net v0.28.0 // indirect
 	golang.org/x/oauth2 v0.20.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.22.0 // indirect
-	golang.org/x/term v0.22.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/sync v0.8.0 // indirect
+	golang.org/x/sys v0.23.0 // indirect
+	golang.org/x/term v0.23.0 // indirect
+	golang.org/x/text v0.17.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect

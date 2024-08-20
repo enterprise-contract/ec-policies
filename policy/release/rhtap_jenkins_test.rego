@@ -41,10 +41,10 @@ bad_invocation_1 := mock_att(good_build_type, {"metadata": {}})
 
 bad_invocation_2 := mock_att(good_build_type, {"metadata": {"invocationID": " "}})
 
-mock_att(build_type, runDetails) := {"statement": {
+mock_att(build_type, run_details) := {"statement": {
 	"predicateType": "https://slsa.dev/provenance/v1",
 	"predicate": {
 		"buildDefinition": {"buildType": build_type},
-		"runDetails": runDetails,
+		"runDetails": run_details,
 	},
 }}

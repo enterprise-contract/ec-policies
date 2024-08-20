@@ -71,6 +71,6 @@ equal_ref(ref1, ref2) if {
 	object.remove(img1, ["tag"]) == object.remove(img2, ["tag"])
 }
 
-_get(array, index, default_value) := value if {
-	value := array[index]
+_get(ary, index, default_value) := value if {
+	value := ary[index]
 } else := default_value

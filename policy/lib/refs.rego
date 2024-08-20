@@ -93,8 +93,8 @@ default _is_sha1(_) := false
 
 _is_sha1(value) if regex.match(`^[0-9a-f]{40}$`, value)
 
-_param(taskRef, name, fallback) := value if {
-	some param in taskRef.params
+_param(task_ref, name, fallback) := value if {
+	some param in task_ref.params
 	param.name == name
 	value := param.value
 } else := fallback

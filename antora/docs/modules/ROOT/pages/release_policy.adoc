@@ -88,6 +88,7 @@ Rules included:
 * xref:release_policy.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]
 * xref:release_policy.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]
 * xref:release_policy.adoc#schedule__rule_data_provided[Schedule related checks: Rule data provided]
+* xref:release_policy.adoc#results__rule_data_provided[Tekton Task result: Rule data provided]
 * xref:release_policy.adoc#test__rule_data_provided[Test: Rule data provided]
 
 | [#redhat]`redhat`
@@ -174,6 +175,7 @@ Rules included:
 * xref:release_policy.adoc#tasks__required_tasks_list_provided[Tasks: Required tasks list was provided]
 * xref:release_policy.adoc#tasks__successful_pipeline_tasks[Tasks: Successful pipeline tasks]
 * xref:release_policy.adoc#tasks__unsupported[Tasks: Task version unsupported]
+* xref:release_policy.adoc#results__rule_data_provided[Tekton Task result: Rule data provided]
 * xref:release_policy.adoc#test__test_all_images[Test: Image digest is present in IMAGES_PROCESSED result]
 * xref:release_policy.adoc#test__no_failed_informative_tests[Test: No informative tests failed]
 * xref:release_policy.adoc#test__no_erred_tests[Test: No tests erred]

@@ -54,6 +54,36 @@ Make sure to use the date format in RFC3339 format in the "build.appstudio.redha
 * Code: `annotation.expires_on_format`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/annotations.rego#L14[Source, window="_blank"]
 
+[#results_package]
+== link:#results_package[Tekton Task result]
+
+Verify Tekton Task definitions provide expected results.
+
+* Package name: `results`
+* Package full path: `policy.task.results`
+
+[#results__required]
+=== link:#results__required[Required result defined]
+
+Verify if Task defines the required result. This is controlled by the `required_task_results` rule data key. By default this is empty making this rule a no-op.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `results.required`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/results.rego#L12[Source, window="_blank"]
+
+[#results__rule_data_provided]
+=== link:#results__rule_data_provided[Rule data provided]
+
+Confirm the expected `required_task_results` rule data key has been provided in the expected format.
+
+*Solution*: If provided, ensure the rule data is in the expected format.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `results.rule_data_provided`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/results.rego#L26[Source, window="_blank"]
+
 [#kind_package]
 == link:#kind_package[Tekton task kind checks]
 

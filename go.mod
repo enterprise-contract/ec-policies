@@ -1,6 +1,7 @@
 module github.com/enterprise-contract/ec-policies
 
-go 1.22.2
+go 1.22.5
+
 require (
 	github.com/enterprise-contract/ec-cli v0.5.120
 	github.com/google/addlicense v1.1.1

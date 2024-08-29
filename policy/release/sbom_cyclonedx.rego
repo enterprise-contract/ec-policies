@@ -116,7 +116,10 @@ deny contains result if {
 
 	msg := regex.replace(object.get(property, "value", ""), `(.+)`, ` to "$1"`)
 
-	result := lib.result_helper(rego.metadata.chain(), [component.purl, property.name, msg])
+	result := _with_effective_on(
+		lib.result_helper(rego.metadata.chain(), [component.purl, property.name, msg]),
+		disallowed,
+	)
 }
 
 # METADATA
@@ -282,6 +285,7 @@ _rule_data_errors contains msg if {
 				"properties": {
 					"name": {"type": "string"},
 					"value": {"type": "string"},
+					"effective_on": {"type": "string", "format": "date-time"},
 				},
 				"additionalProperties": false,
 				"required": ["name"],
@@ -342,6 +346,12 @@ _rule_data_errors contains msg if {
 	# regal ignore:line-length
 	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_disallowed_external_references_key, violation.error])
 }
+
+# _with_effective_on annotates the result with the item's effective_on attribute. If the item does
+# not have the attribute, result is returned unmodified.
+_with_effective_on(result, item) := new_result if {
+	new_result := object.union(result, {"effective_on": item.effective_on})
+} else := result
 
 _rule_data_packages_key := "disallowed_packages"
 

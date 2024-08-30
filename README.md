@@ -58,7 +58,11 @@ well as check that the docs are up to date, like this:
 
 You can run a single test like this:
 
-    opa test . -r <test_name_matcher>
+    ec opa test ./policy -r <test_name_matcher>
+
+or
+
+    go run github.com/enterprise-contract/ec-cli opa test ./policy -r <test_name_matcher>
 
 The `<test_name_matcher>` is a regex, so you can use it to run more than one
 test.

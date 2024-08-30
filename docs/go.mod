@@ -1,6 +1,6 @@
 module github.com/enterprise-contract/ec-policies/docs
 
-go 1.22.2
+go 1.22.5
 
 require github.com/open-policy-agent/opa v0.63.0
 

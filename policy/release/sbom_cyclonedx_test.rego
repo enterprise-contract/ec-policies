@@ -69,6 +69,37 @@ test_attributes_not_allowed_value if {
 		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [{"name": "attr2", "value": "value2"}]}
 }
 
+test_attributes_not_allowed_effective_on if {
+	expected := {
+		{
+			"code": "sbom_cyclonedx.disallowed_package_attributes",
+			# regal ignore:line-length
+			"msg": `Package pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3 has the attribute "attr1" set`,
+			"effective_on": "2025-01-01T00:00:00Z",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_package_attributes",
+			# regal ignore:line-length
+			"msg": `Package pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3 has the attribute "attr2" set to "value2"`,
+			"effective_on": "2024-07-31T00:00:00Z",
+		},
+	}
+
+	raw_results := sbom_cyclonedx.deny with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [
+			{"name": "attr1", "effective_on": "2025-01-01T00:00:00Z"},
+			{"name": "attr2", "value": "value2"},
+		]}
+
+	results := {result_no_collections |
+		some result in raw_results
+		result_no_collections := json.remove(result, ["collections"])
+	}
+
+	lib.assert_equal(expected, results)
+}
+
 test_external_references_allowed_regex_with_no_rules_is_allowed if {
 	expected := {}
 	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
@@ -254,6 +285,8 @@ test_rule_data_validation if {
 			# Duplicated items
 			{"name": "_name_", "value": "_value_"},
 			{"name": "_name_", "value": "_value_"},
+			# Invalid effective on format
+			{"name": "_name_", "effective_on": "not-a-date"},
 		],
 		sbom_cyclonedx._rule_data_allowed_external_references_key: [
 			{"type": "distribution", "url": "example.com"},
@@ -341,6 +374,10 @@ test_rule_data_validation if {
 			"code": "sbom_cyclonedx.disallowed_packages_provided",
 			# regal ignore:line-length
 			"msg": "Rule data disallowed_attributes has unexpected format: (Root): array items[5,6] must be unique",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			"msg": "Rule data disallowed_attributes has unexpected format: 7.effective_on: Does not match format 'date-time'",
 		},
 		{
 			"code": "sbom_cyclonedx.disallowed_packages_provided",

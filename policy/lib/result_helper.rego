@@ -23,13 +23,33 @@ _basic_result(chain, failure_sprintf_params) := {
 }
 
 _code(chain) := code if {
-	pkg_path := chain[count(chain) - 1].path
-	pkg_name := pkg_path[count(pkg_path) - 1]
+	rule_path := chain[0].path
+
+	# rule_path examples:
+	# ["data", "some_package", "deny"]
+	# ["data", "some_package_namespace", "some_package", "deny"]
+	# ["data", "namespace", "another_namespace", "some_package", "deny"]
+	#
+	# Our convention in the ec-policies is something like ["data", "policy",
+	# "release", "some_package", "deny"], but we should stop making the
+	# assumption that all the rules follow that convention.
+	#
+	# For now we'll just use "some_package" and hope there are no name clashes.
+	# Todo: In the longer term we'll probably need the fully qualified package
+	# path in some consistent way.
+	pkg_name := rule_path[count(rule_path) - 2]
+
+	# For the rule name we use the short_name annotation.
+	# Todo someday maybe: Conftest supports denies named deny_some_name,
+	# so we could use that format and ditch the short name annotation.
 	rule_name := _rule_annotations(chain).custom.short_name
+
+	# Put them together
 	code := sprintf("%s.%s", [pkg_name, rule_name])
 }
 
 # The first entry in the chain always points to the active rule, even if it has
 # no declared annotations (in which case the annotations member is not present).
-# Thus, result_helper assumes every rule defines annotations.
+# Thus, result_helper assumes every rule defines annotations. At the very least
+# custom.short_name must be present.
 _rule_annotations(chain) := chain[0].annotations

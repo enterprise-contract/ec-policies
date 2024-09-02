@@ -24,22 +24,8 @@ _basic_result(chain, failure_sprintf_params) := {
 
 _code(chain) := code if {
 	rule_path := chain[0].path
+	pkg_name := _pkg_name(rule_path)
 
-	# rule_path examples:
-	# ["data", "some_package", "deny"]
-	# ["data", "some_package_namespace", "some_package", "deny"]
-	# ["data", "namespace", "another_namespace", "some_package", "deny"]
-	#
-	# Our convention in the ec-policies is something like ["data", "policy",
-	# "release", "some_package", "deny"], but we should stop making the
-	# assumption that all the rules follow that convention.
-	#
-	# For now we'll just use "some_package" and hope there are no name clashes.
-	# Todo: In the longer term we'll probably need the fully qualified package
-	# path in some consistent way.
-	pkg_name := rule_path[count(rule_path) - 2]
-
-	# For the rule name we use the short_name annotation.
 	# Todo someday maybe: Conftest supports denies named deny_some_name,
 	# so we could use that format and ditch the short name annotation.
 	rule_name := _rule_annotations(chain).custom.short_name
@@ -53,3 +39,43 @@ _code(chain) := code if {
 # Thus, result_helper assumes every rule defines annotations. At the very least
 # custom.short_name must be present.
 _rule_annotations(chain) := chain[0].annotations
+
+# This is meant to match the special handling done in ec-cli, see here:
+# https://github.com/enterprise-contract/ec-cli/blob/014a488a4/internal/opa/rule/rule.go#L161-L186
+_pkg_name(rule_path) := name if {
+	# Seems to not work if I keep assigning to a single var, so
+	# that's why the many different pN vars.
+
+	# Strip off the first element which is always "data"
+	p1 := _left_strip_elements(["data"], rule_path)
+
+	# Strip off policy.release or policy.pipeline to match what ec-cli
+	# does. (There are some edge cases where the behavior is not exactly
+	# the same, but I think this version is better.)
+	p2 := _left_strip_elements(["policy", "release"], p1)
+	p3 := _left_strip_elements(["policy", "pipeline"], p2)
+
+	# Actually ec-cli doesn't remove these, but lots of tests in this repo
+	# assume it will be removed, so let's go with the flow for now.
+	# (We might want to revist this behavior in future.)
+	p4 := _left_strip_elements(["policy", "task"], p3)
+	p5 := _left_strip_elements(["policy", "build_task"], p4)
+
+	# Strip off "policy" no matter what
+	p6 := _left_strip_elements(["policy"], p5)
+
+	# Remove the "deny" or "warn" element
+	p7 := _right_strip_elements(["deny"], p6)
+	p8 := _right_strip_elements(["warn"], p7)
+
+	# Put it all together with dots in between
+	name := concat(".", p8)
+}
+
+_left_strip_elements(items_to_strip, list) := new_list if {
+	items_to_strip_count := count(items_to_strip)
+	array.slice(list, 0, items_to_strip_count) == items_to_strip
+	new_list := array.slice(list, items_to_strip_count, count(list))
+} else := list
+
+_right_strip_elements(items_to_strip, list) := array.reverse(_left_strip_elements(items_to_strip, array.reverse(list)))

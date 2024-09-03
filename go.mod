@@ -3,7 +3,7 @@ module github.com/enterprise-contract/ec-policies
 go 1.22.5
 
 require (
-	github.com/enterprise-contract/ec-cli v0.5.120
+	github.com/enterprise-contract/ec-cli v0.5.128
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.55.0
 	github.com/styrainc/regal v0.25.0

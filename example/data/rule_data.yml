@@ -110,3 +110,6 @@ rule_data:
     format: semverv
     min: v50.20.2
     max: v50.28.3
+
+  allowed_rpm_signature_keys:
+  - 199e2f91fd431d51

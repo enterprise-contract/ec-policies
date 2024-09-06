@@ -58,3 +58,88 @@ further reference on annotations.
 The https://enterprisecontract.dev/docs/ec-cli/main/index.html[ec-cli] is reponsible for gathering
 the information to be validated which is made available to policies via the `input` object. Its
 structure is defined https://enterprisecontract.dev/docs/ec-cli/main/policy_input.html[here].
+
+== Pitfalls
+
+Today, EC takes the https://www.conftest.dev/[conftest] approach for asserting violations and
+warnings. The approach follows the path of proving a negative. The policy rules search for issues.
+If there are no issues, the policy rule passes. This has pitfalls, e.g. a policy rule could
+accidentally pass if not written carefully.
+
+The main motivation for the current state is that this allows policy rules to provide precise error
+messages. This is an important requirement of EC; a simple pass/fail result is just not enough.
+
+To illustrate the pitfalls, consider the following policy rule.
+
+```rego
+package main
+
+import rego.v1
+
+deny contains result if {
+	some att in input.attestations
+	got := att.statement.predicateType
+	got != "https://slsa.dev/provenance/v0.2"
+	result := {"msg": sprintf(
+		"Unexpected predicate type %s in statement %s",
+		[got, att.statement._type],
+	)}
+}
+```
+
+The policy rule above iterates over the list of attestations in the input, extracts the
+predicateType for each, and verifies the value is not unexpected. Even this simple policy rule has a
+few pitfalls.
+
+First, if there are no attestations, the policy rule passes. Consider adding an explicit check to
+ensure `input.attestations` is not empty.
+
+Second, if an attestation does not have the statement or the statement.predicateType attribute the
+rule passes for that attestation. This is problematic because a missing value is clearly not equal
+to the expected value, `"https://slsa.dev/provenance/v0.2"`. Use helper functions with default
+values to access such attributes.
+
+Third, if the statement for an attestation does not set the `_type` attribute, the policy rule
+passes. Notice how this particular attribute is used only for error reporting. Use helper functions
+with default values to access such attributes.
+
+Fourth, typos when accessing nested attributes, e.g. `att.statement.predicateTypoooo`, cause the
+policy rule to pass. Unlike typos in function names or variable names, these are not caught by the
+linter nor the compiler. Use helper functions with default values to access such attributes and
+ensure code is tested with real-world data.
+
+Each of those pitfalls can be prevented. However, these require a conscious decision by the policy
+rule author. This can be even more challenging for authors new to the rego programming language.
+
+The pitfalls above showcase an interesting property of rego. A statement within the rule that
+produces no value (or a false value) causes the rule to not produce a value as well. In our case,
+since the rule is asserting a violation, no value means no violation.
+
+Here is a safer version of the example above:
+
+```rego
+package main
+
+import rego.v1
+
+deny contains result if {
+	some att in attestations
+	got := predicate_type(att)
+	got != "https://slsa.dev/provenance/v0.2"
+	result := {"msg": sprintf(
+		"Unexpected predicate type %s in statement %s",
+		[got, statement_type(att)],
+	)}
+}
+
+deny contains result if {
+	count(attestations) == 0
+	result := {"msg": "No attestation found"}
+}
+
+attestations := object.get(input, "attestations", [])
+
+statement_type(att) := object.get(att, ["statement", "_type"], "N/A")
+
+predicate_type(att) := object.get(att, ["statement", "predicateType"], "N/A")
+```

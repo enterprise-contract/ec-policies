@@ -141,7 +141,6 @@ Rules included:
 * xref:release_policy.adoc#rpm_signature__allowed[RPM Signature: Allowed RPM signature key]
 * xref:release_policy.adoc#rpm_signature__result_format[RPM Signature: Result format]
 * xref:release_policy.adoc#rpm_signature__rule_data_provided[RPM Signature: Rule data provided]
-* xref:release_policy.adoc#redhat_manifests__redhat_manifests_missing[Red Hat manifests: Missing Red Hat manifests]
 * xref:release_policy.adoc#sbom_cyclonedx__allowed[SBOM CycloneDX: Allowed]
 * xref:release_policy.adoc#sbom_cyclonedx__allowed_package_external_references[SBOM CycloneDX: Allowed package external references]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]
@@ -1052,24 +1051,6 @@ Confirm the expected `allowed_rpm_signature_keys` rule data key has been provide
 * Code: `rpm_signature.rule_data_provided`
 * Effective from: `2024-10-05T00:00:00Z`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_signature.rego#L52[Source, window="_blank"]
-
-[#redhat_manifests_package]
-== link:#redhat_manifests_package[Red Hat manifests]
-
-Red Hat images are expected to include certain manifest files. This package verifies this requirement is met.
-
-* Package name: `redhat_manifests`
-* Package full path: `policy.release.redhat_manifests`
-
-[#redhat_manifests__redhat_manifests_missing]
-=== link:#redhat_manifests__redhat_manifests_missing[Missing Red Hat manifests]
-
-Verify the expected Red Hat manifests are available in the image.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Missing Red Hat manifest %q`
-* Code: `redhat_manifests.redhat_manifests_missing`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/redhat_manifests.rego#L14[Source, window="_blank"]
 
 [#sbom_cyclonedx_package]
 == link:#sbom_cyclonedx_package[SBOM CycloneDX]

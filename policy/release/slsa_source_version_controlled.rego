@@ -57,15 +57,15 @@ deny contains result if {
 # METADATA
 # title: Material uri is a git repo
 # description: >-
-#   Ensure each entry in the predicate.materials array of the attestation uses
-#   a git URI.
+#   Ensure each entry in the predicate.materials array with a SHA-1 digest includes
+#   a valid Git URI.
 # custom:
 #   short_name: materials_uri_is_git_repo
 #   failure_msg: Material URI %q is not a git URI
 #   solution: >-
-#     Make sure the format of the URI in the materials section of the attestation
-#     is a valid URI. This information comes from the 'CHAINS-GIT_URL' result of the
-#     'git-clone' task.
+#     Ensure the URI associated with a SHA-1 digest in the materials section
+#     of the attestation is valid. This URI is derived from the 'CHAINS-GIT_URL' output
+#     of the 'git-clone' task.
 #   collections:
 #   - minimal
 #   - slsa3
@@ -82,15 +82,15 @@ deny contains result if {
 # METADATA
 # title: Materials include git commit shas
 # description: >-
-#   Ensure each entry in the predicate.materials array of the attestation includes
-#   a SHA1 digest which corresponds to a git commit.
+#   Ensure that each entry in the predicate.materials array with a SHA-1 digest includes
+#   a valid Git commit SHA.
 # custom:
 #   short_name: materials_include_git_sha
 #   failure_msg: Material digest %q is not a git commit sha
 #   solution: >-
-#     Make sure the format of the digest.sha1 in the materials section of the attestation
-#     is a valid commit sha. This information comes from the 'CHAINS-GIT_COMMIT' result of the
-#     'git-clone' task.
+#     Ensure the digest.sha1 in the materials section of the attestation is a valid
+#     Git commit SHA. This commit information is derived from the 'CHAINS-GIT_COMMIT'
+#     output of the 'git-clone' task.
 #   collections:
 #   - minimal
 #   - slsa3

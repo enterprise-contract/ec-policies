@@ -1306,9 +1306,9 @@ This package verifies the requirement by asserting the image was built from a gi
 [#slsa_source_version_controlled__materials_uri_is_git_repo]
 === link:#slsa_source_version_controlled__materials_uri_is_git_repo[Material uri is a git repo]
 
-Ensure each entry in the predicate.materials array of the attestation uses a git URI.
+Ensure each entry in the predicate.materials array with a SHA-1 digest includes a valid Git URI.
 
-*Solution*: Make sure the format of the URI in the materials section of the attestation is a valid URI. This information comes from the 'CHAINS-GIT_URL' result of the 'git-clone' task.
+*Solution*: Ensure the URI associated with a SHA-1 digest in the materials section of the attestation is valid. This URI is derived from the 'CHAINS-GIT_URL' output of the 'git-clone' task.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Material URI %q is not a git URI`
@@ -1330,9 +1330,9 @@ Confirm at least one entry in the predicate.materials array of the attestation c
 [#slsa_source_version_controlled__materials_include_git_sha]
 === link:#slsa_source_version_controlled__materials_include_git_sha[Materials include git commit shas]
 
-Ensure each entry in the predicate.materials array of the attestation includes a SHA1 digest which corresponds to a git commit.
+Ensure that each entry in the predicate.materials array with a SHA-1 digest includes a valid Git commit SHA.
 
-*Solution*: Make sure the format of the digest.sha1 in the materials section of the attestation is a valid commit sha. This information comes from the 'CHAINS-GIT_COMMIT' result of the 'git-clone' task.
+*Solution*: Ensure the digest.sha1 in the materials section of the attestation is a valid Git commit SHA. This commit information is derived from the 'CHAINS-GIT_COMMIT' output of the 'git-clone' task.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Material digest %q is not a git commit sha`

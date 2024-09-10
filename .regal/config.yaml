@@ -60,6 +60,8 @@ rules:
   idiomatic:
     no-defined-entrypoint:
       level: ignore
+    directory-package-mismatch:
+      level: ignore # we need to refactor our directory structure see https://issues.redhat.com/browse/EC-864
   bugs:
     leaked-internal-reference:
       ignore:

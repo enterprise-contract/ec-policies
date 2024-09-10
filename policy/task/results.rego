@@ -42,14 +42,36 @@ deny contains result if {
 }
 
 errors contains err if {
-	some required in lib.rule_data(_rule_data_key)
-	input.metadata.name == required.task
+	version := object.get(input.metadata, ["labels", "app.kubernetes.io/version"], "")
+	version_constraints := {v | some r in lib.rule_data(_rule_data_key); v := r.version}
+	not version in version_constraints
+
+	some required in {r |
+		some r in lib.rule_data(_rule_data_key)
+		input.metadata.name == r.task
+		not r.version
+	}
 	found := [result |
 		some result in input.spec.results
 		result.name == required.result
 	]
 	count(found) == 0
-	err := sprintf("%q result not found in %q Task", [required.result, required.task])
+	err := sprintf("%q result not found in %q Task%s (all versions)", [required.result, required.task, _vstr(version)])
+}
+
+errors contains err if {
+	version := object.get(input.metadata, ["labels", "app.kubernetes.io/version"], "")
+	some required in {r |
+		some r in lib.rule_data(_rule_data_key)
+		input.metadata.name == r.task
+		r.version == version
+	}
+	found := [result |
+		some result in input.spec.results
+		result.name == required.result
+	]
+	count(found) == 0
+	err := sprintf("%q result not found in %q Task/v%s", [required.result, required.task, version])
 }
 
 _rule_data_errors contains err if {
@@ -60,6 +82,7 @@ _rule_data_errors contains err if {
 			"type": "object",
 			"properties": {
 				"task": {"type": "string"},
+				"version": {"type": "string"},
 				"result": {"type": "string"},
 			},
 			"additionalProperties": false,
@@ -76,3 +99,8 @@ _rule_data_errors contains err if {
 }
 
 _rule_data_key := "required_task_results"
+
+_vstr(v) := s if {
+	v != ""
+	s := sprintf("/v%s", [v])
+} else := ""

@@ -10,10 +10,78 @@ test_all_good if {
 		with data.rule_data as _rule_data
 }
 
+test_different_versions_different_results_required_all_good if {
+	task_v1 = {
+		"apiVersion": "tekton.dev/v1",
+		"kind": "Task",
+		"metadata": {"name": "task"},
+		"spec": {"results": [{"name": "ALL_RESULT"}]},
+	}
+
+	task_v2 = {
+		"apiVersion": "tekton.dev/v1",
+		"kind": "Task",
+		"metadata": {"name": "task", "labels": {"app.kubernetes.io/version": "2"}},
+		"spec": {"results": [{"name": "T2_RESULT"}]},
+	}
+
+	task_v3 = {
+		"apiVersion": "tekton.dev/v1",
+		"kind": "Task",
+		"metadata": {"name": "task", "labels": {"app.kubernetes.io/version": "3"}},
+		"spec": {"results": [{"name": "ALL_RESULT"}]},
+	}
+
+	rule_data = {"required_task_results": [
+		{"task": "task", "result": "ALL_RESULT"},
+		{"task": "task", "version": "2", "result": "T2_RESULT"},
+	]}
+
+	lib.assert_empty(results.deny) with input as task_v1
+		with data.rule_data as rule_data
+	lib.assert_empty(results.deny) with input as task_v2
+		with data.rule_data as rule_data
+	lib.assert_empty(results.deny) with input as task_v3
+		with data.rule_data as rule_data
+}
+
+test_different_versions_different_results_required_missing if {
+	task_v1 = {
+		"apiVersion": "tekton.dev/v1",
+		"kind": "Task",
+		"metadata": {"name": "task", "labels": {"app.kubernetes.io/version": "1"}},
+		"spec": {"results": [{"name": "T1_RESULT"}]},
+	}
+
+	task_v2 = {
+		"apiVersion": "tekton.dev/v1",
+		"kind": "Task",
+		"metadata": {"name": "task", "labels": {"app.kubernetes.io/version": "2"}},
+		"spec": {"results": [{"name": "T2_RESULT"}]},
+	}
+
+	rule_data = {"required_task_results": [
+		{"task": "task", "result": "MISSING_RESULT"},
+		{"task": "task", "version": "2", "result": "MISSING_RESULT"},
+	]}
+
+	lib.assert_equal_results(results.deny, {{
+		"code": "results.required",
+		"msg": `"MISSING_RESULT" result not found in "task" Task/v1 (all versions)`,
+	}}) with input as task_v1
+		with data.rule_data as rule_data
+
+	lib.assert_equal_results(results.deny, {{
+		"code": "results.required",
+		"msg": `"MISSING_RESULT" result not found in "task" Task/v2`,
+	}}) with input as task_v2
+		with data.rule_data as rule_data
+}
+
 test_required_result_defined if {
 	expected := {{
 		"code": "results.required",
-		"msg": "\"GRILLED\" result not found in \"bacon\" Task",
+		"msg": `"GRILLED" result not found in "bacon" Task (all versions)`,
 	}}
 
 	lib.assert_equal_results(results.deny, expected) with data.rule_data as _rule_data

@@ -1,0 +1,3 @@
+{
+    "opa.dependency_paths.opa": "${workspaceFolder}/hack/ec-opa.sh"
+}

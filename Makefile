@@ -83,23 +83,28 @@ ec-version:
 	@# as the change date but let's show it anyhow
 	@$(EC) version
 
+# Set TEST to only run tests that match the given string. It does a regex match
+# on the fully qualified name iiuc, e.g. "policy.release.foo_test.test_thing"
+# so you could use TEST=test_thing or TEST=release.foo_", etc
+TEST_FILTER=$(if $(TEST),--run $(TEST))
+
 # Todo maybe: Run tests with conftest verify instead
 .PHONY: test
 test: ## Run all tests in verbose mode and check coverage
-	@$(OPA) test $(TEST_FILES) -v
+	@$(OPA) test $(TEST_FILES) $(TEST_FILTER) --verbose
 	$(COVERAGE)
-
-.PHONY: coverage
-# The cat does nothing but avoids a non-zero exit code from grep -v
-coverage: ## Show which lines of rego are not covered by tests
-	@$(OPA) test $(TEST_FILES) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
 
 .PHONY: quiet-test
 quiet-test: ## Run all tests in quiet mode and check coverage
-	@$(OPA) test $(TEST_FILES)
+	@$(OPA) test $(TEST_FILES) $(TEST_FILTER)
 	$(COVERAGE)
 
+.PHONY: watch
+watch: ## Run tests in watch mode, use TEST=package or TEST=test to focus on a single package or test
+	@$(OPA) test $(TEST_FILES) $(TEST_FILTER) --verbose --watch
+
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
+# (live-test and watch do similar things in different ways. Use whichever one you like better.)
 .PHONY: live-test
 live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` needs to be installed
 	@trap exit SIGINT; \
@@ -107,9 +112,10 @@ live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` ne
 	  git ls-files -c -o '*.rego' | entr -r -d -c $(MAKE) --no-print-directory quiet-test; \
 	done
 
-.PHONY: watch
-watch: ## Run tests in watch mode, use TEST=package/test to focus on single package or test
-	@$(OPA) test $(TEST_FILES) --verbose --watch $(if $(TEST),--run=$(TEST))
+.PHONY: coverage
+# The cat does nothing but avoids a non-zero exit code from grep -v
+coverage: ## Show which lines of rego are not covered by tests
+	@$(OPA) test $(TEST_FILES) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
 
 .PHONY: fmt
 fmt: ## Apply default formatting to all rego files. Use before you commit

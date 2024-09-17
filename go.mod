@@ -3,7 +3,7 @@ module github.com/enterprise-contract/ec-policies
 go 1.22.5
 
 require (
-	github.com/enterprise-contract/ec-cli v0.5.144
+	github.com/enterprise-contract/ec-cli v0.6.5
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.55.0
 	github.com/styrainc/regal v0.26.2
@@ -149,7 +149,7 @@ require (
 	github.com/enterprise-contract/go-gather/expander v0.0.1 // indirect
 	github.com/enterprise-contract/go-gather/gather v0.0.3 // indirect
 	github.com/enterprise-contract/go-gather/gather/file v0.0.2-0.20240906185922-e8ebd246dc19 // indirect
-	github.com/enterprise-contract/go-gather/gather/git v0.0.5 // indirect
+	github.com/enterprise-contract/go-gather/gather/git v0.0.6-0.20240911082231-b67aa65913d1 // indirect
 	github.com/enterprise-contract/go-gather/gather/http v0.0.2 // indirect
 	github.com/enterprise-contract/go-gather/gather/oci v0.0.4 // indirect
 	github.com/enterprise-contract/go-gather/metadata v0.0.2 // indirect

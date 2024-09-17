@@ -450,7 +450,7 @@ This package is responsible for verifying a CVE scan was performed during the bu
 
 The SLSA Provenance attestation for the image is inspected to ensure CVEs that have a known fix and meet a certain security level have not been detected. If detected, this policy rule will fail. By default, only CVEs of critical and high security level cause a failure. This is configurable by the rule data key `restrict_cve_security_levels`. The available levels are critical, high, medium, low, and unknown.
 
-*Solution*: Make sure to address any CVE's related to the image. The CVEs are detected by the task that runs a Clair scan and emits a result named `CLAIR_SCAN_RESULT`.
+*Solution*: Make sure to address any CVE's related to the image. The CVEs are detected by the task that runs a Clair scan and emits a result named `SCAN_OUTPUT`.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Found %d CVE vulnerabilities of %s security level`
@@ -462,7 +462,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that h
 
 The SLSA Provenance attestation for the image is inspected to ensure CVEs that do NOT have a known fix and meet a certain security level have not been detected. If detected, this policy rule will fail. By default, the list of security levels used by this policy is empty. This is configurable by the rule data key `restrict_unpatched_cve_security_levels`. The available levels are critical, high, medium, low, and unknown.
 
-*Solution*: CVEs without a known fix can only be remediated by either removing the impacted dependency, or by waiting for a fix to be available. The CVEs are detected by the task that emits a result named `CLAIR_SCAN_RESULT`.
+*Solution*: CVEs without a known fix can only be remediated by either removing the impacted dependency, or by waiting for a fix to be available. The CVEs are detected by the task that emits a result named `SCAN_OUTPUT`.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Found %d unpatched CVE vulnerabilities of %s security level`
@@ -474,7 +474,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that d
 
 Confirm that clair-scan task results are present in the SLSA Provenance attestation of the build pipeline.
 
-*Solution*: Make sure there is a successful task in the build pipeline that runs a Clair scan and creates a task result called `CLAIR_SCAN_RESULT`.
+*Solution*: Make sure there is a successful task in the build pipeline that runs a Clair scan and creates a task result called `SCAN_OUTPUT`.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Clair CVE scan results were not found`
@@ -498,7 +498,7 @@ The `CLAIR_SCAN_RESULT` result name has been deprecated, and has been replaced w
 
 The SLSA Provenance attestation for the image is inspected to ensure CVEs that have a known fix and meet a certain security level have not been detected. If detected, this policy rule will raise a warning. By default, the list of CVE security levels used by this policy is empty. However, this is configurable by the rule data key `warn_cve_security_levels`. The available levels are critical, high, medium, low, and unknown.
 
-*Solution*: Make sure to address any CVE's related to the image. The CVEs are detected by the task that runs a Clair scan and emits a result named `CLAIR_SCAN_RESULT`.
+*Solution*: Make sure to address any CVE's related to the image. The CVEs are detected by the task that runs a Clair scan and emits a result named `SCAN_OUTPUT`.
 
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Found %d non-blocking CVE vulnerabilities of %s security level`
@@ -510,7 +510,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that h
 
 The SLSA Provenance attestation for the image is inspected to ensure CVEs that do NOT have a known fix and meet a certain security level have not been detected. If detected, this policy rule will raise a warning. By default, only CVEs of critical and high security level cause a warning. This is configurable by the rule data key `warn_unpatched_cve_security_levels`. The available levels are critical, high, medium, low, and unknown.
 
-*Solution*: CVEs without a known fix can only be remediated by either removing the impacted dependency, or by waiting for a fix to be available. The CVEs are detected by the task that emits a result named `CLAIR_SCAN_RESULT`.
+*Solution*: CVEs without a known fix can only be remediated by either removing the impacted dependency, or by waiting for a fix to be available. The CVEs are detected by the task that emits a result named `SCAN_OUTPUT`.
 
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Found %d non-blocking unpatched CVE vulnerabilities of %s security level`

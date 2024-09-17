@@ -7,7 +7,7 @@ require (
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.55.0
 	github.com/styrainc/regal v0.26.2
-	github.com/tektoncd/cli v0.38.0
+	github.com/tektoncd/cli v0.38.1
 	oras.land/oras v1.2.0
 )
 
@@ -369,7 +369,7 @@ require (
 	github.com/tektoncd/chains v0.22.0 // indirect
 	github.com/tektoncd/hub v1.18.0 // indirect
 	github.com/tektoncd/pipeline v0.63.0 // indirect
-	github.com/tektoncd/triggers v0.29.0 // indirect
+	github.com/tektoncd/triggers v0.29.1 // indirect
 	github.com/thales-e-security/pool v0.0.2 // indirect
 	github.com/theupdateframework/go-tuf v0.7.0 // indirect
 	github.com/titanous/rocacheck v0.0.0-20171023193734-afe73141d399 // indirect

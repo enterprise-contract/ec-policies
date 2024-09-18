@@ -192,7 +192,17 @@ _contains(needle, haystack) if {
 	needle_purl.namespace == hay_purl.namespace
 	needle_purl.name == hay_purl.name
 	_matches_version(needle_purl.version, hay)
+
+	not _excluded(needle_purl, object.get(hay, "exceptions", []))
 } else := false
+
+_excluded(purl, exceptions) if {
+	matches := [exception |
+		some exception in exceptions
+		exception.subpath == purl.subpath
+	]
+	count(matches) > 0
+}
 
 _matches_version(version, matcher) if {
 	matcher.format in {"semverv", "semver"}
@@ -232,6 +242,14 @@ _rule_data_errors contains msg if {
 					"format": {"enum": ["semver", "semverv"]},
 					"min": {"type": "string"},
 					"max": {"type": "string"},
+					"exceptions": {
+						"type": "array",
+						"uniqueItems": true,
+						"items": {
+							"type": "object",
+							"properties": {"subpath": {"type": "string"}},
+						},
+					},
 				},
 				"additionalProperties": false,
 				"anyOf": [

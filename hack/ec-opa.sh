@@ -18,4 +18,5 @@
 # This script is a wrapper around the EC version of OPA. Due to the custom rego functions provided
 # by EC, e.g. ec.oci.image_files, a custom version of OPA is required.
 set -euo pipefail
+cd "$(dirname "$0")/.."
 exec go run github.com/enterprise-contract/ec-cli opa "$@"

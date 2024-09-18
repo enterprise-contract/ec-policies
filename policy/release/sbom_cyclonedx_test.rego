@@ -228,6 +228,39 @@ test_not_allowed_with_min_max if {
 	assert_allowed("pkg:golang/k8s.io/client-go@v99.99.99", disallowed_packages)
 }
 
+test_not_allowed_with_subpath if {
+	disallowed_packages := [{
+		"purl": "pkg:golang/github.com/hashicorp/consul#api",
+		"format": "semverv",
+		"min": "v1.29.2",
+	}]
+
+	# Subpath matches
+	assert_not_allowed("pkg:golang/github.com/hashicorp/consul@v1.29.2#api", disallowed_packages)
+
+	# Subpath does not match
+	assert_allowed("pkg:golang/github.com/hashicorp/consul@v1.29.2#spam", disallowed_packages)
+
+	# Missing subpath does not match - (top level case)
+	assert_allowed("pkg:golang/github.com/hashicorp/consul@v1.29.2", disallowed_packages)
+	assert_allowed("pkg:golang/github.com/hashicorp/consul@v1.29.2#", disallowed_packages)
+}
+
+test_not_allowed_with_universal_subpath if {
+	disallowed_packages := [{
+		"purl": "pkg:golang/github.com/hashicorp/consul#*",
+		"format": "semverv",
+		"min": "v1.29.2",
+	}]
+
+	# Any subpath matches
+	assert_not_allowed("pkg:golang/github.com/hashicorp/consul@v1.29.2#spam", disallowed_packages)
+
+	# Missing subpath matches
+	assert_not_allowed("pkg:golang/github.com/hashicorp/consul@v1.29.2", disallowed_packages)
+	assert_not_allowed("pkg:golang/github.com/hashicorp/consul@v1.29.2#", disallowed_packages)
+}
+
 assert_allowed(purl, disallowed_packages) if {
 	att := json.patch(_sbom_attestation, [{
 		"op": "add",

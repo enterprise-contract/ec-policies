@@ -1096,7 +1096,7 @@ Checks different properties of the CycloneDX SBOMs associated with the image bei
 [#sbom_cyclonedx__allowed]
 === link:#sbom_cyclonedx__allowed[Allowed]
 
-Confirm the CycloneDX SBOM contains only allowed packages. By default all packages are allowed. Use the "disallowed_packages" rule data key to provide a list of disallowed packages.
+Confirm the CycloneDX SBOM contains only allowed packages. By default all packages are allowed. Use the "disallowed_packages" rule data key to provide a list of disallowed packages. The subpath attribute of the PURL must be an exact match. Use the special value of "*" as a matcher for all subpaths, e.g. `pkg:golang/my-pakcage#*`.
 
 *Solution*: Update the image to not use a disallowed package.
 
@@ -1115,7 +1115,7 @@ Confirm the CycloneDX SBOM contains only packages with explicitly allowed extern
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package %s has reference %q of type %q which is not explicitly allowed%s`
 * Code: `sbom_cyclonedx.allowed_package_external_references`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L125[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L127[Source, window="_blank"]
 
 [#sbom_cyclonedx__disallowed_package_attributes]
 === link:#sbom_cyclonedx__disallowed_package_attributes[Disallowed package attributes]
@@ -1128,7 +1128,7 @@ Confirm the CycloneDX SBOM contains only packages without disallowed attributes.
 * FAILURE message: `Package %s has the attribute %q set%s`
 * Code: `sbom_cyclonedx.disallowed_package_attributes`
 * Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L93[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L95[Source, window="_blank"]
 
 [#sbom_cyclonedx__disallowed_package_external_references]
 === link:#sbom_cyclonedx__disallowed_package_external_references[Disallowed package external references]
@@ -1141,7 +1141,7 @@ Confirm the CycloneDX SBOM contains only packages without disallowed external re
 * FAILURE message: `Package %s has reference %q of type %q which is disallowed%s`
 * Code: `sbom_cyclonedx.disallowed_package_external_references`
 * Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L155[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L157[Source, window="_blank"]
 
 [#sbom_cyclonedx__disallowed_packages_provided]
 === link:#sbom_cyclonedx__disallowed_packages_provided[Disallowed packages list is provided]
@@ -1153,7 +1153,7 @@ Confirm the `disallowed_packages` and `disallowed_attributes` rule data were pro
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `sbom_cyclonedx.disallowed_packages_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L73[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L75[Source, window="_blank"]
 
 [#sbom_cyclonedx__found]
 === link:#sbom_cyclonedx__found[Found]

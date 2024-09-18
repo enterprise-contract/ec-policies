@@ -54,7 +54,9 @@ deny contains result if {
 # title: Allowed
 # description: >-
 #   Confirm the CycloneDX SBOM contains only allowed packages. By default all packages are allowed.
-#   Use the "disallowed_packages" rule data key to provide a list of disallowed packages.
+#   Use the "disallowed_packages" rule data key to provide a list of disallowed packages. The
+#   subpath attribute of the PURL must be an exact match. Use the special value of "*" as a matcher
+#   for all subpaths, e.g. `pkg:golang/my-pakcage#*`.
 # custom:
 #   short_name: allowed
 #   failure_msg: "Package is not allowed: %s"
@@ -191,6 +193,7 @@ _contains(needle, haystack) if {
 	needle_purl.type == hay_purl.type
 	needle_purl.namespace == hay_purl.namespace
 	needle_purl.name == hay_purl.name
+	hay_purl.subpath in {"*", needle_purl.subpath}
 	_matches_version(needle_purl.version, hay)
 } else := false
 

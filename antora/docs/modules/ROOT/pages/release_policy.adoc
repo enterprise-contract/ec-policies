@@ -138,6 +138,7 @@ Rules included:
 * xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]
 * xref:release_policy.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]
 * xref:release_policy.adoc#quay_expiration__expires_label[Quay expiration: Expires label]
+* xref:release_policy.adoc#rpm_repos__rule_data_provided[RPM Repos: Known repo id list provided]
 * xref:release_policy.adoc#rpm_signature__allowed[RPM Signature: Allowed RPM signature key]
 * xref:release_policy.adoc#rpm_signature__result_format[RPM Signature: Result format]
 * xref:release_policy.adoc#rpm_signature__rule_data_provided[RPM Signature: Rule data provided]
@@ -1008,6 +1009,38 @@ Verify an attestation created by the RHTAP Jenkins build pipeline is present.
 * FAILURE message: `The expected SLSA v1.0 provenance with build type %s was not found.`
 * Code: `rhtap_jenkins.attestation_found`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_jenkins.rego#L17[Source, window="_blank"]
+
+[#rpm_repos_package]
+== link:#rpm_repos_package[RPM Repos]
+
+This package defines rules to confirm that all RPM packages listed in SBOMs specify a known and permitted repository id.
+
+* Package name: `rpm_repos`
+* Package full path: `policy.release.rpm_repos`
+
+[#rpm_repos__ids_known]
+=== link:#rpm_repos__ids_known[All rpms have known repo ids]
+
+Each RPM package listed in an SBOM must specify the repository id that it comes from, and that repository id must be present in the list of known and permitted repository ids.
+
+*Solution*: Ensure every rpm comes from a known and permitted repository, and that the data in the SBOM correctly records that.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `RPM repo id check failed: %s`
+* Code: `rpm_repos.ids_known`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos.rego#L32[Source, window="_blank"]
+
+[#rpm_repos__rule_data_provided]
+=== link:#rpm_repos__rule_data_provided[Known repo id list provided]
+
+A list of known and permitted repository ids should be available in the rule data.
+
+*Solution*: Include a data source that provides a list of known repository ids under the 'known_rpm_repositories' key under the top level 'rule_data' key.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Rule data '%s' has unexpected format: %s`
+* Code: `rpm_repos.rule_data_provided`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos.rego#L14[Source, window="_blank"]
 
 [#rpm_signature_package]
 == link:#rpm_signature_package[RPM Signature]

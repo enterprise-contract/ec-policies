@@ -2,10 +2,12 @@ package lib
 
 import rego.v1
 
-# It's fairly idiomatic rego to just write this inline but still
-# I think this makes things a little more readable
+# It's fairly idiomatic rego to do this inline but these
+# can make your code a little more readable in some cases
 #
 to_set(arr) := {member | some member in arr}
+
+to_array(s) := [member | some member in s]
 
 # Without the in keyword it could be done like this:
 #  needle == haystack[_]

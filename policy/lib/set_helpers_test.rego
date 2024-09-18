@@ -13,6 +13,11 @@ test_to_set if {
 	lib.assert_equal(my_set, lib.to_set(my_set))
 }
 
+test_to_array if {
+	lib.assert_equal(my_list, lib.to_array(my_set))
+	lib.assert_equal(my_list, lib.to_array(my_list))
+}
+
 test_included_in if {
 	lib.included_in("a", my_list)
 	lib.included_in("a", my_set)

@@ -69,22 +69,24 @@ test_repo_id_purls_missing_repo_ids if {
 			"code": "rpm_repos.ids_known",
 			"msg": sprintf("%s %s", [
 				"RPM repo id check failed: An RPM component in the SBOM did not specify a repository_id value in its purl:",
-				"pkg:rpm_borken",
+				"pkg:rpm/borken",
 			]),
 		},
 	}
 
-	lib.assert_equal_results(expected, rpm_repos.deny) with rpm_repos._all_sboms as [fake_sbom({p1, p2, p4, p5, p6})]
+	lib.assert_equal_results(expected, rpm_repos.deny) with rpm_repos._all_sboms as [fake_sbom({p1, p2, p4, p5, p6, p7})]
 		with data.rule_data.known_rpm_repositories as fake_repo_id_list
 }
 
 test_repo_id_purls_missing_repo_ids_truncated if {
+	# It's not clear to me which of the two violations will be listed,
+	# but thankfully it seems to be deterministic
 	expected := {
 		{
 			"code": "rpm_repos.ids_known",
 			"msg": sprintf("%s %s", [
 				"RPM repo id check failed: An RPM component in the SBOM did not specify a repository_id value in its purl:",
-				"pkg:rpm/redhat/spam@1.2.3?arch=amd64&pastry_id=puff",
+				"pkg:rpm/borken",
 			]),
 		},
 		{
@@ -140,7 +142,11 @@ fake_sboms := [fake_sbom({p1, p2, p3, p4, p5, p6})]
 
 fake_sbom(fake_purls) := {"components": [{"purl": p} | some p in fake_purls]}
 
-fake_repo_id_list := ["rhel-23-for-spam-9-rpms", "rhel-42-for-bacon-12-rpms"]
+fake_repo_id_list := [
+	"rhel-23-for-spam-9-rpms",
+	"rhel-42-for-bacon-12-rpms",
+	"rhel-8-for-x86_64-appstream-eus-rpms__8_DOT_6",
+]
 
 p1 := "pkg:rpm/redhat/spam@1.2.3?arch=amd64&repository_id=rhel-23-for-spam-9-rpms"
 
@@ -150,6 +156,9 @@ p3 := "pkg:rpm/redhat/spam@1.2.3?arch=amd64&repository_id=rhel-23-unrecognized-2
 
 p4 := "pkg:rpm/redhat/spam@1.2.3?arch=amd64&pastry_id=puff"
 
-p5 := "pkg:rpm_borken"
+p5 := "pkg:rpm/borken"
 
 p6 := "pkg:golang/gitplanet.com/bacon@1.2.3?arch=amd64"
+
+# regal ignore:line-length
+p7 := "pkg:rpmmod/redhat/squid@4%3A8040020210420090912%3A522a0ee4?arch=ppc64le&repository_id=rhel-8-for-x86_64-appstream-eus-rpms__8_DOT_6"

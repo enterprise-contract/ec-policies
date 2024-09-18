@@ -17,10 +17,26 @@
 package main
 
 import (
-	_ "github.com/enterprise-contract/ec-cli"
-	_ "github.com/google/addlicense"
-	_ "github.com/open-policy-agent/conftest"
-	_ "github.com/styrainc/regal"
-	_ "github.com/tektoncd/cli/cmd/tkn"
-	_ "oras.land/oras/cmd/oras"
+	"errors"
+	"log"
+	"os"
+
+	// Register custom rego functions
+	_ "github.com/enterprise-contract/ec-cli/cmd/validate"
+	"github.com/styrainc/regal/cmd"
 )
+
+func main() {
+	// Remove date and time from any `log.*` calls, as that doesn't add much of value here
+	// Evaluate options for logging later
+	log.SetFlags(0)
+
+	if err := cmd.RootCommand.Execute(); err != nil {
+		code := 1
+		if e := (cmd.ExitError{}); errors.As(err, &e) {
+			code = e.Code()
+		}
+
+		os.Exit(code)
+	}
+}

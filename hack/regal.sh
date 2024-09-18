@@ -15,8 +15,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# This script is a wrapper around the EC version of OPA. Due to the custom rego functions provided
-# by EC, e.g. ec.oci.image_files, a custom version of OPA is required.
+# This script is a wrapper around the Regal version specified in go.mod. It is intended to ensure
+# the expected regal version is used.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-exec go run github.com/enterprise-contract/ec-cli opa "$@"
+# exec go run github.com/styrainc/regal "$@"
+exec go run regal.go "$@"

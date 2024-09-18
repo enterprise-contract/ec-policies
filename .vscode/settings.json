@@ -1,3 +1,11 @@
 {
-    "opa.dependency_paths.opa": "${workspaceFolder}/hack/ec-opa.sh"
+    "opa.dependency_paths.opa": "${workspaceFolder}/hack/ec-opa.sh",
+    "opa.dependency_paths.regal": "${workspaceFolder}/hack/regal.sh",
+    "opa.formatter": "opa-fmt",
+    "opa.languageServers": [
+        "regal"
+    ],
+    "[rego]": {
+        "editor.defaultFormatter": "tsandall.opa"
+    }
 }

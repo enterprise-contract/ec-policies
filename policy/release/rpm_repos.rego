@@ -105,9 +105,15 @@ all_rpm_purls contains purl if {
 	some sbom in _all_sboms
 	some component in sbom.components
 	purl := component.purl
+	_is_rpmish(purl)
+}
 
-	# I'm assuming this is faster than parsing it and checking the type
-	startswith(purl, "pkg:rpm")
+# Match rpms and modules
+# (Use a string match instead of parsing it and checking the type)
+_is_rpmish(purl) if {
+	startswith(purl, "pkg:rpm/")
+} else if {
+	startswith(purl, "pkg:rpmmod/")
 }
 
 # In future there will be SPDX sboms also

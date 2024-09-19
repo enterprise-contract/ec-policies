@@ -48,6 +48,7 @@ manifest := {
 		"features.operators.openshift.io/token-auth-azure": "false",
 		"features.operators.openshift.io/token-auth-gcp": "false",
 		"operators.openshift.io/valid-subscription": `["spam"]`,
+		"alm-examples": `"endpoint": "http://example:4317" spam`,
 	}},
 	"spec": {
 		"version": "0.1.3",

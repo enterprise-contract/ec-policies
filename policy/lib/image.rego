@@ -23,6 +23,8 @@ parse(ref) := d if {
 		),
 	)
 
+	not contains(repo, "://")
+
 	d := {
 		"digest": digest,
 		"repo": repo,

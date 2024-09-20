@@ -348,6 +348,7 @@ all_image_ref(manifest) := [e |
 		],
 	]
 	some i in imgs
+
 	e := {"ref": i.ref, "path": i.path}
 ]
 

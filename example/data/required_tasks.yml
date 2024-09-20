@@ -30,7 +30,6 @@ pipeline-required-tasks:
         - init
         - prefetch-dependencies
         - sast-snyk-check
-        - sbom-json-check
         - show-sbom
         - summary
   docker:
@@ -44,7 +43,6 @@ pipeline-required-tasks:
         - init
         - prefetch-dependencies
         - sast-snyk-check
-        - sbom-json-check
         - show-sbom
         - summary
   generic:
@@ -58,7 +56,6 @@ pipeline-required-tasks:
         - init
         - prefetch-dependencies
         - sast-snyk-check
-        - sbom-json-check
         - show-sbom
         - summary
   java:
@@ -72,7 +69,6 @@ pipeline-required-tasks:
         - prefetch-dependencies
         - s2i-java
         - sast-snyk-check
-        - sbom-json-check
         - show-sbom
         - summary
   nodejs:
@@ -86,7 +82,6 @@ pipeline-required-tasks:
         - prefetch-dependencies
         - s2i-nodejs
         - sast-snyk-check
-        - sbom-json-check
         - show-sbom
         - summary
 

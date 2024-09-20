@@ -198,6 +198,29 @@ test_not_allowed_with_max if {
 	assert_allowed("pkg:golang/k8s.io/client-go@v99.99.99", disallowed_packages)
 }
 
+test_not_allowed_with_subpaths if {
+	disallowed_packages := [{
+		"purl": "pkg:golang/github.com/hashicorp/consul",
+		"format": "semverv",
+		"min": "v1.29.2",
+		"exceptions": [
+			{"subpath": "api"},
+			{"subpath": "sdk"},
+		],
+	}]
+
+	# Unknown subpath matches
+	assert_not_allowed("pkg:golang/github.com/hashicorp/consul@v1.29.2#spam", disallowed_packages)
+
+	# Missing subpath matches
+	assert_not_allowed("pkg:golang/github.com/hashicorp/consul@v1.29.2#", disallowed_packages)
+	assert_not_allowed("pkg:golang/github.com/hashicorp/consul@v1.29.2", disallowed_packages)
+
+	# Excluded subpaths do not match
+	assert_allowed("pkg:golang/github.com/hashicorp/consul@v1.29.2#api", disallowed_packages)
+	assert_allowed("pkg:golang/github.com/hashicorp/consul@v1.29.2#sdk", disallowed_packages)
+}
+
 test_not_allowed_with_min_max if {
 	disallowed_packages := [{
 		"purl": "pkg:golang/k8s.io/client-go",
@@ -264,7 +287,7 @@ test_rule_data_validation if {
 			# Additional properties not allowed
 			{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0", "blah": "foo"},
 			# Bad types everywhere
-			{"purl": 1, "format": 2, "min": 3, "max": 4},
+			{"purl": 1, "format": 2, "min": 3, "max": 4, "exceptions": [{"subpath": 1}]},
 			# Duplicated items
 			{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0"},
 			{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0"},
@@ -404,6 +427,11 @@ test_rule_data_validation if {
 		{
 			"code": "sbom_cyclonedx.disallowed_packages_provided",
 			"msg": "Rule data disallowed_external_references has unexpected format: 1: url is required",
+		},
+		{
+			"code": "sbom_cyclonedx.disallowed_packages_provided",
+			# regal ignore:line-length
+			"msg": "Rule data disallowed_packages has unexpected format: 2.exceptions.0.subpath: Invalid type. Expected: string, given: integer",
 		},
 	}
 

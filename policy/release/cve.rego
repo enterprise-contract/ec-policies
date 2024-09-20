@@ -25,7 +25,7 @@ import data.lib
 #   failure_msg: Found %d non-blocking CVE vulnerabilities of %s security level
 #   solution: >-
 #     Make sure to address any CVE's related to the image. The CVEs are detected
-#     by the task that runs a Clair scan and emits a result named `CLAIR_SCAN_RESULT`.
+#     by the task that runs a Clair scan and emits a result named `SCAN_OUTPUT`.
 #   collections:
 #   - minimal
 #   - redhat
@@ -51,7 +51,7 @@ warn contains result if {
 #   solution: >-
 #     CVEs without a known fix can only be remediated by either removing the impacted dependency, or
 #     by waiting for a fix to be available. The CVEs are detected by the task that emits a result
-#     named `CLAIR_SCAN_RESULT`.
+#     named `SCAN_OUTPUT`.
 #   collections:
 #   - minimal
 #   - redhat
@@ -98,7 +98,7 @@ warn contains result if {
 #   failure_msg: Found %d CVE vulnerabilities of %s security level
 #   solution: >-
 #     Make sure to address any CVE's related to the image. The CVEs are detected
-#     by the task that runs a Clair scan and emits a result named `CLAIR_SCAN_RESULT`.
+#     by the task that runs a Clair scan and emits a result named `SCAN_OUTPUT`.
 #   collections:
 #   - minimal
 #   - redhat
@@ -124,7 +124,7 @@ deny contains result if {
 #   solution: >-
 #     CVEs without a known fix can only be remediated by either removing the impacted dependency, or
 #     by waiting for a fix to be available. The CVEs are detected by the task that emits a result
-#     named `CLAIR_SCAN_RESULT`.
+#     named `SCAN_OUTPUT`.
 #   collections:
 #   - minimal
 #   - redhat
@@ -146,7 +146,7 @@ deny contains result if {
 #   failure_msg: Clair CVE scan results were not found
 #   solution: >-
 #     Make sure there is a successful task in the build pipeline that runs a
-#     Clair scan and creates a task result called `CLAIR_SCAN_RESULT`.
+#     Clair scan and creates a task result called `SCAN_OUTPUT`.
 #   collections:
 #   - minimal
 #   - redhat

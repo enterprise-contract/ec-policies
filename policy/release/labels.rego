@@ -31,10 +31,7 @@ import data.lib.image
 #   - redhat
 #
 warn contains result if {
-	found_labels := {name |
-		some label in _image_labels
-		name := label.name
-	}
+	found_labels := {label.name | some label in _image_labels}
 	some optional_label in optional_labels
 	name := optional_label.name
 	not name in found_labels
@@ -256,10 +253,9 @@ _parent_labels contains label if {
 	label := {"name": name, "value": value}
 }
 
-_value(labels, name) := [v |
+_value(labels, name) := [label.value |
 	some label in labels
 	label.name == name
-	v := label.value
 ][0]
 
 required_labels := lib.rule_data("required_labels") if {

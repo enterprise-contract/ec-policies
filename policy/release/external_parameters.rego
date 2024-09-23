@@ -25,10 +25,9 @@ import data.lib
 deny contains result if {
 	some provenance in lib.pipelinerun_attestations
 
-	param_names := {name |
+	param_names := {p.name |
 		some p in provenance.statement.predicate.buildDefinition.externalParameters.runSpec.params
 		p.value != ""
-		name := p.name
 	}
 	expected_names := {n | some n in lib.rule_data(_rule_data_key)}
 

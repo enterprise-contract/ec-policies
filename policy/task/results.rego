@@ -43,7 +43,7 @@ deny contains result if {
 
 errors contains err if {
 	version := object.get(input.metadata, ["labels", "app.kubernetes.io/version"], "")
-	version_constraints := {v | some r in lib.rule_data(_rule_data_key); v := r.version}
+	version_constraints := {r.version | some r in lib.rule_data(_rule_data_key)}
 	not version in version_constraints
 
 	some required in {r |

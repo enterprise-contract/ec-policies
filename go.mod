@@ -6,7 +6,7 @@ require (
 	github.com/enterprise-contract/ec-cli v0.6.20
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.55.0
-	github.com/styrainc/regal v0.26.2
+	github.com/styrainc/regal v0.27.0
 	github.com/tektoncd/cli v0.38.1
 	oras.land/oras v1.2.0
 )

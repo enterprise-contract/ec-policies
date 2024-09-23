@@ -246,7 +246,7 @@ _trusted_artifact_inputs(task) := {value |
 	}) == 1
 }
 
-_trusted_artifact_outputs(task) := {value |
+_trusted_artifact_outputs(task) := {result.value |
 	some result in tkn.task_results(task)
 	result.type == "string"
 	endswith(result.name, "_ARTIFACT")
@@ -255,8 +255,6 @@ _trusted_artifact_outputs(task) := {value |
 		b = regex.match(supported_uri_ta_reg, result.value)
 		b
 	}) == 1
-
-	value := result.value
 }
 
 _uses_trusted_artifacts if {

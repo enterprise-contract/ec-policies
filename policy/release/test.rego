@@ -101,7 +101,7 @@ deny contains result if {
 #   - test.test_data_found
 #
 deny contains result if {
-	with_results := [result | some r in lib.results_from_tests; result := r.value.result]
+	with_results := [r.value.result | some r in lib.results_from_tests]
 	count(with_results) != count(lib.results_from_tests)
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
@@ -268,11 +268,10 @@ _did_result(test, _, key) if {
 
 # Collect all tests that have resulted with one of the given
 # results and convert their name to "test:<name>" format
-_resulted_in(results, key) := {r |
+_resulted_in(results, key) := {result.name |
 	some result in lib.results_from_tests
 	test := result.value
 	_did_result(test, results, key)
-	r := result.name
 }
 
 _rule_data_errors contains msg if {

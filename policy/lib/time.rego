@@ -15,9 +15,8 @@ default_effective_on := "2022-01-01T00:00:00Z"
 #
 when(metadata_chain) := effective_on if {
 	scope_precedence := ["rule", "document", "package"]
-	all_effective_on := [e |
+	all_effective_on := [metadata.annotations.custom.effective_on |
 		some metadata in metadata_chain
-		e := metadata.annotations.custom.effective_on
 		metadata.annotations.scope in scope_precedence
 	]
 

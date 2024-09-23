@@ -23,13 +23,12 @@ _cyclonedx_sboms_from_image := [sbom] if {
 	sbom := ec.oci.image_files(input.image.ref, [_sbom_image_path])[_sbom_image_path]
 }
 
-_cyclonedx_sboms_from_attestations := [sbom |
+_cyclonedx_sboms_from_attestations := [statement.predicate |
 	some att in input.attestations
 	statement := att.statement
 
 	# https://cyclonedx.org/specification/overview/#recognized-predicate-type
 	statement.predicateType == "https://cyclonedx.org/bom"
-	sbom := statement.predicate
 ]
 
 _cyclonedx_sboms_from_oci := [sbom |

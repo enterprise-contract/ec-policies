@@ -557,7 +557,7 @@ Confirm the `pipeline_run_params` rule data was provided.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `external_parameters.pipeline_run_params_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/external_parameters.rego#L39[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/external_parameters.rego#L38[Source, window="_blank"]
 
 [#external_parameters__restrict_shared_volumes]
 === link:#external_parameters__restrict_shared_volumes[Restrict shared volumes]
@@ -567,7 +567,7 @@ Verify the PipelineRun did not use any pre-existing PersistentVolumeClaim worksp
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `PipelineRun uses shared volumes, %v.`
 * Code: `external_parameters.restrict_shared_volumes`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/external_parameters.rego#L54[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/external_parameters.rego#L53[Source, window="_blank"]
 
 [#github_certificate_package]
 == link:#github_certificate_package[GitHub Certificate Checks]
@@ -709,7 +709,7 @@ Check the image for the presence of labels that have been deprecated. Use the ru
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The %q label is deprecated, replace with %q`
 * Code: `labels.deprecated_labels`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L89[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L86[Source, window="_blank"]
 
 [#labels__disallowed_inherited_labels]
 === link:#labels__disallowed_inherited_labels[Disallowed inherited labels]
@@ -721,7 +721,7 @@ Check that certain labels on the image have different values than the labels fro
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The %q label should not be inherited from the parent image`
 * Code: `labels.disallowed_inherited_labels`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L138[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L135[Source, window="_blank"]
 
 [#labels__inaccessible_config]
 === link:#labels__inaccessible_config[Inaccessible image config]
@@ -733,7 +733,7 @@ The image config is not accessible.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image config of the image %q is inaccessible`
 * Code: `labels.inaccessible_config`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L67[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L64[Source, window="_blank"]
 
 [#labels__inaccessible_manifest]
 === link:#labels__inaccessible_manifest[Inaccessible image manifest]
@@ -745,7 +745,7 @@ The image manifest is not accessible.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Manifest of the image %q is inaccessible`
 * Code: `labels.inaccessible_manifest`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L48[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L45[Source, window="_blank"]
 
 [#labels__inaccessible_parent_config]
 === link:#labels__inaccessible_parent_config[Inaccessible parent image config]
@@ -757,7 +757,7 @@ The parent image config is not accessible.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image config of the image %q, parent of image %q is inaccessible`
 * Code: `labels.inaccessible_parent_config`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L201[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L198[Source, window="_blank"]
 
 [#labels__inaccessible_parent_manifest]
 === link:#labels__inaccessible_parent_manifest[Inaccessible parent image manifest]
@@ -769,7 +769,7 @@ The parent image manifest is not accessible.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Manifest of the image %q, parent of image %q is inaccessible`
 * Code: `labels.inaccessible_parent_manifest`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L183[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L180[Source, window="_blank"]
 
 [#labels__optional_labels]
 === link:#labels__optional_labels[Optional labels]
@@ -793,7 +793,7 @@ Check the image for the presence of labels that are required. Use the rule data 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `labels.required_labels`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L117[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L114[Source, window="_blank"]
 
 [#labels__rule_data_provided]
 === link:#labels__rule_data_provided[Rule data provided]
@@ -805,7 +805,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `labels.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L164[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L161[Source, window="_blank"]
 
 [#olm_package]
 == link:#olm_package[OLM]

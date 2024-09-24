@@ -64,6 +64,7 @@ test_repo_id_purls_missing_repo_ids if {
 				"RPM repo id check failed: An RPM component in the SBOM did not specify a repository_id value in its purl:",
 				"pkg:rpm/redhat/spam@1.2.3?arch=amd64&pastry_id=puff",
 			]),
+			"term": "pkg:rpm/redhat/spam@1.2.3?arch=amd64&pastry_id=puff",
 		},
 		{
 			"code": "rpm_repos.ids_known",
@@ -71,6 +72,7 @@ test_repo_id_purls_missing_repo_ids if {
 				"RPM repo id check failed: An RPM component in the SBOM did not specify a repository_id value in its purl:",
 				"pkg:rpm/borken",
 			]),
+			"term": "pkg:rpm/borken",
 		},
 	}
 
@@ -79,24 +81,12 @@ test_repo_id_purls_missing_repo_ids if {
 }
 
 test_repo_id_purls_missing_repo_ids_truncated if {
-	# It's not clear to me which of the two violations will be listed,
-	# but thankfully it seems to be deterministic
-	expected := {
-		{
-			"code": "rpm_repos.ids_known",
-			"msg": sprintf("%s %s", [
-				"RPM repo id check failed: An RPM component in the SBOM did not specify a repository_id value in its purl:",
-				"pkg:rpm/borken",
-			]),
-		},
-		{
-			"code": "rpm_repos.ids_known",
-			"msg": sprintf("%s %s", [
-				"RPM repo id check failed: An RPM component in the SBOM did not specify a repository_id value in its purl:",
-				"1 additional similar violations not separately listed",
-			]),
-		},
-	}
+	expected := {{
+		"code": "rpm_repos.ids_known",
+		# regal ignore:line-length
+		"msg": "RPM repo id check failed: An RPM component in the SBOM did not specify a repository_id value in its purl: pkg:rpm/borken (1 additional similar violations not separately listed)",
+		"term": "pkg:rpm/borken",
+	}}
 
 	lib.assert_equal_results(expected, rpm_repos.deny) with rpm_repos._all_sboms as [fake_sbom({p1, p2, p4, p5, p6})]
 		with data.rule_data.known_rpm_repositories as fake_repo_id_list
@@ -110,6 +100,7 @@ test_repo_id_purls_unknown_repo_ids if {
 			"RPM repo id check failed: An RPM component in the SBOM specified an unknown or disallowed repository_id:",
 			"pkg:rpm/redhat/spam@1.2.3?arch=amd64&repository_id=rhel-23-unrecognized-2-rpms",
 		]),
+		"term": "pkg:rpm/redhat/spam@1.2.3?arch=amd64&repository_id=rhel-23-unrecognized-2-rpms",
 	}
 
 	lib.assert_equal_results({expected}, rpm_repos.deny) with rpm_repos._all_sboms as [fake_sbom({p1, p2, p3, p6})]
@@ -118,18 +109,18 @@ test_repo_id_purls_unknown_repo_ids if {
 
 test_clamp_violation_strings if {
 	lib.assert_equal(
-		["a", "b", "c", "2 additional similar violations not separately listed"],
-		rpm_repos._truncated_msg_list(["a", "b", "c", "d", "e"]),
+		{"remainder": 2, "values": ["a", "b", "c"]},
+		rpm_repos._truncate(["a", "b", "c", "d", "e"]),
 	) with rpm_repos._truncate_threshold as 3 with rpm_repos._min_remainder_count as 0
 
 	lib.assert_equal(
-		["a", "b", "c", "d", "e"],
-		rpm_repos._truncated_msg_list(["a", "b", "c", "d", "e"]),
+		{"remainder": 0, "values": ["a", "b", "c", "d", "e"]},
+		rpm_repos._truncate(["a", "b", "c", "d", "e"]),
 	) with rpm_repos._truncate_threshold as 5
 
 	lib.assert_equal(
-		["a", "b", "3 additional similar violations not separately listed"],
-		rpm_repos._truncated_msg_list(["a", "b", "c", "d", "e"]),
+		{"remainder": 3, "values": ["a", "b"]},
+		rpm_repos._truncate(["a", "b", "c", "d", "e"]),
 	) with rpm_repos._truncate_threshold as 2 with rpm_repos._min_remainder_count as 3
 }
 

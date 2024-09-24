@@ -52,8 +52,8 @@ Rules included:
 * xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
 * xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]
 * xref:release_policy.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]
-* xref:release_policy.adoc#sbom_cyclonedx__found[SBOM CycloneDX: Found]
 * xref:release_policy.adoc#sbom_cyclonedx__valid[SBOM CycloneDX: Valid]
+* xref:release_policy.adoc#sbom__found[SBOM: Found]
 * xref:release_policy.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]
 * xref:release_policy.adoc#slsa_provenance_available__attestation_predicate_type_accepted[SLSA - Provenance - Available: Expected attestation predicate type found]
 * xref:release_policy.adoc#slsa_source_version_controlled__materials_uri_is_git_repo[SLSA - Source - Version Controlled: Material uri is a git repo]
@@ -63,6 +63,7 @@ Rules included:
 * xref:release_policy.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]
 * xref:release_policy.adoc#slsa_source_correlated__source_code_reference_provided[SLSA - Verification model - Source: Source code reference provided]
 * xref:release_policy.adoc#slsa_source_correlated__attested_source_code_reference[SLSA - Verification model - Source: Source reference]
+* xref:release_policy.adoc#sbom_spdx__valid[SPDX SBOM: Valid]
 * xref:release_policy.adoc#tasks__pipeline_has_tasks[Tasks: Pipeline run includes at least one task]
 * xref:release_policy.adoc#tasks__successful_pipeline_tasks[Tasks: Successful pipeline tasks]
 
@@ -85,10 +86,12 @@ Rules included:
 * xref:release_policy.adoc#sbom_cyclonedx__allowed_package_external_references[SBOM CycloneDX: Allowed package external references]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_external_references[SBOM CycloneDX: Disallowed package external references]
-* xref:release_policy.adoc#sbom_cyclonedx__disallowed_packages_provided[SBOM CycloneDX: Disallowed packages list is provided]
+* xref:release_policy.adoc#sbom__disallowed_packages_provided[SBOM: Disallowed packages list is provided]
 * xref:release_policy.adoc#slsa_build_build_service__allowed_builder_ids_provided[SLSA - Build - Build Service: Allowed builder IDs provided]
 * xref:release_policy.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]
 * xref:release_policy.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]
+* xref:release_policy.adoc#sbom_spdx__allowed_package_external_references[SPDX SBOM: Allowed package external references]
+* xref:release_policy.adoc#sbom_spdx__disallowed_package_external_references[SPDX SBOM: Disallowed package external references]
 * xref:release_policy.adoc#schedule__rule_data_provided[Schedule related checks: Rule data provided]
 * xref:release_policy.adoc#tasks__data_provided[Tasks: Data provided]
 * xref:release_policy.adoc#results__rule_data_provided[Tekton Task result: Rule data provided]
@@ -149,9 +152,9 @@ Rules included:
 * xref:release_policy.adoc#sbom_cyclonedx__allowed_package_external_references[SBOM CycloneDX: Allowed package external references]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_external_references[SBOM CycloneDX: Disallowed package external references]
-* xref:release_policy.adoc#sbom_cyclonedx__disallowed_packages_provided[SBOM CycloneDX: Disallowed packages list is provided]
-* xref:release_policy.adoc#sbom_cyclonedx__found[SBOM CycloneDX: Found]
 * xref:release_policy.adoc#sbom_cyclonedx__valid[SBOM CycloneDX: Valid]
+* xref:release_policy.adoc#sbom__disallowed_packages_provided[SBOM: Disallowed packages list is provided]
+* xref:release_policy.adoc#sbom__found[SBOM: Found]
 * xref:release_policy.adoc#slsa_build_build_service__allowed_builder_ids_provided[SLSA - Build - Build Service: Allowed builder IDs provided]
 * xref:release_policy.adoc#slsa_build_build_service__slsa_builder_id_found[SLSA - Build - Build Service: SLSA Builder ID found]
 * xref:release_policy.adoc#slsa_build_build_service__slsa_builder_id_accepted[SLSA - Build - Build Service: SLSA Builder ID is known and accepted]
@@ -168,6 +171,10 @@ Rules included:
 * xref:release_policy.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]
 * xref:release_policy.adoc#slsa_source_correlated__source_code_reference_provided[SLSA - Verification model - Source: Source code reference provided]
 * xref:release_policy.adoc#slsa_source_correlated__attested_source_code_reference[SLSA - Verification model - Source: Source reference]
+* xref:release_policy.adoc#sbom_spdx__allowed[SPDX SBOM: Allowed]
+* xref:release_policy.adoc#sbom_spdx__allowed_package_external_references[SPDX SBOM: Allowed package external references]
+* xref:release_policy.adoc#sbom_spdx__disallowed_package_external_references[SPDX SBOM: Disallowed package external references]
+* xref:release_policy.adoc#sbom_spdx__valid[SPDX SBOM: Valid]
 * xref:release_policy.adoc#schedule__date_restriction[Schedule related checks: Date Restriction]
 * xref:release_policy.adoc#schedule__rule_data_provided[Schedule related checks: Rule data provided]
 * xref:release_policy.adoc#schedule__weekday_restriction[Schedule related checks: Weekday Restriction]
@@ -1090,6 +1097,38 @@ Confirm the expected `allowed_rpm_signature_keys` rule data key has been provide
 * Effective from: `2024-10-05T00:00:00Z`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_signature.rego#L52[Source, window="_blank"]
 
+[#sbom_package]
+== link:#sbom_package[SBOM]
+
+Checks general properties of the SBOMs associated with the image being validated. More specific rules for SPDX and CycloneDX SBOMs are in separate packages.
+
+* Package name: `sbom`
+* Package full path: `policy.release.sbom`
+
+[#sbom__disallowed_packages_provided]
+=== link:#sbom__disallowed_packages_provided[Disallowed packages list is provided]
+
+Confirm the `disallowed_packages` and `disallowed_attributes` rule data were provided, since they are required by the policy rules in this package.
+
+*Solution*: Provide a list of disallowed packages or package attributes in the expected format.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `sbom.disallowed_packages_provided`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom.rego#L31[Source, window="_blank"]
+
+[#sbom__found]
+=== link:#sbom__found[Found]
+
+Confirm an SBOM attestation exists.
+
+*Solution*: Make sure the build process produces an SBOM attestation.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `No SBOM attestations found`
+* Code: `sbom.found`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom.rego#L14[Source, window="_blank"]
+
 [#sbom_cyclonedx_package]
 == link:#sbom_cyclonedx_package[SBOM CycloneDX]
 
@@ -1108,7 +1147,7 @@ Confirm the CycloneDX SBOM contains only allowed packages. By default all packag
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package is not allowed: %s`
 * Code: `sbom_cyclonedx.allowed`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L53[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L36[Source, window="_blank"]
 
 [#sbom_cyclonedx__allowed_package_external_references]
 === link:#sbom_cyclonedx__allowed_package_external_references[Allowed package external references]
@@ -1120,7 +1159,7 @@ Confirm the CycloneDX SBOM contains only packages with explicitly allowed extern
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package %s has reference %q of type %q which is not explicitly allowed%s`
 * Code: `sbom_cyclonedx.allowed_package_external_references`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L126[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L89[Source, window="_blank"]
 
 [#sbom_cyclonedx__disallowed_package_attributes]
 === link:#sbom_cyclonedx__disallowed_package_attributes[Disallowed package attributes]
@@ -1133,7 +1172,7 @@ Confirm the CycloneDX SBOM contains only packages without disallowed attributes.
 * FAILURE message: `Package %s has the attribute %q set%s`
 * Code: `sbom_cyclonedx.disallowed_package_attributes`
 * Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L93[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L56[Source, window="_blank"]
 
 [#sbom_cyclonedx__disallowed_package_external_references]
 === link:#sbom_cyclonedx__disallowed_package_external_references[Disallowed package external references]
@@ -1146,31 +1185,7 @@ Confirm the CycloneDX SBOM contains only packages without disallowed external re
 * FAILURE message: `Package %s has reference %q of type %q which is disallowed%s`
 * Code: `sbom_cyclonedx.disallowed_package_external_references`
 * Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L157[Source, window="_blank"]
-
-[#sbom_cyclonedx__disallowed_packages_provided]
-=== link:#sbom_cyclonedx__disallowed_packages_provided[Disallowed packages list is provided]
-
-Confirm the `disallowed_packages` and `disallowed_attributes` rule data were provided, since they are required by the policy rules in this package.
-
-*Solution*: Provide a list of disallowed packages or package attributes in the expected format.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `sbom_cyclonedx.disallowed_packages_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L73[Source, window="_blank"]
-
-[#sbom_cyclonedx__found]
-=== link:#sbom_cyclonedx__found[Found]
-
-Confirm a CycloneDX SBOM exists.
-
-*Solution*: Make sure the build process produces a CycloneDX SBOM.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `No CycloneDX SBOM found`
-* Code: `sbom_cyclonedx.found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L16[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L120[Source, window="_blank"]
 
 [#sbom_cyclonedx__valid]
 === link:#sbom_cyclonedx__valid[Valid]
@@ -1182,7 +1197,7 @@ Check the CycloneDX SBOM has the expected format. It verifies the CycloneDX SBOM
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `CycloneDX SBOM at index %d is not valid: %s`
 * Code: `sbom_cyclonedx.valid`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L33[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L16[Source, window="_blank"]
 
 [#slsa_build_build_service_package]
 == link:#slsa_build_build_service_package[SLSA - Build - Build Service]
@@ -1436,10 +1451,34 @@ Attestation contains source reference.
 [#sbom_spdx_package]
 == link:#sbom_spdx_package[SPDX SBOM]
 
-Checks different properties of the SPDX SBOM attestation.
+Checks different properties of the CycloneDX SBOMs associated with the image being validated. The SBOMs are read from multiple locations: a file within the image, and a CycloneDX SBOM attestation.
 
 * Package name: `sbom_spdx`
 * Package full path: `policy.release.sbom_spdx`
+
+[#sbom_spdx__allowed]
+=== link:#sbom_spdx__allowed[Allowed]
+
+Confirm the SPDX SBOM contains only allowed packages. By default all packages are allowed. Use the "disallowed_packages" rule data key to provide a list of disallowed packages.
+
+*Solution*: Update the image to not use a disallowed package.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Package is not allowed: %s`
+* Code: `sbom_spdx.allowed`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L51[Source, window="_blank"]
+
+[#sbom_spdx__allowed_package_external_references]
+=== link:#sbom_spdx__allowed_package_external_references[Allowed package external references]
+
+Confirm the SPDX SBOM contains only packages with explicitly allowed external references. By default all external references are allowed unless the "allowed_external_references" rule data key provides a list of type-pattern pairs that forbid the use of any other external reference of the given type where the reference url matches the given pattern.
+
+*Solution*: Update the image to use only packages with explicitly allowed external references.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Package %s has reference %q of type %q which is not explicitly allowed%s`
+* Code: `sbom_spdx.allowed_package_external_references`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L73[Source, window="_blank"]
 
 [#sbom_spdx__contains_files]
 === link:#sbom_spdx__contains_files[Contains files]
@@ -1451,7 +1490,7 @@ Check the list of files in the SPDX SBOM is not empty.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The list of files is empty`
 * Code: `sbom_spdx.contains_files`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L59[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L134[Source, window="_blank"]
 
 [#sbom_spdx__contains_packages]
 === link:#sbom_spdx__contains_packages[Contains packages]
@@ -1463,19 +1502,20 @@ Check the list of packages in the SPDX SBOM is not empty.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The list of packages is empty`
 * Code: `sbom_spdx.contains_packages`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L44[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L36[Source, window="_blank"]
 
-[#sbom_spdx__found]
-=== link:#sbom_spdx__found[Found]
+[#sbom_spdx__disallowed_package_external_references]
+=== link:#sbom_spdx__disallowed_package_external_references[Disallowed package external references]
 
-Confirm an SPDX SBOM attestation exists.
+Confirm the SPDX SBOM contains only packages without disallowed external references. By default all external references are allowed. Use the "disallowed_external_references" rule data key to provide a list of type-pattern pairs that forbid the use of an external reference of the given type where the reference url matches the given pattern.
 
-*Solution*: Make sure the build process produces an SPDX SBOM attestation.
+*Solution*: Update the image to not use a package with a disallowed external reference.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `No SPDX SBOM attestations found`
-* Code: `sbom_spdx.found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L14[Source, window="_blank"]
+* FAILURE message: `Package %s has reference %q of type %q which is disallowed%s`
+* Code: `sbom_spdx.disallowed_package_external_references`
+* Effective from: `2024-07-31T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L103[Source, window="_blank"]
 
 [#sbom_spdx__matches_image]
 === link:#sbom_spdx__matches_image[Matches image]
@@ -1487,19 +1527,19 @@ Check the SPDX SBOM targets the image being validated.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image digest in the SBOM, %q, is not as expected, %q`
 * Code: `sbom_spdx.matches_image`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L74[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L149[Source, window="_blank"]
 
 [#sbom_spdx__valid]
 === link:#sbom_spdx__valid[Valid]
 
-Check the SPDX SBOM has the expected format.
+Check the SPDX SBOM has the expected format. It verifies the SPDX SBOM matches the 2.3 version of the schema.
 
 *Solution*: Make sure the build process produces a valid SPDX SBOM.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `SPDX SBOM at index %d is not valid`
+* FAILURE message: `SPDX SBOM at index %d is not valid: %s`
 * Code: `sbom_spdx.valid`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L28[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L16[Source, window="_blank"]
 
 [#schedule_package]
 == link:#schedule_package[Schedule related checks]

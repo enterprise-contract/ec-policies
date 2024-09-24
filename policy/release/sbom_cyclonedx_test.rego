@@ -3,6 +3,7 @@ package policy.release.sbom_cyclonedx_test
 import rego.v1
 
 import data.lib
+import data.lib.sbom
 import data.policy.release.sbom_cyclonedx
 
 test_all_good_from_attestation if {
@@ -13,12 +14,6 @@ test_all_good_from_attestation if {
 test_all_good_from_image if {
 	files := {"root/buildinfo/content_manifests/sbom-cyclonedx.json": _sbom_attestation.statement.predicate}
 	lib.assert_empty(sbom_cyclonedx.deny) with input.image.files as files
-		with input.image.ref as "registry.local/spam@sha256:123"
-}
-
-test_not_found if {
-	expected := {{"code": "sbom_cyclonedx.found", "msg": "No CycloneDX SBOM found"}}
-	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as []
 		with input.image.ref as "registry.local/spam@sha256:123"
 }
 
@@ -33,7 +28,6 @@ test_not_valid if {
 		"value": "spam",
 	}])
 	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [att]
-		with input.image.ref as "registry.local/spam@sha256:123"
 }
 
 test_attributes_not_allowed_all_good if {
@@ -42,7 +36,7 @@ test_attributes_not_allowed_all_good if {
 
 	lib.assert_empty(sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
 		with input.image.ref as "registry.local/spam@sha256:123"
-		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [{"name": "attrX", "value": "valueX"}]}
+		with data.rule_data as {sbom.rule_data_attributes_key: [{"name": "attrX", "value": "valueX"}]}
 }
 
 test_attributes_not_allowed_pair if {
@@ -56,7 +50,7 @@ test_attributes_not_allowed_pair if {
 
 	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
 		with input.image.ref as "registry.local/spam@sha256:123"
-		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [{"name": "attr1"}]}
+		with data.rule_data as {sbom.rule_data_attributes_key: [{"name": "attr1"}]}
 }
 
 test_attributes_not_allowed_value if {
@@ -70,7 +64,7 @@ test_attributes_not_allowed_value if {
 
 	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
 		with input.image.ref as "registry.local/spam@sha256:123"
-		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [{"name": "attr2", "value": "value2"}]}
+		with data.rule_data as {sbom.rule_data_attributes_key: [{"name": "attr2", "value": "value2"}]}
 }
 
 test_attributes_not_allowed_effective_on if {
@@ -95,7 +89,7 @@ test_attributes_not_allowed_effective_on if {
 
 	raw_results := sbom_cyclonedx.deny with input.attestations as [_sbom_attestation]
 		with input.image.ref as "registry.local/spam@sha256:123"
-		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [
+		with data.rule_data as {sbom.rule_data_attributes_key: [
 			{"name": "attr1", "effective_on": "2025-01-01T00:00:00Z"},
 			{"name": "attr2", "value": "value2"},
 		]}
@@ -118,14 +112,14 @@ test_attributes_not_allowed_value_no_purl if {
 
 	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
 		with input.image.ref as "registry.local/spam@sha256:123"
-		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [{"name": "syft:distro:id", "value": "rhel"}]}
+		with data.rule_data as {sbom.rule_data_attributes_key: [{"name": "syft:distro:id", "value": "rhel"}]}
 }
 
 test_external_references_allowed_regex_with_no_rules_is_allowed if {
 	expected := {}
 	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
 		with input.image.ref as "registry.local/spam@sha256:123"
-		with data.rule_data as {sbom_cyclonedx._rule_data_allowed_external_references_key: []}
+		with data.rule_data as {sbom.rule_data_allowed_external_references_key: []}
 }
 
 test_external_references_allowed_regex if {
@@ -139,7 +133,7 @@ test_external_references_allowed_regex if {
 
 	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
 		with input.image.ref as "registry.local/spam@sha256:123"
-		with data.rule_data as {sbom_cyclonedx._rule_data_allowed_external_references_key: [{
+		with data.rule_data as {sbom.rule_data_allowed_external_references_key: [{
 			"type": "distribution",
 			"url": ".*allowed.net.*",
 		}]}
@@ -155,7 +149,7 @@ test_external_references_allowed_no_purl if {
 
 	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
 		with input.image.ref as "registry.local/spam@sha256:123"
-		with data.rule_data as {sbom_cyclonedx._rule_data_allowed_external_references_key: [{
+		with data.rule_data as {sbom.rule_data_allowed_external_references_key: [{
 			"type": "website",
 			"url": ".*example.com.*",
 		}]}
@@ -172,7 +166,7 @@ test_external_references_disallowed_regex if {
 
 	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
 		with input.image.ref as "registry.local/spam@sha256:123"
-		with data.rule_data as {sbom_cyclonedx._rule_data_disallowed_external_references_key: [{
+		with data.rule_data as {sbom.rule_data_disallowed_external_references_key: [{
 			"type": "distribution",
 			"url": ".*example.com.*",
 		}]}
@@ -188,7 +182,7 @@ test_external_references_disallowed_no_purl if {
 
 	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
 		with input.image.ref as "registry.local/spam@sha256:123"
-		with data.rule_data as {sbom_cyclonedx._rule_data_disallowed_external_references_key: [{
+		with data.rule_data as {sbom.rule_data_disallowed_external_references_key: [{
 			"type": "website",
 			"url": ".*redhat.com.*",
 		}]}
@@ -202,7 +196,7 @@ test_attributes_not_allowed_no_properties if {
 
 	lib.assert_empty(sbom_cyclonedx.deny) with input.attestations as [att]
 		with input.image.ref as "registry.local/spam@sha256:123"
-		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [{"name": "attr", "value": "value"}]}
+		with data.rule_data as {sbom.rule_data_attributes_key: [{"name": "attr", "value": "value"}]}
 }
 
 test_allowed_by_default if {
@@ -334,175 +328,6 @@ assert_not_allowed(purl, disallowed_packages) if {
 	# regal ignore:with-outside-test-context
 	lib.assert_equal_results(sbom_cyclonedx.deny, expected) with input.attestations as [att]
 		with data.rule_data.disallowed_packages as disallowed_packages
-}
-
-test_rule_data_validation if {
-	d := {
-		"disallowed_packages": [
-			# Missing required attributes
-			{},
-			# Additional properties not allowed
-			{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0", "blah": "foo"},
-			# Bad types everywhere
-			{"purl": 1, "format": 2, "min": 3, "max": 4, "exceptions": [{"subpath": 1}]},
-			# Duplicated items
-			{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0"},
-			{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1.0"},
-			# Bad semver values
-			{"purl": "pkg:golang/k8s.io/client-go", "format": "semverv", "min": "v0.1"},
-			{"purl": "pkg:golang/k8s.io/client-go", "format": "semver", "max": "v0.1"},
-		],
-		sbom_cyclonedx._rule_data_attributes_key: [
-			# ok
-			{"name": "some_attr", "value": "some_val"},
-			{"name": "no_val_attr"},
-			# Missing required attributes
-			{},
-			# Additional properties not allowed
-			{"name": "_name_", "value": "_value_", "something": "else"},
-			# Bad types everywhere
-			{"name": 1, "value": 2},
-			# Duplicated items
-			{"name": "_name_", "value": "_value_"},
-			{"name": "_name_", "value": "_value_"},
-			# Invalid effective on format
-			{"name": "_name_", "effective_on": "not-a-date"},
-		],
-		sbom_cyclonedx._rule_data_allowed_external_references_key: [
-			{"type": "distribution", "url": "example.com"},
-			{"invalid": "foo"},
-		],
-		sbom_cyclonedx._rule_data_disallowed_external_references_key: [
-			{"type": "distribution", "url": "badurl"},
-			{"invalid": "foo"},
-		],
-	}
-
-	expected := {
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_packages has unexpected format: 0: Must validate at least one schema (anyOf)",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_packages has unexpected format: 0: format is required",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_packages has unexpected format: 0: min is required",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_packages has unexpected format: 0: purl is required",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_packages has unexpected format: 1: Additional property blah is not allowed",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			# regal ignore:line-length
-			"msg": "Rule data disallowed_packages has unexpected format: 2.format: 2.format must be one of the following: \"semver\", \"semverv\"",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_packages has unexpected format: 2.max: Invalid type. Expected: string, given: integer",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_packages has unexpected format: 2.min: Invalid type. Expected: string, given: integer",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_packages has unexpected format: 2.purl: Invalid type. Expected: string, given: integer",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Item at index 2 in disallowed_packages does not have a valid PURL: '\\x01'",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_packages has unexpected format: (Root): array items[3,4] must be unique",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Item at index 5 in disallowed_packages does not have a valid min semver value: \"0.1\"",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Item at index 6 in disallowed_packages does not have a valid max semver value: \"0.1\"",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_attributes has unexpected format: 2: name is required",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_attributes has unexpected format: 3: Additional property something is not allowed",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			# regal ignore:line-length
-			"msg": "Rule data disallowed_attributes has unexpected format: 4.name: Invalid type. Expected: string, given: integer",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			# regal ignore:line-length
-			"msg": "Rule data disallowed_attributes has unexpected format: 4.value: Invalid type. Expected: string, given: integer",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			# regal ignore:line-length
-			"msg": "Rule data disallowed_attributes has unexpected format: (Root): array items[5,6] must be unique",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_attributes has unexpected format: 7.effective_on: Does not match format 'date-time'",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			# regal ignore:line-length
-			"msg": "Rule data allowed_external_references has unexpected format: 1: Additional property invalid is not allowed",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data allowed_external_references has unexpected format: 1: type is required",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data allowed_external_references has unexpected format: 1: url is required",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			# regal ignore:line-length
-			"msg": "Rule data disallowed_external_references has unexpected format: 1: Additional property invalid is not allowed",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_external_references has unexpected format: 1: type is required",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			"msg": "Rule data disallowed_external_references has unexpected format: 1: url is required",
-		},
-		{
-			"code": "sbom_cyclonedx.disallowed_packages_provided",
-			# regal ignore:line-length
-			"msg": "Rule data disallowed_packages has unexpected format: 2.exceptions.0.subpath: Invalid type. Expected: string, given: integer",
-		},
-	}
-
-	lib.assert_equal_results(sbom_cyclonedx.deny, expected) with input.attestations as [_sbom_attestation]
-		with data.rule_data as d
-
-	# rule data keys are optional
-	lib.assert_empty(sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
-		with data.rule_data as {}
-	lib.assert_empty(sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
-		with data.rule_data as {
-			sbom_cyclonedx._rule_data_packages_key: [],
-			sbom_cyclonedx._rule_data_attributes_key: [],
-		}
 }
 
 _sbom_attestation := {"statement": {

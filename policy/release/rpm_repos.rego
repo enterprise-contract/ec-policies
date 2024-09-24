@@ -23,6 +23,7 @@ import data.lib
 #     'known_rpm_repositories' key under the top level 'rule_data' key.
 #   collections:
 #   - redhat
+#   - policy_data
 #
 deny contains result if {
 	some error in _rule_data_errors

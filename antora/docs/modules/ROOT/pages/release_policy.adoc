@@ -1758,10 +1758,8 @@ Ensure that all of the Tasks in the Pipeline completed successfully. Note that s
 
 The Tekton Task used is or will be unsupported. The Task is annotated with `build.appstudio.redhat.com/expires-on` annotation marking it as unsupported after a certain date.
 
-*Solution*: Upgrade to a newer version of the Task.
-
 * Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Task %q is used by pipeline task %q is or will be unsupported as of %s.`
+* FAILURE message: `Task %q is used by pipeline task %q is or will be unsupported as of %s. %s`
 * Code: `tasks.unsupported`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L240[Source, window="_blank"]
 

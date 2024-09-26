@@ -588,7 +588,8 @@ test_deprecated_slsa_v0_2 if {
 
 	expected := {{
 		"code": "tasks.unsupported",
-		"msg": `Task "task" is used by pipeline task "task" is or will be unsupported as of 2200-01-01T00:00:00Z.`,
+		# regal ignore:line-length
+		"msg": `Task "task" is used by pipeline task "task" is or will be unsupported as of 2200-01-01T00:00:00Z. Upgrade to a newer version of the Task.`,
 		"term": "task",
 	}}
 
@@ -605,7 +606,8 @@ test_expired_slsa_v0_2 if {
 
 	expected := {{
 		"code": "tasks.unsupported",
-		"msg": `Task "task" is used by pipeline task "task" is or will be unsupported as of 2000-01-01T00:00:00Z.`,
+		# regal ignore:line-length
+		"msg": `Task "task" is used by pipeline task "task" is or will be unsupported as of 2000-01-01T00:00:00Z. Upgrade to a newer version of the Task.`,
 		"term": "task",
 	}}
 
@@ -622,7 +624,8 @@ test_deprecated_slsa_v1 if {
 
 	expected := {{
 		"code": "tasks.unsupported",
-		"msg": `Task "task" is used by pipeline task "task" is or will be unsupported as of 2200-01-01T00:00:00Z.`,
+		# regal ignore:line-length
+		"msg": `Task "task" is used by pipeline task "task" is or will be unsupported as of 2200-01-01T00:00:00Z. Upgrade to a newer version of the Task.`,
 		"term": "task",
 	}}
 
@@ -639,7 +642,29 @@ test_expired_slsa_v1 if {
 
 	expected := {{
 		"code": "tasks.unsupported",
-		"msg": `Task "task" is used by pipeline task "task" is or will be unsupported as of 2000-01-01T00:00:00Z.`,
+		# regal ignore:line-length
+		"msg": `Task "task" is used by pipeline task "task" is or will be unsupported as of 2000-01-01T00:00:00Z. Upgrade to a newer version of the Task.`,
+		"term": "task",
+	}}
+
+	lib.assert_equal_results(tasks.deny, expected) with input.attestations as attestation
+		with data["pipeline-required-tasks"] as {"generic": []}
+		with data["task-bundles"] as _trusted_tasks
+}
+
+test_expired_with_custom_message if {
+	attestation := _slsav1_attestations_with_tasks({}, [object.union(
+		_task("task"),
+		{"invocation": {"environment": {"annotations": {
+			tasks._expires_on_annotation: "2000-01-01T00:00:00Z",
+			tasks._expiry_msg_annotation: "The Task has been discontinued.",
+		}}}},
+	)])
+
+	expected := {{
+		"code": "tasks.unsupported",
+		# regal ignore:line-length
+		"msg": `Task "task" is used by pipeline task "task" is or will be unsupported as of 2000-01-01T00:00:00Z. The Task has been discontinued.`,
 		"term": "task",
 	}}
 

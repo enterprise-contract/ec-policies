@@ -100,6 +100,18 @@ test_attributes_not_allowed_effective_on if {
 	lib.assert_equal(expected, results)
 }
 
+test_attributes_not_allowed_value_no_purl if {
+	expected := {{
+		"code": "sbom_cyclonedx.disallowed_package_attributes",
+		# regal ignore:line-length
+		"msg": `Package rhel has the attribute "syft:distro:id" set to "rhel"`,
+	}}
+
+	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom_cyclonedx._rule_data_attributes_key: [{"name": "syft:distro:id", "value": "rhel"}]}
+}
+
 test_external_references_allowed_regex_with_no_rules_is_allowed if {
 	expected := {}
 	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
@@ -122,6 +134,21 @@ test_external_references_allowed_regex if {
 		}]}
 }
 
+test_external_references_allowed_no_purl if {
+	expected := {{
+		"code": "sbom_cyclonedx.allowed_package_external_references",
+		# regal ignore:line-length
+		"msg": `Package rhel has reference "https://www.redhat.com/" of type "website" which is not explicitly allowed by pattern ".*example.com.*"`,
+	}}
+
+	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom_cyclonedx._rule_data_allowed_external_references_key: [{
+			"type": "website",
+			"url": ".*example.com.*",
+		}]}
+}
+
 test_external_references_disallowed_regex if {
 	expected := {{
 		"code": "sbom_cyclonedx.disallowed_package_external_references",
@@ -134,6 +161,21 @@ test_external_references_disallowed_regex if {
 		with data.rule_data as {sbom_cyclonedx._rule_data_disallowed_external_references_key: [{
 			"type": "distribution",
 			"url": ".*example.com.*",
+		}]}
+}
+
+test_external_references_disallowed_no_purl if {
+	expected := {{
+		"code": "sbom_cyclonedx.disallowed_package_external_references",
+		# regal ignore:line-length
+		"msg": `Package rhel has reference "https://www.redhat.com/" of type "website" which is disallowed by pattern ".*redhat.com.*"`,
+	}}
+
+	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom_cyclonedx._rule_data_disallowed_external_references_key: [{
+			"type": "website",
+			"url": ".*redhat.com.*",
 		}]}
 }
 
@@ -469,28 +511,71 @@ _sbom_attestation := {"statement": {
 				"name": "/var/lib/containers/storage/vfs/dir/dfd74fe178f4ea0472b5569bff38a4df69d05e7a81b538c98d731566aec15a69",
 			},
 		},
-		"components": [{
-			# regal ignore:line-length
-			"bom-ref": "pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3&package-id=f4f4e3cc2a6d9c37",
-			"type": "library",
-			"publisher": "Red Hat, Inc.",
-			"name": "coreutils-single",
-			"version": "8.32-34.el9",
-			"licenses": [{"license": {"name": "GPLv3+"}}],
-			"cpe": "cpe:2.3:a:coreutils-single:coreutils-single:8.32-34.el9:*:*:*:*:*:*:*",
-			# regal ignore:line-length
-			"purl": "pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3",
-			"properties": [
-				{"name": "attr1"},
-				{
-					"name": "attr2",
-					"value": "value2",
+		"components": [
+			{
+				# regal ignore:line-length
+				"bom-ref": "pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3&package-id=f4f4e3cc2a6d9c37",
+				"type": "library",
+				"publisher": "Red Hat, Inc.",
+				"name": "coreutils-single",
+				"version": "8.32-34.el9",
+				"licenses": [{"license": {"name": "GPLv3+"}}],
+				"cpe": "cpe:2.3:a:coreutils-single:coreutils-single:8.32-34.el9:*:*:*:*:*:*:*",
+				# regal ignore:line-length
+				"purl": "pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3",
+				"properties": [
+					{"name": "attr1"},
+					{
+						"name": "attr2",
+						"value": "value2",
+					},
+				],
+				"externalReferences": [{
+					"type": "distribution",
+					"url": "https://example.com/file.txt",
+				}],
+			},
+			{
+				"bom-ref": "os:rhel@9.4",
+				"type": "operating-system",
+				"name": "rhel",
+				"version": "9.4",
+				"description": "Red Hat Enterprise Linux 9.4 (Plow)",
+				"cpe": "cpe:2.3:o:redhat:enterprise_linux:9:*:baseos:*:*:*:*:*",
+				"swid": {
+					"tagId": "rhel",
+					"name": "rhel",
+					"version": "9.4",
 				},
-			],
-			"externalReferences": [{
-				"type": "distribution",
-				"url": "https://example.com/file.txt",
-			}],
-		}],
+				"externalReferences": [
+					{
+						"url": "https://bugzilla.redhat.com/",
+						"type": "issue-tracker",
+					},
+					{
+						"url": "https://www.redhat.com/",
+						"type": "website",
+					},
+				],
+				"properties": [
+					{
+						"name": "syft:distro:id",
+						"value": "rhel",
+					},
+					{
+						"name": "syft:distro:idLike:0",
+						"value": "fedora",
+					},
+					{
+						"name": "syft:distro:prettyName",
+						"value": "Red Hat Enterprise Linux 9.4 (Plow)",
+					},
+					{
+						"name": "syft:distro:versionID",
+						"value": "9.4",
+					},
+				],
+			},
+		],
 	},
 }}

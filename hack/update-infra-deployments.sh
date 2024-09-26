@@ -79,6 +79,8 @@ TASK_POLICY_REF_OCI="$(oci_source ${TASK_POLICY_REF})"
 echo "Resolved task policy is ${TASK_POLICY_REF_OCI}"
 
 echo 'Updating infra-deployments...'
-update_ecp_resources 'oci::.*/ec-release-policy:.*$' "${RELEASE_POLICY_REF_OCI}"
-update_ecp_resources 'oci::.*/ec-task-policy:.*$' "${TASK_POLICY_REF_OCI}"
+# The "oci::" is not required by EC CLI. The expression below handles both cases. It's important to
+# note that this script will normalize the source references to always include the oci:: prefix.
+update_ecp_resources '\b\(oci::\)\{0,1\}.*/ec-release-policy:.*$' "${RELEASE_POLICY_REF_OCI}"
+update_ecp_resources '\b\(oci::\)\{0,1\}.*/ec-task-policy:.*$' "${TASK_POLICY_REF_OCI}"
 echo 'infra-deployments updated successfully'

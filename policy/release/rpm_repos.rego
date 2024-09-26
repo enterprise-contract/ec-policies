@@ -23,6 +23,7 @@ import data.lib
 #     'known_rpm_repositories' key under the top level 'rule_data' key.
 #   collections:
 #   - redhat
+#   - policy_data
 #
 deny contains result if {
 	some error in _rule_data_errors
@@ -49,8 +50,8 @@ deny contains result if {
 	# Don't bother with this unless we have valid rule data
 	count(_rule_data_errors) == 0
 
-	some error in _repo_id_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	some bad_purl, msg in _repo_id_errors
+	result := lib.result_helper_with_term(rego.metadata.chain(), [msg], bad_purl)
 }
 
 _rule_data_errors contains msg if {
@@ -70,20 +71,28 @@ _rule_data_errors contains msg if {
 	msg := violation.error
 }
 
-_repo_id_errors contains msg if {
+_repo_id_errors[bad_purl] := msg if {
 	bad_purls := all_rpm_purls - _plain_purls(all_purls_with_repo_ids)
 	count(bad_purls) > 0
 
-	some bad_purl in _truncated_msg_list(bad_purls)
-	msg := sprintf("An RPM component in the SBOM did not specify a repository_id value in its purl: %s", [bad_purl])
+	truncated := _truncate(bad_purls)
+	some bad_purl in truncated.values
+	msg := sprintf("An RPM component in the SBOM did not specify a repository_id value in its purl: %s%s", [
+		bad_purl,
+		_truncated_msg(truncated.remainder),
+	])
 }
 
-_repo_id_errors contains msg if {
+_repo_id_errors[bad_purl] := msg if {
 	bad_purls := all_purls_with_repo_ids - all_purls_with_known_repo_ids
 	count(bad_purls) > 0
 
-	some bad_purl in _truncated_msg_list(_plain_purls(bad_purls))
-	msg := sprintf("An RPM component in the SBOM specified an unknown or disallowed repository_id: %s", [bad_purl])
+	truncated := _truncate(_plain_purls(bad_purls))
+	some bad_purl in truncated.values
+	msg := sprintf("An RPM component in the SBOM specified an unknown or disallowed repository_id: %s%s", [
+		bad_purl,
+		_truncated_msg(truncated.remainder),
+	])
 }
 
 all_purls_with_known_repo_ids contains purl_obj if {
@@ -145,11 +154,13 @@ _truncate_threshold := 10
 # ...but not if the N in the "N more" is less than this
 _min_remainder_count := 4
 
-_truncated_msg_list(all_msgs) := truncated_msgs if {
-	remainder_count := count(all_msgs) - _truncate_threshold
+_truncate(collection) := {"values": truncated, "remainder": remainder_count} if {
+	remainder_count := count(collection) - _truncate_threshold
 	remainder_count >= _min_remainder_count
-	truncated_msgs := array.concat(
-		array.slice(lib.to_array(all_msgs), 0, _truncate_threshold),
-		[sprintf("%d additional similar violations not separately listed", [remainder_count])],
-	)
-} else := all_msgs
+	truncated := array.slice(lib.to_array(collection), 0, _truncate_threshold)
+} else := {"values": collection, "remainder": 0}
+
+_truncated_msg(remainder) := msg if {
+	remainder > 0
+	msg := sprintf(" (%d additional similar violations not separately listed)", [remainder])
+} else := ""

@@ -80,6 +80,7 @@ Rules included:
 * xref:release_policy.adoc#java__trusted_dependencies_source_list_provided[Java dependency checks: Trusted Java dependency source list was provided]
 * xref:release_policy.adoc#labels__rule_data_provided[Labels: Rule data provided]
 * xref:release_policy.adoc#olm__required_olm_features_annotations_provided[OLM: Required OLM feature annotations list provided]
+* xref:release_policy.adoc#rpm_repos__rule_data_provided[RPM Repos: Known repo id list provided]
 * xref:release_policy.adoc#rpm_signature__rule_data_provided[RPM Signature: Rule data provided]
 * xref:release_policy.adoc#sbom_cyclonedx__allowed_package_external_references[SBOM CycloneDX: Allowed package external references]
 * xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]
@@ -1028,7 +1029,7 @@ Each RPM package listed in an SBOM must specify the repository id that it comes 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `RPM repo id check failed: %s`
 * Code: `rpm_repos.ids_known`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos.rego#L32[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos.rego#L33[Source, window="_blank"]
 
 [#rpm_repos__rule_data_provided]
 === link:#rpm_repos__rule_data_provided[Known repo id list provided]

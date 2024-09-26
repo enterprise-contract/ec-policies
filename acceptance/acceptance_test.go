@@ -28,6 +28,8 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
+	"slices"
+	"strings"
 	"testing"
 
 	"github.com/cucumber/godog"
@@ -50,6 +52,7 @@ var (
 type testStateKey struct{}
 
 type testState struct {
+	id                   string
 	tempDir              string
 	variables            map[string]string
 	report               report
@@ -61,9 +64,17 @@ type testState struct {
 
 // Types used for parsing violations and warnings from report
 type (
+	metadata struct {
+		Code        string   `json:"code"`
+		Description string   `json:"description"`
+		Title       string   `json:"title"`
+		Solution    string   `json:"solution"`
+		Term        string   `json:"term"`
+		Collections []string `json:"collections"`
+	}
 	result struct {
-		Message  string                 `json:"msg"`
-		Metadata map[string]interface{} `json:"metadata,omitempty"`
+		Message  string   `json:"msg"`
+		Metadata metadata `json:"metadata,omitempty"`
 	}
 
 	input struct {
@@ -143,6 +154,7 @@ func validateInputWithPolicyConfig(ctx context.Context) (context.Context, error)
 		"--policy",
 		ts.configFileName,
 		"--strict=false",
+		"--info",
 	)
 	cmd.Dir = ts.acceptanceModulePath
 
@@ -194,9 +206,77 @@ func thereShouldBeNoWarningsInTheResult(ctx context.Context) error {
 	return nil
 }
 
+func thereShouldBeNoViolationsWithCollectionInTheResult(ctx context.Context, collection string) error {
+	ts, err := getTestState(ctx)
+	if err != nil {
+		return fmt.Errorf("reading test state: %w", err)
+	}
+
+	for _, filepath := range ts.report.FilePaths {
+		for _, violation := range filepath.Violations {
+			if slices.Contains(violation.Metadata.Collections, collection) {
+				return errors.New(prettifyResults(fmt.Sprintf("expected no violations with collection %q, got:", collection), filepath.Violations))
+			}
+		}
+	}
+
+	return nil
+}
+
+func thereShouldBeNoViolationsWithPackageInTheResult(ctx context.Context, pkg string) error {
+	ts, err := getTestState(ctx)
+	if err != nil {
+		return fmt.Errorf("reading test state: %w", err)
+	}
+
+	for _, filepath := range ts.report.FilePaths {
+		for _, violation := range filepath.Violations {
+			if strings.HasPrefix(violation.Metadata.Code, pkg) {
+				return errors.New(prettifyResults(fmt.Sprintf("expected no violations with package %q, got:", pkg), filepath.Violations))
+			}
+		}
+	}
+
+	return nil
+}
+
+func thereShouldBeNoViolationsWithRuleAndTermInTheResult(ctx context.Context, code string, term string) error {
+	ts, err := getTestState(ctx)
+	if err != nil {
+		return fmt.Errorf("reading test state: %w", err)
+	}
+
+	for _, filepath := range ts.report.FilePaths {
+		for _, violation := range filepath.Violations {
+			if violation.Metadata.Code == code && violation.Metadata.Term == term {
+				return errors.New(prettifyResults(fmt.Sprintf("expected no violations with code %q and term %q, got:", code, term), filepath.Violations))
+			}
+		}
+	}
+
+	return nil
+}
+
+func thereShouldBeNoWarningsWithPackageInTheResult(ctx context.Context, pkg string) error {
+	ts, err := getTestState(ctx)
+	if err != nil {
+		return fmt.Errorf("reading test state: %w", err)
+	}
+
+	for _, filepath := range ts.report.FilePaths {
+		for _, warning := range filepath.Warnings {
+			if strings.HasPrefix(warning.Metadata.Code, pkg) {
+				return errors.New(prettifyResults(fmt.Sprintf("expected no violations with package %q, got:", pkg), filepath.Violations))
+			}
+		}
+	}
+
+	return nil
+}
+
 func prettifyResults(msg string, results []result) string {
 	for _, violation := range results {
-		code := violation.Metadata["code"].(string)
+		code := violation.Metadata.Code
 		msg += fmt.Sprintf("\n\t%s:\t%s", code, violation.Message)
 	}
 	return msg
@@ -227,6 +307,7 @@ func setupScenario(ctx context.Context, sc *godog.Scenario) (context.Context, er
 	}
 
 	ts := testState{
+		id:                   sc.Id,
 		cliPath:              filepath.Join(gitroot, "acceptance/bin/ec"),
 		tempDir:              tempDir,
 		acceptanceModulePath: acceptanceModulePath,
@@ -270,6 +351,10 @@ func InitializeScenario(sc *godog.ScenarioContext) {
 	sc.Step(`^input is validated$`, validateInputWithPolicyConfig)
 	sc.Step(`^there should be no violations in the result$`, thereShouldBeNoViolationsInTheResult)
 	sc.Step(`^there should be no warnings in the result$`, thereShouldBeNoWarningsInTheResult)
+	sc.Step(`^there should be no violations with "([^"]*)" collection in the result$`, thereShouldBeNoViolationsWithCollectionInTheResult)
+	sc.Step(`^there should be no violations with "([^"]*)" package in the result$`, thereShouldBeNoViolationsWithPackageInTheResult)
+	sc.Step(`^there should be no violations with "([^"]*)" code and "([^"]*)" term in the result$`, thereShouldBeNoViolationsWithRuleAndTermInTheResult)
+	sc.Step(`^there should be no warnings with "([^"]*)" package in the result$`, thereShouldBeNoWarningsWithPackageInTheResult)
 
 	sc.After(tearDownScenario)
 }
@@ -281,6 +366,7 @@ func TestFeatures(t *testing.T) {
 			Format:   "pretty",
 			Paths:    []string{"features"},
 			TestingT: t, // Testing instance that will run subtests.
+			Strict:   true,
 		},
 	}
 

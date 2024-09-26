@@ -19,6 +19,10 @@ A Task can be set to expire by setting the
 annotation means that the task is or will be unsupported by a certain date/time
 provided in the value of the annotation in the RFC3339 format.
 
+By default, the rule will prompt the user to `Update to a newer version of the Task.`.
+The message can be customized by setting the `build.appstudio.redhat.com/expiry-message`
+annotation.
+
 For example, this will set the Task to be unsupported after 2025-01-01 at
 midnight UTC; prior to that a warning will be emited by the
 xref:release_policy.adoc#tasks__unsupported[Task version unsupported] rule and

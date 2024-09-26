@@ -246,9 +246,7 @@ deny contains result if {
 # custom:
 #   short_name: unsupported
 #   failure_msg: >-
-#     Task %q is used by pipeline task %q is or will be unsupported as of %s.
-#   solution: >-
-#     Upgrade to a newer version of the Task.
+#     Task %q is used by pipeline task %q is or will be unsupported as of %s. %s
 #   collections:
 #   - redhat
 #   depends_on:
@@ -261,11 +259,16 @@ deny contains result if {
 	annotations := tkn.task_annotations(task)
 
 	expires_on := annotations[_expires_on_annotation]
+	expiry_message := object.get(
+		annotations,
+		_expiry_msg_annotation,
+		"Upgrade to a newer version of the Task.",
+	)
 
 	result := object.union(
 		lib.result_helper_with_term(
 			rego.metadata.chain(),
-			[tkn.task_name(task), tkn.pipeline_task_name(task), expires_on],
+			[tkn.task_name(task), tkn.pipeline_task_name(task), expires_on, expiry_message],
 			tkn.task_name(task),
 		),
 		{"effective_on": expires_on},
@@ -385,3 +388,5 @@ _format_missing(o, opt) := desc if {
 } else := sprintf("Required task %q", [o])
 
 _expires_on_annotation := "build.appstudio.redhat.com/expires-on"
+
+_expiry_msg_annotation := "build.appstudio.redhat.com/expiry-message"

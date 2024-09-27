@@ -275,6 +275,24 @@ deny contains result if {
 	)
 }
 
+# METADATA
+# title: Data provided
+# description: >-
+#   Confirm the expected data keys have been provided in the expected format. The keys are
+#   `pipeline-required-tasks` and `required-tasks`.
+# custom:
+#   short_name: data_provided
+#   failure_msg: '%s'
+#   solution: If provided, ensure the data is in the expected format.
+#   collections:
+#   - redhat
+#   - policy_data
+#
+deny contains result if {
+	some error in _data_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
 # _missing_tasks returns a set of task names that are in the given
 # required_tasks, but not in the PipelineRun attestation.
 _missing_tasks(required_tasks) := {task |
@@ -390,3 +408,79 @@ _format_missing(o, opt) := desc if {
 _expires_on_annotation := "build.appstudio.redhat.com/expires-on"
 
 _expiry_msg_annotation := "build.appstudio.redhat.com/expiry-message"
+
+_data_errors contains msg if {
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(data["pipeline-required-tasks"])
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "object",
+			"patternProperties": {".*": _required_tasks_schema},
+		},
+	)[1]
+
+	msg := sprintf("Data pipeline-required-tasks has unexpected format: %s", [violation.error])
+}
+
+_data_errors contains msg if {
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(data["required-tasks"])
+	some violation in json.match_schema(
+		value,
+		_required_tasks_schema,
+	)[1]
+
+	msg := sprintf("Data required-tasks has unexpected format: %s", [violation.error])
+}
+
+_data_errors contains msg if {
+	some i, entry in data["required-tasks"]
+	effective_on := entry.effective_on
+	not time.parse_rfc3339_ns(effective_on)
+	msg := sprintf(
+		"required-tasks[%d].effective_on is not valid RFC3339 format: %q",
+		[i, effective_on],
+	)
+}
+
+_data_errors contains msg if {
+	some key, entries in data["pipeline-required-tasks"]
+	some i, entry in entries
+	effective_on := entry.effective_on
+	not time.parse_rfc3339_ns(effective_on)
+	msg := sprintf(
+		"pipeline-required-tasks.%s[%d].effective_on is not valid RFC3339 format: %q",
+		[key, i, effective_on],
+	)
+}
+
+_required_tasks_schema := {
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "array",
+	"items": {
+		"type": "object",
+		"properties": {
+			"effective_on": {"type": "string"},
+			"tasks": {
+				"type": "array",
+				"uniqueItems": true,
+				"items": {"oneOf": [
+					{"type": "string"},
+					{
+						"type": "array",
+						"items": {"type": "string"},
+						"uniqueItems": true,
+						"minItems": 1,
+					},
+				]},
+				"minItems": 1,
+			},
+		},
+		"required": ["effective_on", "tasks"],
+	},
+	"uniqueItems": true,
+}

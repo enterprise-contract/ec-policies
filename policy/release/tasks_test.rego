@@ -594,7 +594,6 @@ test_deprecated_slsa_v0_2 if {
 	}}
 
 	lib.assert_equal_results(tasks.deny, expected) with input.attestations as attestation
-		with data["pipeline-required-tasks"] as {"generic": []}
 		with data["task-bundles"] as _trusted_tasks
 }
 
@@ -612,7 +611,6 @@ test_expired_slsa_v0_2 if {
 	}}
 
 	lib.assert_equal_results(tasks.deny, expected) with input.attestations as attestation
-		with data["pipeline-required-tasks"] as {"generic": []}
 		with data["task-bundles"] as _trusted_tasks
 }
 
@@ -630,7 +628,6 @@ test_deprecated_slsa_v1 if {
 	}}
 
 	lib.assert_equal_results(tasks.deny, expected) with input.attestations as attestation
-		with data["pipeline-required-tasks"] as {"generic": []}
 		with data["task-bundles"] as _trusted_tasks
 }
 
@@ -648,7 +645,6 @@ test_expired_slsa_v1 if {
 	}}
 
 	lib.assert_equal_results(tasks.deny, expected) with input.attestations as attestation
-		with data["pipeline-required-tasks"] as {"generic": []}
 		with data["task-bundles"] as _trusted_tasks
 }
 
@@ -669,8 +665,136 @@ test_expired_with_custom_message if {
 	}}
 
 	lib.assert_equal_results(tasks.deny, expected) with input.attestations as attestation
-		with data["pipeline-required-tasks"] as {"generic": []}
 		with data["task-bundles"] as _trusted_tasks
+}
+
+test_data_errors_on_required_tasks if {
+	required_tasks := [
+		{
+			# No issues.
+			"effective_on": "2099-01-02T00:00:00Z",
+			"tasks": [
+				["git-clone", "git-clone-oci-ta"],
+				"buildah",
+			],
+		},
+		{
+			# Bad datetime
+			"effective_on": "bad-datetime-format",
+			"tasks": [
+				["git-clone", "git-clone-oci-ta"],
+				"buildah",
+			],
+		},
+		{
+			# Bad types all around
+			"effective_on": {},
+			"tasks": [[1, 2], 3],
+		},
+		{
+			# Empty list of tasks.
+			"effective_on": "2099-01-02T00:00:00Z",
+			"tasks": [],
+		},
+		{
+			# Empty task entry.
+			"effective_on": "2099-01-02T00:00:00Z",
+			"tasks": [
+				[],
+				"buildah",
+			],
+		},
+	]
+
+	expected := {
+		{
+			"code": "tasks.data_provided",
+			"msg": "Data required-tasks has unexpected format: 2.effective_on: Invalid type. Expected: string, given: object",
+		},
+		{
+			"code": "tasks.data_provided",
+			"msg": "Data required-tasks has unexpected format: 2.tasks.0.0: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "tasks.data_provided",
+			"msg": "Data required-tasks has unexpected format: 2.tasks.0.1: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "tasks.data_provided",
+			"msg": "Data required-tasks has unexpected format: 2.tasks.0: Must validate one and only one schema (oneOf)",
+		},
+		{
+			"code": "tasks.data_provided",
+			"msg": "Data required-tasks has unexpected format: 2.tasks.1: Invalid type. Expected: string, given: integer",
+		},
+		{
+			"code": "tasks.data_provided",
+			"msg": "Data required-tasks has unexpected format: 2.tasks.1: Must validate one and only one schema (oneOf)",
+		},
+		{
+			"code": "tasks.data_provided",
+			"msg": "Data required-tasks has unexpected format: 3.tasks: Array must have at least 1 items",
+		},
+		{
+			"code": "tasks.data_provided",
+			"msg": "Data required-tasks has unexpected format: 4.tasks.0: Array must have at least 1 items",
+		},
+		{
+			"code": "tasks.data_provided",
+			"msg": "Data required-tasks has unexpected format: 4.tasks.0: Must validate one and only one schema (oneOf)",
+		},
+		{
+			"code": "tasks.data_provided",
+			"msg": "required-tasks[1].effective_on is not valid RFC3339 format: \"bad-datetime-format\"",
+		},
+		{
+			"code": "tasks.data_provided",
+			"msg": "required-tasks[2].effective_on is not valid RFC3339 format: \"{}\"",
+		},
+	}
+
+	lib.assert_equal_results(tasks.deny, expected) with data["required-tasks"] as required_tasks
+}
+
+test_data_errors_on_pipeline_required_tasks if {
+	# Since pipeline-required-tasks uses the schema for required-tasks, only perform basic tests
+	pipeline_required_tasks := {
+		# No issues
+		"generic": [{
+			"effective_on": "2099-01-02T00:00:00Z",
+			"tasks": [
+				["git-clone", "git-clone-oci-ta"],
+				"buildah",
+			],
+		}],
+		# Empty task list
+		"docker": [{
+			"effective_on": "2099-01-02T00:00:00Z",
+			"tasks": [],
+		}],
+		# Bad datetime
+		"spam": [{
+			"effective_on": "bad-datetime-format",
+			"tasks": [
+				["git-clone", "git-clone-oci-ta"],
+				"buildah",
+			],
+		}],
+	}
+
+	expected := {
+		{
+			"code": "tasks.data_provided",
+			"msg": "Data pipeline-required-tasks has unexpected format: docker.0.tasks: Array must have at least 1 items",
+		},
+		{
+			"code": "tasks.data_provided",
+			# regal ignore:line-length
+			"msg": "pipeline-required-tasks.spam[0].effective_on is not valid RFC3339 format: \"bad-datetime-format\"",
+		},
+	}
+
+	lib.assert_equal_results(tasks.deny, expected) with data["pipeline-required-tasks"] as pipeline_required_tasks
 }
 
 _attestations_with_tasks(names, add_tasks) := attestations if {

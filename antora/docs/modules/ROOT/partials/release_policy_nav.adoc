@@ -138,6 +138,7 @@
 *** xref:release_policy.adoc#tasks_package[Tasks]
 **** xref:release_policy.adoc#tasks__required_untrusted_task_found[All required tasks are from trusted tasks]
 **** xref:release_policy.adoc#tasks__required_tasks_found[All required tasks were included in the pipeline]
+**** xref:release_policy.adoc#tasks__data_provided[Data provided]
 **** xref:release_policy.adoc#tasks__future_required_tasks_found[Future required tasks were found]
 **** xref:release_policy.adoc#tasks__pinned_task_refs[Pinned Task references]
 **** xref:release_policy.adoc#tasks__pipeline_has_tasks[Pipeline run includes at least one task]

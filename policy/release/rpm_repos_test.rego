@@ -37,21 +37,21 @@ test_repo_id_data_not_strings if {
 
 test_repo_id_all if {
 	lib.assert_equal_results(
-		{p1, p2, p3, p4, p5},
+		{p1, p2, p3, p4, p5, p7},
 		rpm_repos.all_rpm_purls,
 	) with rpm_repos._all_sboms as fake_sboms
 }
 
 test_repo_id_all_with_repo_id if {
 	lib.assert_equal_results(
-		{p1, p2, p3},
+		{p1, p2, p3, p7},
 		rpm_repos._plain_purls(rpm_repos.all_purls_with_repo_ids),
 	) with rpm_repos._all_sboms as fake_sboms
 }
 
 test_repo_id_all_known if {
 	lib.assert_equal_results(
-		{p1, p2},
+		{p1, p2, p7},
 		rpm_repos._plain_purls(rpm_repos.all_purls_with_known_repo_ids),
 	) with rpm_repos._all_sboms as fake_sboms with data.rule_data.known_rpm_repositories as fake_repo_id_list
 }
@@ -129,7 +129,7 @@ test_all_sboms if {
 	lib.assert_equal("spam-1000", rpm_repos._all_sboms) with lib.sbom.cyclonedx_sboms as "spam-1000"
 }
 
-fake_sboms := [fake_sbom({p1, p2, p3, p4, p5, p6})]
+fake_sboms := [fake_sbom({p1, p2, p3, p4, p5, p6, p7})]
 
 fake_sbom(fake_purls) := {"components": [{"purl": p} | some p in fake_purls]}
 

@@ -118,7 +118,7 @@ deny contains result if {
 
 	id := object.get(component, "purl", component.name)
 	result := _with_effective_on(
-		lib.result_helper(rego.metadata.chain(), [id, property.name, msg]),
+		lib.result_helper_with_term(rego.metadata.chain(), [id, property.name, msg], id),
 		disallowed,
 	)
 }
@@ -151,7 +151,7 @@ deny contains result if {
 	msg := regex.replace(object.get(allowed, "url", ""), `(.+)`, ` by pattern "$1"`)
 
 	id := object.get(component, "purl", component.name)
-	result := lib.result_helper(rego.metadata.chain(), [id, reference.url, reference.type, msg])
+	result := lib.result_helper_with_term(rego.metadata.chain(), [id, reference.url, reference.type, msg], id)
 }
 
 # METADATA
@@ -182,7 +182,7 @@ deny contains result if {
 	msg := regex.replace(object.get(disallowed, "url", ""), `(.+)`, ` by pattern "$1"`)
 
 	id := object.get(component, "purl", component.name)
-	result := lib.result_helper(rego.metadata.chain(), [id, reference.url, reference.type, msg])
+	result := lib.result_helper_with_term(rego.metadata.chain(), [id, reference.url, reference.type, msg], id)
 }
 
 _contains(needle, haystack) if {

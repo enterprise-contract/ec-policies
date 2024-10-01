@@ -49,6 +49,8 @@ test_attributes_not_allowed_pair if {
 	expected := {{
 		"code": "sbom_cyclonedx.disallowed_package_attributes",
 		# regal ignore:line-length
+		"term": "pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3",
+		# regal ignore:line-length
 		"msg": `Package pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3 has the attribute "attr1" set`,
 	}}
 
@@ -60,6 +62,8 @@ test_attributes_not_allowed_pair if {
 test_attributes_not_allowed_value if {
 	expected := {{
 		"code": "sbom_cyclonedx.disallowed_package_attributes",
+		# regal ignore:line-length
+		"term": "pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3",
 		# regal ignore:line-length
 		"msg": `Package pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3 has the attribute "attr2" set to "value2"`,
 	}}
@@ -74,11 +78,15 @@ test_attributes_not_allowed_effective_on if {
 		{
 			"code": "sbom_cyclonedx.disallowed_package_attributes",
 			# regal ignore:line-length
+			"term": "pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3",
+			# regal ignore:line-length
 			"msg": `Package pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3 has the attribute "attr1" set`,
 			"effective_on": "2025-01-01T00:00:00Z",
 		},
 		{
 			"code": "sbom_cyclonedx.disallowed_package_attributes",
+			# regal ignore:line-length
+			"term": "pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3",
 			# regal ignore:line-length
 			"msg": `Package pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3 has the attribute "attr2" set to "value2"`,
 			"effective_on": "2024-07-31T00:00:00Z",
@@ -103,6 +111,7 @@ test_attributes_not_allowed_effective_on if {
 test_attributes_not_allowed_value_no_purl if {
 	expected := {{
 		"code": "sbom_cyclonedx.disallowed_package_attributes",
+		"term": "rhel",
 		# regal ignore:line-length
 		"msg": `Package rhel has the attribute "syft:distro:id" set to "rhel"`,
 	}}
@@ -123,6 +132,8 @@ test_external_references_allowed_regex if {
 	expected := {{
 		"code": "sbom_cyclonedx.allowed_package_external_references",
 		# regal ignore:line-length
+		"term": "pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3",
+		# regal ignore:line-length
 		"msg": `Package pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3 has reference "https://example.com/file.txt" of type "distribution" which is not explicitly allowed by pattern ".*allowed.net.*"`,
 	}}
 
@@ -137,6 +148,7 @@ test_external_references_allowed_regex if {
 test_external_references_allowed_no_purl if {
 	expected := {{
 		"code": "sbom_cyclonedx.allowed_package_external_references",
+		"term": "rhel",
 		# regal ignore:line-length
 		"msg": `Package rhel has reference "https://www.redhat.com/" of type "website" which is not explicitly allowed by pattern ".*example.com.*"`,
 	}}
@@ -153,6 +165,8 @@ test_external_references_disallowed_regex if {
 	expected := {{
 		"code": "sbom_cyclonedx.disallowed_package_external_references",
 		# regal ignore:line-length
+		"term": "pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3",
+		# regal ignore:line-length
 		"msg": `Package pkg:rpm/rhel/coreutils-single@8.32-34.el9?arch=x86_64&upstream=coreutils-8.32-34.el9.src.rpm&distro=rhel-9.3 has reference "https://example.com/file.txt" of type "distribution" which is disallowed by pattern ".*example.com.*"`,
 	}}
 
@@ -167,6 +181,7 @@ test_external_references_disallowed_regex if {
 test_external_references_disallowed_no_purl if {
 	expected := {{
 		"code": "sbom_cyclonedx.disallowed_package_external_references",
+		"term": "rhel",
 		# regal ignore:line-length
 		"msg": `Package rhel has reference "https://www.redhat.com/" of type "website" which is disallowed by pattern ".*redhat.com.*"`,
 	}}

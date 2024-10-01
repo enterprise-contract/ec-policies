@@ -71,6 +71,36 @@ test_rule_data_merging if {
 		with data.rule_data.trusted_tasks as {"foo": "bar"}
 }
 
+test_data_errors if {
+	tasks := {
+		"not-an-array": 1,
+		"empty-array": [],
+		"missing-required-properties": [{}],
+		"additional-properties": [{
+			"effective_on": "2024-01-01T00:00:00Z",
+			"expires_on": "2024-02-01T00:00:00Z",
+			"ref": "abc",
+			"spam": "maps",
+		}],
+		"bad-dates": [
+			{"ref": "bad-effective-on", "effective_on": "not-a-date"},
+			{"ref": "bad-effective-on", "effective_on": "2024-01-01T00:00:00Z", "expires_on": "not-a-date"},
+		],
+	}
+
+	expected := {
+		"trusted_tasks data has unexpected format: not-an-array: Invalid type. Expected: array, given: integer",
+		"trusted_tasks data has unexpected format: empty-array: Array must have at least 1 items",
+		"trusted_tasks data has unexpected format: missing-required-properties.0: effective_on is required",
+		"trusted_tasks data has unexpected format: missing-required-properties.0: ref is required",
+		"trusted_tasks data has unexpected format: additional-properties.0: Additional property spam is not allowed",
+		"trusted_tasks.bad-dates[0].effective_on is not valid RFC3339 format: \"not-a-date\"",
+		"trusted_tasks.bad-dates[1].expires_on is not valid RFC3339 format: \"not-a-date\"",
+	}
+
+	lib.assert_equal(tkn.data_errors, expected) with data.trusted_tasks as tasks
+}
+
 trusted_bundle_task := {"spec": {"taskRef": {"resolver": "bundles", "params": [
 	{"name": "bundle", "value": "registry.local/trusty:1.0@sha256:digest"},
 	{"name": "name", "value": "trusty"},

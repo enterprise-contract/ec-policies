@@ -71,3 +71,54 @@ _trusted_tasks[key] := pruned_records if {
 
 # Merging in the trusted_tasks rule data makes it easier for users to customize their trusted tasks
 _trusted_tasks_data := object.union(data.trusted_tasks, lib_rule_data("trusted_tasks"))
+
+data_errors contains msg if {
+	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
+	# handle an Array directly.
+	value := json.marshal(_trusted_tasks_data)
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "object",
+			"patternProperties": {".*": {
+				"type": "array",
+				"items": {
+					"type": "object",
+					"properties": {
+						"effective_on": {"type": "string"},
+						"expires_on": {"type": "string"},
+						"ref": {"type": "string"},
+					},
+					"required": ["effective_on", "ref"],
+					"additionalProperties": false,
+				},
+				"uniqueItems": true,
+				"minItems": 1,
+			}},
+		},
+	)[1]
+	msg := sprintf("trusted_tasks data has unexpected format: %s", [violation.error])
+}
+
+data_errors contains msg if {
+	some task, refs in _trusted_tasks_data
+	some i, ref in refs
+	effective_on := ref.effective_on
+	not time.parse_rfc3339_ns(effective_on)
+	msg := sprintf(
+		"trusted_tasks.%s[%d].effective_on is not valid RFC3339 format: %q",
+		[task, i, effective_on],
+	)
+}
+
+data_errors contains msg if {
+	some task, refs in _trusted_tasks_data
+	some i, ref in refs
+	expires_on := ref.expires_on
+	not time.parse_rfc3339_ns(expires_on)
+	msg := sprintf(
+		"trusted_tasks.%s[%d].expires_on is not valid RFC3339 format: %q",
+		[task, i, expires_on],
+	)
+}

@@ -253,6 +253,26 @@ test_data_missing if {
 	lib.assert_equal_results(trusted_task.deny, expected) with data.trusted_tasks as []
 }
 
+test_data_errors if {
+	# Data validation happens in tkn.data_errors. Only need to test that errors are propagated.
+	bad_data := {"spam": [{"spam": "spam"}]}
+	expected := {
+		{
+			"code": "trusted_task.data_format",
+			"msg": "trusted_tasks data has unexpected format: spam.0: Additional property spam is not allowed",
+		},
+		{
+			"code": "trusted_task.data_format",
+			"msg": "trusted_tasks data has unexpected format: spam.0: effective_on is required",
+		},
+		{
+			"code": "trusted_task.data_format",
+			"msg": "trusted_tasks data has unexpected format: spam.0: ref is required",
+		},
+	}
+	lib.assert_equal_results(trusted_task.deny, expected) with data.trusted_tasks as bad_data
+}
+
 #########################################
 # Pipeline Tasks using bundles resolver #
 #########################################

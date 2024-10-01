@@ -182,6 +182,23 @@ deny contains result if {
 	)
 }
 
+# METADATA
+# title: Data format
+# description: >-
+#   Confirm the expected `trusted_tasks` data keys have been provided in the expected format.
+# custom:
+#   short_name: data_format
+#   failure_msg: '%s'
+#   solution: If provided, ensure the data is in the expected format.
+#   collections:
+#   - redhat
+#   - policy_data
+#
+deny contains result if {
+	some error in tkn.data_errors
+	result := lib.result_helper(rego.metadata.chain(), [error])
+}
+
 _trust_errors contains error if {
 	_uses_trusted_artifacts
 	some attestation in lib.pipelinerun_attestations

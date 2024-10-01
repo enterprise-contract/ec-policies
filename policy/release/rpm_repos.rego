@@ -72,7 +72,7 @@ _rule_data_errors contains msg if {
 }
 
 _repo_id_errors[bad_purl] := msg if {
-	bad_purls := all_rpm_purls - _plain_purls(all_purls_with_repo_ids)
+	bad_purls := all_c2_rpm_purls - _plain_purls(all_c2_purls_with_repo_ids)
 	count(bad_purls) > 0
 
 	truncated := _truncate(bad_purls)
@@ -84,7 +84,7 @@ _repo_id_errors[bad_purl] := msg if {
 }
 
 _repo_id_errors[bad_purl] := msg if {
-	bad_purls := all_purls_with_repo_ids - all_purls_with_known_repo_ids
+	bad_purls := all_c2_purls_with_repo_ids - all_c2_purls_with_known_repo_ids
 	count(bad_purls) > 0
 
 	truncated := _truncate(_plain_purls(bad_purls))
@@ -95,13 +95,13 @@ _repo_id_errors[bad_purl] := msg if {
 	])
 }
 
-all_purls_with_known_repo_ids contains purl_obj if {
-	some purl_obj in all_purls_with_repo_ids
+all_c2_purls_with_known_repo_ids contains purl_obj if {
+	some purl_obj in all_c2_purls_with_repo_ids
 	purl_obj.repo_id in _known_repo_ids
 }
 
-all_purls_with_repo_ids contains purl_obj if {
-	some purl in all_rpm_purls
+all_c2_purls_with_repo_ids contains purl_obj if {
+	some purl in all_c2_rpm_purls
 	ec.purl.is_valid(purl)
 
 	purl_obj := {
@@ -110,11 +110,28 @@ all_purls_with_repo_ids contains purl_obj if {
 	}
 }
 
-all_rpm_purls contains purl if {
+# Pick out only the rpm components discovered by cachi2, since they're the
+# only components that have repo ids currently. This means rpm components
+# discovered by syft are excluded from this check.
+#
+# (The reason we can have both of them together in the same sbom is because
+# different sboms are merged together to produce the final sbom.)
+#
+all_c2_rpm_purls contains purl if {
 	some sbom in _all_sboms
 	some component in sbom.components
+
+	some property in component.properties
+	property == _cachi2_found_by_property
+
 	purl := component.purl
 	_is_rpmish(purl)
+}
+
+# This is what cachi2 produces in the component property list
+_cachi2_found_by_property := {
+	"name": "cachi2:found_by",
+	"value": "cachi2",
 }
 
 # Match rpms and modules

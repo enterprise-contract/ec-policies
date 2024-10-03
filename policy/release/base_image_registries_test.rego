@@ -59,6 +59,36 @@ test_allowed_base_images if {
 		with lib.sbom.cyclonedx_sboms as sboms
 }
 
+test_allowed_base_images_from_snapshot if {
+	sboms := [{"formulation": [
+		{"components": [{
+			"name": "registry.redhat.io/ubi7:latest@sha256:abc",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_base_image",
+				"value": "true",
+			}],
+		}]},
+		{"components": [{
+			"name": "docker.io/library/registry:latest@sha256:bcd",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_builder_image:for_stage",
+				"value": "0",
+			}],
+		}]},
+	]}]
+
+	snapshot := {"components": [
+		{"containerImage": "ignored.io/ignore@sha256:abc"},
+		{"containerImage": "ignored.dev/ignore:ignore@sha256:bcd"},
+	]}
+
+	lib.assert_empty(base_image_registries.deny) with lib.sbom.cyclonedx_sboms as sboms
+		with data.rule_data.allowed_registry_prefixes as ["another.registry.io"]
+		with input.snapshot as snapshot
+}
+
 test_empty_base_images_result if {
 	slsav1_task_with_result := tkn_test.slsav1_task_result(
 		"buildah-task-1",
@@ -167,6 +197,47 @@ test_disallowed_base_images if {
 	}
 	lib.assert_equal_results(base_image_registries.deny, expected) with input.attestations as attestations
 		with lib.sbom.cyclonedx_sboms as sboms
+}
+
+test_disallowed_base_images_with_snapshot if {
+	sboms := [{"formulation": [
+		{"components": [{
+			"name": "registry.redhat.io/ubi7:latest@sha256:abc",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_base_image",
+				"value": "true",
+			}],
+		}]},
+		{"components": [{
+			"name": "docker.io/library/registry:latest@sha256:bcd",
+			"type": "container",
+			"properties": [{
+				"name": "konflux:container:is_builder_image:for_stage",
+				"value": "0",
+			}],
+		}]},
+	]}]
+
+	snapshot := {"components": [
+		{"containerImage": "ignored.io/ignore@sha256:cba"},
+		{"containerImage": "ignored.dev/ignore:ignore@sha256:dcb"},
+	]}
+
+	expected := {
+		{
+			"code": "base_image_registries.base_image_permitted",
+			"msg": "Base image \"docker.io/library/registry:latest@sha256:bcd\" is from a disallowed registry",
+		},
+		{
+			"code": "base_image_registries.base_image_permitted",
+			"msg": "Base image \"registry.redhat.io/ubi7:latest@sha256:abc\" is from a disallowed registry",
+		},
+	}
+
+	lib.assert_equal_results(base_image_registries.deny, expected) with lib.sbom.cyclonedx_sboms as sboms
+		with data.rule_data.allowed_registry_prefixes as ["another.registry.io"]
+		with input.snapshot as snapshot
 }
 
 test_sbom_base_image_selection if {

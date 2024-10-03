@@ -10,6 +10,7 @@ package policy.release.base_image_registries
 import rego.v1
 
 import data.lib
+import data.lib.image
 import data.lib.sbom
 
 # METADATA
@@ -20,6 +21,8 @@ import data.lib.sbom
 #   policy defines trusted registries as registries that are fully maintained by Red
 #   Hat and only contain content produced by Red Hat. The list of permitted registries
 #   can be customized by setting the `allowed_registry_prefixes` list in the rule data.
+#   Base images that are found in the snapshot being validated are also allowed since EC
+#   will also validate those images individually.
 # custom:
 #   short_name: base_image_permitted
 #   failure_msg: Base image %q is from a disallowed registry
@@ -35,7 +38,7 @@ import data.lib.sbom
 #
 deny contains result if {
 	some image_ref in _base_images
-	not _image_ref_permitted(image_ref, lib.rule_data(_rule_data_key))
+	not _image_ref_permitted(image_ref)
 	result := lib.result_helper(rego.metadata.chain(), [image_ref])
 }
 
@@ -91,9 +94,16 @@ deny contains result if {
 	result := lib.result_helper(rego.metadata.chain(), [error])
 }
 
-_image_ref_permitted(image_ref, allowed_prefixes) if {
+_image_ref_permitted(image_ref) if {
+	allowed_prefixes := lib.rule_data(_rule_data_key)
 	some allowed_prefix in allowed_prefixes
 	startswith(image_ref, allowed_prefix)
+} else if {
+	allowed_digests := {img.digest |
+		some component in input.snapshot.components
+		img := image.parse(component.containerImage)
+	}
+	image.parse(image_ref).digest in allowed_digests
 }
 
 _base_images contains name if {

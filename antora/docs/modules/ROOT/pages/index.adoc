@@ -14,7 +14,7 @@ xref:pipeline_policy.adoc[Pipeline Policy].
 == Additional Documentation
 
 * https://konflux-ci.dev/docs/[Konflux Documentation]
-* xref:main@ec-cli::index.adoc[EC CLI Documentation]
+* xref:_@ec-cli::index.adoc[EC CLI Documentation]
 
 == Code
 

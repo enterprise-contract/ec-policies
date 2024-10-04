@@ -118,20 +118,62 @@ all_c2_purls_with_repo_ids contains purl_obj if {
 # different sboms are merged together to produce the final sbom.)
 #
 all_c2_rpm_purls contains purl if {
-	some sbom in _all_sboms
-	some component in sbom.components
+	some entity in all_rpm_entities
+	entity.found_by_cachi2
+	purl := entity.purl
+}
 
+all_rpm_entities contains entity if {
+	some sbom in lib.sbom.all_sboms
+	some entity in _rpm_entities(sbom)
+}
+
+_rpm_entities(sbom) := entities if {
+	# CycloneDX
+	entities := {entity |
+		some component in sbom.components
+		purl := component.purl
+		_is_rpmish(purl)
+		entity := {
+			"purl": purl,
+			"found_by_cachi2": _component_found_by_cachi2(component),
+		}
+	}
+	count(entities) > 0
+} else := entities if {
+	# SPDX
+	entities := {entity |
+		some pkg in sbom.packages
+		some ref in pkg.externalRefs
+		ref.referenceType == "purl"
+		ref.referenceCategory == "PACKAGE-MANAGER"
+		purl := ref.referenceLocator
+		_is_rpmish(purl)
+		entity := {
+			"purl": purl,
+			"found_by_cachi2": _package_found_by_cachi2(pkg),
+		}
+	}
+	count(entities) > 0
+}
+
+_component_found_by_cachi2(component) if {
 	some property in component.properties
 	property == _cachi2_found_by_property
-
-	purl := component.purl
-	_is_rpmish(purl)
 }
 
 # This is what cachi2 produces in the component property list
 _cachi2_found_by_property := {
 	"name": "cachi2:found_by",
 	"value": "cachi2",
+}
+
+_package_found_by_cachi2(pkg) if {
+	some annotation in pkg.annotations
+	annotation.annotator == "cachi2"
+	annotation.annotationType == "OTHER"
+	# `comment` contains additional information, but that is not needed for the purpose of
+	# simply filtering what was found by cachi2.
 }
 
 # Match rpms and modules
@@ -141,9 +183,6 @@ _is_rpmish(purl) if {
 } else if {
 	startswith(purl, "pkg:rpmmod/")
 }
-
-# In future there will be SPDX sboms also
-_all_sboms := lib.sbom.cyclonedx_sboms
 
 _known_repo_ids := lib.rule_data(_rule_data_key)
 

@@ -36,24 +36,39 @@ test_repo_id_data_not_strings if {
 }
 
 test_repo_id_all if {
-	lib.assert_equal_results(
+	lib.assert_equal(
 		{p1, p2, p3, p4, p5, p7},
 		rpm_repos.all_c2_rpm_purls,
-	) with rpm_repos._all_sboms as fake_sboms
+	) with lib.sbom.all_sboms as fake_cyclonedx_sboms
+
+	lib.assert_equal(
+		{p1, p2, p3, p4, p5, p7},
+		rpm_repos.all_c2_rpm_purls,
+	) with lib.sbom.all_sboms as fake_spdx_sboms
 }
 
 test_repo_id_all_with_repo_id if {
-	lib.assert_equal_results(
+	lib.assert_equal(
 		{p1, p2, p3, p7},
 		rpm_repos._plain_purls(rpm_repos.all_c2_purls_with_repo_ids),
-	) with rpm_repos._all_sboms as fake_sboms
+	) with lib.sbom.all_sboms as fake_cyclonedx_sboms
+
+	lib.assert_equal(
+		{p1, p2, p3, p7},
+		rpm_repos._plain_purls(rpm_repos.all_c2_purls_with_repo_ids),
+	) with lib.sbom.all_sboms as fake_spdx_sboms
 }
 
 test_repo_id_all_known if {
-	lib.assert_equal_results(
+	lib.assert_equal(
 		{p1, p2, p7},
 		rpm_repos._plain_purls(rpm_repos.all_c2_purls_with_known_repo_ids),
-	) with rpm_repos._all_sboms as fake_sboms with data.rule_data.known_rpm_repositories as fake_repo_id_list
+	) with lib.sbom.all_sboms as fake_cyclonedx_sboms with data.rule_data.known_rpm_repositories as fake_repo_id_list
+
+	lib.assert_equal(
+		{p1, p2, p7},
+		rpm_repos._plain_purls(rpm_repos.all_c2_purls_with_known_repo_ids),
+	) with lib.sbom.all_sboms as fake_spdx_sboms with data.rule_data.known_rpm_repositories as fake_repo_id_list
 }
 
 test_repo_id_purls_missing_repo_ids if {
@@ -76,7 +91,12 @@ test_repo_id_purls_missing_repo_ids if {
 		},
 	}
 
-	lib.assert_equal_results(expected, rpm_repos.deny) with rpm_repos._all_sboms as [fake_sbom({p1, p2, p4, p5, p6, p7})]
+	cyclonedx_sboms := [fake_cyclonedx_sbom({p1, p2, p4, p5, p6, p7})]
+	lib.assert_equal_results(expected, rpm_repos.deny) with lib.sbom.all_sboms as cyclonedx_sboms
+		with data.rule_data.known_rpm_repositories as fake_repo_id_list
+
+	spdx_sboms := [fake_spdx_sbom({p1, p2, p4, p5, p6, p7})]
+	lib.assert_equal_results(expected, rpm_repos.deny) with lib.sbom.all_sboms as spdx_sboms
 		with data.rule_data.known_rpm_repositories as fake_repo_id_list
 }
 
@@ -88,7 +108,13 @@ test_repo_id_purls_missing_repo_ids_truncated if {
 		"term": "pkg:rpm/borken",
 	}}
 
-	lib.assert_equal_results(expected, rpm_repos.deny) with rpm_repos._all_sboms as [fake_sbom({p1, p2, p4, p5, p6})]
+	cyclonedx_sboms := [fake_cyclonedx_sbom({p1, p2, p4, p5, p6})]
+	lib.assert_equal_results(expected, rpm_repos.deny) with lib.sbom.all_sboms as cyclonedx_sboms
+		with data.rule_data.known_rpm_repositories as fake_repo_id_list
+		with rpm_repos._truncate_threshold as 1 with rpm_repos._min_remainder_count as 0
+
+	spdx_sboms := [fake_spdx_sbom({p1, p2, p4, p5, p6})]
+	lib.assert_equal_results(expected, rpm_repos.deny) with lib.sbom.all_sboms as spdx_sboms
 		with data.rule_data.known_rpm_repositories as fake_repo_id_list
 		with rpm_repos._truncate_threshold as 1 with rpm_repos._min_remainder_count as 0
 }
@@ -103,13 +129,35 @@ test_repo_id_purls_unknown_repo_ids if {
 		"term": "pkg:rpm/redhat/spam@1.2.3?arch=amd64&repository_id=rhel-23-unrecognized-2-rpms",
 	}
 
-	lib.assert_equal_results({expected}, rpm_repos.deny) with rpm_repos._all_sboms as [fake_sbom({p1, p2, p3, p6})]
+	cyclonedx_sboms := [fake_cyclonedx_sbom({p1, p2, p3, p6})]
+	lib.assert_equal_results({expected}, rpm_repos.deny) with lib.sbom.all_sboms as cyclonedx_sboms
+		with data.rule_data.known_rpm_repositories as fake_repo_id_list
+
+	spdx_sboms := [fake_spdx_sbom({p1, p2, p3, p6})]
+	lib.assert_equal_results({expected}, rpm_repos.deny) with lib.sbom.all_sboms as spdx_sboms
+		with data.rule_data.known_rpm_repositories as fake_repo_id_list
+}
+
+test_purl_in_multiple_sboms if {
+	# Same PURL in both CycloneDX and SPDX SBOMs emits a single violation.
+	expected := {
+		"code": "rpm_repos.ids_known",
+		"msg": sprintf("%s %s", [
+			"RPM repo id check failed: An RPM component in the SBOM specified an unknown or disallowed repository_id:",
+			"pkg:rpm/redhat/spam@1.2.3?arch=amd64&repository_id=rhel-23-unrecognized-2-rpms",
+		]),
+		"term": "pkg:rpm/redhat/spam@1.2.3?arch=amd64&repository_id=rhel-23-unrecognized-2-rpms",
+	}
+
+	all_sboms := [fake_cyclonedx_sbom({p1, p2, p3, p6}), fake_spdx_sbom({p1, p2, p3, p6})]
+	lib.assert_equal_results({expected}, rpm_repos.deny) with lib.sbom.all_sboms as all_sboms
 		with data.rule_data.known_rpm_repositories as fake_repo_id_list
 }
 
 test_repo_id_happy_path_cachi2_components if {
-	# These three sboms are valid, so we see no violations
-	lib.assert_empty(rpm_repos.deny) with rpm_repos._all_sboms as [fake_sbom({p1, p2, p7})]
+	# These three purls are valid, so we see no violations
+	all_sboms := [fake_cyclonedx_sbom({p1, p2, p7}), fake_spdx_sbom({p1, p2, p7})]
+	lib.assert_empty(rpm_repos.deny) with rpm_repos._all_sboms as all_sboms
 		with data.rule_data.known_rpm_repositories as fake_repo_id_list
 }
 
@@ -140,27 +188,58 @@ test_clamp_violation_strings if {
 	) with rpm_repos._truncate_threshold as 2 with rpm_repos._min_remainder_count as 3
 }
 
-test_all_sboms if {
-	# (Needed for 100% coverage)
-	lib.assert_equal("spam-1000", rpm_repos._all_sboms) with lib.sbom.cyclonedx_sboms as "spam-1000"
-}
+fake_cyclonedx_sboms := [fake_cyclonedx_sbom({p1, p2, p3, p4, p5, p6, p7})]
 
-fake_sboms := [fake_sbom({p1, p2, p3, p4, p5, p6, p7})]
+fake_cyclonedx_sbom(fake_purls) := {"components": [
+{
+	"purl": p,
+	"properties": [rpm_repos._cachi2_found_by_property],
+} |
+	some p in fake_purls
+]}
 
-# regal ignore:line-length
-fake_sbom(fake_purls) := {"components": [{"purl": p, "properties": [rpm_repos._cachi2_found_by_property]} | some p in fake_purls]}
+fake_sboms_syft := [
+	fake_sbom_cyclonedx_found_by_syft({p1, p2, p3, p4, p5, p6, p7}),
+	fake_sbom_spdx_found_by_syft({p1, p2, p3, p4, p5, p6, p7}),
+]
 
-fake_sboms_syft := [fake_sbom_syft({p1, p2, p3, p4, p5, p6, p7})]
+fake_sbom_cyclonedx_found_by_syft(fake_purls) := {"components": [
+{
+	"purl": p,
+	# It's not specially relevant to the functionality, since we look for the cachi2 property
+	# and ignore everything else, but this is what we see syft produce for rpm components.
+	"properties": [{"name": "syft:package:foundBy", "value": "rpm-db-cataloger"}],
+} |
+	some p in fake_purls
+]}
 
-# regal ignore:line-length
-fake_sbom_syft(fake_purls) := {"components": [{"purl": p, "properties": [_syft_found_by_property]} | some p in fake_purls]}
+fake_sbom_spdx_found_by_syft(fake_purls) := {"packages": [
+{
+	"annotations": [{"annotator": "syft", "annotationType": "OTHER"}],
+	"externalRefs": [r],
+} |
+	some p in fake_purls
+	r := {
+		"referenceType": "purl",
+		"referenceCategory": "PACKAGE-MANAGER",
+		"referenceLocator": p,
+	}
+]}
 
-# It's not specially relevant to the functionality, since we look for the cachi2 property
-# and ignore everything else, but this is what we see syft produce for rpm components.
-_syft_found_by_property := {
-	"name": "syft:package:foundBy",
-	"value": "rpm-db-cataloger",
-}
+fake_spdx_sboms := [fake_spdx_sbom({p1, p2, p3, p4, p5, p6, p7})]
+
+fake_spdx_sbom(fake_purls) := {"packages": [
+{
+	"annotations": [{"annotator": "cachi2", "annotationType": "OTHER"}],
+	"externalRefs": [r],
+} |
+	some p in fake_purls
+	r := {
+		"referenceType": "purl",
+		"referenceCategory": "PACKAGE-MANAGER",
+		"referenceLocator": p,
+	}
+]}
 
 fake_repo_id_list := [
 	"rhel-23-for-spam-9-rpms",

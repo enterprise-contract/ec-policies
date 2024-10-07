@@ -6,7 +6,7 @@ require (
 	github.com/enterprise-contract/ec-cli v0.6.52
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.55.0
-	github.com/styrainc/regal v0.27.0
+	github.com/styrainc/regal v0.28.0
 	github.com/tektoncd/cli v0.38.1
 	oras.land/oras v1.2.0
 )
@@ -73,7 +73,7 @@ require (
 	github.com/alibabacloud-go/tea-xml v1.1.3 // indirect
 	github.com/aliyun/credentials-go v1.3.9 // indirect
 	github.com/anchore/go-struct-converter v0.0.0-20230627203149-c72ef8859ca9 // indirect
-	github.com/anderseknert/roast v0.2.0 // indirect
+	github.com/anderseknert/roast v0.4.2 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect

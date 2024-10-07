@@ -311,7 +311,7 @@ Confirm the `allowed_registry_prefixes` rule data was provided, since it's requi
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `base_image_registries.allowed_registries_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries.rego#L76[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries.rego#L71[Source, window="_blank"]
 
 [#base_image_registries__base_image_permitted]
 === link:#base_image_registries__base_image_permitted[Base image comes from permitted registry]
@@ -328,9 +328,9 @@ Verify that the base images used when building a container image come from a kno
 [#base_image_registries__base_image_info_found]
 === link:#base_image_registries__base_image_info_found[Base images provided]
 
-Verify the expected information was provided about which base images were used during the build process.The list of base images is a combination of two sources. One is extracted from the SLSA Provenance in the form of Tekton Task result called BASE_IMAGES_DIGESTS. The other comes from the components in the `formulation` attribute of any associated CycloneDX SBOMs.
+Verify the expected information was provided about which base images were used during the build process.The list of base images comes from the components in the `formulation` attribute of any associated CycloneDX SBOMs.
 
-*Solution*: Either a Tekton task must exist that emits a result named BASE_IMAGES_DIGESTS, or a CycloneDX SBOM must be associated with the image.
+*Solution*: Ensure a CycloneDX SBOM is associated with the image.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Base images information is missing`

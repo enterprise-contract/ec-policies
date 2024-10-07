@@ -3,39 +3,9 @@ package policy.release.base_image_registries_test
 import rego.v1
 
 import data.lib
-import data.lib.tkn_test
-import data.lib_test
 import data.policy.release.base_image_registries
 
-mock_bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
-
 test_allowed_base_images if {
-	slsav1_task_with_result := tkn_test.slsav1_task_result(
-		"buildah-task-1",
-		[{
-			"name": lib.build_base_images_digests_result_name,
-			"type": "string",
-			"value": concat("\n", [
-				"registry.redhat.io/ubi7:latest@sha256:abc",
-				"docker.io/library/registry:latest@sha256:bcd",
-				"", # Verify trailing new line is ignored
-			]),
-		}],
-	)
-	attestations := [
-		lib_test.att_mock_helper_ref_plain_result(
-			lib.build_base_images_digests_result_name,
-			concat("\n", [
-				"registry.redhat.io/ubi7:latest@sha256:abc",
-				"docker.io/library/registry:latest@sha256:bcd",
-				"", # Verify trailing new line is ignored
-			]),
-			"buildah-task-1",
-			mock_bundle,
-		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, mock_bundle)]),
-	]
-
 	sboms := [{"formulation": [
 		{"components": [{
 			"name": "registry.redhat.io/ubi7:latest@sha256:abc",
@@ -55,8 +25,7 @@ test_allowed_base_images if {
 		}]},
 	]}]
 
-	lib.assert_empty(base_image_registries.deny) with input.attestations as attestations
-		with lib.sbom.cyclonedx_sboms as sboms
+	lib.assert_empty(base_image_registries.deny) with lib.sbom.cyclonedx_sboms as sboms
 }
 
 test_allowed_base_images_from_snapshot if {
@@ -90,54 +59,10 @@ test_allowed_base_images_from_snapshot if {
 }
 
 test_empty_base_images_result if {
-	slsav1_task_with_result := tkn_test.slsav1_task_result(
-		"buildah-task-1",
-		[{
-			"name": lib.build_base_images_digests_result_name,
-			"type": "string",
-			"value": "",
-		}],
-	)
-
-	attestations := [
-		lib_test.att_mock_helper_ref_plain_result(
-			lib.build_base_images_digests_result_name,
-			"",
-			"buildah-task-1",
-			mock_bundle,
-		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, mock_bundle)]),
-	]
-	lib.assert_empty(base_image_registries.deny) with input.attestations as attestations
+	lib.assert_empty(base_image_registries.deny) with lib.sbom.cyclonedx_sboms as [{}]
 }
 
 test_disallowed_base_images if {
-	slsav1_task_with_result := tkn_test.slsav1_task_result(
-		"buildah-task-1",
-		[{
-			"name": lib.build_base_images_digests_result_name,
-			"type": "string",
-			"value": concat("\n", [
-				"registry.redhat.io/ubi7:latest@sha256:abc1",
-				"dockery.io/busybox:latest@sha256:bcd1",
-				"registry.redhat.ioo/spam:latest@sha256:def1",
-			]),
-		}],
-	)
-	attestations := [
-		lib_test.att_mock_helper_ref_plain_result(
-			lib.build_base_images_digests_result_name,
-			concat("\n", [
-				"registry.redhat.io/ubi7:latest@sha256:abc2",
-				"dockery.io/busybox:latest@sha256:bcd2",
-				"registry.redhat.ioo/spam:latest@sha256:def2",
-			]),
-			"buildah-task-1",
-			mock_bundle,
-		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, mock_bundle)]),
-	]
-
 	sboms := [{"formulation": [
 		{"components": [{
 			"name": "registry.redhat.yo/ubi7/3",
@@ -168,22 +93,6 @@ test_disallowed_base_images if {
 	expected := {
 		{
 			"code": "base_image_registries.base_image_permitted",
-			"msg": "Base image \"dockery.io/busybox:latest@sha256:bcd1\" is from a disallowed registry",
-		},
-		{
-			"code": "base_image_registries.base_image_permitted",
-			"msg": "Base image \"registry.redhat.ioo/spam:latest@sha256:def1\" is from a disallowed registry",
-		},
-		{
-			"code": "base_image_registries.base_image_permitted",
-			"msg": "Base image \"dockery.io/busybox:latest@sha256:bcd2\" is from a disallowed registry",
-		},
-		{
-			"code": "base_image_registries.base_image_permitted",
-			"msg": "Base image \"registry.redhat.ioo/spam:latest@sha256:def2\" is from a disallowed registry",
-		},
-		{
-			"code": "base_image_registries.base_image_permitted",
 			"msg": "Base image \"registry.redhat.yo/ubi7/3\" is from a disallowed registry",
 		},
 		{
@@ -195,8 +104,7 @@ test_disallowed_base_images if {
 			"msg": "Base image \"dockery.io/busybox/3\" is from a disallowed registry",
 		},
 	}
-	lib.assert_equal_results(base_image_registries.deny, expected) with input.attestations as attestations
-		with lib.sbom.cyclonedx_sboms as sboms
+	lib.assert_equal_results(base_image_registries.deny, expected) with lib.sbom.cyclonedx_sboms as sboms
 }
 
 test_disallowed_base_images_with_snapshot if {
@@ -302,32 +210,11 @@ test_sbom_base_image_selection if {
 }
 
 test_missing_result if {
-	slsav1_task_with_result := tkn_test.slsav1_task_bundle(
-		tkn_test.slsav1_task_result(
-			"buildah-task-1",
-			[{
-				"name": "SPAM_SPAM_SPAM",
-				"type": "string",
-				"value": "registry.redhat.io/ubi7:latest@sha256:abc",
-			}],
-		),
-		"registry.img/unacceptable@sha256:012",
-	)
-
-	attestations := [
-		lib_test.att_mock_helper_ref_plain_result(
-			"SPAM_SPAM_SPAM",
-			"registry.redhat.io/ubi7:latest@sha256:abc",
-			"buildah-task-1",
-			"registry.img/unacceptable@sha256:012",
-		),
-		lib_test.mock_slsav1_attestation_with_tasks([slsav1_task_with_result]),
-	]
 	expected := {{
 		"code": "base_image_registries.base_image_info_found",
 		"msg": "Base images information is missing",
 	}}
-	lib.assert_equal_results(base_image_registries.deny, expected) with input.attestations as attestations
+	lib.assert_equal_results(base_image_registries.deny, expected)
 }
 
 test_allowed_registries_provided if {

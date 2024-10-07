@@ -46,16 +46,13 @@ deny contains result if {
 # title: Base images provided
 # description: >-
 #   Verify the expected information was provided about which base images were used during
-#   the build process.The list of base images is a combination of two sources. One is
-#   extracted from the SLSA Provenance in the form of Tekton Task result called
-#   BASE_IMAGES_DIGESTS. The other comes from the components in the `formulation` attribute
-#   of any associated CycloneDX SBOMs.
+#   the build process.The list of base images comes from the components in the `formulation`
+#   attribute of any associated CycloneDX SBOMs.
 # custom:
 #   short_name: base_image_info_found
 #   failure_msg: Base images information is missing
 #   solution: >-
-#     Either a Tekton task must exist that emits a result named BASE_IMAGES_DIGESTS, or a
-#     CycloneDX SBOM must be associated with the image.
+#     Ensure a CycloneDX SBOM is associated with the image.
 #   collections:
 #   - minimal
 #   - redhat
@@ -64,10 +61,8 @@ deny contains result if {
 #
 deny contains result if {
 	# Some images are built "from scratch" and not have any base images, e.g. UBI.
-	# This check distinguishes such images by simply ensuring that either the expected
-	# Task result exists regardless of its value, or at least one SBOM is attached to
-	# the image.
-	count(lib.results_named(lib.build_base_images_digests_result_name)) == 0
+	# This check distinguishes such images by simply ensuring that at least one SBOM
+	# is attached to the image.
 	count(sbom.cyclonedx_sboms) == 0
 
 	result := lib.result_helper(rego.metadata.chain(), [])
@@ -104,12 +99,6 @@ _image_ref_permitted(image_ref) if {
 		img := image.parse(component.containerImage)
 	}
 	image.parse(image_ref).digest in allowed_digests
-}
-
-_base_images contains name if {
-	some _, image in lib.results_named(lib.build_base_images_digests_result_name)
-	some name in split(image.value, "\n")
-	name != ""
 }
 
 _base_images contains base_image if {

@@ -16,7 +16,7 @@ import rego.v1
 
 import data.lib
 import data.lib.bundles
-import data.lib.tkn
+import data.lib.tekton
 
 # METADATA
 # title: Task bundle references pinned to digest
@@ -33,7 +33,7 @@ import data.lib.tkn
 #
 warn contains result if {
 	some task in bundles.unpinned_task_bundle(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task), bundles.bundle(task)])
+	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task), bundles.bundle(task)])
 }
 
 # METADATA
@@ -51,10 +51,10 @@ warn contains result if {
 #   - attestation_type.known_attestation_type
 #
 warn contains result if {
-	some task in tkn.out_of_date_task_refs(lib.tasks_from_pipelinerun)
+	some task in tekton.out_of_date_task_refs(lib.tasks_from_pipelinerun)
 	bundle := bundles.bundle(task)
 	bundle != ""
-	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task), bundle])
+	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task), bundle])
 }
 
 # METADATA
@@ -70,7 +70,7 @@ warn contains result if {
 #
 deny contains result if {
 	some task in bundles.disallowed_task_reference(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task)])
+	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task)])
 }
 
 # METADATA
@@ -87,7 +87,7 @@ deny contains result if {
 #
 deny contains result if {
 	some task in bundles.empty_task_bundle_reference(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task)])
+	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task)])
 }
 
 # METADATA
@@ -105,10 +105,10 @@ deny contains result if {
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	some task in tkn.untrusted_task_refs(lib.tasks_from_pipelinerun)
+	some task in tekton.untrusted_task_refs(lib.tasks_from_pipelinerun)
 	bundle := bundles.bundle(task)
 	bundle != ""
-	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_task_name(task), bundle])
+	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task), bundle])
 }
 
 # METADATA
@@ -124,6 +124,6 @@ deny contains result if {
 #     of 'trusted_tasks'.
 #
 deny contains result if {
-	tkn.missing_trusted_tasks_data
+	tekton.missing_trusted_tasks_data
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

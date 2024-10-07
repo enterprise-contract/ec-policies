@@ -16,7 +16,7 @@ import rego.v1
 
 import data.lib
 import data.lib.bundles
-import data.lib.tkn
+import data.lib.tekton
 
 # METADATA
 # title: Unpinned task bundle reference
@@ -42,7 +42,7 @@ warn contains result if {
 #   failure_msg: Pipeline task '%s' uses an out of date task bundle '%s'
 #
 warn contains result if {
-	some task in tkn.out_of_date_task_refs(input.spec.tasks)
+	some task in tekton.out_of_date_task_refs(input.spec.tasks)
 	bundle := bundles.bundle(task)
 	bundle != ""
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundle])
@@ -84,7 +84,7 @@ deny contains result if {
 #   failure_msg: Pipeline task '%s' uses an untrusted task bundle '%s'
 #
 deny contains result if {
-	some task in tkn.untrusted_task_refs(input.spec.tasks)
+	some task in tekton.untrusted_task_refs(input.spec.tasks)
 	bundle := bundles.bundle(task)
 	bundle != ""
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundle])
@@ -99,6 +99,6 @@ deny contains result if {
 #   short_name: missing_required_data
 #   failure_msg: Missing required trusted_tasks data
 deny contains result if {
-	tkn.missing_trusted_tasks_data
+	tekton.missing_trusted_tasks_data
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

@@ -16,7 +16,7 @@ import rego.v1
 
 import data.lib
 import data.lib.refs
-import data.lib.tkn
+import data.lib.tekton
 
 _supported_ta_uris_reg := {"oci:.*@sha256:[0-9a-f]{64}"}
 
@@ -39,11 +39,11 @@ _digest_patterns := {`sha256:[0-9a-f]{64}`}
 #   effective_on: 2024-05-07T00:00:00Z
 #
 warn contains result if {
-	some task in tkn.unpinned_task_references(lib.tasks_from_pipelinerun)
+	some task in tekton.unpinned_task_references(lib.tasks_from_pipelinerun)
 	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
-		[tkn.pipeline_task_name(task), _task_info(task)],
-		tkn.task_name(task),
+		[tekton.pipeline_task_name(task), _task_info(task)],
+		tekton.task_name(task),
 	)
 }
 
@@ -61,11 +61,11 @@ warn contains result if {
 #   effective_on: 2024-05-07T00:00:00Z
 #
 warn contains result if {
-	some task in tkn.out_of_date_task_refs(lib.tasks_from_pipelinerun)
+	some task in tekton.out_of_date_task_refs(lib.tasks_from_pipelinerun)
 	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
-		[tkn.pipeline_task_name(task), _task_info(task)],
-		tkn.task_name(task),
+		[tekton.pipeline_task_name(task), _task_info(task)],
+		tekton.task_name(task),
 	)
 }
 
@@ -114,16 +114,16 @@ deny contains result if {
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	some task in tkn.tasks(attestation)
+	some task in tekton.tasks(attestation)
 	some invalid_input in _trusted_artifact_inputs(task)
 	count({o |
-		some t in tkn.tasks(attestation)
+		some t in tekton.tasks(attestation)
 		some o in _trusted_artifact_outputs(t)
 
 		o == invalid_input
 	}) == 0
 
-	task_name = tkn.pipeline_task_name(task)
+	task_name = tekton.pipeline_task_name(task)
 
 	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
@@ -147,7 +147,7 @@ deny contains result if {
 #   effective_on: 2024-05-07T00:00:00Z
 #
 deny contains result if {
-	tkn.missing_trusted_tasks_data
+	tekton.missing_trusted_tasks_data
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -167,9 +167,9 @@ deny contains result if {
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	some build_task in tkn.build_tasks(attestation)
+	some build_task in tekton.build_tasks(attestation)
 
-	some param_name, param_value in tkn.task_params(build_task)
+	some param_name, param_value in tekton.task_params(build_task)
 
 	# Trusted Artifacts are handled differently. Here we are concerned with all other parameters.
 	not endswith(param_name, "_ARTIFACT")
@@ -178,7 +178,7 @@ deny contains result if {
 	some untrusted_digest in (params_digests - _trusted_build_digests)
 	result := lib.result_helper(
 		rego.metadata.chain(),
-		[param_name, tkn.pipeline_task_name(build_task), untrusted_digest],
+		[param_name, tekton.pipeline_task_name(build_task), untrusted_digest],
 	)
 }
 
@@ -195,29 +195,29 @@ deny contains result if {
 #   - policy_data
 #
 deny contains result if {
-	some error in tkn.data_errors
+	some error in tekton.data_errors
 	result := lib.result_helper(rego.metadata.chain(), [error])
 }
 
 _trust_errors contains error if {
 	_uses_trusted_artifacts
 	some attestation in lib.pipelinerun_attestations
-	build_tasks := tkn.build_tasks(attestation)
-	test_tasks := tkn.tasks_output_result(attestation)
+	build_tasks := tekton.build_tasks(attestation)
+	test_tasks := tekton.tasks_output_result(attestation)
 	some build_or_test_task in array.concat(build_tasks, test_tasks)
 
-	dependency_chain := graph.reachable(_artifact_chain[attestation], {tkn.pipeline_task_name(build_or_test_task)})
+	dependency_chain := graph.reachable(_artifact_chain[attestation], {tekton.pipeline_task_name(build_or_test_task)})
 
 	chain := [task |
 		some link in dependency_chain
-		some task in tkn.tasks(attestation)
+		some task in tekton.tasks(attestation)
 
-		link == tkn.pipeline_task_name(task)
+		link == tekton.pipeline_task_name(task)
 	]
 
-	some untrusted_task in tkn.untrusted_task_refs(chain)
-	untrusted_pipeline_task_name := tkn.pipeline_task_name(untrusted_task)
-	untrusted_task_name := tkn.task_name(untrusted_task)
+	some untrusted_task in tekton.untrusted_task_refs(chain)
+	untrusted_pipeline_task_name := tekton.pipeline_task_name(untrusted_task)
+	untrusted_task_name := tekton.task_name(untrusted_task)
 
 	error := {
 		"msg": sprintf(
@@ -230,31 +230,31 @@ _trust_errors contains error if {
 
 _trust_errors contains error if {
 	not _uses_trusted_artifacts
-	some task in tkn.untrusted_task_refs(lib.tasks_from_pipelinerun)
+	some task in tekton.untrusted_task_refs(lib.tasks_from_pipelinerun)
 	error := {
 		"msg": sprintf(
 			"Pipeline task %q uses an untrusted task reference, %s",
-			[tkn.pipeline_task_name(task), _task_info(task)],
+			[tekton.pipeline_task_name(task), _task_info(task)],
 		),
-		"term": tkn.task_name(task),
+		"term": tekton.task_name(task),
 	}
 }
 
 _artifact_chain[attestation][name] := dependencies if {
 	some attestation in lib.pipelinerun_attestations
-	some task in tkn.tasks(attestation)
-	name := tkn.pipeline_task_name(task)
+	some task in tekton.tasks(attestation)
+	name := tekton.pipeline_task_name(task)
 	dependencies := {dep |
-		some t in tkn.tasks(attestation)
+		some t in tekton.tasks(attestation)
 		some i in _trusted_artifact_inputs(task)
 		some o in _trusted_artifact_outputs(t)
 		i == o
-		dep := tkn.pipeline_task_name(t)
+		dep := tekton.pipeline_task_name(t)
 	}
 }
 
 _trusted_artifact_inputs(task) := {value |
-	some key, value in tkn.task_params(task)
+	some key, value in tekton.task_params(task)
 	endswith(key, "_ARTIFACT")
 	count({b |
 		some supported_uri_ta_reg in _supported_ta_uris_reg
@@ -264,7 +264,7 @@ _trusted_artifact_inputs(task) := {value |
 }
 
 _trusted_artifact_outputs(task) := {result.value |
-	some result in tkn.task_results(task)
+	some result in tekton.task_results(task)
 	result.type == "string"
 	endswith(result.name, "_ARTIFACT")
 	count({b |
@@ -291,9 +291,9 @@ _task_info(task) := info if {
 # _trusted_build_digest is a set containing any digest found in one of the trusted builder Tasks.
 _trusted_build_digests contains digest if {
 	some attestation in lib.pipelinerun_attestations
-	some build_task in tkn.build_tasks(attestation)
-	tkn.is_trusted_task(build_task)
-	some result in tkn.task_results(build_task)
+	some build_task in tekton.build_tasks(attestation)
+	tekton.is_trusted_task(build_task)
+	some result in tekton.task_results(build_task)
 	some digest in _digests_from_values(lib.result_values(result))
 }
 

@@ -16,7 +16,7 @@ import rego.v1
 
 import data.lib
 import data.lib.image
-import data.lib.tkn
+import data.lib.tekton
 
 # METADATA
 # title: Build task contains steps
@@ -38,7 +38,7 @@ import data.lib.tkn
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	build_tasks := tkn.build_tasks(attestation)
+	build_tasks := tekton.build_tasks(attestation)
 	some build_task in build_tasks
 	count(task_steps(build_task)) == 0
 	result := lib.result_helper(rego.metadata.chain(), [build_task.name])
@@ -63,7 +63,7 @@ deny contains result if {
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	count(tkn.build_tasks(attestation)) == 0
+	count(tekton.build_tasks(attestation)) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -88,12 +88,12 @@ deny contains result if {
 	some attestation in lib.pipelinerun_attestations
 	subject_image_refs := collect_subjects(attestation)
 
-	build_tasks := tkn.build_tasks(attestation)
+	build_tasks := tekton.build_tasks(attestation)
 
 	count(build_tasks) > 0
 
 	# all image results within all build tasks
-	result_image_refs := tkn.images_with_digests(build_tasks)
+	result_image_refs := tekton.images_with_digests(build_tasks)
 	some subject_image_ref in subject_image_refs
 	not _contains_equal_ref(result_image_refs, subject_image_ref)
 
@@ -122,8 +122,8 @@ deny contains result if {
 	# validated.
 	tasks := {build_task |
 		some attestation in lib.pipelinerun_attestations
-		some build_task in tkn.build_tasks(attestation)
-		digests := tkn.task_result_artifact_digest(build_task)
+		some build_task in tekton.build_tasks(attestation)
+		digests := tekton.task_result_artifact_digest(build_task)
 		_contains_digest(digests, expected_digest)
 	}
 
@@ -149,13 +149,13 @@ _trusted_build_task_error(tasks) := error if {
 	count(tasks) == 0
 	error := "No Pipeline Tasks built the image"
 } else := error if {
-	untrusted_tasks := tkn.untrusted_task_refs(lib.tasks_from_pipelinerun)
+	untrusted_tasks := tekton.untrusted_task_refs(lib.tasks_from_pipelinerun)
 	untrusted_build_tasks = untrusted_tasks & tasks
 	count(untrusted_build_tasks) > 0
 
 	names := {name |
 		some task in untrusted_build_tasks
-		name := tkn.task_name(task)
+		name := tekton.task_name(task)
 	}
 	error := sprintf("Build Task(s) %q are not trusted", [concat(",", names)])
 }

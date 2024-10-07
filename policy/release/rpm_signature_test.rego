@@ -3,7 +3,7 @@ package policy.release.rpm_signature_test
 import rego.v1
 
 import data.lib
-import data.lib.tkn_test
+import data.lib.tekton_test
 import data.lib_test
 import data.policy.release.rpm_signature
 
@@ -96,7 +96,7 @@ _attestation_v0_2(result_value) := lib_test.att_mock_helper_ref(
 
 _attestation_v1_0(result_value) := attestation if {
 	results := [{"name": rpm_signature._rpms_data_result_name, "value": result_value}]
-	content := base64.encode(json.marshal(json.patch(tkn_test.slsav1_task("spam_v1_0"), [{
+	content := base64.encode(json.marshal(json.patch(tekton_test.slsav1_task("spam_v1_0"), [{
 		"op": "add",
 		"path": "/status/taskResults",
 		"value": results,

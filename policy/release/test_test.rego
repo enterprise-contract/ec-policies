@@ -3,13 +3,14 @@ package policy.release.test_test
 import rego.v1
 
 import data.lib
-import data.lib.tkn_test
+import data.lib.tekton_test
 import data.lib_test
 import data.policy.release.test
 
 # Because TEST_OUTPUT isn't in the task results, the lib.results_from_tests will be empty
 test_needs_non_empty_data if {
-	slsav1_task := tkn_test.slsav1_task_result_ref("task2", [{"name": "NOT_TEST_OUTPUT", "type": "string", "value": {}}])
+	# regal ignore:line-length
+	slsav1_task := tekton_test.slsav1_task_result_ref("task2", [{"name": "NOT_TEST_OUTPUT", "type": "string", "value": {}}])
 	attestations := [
 		lib_test.att_mock_helper_ref("NOT_TEST_OUTPUT", {}, "task1", _bundle),
 		lib_test.mock_slsav1_attestation_with_tasks([slsav1_task]),
@@ -22,7 +23,7 @@ test_needs_non_empty_data if {
 
 # There is a test result, but the data inside it doesn't include the "result" key
 test_needs_tests_with_results if {
-	slsav1_task := tkn_test.slsav1_task_result_ref("task2", [{
+	slsav1_task := tekton_test.slsav1_task_result_ref("task2", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
 		"value": {"rezult": "SUCCESS"},
@@ -41,12 +42,12 @@ test_needs_tests_with_results if {
 }
 
 test_needs_tests_with_results_mixed if {
-	slsav1_bad_task := tkn_test.slsav1_task_result_ref("task3", [{
+	slsav1_bad_task := tekton_test.slsav1_task_result_ref("task3", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
 		"value": {"rezult": "SUCCESS"},
 	}])
-	slsav1_good_task := tkn_test.slsav1_task_result_ref("task4", [{
+	slsav1_good_task := tekton_test.slsav1_task_result_ref("task4", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
 		"value": {"result": "SUCCESS"},
@@ -64,7 +65,7 @@ test_needs_tests_with_results_mixed if {
 }
 
 test_success_data if {
-	slsav1_good_task := tkn_test.slsav1_task_result_ref("task1", [{
+	slsav1_good_task := tekton_test.slsav1_task_result_ref("task1", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
 		"value": {"result": "SUCCESS"},
@@ -82,7 +83,7 @@ mock_a_failing_test := lib_test.att_mock_helper_ref(
 )
 
 test_failure_data if {
-	slsav1_task := tkn_test.slsav1_task_result_ref("task1", [{
+	slsav1_task := tekton_test.slsav1_task_result_ref("task1", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
 		"value": {"result": "FAILURE"},
@@ -133,7 +134,7 @@ mock_an_errored_test := lib_test.att_mock_helper_ref(
 )
 
 test_error_data if {
-	slsav1_task := tkn_test.slsav1_task_result_ref("errored_2", [{
+	slsav1_task := tekton_test.slsav1_task_result_ref("errored_2", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
 		"value": {"result": "ERROR"},
@@ -160,12 +161,12 @@ test_error_data if {
 }
 
 test_mix_data if {
-	slsav1_errored_task := tkn_test.slsav1_task_result_ref("errored_2", [{
+	slsav1_errored_task := tekton_test.slsav1_task_result_ref("errored_2", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
 		"value": {"result": "ERROR"},
 	}])
-	slsav1_failed_task := tkn_test.slsav1_task_result_ref("failed_2", [{
+	slsav1_failed_task := tekton_test.slsav1_task_result_ref("failed_2", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
 		"value": {"result": "FAILURE"},
@@ -206,7 +207,7 @@ test_skipped_is_not_warning if {
 			lib.task_test_result_name,
 			{"result": "SKIPPED"}, "skipped_1", _bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("skipped_2", [{
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_result_ref("skipped_2", [{
 			"name": lib.task_test_result_name,
 			"type": "string",
 			"value": {"result": "SKIPPED"},
@@ -221,7 +222,7 @@ test_skipped_is_deny if {
 			lib.task_test_result_name,
 			{"result": "SKIPPED"}, "skipped_1", _bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("skipped_2", [{
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_result_ref("skipped_2", [{
 			"name": lib.task_test_result_name,
 			"type": "string",
 			"value": {"result": "SKIPPED"},
@@ -247,7 +248,7 @@ test_warning_is_warning if {
 			lib.task_test_result_name,
 			{"result": "WARNING"}, "warning_1", _bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("warning_2", [{
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_result_ref("warning_2", [{
 			"name": lib.task_test_result_name,
 			"type": "string",
 			"value": {"result": "WARNING"},
@@ -279,27 +280,27 @@ test_mixed_statuses if {
 		lib_test.att_mock_helper_ref(lib.task_test_result_name, {"result": "WARNING"}, "warning_1", _bundle),
 		lib_test.att_mock_helper_ref(lib.task_test_result_name, {"result": "ERROR"}, "error_2", _bundle),
 		lib_test.att_mock_helper_ref(lib.task_test_result_name, {"result": "WARNING"}, "warning_2", _bundle),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("success_20", [{
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_result_ref("success_20", [{
 			"name": lib.task_test_result_name,
 			"type": "string",
 			"value": {"result": "SUCCESS"},
 		}])]),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("failure_20", [{
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_result_ref("failure_20", [{
 			"name": lib.task_test_result_name,
 			"type": "string",
 			"value": {"result": "FAILURE"},
 		}])]),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("error_20", [{
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_result_ref("error_20", [{
 			"name": lib.task_test_result_name,
 			"type": "string",
 			"value": {"result": "ERROR"},
 		}])]),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("warning_20", [{
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_result_ref("warning_20", [{
 			"name": lib.task_test_result_name,
 			"type": "string",
 			"value": {"result": "WARNING"},
 		}])]),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("skipped_20", [{
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_result_ref("skipped_20", [{
 			"name": lib.task_test_result_name,
 			"type": "string",
 			"value": {"result": "SKIPPED"},
@@ -379,7 +380,7 @@ test_unsupported_test_result if {
 		lib_test.att_mock_helper_ref(lib.task_test_result_name, {"result": "SUCESS"}, "success_1", _bundle),
 		lib_test.att_mock_helper_ref(lib.task_test_result_name, {"result": "FAIL"}, "failure_1", _bundle),
 		lib_test.att_mock_helper_ref(lib.task_test_result_name, {"result": "SKIPED"}, "skipped_1", _bundle),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("skipped_20", [{
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_result_ref("skipped_20", [{
 			"name": lib.task_test_result_name,
 			"type": "string",
 			"value": {"result": "SKIPED"},
@@ -419,7 +420,9 @@ test_missing_wrong_attestation_type if {
 	pr := lib_test.att_mock_helper_ref("some-result", {"result": "value"}, "task1", _bundle)
 	tr := object.union(pr, {"statement": {"predicate": {"buildType": lib.tekton_task_run}}})
 	tr_result := {"name": lib.task_test_result_name, "type": "string", "value": {"result": "SKIPED"}}
-	pr_slsav1 := lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("skipped_20", [tr_result])])
+
+	# regal ignore:line-length
+	pr_slsav1 := lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_result_ref("skipped_20", [tr_result])])
 	tr_slsav1 := object.union(
 		pr_slsav1,
 		{"statement": {"predicate": {"buildDefinition": {"buildType": lib.tekton_task_run}}}},
@@ -432,7 +435,9 @@ test_wrong_attestation_type if {
 	pr := lib_test.att_mock_helper_ref(lib.task_test_result_name, {"result": "ERROR"}, "errored_1", _bundle)
 	tr := object.union(pr, {"statement": {"predicate": {"buildType": lib.tekton_task_run}}})
 	tr_result := {"name": lib.task_test_result_name, "type": "string", "value": {"result": "ERROR"}}
-	pr_slsav1 := lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("skipped_20", [tr_result])])
+
+	# regal ignore:line-length
+	pr_slsav1 := lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_result_ref("skipped_20", [tr_result])])
 	tr_slsav1 := object.union(
 		pr_slsav1,
 		{"statement": {"predicate": {"buildDefinition": {"buildType": lib.tekton_task_run}}}},
@@ -537,17 +542,17 @@ test_rule_data_provided if {
 }
 
 test_results_and_counts if {
-	task1 := tkn_test.slsav1_task_result_ref("task1", [{
+	task1 := tekton_test.slsav1_task_result_ref("task1", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
 		"value": {"result": "ERROR", "failures": 1, "warnings": 2, "successes": 3},
 	}])
-	task2 := tkn_test.slsav1_task_result_ref("task2", [{
+	task2 := tekton_test.slsav1_task_result_ref("task2", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
 		"value": {"result": "FAILURE", "failures": 1, "warnings": 0, "successes": 3},
 	}])
-	task3 := tkn_test.slsav1_task_result_ref("task3", [{
+	task3 := tekton_test.slsav1_task_result_ref("task3", [{
 		"name": lib.task_test_result_name,
 		"type": "string",
 		"value": {"result": "SUCCESS", "failures": 0, "warnings": 2, "successes": 3},

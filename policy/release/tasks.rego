@@ -29,7 +29,7 @@ import rego.v1
 
 import data.lib
 import data.lib.refs
-import data.lib.tkn
+import data.lib.tekton
 
 # METADATA
 # title: All required tasks are from trusted tasks
@@ -50,9 +50,9 @@ warn contains result if {
 	some att in lib.pipelinerun_attestations
 
 	# only tasks that are not trusted
-	some untrusted_task in tkn.untrusted_task_refs(lib.tasks_from_pipelinerun)
+	some untrusted_task in tekton.untrusted_task_refs(lib.tasks_from_pipelinerun)
 	some missing_required_name in _missing_tasks(current_required_tasks.tasks)
-	some untrusted_task_name in tkn.task_names(untrusted_task)
+	some untrusted_task_name in tekton.task_names(untrusted_task)
 
 	untrusted_task_name == missing_required_name
 	result := lib.result_helper_with_term(
@@ -130,7 +130,7 @@ warn contains result if {
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations
-	count(tkn.tasks(att)) == 0
+	count(tekton.tasks(att)) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -154,12 +154,12 @@ deny contains result if {
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations
-	some task in tkn.tasks(att)
+	some task in tekton.tasks(att)
 	some status in _status(task)
 	status != "Succeeded"
 	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
-		[tkn.pipeline_task_name(task), status], tkn.pipeline_task_name(task),
+		[tekton.pipeline_task_name(task), status], tekton.pipeline_task_name(task),
 	)
 }
 
@@ -205,7 +205,7 @@ deny contains result if {
 #   - tasks.pipeline_has_tasks
 #
 deny contains result if {
-	tkn.missing_required_tasks_data
+	tekton.missing_required_tasks_data
 	not required_pipeline_task_data
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
@@ -228,12 +228,12 @@ deny contains result if {
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations
-	some task in tkn.tasks(att)
+	some task in tekton.tasks(att)
 	not refs.task_ref(task).pinned
 	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
-		[tkn.task_name(task), tkn.pipeline_task_name(task)],
-		tkn.task_name(task),
+		[tekton.task_name(task), tekton.pipeline_task_name(task)],
+		tekton.task_name(task),
 	)
 }
 
@@ -254,9 +254,9 @@ deny contains result if {
 #
 deny contains result if {
 	some att in lib.pipelinerun_attestations
-	some task in tkn.tasks(att)
+	some task in tekton.tasks(att)
 
-	annotations := tkn.task_annotations(task)
+	annotations := tekton.task_annotations(task)
 
 	expires_on := annotations[_expires_on_annotation]
 	expiry_message := object.get(
@@ -268,8 +268,8 @@ deny contains result if {
 	result := object.union(
 		lib.result_helper_with_term(
 			rego.metadata.chain(),
-			[tkn.task_name(task), tkn.pipeline_task_name(task), expires_on, expiry_message],
-			tkn.task_name(task),
+			[tekton.task_name(task), tekton.pipeline_task_name(task), expires_on, expiry_message],
+			tekton.task_name(task),
 		),
 		{"effective_on": expires_on},
 	)
@@ -299,14 +299,14 @@ _missing_tasks(required_tasks) := {task |
 	some att in lib.pipelinerun_attestations
 
 	# all tasks on a PipelineRun
-	tasks := tkn.tasks(att)
+	tasks := tekton.tasks(att)
 	count(tasks) > 0
 
 	# only tasks that are trusted, i.e. tasks that have a record in the trusted_tasks data
 	trusted := [task_name |
 		some task in tasks
-		tkn.is_trusted_task(task)
-		some task_name in tkn.task_names(task)
+		tekton.is_trusted_task(task)
+		some task_name in tekton.task_names(task)
 	]
 
 	some required_task in required_tasks
@@ -340,10 +340,10 @@ default latest_required_tasks := {"tasks": []}
 
 latest_required_tasks := task_data if {
 	some att in lib.pipelinerun_attestations
-	count(tkn.tasks(att)) > 0
-	task_data := tkn.latest_required_pipeline_tasks(att)
+	count(tekton.tasks(att)) > 0
+	task_data := tekton.latest_required_pipeline_tasks(att)
 } else := task_data if {
-	task_data := tkn.latest_required_default_tasks
+	task_data := tekton.latest_required_default_tasks
 }
 
 # get current required tasks. fall back to the default list if
@@ -352,17 +352,17 @@ default current_required_tasks := {"tasks": []}
 
 current_required_tasks := task_data if {
 	some att in lib.pipelinerun_attestations
-	count(tkn.tasks(att)) > 0
-	task_data := tkn.current_required_pipeline_tasks(att)
+	count(tekton.tasks(att)) > 0
+	task_data := tekton.current_required_pipeline_tasks(att)
 } else := task_data if {
-	task_data := tkn.current_required_default_tasks
+	task_data := tekton.current_required_default_tasks
 }
 
 ## get the required task data for a pipeline with a label
 required_pipeline_task_data := task_data if {
 	some att in lib.pipelinerun_attestations
-	count(tkn.tasks(att)) > 0
-	task_data := tkn.required_task_list(att)
+	count(tekton.tasks(att)) > 0
+	task_data := tekton.required_task_list(att)
 }
 
 _status(task) := status if {

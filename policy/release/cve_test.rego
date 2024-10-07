@@ -3,12 +3,12 @@ package policy.release.cve_test
 import rego.v1
 
 import data.lib
-import data.lib.tkn_test
+import data.lib.tekton_test
 import data.lib_test
 import data.policy.release.cve
 
 test_success if {
-	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._result_name,
@@ -29,13 +29,13 @@ test_success if {
 			"clair-scan",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	lib.assert_empty(cve.deny | cve.warn) with input.attestations as attestations
 }
 
 test_success_deprecated_name if {
-	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._deprecated_result_name,
@@ -50,14 +50,14 @@ test_success_deprecated_name if {
 			"clair-scan",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	lib.assert_empty(cve.deny) with input.attestations as attestations
 }
 
 test_success_with_rule_data if {
 	counts := json.remove(_dummy_counts, ["/unknown"])
-	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._result_name,
@@ -78,7 +78,7 @@ test_success_with_rule_data if {
 			"clair-scan",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	lib.assert_empty(cve.deny | cve.warn) with input.attestations as attestations
 		with data.rule_data.restrict_cve_security_levels as ["unknown"]
@@ -87,7 +87,7 @@ test_success_with_rule_data if {
 
 test_success_with_rule_data_deprecated_name if {
 	counts := json.remove(_dummy_counts, ["/unknown"])
-	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._deprecated_result_name,
@@ -102,7 +102,7 @@ test_success_with_rule_data_deprecated_name if {
 			"clair-scan",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	lib.assert_empty(cve.deny) with input.attestations as attestations
 		with data.rule_data.restrict_cve_security_levels as ["unknown"]
@@ -110,7 +110,7 @@ test_success_with_rule_data_deprecated_name if {
 }
 
 test_failure if {
-	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._result_name,
@@ -131,7 +131,7 @@ test_failure if {
 			"clair-scan",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	expected_deny := {
 		{
@@ -149,7 +149,7 @@ test_failure if {
 }
 
 test_failure_deprecated_name if {
-	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._deprecated_result_name,
@@ -170,7 +170,7 @@ test_failure_deprecated_name if {
 			"clair-scan",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	expected_deny := {
 		{
@@ -208,7 +208,7 @@ test_failure_deprecated_name if {
 
 test_failure_with_rule_data if {
 	_custom_counts := {"unknown": 1, "low": 2, "medium": 3}
-	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._result_name,
@@ -229,7 +229,7 @@ test_failure_with_rule_data if {
 			"clair-scan",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	expected := {
 		{
@@ -259,7 +259,7 @@ test_failure_with_rule_data if {
 }
 
 test_warn if {
-	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._result_name,
@@ -280,7 +280,7 @@ test_warn if {
 			"clair-scan",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	expected := {
 		{
@@ -298,7 +298,7 @@ test_warn if {
 }
 
 test_no_warn_deprecated_name_with_new_name_present if {
-	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._deprecated_result_name,
@@ -319,7 +319,7 @@ test_no_warn_deprecated_name_with_new_name_present if {
 			"clair-scan",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	expected := {
 		{
@@ -337,7 +337,7 @@ test_no_warn_deprecated_name_with_new_name_present if {
 }
 
 test_warn_with_rule_data if {
-	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._result_name,
@@ -358,7 +358,7 @@ test_warn_with_rule_data if {
 			"clair-scan",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	expected := {
 		{
@@ -398,7 +398,7 @@ test_warn_with_rule_data if {
 }
 
 test_missing_cve_scan_result if {
-	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": "WRONG_RESULT_NAME",
@@ -413,7 +413,7 @@ test_missing_cve_scan_result if {
 			"clair-scan",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	expected := {{
 		"code": "cve.cve_results_found",
@@ -423,7 +423,7 @@ test_missing_cve_scan_result if {
 }
 
 test_missing_cve_scan_vulnerabilities if {
-	slsav1_task_with_result := tkn_test.slsav1_task_result_ref(
+	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(
 		"clair-scan",
 		[{
 			"name": cve._result_name,
@@ -438,7 +438,7 @@ test_missing_cve_scan_vulnerabilities if {
 			"clair-scan",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 	expected := {{
 		"code": "cve.cve_results_found",

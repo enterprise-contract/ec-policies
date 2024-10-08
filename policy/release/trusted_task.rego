@@ -15,7 +15,6 @@ package policy.release.trusted_task
 import rego.v1
 
 import data.lib
-import data.lib.refs
 import data.lib.tekton
 
 _supported_ta_uris_reg := {"oci:.*@sha256:[0-9a-f]{64}"}
@@ -284,7 +283,7 @@ _uses_trusted_artifacts if {
 }
 
 _task_info(task) := info if {
-	ref := refs.task_ref(task)
+	ref := tekton.task_ref(task)
 	info := sprintf("%s@%s", [object.get(ref, "key", ""), object.get(ref, "pinned_ref", "")])
 }
 

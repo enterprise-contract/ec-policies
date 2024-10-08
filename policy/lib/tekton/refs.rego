@@ -1,4 +1,4 @@
-package lib.refs
+package lib.tekton
 
 import rego.v1
 

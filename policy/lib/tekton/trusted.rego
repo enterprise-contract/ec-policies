@@ -2,7 +2,6 @@ package lib.tekton
 
 import rego.v1
 
-import data.lib.refs
 import data.lib.time as time_lib
 
 # regal ignore:prefer-package-imports
@@ -11,7 +10,7 @@ import data.lib.rule_data as lib_rule_data
 # Returns a subset of tasks that use unpinned Task references.
 unpinned_task_references(tasks) := {task |
 	some task in tasks
-	not refs.task_ref(task).pinned
+	not task_ref(task).pinned
 }
 
 # Returns if the list of trusted Tasks are missing
@@ -36,7 +35,7 @@ untrusted_task_refs(tasks) := {task |
 
 # Returns true if the task uses a trusted Task reference.
 is_trusted_task(task) if {
-	ref := refs.task_ref(task)
+	ref := task_ref(task)
 	records := _trusted_tasks[ref.key]
 
 	some record in records
@@ -49,7 +48,7 @@ is_trusted_task(task) if {
 
 # Returns true if a newer record exists with a different digest.
 _newer_record_exists(task) if {
-	ref := refs.task_ref(task)
+	ref := task_ref(task)
 	records := _trusted_tasks[ref.key]
 
 	newest_record := time_lib.newest(records)
@@ -104,21 +103,19 @@ data_errors contains msg if {
 data_errors contains msg if {
 	some task, refs in _trusted_tasks_data
 	some i, ref in refs
-	effective_on := ref.effective_on
-	not time.parse_rfc3339_ns(effective_on)
+	not time.parse_rfc3339_ns(ref.effective_on)
 	msg := sprintf(
 		"trusted_tasks.%s[%d].effective_on is not valid RFC3339 format: %q",
-		[task, i, effective_on],
+		[task, i, ref.effective_on],
 	)
 }
 
 data_errors contains msg if {
 	some task, refs in _trusted_tasks_data
 	some i, ref in refs
-	expires_on := ref.expires_on
-	not time.parse_rfc3339_ns(expires_on)
+	not time.parse_rfc3339_ns(ref.expires_on)
 	msg := sprintf(
 		"trusted_tasks.%s[%d].expires_on is not valid RFC3339 format: %q",
-		[task, i, expires_on],
+		[task, i, ref.expires_on],
 	)
 }

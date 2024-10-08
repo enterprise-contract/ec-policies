@@ -15,7 +15,6 @@ package policy.pipeline.task_bundle
 import rego.v1
 
 import data.lib
-import data.lib.bundles
 import data.lib.tekton
 
 # METADATA
@@ -28,8 +27,8 @@ import data.lib.tekton
 #   failure_msg: Pipeline task '%s' uses an unpinned task bundle reference '%s'
 #
 warn contains result if {
-	some task in bundles.unpinned_task_bundle(input.spec.tasks)
-	result := lib.result_helper(rego.metadata.chain(), [task.name, bundles.bundle(task)])
+	some task in tekton.unpinned_task_bundle(input.spec.tasks)
+	result := lib.result_helper(rego.metadata.chain(), [task.name, tekton.bundle(task)])
 }
 
 # METADATA
@@ -43,7 +42,7 @@ warn contains result if {
 #
 warn contains result if {
 	some task in tekton.out_of_date_task_refs(input.spec.tasks)
-	bundle := bundles.bundle(task)
+	bundle := tekton.bundle(task)
 	bundle != ""
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundle])
 }
@@ -58,7 +57,7 @@ warn contains result if {
 #   failure_msg: Pipeline task '%s' does not contain a bundle reference
 #
 deny contains result if {
-	some task in bundles.disallowed_task_reference(input.spec.tasks)
+	some task in tekton.disallowed_task_reference(input.spec.tasks)
 	result := lib.result_helper(rego.metadata.chain(), [task.name])
 }
 
@@ -71,7 +70,7 @@ deny contains result if {
 #   failure_msg: Pipeline task '%s' uses an empty bundle image reference
 #
 deny contains result if {
-	some task in bundles.empty_task_bundle_reference(input.spec.tasks)
+	some task in tekton.empty_task_bundle_reference(input.spec.tasks)
 	result := lib.result_helper(rego.metadata.chain(), [task.name])
 }
 
@@ -85,7 +84,7 @@ deny contains result if {
 #
 deny contains result if {
 	some task in tekton.untrusted_task_refs(input.spec.tasks)
-	bundle := bundles.bundle(task)
+	bundle := tekton.bundle(task)
 	bundle != ""
 	result := lib.result_helper(rego.metadata.chain(), [task.name, bundle])
 }

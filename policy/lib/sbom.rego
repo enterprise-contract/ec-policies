@@ -10,6 +10,8 @@ import rego.v1
 # image's filesystem. This fallback exists for legacy purposes and support for it will be removed
 # soon.
 
+all_sboms := array.concat(cyclonedx_sboms, spdx_sboms)
+
 default cyclonedx_sboms := []
 
 cyclonedx_sboms := sboms if {

@@ -5,6 +5,12 @@ import rego.v1
 import data.lib
 import data.lib.sbom
 
+test_all_sboms if {
+	expected := ["hurricane", "tornado", "spandex", "latex"]
+	lib.assert_equal(sbom.all_sboms, expected) with sbom.cyclonedx_sboms as ["hurricane", "tornado"]
+		with sbom.spdx_sboms as ["spandex", "latex"]
+}
+
 # test from attestation and fallback to oci image
 test_cyclonedx_sboms if {
 	attestations := [

@@ -3,7 +3,7 @@ package policy.release.attestation_task_bundle_test
 import rego.v1
 
 import data.lib
-import data.lib.tkn_test
+import data.lib.tekton_test
 import data.lib_test
 import data.policy.release.attestation_task_bundle
 
@@ -19,7 +19,7 @@ test_bundle_not_exists if {
 			"name": name,
 			"ref": {"name": "my-task"},
 		}),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task("my-task")]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task("my-task")]),
 	]
 
 	expected_msg := "Pipeline task 'my-task' does not contain a bundle reference"
@@ -40,7 +40,7 @@ test_bundle_not_exists_empty_string if {
 			"name": name,
 			"ref": {"name": "my-task", "bundle": image},
 		}),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle("my-task", image)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle("my-task", image)]),
 	]
 
 	expected_msg := sprintf("Pipeline task '%s' uses an empty bundle image reference", [name])
@@ -63,7 +63,7 @@ test_bundle_unpinned if {
 				"bundle": image,
 			},
 		}),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle("my-task", image)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle("my-task", image)]),
 	]
 
 	expected_msg := sprintf("Pipeline task '%s' uses an unpinned task bundle reference '%s'", [name, image])
@@ -84,7 +84,7 @@ test_bundle_reference_valid if {
 				"bundle": image,
 			},
 		}),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle("my-task", image)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle("my-task", image)]),
 	]
 
 	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
@@ -105,7 +105,7 @@ test_bundle_reference_digest_doesnt_match if {
 				"bundle": image,
 			},
 		}),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle("my-task", image)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle("my-task", image)]),
 	]
 
 	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
@@ -129,7 +129,7 @@ test_bundle_reference_repo_not_present if {
 				"bundle": image,
 			},
 		}),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle("my-task", image)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle("my-task", image)]),
 	]
 
 	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
@@ -147,7 +147,7 @@ test_trusted_bundle_up_to_date if {
 	image := "reg.com/repo:v2@sha256:abc"
 	attestations := [
 		lib_test.mock_slsav02_attestation_bundles([image]),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle("my-task", image)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle("my-task", image)]),
 	]
 
 	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as attestations
@@ -295,7 +295,7 @@ test_ec316 if {
 			"name": "my-task",
 			"ref": {"name": "my-task", "bundle": image_ref},
 		}),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle("my-task", image_ref)]),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle("my-task", image_ref)]),
 	]
 
 	trusted_tasks := {

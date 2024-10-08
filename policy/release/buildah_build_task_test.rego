@@ -3,7 +3,7 @@ package policy.release.buildah_build_task_test
 import rego.v1
 
 import data.lib
-import data.lib.tkn_test
+import data.lib.tekton_test
 import data.policy.release.buildah_build_task
 
 test_good_dockerfile_param if {
@@ -18,11 +18,11 @@ test_buildah_tasks if {
 	tasks := [
 		{
 			"name": "pipelineTask",
-			"content": base64.encode(json.marshal(tkn_test.slsav1_attestation_local_spec)),
+			"content": base64.encode(json.marshal(tekton_test.slsav1_attestation_local_spec)),
 		},
 		{
 			"name": "pipelineTask",
-			"content": base64.encode(json.marshal(tkn_test.slsav1_attestation_local_spec)),
+			"content": base64.encode(json.marshal(tekton_test.slsav1_attestation_local_spec)),
 		},
 	]
 	slsav1_attestation := json.patch(
@@ -121,7 +121,7 @@ test_multiple_buildah_tasks if {
 	tasks := [
 		{
 			"name": "task",
-			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
+			"content": base64.encode(json.marshal(json.patch(tekton_test.slsav1_attestation_local_spec, [{
 				"op": "add",
 				"path": "/taskRef/name",
 				"value": "task1",
@@ -129,7 +129,7 @@ test_multiple_buildah_tasks if {
 		},
 		{
 			"name": "pipelineTask",
-			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
+			"content": base64.encode(json.marshal(json.patch(tekton_test.slsav1_attestation_local_spec, [{
 				"op": "add",
 				"path": "/taskRef/name",
 				"value": "task1",
@@ -137,7 +137,7 @@ test_multiple_buildah_tasks if {
 		},
 		{
 			"name": "pipeline",
-			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
+			"content": base64.encode(json.marshal(json.patch(tekton_test.slsav1_attestation_local_spec, [{
 				"op": "add",
 				"path": "/taskRef/name",
 				"value": "task1",
@@ -180,7 +180,7 @@ test_multiple_buildah_tasks_one_with_external_dockerfile if {
 	tasks := [
 		{
 			"name": "task",
-			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
+			"content": base64.encode(json.marshal(json.patch(tekton_test.slsav1_attestation_local_spec, [{
 				"op": "add",
 				"path": "params",
 				"value": [{"name": "DOCKERFILE", "value": "Dockerfile"}],
@@ -188,7 +188,7 @@ test_multiple_buildah_tasks_one_with_external_dockerfile if {
 		},
 		{
 			"name": "pipelineTask",
-			"content": base64.encode(json.marshal(json.patch(tkn_test.slsav1_attestation_local_spec, [{
+			"content": base64.encode(json.marshal(json.patch(tekton_test.slsav1_attestation_local_spec, [{
 				"op": "add",
 				"path": "/params",
 				"value": [{"name": "DOCKERFILE", "value": "http://Dockerfile"}],
@@ -277,7 +277,7 @@ _attestation(task_name, params, results) := {"statement": {"predicate": {
 }}}
 
 _slsav1_attestation(task_name, params, results) := attestation if {
-	content := base64.encode(json.marshal(json.patch(tkn_test.slsav1_task(task_name), [
+	content := base64.encode(json.marshal(json.patch(tekton_test.slsav1_task(task_name), [
 		{
 			"op": "replace",
 			"path": "/spec/params",

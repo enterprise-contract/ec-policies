@@ -3,7 +3,7 @@ package policy.release.java_test
 import rego.v1
 
 import data.lib
-import data.lib.tkn_test
+import data.lib.tekton_test
 import data.lib_test
 import data.policy.release.java
 
@@ -15,7 +15,7 @@ test_all_good if {
 			"java-task-1",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("java-task-2", [{
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_result_ref("java-task-2", [{
 			"name": lib.java_sbom_component_count_result_name,
 			"type": "string",
 			"value": {"redhat": 12, "rebuilt": 42},
@@ -32,7 +32,7 @@ test_has_foreign if {
 			"java-task-1",
 			_bundle,
 		),
-		lib_test.mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_result_ref("java-task-2", [{
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_result_ref("java-task-2", [{
 			"name": lib.java_sbom_component_count_result_name,
 			"type": "string",
 			"value": {"redhat": 12, "rebuilt": 42, "central": 1},

@@ -3,7 +3,7 @@ package lib_test
 import rego.v1
 
 import data.lib
-import data.lib.tkn_test
+import data.lib.tekton_test
 
 pr_build_type := "tekton.dev/v1beta1/PipelineRun"
 
@@ -112,14 +112,14 @@ mock_slsav1_attestation_with_tasks(tasks) := {"statement": {
 	"predicate": {"buildDefinition": {
 		"buildType": lib.tekton_slsav1_pipeline_run,
 		"externalParameters": {"runSpec": {"pipelineSpec": {}}},
-		"resolvedDependencies": tkn_test.resolved_dependencies(tasks),
+		"resolvedDependencies": tekton_test.resolved_dependencies(tasks),
 	}},
 }}
 
 mock_slsav1_attestation_bundles(bundles, task_name) := a if {
 	tasks := [task |
 		some bundle in bundles
-		task := tkn_test.slsav1_task_bundle(task_name, bundle)
+		task := tekton_test.slsav1_task_bundle(task_name, bundle)
 	]
 	a := mock_slsav1_attestation_with_tasks(tasks)
 }
@@ -143,11 +143,11 @@ mock_slsav02_attestation_bundles(bundles) := a if {
 }
 
 test_tasks_from_pipelinerun if {
-	slsa1_task := tkn_test.slsav1_task("buildah")
+	slsa1_task := tekton_test.slsav1_task("buildah")
 	slsa1_att := [json.patch(valid_slsav1_att, [{
 		"op": "replace",
 		"path": "/statement/predicate/buildDefinition/resolvedDependencies",
-		"value": tkn_test.resolved_dependencies([slsa1_task]),
+		"value": tekton_test.resolved_dependencies([slsa1_task]),
 	}])]
 	lib.assert_equal([slsa1_task], lib.tasks_from_pipelinerun) with input.attestations as slsa1_att
 
@@ -322,8 +322,8 @@ test_results_from_tests if {
 	)
 	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att2]
 
-	att3 := mock_slsav1_attestation_with_tasks([tkn_test.slsav1_task_bundle(
-		tkn_test.slsav1_task_result(
+	att3 := mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(
+		tekton_test.slsav1_task_result(
 			"mytask",
 			[{
 				"name": lib.task_test_result_name,

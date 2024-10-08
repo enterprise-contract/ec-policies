@@ -1,4 +1,4 @@
-package lib.tkn
+package lib.tekton
 
 import rego.v1
 

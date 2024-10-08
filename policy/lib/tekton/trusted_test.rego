@@ -1,9 +1,9 @@
-package lib.tkn_test
+package lib.tekton_test
 
 import rego.v1
 
 import data.lib
-import data.lib.tkn
+import data.lib.tekton
 
 test_unpinned_task_references if {
 	tasks := [
@@ -15,13 +15,13 @@ test_unpinned_task_references if {
 
 	expected := {unpinned_bundle_task, unpinned_git_task}
 
-	lib.assert_equal(expected, tkn.unpinned_task_references(tasks)) with data.trusted_tasks as trusted_tasks
+	lib.assert_equal(expected, tekton.unpinned_task_references(tasks)) with data.trusted_tasks as trusted_tasks
 }
 
 test_missing_trusted_tasks_data if {
-	lib.assert_equal(true, tkn.missing_trusted_tasks_data)
+	lib.assert_equal(true, tekton.missing_trusted_tasks_data)
 
-	lib.assert_equal(false, tkn.missing_trusted_tasks_data) with data.trusted_tasks as trusted_tasks
+	lib.assert_equal(false, tekton.missing_trusted_tasks_data) with data.trusted_tasks as trusted_tasks
 }
 
 test_out_of_date_task_refs if {
@@ -35,7 +35,7 @@ test_out_of_date_task_refs if {
 
 	expected := {outdated_trusted_bundle_task, outdated_trusted_git_task}
 
-	lib.assert_equal(expected, tkn.out_of_date_task_refs(tasks)) with data.trusted_tasks as trusted_tasks
+	lib.assert_equal(expected, tekton.out_of_date_task_refs(tasks)) with data.trusted_tasks as trusted_tasks
 }
 
 test_untrusted_task_refs if {
@@ -50,24 +50,24 @@ test_untrusted_task_refs if {
 
 	expected := {untrusted_bundle_task, expired_trusted_bundle_task, untrusted_git_task, expired_trusted_git_task}
 
-	lib.assert_equal(expected, tkn.untrusted_task_refs(tasks)) with data.trusted_tasks as trusted_tasks
+	lib.assert_equal(expected, tekton.untrusted_task_refs(tasks)) with data.trusted_tasks as trusted_tasks
 }
 
 test_is_trusted_task if {
-	tkn.is_trusted_task(trusted_bundle_task) with data.trusted_tasks as trusted_tasks
-	tkn.is_trusted_task(trusted_git_task) with data.trusted_tasks as trusted_tasks
+	tekton.is_trusted_task(trusted_bundle_task) with data.trusted_tasks as trusted_tasks
+	tekton.is_trusted_task(trusted_git_task) with data.trusted_tasks as trusted_tasks
 
-	not tkn.is_trusted_task(untrusted_bundle_task) with data.trusted_tasks as trusted_tasks
-	not tkn.is_trusted_task(untrusted_git_task) with data.trusted_tasks as trusted_tasks
+	not tekton.is_trusted_task(untrusted_bundle_task) with data.trusted_tasks as trusted_tasks
+	not tekton.is_trusted_task(untrusted_git_task) with data.trusted_tasks as trusted_tasks
 
-	tkn.is_trusted_task(newest_trusted_bundle_task) with data.trusted_tasks as future_trusted_tasks
-	tkn.is_trusted_task(newest_trusted_git_task) with data.trusted_tasks as future_trusted_tasks
+	tekton.is_trusted_task(newest_trusted_bundle_task) with data.trusted_tasks as future_trusted_tasks
+	tekton.is_trusted_task(newest_trusted_git_task) with data.trusted_tasks as future_trusted_tasks
 }
 
 test_rule_data_merging if {
-	lib.assert_equal(tkn._trusted_tasks_data.foo, "baz") with data.trusted_tasks as {"foo": "baz"}
+	lib.assert_equal(tekton._trusted_tasks_data.foo, "baz") with data.trusted_tasks as {"foo": "baz"}
 
-	lib.assert_equal(tkn._trusted_tasks_data.foo, "bar") with data.trusted_tasks as {"foo": "baz"}
+	lib.assert_equal(tekton._trusted_tasks_data.foo, "bar") with data.trusted_tasks as {"foo": "baz"}
 		with data.rule_data.trusted_tasks as {"foo": "bar"}
 }
 
@@ -98,7 +98,7 @@ test_data_errors if {
 		"trusted_tasks.bad-dates[1].expires_on is not valid RFC3339 format: \"not-a-date\"",
 	}
 
-	lib.assert_equal(tkn.data_errors, expected) with data.trusted_tasks as tasks
+	lib.assert_equal(tekton.data_errors, expected) with data.trusted_tasks as tasks
 }
 
 trusted_bundle_task := {"spec": {"taskRef": {"resolver": "bundles", "params": [

@@ -2,7 +2,7 @@ package lib
 
 import rego.v1
 
-import data.lib.tkn
+import data.lib.tekton
 
 slsa_provenance_predicate_type_v1 := "https://slsa.dev/provenance/v1"
 
@@ -99,7 +99,7 @@ rhtap_jenkins_attestations := [att |
 
 tasks_from_pipelinerun := [task |
 	some att in pipelinerun_attestations
-	some task in tkn.tasks(att)
+	some task in tekton.tasks(att)
 ]
 
 # slsa v0.2 results
@@ -122,7 +122,7 @@ results_named(name) := [r |
 
 	# Inject the task data, currently task name and task bundle image
 	# reference so we can show it in failure messages
-	r := object.union({"value": result_map}, tkn.task_data(task))
+	r := object.union({"value": result_map}, tekton.task_data(task))
 ]
 
 # Attempts to json.unmarshal the given value. If not possible, the given

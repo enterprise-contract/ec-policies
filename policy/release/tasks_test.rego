@@ -4,7 +4,7 @@ package policy.release.tasks_test
 import rego.v1
 
 import data.lib
-import data.lib.tkn_test
+import data.lib.tekton_test
 import data.policy.release.tasks
 
 test_no_tasks_present if {
@@ -52,12 +52,12 @@ test_failed_tasks if {
 	}}}]
 
 	slsav1_tasks := [
-		json.patch(tkn_test.slsav1_task("buildah"), [{
+		json.patch(tekton_test.slsav1_task("buildah"), [{
 			"op": "add",
 			"path": "/spec/taskRef/bundle",
 			"value": _bundle,
 		}]),
-		json.patch(tkn_test.slsav1_task("av-scanner"), [
+		json.patch(tekton_test.slsav1_task("av-scanner"), [
 			{
 				"op": "replace",
 				"path": "/status/conditions",
@@ -69,7 +69,7 @@ test_failed_tasks if {
 				"value": _bundle,
 			},
 		]),
-		json.patch(tkn_test.slsav1_task("cve-scanner"), [
+		json.patch(tekton_test.slsav1_task("cve-scanner"), [
 			{
 				"op": "replace",
 				"path": "/status/conditions",
@@ -287,7 +287,7 @@ test_parameterized if {
 		with data.trusted_tasks as _trusted_tasks
 		with input.attestations as attestations
 
-	slsav1_no_param := tkn_test.slsav1_task_bundle("label-check", _bundle)
+	slsav1_no_param := tekton_test.slsav1_task_bundle("label-check", _bundle)
 	slsav1_task1 := json.patch(slsav1_no_param, [{
 		"op": "replace",
 		"path": "/spec/params",
@@ -349,7 +349,7 @@ test_multiple_conditions_in_status if {
 		},
 		{"type": "invalid"},
 	]
-	slsav1_task := json.patch(tkn_test.slsav1_task("buildah"), [{
+	slsav1_task := json.patch(tekton_test.slsav1_task("buildah"), [{
 		"op": "replace",
 		"path": "/status/conditions",
 		"value": conditions,
@@ -360,7 +360,7 @@ test_multiple_conditions_in_status if {
 
 test_invalid_status_conditions if {
 	conditions := []
-	slsav1_task1 := json.patch(tkn_test.slsav1_task("buildah"), [{
+	slsav1_task1 := json.patch(tekton_test.slsav1_task("buildah"), [{
 		"op": "replace",
 		"path": "/status/conditions",
 		"value": conditions,
@@ -808,14 +808,14 @@ _attestations_with_tasks(names, add_tasks) := attestations if {
 }
 
 _slsav1_attestations_with_tasks(names, add_tasks) := attestations if {
-	slsav1_tasks := array.concat([t | some name in names; t := tkn_test.slsav1_task_bundle(name, _bundle)], add_tasks)
+	slsav1_tasks := array.concat([t | some name in names; t := tekton_test.slsav1_task_bundle(name, _bundle)], add_tasks)
 
 	attestations := [{"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
 		"predicate": {"buildDefinition": {
 			"buildType": lib.tekton_slsav1_pipeline_run,
 			"externalParameters": {"runSpec": {"pipelineRef": {"name": "pipeline1"}}},
-			"resolvedDependencies": tkn_test.resolved_dependencies(slsav1_tasks),
+			"resolvedDependencies": tekton_test.resolved_dependencies(slsav1_tasks),
 			"internalParameters": {"labels": {"pipelines.openshift.io/runtime": "generic"}},
 		}},
 	}}]
@@ -831,14 +831,14 @@ _attestations_with_tasks_no_label(names, add_tasks) := attestations if {
 }
 
 _slsav1_attestations_with_tasks_no_label(names, add_tasks) := attestations if {
-	slsav1_tasks := array.concat([t | some name in names; t := tkn_test.slsav1_task_bundle(name, _bundle)], add_tasks)
+	slsav1_tasks := array.concat([t | some name in names; t := tekton_test.slsav1_task_bundle(name, _bundle)], add_tasks)
 
 	attestations := [{"statement": {
 		"predicateType": "https://slsa.dev/provenance/v1",
 		"predicate": {"buildDefinition": {
 			"buildType": lib.tekton_slsav1_pipeline_run,
 			"externalParameters": {"runSpec": {"pipelineRef": {"name": "pipeline1"}}},
-			"resolvedDependencies": tkn_test.resolved_dependencies(slsav1_tasks),
+			"resolvedDependencies": tekton_test.resolved_dependencies(slsav1_tasks),
 			"internalParameters": {},
 		}},
 	}}]

@@ -10,7 +10,7 @@ package policy.release.provenance_materials
 import rego.v1
 
 import data.lib
-import data.lib.tkn
+import data.lib.tekton
 
 # METADATA
 # title: Git clone task found
@@ -29,7 +29,7 @@ import data.lib.tkn
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	count(tkn.git_clone_tasks(attestation)) == 0
+	count(tekton.git_clone_tasks(attestation)) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -54,9 +54,9 @@ deny contains result if {
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
 
-	some task in tkn.git_clone_tasks(attestation)
-	url := _normalize_git_url(tkn.task_result(task, "url"))
-	commit := tkn.task_result(task, "commit")
+	some task in tekton.git_clone_tasks(attestation)
+	url := _normalize_git_url(tekton.task_result(task, "url"))
+	commit := tekton.task_result(task, "commit")
 
 	materials := [m |
 		some m in attestation.statement.predicate.materials

@@ -10,7 +10,7 @@ package policy.release.source_image
 import rego.v1
 
 import data.lib
-import data.lib.tkn
+import data.lib.tekton
 
 # METADATA
 # title: Exists
@@ -74,9 +74,9 @@ _source_image_sig_errors contains error if {
 # SOURCE_IMAGE_URL@SOURCE_IMAGE_DIGEST parameter of a source-build Task.
 _source_images contains img if {
 	some att in lib.pipelinerun_attestations
-	some task in tkn.source_build_tasks(att)
+	some task in tekton.source_build_tasks(att)
 
-	url := trim_space(tkn.task_result(task, "SOURCE_IMAGE_URL"))
-	digest := trim_space(tkn.task_result(task, "SOURCE_IMAGE_DIGEST"))
+	url := trim_space(tekton.task_result(task, "SOURCE_IMAGE_URL"))
+	digest := trim_space(tekton.task_result(task, "SOURCE_IMAGE_DIGEST"))
 	img := sprintf("%s@%s", [url, digest])
 }

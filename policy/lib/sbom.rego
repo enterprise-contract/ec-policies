@@ -1,7 +1,7 @@
 package lib.sbom
 
 import data.lib
-import data.lib.tkn
+import data.lib.tekton
 import rego.v1
 
 # cyclonedx_sboms and spdx_sboms returns a list of SBOMs associated with the image being validated. It will first
@@ -64,9 +64,9 @@ _spdx_sboms_from_oci := [sbom |
 
 _fetch_oci_sbom := [sbom |
 	some attestation in lib.pipelinerun_attestations
-	some task in tkn.build_tasks(attestation)
+	some task in tekton.build_tasks(attestation)
 
-	blob_ref := tkn.task_result(task, "SBOM_BLOB_URL")
+	blob_ref := tekton.task_result(task, "SBOM_BLOB_URL")
 	blob := ec.oci.blob(blob_ref)
 	sbom := json.unmarshal(blob)
 ]

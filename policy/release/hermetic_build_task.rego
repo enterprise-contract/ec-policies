@@ -10,7 +10,7 @@ package policy.release.hermetic_build_task
 import rego.v1
 
 import data.lib
-import data.lib.tkn
+import data.lib.tekton
 
 # METADATA
 # title: Build task called with hermetic param set
@@ -36,6 +36,6 @@ deny contains result if {
 
 _hermetic_build contains value if {
 	some attestation in lib.pipelinerun_attestations
-	some task in tkn.build_tasks(attestation)
-	value := tkn.task_param(task, "HERMETIC")
+	some task in tekton.build_tasks(attestation)
+	value := tekton.task_param(task, "HERMETIC")
 }

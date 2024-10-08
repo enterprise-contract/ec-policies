@@ -9,7 +9,6 @@ package policy.release.buildah_build_task
 import rego.v1
 
 import data.lib
-import data.lib.tkn
 
 # METADATA
 # title: Buildah task uses a local Dockerfile
@@ -102,22 +101,22 @@ _not_allowed_prefix(search) if {
 
 _buildah_tasks contains task if {
 	some att in lib.pipelinerun_attestations
-	some task in tkn.build_tasks(att)
+	some task in lib.tekton.build_tasks(att)
 }
 
 _dockerfile_params contains param if {
 	some buildah_task in _buildah_tasks
-	param := lib.tkn.task_param(buildah_task, "DOCKERFILE")
+	param := lib.tekton.task_param(buildah_task, "DOCKERFILE")
 }
 
 _add_capabilities_params contains param if {
 	some buildah_task in _buildah_tasks
-	param := lib.tkn.task_param(buildah_task, "ADD_CAPABILITIES")
+	param := lib.tekton.task_param(buildah_task, "ADD_CAPABILITIES")
 }
 
 _platform_params contains param if {
 	some buildah_task in _buildah_tasks
-	param := lib.tkn.task_param(buildah_task, "PLATFORM")
+	param := lib.tekton.task_param(buildah_task, "PLATFORM")
 }
 
 # Verify disallowed_platform_patterns is a list of strings. Empty list is fine.

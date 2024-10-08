@@ -10,7 +10,7 @@ package policy.release.rpm_ostree_task
 import rego.v1
 
 import data.lib
-import data.lib.tkn
+import data.lib.tekton
 
 # METADATA
 # title: Builder image parameter
@@ -123,9 +123,9 @@ rule_data_errors contains msg if {
 # of an rpm-ostree Task.
 _builder_images contains image if {
 	some att in lib.pipelinerun_attestations
-	some task in tkn.tasks(att)
-	"rpm-ostree" in tkn.task_names(task)
-	image := tkn.task_param(task, "BUILDER_IMAGE")
+	some task in tekton.tasks(att)
+	"rpm-ostree" in tekton.task_names(task)
+	image := tekton.task_param(task, "BUILDER_IMAGE")
 }
 
 # _allowed_prefixes is a set of objects. Each object is guaranteed to contains a `value` attribute.

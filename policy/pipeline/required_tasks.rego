@@ -11,7 +11,7 @@ package policy.pipeline.required_tasks
 import rego.v1
 
 import data.lib
-import data.lib.tkn
+import data.lib.tekton
 
 # METADATA
 # title: Required tasks found in pipeline definition
@@ -22,14 +22,14 @@ import data.lib.tkn
 #   short_name: required_tasks_found
 #   failure_msg: Required tasks do not exist for pipeline %q
 warn contains result if {
-	count(tkn.tasks(input)) > 0
+	count(tekton.tasks(input)) > 0
 
 	# check for current tasks
-	not tkn.current_required_pipeline_tasks(input)
+	not tekton.current_required_pipeline_tasks(input)
 
 	# check for future tasks
-	not tkn.latest_required_pipeline_tasks(input)
-	result := lib.result_helper(rego.metadata.chain(), [tkn.pipeline_name])
+	not tekton.latest_required_pipeline_tasks(input)
+	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_name])
 }
 
 # METADATA
@@ -41,7 +41,7 @@ warn contains result if {
 #   short_name: missing_future_required_task
 #   failure_msg: '%s is missing and will be required on %s'
 warn contains result if {
-	count(tkn.tasks(input)) > 0
+	count(tekton.tasks(input)) > 0
 
 	# Get missing tasks by comparing with the default required task list
 	some required_task in _missing_tasks(latest_required_tasks.tasks)
@@ -65,7 +65,7 @@ warn contains result if {
 #   failure_msg: No tasks found in pipeline
 deny contains result if {
 	input.kind == "Pipeline"
-	count(tkn.tasks(input)) == 0
+	count(tekton.tasks(input)) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -78,7 +78,7 @@ deny contains result if {
 #   short_name: missing_required_task
 #   failure_msg: '%s is missing'
 deny contains result if {
-	count(tkn.tasks(input)) > 0
+	count(tekton.tasks(input)) > 0
 
 	# Get missing tasks by comparing with the default required task list
 	some required_task in _missing_tasks(current_required_tasks.tasks)
@@ -97,8 +97,8 @@ deny contains result if {
 #   short_name: required_tasks_list_present
 #   failure_msg: The required tasks list is missing from the rule data
 deny contains result if {
-	tkn.missing_required_tasks_data
-	not tkn.required_task_list(input)
+	tekton.missing_required_tasks_data
+	not tekton.required_task_list(input)
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -106,9 +106,9 @@ deny contains result if {
 # required_tasks, but not in the pipeline definition.
 _missing_tasks(required_tasks) := {task |
 	trusted := [task_name |
-		some task in tkn.tasks(input)
-		tkn.is_trusted_task(task)
-		some task_name in tkn.task_names(task)
+		some task in tekton.tasks(input)
+		tekton.is_trusted_task(task)
+		some task_name in tekton.task_names(task)
 	]
 
 	some required_task in required_tasks
@@ -141,9 +141,9 @@ _any_missing(required, tasks) := missing if {
 default latest_required_tasks := {"tasks": []}
 
 latest_required_tasks := task_data if {
-	task_data := tkn.latest_required_pipeline_tasks(input)
+	task_data := tekton.latest_required_pipeline_tasks(input)
 } else := task_data if {
-	task_data := tkn.latest_required_default_tasks
+	task_data := tekton.latest_required_default_tasks
 }
 
 # get the current tasks that are pipeline specific. If none exists
@@ -151,9 +151,9 @@ latest_required_tasks := task_data if {
 default current_required_tasks := {"tasks": []}
 
 current_required_tasks := task_data if {
-	task_data := tkn.current_required_pipeline_tasks(input)
+	task_data := tekton.current_required_pipeline_tasks(input)
 } else := task_data if {
-	task_data := tkn.current_required_default_tasks
+	task_data := tekton.current_required_default_tasks
 }
 
 # given an array a nice message saying one of the elements of the array,

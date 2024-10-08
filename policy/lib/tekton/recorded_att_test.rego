@@ -1,14 +1,15 @@
-package lib.tkn.recorded_att_test
+package lib.tekton_test
 
 import rego.v1
 
 import data.lib
+import data.lib.tekton
 
 test_slsa_v02_task_extraction if {
 	lib.assert_equal(
 		[t |
-			some task in lib.tkn.tasks({"statement": input})
-			t := lib.tkn.task_data(task)
+			some task in tekton.tasks({"statement": input})
+			t := tekton.task_data(task)
 		],
 		[
 			{"name": "mock-av-scanner"},
@@ -20,14 +21,14 @@ test_slsa_v02_task_extraction if {
 			},
 			{"name": "mock-git-clone"},
 		],
-	) with input as lib.tkn.recorded_att_test.att_01_slsa_v0_2_pipeline_in_cluster
+	) with input as att_01_slsa_v0_2_pipeline_in_cluster
 }
 
 test_slsa_v1_task_extraction if {
 	lib.assert_equal(
 		[t |
-			some task in lib.tkn.tasks({"statement": input})
-			t := lib.tkn.task_data(task)
+			some task in tekton.tasks({"statement": input})
+			t := tekton.task_data(task)
 		],
 		[
 			{"name": "mock-git-clone"},
@@ -39,5 +40,5 @@ test_slsa_v1_task_extraction if {
 				"name": "mock-build",
 			},
 		],
-	) with input as lib.tkn.recorded_att_test.att_05_slsa_v1_0_tekton_build_type_pipeline_in_cluster
+	) with input as att_05_slsa_v1_0_tekton_build_type_pipeline_in_cluster
 }

@@ -144,6 +144,7 @@ Rules included:
 * xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]
 * xref:release_policy.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]
 * xref:release_policy.adoc#quay_expiration__expires_label[Quay expiration: Expires label]
+* xref:release_policy.adoc#rpm_repos__ids_known[RPM Repos: All rpms have known repo ids]
 * xref:release_policy.adoc#rpm_repos__rule_data_provided[RPM Repos: Known repo id list provided]
 * xref:release_policy.adoc#rpm_signature__allowed[RPM Signature: Allowed RPM signature key]
 * xref:release_policy.adoc#rpm_signature__result_format[RPM Signature: Result format]
@@ -1040,6 +1041,7 @@ Each RPM package listed in an SBOM must specify the repository id that it comes 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `RPM repo id check failed: %s`
 * Code: `rpm_repos.ids_known`
+* Effective from: `2024-11-10T00:00:00Z`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos.rego#L33[Source, window="_blank"]
 
 [#rpm_repos__rule_data_provided]

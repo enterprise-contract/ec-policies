@@ -41,10 +41,9 @@ deny contains result if {
 #   solution: >-
 #     Ensure every rpm comes from a known and permitted repository, and that the data in the
 #     SBOM correctly records that.
-#   # Todo: Until the sbom generation is upated this will always fail, so don't include it
-#   # in the redhat collection yet. See https://issues.redhat.com/browse/STONEBLD-2638
-#   #collections:
-#   #- redhat
+#   collections:
+#   - redhat
+#   effective_on: "2024-11-10T00:00:00Z"
 #
 deny contains result if {
 	# Don't bother with this unless we have valid rule data

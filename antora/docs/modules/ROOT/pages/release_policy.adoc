@@ -1034,7 +1034,7 @@ This package defines rules to confirm that all RPM packages listed in SBOMs spec
 [#rpm_repos__ids_known]
 === link:#rpm_repos__ids_known[All rpms have known repo ids]
 
-Each RPM package listed in an SBOM must specify the repository id that it comes from, and that repository id must be present in the list of known and permitted repository ids.
+Each RPM package listed in an SBOM must specify the repository id that it comes from, and that repository id must be present in the list of known and permitted repository ids. Currently this is rule enforced only for SBOM components created by cachi2.
 
 *Solution*: Ensure every rpm comes from a known and permitted repository, and that the data in the SBOM correctly records that.
 

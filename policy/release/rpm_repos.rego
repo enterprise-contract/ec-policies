@@ -35,6 +35,7 @@ deny contains result if {
 # description: >-
 #   Each RPM package listed in an SBOM must specify the repository id that it comes from,
 #   and that repository id must be present in the list of known and permitted repository ids.
+#   Currently this is rule enforced only for SBOM components created by cachi2.
 # custom:
 #   short_name: ids_known
 #   failure_msg: 'RPM repo id check failed: %s'

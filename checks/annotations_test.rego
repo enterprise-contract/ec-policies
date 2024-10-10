@@ -162,6 +162,46 @@ opa_inspect_duplicate := {
 	],
 }
 
+opa_inspect_effective_on := {
+	"namespaces": {"data.policy.release.effective_on": ["policy/release/effective_on.rego"]},
+	"annotations": [
+		{
+			"annotations": {
+				"custom": {
+					"short_name": "good_effective_on",
+					"failure_msg": "all good",
+					"effective_on": "1985-04-12T23:20:50.52Z",
+				},
+				"description": "effective_on must be well formed",
+				"scope": "rule",
+				"title": "effective_on ok case",
+			},
+			"location": {
+				"file": "policy/release/effective_on.rego",
+				"row": 1,
+				"col": 1,
+			},
+		},
+		{
+			"annotations": {
+				"custom": {
+					"short_name": "bad_effective_on",
+					"failure_msg": "not good",
+					"effective_on": "wubba lubba dub dub",
+				},
+				"description": "effective_on must be well formed",
+				"scope": "rule",
+				"title": "effective_on bad case",
+			},
+			"location": {
+				"file": "policy/release/effective_on.rego",
+				"row": 10,
+				"col": 1,
+			},
+		},
+	],
+}
+
 test_required_annotations_invalid if {
 	err = "ERROR: Missing annotation(s) custom.failure_msg, title at policy/release/attestation_task_bundle.rego:13"
 	lib.assert_equal({err}, checks.violation) with input as opa_inspect_missing_annotations
@@ -180,4 +220,9 @@ test_duplicate_rules if {
 	# regal ignore:line-length
 	err2 = `ERROR: Found non-unique code "data.policy.release.attestation_type.known_attestation_type" at policy/release/attestation_type.rego:50`
 	lib.assert_equal({err1, err2}, checks.violation) with input as opa_inspect_duplicate
+}
+
+test_effective_on if {
+	err := `ERROR: wrong syntax of effective_on value "wubba lubba dub dub" at policy/release/effective_on.rego:10`
+	lib.assert_equal({err}, checks.violation) with input as opa_inspect_effective_on
 }

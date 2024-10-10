@@ -129,3 +129,18 @@ violation contains msg if {
 
 	msg := sprintf("ERROR: Found non-unique code %q at %s:%d", [code, file, annotation.location.row])
 }
+
+# Validates that the `effective_on` annotation has the correct syntax
+violation contains msg if {
+	some policy_files in policy_rule_files(input.namespaces)
+
+	some file in policy_files.files
+	some annotation in input.annotations
+
+	annotation.location.file == file
+
+	effective_on := annotation.annotations.custom.effective_on
+	not time.parse_rfc3339_ns(effective_on)
+
+	msg := sprintf("ERROR: wrong syntax of effective_on value %q at %s:%d", [effective_on, file, annotation.location.row])
+}

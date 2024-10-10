@@ -15,7 +15,6 @@ package policy.release.attestation_task_bundle
 import rego.v1
 
 import data.lib
-import data.lib.bundles
 import data.lib.tekton
 
 # METADATA
@@ -32,8 +31,8 @@ import data.lib.tekton
 #   - attestation_type.known_attestation_type
 #
 warn contains result if {
-	some task in bundles.unpinned_task_bundle(lib.tasks_from_pipelinerun)
-	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task), bundles.bundle(task)])
+	some task in tekton.unpinned_task_bundle(lib.tasks_from_pipelinerun)
+	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task), tekton.bundle(task)])
 }
 
 # METADATA
@@ -52,7 +51,7 @@ warn contains result if {
 #
 warn contains result if {
 	some task in tekton.out_of_date_task_refs(lib.tasks_from_pipelinerun)
-	bundle := bundles.bundle(task)
+	bundle := tekton.bundle(task)
 	bundle != ""
 	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task), bundle])
 }
@@ -69,7 +68,7 @@ warn contains result if {
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	some task in bundles.disallowed_task_reference(lib.tasks_from_pipelinerun)
+	some task in tekton.disallowed_task_reference(lib.tasks_from_pipelinerun)
 	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task)])
 }
 
@@ -86,7 +85,7 @@ deny contains result if {
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	some task in bundles.empty_task_bundle_reference(lib.tasks_from_pipelinerun)
+	some task in tekton.empty_task_bundle_reference(lib.tasks_from_pipelinerun)
 	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task)])
 }
 
@@ -106,7 +105,7 @@ deny contains result if {
 #
 deny contains result if {
 	some task in tekton.untrusted_task_refs(lib.tasks_from_pipelinerun)
-	bundle := bundles.bundle(task)
+	bundle := tekton.bundle(task)
 	bundle != ""
 	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task), bundle])
 }

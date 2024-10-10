@@ -1,12 +1,11 @@
-package lib.bundles
+package lib.tekton
 
 import rego.v1
 
 import data.lib.image
-import data.lib.refs
 
 # Return the bundle reference as is
-bundle(task) := refs.task_ref(task).bundle
+bundle(task) := task_ref(task).bundle
 
 # Returns a subset of tasks that do not use a bundle reference.
 disallowed_task_reference(tasks) := {task |

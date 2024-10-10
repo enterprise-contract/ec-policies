@@ -3,7 +3,6 @@ package lib.tekton
 import rego.v1
 
 import data.lib.arrays
-import data.lib.refs
 import data.lib.time as ectime
 
 default missing_required_tasks_data := false
@@ -27,8 +26,8 @@ tasks(obj) := {task |
 
 # task from a slsav0.2 attestation
 _slsa_task(task) if {
-	task_ref := refs.task_ref(task)
-	task_ref.kind == "task"
+	ref := task_ref(task)
+	ref.kind == "task"
 }
 
 # _maybe_tasks returns a set of potential tasks.
@@ -90,7 +89,7 @@ task_names(task) := names if {
 }
 
 # task name from a v0.2 and v1.0 attestation
-task_name(task) := refs.task_ref(task).name
+task_name(task) := task_ref(task).name
 
 # returns a slsav0.2 pipeline task name
 # the name field (which is the taskRun name) for slsav1.0 is metadata.name
@@ -202,7 +201,7 @@ source_build_tasks(attestation) := [task |
 # task_data returns the data relating to the task. If the task is
 # referenced from a bundle, the "bundle" attribute is included.
 task_data(task) := info if {
-	r := refs.task_ref(task)
+	r := task_ref(task)
 	info := {"name": r.name, "bundle": r.bundle}
 } else := info if {
 	info := {"name": task_name(task)}

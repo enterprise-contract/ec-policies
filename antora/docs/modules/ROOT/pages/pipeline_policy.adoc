@@ -20,7 +20,7 @@ Confirm the `trusted_tasks` rule data was provided, since it's required by the p
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Missing required trusted_tasks data`
 * Code: `task_bundle.missing_required_data`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L93[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L92[Source, window="_blank"]
 
 [#task_bundle__untrusted_task_bundle]
 === link:#task_bundle__untrusted_task_bundle[Task bundle is not trusted]
@@ -30,7 +30,7 @@ For each Task in the Pipeline definition, check if the Tekton Bundle used is a t
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' uses an untrusted task bundle '%s'`
 * Code: `task_bundle.untrusted_task_bundle`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L78[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L77[Source, window="_blank"]
 
 [#task_bundle__out_of_date_task_bundle]
 === link:#task_bundle__out_of_date_task_bundle[Task bundle is out of date]
@@ -40,7 +40,7 @@ For each Task in the Pipeline definition, check if the Tekton Bundle used is the
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Pipeline task '%s' uses an out of date task bundle '%s'`
 * Code: `task_bundle.out_of_date_task_bundle`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L35[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L34[Source, window="_blank"]
 
 [#task_bundle__empty_task_bundle_reference]
 === link:#task_bundle__empty_task_bundle_reference[Task bundle reference is empty]
@@ -50,7 +50,7 @@ Check that a valid task bundle reference is being used.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' uses an empty bundle image reference`
 * Code: `task_bundle.empty_task_bundle_reference`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L65[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L64[Source, window="_blank"]
 
 [#task_bundle__disallowed_task_reference]
 === link:#task_bundle__disallowed_task_reference[Task bundle was not used or is not defined]
@@ -60,7 +60,7 @@ Check for the existence of a task bundle. This rule will fail if the task is not
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' does not contain a bundle reference`
 * Code: `task_bundle.disallowed_task_reference`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L51[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L50[Source, window="_blank"]
 
 [#task_bundle__unpinned_task_bundle]
 === link:#task_bundle__unpinned_task_bundle[Unpinned task bundle reference]
@@ -70,7 +70,7 @@ Check if the Tekton Bundle used for the Tasks in the Pipeline definition is pinn
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Pipeline task '%s' uses an unpinned task bundle reference '%s'`
 * Code: `task_bundle.unpinned_task_bundle`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L21[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L20[Source, window="_blank"]
 
 [#basic_package]
 == link:#basic_package[Pipeline definition sanity checks]

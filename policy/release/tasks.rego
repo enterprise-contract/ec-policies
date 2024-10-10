@@ -28,7 +28,6 @@ package policy.release.tasks
 import rego.v1
 
 import data.lib
-import data.lib.refs
 import data.lib.tekton
 
 # METADATA
@@ -229,7 +228,7 @@ deny contains result if {
 deny contains result if {
 	some att in lib.pipelinerun_attestations
 	some task in tekton.tasks(att)
-	not refs.task_ref(task).pinned
+	not tekton.task_ref(task).pinned
 	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
 		[tekton.task_name(task), tekton.pipeline_task_name(task)],

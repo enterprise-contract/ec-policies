@@ -1,9 +1,9 @@
-package policy.release.slsa_source_version_controlled_test
+package release.slsa_source_version_controlled_test
 
 import rego.v1
 
 import data.lib
-import data.policy.release.slsa_source_version_controlled
+import data.release.slsa_source_version_controlled
 
 test_all_good if {
 	materials := [

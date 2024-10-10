@@ -1,9 +1,9 @@
-package policy.release.base_image_registries_test
+package release.base_image_registries_test
 
 import rego.v1
 
 import data.lib
-import data.policy.release.base_image_registries
+import data.release.base_image_registries
 
 test_allowed_base_images if {
 	sboms := [{"formulation": [

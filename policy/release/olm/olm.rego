@@ -4,7 +4,7 @@
 # description: >-
 #   Checks for Operator Lifecycle Manager (OLM) bundles.
 #
-package policy.release.olm
+package release.olm
 
 import rego.v1
 

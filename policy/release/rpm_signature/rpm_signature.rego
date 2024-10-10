@@ -5,7 +5,7 @@
 #   This package provides rules for verifying the signatures of RPMs identified in the the SLSA
 #   Provenance attestation.
 #
-package policy.release.rpm_signature
+package release.rpm_signature
 
 import rego.v1
 

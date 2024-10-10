@@ -10,7 +10,7 @@
 #   This package correlates the provided source code reference with the source
 #   code referenced in the attestation.
 #
-package policy.release.slsa_source_correlated
+package release.slsa_source_correlated
 
 import rego.v1
 

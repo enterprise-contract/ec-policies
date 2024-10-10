@@ -1,9 +1,9 @@
-package policy.release.schedule_test
+package release.schedule_test
 
 import rego.v1
 
 import data.lib
-import data.policy.release.schedule
+import data.release.schedule
 
 test_no_restriction_by_default if {
 	lib.assert_empty(schedule.deny)

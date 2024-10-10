@@ -5,7 +5,7 @@
 #   This package is reponsible for verifying the source container image associated with the image
 #   being validated.
 #
-package policy.release.source_image
+package release.source_image
 
 import rego.v1
 

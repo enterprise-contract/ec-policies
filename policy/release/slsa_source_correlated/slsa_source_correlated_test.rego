@@ -1,9 +1,9 @@
-package policy.release.slsa_source_correlated_test
+package release.slsa_source_correlated_test
 
 import rego.v1
 
 import data.lib
-import data.policy.release.slsa_source_correlated
+import data.release.slsa_source_correlated
 
 test_deny_missing_source_code_happy_day if {
 	lib.assert_empty(slsa_source_correlated.deny) with input.image as {"source": {"something": "here"}}

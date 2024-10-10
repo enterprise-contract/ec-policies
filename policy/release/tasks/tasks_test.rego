@@ -1,11 +1,11 @@
 # regal ignore:file-length
-package policy.release.tasks_test
+package release.tasks_test
 
 import rego.v1
 
 import data.lib
 import data.lib.tekton_test
-import data.policy.release.tasks
+import data.release.tasks
 
 test_no_tasks_present if {
 	expected := {{

@@ -4,7 +4,7 @@
 # description: >-
 #   Rules that verify the current date conform to a given schedule.
 #
-package policy.release.schedule
+package release.schedule
 
 import rego.v1
 

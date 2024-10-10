@@ -1,11 +1,11 @@
-package policy.release.cve_test
+package release.cve_test
 
 import rego.v1
 
 import data.lib
 import data.lib.tekton_test
 import data.lib_test
-import data.policy.release.cve
+import data.release.cve
 
 test_success if {
 	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(

@@ -1,9 +1,9 @@
-package policy.release.external_parameters_test
+package release.external_parameters_test
 
 import rego.v1
 
 import data.lib
-import data.policy.release.external_parameters
+import data.release.external_parameters
 
 test_success if {
 	lib.assert_empty(external_parameters.deny) with input.attestations as [good_provenance]

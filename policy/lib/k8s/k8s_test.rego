@@ -1,4 +1,4 @@
-package policy.task.k8s_test
+package lib.k8s_test
 
 import rego.v1
 

@@ -7,7 +7,7 @@
 #   produced by "on-pr" build pipelines, i.e. pre-merge CI builds,
 #   so this is intended to prevent accidentally releasing a CI build.
 #
-package policy.release.quay_expiration
+package release.quay_expiration
 
 import rego.v1
 

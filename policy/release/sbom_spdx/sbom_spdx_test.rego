@@ -1,10 +1,10 @@
-package policy.release.sbom_spdx_test
+package release.sbom_spdx_test
 
 import rego.v1
 
 import data.lib
 import data.lib.sbom
-import data.policy.release.sbom_spdx
+import data.release.sbom_spdx
 
 test_all_good if {
 	lib.assert_empty(sbom_spdx.deny) with input.attestations as [_sbom_attestation]

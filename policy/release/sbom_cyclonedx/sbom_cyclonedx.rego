@@ -6,7 +6,7 @@
 #   The SBOMs are read from multiple locations: a file within the image, and a CycloneDX SBOM
 #   attestation.
 #
-package policy.release.sbom_cyclonedx
+package release.sbom_cyclonedx
 
 import rego.v1
 

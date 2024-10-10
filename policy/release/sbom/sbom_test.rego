@@ -1,9 +1,9 @@
-package policy.release.sbom_test
+package release.sbom_test
 
 import rego.v1
 
 import data.lib
-import data.policy.release.sbom
+import data.release.sbom
 
 test_not_found if {
 	expected := {{"code": "sbom.found", "msg": "No SBOM attestations found"}}

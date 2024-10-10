@@ -24,7 +24,7 @@
 #   This package verifies the requirement by asserting the image was built
 #   from a git repository.
 #
-package policy.release.slsa_source_version_controlled
+package release.slsa_source_version_controlled
 
 import rego.v1
 

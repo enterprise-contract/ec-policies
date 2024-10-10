@@ -5,7 +5,7 @@
 #   Verify the attribute .predicate.buildDefinition.externalParameters of a
 #   SLSA Provenance v1.0 matches the expectation.
 #
-package policy.release.external_parameters
+package release.external_parameters
 
 import rego.v1
 

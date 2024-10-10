@@ -10,7 +10,7 @@
 #   This package verifies the requirement by asserting the image was
 #   built by Tekton Pipelines.
 #
-package policy.release.slsa_build_build_service
+package release.slsa_build_build_service
 
 import rego.v1
 

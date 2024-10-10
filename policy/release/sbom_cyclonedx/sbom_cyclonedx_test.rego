@@ -1,10 +1,10 @@
-package policy.release.sbom_cyclonedx_test
+package release.sbom_cyclonedx_test
 
 import rego.v1
 
 import data.lib
 import data.lib.sbom
-import data.policy.release.sbom_cyclonedx
+import data.release.sbom_cyclonedx
 
 test_all_good_from_attestation if {
 	lib.assert_empty(sbom_cyclonedx.deny) with input.attestations as [_sbom_attestation]

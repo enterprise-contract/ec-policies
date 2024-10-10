@@ -4,7 +4,7 @@
 # description: >-
 #   This package is responsible for verifying the buildah build task
 #
-package policy.release.buildah_build_task
+package release.buildah_build_task
 
 import rego.v1
 

@@ -5,7 +5,7 @@
 #   This package verifies the build task in the attestation was invoked
 #   with the expected parameters to perform a hermetic build.
 #
-package policy.release.hermetic_build_task
+package release.hermetic_build_task
 
 import rego.v1
 

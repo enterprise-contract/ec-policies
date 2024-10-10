@@ -8,7 +8,7 @@
 #   Jenkins pipelines are defined under
 #   https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
 #
-package policy.release.rhtap_jenkins
+package release.rhtap_jenkins
 
 import rego.v1
 

@@ -5,7 +5,7 @@
 #   Verify attributes on the certificate involved in the image signature when using
 #   slsa-github-generator on GitHub Actions with Sigstore Fulcio
 #
-package policy.release.github_certificate
+package release.github_certificate
 
 import rego.v1
 

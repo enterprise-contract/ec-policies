@@ -1,4 +1,4 @@
-package policy.release.sbom_cyclonedx
+package release.sbom_cyclonedx
 
 import rego.v1
 

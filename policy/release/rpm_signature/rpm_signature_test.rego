@@ -1,11 +1,11 @@
-package policy.release.rpm_signature_test
+package release.rpm_signature_test
 
 import rego.v1
 
 import data.lib
 import data.lib.tekton_test
 import data.lib_test
-import data.policy.release.rpm_signature
+import data.release.rpm_signature
 
 test_success if {
 	result_value := {"keys": {"abcdef0123456789": 1, "ABCDEF0123456789": 2, "unsigned": 0}}

@@ -1,9 +1,9 @@
-package policy.release.labels_test
+package release.labels_test
 
 import rego.v1
 
 import data.lib
-import data.policy.release.labels
+import data.release.labels
 
 # For these tests builtin functions ec.oci.image_manifest and ec.oci.blob need
 # to be mocked. Both take a single parameter -- the image reference, for which

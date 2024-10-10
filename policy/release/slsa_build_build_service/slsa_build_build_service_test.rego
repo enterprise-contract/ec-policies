@@ -1,9 +1,9 @@
-package policy.release.slsa_build_build_service_test
+package release.slsa_build_build_service_test
 
 import rego.v1
 
 import data.lib
-import data.policy.release.slsa_build_build_service
+import data.release.slsa_build_build_service
 
 test_all_good if {
 	builder_id := lib.rule_data("allowed_builder_ids")[0]

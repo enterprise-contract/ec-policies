@@ -15,7 +15,7 @@
 #   Default configuration in Konflux currently includes Maven repositories with
 #   names : 'jboss', 'confluent', 'redhat', 'jitpack' and 'gradle'.
 #
-package policy.release.java
+package release.java
 
 import rego.v1
 

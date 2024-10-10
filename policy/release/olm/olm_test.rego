@@ -1,9 +1,9 @@
-package policy.release.olm_test
+package release.olm_test
 
 import rego.v1
 
 import data.lib
-import data.policy.release.olm
+import data.release.olm
 
 pinned := "registry.io/repository/image@sha256:cafe"
 

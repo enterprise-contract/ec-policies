@@ -1,9 +1,9 @@
-package policy.release.hermetic_build_task_test
+package release.hermetic_build_task_test
 
 import rego.v1
 
 import data.lib
-import data.policy.release.hermetic_build_task
+import data.release.hermetic_build_task
 
 test_hermetic_build if {
 	lib.assert_empty(hermetic_build_task.deny) with input.attestations as [_good_attestation]

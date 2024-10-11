@@ -51,7 +51,10 @@ jobs:
           cache: true
 
       - name: Run checks
-        run: make ci
+        run: |
+          # allows us to use unshare to restrict network access
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          make ci
 
       - name: Check for uncommitted changes
         run: |

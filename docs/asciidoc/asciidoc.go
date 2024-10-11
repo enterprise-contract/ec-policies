@@ -46,7 +46,7 @@ func (d *doc) SetAnnotations(a []ast.FlatAnnotationsRefSet) {
 		rules := make([]*ast.Annotations, 0, 5)
 		for _, ref := range set {
 			path := ref.GetPackage().Path.String()
-			if strings.HasPrefix(path, fmt.Sprintf("data.policy.%s.", d.Qualifier)) {
+			if strings.HasPrefix(path, fmt.Sprintf("data.%s.", d.Qualifier)) {
 				if strings.Contains(path, ".collection.") {
 					c := col{ref.Annotations, nil}
 					c.SetAnnotations(a)

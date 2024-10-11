@@ -11,15 +11,6 @@ These rules are applied to pipeline run attestations associated with container i
 |*Name*
 |*Description*
 
-| [#builtin]`builtin`
-a| Includes a set of always on builtin policies. Note that builtin policies are always included and cannot be skipped regardless of your policy configuration.
-
-Rules included:
-
-* xref:release_policy.adoc#attestation__signature_check[Builtin attestation policies: Attestation signature]
-* xref:release_policy.adoc#attestation__syntax_check[Builtin attestation policies: Attestation syntax]
-* xref:release_policy.adoc#image__signature_check[Builtin image policies: Image signature]
-
 | [#github]`github`
 a| A set of policy rules to validate artifacts built on GitHub.
 
@@ -212,14 +203,6 @@ Rules included:
 * xref:release_policy.adoc#rpm_ostree_task__builder_image_param[rpm-ostree Task: Builder image parameter]
 * xref:release_policy.adoc#rpm_ostree_task__rule_data[rpm-ostree Task: Rule data]
 
-| [#rhtap-jenkins]`rhtap-jenkins`
-a| A set of policy rules to validate artifacts built using RHTAP Jenkins pipelines.
-
-Rules included:
-
-* xref:release_policy.adoc#rhtap_jenkins__invocation_id_found[RHTAP Jenkins: RHTAP Jenkins SLSA Invocation ID present]
-* xref:release_policy.adoc#rhtap_jenkins__attestation_found[RHTAP Jenkins: RHTAP Jenkins SLSA Provenance Attestation Found]
-
 | [#slsa3]`slsa3`
 a| Includes policy rules required to meet SLSA Level 3.
 
@@ -250,7 +233,7 @@ Rules included:
 Sanity checks related to the format of the image build's attestation.
 
 * Package name: `attestation_type`
-* Package full path: `policy.release.attestation_type`
+* Package full path: `release.attestation_type`
 
 [#attestation_type__deprecated_policy_attestation_format]
 === link:#attestation_type__deprecated_policy_attestation_format[Deprecated policy attestation format]
@@ -263,7 +246,7 @@ The Enterprise Contract CLI now places the attestation data in a different locat
 * FAILURE message: `Deprecated policy attestation format found`
 * Code: `attestation_type.deprecated_policy_attestation_format`
 * Effective from: `2023-08-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type.rego#L74[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L74[Source, window="_blank"]
 
 [#attestation_type__known_attestation_type]
 === link:#attestation_type__known_attestation_type[Known attestation type found]
@@ -275,7 +258,7 @@ Confirm the attestation found for the image has a known attestation type.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Unknown attestation type '%s'`
 * Code: `attestation_type.known_attestation_type`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type.rego#L13[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L13[Source, window="_blank"]
 
 [#attestation_type__known_attestation_types_provided]
 === link:#attestation_type__known_attestation_types_provided[Known attestation types provided]
@@ -287,7 +270,7 @@ Confirm the `known_attestation_types` rule data was provided.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `attestation_type.known_attestation_types_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type.rego#L39[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L39[Source, window="_blank"]
 
 [#attestation_type__pipelinerun_attestation_found]
 === link:#attestation_type__pipelinerun_attestation_found[PipelineRun attestation found]
@@ -299,7 +282,7 @@ Confirm at least one PipelineRun attestation is present.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Missing pipelinerun attestation`
 * Code: `attestation_type.pipelinerun_attestation_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type.rego#L56[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L56[Source, window="_blank"]
 
 [#base_image_registries_package]
 == link:#base_image_registries_package[Base image checks]
@@ -307,7 +290,7 @@ Confirm at least one PipelineRun attestation is present.
 This package is responsible for verifying the base (parent) images reported in the SLSA Provenace or the SBOM are allowed.
 
 * Package name: `base_image_registries`
-* Package full path: `policy.release.base_image_registries`
+* Package full path: `release.base_image_registries`
 
 [#base_image_registries__allowed_registries_provided]
 === link:#base_image_registries__allowed_registries_provided[Allowed base image registry prefixes list was provided]
@@ -319,7 +302,7 @@ Confirm the `allowed_registry_prefixes` rule data was provided, since it's requi
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `base_image_registries.allowed_registries_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries.rego#L71[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L71[Source, window="_blank"]
 
 [#base_image_registries__base_image_permitted]
 === link:#base_image_registries__base_image_permitted[Base image comes from permitted registry]
@@ -331,7 +314,7 @@ Verify that the base images used when building a container image come from a kno
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Base image %q is from a disallowed registry`
 * Code: `base_image_registries.base_image_permitted`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries.rego#L16[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L16[Source, window="_blank"]
 
 [#base_image_registries__base_image_info_found]
 === link:#base_image_registries__base_image_info_found[Base images provided]
@@ -343,7 +326,7 @@ Verify the expected information was provided about which base images were used d
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Base images information is missing`
 * Code: `base_image_registries.base_image_info_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries.rego#L45[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L45[Source, window="_blank"]
 
 [#buildah_build_task_package]
 == link:#buildah_build_task_package[Buildah build task]
@@ -351,7 +334,7 @@ Verify the expected information was provided about which base images were used d
 This package is responsible for verifying the buildah build task
 
 * Package name: `buildah_build_task`
-* Package full path: `policy.release.buildah_build_task`
+* Package full path: `release.buildah_build_task`
 
 [#buildah_build_task__add_capabilities_param]
 === link:#buildah_build_task__add_capabilities_param[ADD_CAPABILITIES parameter]
@@ -364,7 +347,7 @@ Verify the ADD_CAPABILITIES parameter of a builder Tasks was not used.
 * FAILURE message: `ADD_CAPABILITIES parameter is not allowed`
 * Code: `buildah_build_task.add_capabilities_param`
 * Effective from: `2024-08-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task.rego#L34[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task/buildah_build_task.rego#L34[Source, window="_blank"]
 
 [#buildah_build_task__buildah_uses_local_dockerfile]
 === link:#buildah_build_task__buildah_uses_local_dockerfile[Buildah task uses a local Dockerfile]
@@ -376,7 +359,7 @@ Verify the Dockerfile used in the buildah task was not fetched from an external 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `DOCKERFILE param value (%s) is an external source`
 * Code: `buildah_build_task.buildah_uses_local_dockerfile`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task.rego#L13[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task/buildah_build_task.rego#L13[Source, window="_blank"]
 
 [#buildah_build_task__platform_param]
 === link:#buildah_build_task__platform_param[PLATFORM parameter]
@@ -389,7 +372,7 @@ Verify the value of the PLATFORM parameter of a builder Task is allowed by match
 * FAILURE message: `PLATFORM parameter value %q is disallowed by regex %q`
 * Code: `buildah_build_task.platform_param`
 * Effective from: `2024-09-01T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task.rego#L57[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task/buildah_build_task.rego#L57[Source, window="_blank"]
 
 [#buildah_build_task__disallowed_platform_patterns_pattern]
 === link:#buildah_build_task__disallowed_platform_patterns_pattern[disallowed_platform_patterns format]
@@ -399,56 +382,7 @@ Confirm the `disallowed_platform_patterns` rule data, if provided matches the ex
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `buildah_build_task.disallowed_platform_patterns_pattern`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task.rego#L80[Source, window="_blank"]
-
-[#attestation_package]
-== link:#attestation_package[Builtin attestation policies]
-
-This package is responsible for validating attestation signature and syntax. Note that builtin policies are always included and cannot be skipped regardless of your policy.
-
-* Package name: `attestation`
-* Package full path: `policy.release.builtin.attestation`
-
-[#attestation__signature_check]
-=== link:#attestation__signature_check[Attestation signature]
-
-Validates the cryptographic signature of the attestation.
-
-*Solution*: Examine the signature of the attestation, provided key material or trust chain for verification.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `No image attestations found matching the given public key. Verify the correct public key was provided, and one or more attestations were created.`
-* Code: `attestation.signature_check`
-
-[#attestation__syntax_check]
-=== link:#attestation__syntax_check[Attestation syntax]
-
-Validates the syntax of the attestation.
-
-*Solution*: Make sure that the attestation is well formed and syntactically correct.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Attestation syntax check failed: %s`
-* Code: `attestation.syntax_check`
-
-[#image_package]
-== link:#image_package[Builtin image policies]
-
-This package is responsible for validating image signature. Note that builtin policies are always included and cannot be skipped regardless of your policy configuration.
-
-* Package name: `image`
-* Package full path: `policy.release.builtin.image`
-
-[#image__signature_check]
-=== link:#image__signature_check[Image signature]
-
-Validates the cryptographic signature of the image.
-
-*Solution*: Examine the signature of the image, provided key material or trust chain for verification.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `No image signatures found matching the given public key. Verify the correct public key was provided, and a signature was created.`
-* Code: `image.signature_check`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task/buildah_build_task.rego#L80[Source, window="_blank"]
 
 [#cve_package]
 == link:#cve_package[CVE checks]
@@ -456,7 +390,7 @@ Validates the cryptographic signature of the image.
 This package is responsible for verifying a CVE scan was performed during the build pipeline, and that the image under test does not contain CVEs of certain security levels.
 
 * Package name: `cve`
-* Package full path: `policy.release.cve`
+* Package full path: `release.cve`
 
 [#cve__cve_blockers]
 === link:#cve__cve_blockers[Blocking CVE check]
@@ -468,7 +402,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that h
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Found %d CVE vulnerabilities of %s security level`
 * Code: `cve.cve_blockers`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L88[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L88[Source, window="_blank"]
 
 [#cve__unpatched_cve_blockers]
 === link:#cve__unpatched_cve_blockers[Blocking unpatched CVE check]
@@ -480,7 +414,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that d
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Found %d unpatched CVE vulnerabilities of %s security level`
 * Code: `cve.unpatched_cve_blockers`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L113[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L113[Source, window="_blank"]
 
 [#cve__cve_results_found]
 === link:#cve__cve_results_found[CVE scan results found]
@@ -492,7 +426,7 @@ Confirm that clair-scan task results are present in the SLSA Provenance attestat
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Clair CVE scan results were not found`
 * Code: `cve.cve_results_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L139[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L139[Source, window="_blank"]
 
 [#cve__deprecated_cve_result_name]
 === link:#cve__deprecated_cve_result_name[Deprecated CVE result name]
@@ -504,7 +438,7 @@ The `CLAIR_SCAN_RESULT` result name has been deprecated, and has been replaced w
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `CVE scan uses deprecated result name`
 * Code: `cve.deprecated_cve_result_name`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L66[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L66[Source, window="_blank"]
 
 [#cve__cve_warnings]
 === link:#cve__cve_warnings[Non-blocking CVE check]
@@ -516,7 +450,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that h
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Found %d non-blocking CVE vulnerabilities of %s security level`
 * Code: `cve.cve_warnings`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L15[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L15[Source, window="_blank"]
 
 [#cve__unpatched_cve_warnings]
 === link:#cve__unpatched_cve_warnings[Non-blocking unpatched CVE check]
@@ -528,7 +462,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that d
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Found %d non-blocking unpatched CVE vulnerabilities of %s security level`
 * Code: `cve.unpatched_cve_warnings`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L40[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L40[Source, window="_blank"]
 
 [#cve__rule_data_provided]
 === link:#cve__rule_data_provided[Rule data provided]
@@ -540,7 +474,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `cve.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve.rego#L164[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L164[Source, window="_blank"]
 
 [#external_parameters_package]
 == link:#external_parameters_package[External parameters]
@@ -548,7 +482,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 Verify the attribute .predicate.buildDefinition.externalParameters of a SLSA Provenance v1.0 matches the expectation.
 
 * Package name: `external_parameters`
-* Package full path: `policy.release.external_parameters`
+* Package full path: `release.external_parameters`
 
 [#external_parameters__pipeline_run_params]
 === link:#external_parameters__pipeline_run_params[Pipeline run params]
@@ -558,7 +492,7 @@ Verify the PipelineRun was initialized with a set of expected parameters. By def
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `PipelineRun params, %v, do not match expectation, %v.`
 * Code: `external_parameters.pipeline_run_params`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/external_parameters.rego#L14[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/external_parameters/external_parameters.rego#L14[Source, window="_blank"]
 
 [#external_parameters__pipeline_run_params_provided]
 === link:#external_parameters__pipeline_run_params_provided[PipelineRun params provided]
@@ -570,7 +504,7 @@ Confirm the `pipeline_run_params` rule data was provided.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `external_parameters.pipeline_run_params_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/external_parameters.rego#L38[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/external_parameters/external_parameters.rego#L38[Source, window="_blank"]
 
 [#external_parameters__restrict_shared_volumes]
 === link:#external_parameters__restrict_shared_volumes[Restrict shared volumes]
@@ -580,7 +514,7 @@ Verify the PipelineRun did not use any pre-existing PersistentVolumeClaim worksp
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `PipelineRun uses shared volumes, %v.`
 * Code: `external_parameters.restrict_shared_volumes`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/external_parameters.rego#L53[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/external_parameters/external_parameters.rego#L53[Source, window="_blank"]
 
 [#github_certificate_package]
 == link:#github_certificate_package[GitHub Certificate Checks]
@@ -588,7 +522,7 @@ Verify the PipelineRun did not use any pre-existing PersistentVolumeClaim worksp
 Verify attributes on the certificate involved in the image signature when using slsa-github-generator on GitHub Actions with Sigstore Fulcio
 
 * Package name: `github_certificate`
-* Package full path: `policy.release.github_certificate`
+* Package full path: `release.github_certificate`
 
 [#github_certificate__gh_workflow_extensions]
 === link:#github_certificate__gh_workflow_extensions[GitHub Workflow Certificate Extensions]
@@ -598,7 +532,7 @@ Check if the image signature certificate contains the expected GitHub extensions
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Missing extension %q`
 * Code: `github_certificate.gh_workflow_extensions`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/github_certificate.rego#L14[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/github_certificate/github_certificate.rego#L14[Source, window="_blank"]
 
 [#github_certificate__gh_workflow_name]
 === link:#github_certificate__gh_workflow_name[GitHub Workflow Name]
@@ -608,7 +542,7 @@ Check if the value of the GitHub Workflow Name extension in the image signature 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Name %q not in allowed list: %v`
 * Code: `github_certificate.gh_workflow_name`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/github_certificate.rego#L62[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/github_certificate/github_certificate.rego#L62[Source, window="_blank"]
 
 [#github_certificate__gh_workflow_repository]
 === link:#github_certificate__gh_workflow_repository[GitHub Workflow Repository]
@@ -618,7 +552,7 @@ Check if the value of the GitHub Workflow Repository extension in the image sign
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Repository %q not in allowed list: %v`
 * Code: `github_certificate.gh_workflow_repository`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/github_certificate.rego#L32[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/github_certificate/github_certificate.rego#L32[Source, window="_blank"]
 
 [#github_certificate__gh_workflow_ref]
 === link:#github_certificate__gh_workflow_ref[GitHub Workflow Repository]
@@ -628,7 +562,7 @@ Check if the value of the GitHub Workflow Ref extension in the image signature c
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Ref %q not in allowed list: %v`
 * Code: `github_certificate.gh_workflow_ref`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/github_certificate.rego#L47[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/github_certificate/github_certificate.rego#L47[Source, window="_blank"]
 
 [#github_certificate__gh_workflow_trigger]
 === link:#github_certificate__gh_workflow_trigger[GitHub Workflow Trigger]
@@ -638,7 +572,7 @@ Check if the value of the GitHub Workflow Trigger extension in the image signatu
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Trigger %q not in allowed list: %v`
 * Code: `github_certificate.gh_workflow_trigger`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/github_certificate.rego#L77[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/github_certificate/github_certificate.rego#L77[Source, window="_blank"]
 
 [#github_certificate__rule_data_provided]
 === link:#github_certificate__rule_data_provided[Rule data provided]
@@ -650,7 +584,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `github_certificate.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/github_certificate.rego#L92[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/github_certificate/github_certificate.rego#L92[Source, window="_blank"]
 
 [#hermetic_build_task_package]
 == link:#hermetic_build_task_package[Hermetic build task]
@@ -658,7 +592,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 This package verifies the build task in the attestation was invoked with the expected parameters to perform a hermetic build.
 
 * Package name: `hermetic_build_task`
-* Package full path: `policy.release.hermetic_build_task`
+* Package full path: `release.hermetic_build_task`
 
 [#hermetic_build_task__build_task_hermetic]
 === link:#hermetic_build_task__build_task_hermetic[Build task called with hermetic param set]
@@ -670,7 +604,7 @@ Verify the build task in the PipelineRun attestation was invoked with the proper
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Build task was not invoked with the hermetic parameter set`
 * Code: `hermetic_build_task.build_task_hermetic`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/hermetic_build_task.rego#L15[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/hermetic_build_task/hermetic_build_task.rego#L15[Source, window="_blank"]
 
 [#java_package]
 == link:#java_package[Java dependency checks]
@@ -678,7 +612,7 @@ Verify the build task in the PipelineRun attestation was invoked with the proper
 This package contains a rule to confirm that all Java dependencies were rebuilt in house rather than imported directly from potentially untrusted respositories. If the result is missing no violation is reported. The rules depend on the configuration under the key 'allowed_java_component_sources', the key lists all component sources that are allowed by the policy. The values of the list can be 'rebuilt' for dependencies that have been explicitly built from sources, or the name of the Maven repository names where the dependency artifact was retrieved from. The Maven repositories are configured using the 'JBSConfig' custom resources. Default configuration in Konflux currently includes Maven repositories with names : 'jboss', 'confluent', 'redhat', 'jitpack' and 'gradle'.
 
 * Package name: `java`
-* Package full path: `policy.release.java`
+* Package full path: `release.java`
 
 [#java__no_foreign_dependencies]
 === link:#java__no_foreign_dependencies[Java builds have no foreign dependencies]
@@ -690,7 +624,7 @@ The SBOM_JAVA_COMPONENTS_COUNT task result finds dependencies that have originat
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Found Java dependencies from '%s', expecting to find only from '%s'`
 * Code: `java.no_foreign_dependencies`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/java.rego#L24[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/java/java.rego#L24[Source, window="_blank"]
 
 [#java__trusted_dependencies_source_list_provided]
 === link:#java__trusted_dependencies_source_list_provided[Trusted Java dependency source list was provided]
@@ -702,7 +636,7 @@ Confirm the `allowed_java_component_sources` rule data was provided, since it's 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `java.trusted_dependencies_source_list_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/java.rego#L49[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/java/java.rego#L49[Source, window="_blank"]
 
 [#labels_package]
 == link:#labels_package[Labels]
@@ -710,7 +644,7 @@ Confirm the `allowed_java_component_sources` rule data was provided, since it's 
 Check if the image has the expected labels set. The rules in this package distinguish file-based catalog (FBC) images from all other images. When checking an FBC image, a policy rule may use a different set of rule data. An FBC image is detected by the presence of the operators.operatorframework.io.index.configs.v1 label.
 
 * Package name: `labels`
-* Package full path: `policy.release.labels`
+* Package full path: `release.labels`
 
 [#labels__deprecated_labels]
 === link:#labels__deprecated_labels[Deprecated labels]
@@ -722,7 +656,7 @@ Check the image for the presence of labels that have been deprecated. Use the ru
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The %q label is deprecated, replace with %q`
 * Code: `labels.deprecated_labels`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L86[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L86[Source, window="_blank"]
 
 [#labels__disallowed_inherited_labels]
 === link:#labels__disallowed_inherited_labels[Disallowed inherited labels]
@@ -734,7 +668,7 @@ Check that certain labels on the image have different values than the labels fro
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The %q label should not be inherited from the parent image`
 * Code: `labels.disallowed_inherited_labels`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L135[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L135[Source, window="_blank"]
 
 [#labels__inaccessible_config]
 === link:#labels__inaccessible_config[Inaccessible image config]
@@ -746,7 +680,7 @@ The image config is not accessible.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image config of the image %q is inaccessible`
 * Code: `labels.inaccessible_config`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L64[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L64[Source, window="_blank"]
 
 [#labels__inaccessible_manifest]
 === link:#labels__inaccessible_manifest[Inaccessible image manifest]
@@ -758,7 +692,7 @@ The image manifest is not accessible.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Manifest of the image %q is inaccessible`
 * Code: `labels.inaccessible_manifest`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L45[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L45[Source, window="_blank"]
 
 [#labels__inaccessible_parent_config]
 === link:#labels__inaccessible_parent_config[Inaccessible parent image config]
@@ -770,7 +704,7 @@ The parent image config is not accessible.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image config of the image %q, parent of image %q is inaccessible`
 * Code: `labels.inaccessible_parent_config`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L198[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L198[Source, window="_blank"]
 
 [#labels__inaccessible_parent_manifest]
 === link:#labels__inaccessible_parent_manifest[Inaccessible parent image manifest]
@@ -782,7 +716,7 @@ The parent image manifest is not accessible.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Manifest of the image %q, parent of image %q is inaccessible`
 * Code: `labels.inaccessible_parent_manifest`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L180[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L180[Source, window="_blank"]
 
 [#labels__optional_labels]
 === link:#labels__optional_labels[Optional labels]
@@ -794,7 +728,7 @@ Check the image for the presence of labels that are recommended, but not require
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `The optional %q label is missing. Label description: %s`
 * Code: `labels.optional_labels`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L18[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L18[Source, window="_blank"]
 
 [#labels__required_labels]
 === link:#labels__required_labels[Required labels]
@@ -806,7 +740,7 @@ Check the image for the presence of labels that are required. Use the rule data 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `labels.required_labels`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L114[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L114[Source, window="_blank"]
 
 [#labels__rule_data_provided]
 === link:#labels__rule_data_provided[Rule data provided]
@@ -818,7 +752,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `labels.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels.rego#L161[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L161[Source, window="_blank"]
 
 [#olm_package]
 == link:#olm_package[OLM]
@@ -826,7 +760,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 Checks for Operator Lifecycle Manager (OLM) bundles.
 
 * Package name: `olm`
-* Package full path: `policy.release.olm`
+* Package full path: `release.olm`
 
 [#olm__csv_semver_format]
 === link:#olm__csv_semver_format[ClusterServiceVersion semver format]
@@ -838,7 +772,7 @@ Check the `spec.version` value in the ClusterServiceVersion manifest of the OLM 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The ClusterServiceVersion spec.version, %q, is not a valid semver`
 * Code: `olm.csv_semver_format`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm.rego#L16[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L16[Source, window="_blank"]
 
 [#olm__feature_annotations_format]
 === link:#olm__feature_annotations_format[Feature annotations have expected value]
@@ -850,7 +784,7 @@ Check the feature annotations in the ClusterServiceVersion manifest of the OLM b
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The annotation %q is either missing or has an unexpected value`
 * Code: `olm.feature_annotations_format`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm.rego#L63[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L63[Source, window="_blank"]
 
 [#olm__allowed_registries]
 === link:#olm__allowed_registries[Images referenced by OLM bundle are from allowed registries]
@@ -863,7 +797,7 @@ Each image referenced by the OLM bundle should match an entry in the list of pre
 * FAILURE message: `The %q CSV image reference is not from an allowed registry.`
 * Code: `olm.allowed_registries`
 * Effective from: `2024-09-01T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm.rego#L218[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L218[Source, window="_blank"]
 
 [#olm__required_olm_features_annotations_provided]
 === link:#olm__required_olm_features_annotations_provided[Required OLM feature annotations list provided]
@@ -873,7 +807,7 @@ Confirm the `required_olm_features_annotations` rule data was provided, since it
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `olm.required_olm_features_annotations_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm.rego#L108[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L108[Source, window="_blank"]
 
 [#olm__subscriptions_annotation_format]
 === link:#olm__subscriptions_annotation_format[Subscription annotation has expected value]
@@ -886,7 +820,7 @@ Check the value of the operators.openshift.io/valid-subscription annotation from
 * FAILURE message: `%s`
 * Code: `olm.subscriptions_annotation_format`
 * Effective from: `2024-04-18T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm.rego#L87[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L87[Source, window="_blank"]
 
 [#olm__inaccessible_snapshot_references]
 === link:#olm__inaccessible_snapshot_references[Unable to access images in the input snapshot]
@@ -899,7 +833,7 @@ Check the input snapshot and make sure all the images are accessible.
 * FAILURE message: `The %q image reference is not accessible in the input snapshot.`
 * Code: `olm.inaccessible_snapshot_references`
 * Effective from: `2024-08-15T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm.rego#L155[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L155[Source, window="_blank"]
 
 [#olm__unmapped_references]
 === link:#olm__unmapped_references[Unmapped images in OLM bundle]
@@ -912,7 +846,7 @@ Check the OLM bundle image for the presence of unmapped image references. Unmapp
 * FAILURE message: `The %q CSV image reference is not in the snapshot or accessible.`
 * Code: `olm.unmapped_references`
 * Effective from: `2024-08-15T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm.rego#L177[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L177[Source, window="_blank"]
 
 [#olm__unpinned_references]
 === link:#olm__unpinned_references[Unpinned images in OLM bundle]
@@ -924,7 +858,7 @@ Check the OLM bundle image for the presence of unpinned image references. Unpinn
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The %q image reference is not pinned at %s.`
 * Code: `olm.unpinned_references`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm.rego#L37[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L37[Source, window="_blank"]
 
 [#olm__unpinned_snapshot_references]
 === link:#olm__unpinned_snapshot_references[Unpinned images in input snapshot]
@@ -937,7 +871,7 @@ Check the input snapshot for the presence of unpinned image references. Unpinned
 * FAILURE message: `The %q image reference is not pinned in the input snapshot.`
 * Code: `olm.unpinned_snapshot_references`
 * Effective from: `2024-08-15T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm.rego#L125[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L125[Source, window="_blank"]
 
 [#provenance_materials_package]
 == link:#provenance_materials_package[Provenance Materials]
@@ -945,7 +879,7 @@ Check the input snapshot for the presence of unpinned image references. Unpinned
 This package provides rules for verifying the contents of the materials section of the SLSA Provenance attestation.
 
 * Package name: `provenance_materials`
-* Package full path: `policy.release.provenance_materials`
+* Package full path: `release.provenance_materials`
 
 [#provenance_materials__git_clone_source_matches_provenance]
 === link:#provenance_materials__git_clone_source_matches_provenance[Git clone source matches materials provenance]
@@ -957,7 +891,7 @@ Confirm that the result of the git-clone task is included in the materials secti
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Entry in materials for the git repo %q and commit %q not found`
 * Code: `provenance_materials.git_clone_source_matches_provenance`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/provenance_materials.rego#L36[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/provenance_materials/provenance_materials.rego#L36[Source, window="_blank"]
 
 [#provenance_materials__git_clone_task_found]
 === link:#provenance_materials__git_clone_task_found[Git clone task found]
@@ -969,7 +903,7 @@ Confirm that the attestation contains a git-clone task with `commit` and `url` t
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Task git-clone not found`
 * Code: `provenance_materials.git_clone_task_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/provenance_materials.rego#L15[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/provenance_materials/provenance_materials.rego#L15[Source, window="_blank"]
 
 [#quay_expiration_package]
 == link:#quay_expiration_package[Quay expiration]
@@ -977,7 +911,7 @@ Confirm that the attestation contains a git-clone task with `commit` and `url` t
 Policies to prevent releasing an image to quay that has a quay expiration date. In Konflux images with an expiration date are produced by "on-pr" build pipelines, i.e. pre-merge CI builds, so this is intended to prevent accidentally releasing a CI build.
 
 * Package name: `quay_expiration`
-* Package full path: `policy.release.quay_expiration`
+* Package full path: `release.quay_expiration`
 
 [#quay_expiration__expires_label]
 === link:#quay_expiration__expires_label[Expires label]
@@ -989,7 +923,7 @@ Check the image metadata for the presence of a "quay.expires-after" label. If it
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The image has a 'quay.expires-after' label set to '%s'`
 * Code: `quay_expiration.expires_label`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/quay_expiration.rego#L16[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/quay_expiration/quay_expiration.rego#L16[Source, window="_blank"]
 
 [#rhtap_jenkins_package]
 == link:#rhtap_jenkins_package[RHTAP Jenkins]
@@ -997,7 +931,7 @@ Check the image metadata for the presence of a "quay.expires-after" label. If it
 Some initial checks for images built using an RHTAP Jenkins build pipeline. Note that the RHTAP Jenkins pipeline is WIP currently, but will be shipped in an upcoming release of RHTAP. It's expected more useful checks will be added in future. RHTAP Jenkins pipelines are defined under https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
 
 * Package name: `rhtap_jenkins`
-* Package full path: `policy.release.rhtap_jenkins`
+* Package full path: `release.rhtap_jenkins`
 
 [#rhtap_jenkins__invocation_id_found]
 === link:#rhtap_jenkins__invocation_id_found[RHTAP Jenkins SLSA Invocation ID present]
@@ -1009,7 +943,7 @@ Confirm that an invocation ID was found in the attestation in the expected locat
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The build provenance metadata did not contain an invocation id.`
 * Code: `rhtap_jenkins.invocation_id_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_jenkins.rego#L36[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_jenkins/rhtap_jenkins.rego#L36[Source, window="_blank"]
 
 [#rhtap_jenkins__attestation_found]
 === link:#rhtap_jenkins__attestation_found[RHTAP Jenkins SLSA Provenance Attestation Found]
@@ -1021,7 +955,7 @@ Verify an attestation created by the RHTAP Jenkins build pipeline is present.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The expected SLSA v1.0 provenance with build type %s was not found.`
 * Code: `rhtap_jenkins.attestation_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_jenkins.rego#L17[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_jenkins/rhtap_jenkins.rego#L17[Source, window="_blank"]
 
 [#rpm_repos_package]
 == link:#rpm_repos_package[RPM Repos]
@@ -1029,7 +963,7 @@ Verify an attestation created by the RHTAP Jenkins build pipeline is present.
 This package defines rules to confirm that all RPM packages listed in SBOMs specify a known and permitted repository id.
 
 * Package name: `rpm_repos`
-* Package full path: `policy.release.rpm_repos`
+* Package full path: `release.rpm_repos`
 
 [#rpm_repos__ids_known]
 === link:#rpm_repos__ids_known[All rpms have known repo ids]
@@ -1042,7 +976,7 @@ Each RPM package listed in an SBOM must specify the repository id that it comes 
 * FAILURE message: `RPM repo id check failed: %s`
 * Code: `rpm_repos.ids_known`
 * Effective from: `2024-11-10T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos.rego#L33[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos/rpm_repos.rego#L33[Source, window="_blank"]
 
 [#rpm_repos__rule_data_provided]
 === link:#rpm_repos__rule_data_provided[Known repo id list provided]
@@ -1054,7 +988,7 @@ A list of known and permitted repository ids should be available in the rule dat
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Rule data '%s' has unexpected format: %s`
 * Code: `rpm_repos.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos.rego#L14[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos/rpm_repos.rego#L14[Source, window="_blank"]
 
 [#rpm_signature_package]
 == link:#rpm_signature_package[RPM Signature]
@@ -1062,7 +996,7 @@ A list of known and permitted repository ids should be available in the rule dat
 This package provides rules for verifying the signatures of RPMs identified in the the SLSA Provenance attestation.
 
 * Package name: `rpm_signature`
-* Package full path: `policy.release.rpm_signature`
+* Package full path: `release.rpm_signature`
 
 [#rpm_signature__allowed]
 === link:#rpm_signature__allowed[Allowed RPM signature key]
@@ -1075,7 +1009,7 @@ The SLSA Provenance attestation for the image is inspected to ensure RPMs have b
 * FAILURE message: `Signing key %q is not one of the allowed keys: %s`
 * Code: `rpm_signature.allowed`
 * Effective from: `2024-10-05T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_signature.rego#L14[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_signature/rpm_signature.rego#L14[Source, window="_blank"]
 
 [#rpm_signature__result_format]
 === link:#rpm_signature__result_format[Result format]
@@ -1086,7 +1020,7 @@ Confirm the format of the RPMS_DATA result is in the expected format.
 * FAILURE message: `%s`
 * Code: `rpm_signature.result_format`
 * Effective from: `2024-10-05T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_signature.rego#L36[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_signature/rpm_signature.rego#L36[Source, window="_blank"]
 
 [#rpm_signature__rule_data_provided]
 === link:#rpm_signature__rule_data_provided[Rule data provided]
@@ -1097,7 +1031,7 @@ Confirm the expected `allowed_rpm_signature_keys` rule data key has been provide
 * FAILURE message: `%s`
 * Code: `rpm_signature.rule_data_provided`
 * Effective from: `2024-10-05T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_signature.rego#L52[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_signature/rpm_signature.rego#L52[Source, window="_blank"]
 
 [#sbom_package]
 == link:#sbom_package[SBOM]
@@ -1105,7 +1039,7 @@ Confirm the expected `allowed_rpm_signature_keys` rule data key has been provide
 Checks general properties of the SBOMs associated with the image being validated. More specific rules for SPDX and CycloneDX SBOMs are in separate packages.
 
 * Package name: `sbom`
-* Package full path: `policy.release.sbom`
+* Package full path: `release.sbom`
 
 [#sbom__disallowed_packages_provided]
 === link:#sbom__disallowed_packages_provided[Disallowed packages list is provided]
@@ -1117,7 +1051,7 @@ Confirm the `disallowed_packages` and `disallowed_attributes` rule data were pro
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `sbom.disallowed_packages_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom.rego#L31[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom/sbom.rego#L31[Source, window="_blank"]
 
 [#sbom__found]
 === link:#sbom__found[Found]
@@ -1129,7 +1063,7 @@ Confirm an SBOM attestation exists.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `No SBOM attestations found`
 * Code: `sbom.found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom.rego#L14[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom/sbom.rego#L14[Source, window="_blank"]
 
 [#sbom_cyclonedx_package]
 == link:#sbom_cyclonedx_package[SBOM CycloneDX]
@@ -1137,7 +1071,7 @@ Confirm an SBOM attestation exists.
 Checks different properties of the CycloneDX SBOMs associated with the image being validated. The SBOMs are read from multiple locations: a file within the image, and a CycloneDX SBOM attestation.
 
 * Package name: `sbom_cyclonedx`
-* Package full path: `policy.release.sbom_cyclonedx`
+* Package full path: `release.sbom_cyclonedx`
 
 [#sbom_cyclonedx__allowed]
 === link:#sbom_cyclonedx__allowed[Allowed]
@@ -1149,7 +1083,7 @@ Confirm the CycloneDX SBOM contains only allowed packages. By default all packag
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package is not allowed: %s`
 * Code: `sbom_cyclonedx.allowed`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L36[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L36[Source, window="_blank"]
 
 [#sbom_cyclonedx__allowed_package_external_references]
 === link:#sbom_cyclonedx__allowed_package_external_references[Allowed package external references]
@@ -1161,7 +1095,7 @@ Confirm the CycloneDX SBOM contains only packages with explicitly allowed extern
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package %s has reference %q of type %q which is not explicitly allowed%s`
 * Code: `sbom_cyclonedx.allowed_package_external_references`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L89[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L89[Source, window="_blank"]
 
 [#sbom_cyclonedx__disallowed_package_attributes]
 === link:#sbom_cyclonedx__disallowed_package_attributes[Disallowed package attributes]
@@ -1174,7 +1108,7 @@ Confirm the CycloneDX SBOM contains only packages without disallowed attributes.
 * FAILURE message: `Package %s has the attribute %q set%s`
 * Code: `sbom_cyclonedx.disallowed_package_attributes`
 * Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L56[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L56[Source, window="_blank"]
 
 [#sbom_cyclonedx__disallowed_package_external_references]
 === link:#sbom_cyclonedx__disallowed_package_external_references[Disallowed package external references]
@@ -1187,7 +1121,7 @@ Confirm the CycloneDX SBOM contains only packages without disallowed external re
 * FAILURE message: `Package %s has reference %q of type %q which is disallowed%s`
 * Code: `sbom_cyclonedx.disallowed_package_external_references`
 * Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L120[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L120[Source, window="_blank"]
 
 [#sbom_cyclonedx__valid]
 === link:#sbom_cyclonedx__valid[Valid]
@@ -1199,7 +1133,7 @@ Check the CycloneDX SBOM has the expected format. It verifies the CycloneDX SBOM
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `CycloneDX SBOM at index %d is not valid: %s`
 * Code: `sbom_cyclonedx.valid`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx.rego#L16[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L16[Source, window="_blank"]
 
 [#slsa_build_build_service_package]
 == link:#slsa_build_build_service_package[SLSA - Build - Build Service]
@@ -1209,7 +1143,7 @@ The SLSA requirement states the following:
 This package verifies the requirement by asserting the image was built by Tekton Pipelines.
 
 * Package name: `slsa_build_build_service`
-* Package full path: `policy.release.slsa_build_build_service`
+* Package full path: `release.slsa_build_build_service`
 
 [#slsa_build_build_service__allowed_builder_ids_provided]
 === link:#slsa_build_build_service__allowed_builder_ids_provided[Allowed builder IDs provided]
@@ -1219,7 +1153,7 @@ Confirm the `allowed_builder_ids` rule data was provided, since it is required b
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `slsa_build_build_service.allowed_builder_ids_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_build_service.rego#L67[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_build_service/slsa_build_build_service.rego#L67[Source, window="_blank"]
 
 [#slsa_build_build_service__slsa_builder_id_found]
 === link:#slsa_build_build_service__slsa_builder_id_found[SLSA Builder ID found]
@@ -1231,7 +1165,7 @@ Verify that the attestation attribute predicate.builder.id is set.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Builder ID not set in attestation`
 * Code: `slsa_build_build_service.slsa_builder_id_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_build_service.rego#L19[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_build_service/slsa_build_build_service.rego#L19[Source, window="_blank"]
 
 [#slsa_build_build_service__slsa_builder_id_accepted]
 === link:#slsa_build_build_service__slsa_builder_id_accepted[SLSA Builder ID is known and accepted]
@@ -1243,7 +1177,7 @@ Verify that the attestation attribute predicate.builder.id is set to one of the 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Builder ID %q is unexpected`
 * Code: `slsa_build_build_service.slsa_builder_id_accepted`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_build_service.rego#L41[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_build_service/slsa_build_build_service.rego#L41[Source, window="_blank"]
 
 [#slsa_build_scripted_build_package]
 == link:#slsa_build_scripted_build_package[SLSA - Build - Scripted Build]
@@ -1253,7 +1187,7 @@ The SLSA requirement states the following:
 This package verifies the requirement by asserting the image was built by Tekton Pipelines.
 
 * Package name: `slsa_build_scripted_build`
-* Package full path: `policy.release.slsa_build_scripted_build`
+* Package full path: `release.slsa_build_scripted_build`
 
 [#slsa_build_scripted_build__build_script_used]
 === link:#slsa_build_scripted_build__build_script_used[Build task contains steps]
@@ -1265,7 +1199,7 @@ Verify that the predicate.buildConfig.tasks.steps attribute for the task respons
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Build task %q does not contain any steps`
 * Code: `slsa_build_scripted_build.build_script_used`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build.rego#L21[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L21[Source, window="_blank"]
 
 [#slsa_build_scripted_build__build_task_image_results_found]
 === link:#slsa_build_scripted_build__build_task_image_results_found[Build task set image digest and url task results]
@@ -1277,7 +1211,7 @@ Confirm that a build task exists and it has the expected IMAGE_DIGEST and IMAGE_
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Build task not found`
 * Code: `slsa_build_scripted_build.build_task_image_results_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build.rego#L47[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L47[Source, window="_blank"]
 
 [#slsa_build_scripted_build__image_built_by_trusted_task]
 === link:#slsa_build_scripted_build__image_built_by_trusted_task[Image built by trusted Task]
@@ -1289,7 +1223,7 @@ Verify the digest of the image being validated is reported by a trusted Task in 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image %q not built by a trusted task: %s`
 * Code: `slsa_build_scripted_build.image_built_by_trusted_task`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build.rego#L103[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L103[Source, window="_blank"]
 
 [#slsa_build_scripted_build__subject_build_task_matches]
 === link:#slsa_build_scripted_build__subject_build_task_matches[Provenance subject matches build task image result]
@@ -1301,7 +1235,7 @@ Verify the subject of the attestations matches the IMAGE_DIGEST and IMAGE_URL va
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The attestation subject, %q, does not match any of the images built`
 * Code: `slsa_build_scripted_build.subject_build_task_matches`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build.rego#L70[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L70[Source, window="_blank"]
 
 [#slsa_provenance_available_package]
 == link:#slsa_provenance_available_package[SLSA - Provenance - Available]
@@ -1311,7 +1245,7 @@ The SLSA Provenance Available requirement states the following:
 This package only accepts the in-toto SLSA Provenance format.
 
 * Package name: `slsa_provenance_available`
-* Package full path: `policy.release.slsa_provenance_available`
+* Package full path: `release.slsa_provenance_available`
 
 [#slsa_provenance_available__allowed_predicate_types_provided]
 === link:#slsa_provenance_available__allowed_predicate_types_provided[Allowed predicate types provided]
@@ -1321,7 +1255,7 @@ Confirm the `allowed_predicate_types` rule data was provided, since it is requir
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `slsa_provenance_available.allowed_predicate_types_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_provenance_available.rego#L47[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_provenance_available/slsa_provenance_available.rego#L47[Source, window="_blank"]
 
 [#slsa_provenance_available__attestation_predicate_type_accepted]
 === link:#slsa_provenance_available__attestation_predicate_type_accepted[Expected attestation predicate type found]
@@ -1333,7 +1267,7 @@ Verify that the predicateType field of the attestation indicates the in-toto SLS
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Attestation predicate type %q is not an expected type (%s)`
 * Code: `slsa_provenance_available.attestation_predicate_type_accepted`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_provenance_available.rego#L19[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_provenance_available/slsa_provenance_available.rego#L19[Source, window="_blank"]
 
 [#slsa_source_version_controlled_package]
 == link:#slsa_source_version_controlled_package[SLSA - Source - Version Controlled]
@@ -1356,7 +1290,7 @@ Most popular version control system meet this requirement, such as git, Mercuria
 This package verifies the requirement by asserting the image was built from a git repository.
 
 * Package name: `slsa_source_version_controlled`
-* Package full path: `policy.release.slsa_source_version_controlled`
+* Package full path: `release.slsa_source_version_controlled`
 
 [#slsa_source_version_controlled__materials_uri_is_git_repo]
 === link:#slsa_source_version_controlled__materials_uri_is_git_repo[Material uri is a git repo]
@@ -1368,7 +1302,7 @@ Ensure each entry in the predicate.materials array with a SHA-1 digest includes 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Material URI %q is not a git URI`
 * Code: `slsa_source_version_controlled.materials_uri_is_git_repo`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_version_controlled.rego#L57[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_version_controlled/slsa_source_version_controlled.rego#L57[Source, window="_blank"]
 
 [#slsa_source_version_controlled__materials_format_okay]
 === link:#slsa_source_version_controlled__materials_format_okay[Materials have uri and digest]
@@ -1380,7 +1314,7 @@ Confirm at least one entry in the predicate.materials array of the attestation c
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `No materials match expected format`
 * Code: `slsa_source_version_controlled.materials_format_okay`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_version_controlled.rego#L33[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_version_controlled/slsa_source_version_controlled.rego#L33[Source, window="_blank"]
 
 [#slsa_source_version_controlled__materials_include_git_sha]
 === link:#slsa_source_version_controlled__materials_include_git_sha[Materials include git commit shas]
@@ -1392,7 +1326,7 @@ Ensure that each entry in the predicate.materials array with a SHA-1 digest incl
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Material digest %q is not a git commit sha`
 * Code: `slsa_source_version_controlled.materials_include_git_sha`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_version_controlled.rego#L82[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_version_controlled/slsa_source_version_controlled.rego#L82[Source, window="_blank"]
 
 [#slsa_source_correlated_package]
 == link:#slsa_source_correlated_package[SLSA - Verification model - Source]
@@ -1402,7 +1336,7 @@ SLSA v1 verification model states:
 This package correlates the provided source code reference with the source code referenced in the attestation.
 
 * Package name: `slsa_source_correlated`
-* Package full path: `policy.release.slsa_source_correlated`
+* Package full path: `release.slsa_source_correlated`
 
 [#slsa_source_correlated__expected_source_code_reference]
 === link:#slsa_source_correlated__expected_source_code_reference[Expected source code reference]
@@ -1414,7 +1348,7 @@ Verify that the provided source code reference is the one being attested.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The expected source code reference %q is not attested`
 * Code: `slsa_source_correlated.expected_source_code_reference`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated.rego#L69[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L69[Source, window="_blank"]
 
 [#slsa_source_correlated__rule_data_provided]
 === link:#slsa_source_correlated__rule_data_provided[Rule data provided]
@@ -1424,7 +1358,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `slsa_source_correlated.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated.rego#L107[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L107[Source, window="_blank"]
 
 [#slsa_source_correlated__source_code_reference_provided]
 === link:#slsa_source_correlated__source_code_reference_provided[Source code reference provided]
@@ -1436,7 +1370,7 @@ Check if the expected source code reference is provided.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Expected source code reference was not provided for verification`
 * Code: `slsa_source_correlated.source_code_reference_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated.rego#L23[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L23[Source, window="_blank"]
 
 [#slsa_source_correlated__attested_source_code_reference]
 === link:#slsa_source_correlated__attested_source_code_reference[Source reference]
@@ -1448,7 +1382,7 @@ Attestation contains source reference.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The attested material contains no source code reference`
 * Code: `slsa_source_correlated.attested_source_code_reference`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated.rego#L43[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L43[Source, window="_blank"]
 
 [#sbom_spdx_package]
 == link:#sbom_spdx_package[SPDX SBOM]
@@ -1456,7 +1390,7 @@ Attestation contains source reference.
 Checks different properties of the CycloneDX SBOMs associated with the image being validated. The SBOMs are read from multiple locations: a file within the image, and a CycloneDX SBOM attestation.
 
 * Package name: `sbom_spdx`
-* Package full path: `policy.release.sbom_spdx`
+* Package full path: `release.sbom_spdx`
 
 [#sbom_spdx__allowed]
 === link:#sbom_spdx__allowed[Allowed]
@@ -1468,7 +1402,7 @@ Confirm the SPDX SBOM contains only allowed packages. By default all packages ar
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package is not allowed: %s`
 * Code: `sbom_spdx.allowed`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L51[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L51[Source, window="_blank"]
 
 [#sbom_spdx__allowed_package_external_references]
 === link:#sbom_spdx__allowed_package_external_references[Allowed package external references]
@@ -1480,7 +1414,7 @@ Confirm the SPDX SBOM contains only packages with explicitly allowed external re
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package %s has reference %q of type %q which is not explicitly allowed%s`
 * Code: `sbom_spdx.allowed_package_external_references`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L73[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L73[Source, window="_blank"]
 
 [#sbom_spdx__contains_files]
 === link:#sbom_spdx__contains_files[Contains files]
@@ -1492,7 +1426,7 @@ Check the list of files in the SPDX SBOM is not empty.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The list of files is empty`
 * Code: `sbom_spdx.contains_files`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L134[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L134[Source, window="_blank"]
 
 [#sbom_spdx__contains_packages]
 === link:#sbom_spdx__contains_packages[Contains packages]
@@ -1504,7 +1438,7 @@ Check the list of packages in the SPDX SBOM is not empty.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The list of packages is empty`
 * Code: `sbom_spdx.contains_packages`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L36[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L36[Source, window="_blank"]
 
 [#sbom_spdx__disallowed_package_external_references]
 === link:#sbom_spdx__disallowed_package_external_references[Disallowed package external references]
@@ -1517,7 +1451,7 @@ Confirm the SPDX SBOM contains only packages without disallowed external referen
 * FAILURE message: `Package %s has reference %q of type %q which is disallowed%s`
 * Code: `sbom_spdx.disallowed_package_external_references`
 * Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L103[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L103[Source, window="_blank"]
 
 [#sbom_spdx__matches_image]
 === link:#sbom_spdx__matches_image[Matches image]
@@ -1529,7 +1463,7 @@ Check the SPDX SBOM targets the image being validated.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image digest in the SBOM, %q, is not as expected, %q`
 * Code: `sbom_spdx.matches_image`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L149[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L149[Source, window="_blank"]
 
 [#sbom_spdx__valid]
 === link:#sbom_spdx__valid[Valid]
@@ -1541,7 +1475,7 @@ Check the SPDX SBOM has the expected format. It verifies the SPDX SBOM matches t
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `SPDX SBOM at index %d is not valid: %s`
 * Code: `sbom_spdx.valid`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx.rego#L16[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L16[Source, window="_blank"]
 
 [#schedule_package]
 == link:#schedule_package[Schedule related checks]
@@ -1549,7 +1483,7 @@ Check the SPDX SBOM has the expected format. It verifies the SPDX SBOM matches t
 Rules that verify the current date conform to a given schedule.
 
 * Package name: `schedule`
-* Package full path: `policy.release.schedule`
+* Package full path: `release.schedule`
 
 [#schedule__date_restriction]
 === link:#schedule__date_restriction[Date Restriction]
@@ -1561,7 +1495,7 @@ Check if the current date is not allowed based on the rule data value from the k
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s is a disallowed date: %s`
 * Code: `schedule.date_restriction`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/schedule.rego#L36[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/schedule/schedule.rego#L36[Source, window="_blank"]
 
 [#schedule__rule_data_provided]
 === link:#schedule__rule_data_provided[Rule data provided]
@@ -1573,7 +1507,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `schedule.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/schedule.rego#L58[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/schedule/schedule.rego#L58[Source, window="_blank"]
 
 [#schedule__weekday_restriction]
 === link:#schedule__weekday_restriction[Weekday Restriction]
@@ -1585,7 +1519,7 @@ Check if the current weekday is allowed based on the rule data value from the ke
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s is a disallowed weekday: %s`
 * Code: `schedule.weekday_restriction`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/schedule.rego#L13[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/schedule/schedule.rego#L13[Source, window="_blank"]
 
 [#source_image_package]
 == link:#source_image_package[Source image]
@@ -1593,7 +1527,7 @@ Check if the current weekday is allowed based on the rule data value from the ke
 This package is reponsible for verifying the source container image associated with the image being validated.
 
 * Package name: `source_image`
-* Package full path: `policy.release.source_image`
+* Package full path: `release.source_image`
 
 [#source_image__exists]
 === link:#source_image__exists[Exists]
@@ -1604,7 +1538,7 @@ Verify the source container image exists.
 * FAILURE message: `%s`
 * Code: `source_image.exists`
 * Effective from: `2024-06-05T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/source_image.rego#L15[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/source_image/source_image.rego#L15[Source, window="_blank"]
 
 [#source_image__signed]
 === link:#source_image__signed[Signed]
@@ -1615,7 +1549,7 @@ Verify the source container image is signed.
 * FAILURE message: `%s`
 * Code: `source_image.signed`
 * Effective from: `2024-05-04T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/source_image.rego#L30[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/source_image/source_image.rego#L30[Source, window="_blank"]
 
 [#attestation_task_bundle_package]
 == link:#attestation_task_bundle_package[Task bundle checks]
@@ -1623,7 +1557,7 @@ Verify the source container image is signed.
 To be able to reproduce and audit builds accurately it's important to know exactly what happened during the build. To do this Enterprise Contract requires that all tasks are defined in a set of known and trusted task bundles. This package includes rules to confirm that the tasks that built the image were defined in task bundles, and that the task bundles used are from the list of known and trusted bundles.
 
 * Package name: `attestation_task_bundle`
-* Package full path: `policy.release.attestation_task_bundle`
+* Package full path: `release.attestation_task_bundle`
 
 [#attestation_task_bundle__trusted_bundles_provided]
 === link:#attestation_task_bundle__trusted_bundles_provided[A trusted Tekton bundles list was provided]
@@ -1635,7 +1569,7 @@ Confirm the `trusted_tasks` rule data was provided, since it's required by the p
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Missing required trusted_tasks data`
 * Code: `attestation_task_bundle.trusted_bundles_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L113[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L113[Source, window="_blank"]
 
 [#attestation_task_bundle__task_ref_bundles_not_empty]
 === link:#attestation_task_bundle__task_ref_bundles_not_empty[Task bundle references not empty]
@@ -1647,7 +1581,7 @@ Check that a valid task bundle reference is being used.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' uses an empty bundle image reference`
 * Code: `attestation_task_bundle.task_ref_bundles_not_empty`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L75[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L75[Source, window="_blank"]
 
 [#attestation_task_bundle__task_ref_bundles_pinned]
 === link:#attestation_task_bundle__task_ref_bundles_pinned[Task bundle references pinned to digest]
@@ -1659,7 +1593,7 @@ Check if the Tekton Bundle used for the Tasks in the Pipeline definition is pinn
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Pipeline task '%s' uses an unpinned task bundle reference '%s'`
 * Code: `attestation_task_bundle.task_ref_bundles_pinned`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L20[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L20[Source, window="_blank"]
 
 [#attestation_task_bundle__task_ref_bundles_trusted]
 === link:#attestation_task_bundle__task_ref_bundles_trusted[Task bundles are in trusted tasks list]
@@ -1671,7 +1605,7 @@ For each Task in the SLSA Provenance attestation, check if the Tekton Bundle use
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' uses an untrusted task bundle '%s'`
 * Code: `attestation_task_bundle.task_ref_bundles_trusted`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L92[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L92[Source, window="_blank"]
 
 [#attestation_task_bundle__task_ref_bundles_current]
 === link:#attestation_task_bundle__task_ref_bundles_current[Task bundles are latest versions]
@@ -1683,7 +1617,7 @@ For each Task in the SLSA Provenance attestation, check if the Tekton Bundle use
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Pipeline task '%s' uses an out of date task bundle '%s'`
 * Code: `attestation_task_bundle.task_ref_bundles_current`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L38[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L38[Source, window="_blank"]
 
 [#attestation_task_bundle__tasks_defined_in_bundle]
 === link:#attestation_task_bundle__tasks_defined_in_bundle[Tasks defined using bundle references]
@@ -1693,7 +1627,7 @@ Check for the existence of a task bundle. This rule will fail if the task is not
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' does not contain a bundle reference`
 * Code: `attestation_task_bundle.tasks_defined_in_bundle`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle.rego#L59[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L59[Source, window="_blank"]
 
 [#tasks_package]
 == link:#tasks_package[Tasks]
@@ -1701,7 +1635,7 @@ Check for the existence of a task bundle. This rule will fail if the task is not
 Enterprise Contract expects that a set of tasks were included in the pipeline build for each image to be released. This package includes a set of rules to verify that the expected tasks ran in the pipeline when the image was built. Required tasks for a pipeline are specified in a data source provided at runtime. This data source features two primary rule data keys: pipeline-required-tasks and required-tasks. The pipeline-required-tasks key lists all required tasks broken down by pipeline name, while required-tasks details a default or baseline set of tasks. If your pipeline corresponds to an entry under pipeline-required-tasks, those tasks will be prioritized; otherwise, the system will default to the tasks listed under required-tasks. Required tasks are listed by the names given to them within the task definition. Optionally invocation parameter of a Task can be also mandated by including the name and the value in square brackets following the name of the task. For example: name[PARAM=val]. Only single parameter is supported, to assert multiple parameters repeat the required task definition for each parameter seperately.
 
 * Package name: `tasks`
-* Package full path: `policy.release.tasks`
+* Package full path: `release.tasks`
 
 [#tasks__required_untrusted_task_found]
 === link:#tasks__required_untrusted_task_found[All required tasks are from trusted tasks]
@@ -1713,7 +1647,7 @@ Ensure that the all required tasks are resolved from trusted tasks.
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `%s is required and present but not from a trusted task`
 * Code: `tasks.required_untrusted_task_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L33[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L33[Source, window="_blank"]
 
 [#tasks__required_tasks_found]
 === link:#tasks__required_tasks_found[All required tasks were included in the pipeline]
@@ -1725,7 +1659,7 @@ Ensure that the set of required tasks are included in the PipelineRun attestatio
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s is missing`
 * Code: `tasks.required_tasks_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L165[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L165[Source, window="_blank"]
 
 [#tasks__data_provided]
 === link:#tasks__data_provided[Data provided]
@@ -1737,7 +1671,7 @@ Confirm the expected data keys have been provided in the expected format. The ke
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `tasks.data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L277[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L277[Source, window="_blank"]
 
 [#tasks__future_required_tasks_found]
 === link:#tasks__future_required_tasks_found[Future required tasks were found]
@@ -1749,7 +1683,7 @@ Produce a warning when a task that will be required in the future was not includ
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `%s is missing and will be required on %s`
 * Code: `tasks.future_required_tasks_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L83[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L83[Source, window="_blank"]
 
 [#tasks__pinned_task_refs]
 === link:#tasks__pinned_task_refs[Pinned Task references]
@@ -1761,7 +1695,7 @@ Ensure that all Tasks in the SLSA Provenance attestation use an immuntable refer
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Task %s is used by pipeline task %s via an unpinned reference.`
 * Code: `tasks.pinned_task_refs`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L212[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L212[Source, window="_blank"]
 
 [#tasks__pipeline_has_tasks]
 === link:#tasks__pipeline_has_tasks[Pipeline run includes at least one task]
@@ -1773,7 +1707,7 @@ Ensure that at least one Task is present in the PipelineRun attestation.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `No tasks found in PipelineRun attestation`
 * Code: `tasks.pipeline_has_tasks`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L112[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L112[Source, window="_blank"]
 
 [#tasks__pipeline_required_tasks_list_provided]
 === link:#tasks__pipeline_required_tasks_list_provided[Required tasks list for pipeline was provided]
@@ -1785,7 +1719,7 @@ Produce a warning if the required tasks list rule data was not provided.
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Required tasks do not exist for pipeline`
 * Code: `tasks.pipeline_required_tasks_list_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L63[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L63[Source, window="_blank"]
 
 [#tasks__required_tasks_list_provided]
 === link:#tasks__required_tasks_list_provided[Required tasks list was provided]
@@ -1797,7 +1731,7 @@ Confirm the `required-tasks` rule data was provided, since it's required by the 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Missing required required-tasks data`
 * Code: `tasks.required_tasks_list_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L189[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L189[Source, window="_blank"]
 
 [#tasks__successful_pipeline_tasks]
 === link:#tasks__successful_pipeline_tasks[Successful pipeline tasks]
@@ -1809,7 +1743,7 @@ Ensure that all of the Tasks in the Pipeline completed successfully. Note that s
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task %q did not complete successfully, %q`
 * Code: `tasks.successful_pipeline_tasks`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L136[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L136[Source, window="_blank"]
 
 [#tasks__unsupported]
 === link:#tasks__unsupported[Task version unsupported]
@@ -1819,7 +1753,7 @@ The Tekton Task used is or will be unsupported. The Task is annotated with `buil
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Task %q is used by pipeline task %q is or will be unsupported as of %s. %s`
 * Code: `tasks.unsupported`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks.rego#L239[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L239[Source, window="_blank"]
 
 [#test_package]
 == link:#test_package[Test]
@@ -1827,7 +1761,7 @@ The Tekton Task used is or will be unsupported. The Task is annotated with `buil
 Enterprise Contract requires that each build was subjected to a set of tests and that those tests all passed. This package includes a set of rules to verify that.
 
 * Package name: `test`
-* Package full path: `policy.release.test`
+* Package full path: `release.test`
 
 [#test__test_all_images]
 === link:#test__test_all_images[Image digest is present in IMAGES_PROCESSED result]
@@ -1840,7 +1774,7 @@ Ensure that task producing the IMAGES_PROCESSED result contains the digests of t
 * FAILURE message: `Test '%s' did not process image with digest '%s'.`
 * Code: `test.test_all_images`
 * Effective from: `2024-05-29T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test.rego#L232[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L232[Source, window="_blank"]
 
 [#test__no_failed_informative_tests]
 === link:#test__no_failed_informative_tests[No informative tests failed]
@@ -1852,7 +1786,7 @@ Produce a warning if any informative tests have their result set to "FAILED". Th
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `The Task %q from the build Pipeline reports a failed informative test`
 * Code: `test.no_failed_informative_tests`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test.rego#L16[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L16[Source, window="_blank"]
 
 [#test__no_erred_tests]
 === link:#test__no_erred_tests[No tests erred]
@@ -1864,7 +1798,7 @@ Produce a violation if any tests have their result set to "ERROR". The result ty
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The Task %q from the build Pipeline reports a test erred`
 * Code: `test.no_erred_tests`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test.rego#L165[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L165[Source, window="_blank"]
 
 [#test__no_failed_tests]
 === link:#test__no_failed_tests[No tests failed]
@@ -1876,7 +1810,7 @@ Produce a violation if any non-informative tests have their result set to "FAILE
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The Task %q from the build Pipeline reports a failed test`
 * Code: `test.no_failed_tests`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test.rego#L141[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L141[Source, window="_blank"]
 
 [#test__no_test_warnings]
 === link:#test__no_test_warnings[No tests produced warnings]
@@ -1888,7 +1822,7 @@ Produce a warning if any tests have their result set to "WARNING". The result ty
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `The Task %q from the build Pipeline reports a test contains warnings`
 * Code: `test.no_test_warnings`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test.rego#L40[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L40[Source, window="_blank"]
 
 [#test__no_skipped_tests]
 === link:#test__no_skipped_tests[No tests were skipped]
@@ -1901,7 +1835,7 @@ Produce a violation if any tests have their result set to "SKIPPED". A skipped r
 * FAILURE message: `The Task %q from the build Pipeline reports a test was skipped`
 * Code: `test.no_skipped_tests`
 * Effective from: `2023-12-08T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test.rego#L187[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L187[Source, window="_blank"]
 
 [#test__test_results_known]
 === link:#test__test_results_known[No unsupported test result values found]
@@ -1913,7 +1847,7 @@ Ensure all test data result values are in the set of known/supported result valu
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The Task %q from the build Pipeline has an unsupported test result %q`
 * Code: `test.test_results_known`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test.rego#L109[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L109[Source, window="_blank"]
 
 [#test__rule_data_provided]
 === link:#test__rule_data_provided[Rule data provided]
@@ -1925,7 +1859,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `test.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test.rego#L213[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L213[Source, window="_blank"]
 
 [#test__test_data_found]
 === link:#test__test_data_found[Test data found in task results]
@@ -1937,7 +1871,7 @@ Ensure that at least one of the tasks in the pipeline includes a TEST_OUTPUT tas
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `No test data found`
 * Code: `test.test_data_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test.rego#L63[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L63[Source, window="_blank"]
 
 [#test__test_results_found]
 === link:#test__test_results_found[Test data includes results key]
@@ -1949,7 +1883,7 @@ Each test result is expected to have a `results` key. Verify that the `results` 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Found tests without results`
 * Code: `test.test_results_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test.rego#L87[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L87[Source, window="_blank"]
 
 [#trusted_task_package]
 == link:#trusted_task_package[Trusted Task checks]
@@ -1957,7 +1891,7 @@ Each test result is expected to have a `results` key. Verify that the `results` 
 This package is used to verify all the Tekton Tasks involved in building the image are trusted. Trust is established by comparing the Task references found in the SLSA Provenance with a pre-defined list of trusted Tasks, which is expected to be provided as a data source that creates the `data.trusted_tasks` in the format demonstrated at https://github.com/enterprise-contract/ec-policies/blob/main/example/data/trusted_tekton_tasks.yml. The list can be extended or customized using the `trusted_tasks` rule data key which is merged into the `trusted_tasks` data.
 
 * Package name: `trusted_task`
-* Package full path: `policy.release.trusted_task`
+* Package full path: `release.trusted_task`
 
 [#trusted_task__data_format]
 === link:#trusted_task__data_format[Data format]
@@ -1969,7 +1903,7 @@ Confirm the expected `trusted_tasks` data keys have been provided in the expecte
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `trusted_task.data_format`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L184[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L184[Source, window="_blank"]
 
 [#trusted_task__pinned]
 === link:#trusted_task__pinned[Task references are pinned]
@@ -1982,7 +1916,7 @@ Check if all Tekton Tasks use a Task definition by a pinned reference. When usin
 * WARNING message: `Pipeline task %q uses an unpinned task reference, %s`
 * Code: `trusted_task.pinned`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L24[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L24[Source, window="_blank"]
 
 [#trusted_task__data]
 === link:#trusted_task__data[Task tracking data was provided]
@@ -1995,7 +1929,7 @@ Confirm the `trusted_tasks` rule data was provided, since it's required by the p
 * FAILURE message: `Missing required trusted_tasks data`
 * Code: `trusted_task.data`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L134[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L134[Source, window="_blank"]
 
 [#trusted_task__trusted]
 === link:#trusted_task__trusted[Tasks are trusted]
@@ -2008,7 +1942,7 @@ Check the trust of the Tekton Tasks used in the build Pipeline. There are two mo
 * FAILURE message: `%s`
 * Code: `trusted_task.trusted`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L71[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L71[Source, window="_blank"]
 
 [#trusted_task__current]
 === link:#trusted_task__current[Tasks using the latest versions]
@@ -2021,7 +1955,7 @@ Check if all Tekton Tasks use the latest known Task reference.
 * WARNING message: `Pipeline task %q uses an out of date task reference, %s`
 * Code: `trusted_task.current`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L49[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L49[Source, window="_blank"]
 
 [#trusted_task__valid_trusted_artifact_inputs]
 === link:#trusted_task__valid_trusted_artifact_inputs[Trusted Artifact produced in pipeline]
@@ -2033,7 +1967,7 @@ All input trusted artifacts must be produced on the pipeline. If they are not th
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Code tampering detected, input %q for task %q was not produced by the pipeline as attested.`
 * Code: `trusted_task.valid_trusted_artifact_inputs`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L97[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L97[Source, window="_blank"]
 
 [#trusted_task__trusted_parameters]
 === link:#trusted_task__trusted_parameters[Trusted parameters]
@@ -2046,7 +1980,7 @@ Confirm certain parameters provided to each builder Task have come from trusted 
 * FAILURE message: `The %q parameter of the %q PipelineTask includes an untrusted digest: %s`
 * Code: `trusted_task.trusted_parameters`
 * Effective from: `2021-07-04T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task.rego#L153[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L153[Source, window="_blank"]
 
 [#rpm_ostree_task_package]
 == link:#rpm_ostree_task_package[rpm-ostree Task]
@@ -2054,7 +1988,7 @@ Confirm certain parameters provided to each builder Task have come from trusted 
 This package is responsible for verifying the rpm-ostree Tekton Task was executed with the expected parameters.
 
 * Package name: `rpm_ostree_task`
-* Package full path: `policy.release.rpm_ostree_task`
+* Package full path: `release.rpm_ostree_task`
 
 [#rpm_ostree_task__builder_image_param]
 === link:#rpm_ostree_task__builder_image_param[Builder image parameter]
@@ -2067,7 +2001,7 @@ Verify the BUILDER_IMAGE parameter of the rpm-ostree Task uses an image referenc
 * FAILURE message: `%s`
 * Code: `rpm_ostree_task.builder_image_param`
 * Effective from: `2024-03-20T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_ostree_task.rego#L15[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_ostree_task/rpm_ostree_task.rego#L15[Source, window="_blank"]
 
 [#rpm_ostree_task__rule_data]
 === link:#rpm_ostree_task__rule_data[Rule data]
@@ -2079,4 +2013,4 @@ Verify the rule data used by this package, `allowed_rpm_ostree_builder_image_pre
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `rpm_ostree_task.rule_data`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_ostree_task.rego#L36[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_ostree_task/rpm_ostree_task.rego#L36[Source, window="_blank"]

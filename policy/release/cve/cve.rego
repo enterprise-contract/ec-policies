@@ -386,3 +386,27 @@ _rule_data_errors contains msg if {
 	)[1]
 	msg := sprintf("Rule data %s has unexpected format: %s", [key, violation.error])
 }
+
+_rule_data_errors contains msg if {
+	value := lib.rule_data("cve_leeway")
+	leeway_days := {
+		"type": "integer",
+		"minimum": 0,
+	}
+	some violation in json.match_schema(
+		value,
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "object",
+			"properties": {
+				"critical": leeway_days,
+				"high": leeway_days,
+				"medium": leeway_days,
+				"low": leeway_days,
+				"unknown": leeway_days,
+			},
+			"additionalProperties": false,
+		},
+	)[1]
+	msg := sprintf("Rule data cve_leeway has unexpected format: %s", [violation.error])
+}

@@ -786,6 +786,46 @@ test_warning_leeway_with_full_report if {
 		with lib_time.effective_current_time_ns as time.parse_rfc3339_ns("2022-04-05T00:00:00Z")
 }
 
+test_leeway_rule_data_check if {
+	d := {"cve_leeway": {
+		# wrong key
+		"blooper": 1,
+		# wrong type
+		"critical": "one",
+		# negative number
+		"high": -10,
+		# all good
+		"medium": 10,
+	}}
+
+	expected := {
+		{
+			"code": "cve.rule_data_provided",
+			"msg": "Rule data cve_leeway has unexpected format: (Root): Additional property blooper is not allowed",
+		},
+		{
+			"code": "cve.rule_data_provided",
+			"msg": "Rule data cve_leeway has unexpected format: critical: Invalid type. Expected: integer, given: string",
+		},
+		{
+			"code": "cve.rule_data_provided",
+			"msg": "Rule data cve_leeway has unexpected format: high: Must be greater than or equal to 0",
+		},
+	}
+
+	attestations := [lib_test.att_mock_helper_ref(
+		cve._result_name,
+		{
+			"vulnerabilities": _dummy_counts_zero_high,
+			"unpatched_vulnerabilities": _dummy_counts_zero_high,
+		},
+		"clair-scan",
+		_bundle,
+	)]
+	lib.assert_equal_results(cve.deny, expected) with input.attestations as attestations
+		with data.rule_data as d
+}
+
 _fingerprints(a, b) := [v | some n in numbers.range(a, b); v := sprintf("%d", [n])]
 
 _vulns(fingerprits, template) := {v |

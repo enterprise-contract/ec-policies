@@ -115,14 +115,14 @@ test_result_helper_pkg_name if {
 	# Unlikely edge case: Documenting this since it likely doesn't match the ec-cli behavior,
 	# but actually I think this way is slightly more sane, so let's accept the discrepancy for now.
 	# lib.assert_equal("pipeline.foo", lib._pkg_name(["data", "release", "pipeline", "foo", "deny"]))
-	# lib.assert_equal("release.foo", lib._pkg_name(["data", "policy", "pipeline", "release", "foo", "deny"]))
+	lib.assert_equal("release.foo", lib._pkg_name(["data", "pipeline", "release", "foo", "deny"]))
 
 	# Very unlikely edge case: Just to illustrate how deny/warn/data are stripped once
 	# lib.assert_equal("foo", lib._pkg_name(["data", "policy", "release", "foo", "warn", "deny"]))
 	lib.assert_equal("foo.deny", lib._pkg_name(["data", "release", "foo", "deny", "warn"]))
 	lib.assert_equal("foo.warn", lib._pkg_name(["data", "release", "foo", "warn", "warn"]))
 	lib.assert_equal(
-		"data.policy.release.foo.warn.deny",
-		lib._pkg_name(["data", "data", "policy", "release", "foo", "warn", "deny", "warn"]),
+		"data.release.foo.warn.deny",
+		lib._pkg_name(["data", "data", "release", "foo", "warn", "deny", "warn"]),
 	)
 }

@@ -64,8 +64,6 @@ _pkg_name(rule_path) := name if {
 	# Strip off "policy" no matter what
 	p6 := _left_strip_elements(["policy"], p5)
 
-	# p7 := _left_strip_elements(["release"], p6)
-
 	# Remove the "deny" or "warn" element
 	p7 := _right_strip_elements(["deny"], p6)
 	p8 := _right_strip_elements(["warn"], p7)

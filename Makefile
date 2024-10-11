@@ -23,6 +23,12 @@ EC=go run $(EC_MOD)
 OPA=$(EC) opa
 CONFTEST=EC_EXPERIMENTAL=1 $(EC)
 TKN=go run github.com/tektoncd/cli/cmd/tkn
+TEST_CMD_DEFAULT=$(OPA) test $(TEST_FILES) $(TEST_FILTER)
+ifeq ($(shell command -v unshare),)
+  TEST_CMD=$(TEST_CMD_DEFAULT)
+else
+  TEST_CMD=unshare -r -n $(TEST_CMD_DEFAULT)
+endif
 
 LICENSE_IGNORE=-ignore '.git/**'
 
@@ -91,17 +97,17 @@ TEST_FILTER=$(if $(TEST),--run $(TEST))
 # Todo maybe: Run tests with conftest verify instead
 .PHONY: test
 test: ## Run all tests in verbose mode and check coverage
-	@$(OPA) test $(TEST_FILES) $(TEST_FILTER) --verbose
+	@$(TEST_CMD) --verbose
 	$(COVERAGE)
 
 .PHONY: quiet-test
 quiet-test: ## Run all tests in quiet mode and check coverage
-	@$(OPA) test $(TEST_FILES) $(TEST_FILTER)
+	@$(TEST_CMD)
 	$(COVERAGE)
 
 .PHONY: watch
 watch: ## Run tests in watch mode, use TEST=package or TEST=test to focus on a single package or test
-	@$(OPA) test $(TEST_FILES) $(TEST_FILTER) --verbose --watch
+	@$(TEST_CMD) --verbose --watch
 
 # Do `dnf install entr` then run this a separate terminal or split window while hacking
 # (live-test and watch do similar things in different ways. Use whichever one you like better.)
@@ -115,7 +121,7 @@ live-test: ## Continuously run tests on changes to any `*.rego` files, `entr` ne
 .PHONY: coverage
 # The cat does nothing but avoids a non-zero exit code from grep -v
 coverage: ## Show which lines of rego are not covered by tests
-	@$(OPA) test $(TEST_FILES) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
+	@$(TEST_CMD) --coverage --format json | jq -r '.files | to_entries | map("\(.key): Uncovered:\(.value.not_covered)") | .[]' | grep -v "Uncovered:null" | cat
 
 .PHONY: fmt
 fmt: ## Apply default formatting to all rego files. Use before you commit

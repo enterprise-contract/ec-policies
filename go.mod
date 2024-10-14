@@ -3,7 +3,7 @@ module github.com/enterprise-contract/ec-policies
 go 1.22.5
 
 require (
-	github.com/enterprise-contract/ec-cli v0.6.52
+	github.com/enterprise-contract/ec-cli v0.6.60
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.55.0
 	github.com/styrainc/regal v0.28.0
@@ -126,7 +126,7 @@ require (
 	github.com/coreos/go-oidc/v3 v3.11.0 // indirect
 	github.com/coreos/go-semver v0.3.1 // indirect
 	github.com/cyberphone/json-canonicalization v0.0.0-20231217050601-ba74d44ecf5f // indirect
-	github.com/cyphar/filepath-securejoin v0.3.2 // indirect
+	github.com/cyphar/filepath-securejoin v0.3.4 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dgraph-io/badger/v3 v3.2103.5 // indirect
 	github.com/dgraph-io/ristretto v0.1.1 // indirect
@@ -144,19 +144,19 @@ require (
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.12.1 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
-	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.58 // indirect
-	github.com/enterprise-contract/go-gather v0.0.3 // indirect
+	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.60 // indirect
+	github.com/enterprise-contract/go-gather v0.0.4-0.20241009163919-f9697d385bbb // indirect
 	github.com/enterprise-contract/go-gather/expander v0.0.1 // indirect
-	github.com/enterprise-contract/go-gather/gather v0.0.3 // indirect
-	github.com/enterprise-contract/go-gather/gather/file v0.0.2-0.20240906185922-e8ebd246dc19 // indirect
-	github.com/enterprise-contract/go-gather/gather/git v0.0.6-0.20240911082231-b67aa65913d1 // indirect
-	github.com/enterprise-contract/go-gather/gather/http v0.0.3-0.20240923130737-4120ba0d92bf // indirect
+	github.com/enterprise-contract/go-gather/gather v0.0.4-0.20241009163919-f9697d385bbb // indirect
+	github.com/enterprise-contract/go-gather/gather/file v0.0.2-0.20241009005203-1e339603d9c3 // indirect
+	github.com/enterprise-contract/go-gather/gather/git v0.0.6-0.20241009163919-f9697d385bbb // indirect
+	github.com/enterprise-contract/go-gather/gather/http v0.0.3-0.20241009005203-1e339603d9c3 // indirect
 	github.com/enterprise-contract/go-gather/gather/oci v0.0.5-0.20240923101526-bbc07b341aed // indirect
-	github.com/enterprise-contract/go-gather/metadata v0.0.2 // indirect
-	github.com/enterprise-contract/go-gather/metadata/file v0.0.1 // indirect
-	github.com/enterprise-contract/go-gather/metadata/git v0.0.2 // indirect
-	github.com/enterprise-contract/go-gather/metadata/http v0.0.1 // indirect
-	github.com/enterprise-contract/go-gather/metadata/oci v0.0.3 // indirect
+	github.com/enterprise-contract/go-gather/metadata v0.0.3-0.20241009163919-f9697d385bbb // indirect
+	github.com/enterprise-contract/go-gather/metadata/file v0.0.2-0.20241009163919-f9697d385bbb // indirect
+	github.com/enterprise-contract/go-gather/metadata/git v0.0.3-0.20241009163919-f9697d385bbb // indirect
+	github.com/enterprise-contract/go-gather/metadata/http v0.0.2-0.20241009163919-f9697d385bbb // indirect
+	github.com/enterprise-contract/go-gather/metadata/oci v0.0.4-0.20241009163919-f9697d385bbb // indirect
 	github.com/enterprise-contract/go-gather/saver v0.0.2 // indirect
 	github.com/enterprise-contract/go-gather/saver/file v0.0.1 // indirect
 	github.com/evanphx/json-patch v5.9.0+incompatible // indirect
@@ -413,15 +413,15 @@ require (
 	gocloud.dev v0.37.0 // indirect
 	gocloud.dev/docstore/mongodocstore v0.37.1-0.20240501181211-d8b9c9401f18 // indirect
 	gocloud.dev/pubsub/kafkapubsub v0.37.0 // indirect
-	golang.org/x/crypto v0.27.0 // indirect
+	golang.org/x/crypto v0.28.0 // indirect
 	golang.org/x/exp v0.0.0-20240909161429-701f63a606c0 // indirect
 	golang.org/x/mod v0.21.0 // indirect
-	golang.org/x/net v0.29.0 // indirect
+	golang.org/x/net v0.30.0 // indirect
 	golang.org/x/oauth2 v0.22.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
-	golang.org/x/sys v0.25.0 // indirect
-	golang.org/x/term v0.24.0 // indirect
-	golang.org/x/text v0.18.0 // indirect
+	golang.org/x/sys v0.26.0 // indirect
+	golang.org/x/term v0.25.0 // indirect
+	golang.org/x/text v0.19.0 // indirect
 	golang.org/x/time v0.6.0 // indirect
 	golang.org/x/tools v0.25.0 // indirect
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect

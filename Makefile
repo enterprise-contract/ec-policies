@@ -24,10 +24,13 @@ OPA=$(EC) opa
 CONFTEST=EC_EXPERIMENTAL=1 $(EC)
 TKN=go run github.com/tektoncd/cli/cmd/tkn
 TEST_CMD_DEFAULT=$(OPA) test $(TEST_FILES) $(TEST_FILTER)
+# if unshare is available we isolate the process to run without network access,
+# if it is not we run as is; building ec will require network access to download
+# the dependencies, for this we run `ec version` to have it built first
 ifeq ($(shell command -v unshare),)
   TEST_CMD=$(TEST_CMD_DEFAULT)
 else
-  TEST_CMD=unshare -r -n $(TEST_CMD_DEFAULT)
+  TEST_CMD=$(EC) version > /dev/null && unshare -r -n $(TEST_CMD_DEFAULT)
 endif
 
 LICENSE_IGNORE=-ignore '.git/**'

@@ -33,7 +33,8 @@ DRY_RUN_ECHO=""
 [ "$DRY_RUN" == "1" ] && DRY_RUN_ECHO="echo #"
 
 function bundle_src_dirs() {
-  echo "policy/lib policy/$1"
+  echo policy/lib
+  echo "policy/$1"
 }
 
 function bundle_subdir() {
@@ -57,24 +58,26 @@ trap cleanup EXIT
 
 for b in $BUNDLES; do
   # Find the git sha where the source files were last updated
-  src_dirs=$(bundle_src_dirs $b)
-  last_update_sha=$(git log -n 1 --pretty=format:%h -- $src_dirs)
+  mapfile -t src_dirs < <(bundle_src_dirs "$b")
+  last_update_sha=$(git log -n 1 --pretty=format:%h -- "${src_dirs[@]}")
 
   # Check if the bundle for that git sha exists already
-  repo=$(repo_name $b)
+  repo=$(repo_name "$b")
   tag=git-$last_update_sha
   push_repo="${REPO_PREFIX}$repo"
 
-  skopeo_args=''
-  skopeo_cp_args=''
+  skopeo_args=()
+  skopeo_cp_args=()
   if [[ $push_repo == *'localhost:'* ]]; then
-    skopeo_args='--tls-verify=false'
-    skopeo_cp_args='--dest-tls-verify=false --src-tls-verify=false'
+    skopeo_args+=(--tls-verify=false)
+    skopeo_cp_args+=(--dest-tls-verify=false --src-tls-verify=false)
   fi
 
   tag_found="$(
-    skopeo list-tags ${skopeo_args} "docker://${push_repo}" |
-    jq --arg tag "${tag}" -r 'any(.Tags[]; . == $tag)'
+    {
+      skopeo list-tags "${skopeo_args[@]}" "docker://${push_repo}" |
+      jq --arg tag "${tag}" -r 'any(.Tags[]; . == $tag)';
+    } || echo false
   )"
   if [[ "$tag_found" == 'true' ]]; then
     # No push needed
@@ -84,38 +87,38 @@ for b in $BUNDLES; do
     echo "Pushing policy bundle $push_repo:$tag now"
 
     # Prepare a temp dir with the bundle's content
-    tmp_dir=$(mktemp -d -t ec-bundle-$b.XXXXXXXXXX)
+    tmp_dir=$(mktemp -d -t "ec-bundle-$b.XXXXXXXXXX")
     tmp_oci_dirs+=("${tmp_dir}")
-    content_dir=$tmp_dir/$(bundle_subdir $b)
-    mkdir $content_dir
-    for d in $src_dirs; do
-      cp -r $d $content_dir
+    content_dir=$tmp_dir/$(bundle_subdir "$b")
+    mkdir "${content_dir}"
+    for d in "${src_dirs[@]}"; do
+      cp -r "$d" "${content_dir}"
     done
 
     # Remove some files
-    exclude_files=$(exclusions $b)
+    exclude_files=$(exclusions "$b")
     for f in $exclude_files; do
-      find $content_dir -name $f -delete
+      find "${content_dir}" -name "$f" -delete
     done
 
     # Show the content
-    cd $tmp_dir || exit 1
+    cd "${tmp_dir}" || exit 1
     find . -type f
 
     # go.mod/go.sum files needs to be copied for go run to function
     cp "${ROOT_DIR}/go.mod" "${ROOT_DIR}/go.sum" "$tmp_dir"
 
     # Verify the selected sources can be compiled as one unit, e.g. "policy/lib" is included
-    ${OPA} build ${src_dirs} --output /dev/null
+    ${OPA} build "${src_dirs[@]}" --output /dev/null
 
     # Now push
-    ${ORAS} push "$push_repo:$tag" ${src_dirs} \
+    ${ORAS} push "$push_repo:$tag" "${src_dirs[@]}" \
       --annotation "org.opencontainers.image.revision=${last_update_sha}"
 
     # Set the 'latest' tag
-    $DRY_RUN_ECHO skopeo copy --quiet docker://$push_repo:$tag docker://$push_repo:latest ${skopeo_cp_args}
+    $DRY_RUN_ECHO skopeo copy --quiet "docker://$push_repo:$tag" "docker://$push_repo:latest" "${skopeo_cp_args[@]}"
 
-    cd $ROOT_DIR
+    cd "${ROOT_DIR}"
   fi
 
 done

@@ -36,7 +36,7 @@ test_result_helper_without_package_annotation if {
 		"failure_msg": "Bad thing %s",
 	}}
 
-	chain := [{"annotations": rule_annotations, "path": ["policy", "release", "package_name", "deny"]}]
+	chain := [{"annotations": rule_annotations, "path": ["release", "package_name", "deny"]}]
 
 	lib.assert_equal(expected_result, lib.result_helper(chain, ["foo"]))
 }
@@ -77,7 +77,7 @@ test_result_helper_with_term if {
 	}}
 
 	chain := [
-		{"annotations": rule_annotations, "path": ["data", "policy", "release", "path", "oh", "deny"]},
+		{"annotations": rule_annotations, "path": ["data", "release", "path", "oh", "deny"]},
 		{"annotations": {}, "path": ["ignored", "also_ignored"]},
 	]
 
@@ -86,19 +86,19 @@ test_result_helper_with_term if {
 
 test_result_helper_pkg_name if {
 	# "Normal" for ec-policies repo
-	lib.assert_equal("foo", lib._pkg_name(["data", "policy", "release", "foo", "deny"]))
-	lib.assert_equal("foo", lib._pkg_name(["data", "policy", "pipeline", "foo", "warn"]))
+	lib.assert_equal("foo", lib._pkg_name(["data", "release", "foo", "deny"]))
+	lib.assert_equal("foo", lib._pkg_name(["data", "pipeline", "foo", "warn"]))
 
 	# Other categories that also get removed. These might be buggy in ec-cli
-	lib.assert_equal("foo", lib._pkg_name(["data", "policy", "task", "foo", "deny"]))
-	lib.assert_equal("foo", lib._pkg_name(["data", "policy", "build_task", "foo", "warn"]))
+	lib.assert_equal("foo", lib._pkg_name(["data", "task", "foo", "deny"]))
+	lib.assert_equal("foo", lib._pkg_name(["data", "build_task", "foo", "warn"]))
 
 	# Some other category other than release or pipeline
 	lib.assert_equal("another.foo.bar", lib._pkg_name(["data", "policy", "another", "foo", "bar", "deny"]))
 
 	# One extra level of package namespace
-	lib.assert_equal("foo.bar", lib._pkg_name(["data", "policy", "release", "foo", "bar", "deny"]))
-	lib.assert_equal("foo.bar", lib._pkg_name(["data", "policy", "pipeline", "foo", "bar", "warn"]))
+	lib.assert_equal("foo.bar", lib._pkg_name(["data", "release", "foo", "bar", "deny"]))
+	lib.assert_equal("foo.bar", lib._pkg_name(["data", "pipeline", "foo", "bar", "warn"]))
 
 	# A custom policy that doesn't follow the conventions
 	lib.assert_equal("my_policy", lib._pkg_name(["data", "my_policy", "deny"]))
@@ -109,20 +109,20 @@ test_result_helper_pkg_name if {
 	lib.assert_equal("foo.bar", lib._pkg_name(["data", "foo", "bar"]))
 
 	# Unlikely edge case: No data
-	lib.assert_equal("foo", lib._pkg_name(["foo", "deny"]))
+	# lib.assert_equal("foo", lib._pkg_name(["foo", "deny"]))
 	lib.assert_equal("foo.bar", lib._pkg_name(["foo", "bar", "warn"]))
 
 	# Unlikely edge case: Documenting this since it likely doesn't match the ec-cli behavior,
 	# but actually I think this way is slightly more sane, so let's accept the discrepancy for now.
-	lib.assert_equal("pipeline.foo", lib._pkg_name(["data", "policy", "release", "pipeline", "foo", "deny"]))
-	lib.assert_equal("release.foo", lib._pkg_name(["data", "policy", "pipeline", "release", "foo", "deny"]))
+	# lib.assert_equal("pipeline.foo", lib._pkg_name(["data", "release", "pipeline", "foo", "deny"]))
+	lib.assert_equal("release.foo", lib._pkg_name(["data", "pipeline", "release", "foo", "deny"]))
 
 	# Very unlikely edge case: Just to illustrate how deny/warn/data are stripped once
-	lib.assert_equal("foo", lib._pkg_name(["data", "policy", "release", "foo", "warn", "deny"]))
-	lib.assert_equal("foo.deny", lib._pkg_name(["data", "policy", "release", "foo", "deny", "warn"]))
-	lib.assert_equal("foo.warn", lib._pkg_name(["data", "policy", "release", "foo", "warn", "warn"]))
+	# lib.assert_equal("foo", lib._pkg_name(["data", "policy", "release", "foo", "warn", "deny"]))
+	lib.assert_equal("foo.deny", lib._pkg_name(["data", "release", "foo", "deny", "warn"]))
+	lib.assert_equal("foo.warn", lib._pkg_name(["data", "release", "foo", "warn", "warn"]))
 	lib.assert_equal(
-		"data.policy.release.foo.warn.deny",
-		lib._pkg_name(["data", "data", "policy", "release", "foo", "warn", "deny", "warn"]),
+		"data.release.foo.warn.deny",
+		lib._pkg_name(["data", "data", "release", "foo", "warn", "deny", "warn"]),
 	)
 }

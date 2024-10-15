@@ -1,5 +1,5 @@
 # Copied from https://github.com/open-policy-agent/contrib/tree/main/simplecov/simplecov.rego
-package simplecov
+package hack
 
 import rego.v1
 

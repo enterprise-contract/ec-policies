@@ -52,14 +52,14 @@ _pkg_name(rule_path) := name if {
 	# Strip off policy.release or policy.pipeline to match what ec-cli
 	# does. (There are some edge cases where the behavior is not exactly
 	# the same, but I think this version is better.)
-	p2 := _left_strip_elements(["policy", "release"], p1)
-	p3 := _left_strip_elements(["policy", "pipeline"], p2)
+	p2 := _left_strip_elements(["release"], p1)
+	p3 := _left_strip_elements(["pipeline"], p2)
 
 	# Actually ec-cli doesn't remove these, but lots of tests in this repo
 	# assume it will be removed, so let's go with the flow for now.
 	# (We might want to revist this behavior in future.)
-	p4 := _left_strip_elements(["policy", "task"], p3)
-	p5 := _left_strip_elements(["policy", "build_task"], p4)
+	p4 := _left_strip_elements(["task"], p3)
+	p5 := _left_strip_elements(["build_task"], p4)
 
 	# Strip off "policy" no matter what
 	p6 := _left_strip_elements(["policy"], p5)

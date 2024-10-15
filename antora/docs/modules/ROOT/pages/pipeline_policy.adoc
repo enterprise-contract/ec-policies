@@ -10,7 +10,7 @@ These rules are applied to Tekton pipeline definitions.
 To be able to reproduce and audit builds accurately it's important to know exactly what happens during the build. To do this Enterprise Contract requires that all tasks are defined in a set of known and trusted task bundles. This package includes rules to confirm that the tasks in a Pipeline definition are defined in task bundles, and that the task bundles are from the list of known and trusted bundles.
 
 * Package name: `task_bundle`
-* Package full path: `policy.pipeline.task_bundle`
+* Package full path: `pipeline.task_bundle`
 
 [#task_bundle__missing_required_data]
 === link:#task_bundle__missing_required_data[Missing required data]
@@ -20,7 +20,7 @@ Confirm the `trusted_tasks` rule data was provided, since it's required by the p
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Missing required trusted_tasks data`
 * Code: `task_bundle.missing_required_data`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L92[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle/task_bundle.rego#L92[Source, window="_blank"]
 
 [#task_bundle__untrusted_task_bundle]
 === link:#task_bundle__untrusted_task_bundle[Task bundle is not trusted]
@@ -30,7 +30,7 @@ For each Task in the Pipeline definition, check if the Tekton Bundle used is a t
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' uses an untrusted task bundle '%s'`
 * Code: `task_bundle.untrusted_task_bundle`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L77[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle/task_bundle.rego#L77[Source, window="_blank"]
 
 [#task_bundle__out_of_date_task_bundle]
 === link:#task_bundle__out_of_date_task_bundle[Task bundle is out of date]
@@ -40,7 +40,7 @@ For each Task in the Pipeline definition, check if the Tekton Bundle used is the
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Pipeline task '%s' uses an out of date task bundle '%s'`
 * Code: `task_bundle.out_of_date_task_bundle`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L34[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle/task_bundle.rego#L34[Source, window="_blank"]
 
 [#task_bundle__empty_task_bundle_reference]
 === link:#task_bundle__empty_task_bundle_reference[Task bundle reference is empty]
@@ -50,7 +50,7 @@ Check that a valid task bundle reference is being used.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' uses an empty bundle image reference`
 * Code: `task_bundle.empty_task_bundle_reference`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L64[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle/task_bundle.rego#L64[Source, window="_blank"]
 
 [#task_bundle__disallowed_task_reference]
 === link:#task_bundle__disallowed_task_reference[Task bundle was not used or is not defined]
@@ -60,7 +60,7 @@ Check for the existence of a task bundle. This rule will fail if the task is not
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' does not contain a bundle reference`
 * Code: `task_bundle.disallowed_task_reference`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L50[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle/task_bundle.rego#L50[Source, window="_blank"]
 
 [#task_bundle__unpinned_task_bundle]
 === link:#task_bundle__unpinned_task_bundle[Unpinned task bundle reference]
@@ -70,7 +70,7 @@ Check if the Tekton Bundle used for the Tasks in the Pipeline definition is pinn
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Pipeline task '%s' uses an unpinned task bundle reference '%s'`
 * Code: `task_bundle.unpinned_task_bundle`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle.rego#L20[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/task_bundle/task_bundle.rego#L20[Source, window="_blank"]
 
 [#basic_package]
 == link:#basic_package[Pipeline definition sanity checks]
@@ -78,7 +78,7 @@ Check if the Tekton Bundle used for the Tasks in the Pipeline definition is pinn
 Policies to confirm the Tekton Pipeline definition has the expected kind.
 
 * Package name: `basic`
-* Package full path: `policy.pipeline.basic`
+* Package full path: `pipeline.basic`
 
 [#basic__expected_kind]
 === link:#basic__expected_kind[Pipeline definition has expected kind]
@@ -88,7 +88,7 @@ Confirm that the pipeline definition has the kind "Pipeline".
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Unexpected kind '%s' for pipeline definition`
 * Code: `basic.expected_kind`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/basic.rego#L19[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/basic/basic.rego#L19[Source, window="_blank"]
 
 [#required_tasks_package]
 == link:#required_tasks_package[Required tasks]
@@ -96,7 +96,7 @@ Confirm that the pipeline definition has the kind "Pipeline".
 Konflux expects that certain Tekton tasks are executed during image builds. This package includes policy rules to confirm that the pipeline definition includes those required tasks.
 
 * Package name: `required_tasks`
-* Package full path: `policy.pipeline.required_tasks`
+* Package full path: `pipeline.required_tasks`
 
 [#required_tasks__missing_future_required_task]
 === link:#required_tasks__missing_future_required_task[Missing future required task]
@@ -106,7 +106,7 @@ Produce a warning when a task that will be required in the future is not current
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `%s is missing and will be required on %s`
 * Code: `required_tasks.missing_future_required_task`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/required_tasks.rego#L35[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/required_tasks/required_tasks.rego#L35[Source, window="_blank"]
 
 [#required_tasks__missing_required_task]
 === link:#required_tasks__missing_required_task[Missing required task]
@@ -116,7 +116,7 @@ Ensure that the set of required tasks is included in the Pipeline definition.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s is missing`
 * Code: `required_tasks.missing_required_task`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/required_tasks.rego#L72[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/required_tasks/required_tasks.rego#L72[Source, window="_blank"]
 
 [#required_tasks__tasks_found]
 === link:#required_tasks__tasks_found[Pipeline contains tasks]
@@ -126,7 +126,7 @@ Confirm at least one task is present in the pipeline definition.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `No tasks found in pipeline`
 * Code: `required_tasks.tasks_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/required_tasks.rego#L59[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/required_tasks/required_tasks.rego#L59[Source, window="_blank"]
 
 [#required_tasks__required_tasks_list_present]
 === link:#required_tasks__required_tasks_list_present[Required task list is present in rule data]
@@ -136,7 +136,7 @@ Confirm the `required-tasks` rule data was provided, since it's required by the 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The required tasks list is missing from the rule data`
 * Code: `required_tasks.required_tasks_list_present`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/required_tasks.rego#L91[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/required_tasks/required_tasks.rego#L91[Source, window="_blank"]
 
 [#required_tasks__required_tasks_found]
 === link:#required_tasks__required_tasks_found[Required tasks found in pipeline definition]
@@ -146,4 +146,4 @@ Produce a warning if a list of current or future required tasks does not exist i
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Required tasks do not exist for pipeline %q`
 * Code: `required_tasks.required_tasks_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/required_tasks.rego#L16[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/required_tasks/required_tasks.rego#L16[Source, window="_blank"]

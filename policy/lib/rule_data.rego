@@ -35,6 +35,13 @@ rule_data_defaults := {
 	"warn_cve_security_levels": [],
 	"restrict_unpatched_cve_security_levels": [],
 	"warn_unpatched_cve_security_levels": ["critical", "high"],
+	"cve_leeway": {
+		"critical": 0,
+		"high": 0,
+		"medium": 0,
+		"low": 0,
+		"unknown": 0,
+	},
 	# Used in policy/release/slsa_source_correlated.rego
 	# According to https://pip.pypa.io/en/latest/topics/vcs-support/#vcs-support
 	# and https://spdx.dev/spdx-specification-20-web-version/#h.49x2ik5

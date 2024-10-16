@@ -395,26 +395,26 @@ This package is responsible for verifying a CVE scan was performed during the bu
 [#cve__cve_blockers]
 === link:#cve__cve_blockers[Blocking CVE check]
 
-The SLSA Provenance attestation for the image is inspected to ensure CVEs that have a known fix and meet a certain security level have not been detected. If detected, this policy rule will fail. By default, only CVEs of critical and high security level cause a failure. This is configurable by the rule data key `restrict_cve_security_levels`. The available levels are critical, high, medium, low, and unknown.
+The SLSA Provenance attestation for the image is inspected to ensure CVEs that have a known fix and meet a certain security level have not been detected. If detected, this policy rule will fail. By default, only CVEs of critical and high security level cause a failure. This is configurable by the rule data key `restrict_cve_security_levels`. The available levels are critical, high, medium, low, and unknown. In addition to that leeway can be granted per severity using the `cve_leeway` rule data key containing days of allowed leeway, measured as time between found vulnerability's public disclosure date and current effective time, per severity level.
 
 *Solution*: Make sure to address any CVE's related to the image. The CVEs are detected by the task that runs a Clair scan and emits a result named `SCAN_OUTPUT`.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Found %d CVE vulnerabilities of %s security level`
 * Code: `cve.cve_blockers`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L88[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L90[Source, window="_blank"]
 
 [#cve__unpatched_cve_blockers]
 === link:#cve__unpatched_cve_blockers[Blocking unpatched CVE check]
 
-The SLSA Provenance attestation for the image is inspected to ensure CVEs that do NOT have a known fix and meet a certain security level have not been detected. If detected, this policy rule will fail. By default, the list of security levels used by this policy is empty. This is configurable by the rule data key `restrict_unpatched_cve_security_levels`. The available levels are critical, high, medium, low, and unknown.
+The SLSA Provenance attestation for the image is inspected to ensure CVEs that do NOT have a known fix and meet a certain security level have not been detected. If detected, this policy rule will fail. By default, the list of security levels used by this policy is empty. This is configurable by the rule data key `restrict_unpatched_cve_security_levels`. The available levels are critical, high, medium, low, and unknown. In addition to that leeway can be granted per severity using the `cve_leeway` rule data key containing days of allowed leeway, measured as time between found vulnerability's public disclosure date and current effective time, per severity level.
 
 *Solution*: CVEs without a known fix can only be remediated by either removing the impacted dependency, or by waiting for a fix to be available. The CVEs are detected by the task that emits a result named `SCAN_OUTPUT`.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Found %d unpatched CVE vulnerabilities of %s security level`
 * Code: `cve.unpatched_cve_blockers`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L113[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L117[Source, window="_blank"]
 
 [#cve__cve_results_found]
 === link:#cve__cve_results_found[CVE scan results found]
@@ -426,7 +426,7 @@ Confirm that clair-scan task results are present in the SLSA Provenance attestat
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Clair CVE scan results were not found`
 * Code: `cve.cve_results_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L139[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L146[Source, window="_blank"]
 
 [#cve__deprecated_cve_result_name]
 === link:#cve__deprecated_cve_result_name[Deprecated CVE result name]
@@ -438,7 +438,7 @@ The `CLAIR_SCAN_RESULT` result name has been deprecated, and has been replaced w
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `CVE scan uses deprecated result name`
 * Code: `cve.deprecated_cve_result_name`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L66[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L68[Source, window="_blank"]
 
 [#cve__cve_warnings]
 === link:#cve__cve_warnings[Non-blocking CVE check]
@@ -450,7 +450,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that h
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Found %d non-blocking CVE vulnerabilities of %s security level`
 * Code: `cve.cve_warnings`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L15[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L17[Source, window="_blank"]
 
 [#cve__unpatched_cve_warnings]
 === link:#cve__unpatched_cve_warnings[Non-blocking unpatched CVE check]
@@ -462,7 +462,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that d
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Found %d non-blocking unpatched CVE vulnerabilities of %s security level`
 * Code: `cve.unpatched_cve_warnings`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L40[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L42[Source, window="_blank"]
 
 [#cve__rule_data_provided]
 === link:#cve__rule_data_provided[Rule data provided]
@@ -474,7 +474,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `cve.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L164[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L171[Source, window="_blank"]
 
 [#external_parameters_package]
 == link:#external_parameters_package[External parameters]

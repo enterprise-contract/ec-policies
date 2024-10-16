@@ -39,18 +39,15 @@ _cyclonedx_sboms_from_oci := [sbom |
 	sbom.bomFormat == "CycloneDX"
 ]
 
-default spdx_sboms := []
-
 spdx_sboms := sboms if {
 	sboms := array.concat(_spdx_sboms_from_attestations, _spdx_sboms_from_oci)
 	count(sboms) > 0
 } else := _spdx_sboms_from_image
 
+default _spdx_sboms_from_image := []
+
 _spdx_sboms_from_image := [sbom] if {
 	sbom := input.image.files[_sbom_spdx_image_path]
-} else := [sbom] if {
-	input.image.config.Labels.vendor == "Red Hat, Inc."
-	sbom := ec.oci.image_files(input.image.ref, [_sbom_spdx_image_path])[_sbom_spdx_image_path]
 }
 
 _spdx_sboms_from_attestations := [statement.predicate |

@@ -118,9 +118,9 @@ test_cyclonedx_sboms_fallback_live_fetch if {
 		with ec.oci.image_files as mock_ec_oci_image_files(sbom._sbom_cyclonedx_image_path)
 }
 
-test_spdx_sboms_fallback_live_fetch if {
+test_spdx_sboms_fallback__no_live_fetch if {
 	image := json.remove(_spdx_image, ["files"])
-	expected := [{"sbom": "from live image"}]
+	expected := []
 	lib.assert_equal(sbom.spdx_sboms, expected) with input.attestations as []
 		with input.image as image
 		with ec.oci.blob as mock_ec_oci_spdx_blob

@@ -572,7 +572,20 @@ test_clair_vulnerabilities if {
 		},
 	}
 
-	got := cve._clair_vulnerabilities with cve._clair_report as _clair_report
+	p := {
+		"start": 0,
+		"end": lib_time.effective_current_time_ns,
+	}
+
+	period := {
+		"critical": p,
+		"high": p,
+		"medium": p,
+		"low": p,
+		"unknown": p,
+	}
+
+	got := cve._clair_vulnerabilities(period) with cve._clair_report as _clair_report
 
 	lib.assert_equal(expected, got)
 }
@@ -623,6 +636,7 @@ test_failure_with_full_report if {
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
+
 	expected_deny := {
 		{
 			"code": "cve.cve_blockers",
@@ -638,6 +652,25 @@ test_failure_with_full_report if {
 
 	# regal ignore:line-length
 	lib.assert_equal_results(cve.deny, expected_deny) with input.image.ref as "registry.io/repository/image@sha256:image_digest"
+		with input.attestations as attestations
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+
+	expected_warn := {
+		{
+			"code": "cve.unpatched_cve_warnings",
+			"term": "critical",
+			"msg": "Found 6 non-blocking unpatched CVE vulnerabilities of critical security level",
+		},
+		{
+			"code": "cve.unpatched_cve_warnings",
+			"term": "high",
+			"msg": "Found 7 non-blocking unpatched CVE vulnerabilities of high security level",
+		},
+	}
+
+	# regal ignore:line-length
+	lib.assert_equal_results(cve.warn, expected_warn) with input.image.ref as "registry.io/repository/image@sha256:image_digest"
 		with input.attestations as attestations
 		with ec.oci.image_manifest as _mock_image_manifest
 		with ec.oci.blob as _mock_blob
@@ -664,12 +697,10 @@ test_full_report_fetch_issue if {
 		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
 
-	expected := {
-		{
-			"code": "cve.cve_results_found",
-			"msg": "Clair CVE scan results were not found"
-		}
-	}
+	expected := {{
+		"code": "cve.cve_results_found",
+		"msg": "Clair CVE scan results were not found",
+	}}
 
 	lib.assert_equal_results(cve.deny, expected) with input.image.ref as "registry.io/repository/image@sha256:image_digest"
 		with input.attestations as attestations
@@ -708,18 +739,50 @@ test_warning_leeway_with_full_report if {
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
-	expected_deny := {{
-		"code": "cve.cve_blockers",
-		"term": "critical",
-		"msg": "Found 1 CVE vulnerabilities of critical security level",
-	}}
+	expected_deny := {
+		{
+			"code": "cve.cve_blockers",
+			"effective_on": lib_time.default_effective_on,
+			"msg": "Found 1 CVE vulnerabilities of critical security level",
+			"term": "critical",
+		},
+		{
+			"code": "cve.cve_blockers",
+			"effective_on": "2022-03-26T00:00:00Z", # 2022-03-26 + 10 days = 2022-04-05
+			"msg": "Found 2 CVE vulnerabilities of high security level",
+			"term": "high",
+		},
+		{
+			"code": "cve.unpatched_cve_blockers",
+			"effective_on": lib_time.default_effective_on,
+			"msg": "Found 6 unpatched CVE vulnerabilities of critical security level",
+			"term": "critical",
+		},
+		{
+			"code": "cve.unpatched_cve_blockers",
+			"effective_on": "2022-03-26T00:00:00Z", # 2022-03-26 + 10 days = 2022-04-05
+			"msg": "Found 7 unpatched CVE vulnerabilities of high security level",
+			"term": "high",
+		},
+	}
 
 	# regal ignore:line-length
-	lib.assert_equal_results(cve.deny, expected_deny) with input.image.ref as "registry.io/repository/image@sha256:image_digest"
+	lib.assert_equal_results_no_collections(cve.deny, expected_deny) with input.image.ref as "registry.io/repository/image@sha256:image_digest"
 		with input.attestations as attestations
 		with ec.oci.image_manifest as _mock_image_manifest
 		with ec.oci.blob as _mock_blob
 		with data.rule_data.cve_leeway as {"critical": 9, "high": 10}
+		with data.rule_data.restrict_unpatched_cve_security_levels as ["critical", "high"]
+		with data.rule_data.warn_unpatched_cve_security_levels as []
+		with lib_time.effective_current_time_ns as time.parse_rfc3339_ns("2022-04-05T00:00:00Z")
+
+	lib.assert_empty(cve.warn) with input.image.ref as "registry.io/repository/image@sha256:image_digest"
+		with input.attestations as attestations
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+		with data.rule_data.cve_leeway as {"critical": 9, "high": 10}
+		with data.rule_data.restrict_unpatched_cve_security_levels as ["critical", "high"]
+		with data.rule_data.warn_unpatched_cve_security_levels as []
 		with lib_time.effective_current_time_ns as time.parse_rfc3339_ns("2022-04-05T00:00:00Z")
 }
 

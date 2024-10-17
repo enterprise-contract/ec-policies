@@ -1,9 +1,9 @@
-package release.provenance_materials_test
+package provenance_materials_test
 
 import rego.v1
 
 import data.lib
-import data.release.provenance_materials
+import data.provenance_materials
 
 test_all_good if {
 	tasks := [{

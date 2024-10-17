@@ -6,7 +6,7 @@
 #   This package includes policy rules to confirm that the pipeline definition
 #   includes those required tasks.
 #
-package pipeline.required_tasks
+package required_tasks
 
 import rego.v1
 

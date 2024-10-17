@@ -1,11 +1,11 @@
-package release.java_test
+package java_test
 
 import rego.v1
 
+import data.java
 import data.lib
 import data.lib.tekton_test
 import data.lib_test
-import data.release.java
 
 test_all_good if {
 	attestations := [

@@ -1,9 +1,9 @@
-package release.rpm_repos_test
+package rpm_repos_test
 
 import rego.v1
 
 import data.lib
-import data.release.rpm_repos
+import data.rpm_repos
 
 test_repo_id_data_empty if {
 	expected := {

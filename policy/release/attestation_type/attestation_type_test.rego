@@ -1,9 +1,9 @@
-package release.attestation_type_test
+package attestation_type_test
 
 import rego.v1
 
+import data.attestation_type
 import data.lib
-import data.release.attestation_type
 
 good_type := "https://in-toto.io/Statement/v0.1"
 

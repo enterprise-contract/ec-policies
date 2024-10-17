@@ -5,7 +5,7 @@
 #   Policies to verify that a Tekton task definition conforms to the expected conventions required
 #   for using Trusted Artifacts.
 #
-package task.trusted_artifacts
+package trusted_artifacts
 
 import rego.v1
 

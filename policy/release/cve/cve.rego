@@ -6,7 +6,7 @@
 #   the build pipeline, and that the image under test does not contain CVEs
 #   of certain security levels.
 #
-package release.cve
+package cve
 
 import rego.v1
 

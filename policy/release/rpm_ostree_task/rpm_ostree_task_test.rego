@@ -1,9 +1,9 @@
-package release.rpm_ostree_task_test
+package rpm_ostree_task_test
 
 import rego.v1
 
 import data.lib
-import data.release.rpm_ostree_task
+import data.rpm_ostree_task
 
 test_success if {
 	slsa_v02_attestation := {"statement": {"predicate": {

@@ -5,7 +5,7 @@
 #   This package defines rules to confirm that all RPM packages listed
 #   in SBOMs specify a known and permitted repository id.
 #
-package release.rpm_repos
+package rpm_repos
 
 import rego.v1
 

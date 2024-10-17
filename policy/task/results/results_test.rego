@@ -1,9 +1,9 @@
-package task.results_test
+package results_test
 
 import rego.v1
 
 import data.lib
-import data.task.results
+import data.results
 
 test_all_good if {
 	lib.assert_empty(results.deny) with input as _mock_task

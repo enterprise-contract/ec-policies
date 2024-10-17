@@ -1,9 +1,9 @@
-package task.trusted_artifacts_test
+package trusted_artifacts_test
 
 import rego.v1
 
 import data.lib
-import data.task.trusted_artifacts
+import data.trusted_artifacts
 
 test_all_good if {
 	lib.assert_empty(trusted_artifacts.deny) with input as _task

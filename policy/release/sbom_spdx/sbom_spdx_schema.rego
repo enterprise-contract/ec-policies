@@ -1,4 +1,4 @@
-package release.sbom_spdx
+package sbom_spdx
 
 import rego.v1
 

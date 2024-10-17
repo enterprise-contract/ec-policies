@@ -5,7 +5,7 @@
 #   Checks general properties of the SBOMs associated with the image being validated. More specific
 #   rules for SPDX and CycloneDX SBOMs are in separate packages.
 #
-package release.sbom
+package sbom
 
 import rego.v1
 

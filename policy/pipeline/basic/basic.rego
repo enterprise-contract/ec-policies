@@ -4,7 +4,7 @@
 # description: >-
 #   Policies to confirm the Tekton Pipeline definition has the expected kind.
 #
-package pipeline.basic
+package basic
 
 import rego.v1
 

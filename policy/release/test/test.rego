@@ -6,7 +6,7 @@
 #   to a set of tests and that those tests all passed. This package
 #   includes a set of rules to verify that.
 #
-package release.test
+package test
 
 import rego.v1
 

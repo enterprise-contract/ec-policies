@@ -4,30 +4,29 @@
 
 These rules are applied to Tekton build task definitions.
 
-[#labels_package]
-== link:#labels_package[Tekton task build type label checks]
+[#build_labels_package]
+== link:#build_labels_package[Tekton task build type label checks]
 
 Policies to verify that a Tekton build task definition has the required build type label.
 
-* Package name: `labels`
-* Package full path: `build_task.labels`
+* Package name: `build_labels`
 
-[#labels__build_type_label_set]
-=== link:#labels__build_type_label_set[Build task has build type label]
+[#build_labels__build_type_label_set]
+=== link:#build_labels__build_type_label_set[Build task has build type label]
 
 Confirm the build task definition has the required build type label.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The required build label '%s' is missing`
-* Code: `labels.build_type_label_set`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/build_task/labels/labels.rego#L17[Source, window="_blank"]
+* Code: `build_labels.build_type_label_set`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/build_task/build_labels/build_labels.rego#L17[Source, window="_blank"]
 
-[#labels__build_task_has_label]
-=== link:#labels__build_task_has_label[Build task has label]
+[#build_labels__build_task_has_label]
+=== link:#build_labels__build_task_has_label[Build task has label]
 
 Confirm that the build task definition includes at least one label.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The task definition does not include any labels`
-* Code: `labels.build_task_has_label`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/build_task/labels/labels.rego#L30[Source, window="_blank"]
+* Code: `build_labels.build_task_has_label`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/build_task/build_labels/build_labels.rego#L30[Source, window="_blank"]

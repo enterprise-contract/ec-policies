@@ -10,7 +10,7 @@
 #   The list can be extended or customized using the `trusted_tasks` rule data key which is merged
 #   into the `trusted_tasks` data.
 #
-package release.trusted_task
+package trusted_task
 
 import rego.v1
 

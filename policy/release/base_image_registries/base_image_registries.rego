@@ -5,7 +5,7 @@
 #   This package is responsible for verifying the base (parent) images
 #   reported in the SLSA Provenace or the SBOM are allowed.
 #
-package release.base_image_registries
+package base_image_registries
 
 import rego.v1
 

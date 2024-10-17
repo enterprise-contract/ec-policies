@@ -5,7 +5,7 @@
 #   This package is responsible for verifying the rpm-ostree Tekton Task was executed with the
 #   expected parameters.
 #
-package release.rpm_ostree_task
+package rpm_ostree_task
 
 import rego.v1
 

@@ -1,9 +1,9 @@
-package release.trusted_task_test
+package trusted_task_test
 
 import rego.v1
 
 import data.lib
-import data.release.trusted_task
+import data.trusted_task
 
 test_success if {
 	att_no_ta := {"statement": {"predicate": {

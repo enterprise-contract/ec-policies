@@ -10,7 +10,7 @@
 #   bundles, and that the task bundles are from the list of known
 #   and trusted bundles.
 #
-package pipeline.task_bundle
+package task_bundle
 
 import rego.v1
 

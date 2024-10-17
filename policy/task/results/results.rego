@@ -3,7 +3,7 @@
 # title: Tekton Task result
 # description: Verify Tekton Task definitions provide expected results.
 #
-package task.results
+package results
 
 import rego.v1
 

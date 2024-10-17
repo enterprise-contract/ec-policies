@@ -5,7 +5,7 @@
 #   This package provides rules for verifying the contents of the materials section
 #   of the SLSA Provenance attestation.
 #
-package release.provenance_materials
+package provenance_materials
 
 import rego.v1
 

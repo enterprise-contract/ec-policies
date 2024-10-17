@@ -1,11 +1,11 @@
-package release.test_test
+package test_test
 
 import rego.v1
 
 import data.lib
 import data.lib.tekton_test
 import data.lib_test
-import data.release.test
+import data.test
 
 # Because TEST_OUTPUT isn't in the task results, the lib.results_from_tests will be empty
 test_needs_non_empty_data if {

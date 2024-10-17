@@ -1,9 +1,9 @@
-package release.rhtap_jenkins_test
+package rhtap_jenkins_test
 
 import rego.v1
 
 import data.lib
-import data.release.rhtap_jenkins
+import data.rhtap_jenkins
 
 test_jenkins_atts_happy_path if {
 	lib.assert_empty(rhtap_jenkins.deny) with input.attestations as [good_att]

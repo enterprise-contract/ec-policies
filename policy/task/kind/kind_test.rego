@@ -1,9 +1,9 @@
-package task.kind_test
+package kind_test
 
 import rego.v1
 
+import data.kind
 import data.lib
-import data.task.kind
 
 test_unexpected_kind if {
 	lib.assert_equal_results(kind.deny, {{

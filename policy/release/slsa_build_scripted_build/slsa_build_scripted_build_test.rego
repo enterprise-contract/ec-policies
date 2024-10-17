@@ -1,9 +1,9 @@
-package release.slsa_build_scripted_build_test
+package slsa_build_scripted_build_test
 
 import rego.v1
 
 import data.lib
-import data.release.slsa_build_scripted_build
+import data.slsa_build_scripted_build
 
 mock_bundle_digest := "sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
 

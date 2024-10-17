@@ -1,9 +1,9 @@
-package pipeline.basic_test
+package basic_test
 
 import rego.v1
 
+import data.basic
 import data.lib
-import data.pipeline.basic
 
 test_unexpected_kind if {
 	lib.assert_equal_results(basic.deny, {{

@@ -10,7 +10,7 @@
 #   bundles, and that the task bundles used are from the list of known
 #   and trusted bundles.
 #
-package release.attestation_task_bundle
+package attestation_task_bundle
 
 import rego.v1
 

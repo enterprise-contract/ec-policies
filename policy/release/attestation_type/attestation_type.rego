@@ -4,7 +4,7 @@
 # description: >-
 #   Sanity checks related to the format of the image build's attestation.
 #
-package release.attestation_type
+package attestation_type
 
 import rego.v1
 

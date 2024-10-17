@@ -23,7 +23,7 @@
 #   required task definition for each parameter seperately.
 #
 #
-package release.tasks
+package tasks
 
 import rego.v1
 

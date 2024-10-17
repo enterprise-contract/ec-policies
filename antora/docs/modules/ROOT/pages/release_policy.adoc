@@ -203,6 +203,14 @@ Rules included:
 * xref:release_policy.adoc#rpm_ostree_task__builder_image_param[rpm-ostree Task: Builder image parameter]
 * xref:release_policy.adoc#rpm_ostree_task__rule_data[rpm-ostree Task: Rule data]
 
+| [#rhtap-jenkins]`rhtap-jenkins`
+a| A set of policy rules to validate artifacts built using RHTAP Jenkins pipelines.
+
+Rules included:
+
+* xref:release_policy.adoc#rhtap_jenkins__invocation_id_found[RHTAP Jenkins: RHTAP Jenkins SLSA Invocation ID present]
+* xref:release_policy.adoc#rhtap_jenkins__attestation_found[RHTAP Jenkins: RHTAP Jenkins SLSA Provenance Attestation Found]
+
 | [#slsa3]`slsa3`
 a| Includes policy rules required to meet SLSA Level 3.
 
@@ -233,7 +241,6 @@ Rules included:
 Sanity checks related to the format of the image build's attestation.
 
 * Package name: `attestation_type`
-* Package full path: `release.attestation_type`
 
 [#attestation_type__deprecated_policy_attestation_format]
 === link:#attestation_type__deprecated_policy_attestation_format[Deprecated policy attestation format]
@@ -290,7 +297,6 @@ Confirm at least one PipelineRun attestation is present.
 This package is responsible for verifying the base (parent) images reported in the SLSA Provenace or the SBOM are allowed.
 
 * Package name: `base_image_registries`
-* Package full path: `release.base_image_registries`
 
 [#base_image_registries__allowed_registries_provided]
 === link:#base_image_registries__allowed_registries_provided[Allowed base image registry prefixes list was provided]
@@ -334,7 +340,6 @@ Verify the expected information was provided about which base images were used d
 This package is responsible for verifying the buildah build task
 
 * Package name: `buildah_build_task`
-* Package full path: `release.buildah_build_task`
 
 [#buildah_build_task__add_capabilities_param]
 === link:#buildah_build_task__add_capabilities_param[ADD_CAPABILITIES parameter]
@@ -390,7 +395,6 @@ Confirm the `disallowed_platform_patterns` rule data, if provided matches the ex
 This package is responsible for verifying a CVE scan was performed during the build pipeline, and that the image under test does not contain CVEs of certain security levels.
 
 * Package name: `cve`
-* Package full path: `release.cve`
 
 [#cve__cve_blockers]
 === link:#cve__cve_blockers[Blocking CVE check]
@@ -482,7 +486,6 @@ Confirm the expected rule data keys have been provided in the expected format. T
 Verify the attribute .predicate.buildDefinition.externalParameters of a SLSA Provenance v1.0 matches the expectation.
 
 * Package name: `external_parameters`
-* Package full path: `release.external_parameters`
 
 [#external_parameters__pipeline_run_params]
 === link:#external_parameters__pipeline_run_params[Pipeline run params]
@@ -522,7 +525,6 @@ Verify the PipelineRun did not use any pre-existing PersistentVolumeClaim worksp
 Verify attributes on the certificate involved in the image signature when using slsa-github-generator on GitHub Actions with Sigstore Fulcio
 
 * Package name: `github_certificate`
-* Package full path: `release.github_certificate`
 
 [#github_certificate__gh_workflow_extensions]
 === link:#github_certificate__gh_workflow_extensions[GitHub Workflow Certificate Extensions]
@@ -592,7 +594,6 @@ Confirm the expected rule data keys have been provided in the expected format. T
 This package verifies the build task in the attestation was invoked with the expected parameters to perform a hermetic build.
 
 * Package name: `hermetic_build_task`
-* Package full path: `release.hermetic_build_task`
 
 [#hermetic_build_task__build_task_hermetic]
 === link:#hermetic_build_task__build_task_hermetic[Build task called with hermetic param set]
@@ -612,7 +613,6 @@ Verify the build task in the PipelineRun attestation was invoked with the proper
 This package contains a rule to confirm that all Java dependencies were rebuilt in house rather than imported directly from potentially untrusted respositories. If the result is missing no violation is reported. The rules depend on the configuration under the key 'allowed_java_component_sources', the key lists all component sources that are allowed by the policy. The values of the list can be 'rebuilt' for dependencies that have been explicitly built from sources, or the name of the Maven repository names where the dependency artifact was retrieved from. The Maven repositories are configured using the 'JBSConfig' custom resources. Default configuration in Konflux currently includes Maven repositories with names : 'jboss', 'confluent', 'redhat', 'jitpack' and 'gradle'.
 
 * Package name: `java`
-* Package full path: `release.java`
 
 [#java__no_foreign_dependencies]
 === link:#java__no_foreign_dependencies[Java builds have no foreign dependencies]
@@ -644,7 +644,6 @@ Confirm the `allowed_java_component_sources` rule data was provided, since it's 
 Check if the image has the expected labels set. The rules in this package distinguish file-based catalog (FBC) images from all other images. When checking an FBC image, a policy rule may use a different set of rule data. An FBC image is detected by the presence of the operators.operatorframework.io.index.configs.v1 label.
 
 * Package name: `labels`
-* Package full path: `release.labels`
 
 [#labels__deprecated_labels]
 === link:#labels__deprecated_labels[Deprecated labels]
@@ -760,7 +759,6 @@ Confirm the expected rule data keys have been provided in the expected format. T
 Checks for Operator Lifecycle Manager (OLM) bundles.
 
 * Package name: `olm`
-* Package full path: `release.olm`
 
 [#olm__csv_semver_format]
 === link:#olm__csv_semver_format[ClusterServiceVersion semver format]
@@ -879,7 +877,6 @@ Check the input snapshot for the presence of unpinned image references. Unpinned
 This package provides rules for verifying the contents of the materials section of the SLSA Provenance attestation.
 
 * Package name: `provenance_materials`
-* Package full path: `release.provenance_materials`
 
 [#provenance_materials__git_clone_source_matches_provenance]
 === link:#provenance_materials__git_clone_source_matches_provenance[Git clone source matches materials provenance]
@@ -911,7 +908,6 @@ Confirm that the attestation contains a git-clone task with `commit` and `url` t
 Policies to prevent releasing an image to quay that has a quay expiration date. In Konflux images with an expiration date are produced by "on-pr" build pipelines, i.e. pre-merge CI builds, so this is intended to prevent accidentally releasing a CI build.
 
 * Package name: `quay_expiration`
-* Package full path: `release.quay_expiration`
 
 [#quay_expiration__expires_label]
 === link:#quay_expiration__expires_label[Expires label]
@@ -931,7 +927,6 @@ Check the image metadata for the presence of a "quay.expires-after" label. If it
 Some initial checks for images built using an RHTAP Jenkins build pipeline. Note that the RHTAP Jenkins pipeline is WIP currently, but will be shipped in an upcoming release of RHTAP. It's expected more useful checks will be added in future. RHTAP Jenkins pipelines are defined under https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
 
 * Package name: `rhtap_jenkins`
-* Package full path: `release.rhtap_jenkins`
 
 [#rhtap_jenkins__invocation_id_found]
 === link:#rhtap_jenkins__invocation_id_found[RHTAP Jenkins SLSA Invocation ID present]
@@ -963,7 +958,6 @@ Verify an attestation created by the RHTAP Jenkins build pipeline is present.
 This package defines rules to confirm that all RPM packages listed in SBOMs specify a known and permitted repository id.
 
 * Package name: `rpm_repos`
-* Package full path: `release.rpm_repos`
 
 [#rpm_repos__ids_known]
 === link:#rpm_repos__ids_known[All rpms have known repo ids]
@@ -996,7 +990,6 @@ A list of known and permitted repository ids should be available in the rule dat
 This package provides rules for verifying the signatures of RPMs identified in the the SLSA Provenance attestation.
 
 * Package name: `rpm_signature`
-* Package full path: `release.rpm_signature`
 
 [#rpm_signature__allowed]
 === link:#rpm_signature__allowed[Allowed RPM signature key]
@@ -1039,7 +1032,6 @@ Confirm the expected `allowed_rpm_signature_keys` rule data key has been provide
 Checks general properties of the SBOMs associated with the image being validated. More specific rules for SPDX and CycloneDX SBOMs are in separate packages.
 
 * Package name: `sbom`
-* Package full path: `release.sbom`
 
 [#sbom__disallowed_packages_provided]
 === link:#sbom__disallowed_packages_provided[Disallowed packages list is provided]
@@ -1071,7 +1063,6 @@ Confirm an SBOM attestation exists.
 Checks different properties of the CycloneDX SBOMs associated with the image being validated. The SBOMs are read from multiple locations: a file within the image, and a CycloneDX SBOM attestation.
 
 * Package name: `sbom_cyclonedx`
-* Package full path: `release.sbom_cyclonedx`
 
 [#sbom_cyclonedx__allowed]
 === link:#sbom_cyclonedx__allowed[Allowed]
@@ -1143,7 +1134,6 @@ The SLSA requirement states the following:
 This package verifies the requirement by asserting the image was built by Tekton Pipelines.
 
 * Package name: `slsa_build_build_service`
-* Package full path: `release.slsa_build_build_service`
 
 [#slsa_build_build_service__allowed_builder_ids_provided]
 === link:#slsa_build_build_service__allowed_builder_ids_provided[Allowed builder IDs provided]
@@ -1187,7 +1177,6 @@ The SLSA requirement states the following:
 This package verifies the requirement by asserting the image was built by Tekton Pipelines.
 
 * Package name: `slsa_build_scripted_build`
-* Package full path: `release.slsa_build_scripted_build`
 
 [#slsa_build_scripted_build__build_script_used]
 === link:#slsa_build_scripted_build__build_script_used[Build task contains steps]
@@ -1245,7 +1234,6 @@ The SLSA Provenance Available requirement states the following:
 This package only accepts the in-toto SLSA Provenance format.
 
 * Package name: `slsa_provenance_available`
-* Package full path: `release.slsa_provenance_available`
 
 [#slsa_provenance_available__allowed_predicate_types_provided]
 === link:#slsa_provenance_available__allowed_predicate_types_provided[Allowed predicate types provided]
@@ -1290,7 +1278,6 @@ Most popular version control system meet this requirement, such as git, Mercuria
 This package verifies the requirement by asserting the image was built from a git repository.
 
 * Package name: `slsa_source_version_controlled`
-* Package full path: `release.slsa_source_version_controlled`
 
 [#slsa_source_version_controlled__materials_uri_is_git_repo]
 === link:#slsa_source_version_controlled__materials_uri_is_git_repo[Material uri is a git repo]
@@ -1336,7 +1323,6 @@ SLSA v1 verification model states:
 This package correlates the provided source code reference with the source code referenced in the attestation.
 
 * Package name: `slsa_source_correlated`
-* Package full path: `release.slsa_source_correlated`
 
 [#slsa_source_correlated__expected_source_code_reference]
 === link:#slsa_source_correlated__expected_source_code_reference[Expected source code reference]
@@ -1390,7 +1376,6 @@ Attestation contains source reference.
 Checks different properties of the CycloneDX SBOMs associated with the image being validated. The SBOMs are read from multiple locations: a file within the image, and a CycloneDX SBOM attestation.
 
 * Package name: `sbom_spdx`
-* Package full path: `release.sbom_spdx`
 
 [#sbom_spdx__allowed]
 === link:#sbom_spdx__allowed[Allowed]
@@ -1483,7 +1468,6 @@ Check the SPDX SBOM has the expected format. It verifies the SPDX SBOM matches t
 Rules that verify the current date conform to a given schedule.
 
 * Package name: `schedule`
-* Package full path: `release.schedule`
 
 [#schedule__date_restriction]
 === link:#schedule__date_restriction[Date Restriction]
@@ -1527,7 +1511,6 @@ Check if the current weekday is allowed based on the rule data value from the ke
 This package is reponsible for verifying the source container image associated with the image being validated.
 
 * Package name: `source_image`
-* Package full path: `release.source_image`
 
 [#source_image__exists]
 === link:#source_image__exists[Exists]
@@ -1557,7 +1540,6 @@ Verify the source container image is signed.
 To be able to reproduce and audit builds accurately it's important to know exactly what happened during the build. To do this Enterprise Contract requires that all tasks are defined in a set of known and trusted task bundles. This package includes rules to confirm that the tasks that built the image were defined in task bundles, and that the task bundles used are from the list of known and trusted bundles.
 
 * Package name: `attestation_task_bundle`
-* Package full path: `release.attestation_task_bundle`
 
 [#attestation_task_bundle__trusted_bundles_provided]
 === link:#attestation_task_bundle__trusted_bundles_provided[A trusted Tekton bundles list was provided]
@@ -1635,7 +1617,6 @@ Check for the existence of a task bundle. This rule will fail if the task is not
 Enterprise Contract expects that a set of tasks were included in the pipeline build for each image to be released. This package includes a set of rules to verify that the expected tasks ran in the pipeline when the image was built. Required tasks for a pipeline are specified in a data source provided at runtime. This data source features two primary rule data keys: pipeline-required-tasks and required-tasks. The pipeline-required-tasks key lists all required tasks broken down by pipeline name, while required-tasks details a default or baseline set of tasks. If your pipeline corresponds to an entry under pipeline-required-tasks, those tasks will be prioritized; otherwise, the system will default to the tasks listed under required-tasks. Required tasks are listed by the names given to them within the task definition. Optionally invocation parameter of a Task can be also mandated by including the name and the value in square brackets following the name of the task. For example: name[PARAM=val]. Only single parameter is supported, to assert multiple parameters repeat the required task definition for each parameter seperately.
 
 * Package name: `tasks`
-* Package full path: `release.tasks`
 
 [#tasks__required_untrusted_task_found]
 === link:#tasks__required_untrusted_task_found[All required tasks are from trusted tasks]
@@ -1761,7 +1742,6 @@ The Tekton Task used is or will be unsupported. The Task is annotated with `buil
 Enterprise Contract requires that each build was subjected to a set of tests and that those tests all passed. This package includes a set of rules to verify that.
 
 * Package name: `test`
-* Package full path: `release.test`
 
 [#test__test_all_images]
 === link:#test__test_all_images[Image digest is present in IMAGES_PROCESSED result]
@@ -1891,7 +1871,6 @@ Each test result is expected to have a `results` key. Verify that the `results` 
 This package is used to verify all the Tekton Tasks involved in building the image are trusted. Trust is established by comparing the Task references found in the SLSA Provenance with a pre-defined list of trusted Tasks, which is expected to be provided as a data source that creates the `data.trusted_tasks` in the format demonstrated at https://github.com/enterprise-contract/ec-policies/blob/main/example/data/trusted_tekton_tasks.yml. The list can be extended or customized using the `trusted_tasks` rule data key which is merged into the `trusted_tasks` data.
 
 * Package name: `trusted_task`
-* Package full path: `release.trusted_task`
 
 [#trusted_task__data_format]
 === link:#trusted_task__data_format[Data format]
@@ -1988,7 +1967,6 @@ Confirm certain parameters provided to each builder Task have come from trusted 
 This package is responsible for verifying the rpm-ostree Tekton Task was executed with the expected parameters.
 
 * Package name: `rpm_ostree_task`
-* Package full path: `release.rpm_ostree_task`
 
 [#rpm_ostree_task__builder_image_param]
 === link:#rpm_ostree_task__builder_image_param[Builder image parameter]

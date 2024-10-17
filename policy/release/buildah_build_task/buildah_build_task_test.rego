@@ -1,10 +1,10 @@
-package release.buildah_build_task_test
+package buildah_build_task_test
 
 import rego.v1
 
+import data.buildah_build_task
 import data.lib
 import data.lib.tekton_test
-import data.release.buildah_build_task
 
 test_good_dockerfile_param if {
 	attestation := _attestation("buildah", {"parameters": {"DOCKERFILE": "./Dockerfile"}}, _results)

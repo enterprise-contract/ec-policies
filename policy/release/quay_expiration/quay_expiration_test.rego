@@ -1,9 +1,9 @@
-package release.quay_expiration_test
+package quay_expiration_test
 
 import rego.v1
 
 import data.lib
-import data.release.quay_expiration
+import data.quay_expiration
 
 test_ci_pipeline if {
 	# Should not produce violations when we're in a non-release pipeline

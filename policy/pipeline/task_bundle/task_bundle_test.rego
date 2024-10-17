@@ -1,9 +1,9 @@
-package pipeline.task_bundle_test
+package task_bundle_test
 
 import rego.v1
 
 import data.lib
-import data.pipeline.task_bundle
+import data.task_bundle
 
 test_bundle_not_exists if {
 	tasks := [{"name": "my-task", "taskRef": {}}]

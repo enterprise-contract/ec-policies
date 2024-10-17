@@ -40,36 +40,15 @@ _code(chain) := code if {
 # custom.short_name must be present.
 _rule_annotations(chain) := chain[0].annotations
 
-# This is meant to match the special handling done in ec-cli, see here:
-# https://github.com/enterprise-contract/ec-cli/blob/014a488a4/internal/opa/rule/rule.go#L161-L186
 _pkg_name(rule_path) := name if {
-	# Seems to not work if I keep assigning to a single var, so
-	# that's why the many different pN vars.
-
-	# Strip off the first element which is always "data"
+	# "data" is automatically added by rego.
 	p1 := _left_strip_elements(["data"], rule_path)
 
-	# Strip off policy.release or policy.pipeline to match what ec-cli
-	# does. (There are some edge cases where the behavior is not exactly
-	# the same, but I think this version is better.)
-	p2 := _left_strip_elements(["release"], p1)
-	p3 := _left_strip_elements(["pipeline"], p2)
+	# Remove the actual rule name as that is not part of the package.
+	p2 := _right_strip_elements(["deny"], p1)
+	p3 := _right_strip_elements(["warn"], p2)
 
-	# Actually ec-cli doesn't remove these, but lots of tests in this repo
-	# assume it will be removed, so let's go with the flow for now.
-	# (We might want to revist this behavior in future.)
-	p4 := _left_strip_elements(["task"], p3)
-	p5 := _left_strip_elements(["build_task"], p4)
-
-	# Strip off "policy" no matter what
-	p6 := _left_strip_elements(["policy"], p5)
-
-	# Remove the "deny" or "warn" element
-	p7 := _right_strip_elements(["deny"], p6)
-	p8 := _right_strip_elements(["warn"], p7)
-
-	# Put it all together with dots in between
-	name := concat(".", p8)
+	name := concat(".", p3)
 }
 
 _left_strip_elements(items_to_strip, list) := new_list if {

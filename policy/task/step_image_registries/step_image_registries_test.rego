@@ -1,9 +1,9 @@
-package task.step_image_registries_test
+package step_image_registries_test
 
 import rego.v1
 
 import data.lib
-import data.task.step_image_registries
+import data.step_image_registries
 
 good_image := "registry.redhat.io/openshift-pipelines/pipelines-git-init-rhel8@sha256:af7dd5b3b"
 

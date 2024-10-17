@@ -34,7 +34,6 @@ Rules included:{{ "\n" }}
 {{ .Description }}
 
 * Package name: `{{ packageName . }}`
-* Package full path: `{{ packageFullPath . }}`
 
 {{- range .Rules }}
 

@@ -5,7 +5,7 @@
 #   Policies to verify that a Tekton build task definition has the
 #   required build type label.
 #
-package build_task.labels
+package build_labels
 
 import rego.v1
 

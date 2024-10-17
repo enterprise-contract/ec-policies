@@ -10,7 +10,6 @@ These rules are applied to Tekton task definitions.
 This package ensures that a Task definition contains expected values for the image references used by the Task's steps.
 
 * Package name: `step_image_registries`
-* Package full path: `task.step_image_registries`
 
 [#step_image_registries__step_image_registry_prefix_list_provided]
 === link:#step_image_registries__step_image_registry_prefix_list_provided[Permitted step image registry prefix list provided]
@@ -42,7 +41,6 @@ Confirm that each step in the Task uses a container image with a URL that matche
 Policies to verify that a Tekton Task definition uses well formed expected annotations .
 
 * Package name: `annotations`
-* Package full path: `task.annotations`
 
 [#annotations__expires_on_format]
 === link:#annotations__expires_on_format[Task definition uses expires-on annotation in RFC3339 format]
@@ -60,7 +58,6 @@ Make sure to use the date format in RFC3339 format in the "build.appstudio.redha
 Verify Tekton Task definitions provide expected results.
 
 * Package name: `results`
-* Package full path: `task.results`
 
 [#results__required]
 === link:#results__required[Required result defined]
@@ -90,7 +87,6 @@ Confirm the expected `required_task_results` rule data key has been provided in 
 Policies to verify that a Tekton task definition has the expected value for kind.
 
 * Package name: `kind`
-* Package full path: `task.kind`
 
 [#kind__kind_present]
 === link:#kind__kind_present[Kind field is present in task definition]
@@ -118,7 +114,6 @@ Confirm the task definition has the kind "Task".
 Policies to verify that a Tekton task definition conforms to the expected conventions required for using Trusted Artifacts.
 
 * Package name: `trusted_artifacts`
-* Package full path: `task.trusted_artifacts`
 
 [#trusted_artifacts__parameter]
 === link:#trusted_artifacts__parameter[Parameter]

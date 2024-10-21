@@ -1,9 +1,9 @@
-package release.github_certificate_test
+package github_certificate_test
 
 import rego.v1
 
+import data.github_certificate
 import data.lib
-import data.release.github_certificate
 
 test_all_good if {
 	signatures := [{"certificate": good_cert}]

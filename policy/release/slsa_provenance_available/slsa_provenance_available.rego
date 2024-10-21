@@ -10,7 +10,7 @@
 #
 #   This package only accepts the in-toto SLSA Provenance format.
 #
-package release.slsa_provenance_available
+package slsa_provenance_available
 
 import rego.v1
 

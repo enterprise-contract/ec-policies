@@ -5,7 +5,7 @@
 #   Policies to verify that a Tekton task definition has the expected
 #   value for kind.
 #
-package task.kind
+package kind
 
 import rego.v1
 

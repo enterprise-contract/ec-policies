@@ -45,9 +45,10 @@ func (d *doc) SetAnnotations(a []ast.FlatAnnotationsRefSet) {
 	for _, set := range a {
 		rules := make([]*ast.Annotations, 0, 5)
 		for _, ref := range set {
-			path := ref.GetPackage().Path.String()
-			if strings.HasPrefix(path, fmt.Sprintf("data.%s.", d.Qualifier)) {
-				if strings.Contains(path, ".collection.") {
+			pkgPath := ref.GetPackage().Path.String()
+			locationPrefix := filepath.Join("policy", d.Qualifier)
+			if strings.HasPrefix(ref.Location.File, locationPrefix) {
+				if strings.Contains(pkgPath, ".collection.") {
 					c := col{ref.Annotations, nil}
 					c.SetAnnotations(a)
 					collections = append(collections, c)
@@ -192,7 +193,6 @@ func init() {
 	funcs := template.FuncMap{
 		"anchor":           anchor,
 		"packageName":      packageName,
-		"packageFullPath":  packageFullPath,
 		"warningOrFailure": warningOrFailure,
 		"toUpper":          strings.ToUpper,
 		"toTitle":          strings.ToTitle,
@@ -207,10 +207,6 @@ func init() {
 func packageName(p *pkg) string {
 	path := p.path()
 	return path[len(path)-1]
-}
-
-func packageFullPath(p *pkg) string {
-	return strings.Join(p.path()[1:], ".")
 }
 
 func anchor(a *ast.Annotations) string {

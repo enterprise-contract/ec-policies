@@ -1,9 +1,9 @@
-package pipeline.required_tasks_test
+package required_tasks_test
 
 import rego.v1
 
 import data.lib
-import data.pipeline.required_tasks
+import data.required_tasks
 
 test_required_tasks_met if {
 	pipeline := _pipeline_with_tasks_and_label(_expected_required_tasks, [], [])

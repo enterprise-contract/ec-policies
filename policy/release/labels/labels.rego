@@ -8,7 +8,7 @@
 #   An FBC image is detected by the presence of the
 #   operators.operatorframework.io.index.configs.v1 label.
 #
-package release.labels
+package labels
 
 import rego.v1
 

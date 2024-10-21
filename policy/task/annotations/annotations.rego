@@ -5,7 +5,7 @@
 #   Policies to verify that a Tekton Task definition uses well formed expected
 #   annotations .
 #
-package task.annotations
+package annotations
 
 import rego.v1
 

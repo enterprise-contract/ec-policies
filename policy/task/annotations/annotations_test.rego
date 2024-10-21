@@ -1,9 +1,9 @@
-package task.annotations_test
+package annotations_test
 
 import rego.v1
 
+import data.annotations
 import data.lib
-import data.task.annotations
 
 test_valid_expiry_dates if {
 	# regal ignore:line-length

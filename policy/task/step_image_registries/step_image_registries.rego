@@ -5,7 +5,7 @@
 #   This package ensures that a Task definition contains expected values for the image references
 #   used by the Task's steps.
 #
-package task.step_image_registries
+package step_image_registries
 
 import rego.v1
 

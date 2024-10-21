@@ -1,9 +1,9 @@
-package release.source_image_test
+package source_image_test
 
 import rego.v1
 
 import data.lib
-import data.release.source_image
+import data.source_image
 
 test_success if {
 	_mock_digest_nl := sprintf("%s\n", [_mock_digest])

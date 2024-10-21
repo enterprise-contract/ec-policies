@@ -1,11 +1,11 @@
-package release.attestation_task_bundle_test
+package attestation_task_bundle_test
 
 import rego.v1
 
+import data.attestation_task_bundle
 import data.lib
 import data.lib.tekton_test
 import data.lib_test
-import data.release.attestation_task_bundle
 
 mock_data(task) := {"statement": {"predicate": {
 	"buildConfig": {"tasks": [task]},

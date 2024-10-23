@@ -28,12 +28,12 @@ test_cyclonedx_sboms if {
 				{
 					"name": "IMAGE_DIGEST",
 					"type": "string",
-					"value": "sha256:f0cacc1a",
+					"value": "sha256:284e3029",
 				},
 				{
 					"name": "IMAGE_URL",
 					"type": "string",
-					"value": "registry.io/repository/image@sha256:baadf00d",
+					"value": "registry.io/repository/image:latest",
 				},
 				{
 					"name": "SBOM_BLOB_URL",
@@ -66,12 +66,12 @@ test_spdx_sboms if {
 				{
 					"name": "IMAGE_DIGEST",
 					"type": "string",
-					"value": "sha256:f0cacc1a",
+					"value": "sha256:284e3029",
 				},
 				{
 					"name": "IMAGE_URL",
 					"type": "string",
-					"value": "registry.io/repository/image@sha256:baadf00d",
+					"value": "registry.io/repository/image:latest",
 				},
 				{
 					"name": "SBOM_BLOB_URL",
@@ -118,13 +118,62 @@ test_cyclonedx_sboms_fallback_live_fetch if {
 		with ec.oci.image_files as mock_ec_oci_image_files(sbom._sbom_cyclonedx_image_path)
 }
 
-test_spdx_sboms_fallback__no_live_fetch if {
+test_spdx_sboms_fallback_no_live_fetch if {
 	image := json.remove(_spdx_image, ["files"])
 	expected := []
 	lib.assert_equal(sbom.spdx_sboms, expected) with input.attestations as []
 		with input.image as image
 		with ec.oci.blob as mock_ec_oci_spdx_blob
 		with ec.oci.image_files as mock_ec_oci_image_files(sbom._sbom_spdx_image_path)
+}
+
+test_ignore_unrelated_sboms if {
+	attestations := [
+		{"statement": {"predicate": {
+			"buildType": lib.tekton_pipeline_run,
+			"buildConfig": {"tasks": [{"results": [
+				{
+					"name": "IMAGE_DIGEST",
+					"type": "string",
+					"value": "sha256:0000000",
+				},
+				{
+					"name": "IMAGE_URL",
+					"type": "string",
+					"value": "registry.io/repository/image:latest",
+				},
+				{
+					"name": "SBOM_BLOB_URL",
+					"type": "string",
+					"value": "registry.io/repository/image@sha256:f0cacc1a",
+				},
+			]}]},
+		}}},
+		{"statement": {"predicate": {
+			"buildType": lib.tekton_pipeline_run,
+			"buildConfig": {"tasks": [{"results": [
+				{
+					"name": "IMAGE_DIGEST",
+					"type": "string",
+					"value": "sha256:1111111",
+				},
+				{
+					"name": "IMAGE_URL",
+					"type": "string",
+					"value": "registry.io/repository/image:latest",
+				},
+				{
+					"name": "SBOM_BLOB_URL",
+					"type": "string",
+					"value": "registry.io/repository/image@sha256:f0cacc1b",
+				},
+			]}]},
+		}}},
+	]
+
+	lib.assert_equal(sbom.all_sboms, []) with input.attestations as attestations
+		with input.image as {"ref": "registry.io/repository/image@sha256:284e3029"}
+		with ec.oci.blob as ""
 }
 
 mock_ec_oci_cyclonedx_blob := `{"sbom": "from oci blob", "bomFormat": "CycloneDX"}`

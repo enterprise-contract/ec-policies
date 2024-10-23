@@ -1,6 +1,7 @@
 package lib.sbom
 
 import data.lib
+import data.lib.image
 import data.lib.tekton
 import rego.v1
 
@@ -64,6 +65,12 @@ _spdx_sboms_from_oci := [sbom |
 _fetch_oci_sbom := [sbom |
 	some attestation in lib.pipelinerun_attestations
 	some task in tekton.build_tasks(attestation)
+
+	# For multi-platform images, the same SLSA Provenance may describe all the platform specific
+	# images. Each will have its own SBOM. Only select the SBOM for the image being evaluated.
+	expected_image_digest := image.parse(input.image.ref).digest
+	image_digest := tekton.task_result(task, "IMAGE_DIGEST")
+	expected_image_digest == image_digest
 
 	blob_ref := tekton.task_result(task, "SBOM_BLOB_URL")
 	blob := ec.oci.blob(blob_ref)

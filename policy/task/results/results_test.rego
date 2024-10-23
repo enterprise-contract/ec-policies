@@ -117,24 +117,29 @@ test_rule_data_provided if {
 		{
 			"code": "results.rule_data_provided",
 			"msg": "Rule data required_task_results has unexpected format: 0: Invalid type. Expected: object, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "results.rule_data_provided",
 			"msg": "Rule data required_task_results has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "results.rule_data_provided",
 			"msg": "Rule data required_task_results has unexpected format: 3: Additional property foo is not allowed",
+			"severity": "warning",
 		},
 		{
 			"code": "results.rule_data_provided",
 			# regal ignore:line-length
 			"msg": "Rule data required_task_results has unexpected format: 4.task: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "results.rule_data_provided",
 			# regal ignore:line-length
 			"msg": "Rule data required_task_results has unexpected format: 5.result: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 	}
 

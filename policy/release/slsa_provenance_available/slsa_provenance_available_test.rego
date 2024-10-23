@@ -32,10 +32,12 @@ test_rule_data_format if {
 		{
 			"code": "slsa_provenance_available.allowed_predicate_types_provided",
 			"msg": "Rule data allowed_predicate_types has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "slsa_provenance_available.allowed_predicate_types_provided",
 			"msg": "Rule data allowed_predicate_types has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 	}
 

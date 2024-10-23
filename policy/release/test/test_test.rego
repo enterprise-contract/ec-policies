@@ -502,39 +502,47 @@ test_rule_data_provided if {
 		{
 			"code": "test.rule_data_provided",
 			# regal ignore:line-length
-			"msg": "Rule data erred_tests_results has unexpected format: 0: 0 must be one of the following: \"SUCCESS\", \"FAILURE\", \"WARNING\", \"SKIPPED\", \"ERROR\"",
+			"msg": `Rule data erred_tests_results has unexpected format: 0: 0 must be one of the following: "SUCCESS", "FAILURE", "WARNING", "SKIPPED", "ERROR"`,
+			"severity": "failure",
 		},
 		{
 			"code": "test.rule_data_provided",
 			# regal ignore:line-length
-			"msg": "Rule data failed_tests_results has unexpected format: 0: 0 must be one of the following: \"SUCCESS\", \"FAILURE\", \"WARNING\", \"SKIPPED\", \"ERROR\"",
+			"msg": `Rule data failed_tests_results has unexpected format: 0: 0 must be one of the following: "SUCCESS", "FAILURE", "WARNING", "SKIPPED", "ERROR"`,
+			"severity": "failure",
 		},
 		{
 			"code": "test.rule_data_provided",
 			"msg": "Rule data informative_tests has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "test.rule_data_provided",
 			"msg": "Rule data informative_tests has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "test.rule_data_provided",
 			# regal ignore:line-length
-			"msg": "Rule data skipped_tests_results has unexpected format: 0: 0 must be one of the following: \"SUCCESS\", \"FAILURE\", \"WARNING\", \"SKIPPED\", \"ERROR\"",
+			"msg": `Rule data skipped_tests_results has unexpected format: 0: 0 must be one of the following: "SUCCESS", "FAILURE", "WARNING", "SKIPPED", "ERROR"`,
+			"severity": "failure",
 		},
 		{
 			"code": "test.rule_data_provided",
 			"msg": "Rule data supported_tests_results has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "test.rule_data_provided",
 			# regal ignore:line-length
-			"msg": "Rule data supported_tests_results has unexpected format: 0: 0 must be one of the following: \"SUCCESS\", \"FAILURE\", \"WARNING\", \"SKIPPED\", \"ERROR\"",
+			"msg": `Rule data supported_tests_results has unexpected format: 0: 0 must be one of the following: "SUCCESS", "FAILURE", "WARNING", "SKIPPED", "ERROR"`,
+			"severity": "failure",
 		},
 		{
 			"code": "test.rule_data_provided",
 			# regal ignore:line-length
-			"msg": "Rule data warned_tests_results has unexpected format: 0: 0 must be one of the following: \"SUCCESS\", \"FAILURE\", \"WARNING\", \"SKIPPED\", \"ERROR\"",
+			"msg": `Rule data warned_tests_results has unexpected format: 0: 0 must be one of the following: "SUCCESS", "FAILURE", "WARNING", "SKIPPED", "ERROR"`,
+			"severity": "failure",
 		},
 	}
 

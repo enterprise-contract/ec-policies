@@ -163,45 +163,54 @@ test_rule_data_failures if {
 			"code": "rpm_ostree_task.rule_data",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_rpm_ostree_builder_image_prefixes has unexpected format: 0: Invalid type. Expected: object, given: array",
+			"severity": "failure",
 		},
 		{
 			"code": "rpm_ostree_task.rule_data",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_rpm_ostree_builder_image_prefixes has unexpected format: 0: Must validate at least one schema (anyOf)",
+			"severity": "failure",
 		},
 		{
 			"code": "rpm_ostree_task.rule_data",
 			"msg": "Rule data allowed_rpm_ostree_builder_image_prefixes has unexpected format: 1: value is required",
+			"severity": "failure",
 		},
 		{
 			"code": "rpm_ostree_task.rule_data",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_rpm_ostree_builder_image_prefixes has unexpected format: 1: Must validate at least one schema (anyOf)",
+			"severity": "failure",
 		},
 		{
 			"code": "rpm_ostree_task.rule_data",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_rpm_ostree_builder_image_prefixes has unexpected format: 2: Additional property spam is not allowed",
+			"severity": "warning",
 		},
 		{
 			"code": "rpm_ostree_task.rule_data",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_rpm_ostree_builder_image_prefixes has unexpected format: 2: Must validate at least one schema (anyOf)",
+			"severity": "failure",
 		},
 		{
 			"code": "rpm_ostree_task.rule_data",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_rpm_ostree_builder_image_prefixes has unexpected format: 3.expires_on: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "rpm_ostree_task.rule_data",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_rpm_ostree_builder_image_prefixes has unexpected format: 3.value: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "rpm_ostree_task.rule_data",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_rpm_ostree_builder_image_prefixes has unexpected format: 3: Must validate at least one schema (anyOf)",
+			"severity": "failure",
 		},
 	}
 

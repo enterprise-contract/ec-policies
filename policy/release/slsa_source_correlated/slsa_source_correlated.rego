@@ -15,6 +15,7 @@ package slsa_source_correlated
 import rego.v1
 
 import data.lib
+import data.lib.json as j
 
 # opa fmt will transform "\u0000" into "\x00" which subsequently can't be parsed
 # by OPA, see https://github.com/open-policy-agent/opa/issues/6220
@@ -118,8 +119,8 @@ deny contains result if {
 #   - redhat
 #   - policy_data
 deny contains result if {
-	some error in _rule_data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	some e in _rule_data_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
 _refs(expected_vcs_uri, expected_revision) := {
@@ -210,20 +211,20 @@ _source_references contains ref if {
 	ref := sprintf("%s@%s:%s", [dep.uri, digest_alg, dep.digest[digest_alg]])
 }
 
-_rule_data_errors contains msg if {
+_rule_data_errors contains error if {
 	some key in ["supported_vcs", "supported_digests"]
 
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(key))
-	some violation in json.match_schema(
-		value,
+	some e in j.validate_schema(
+		lib.rule_data(key),
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "array",
 			"items": {"type": "string"},
 			"uniqueItems": true,
 		},
-	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [key, violation.error])
+	)
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [key, e.message]),
+		"severity": e.severity,
+	}
 }

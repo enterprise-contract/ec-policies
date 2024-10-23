@@ -10,6 +10,7 @@ import rego.v1
 
 import data.lib
 import data.lib.image
+import data.lib.json as j
 
 manifestv1 := "operators.operatorframework.io.bundle.manifests.v1"
 
@@ -101,8 +102,8 @@ deny contains result if {
 #   effective_on: 2024-04-18T00:00:00Z
 #
 deny contains result if {
-	some error_msg in _subscriptions_errors
-	result := lib.result_helper(rego.metadata.chain(), [error_msg])
+	some e in _subscriptions_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
 # METADATA
@@ -118,8 +119,8 @@ deny contains result if {
 #   - policy_data
 #
 deny contains result if {
-	some error in _rule_data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	some e in _rule_data_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
 # METADATA
@@ -370,13 +371,10 @@ _csv_manifests contains manifest if {
 }
 
 # Verify allowed_registry_prefixes & required_olm_features_annotations are non-empty list of strings
-_rule_data_errors contains msg if {
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
+_rule_data_errors contains error if {
 	some rule_data_key in _rule_data_keys
-	value := json.marshal(lib.rule_data(rule_data_key))
-	some violation in json.match_schema(
-		value,
+	some e in j.validate_schema(
+		lib.rule_data(rule_data_key),
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "array",
@@ -384,8 +382,11 @@ _rule_data_errors contains msg if {
 			"uniqueItems": true,
 			"minItems": 1,
 		},
-	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [rule_data_key, violation.error])
+	)
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [rule_data_key, e.message]),
+		"severity": e.severity,
+	}
 }
 
 _rule_data_keys := [
@@ -393,23 +394,29 @@ _rule_data_keys := [
 	"allowed_registry_prefixes",
 ]
 
-_subscriptions_errors contains msg if {
+_subscriptions_errors contains error if {
 	some manifest in _csv_manifests
 	not manifest.metadata.annotations[_subscription_annotation]
-	msg := sprintf("Value of %s annotation is missing", [_subscription_annotation])
+	error := {
+		"message": sprintf("Value of %s annotation is missing", [_subscription_annotation]),
+		"severity": "failure",
+	}
 }
 
-_subscriptions_errors contains msg if {
+_subscriptions_errors contains error if {
 	some manifest in _csv_manifests
 	subscription := manifest.metadata.annotations[_subscription_annotation]
 	not json.is_valid(subscription)
-	msg := sprintf("Value of %s annotation is not valid JSON", [_subscription_annotation])
+	error := {
+		"message": sprintf("Value of %s annotation is not valid JSON", [_subscription_annotation]),
+		"severity": "failure",
+	}
 }
 
-_subscriptions_errors contains msg if {
+_subscriptions_errors contains error if {
 	some manifest in _csv_manifests
 	subscription := manifest.metadata.annotations[_subscription_annotation]
-	some violation in json.match_schema(
+	some e in j.validate_schema(
 		subscription,
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
@@ -418,8 +425,11 @@ _subscriptions_errors contains msg if {
 			"uniqueItems": true,
 			"minItems": 1,
 		},
-	)[1]
-	msg := sprintf("Value of %s annotation is invalid: %s", [_subscription_annotation, violation.error])
+	)
+	error := {
+		"message": sprintf("Value of %s annotation is invalid: %s", [_subscription_annotation, e.message]),
+		"severity": e.severity,
+	}
 }
 
 _subscription_annotation := "operators.openshift.io/valid-subscription"

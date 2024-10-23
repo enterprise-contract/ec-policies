@@ -9,6 +9,7 @@ test_repo_id_data_empty if {
 	expected := {
 		"code": "rpm_repos.rule_data_provided",
 		"msg": "Rule data 'known_rpm_repositories' has unexpected format: (Root): Array must have at least 1 items",
+		"severity": "failure",
 	}
 
 	lib.assert_equal_results({expected}, rpm_repos.deny) with data.rule_data.known_rpm_repositories as []
@@ -21,6 +22,7 @@ test_repo_id_data_not_an_array if {
 			"Rule data 'known_rpm_repositories' has unexpected format:",
 			"(Root): Invalid type. Expected: array, given: object",
 		]),
+		"severity": "failure",
 	}
 
 	lib.assert_equal_results({expected}, rpm_repos.deny) with data.rule_data.known_rpm_repositories as {"chunky": "bacon"}
@@ -30,6 +32,7 @@ test_repo_id_data_not_strings if {
 	expected := {
 		"code": "rpm_repos.rule_data_provided",
 		"msg": "Rule data 'known_rpm_repositories' has unexpected format: 1: Invalid type. Expected: string, given: integer",
+		"severity": "failure",
 	}
 
 	lib.assert_equal_results({expected}, rpm_repos.deny) with data.rule_data.known_rpm_repositories as ["spam", 42]

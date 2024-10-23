@@ -10,6 +10,7 @@ package step_image_registries
 import rego.v1
 
 import data.lib
+import data.lib.json as j
 import data.lib.k8s
 
 # METADATA
@@ -54,8 +55,8 @@ deny contains result if {
 #     that can be used to run tasks in the build pipeline.
 #
 deny contains result if {
-	some error in _rule_data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	some e in _rule_data_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
 image_ref_permitted(image_ref, allowed_prefixes) if {
@@ -63,12 +64,9 @@ image_ref_permitted(image_ref, allowed_prefixes) if {
 	startswith(image_ref, allowed_prefix)
 }
 
-_rule_data_errors contains msg if {
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(_rule_data_key))
-	some violation in json.match_schema(
-		value,
+_rule_data_errors contains error if {
+	some e in j.validate_schema(
+		lib.rule_data(_rule_data_key),
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "array",
@@ -76,8 +74,11 @@ _rule_data_errors contains msg if {
 			"uniqueItems": true,
 			"minItems": 1,
 		},
-	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, violation.error])
+	)
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, e.message]),
+		"severity": e.severity,
+	}
 }
 
 _rule_data_key := "allowed_step_image_registry_prefixes"

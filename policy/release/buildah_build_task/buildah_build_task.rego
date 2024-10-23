@@ -9,6 +9,7 @@ package buildah_build_task
 import rego.v1
 
 import data.lib
+import data.lib.json as j
 
 # METADATA
 # title: Buildah task uses a local Dockerfile
@@ -90,7 +91,7 @@ deny contains result if {
 #
 deny contains result if {
 	some error in _rule_data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [error.message], error.severity)
 }
 
 _not_allowed_prefix(search) if {
@@ -120,29 +121,32 @@ _platform_params contains param if {
 }
 
 # Verify disallowed_platform_patterns is a list of strings. Empty list is fine.
-_rule_data_errors contains msg if {
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(_plat_patterns_rule_data_key))
-	some violation in json.match_schema(
-		value,
+_rule_data_errors contains error if {
+	some e in j.validate_schema(
+		lib.rule_data(_plat_patterns_rule_data_key),
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "array",
 			"items": {"type": "string"},
 			"uniqueItems": true,
 		},
-	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [_plat_patterns_rule_data_key, violation.error])
+	)
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [_plat_patterns_rule_data_key, e.message]),
+		"severity": e.severity,
+	}
 }
 
 # Verify items in the disallowed_platform_patterns list are valid regular expressions.
-_rule_data_errors contains msg if {
+_rule_data_errors contains error if {
 	# We could use `"pattern": "regex"` in the JSON schema. However, rego doesn't fully support all
 	# regex features. This ensures that the regexes provides are valid within the context of rego.
 	some r in lib.rule_data(_plat_patterns_rule_data_key)
 	not regex.is_valid(r)
-	msg := sprintf("%q is not a valid regular expression in rego", [r])
+	error := {
+		"message": sprintf("%q is not a valid regular expression in rego", [r]),
+		"severity": "failure",
+	}
 }
 
 _plat_patterns_rule_data_key := "disallowed_platform_patterns"

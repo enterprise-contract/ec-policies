@@ -134,26 +134,31 @@ test_rule_data_provided if {
 		{
 			"code": "github_certificate.rule_data_provided",
 			"msg": "Rule data allowed_gh_workflow_repos has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "github_certificate.rule_data_provided",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_gh_workflow_repos has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "github_certificate.rule_data_provided",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_gh_workflow_refs has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "github_certificate.rule_data_provided",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_gh_workflow_names has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "github_certificate.rule_data_provided",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_gh_workflow_triggers has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 	}
 

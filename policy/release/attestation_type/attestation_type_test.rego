@@ -75,10 +75,12 @@ test_rule_data_validation if {
 		{
 			"code": "attestation_type.known_attestation_types_provided",
 			"msg": "Rule data known_attestation_types has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "attestation_type.known_attestation_types_provided",
 			"msg": "Rule data known_attestation_types has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 	}
 

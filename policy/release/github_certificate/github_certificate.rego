@@ -10,6 +10,7 @@ package github_certificate
 import rego.v1
 
 import data.lib
+import data.lib.json as j
 
 # METADATA
 # title: GitHub Workflow Certificate Extensions
@@ -104,8 +105,8 @@ deny contains _check_extension(rego.metadata.chain(), "allowed_gh_workflow_trigg
 #   - policy_data
 #
 deny contains result if {
-	some error in _rule_data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	some e in _rule_data_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
 _check_extension(chain, key, extension) := result if {
@@ -146,7 +147,7 @@ _REPOSITORY := {"id": 5, "name": "GitHub Workflow Repository"}
 # regal ignore:prefer-snake-case
 _REF := {"id": 6, "name": "GitHub Workflow Ref"}
 
-_rule_data_errors contains msg if {
+_rule_data_errors contains error if {
 	keys := [
 		"allowed_gh_workflow_repos",
 		"allowed_gh_workflow_refs",
@@ -155,17 +156,17 @@ _rule_data_errors contains msg if {
 	]
 	some key in keys
 
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(key))
-	some violation in json.match_schema(
-		value,
+	some e in j.validate_schema(
+		lib.rule_data(key),
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "array",
 			"items": {"type": "string"},
 			"uniqueItems": true,
 		},
-	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [key, violation.error])
+	)
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [key, e.message]),
+		"severity": e.severity,
+	}
 }

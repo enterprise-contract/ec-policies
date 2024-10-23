@@ -195,7 +195,7 @@ deny contains result if {
 #
 deny contains result if {
 	some error in tekton.data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [error.message], error.severity)
 }
 
 _trust_errors contains error if {

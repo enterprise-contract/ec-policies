@@ -57,113 +57,137 @@ test_rule_data_validation if {
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_packages has unexpected format: 0: Must validate at least one schema (anyOf)",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_packages has unexpected format: 0: format is required",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_packages has unexpected format: 0: min is required",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_packages has unexpected format: 0: purl is required",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_packages has unexpected format: 1: Additional property blah is not allowed",
+			"severity": "warning",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			# regal ignore:line-length
 			"msg": "Rule data disallowed_packages has unexpected format: 2.format: 2.format must be one of the following: \"semver\", \"semverv\"",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_packages has unexpected format: 2.max: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_packages has unexpected format: 2.min: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_packages has unexpected format: 2.purl: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Item at index 2 in disallowed_packages does not have a valid PURL: '\\x01'",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_packages has unexpected format: (Root): array items[3,4] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Item at index 5 in disallowed_packages does not have a valid min semver value: \"0.1\"",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Item at index 6 in disallowed_packages does not have a valid max semver value: \"0.1\"",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_attributes has unexpected format: 2: name is required",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_attributes has unexpected format: 3: Additional property something is not allowed",
+			"severity": "warning",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			# regal ignore:line-length
 			"msg": "Rule data disallowed_attributes has unexpected format: 4.name: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			# regal ignore:line-length
 			"msg": "Rule data disallowed_attributes has unexpected format: 4.value: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
-			# regal ignore:line-length
 			"msg": "Rule data disallowed_attributes has unexpected format: (Root): array items[5,6] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_attributes has unexpected format: 7.effective_on: Does not match format 'date-time'",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
-			# regal ignore:line-length
 			"msg": "Rule data allowed_external_references has unexpected format: 1: Additional property invalid is not allowed",
+			"severity": "warning",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data allowed_external_references has unexpected format: 1: type is required",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data allowed_external_references has unexpected format: 1: url is required",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			# regal ignore:line-length
 			"msg": "Rule data disallowed_external_references has unexpected format: 1: Additional property invalid is not allowed",
+			"severity": "warning",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_external_references has unexpected format: 1: type is required",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			"msg": "Rule data disallowed_external_references has unexpected format: 1: url is required",
+			"severity": "failure",
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
 			# regal ignore:line-length
 			"msg": "Rule data disallowed_packages has unexpected format: 2.exceptions.0.subpath: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 	}
 

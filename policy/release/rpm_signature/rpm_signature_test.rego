@@ -64,14 +64,17 @@ test_rule_data_provided if {
 		{
 			"code": "rpm_signature.rule_data_provided",
 			"msg": "Rule data has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "rpm_signature.rule_data_provided",
 			"msg": "Unexpected format of signing key '\\x01'",
+			"severity": "failure",
 		},
 		{
 			"code": "rpm_signature.rule_data_provided",
 			"msg": "Rule data has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 	}
 
@@ -82,6 +85,7 @@ test_rule_data_not_provided if {
 	expected := {{
 		"code": "rpm_signature.rule_data_provided",
 		"msg": "Rule data has unexpected format: (Root): Array must have at least 1 items",
+		"severity": "failure",
 	}}
 
 	lib.assert_equal_results(rpm_signature.deny, expected) with data.rule_data as {}

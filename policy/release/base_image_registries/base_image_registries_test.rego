@@ -221,6 +221,7 @@ test_allowed_registries_provided if {
 	expected := {{
 		"code": "base_image_registries.allowed_registries_provided",
 		"msg": "Rule data allowed_registry_prefixes has unexpected format: (Root): Array must have at least 1 items",
+		"severity": "failure",
 	}}
 	lib.assert_equal_results(expected, base_image_registries.deny) with data.rule_data as {}
 		with lib.sbom.cyclonedx_sboms as [{}]
@@ -239,11 +240,13 @@ test_rule_data_validation if {
 		{
 			"code": "base_image_registries.allowed_registries_provided",
 			"msg": "Rule data allowed_registry_prefixes has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "base_image_registries.allowed_registries_provided",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_registry_prefixes has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 	}
 

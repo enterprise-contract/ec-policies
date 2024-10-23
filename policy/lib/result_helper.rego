@@ -16,6 +16,11 @@ result_helper_with_term(chain, failure_sprintf_params, term) := object.union(
 	{"term": term},
 )
 
+result_helper_with_severity(chain, failure_sprintf_params, severity) := object.union(
+	result_helper(chain, failure_sprintf_params),
+	{"severity": severity},
+)
+
 _basic_result(chain, failure_sprintf_params) := {
 	"code": _code(chain),
 	"msg": sprintf(_rule_annotations(chain).custom.failure_msg, failure_sprintf_params),

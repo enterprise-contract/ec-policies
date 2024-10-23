@@ -420,14 +420,17 @@ test_rule_data_provided if {
 		{
 			"code": "slsa_source_correlated.rule_data_provided",
 			"msg": "Rule data supported_digests has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "slsa_source_correlated.rule_data_provided",
 			"msg": "Rule data supported_digests has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "slsa_source_correlated.rule_data_provided",
 			"msg": "Rule data supported_vcs has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 	}
 

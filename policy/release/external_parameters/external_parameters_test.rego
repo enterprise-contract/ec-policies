@@ -60,10 +60,12 @@ test_rule_data_validation if {
 		{
 			"code": "external_parameters.pipeline_run_params_provided",
 			"msg": "Rule data pipeline_run_params has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "external_parameters.pipeline_run_params_provided",
 			"msg": "Rule data pipeline_run_params has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 	}
 

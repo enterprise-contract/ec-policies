@@ -216,6 +216,7 @@ test_required_olm_features_annotations_provided if {
 		"code": "olm.required_olm_features_annotations_provided",
 		# regal ignore:line-length
 		"msg": "Rule data required_olm_features_annotations has unexpected format: (Root): Array must have at least 1 items",
+		"severity": "failure",
 	}}
 	lib.assert_equal_results(olm.deny, expected_empty) with input.image.files as {"manifests/csv.yaml": manifest}
 		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
@@ -244,11 +245,13 @@ test_required_olm_features_annotations_provided if {
 		{
 			"code": "olm.required_olm_features_annotations_provided",
 			"msg": "Rule data required_olm_features_annotations has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "olm.required_olm_features_annotations_provided",
 			# regal ignore:line-length
 			"msg": "Rule data required_olm_features_annotations has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 	}
 
@@ -298,25 +301,30 @@ test_subscriptions_annotation_format if {
 		{
 			"code": "olm.subscriptions_annotation_format",
 			"msg": "Value of operators.openshift.io/valid-subscription annotation is missing",
+			"severity": "failure",
 		},
 		{
 			"code": "olm.subscriptions_annotation_format",
 			"msg": "Value of operators.openshift.io/valid-subscription annotation is not valid JSON",
+			"severity": "failure",
 		},
 		{
 			"code": "olm.subscriptions_annotation_format",
 			# regal ignore:line-length
 			"msg": "Value of operators.openshift.io/valid-subscription annotation is invalid: (Root): Array must have at least 1 items",
+			"severity": "failure",
 		},
 		{
 			"code": "olm.subscriptions_annotation_format",
 			# regal ignore:line-length
 			"msg": "Value of operators.openshift.io/valid-subscription annotation is invalid: (Root): array items[0,1] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "olm.subscriptions_annotation_format",
 			# regal ignore:line-length
 			"msg": "Value of operators.openshift.io/valid-subscription annotation is invalid: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 	}
 

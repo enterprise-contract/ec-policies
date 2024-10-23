@@ -10,6 +10,7 @@ package rpm_ostree_task
 import rego.v1
 
 import data.lib
+import data.lib.json as j
 import data.lib.tekton
 
 # METADATA
@@ -48,8 +49,8 @@ deny contains result if {
 #   - redhat
 #
 deny contains result if {
-	some error in rule_data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	some e in rule_data_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
 # Detect when an image reference is not pinned to a digest.
@@ -95,7 +96,7 @@ builder_image_param_errors contains error if {
 	}
 }
 
-rule_data_errors contains msg if {
+rule_data_errors contains error if {
 	schema := {
 		"$schema": "http://json-schema.org/draft-07/schema#",
 		"type": "array",
@@ -111,12 +112,12 @@ rule_data_errors contains msg if {
 		"uniqueItems": true,
 	}
 
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(_rule_data_key))
-	some violation in json.match_schema(value, schema)[1]
+	some e in j.validate_schema(lib.rule_data(_rule_data_key), schema)
 
-	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, violation.error])
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, e.message]),
+		"severity": e.severity,
+	}
 }
 
 # _builder_images is a set of image references. Each corresponding to the BUILDER_IMAGE parameter

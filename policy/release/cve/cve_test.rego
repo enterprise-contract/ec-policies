@@ -468,26 +468,31 @@ test_rule_data_provided if {
 		{
 			"code": "cve.rule_data_provided",
 			"msg": "Rule data restrict_cve_security_levels has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "cve.rule_data_provided",
 			# regal ignore:line-length
 			"msg": "Rule data restrict_cve_security_levels has unexpected format: 0: 0 must be one of the following: \"critical\", \"high\", \"medium\", \"low\", \"unknown\"",
+			"severity": "failure",
 		},
 		{
 			"code": "cve.rule_data_provided",
 			# regal ignore:line-length
 			"msg": "Rule data restrict_unpatched_cve_security_levels has unexpected format: 0: 0 must be one of the following: \"critical\", \"high\", \"medium\", \"low\", \"unknown\"",
+			"severity": "failure",
 		},
 		{
 			"code": "cve.rule_data_provided",
 			# regal ignore:line-length
 			"msg": "Rule data warn_cve_security_levels has unexpected format: 0: 0 must be one of the following: \"critical\", \"high\", \"medium\", \"low\", \"unknown\"",
+			"severity": "failure",
 		},
 		{
 			"code": "cve.rule_data_provided",
 			# regal ignore:line-length
 			"msg": "Rule data warn_unpatched_cve_security_levels has unexpected format: 0: 0 must be one of the following: \"critical\", \"high\", \"medium\", \"low\", \"unknown\"",
+			"severity": "failure",
 		},
 	}
 
@@ -802,14 +807,17 @@ test_leeway_rule_data_check if {
 		{
 			"code": "cve.rule_data_provided",
 			"msg": "Rule data cve_leeway has unexpected format: (Root): Additional property blooper is not allowed",
+			"severity": "warning",
 		},
 		{
 			"code": "cve.rule_data_provided",
 			"msg": "Rule data cve_leeway has unexpected format: critical: Invalid type. Expected: integer, given: string",
+			"severity": "failure",
 		},
 		{
 			"code": "cve.rule_data_provided",
 			"msg": "Rule data cve_leeway has unexpected format: high: Must be greater than or equal to 0",
+			"severity": "failure",
 		},
 	}
 

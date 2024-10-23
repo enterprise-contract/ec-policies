@@ -9,6 +9,7 @@ package schedule
 import rego.v1
 
 import data.lib
+import data.lib.json as j
 
 # METADATA
 # title: Weekday Restriction
@@ -70,8 +71,8 @@ deny contains result if {
 #
 deny contains result if {
 	# (For this one let's do it always)
-	some error in _rule_data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	some e in _rule_data_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
 # We want these checks to apply only if we're doing a release. Detect that by checking
@@ -82,7 +83,7 @@ _schedule_restrictions_apply if {
 	lib.rule_data("pipeline_intention") == "release"
 }
 
-_rule_data_errors contains msg if {
+_rule_data_errors contains error if {
 	key := "disallowed_weekdays"
 
 	# JSON Schema doesn't allow case insensitive enum types. So here we define a list of all the
@@ -96,45 +97,48 @@ _rule_data_errors contains msg if {
 		[upper(d) | some d in titled_weekdays],
 	)
 
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(key))
-	some violation in json.match_schema(
-		value,
+	some e in j.validate_schema(
+		lib.rule_data(key),
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "array",
 			"items": {"enum": weekdays},
 			"uniqueItems": true,
 		},
-	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [key, violation.error])
+	)
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [key, e.message]),
+		"severity": e.severity,
+	}
 }
 
-_rule_data_errors contains msg if {
+_rule_data_errors contains error if {
 	# IMPORTANT: Although the JSON schema spec does allow specifying a regular expression to match
 	# values, via the "pattern" attribute, rego's JSON schema validator does not:
 	# https://github.com/open-policy-agent/opa/issues/6089
 	key := "disallowed_dates"
 
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(key))
-	some violation in json.match_schema(
-		value,
+	some e in j.validate_schema(
+		lib.rule_data(key),
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "array",
 			"items": {"type": "string"},
 			"uniqueItems": true,
 		},
-	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [key, violation.error])
+	)
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [key, e.message]),
+		"severity": e.severity,
+	}
 }
 
-_rule_data_errors contains msg if {
+_rule_data_errors contains error if {
 	key := "disallowed_dates"
 	some index, date in lib.rule_data(key)
 	not time.parse_ns("2006-01-02", date)
-	msg := sprintf("Rule data %s has unexpected format: %d: Invalid date %q", [key, index, date])
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %d: Invalid date %q", [key, index, date]),
+		"severity": "failure",
+	}
 }

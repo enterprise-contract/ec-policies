@@ -248,18 +248,22 @@ test_plat_patterns_rule_data_validation if {
 			"code": "buildah_build_task.disallowed_platform_patterns_pattern",
 			# regal ignore:line-length
 			"msg": "Rule data disallowed_platform_patterns has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "buildah_build_task.disallowed_platform_patterns_pattern",
 			"msg": "'\\x01' is not a valid regular expression in rego",
+			"severity": "failure",
 		},
 		{
 			"code": "buildah_build_task.disallowed_platform_patterns_pattern",
 			"msg": "Rule data disallowed_platform_patterns has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "buildah_build_task.disallowed_platform_patterns_pattern",
 			"msg": "\"(?=a)?b\" is not a valid regular expression in rego",
+			"severity": "failure",
 		},
 	}
 

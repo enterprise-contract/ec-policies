@@ -12,6 +12,7 @@ import rego.v1
 
 import data.lib
 import data.lib.image
+import data.lib.json as j
 import data.lib.time as lib_time
 
 # METADATA
@@ -210,8 +211,8 @@ deny contains result if {
 #   - policy_data
 #
 deny contains result if {
-	some error in _rule_data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	some e in _rule_data_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
 # extracts the clair report attached to the image
@@ -363,7 +364,7 @@ _with_effective_on(result, effective_on) := object.union(
 	{"effective_on": time.format([effective_on, "UTC", "2006-01-02T15:04:05Z07:00"])},
 )
 
-_rule_data_errors contains msg if {
+_rule_data_errors contains error if {
 	keys := [
 		"restrict_cve_security_levels",
 		"warn_cve_security_levels",
@@ -372,29 +373,28 @@ _rule_data_errors contains msg if {
 	]
 	some key in keys
 
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(key))
-	some violation in json.match_schema(
-		value,
+	some e in j.validate_schema(
+		lib.rule_data(key),
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "array",
 			"items": {"enum": ["critical", "high", "medium", "low", "unknown"]},
 			"uniqueItems": true,
 		},
-	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [key, violation.error])
+	)
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [key, e.message]),
+		"severity": e.severity,
+	}
 }
 
-_rule_data_errors contains msg if {
-	value := lib.rule_data("cve_leeway")
+_rule_data_errors contains error if {
 	leeway_days := {
 		"type": "integer",
 		"minimum": 0,
 	}
-	some violation in json.match_schema(
-		value,
+	some e in j.validate_schema(
+		lib.rule_data("cve_leeway"),
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "object",
@@ -407,6 +407,9 @@ _rule_data_errors contains msg if {
 			},
 			"additionalProperties": false,
 		},
-	)[1]
-	msg := sprintf("Rule data cve_leeway has unexpected format: %s", [violation.error])
+	)
+	error := {
+		"message": sprintf("Rule data cve_leeway has unexpected format: %s", [e.message]),
+		"severity": e.severity,
+	}
 }

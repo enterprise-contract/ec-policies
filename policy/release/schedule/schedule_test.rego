@@ -133,16 +133,19 @@ test_rule_data_format_disallowed_weekdays if {
 		{
 			"code": "schedule.rule_data_provided",
 			# regal ignore:line-length
-			"msg": "Rule data disallowed_weekdays has unexpected format: 0: 0 must be one of the following: \"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"sunday\", \"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\", \"saturday\", \"SUNDAY\", \"MONDAY\", \"TUESDAY\", \"WEDNESDAY\", \"THURSDAY\", \"FRIDAY\", \"SATURDAY\"",
+			"msg": `Rule data disallowed_weekdays has unexpected format: 0: 0 must be one of the following: "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"`,
+			"severity": "failure",
 		},
 		{
 			"code": "schedule.rule_data_provided",
 			"msg": "Rule data disallowed_weekdays has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "schedule.rule_data_provided",
 			# regal ignore:line-length
-			"msg": "Rule data disallowed_weekdays has unexpected format: 3: 3 must be one of the following: \"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"sunday\", \"monday\", \"tuesday\", \"wednesday\", \"thursday\", \"friday\", \"saturday\", \"SUNDAY\", \"MONDAY\", \"TUESDAY\", \"WEDNESDAY\", \"THURSDAY\", \"FRIDAY\", \"SATURDAY\"",
+			"msg": `Rule data disallowed_weekdays has unexpected format: 3: 3 must be one of the following: "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"`,
+			"severity": "failure",
 		},
 	}
 
@@ -167,26 +170,32 @@ test_rule_data_format_disallowed_dates if {
 		{
 			"code": "schedule.rule_data_provided",
 			"msg": "Rule data disallowed_dates has unexpected format: 0: Invalid date '\\x01'",
+			"severity": "failure",
 		},
 		{
 			"code": "schedule.rule_data_provided",
 			"msg": "Rule data disallowed_dates has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "schedule.rule_data_provided",
 			"msg": "Rule data disallowed_dates has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "schedule.rule_data_provided",
-			"msg": "Rule data disallowed_dates has unexpected format: 3: Invalid date \"23-01-01\"",
+			"msg": `Rule data disallowed_dates has unexpected format: 3: Invalid date "23-01-01"`,
+			"severity": "failure",
 		},
 		{
 			"code": "schedule.rule_data_provided",
-			"msg": "Rule data disallowed_dates has unexpected format: 4: Invalid date \"2023-1-01\"",
+			"msg": `Rule data disallowed_dates has unexpected format: 4: Invalid date "2023-1-01"`,
+			"severity": "failure",
 		},
 		{
 			"code": "schedule.rule_data_provided",
-			"msg": "Rule data disallowed_dates has unexpected format: 5: Invalid date \"2023-01-1\"",
+			"msg": `Rule data disallowed_dates has unexpected format: 5: Invalid date "2023-01-1"`,
+			"severity": "failure",
 		},
 	}
 

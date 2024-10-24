@@ -710,46 +710,57 @@ test_data_errors_on_required_tasks if {
 		{
 			"code": "tasks.data_provided",
 			"msg": "Data required-tasks has unexpected format: 2.effective_on: Invalid type. Expected: string, given: object",
+			"severity": "failure",
 		},
 		{
 			"code": "tasks.data_provided",
 			"msg": "Data required-tasks has unexpected format: 2.tasks.0.0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "tasks.data_provided",
 			"msg": "Data required-tasks has unexpected format: 2.tasks.0.1: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "tasks.data_provided",
 			"msg": "Data required-tasks has unexpected format: 2.tasks.0: Must validate one and only one schema (oneOf)",
+			"severity": "failure",
 		},
 		{
 			"code": "tasks.data_provided",
 			"msg": "Data required-tasks has unexpected format: 2.tasks.1: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "tasks.data_provided",
 			"msg": "Data required-tasks has unexpected format: 2.tasks.1: Must validate one and only one schema (oneOf)",
+			"severity": "failure",
 		},
 		{
 			"code": "tasks.data_provided",
 			"msg": "Data required-tasks has unexpected format: 3.tasks: Array must have at least 1 items",
+			"severity": "failure",
 		},
 		{
 			"code": "tasks.data_provided",
 			"msg": "Data required-tasks has unexpected format: 4.tasks.0: Array must have at least 1 items",
+			"severity": "failure",
 		},
 		{
 			"code": "tasks.data_provided",
 			"msg": "Data required-tasks has unexpected format: 4.tasks.0: Must validate one and only one schema (oneOf)",
+			"severity": "failure",
 		},
 		{
 			"code": "tasks.data_provided",
-			"msg": "required-tasks[1].effective_on is not valid RFC3339 format: \"bad-datetime-format\"",
+			"msg": `required-tasks[1].effective_on is not valid RFC3339 format: "bad-datetime-format"`,
+			"severity": "failure",
 		},
 		{
 			"code": "tasks.data_provided",
-			"msg": "required-tasks[2].effective_on is not valid RFC3339 format: \"{}\"",
+			"msg": `required-tasks[2].effective_on is not valid RFC3339 format: "{}"`,
+			"severity": "failure",
 		},
 	}
 
@@ -786,11 +797,13 @@ test_data_errors_on_pipeline_required_tasks if {
 		{
 			"code": "tasks.data_provided",
 			"msg": "Data pipeline-required-tasks has unexpected format: docker.0.tasks: Array must have at least 1 items",
+			"severity": "failure",
 		},
 		{
 			"code": "tasks.data_provided",
 			# regal ignore:line-length
-			"msg": "pipeline-required-tasks.spam[0].effective_on is not valid RFC3339 format: \"bad-datetime-format\"",
+			"msg": `pipeline-required-tasks.spam[0].effective_on is not valid RFC3339 format: "bad-datetime-format"`,
+			"severity": "failure",
 		},
 	}
 

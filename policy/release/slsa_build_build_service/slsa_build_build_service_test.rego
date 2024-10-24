@@ -54,10 +54,12 @@ test_rule_data_format if {
 		{
 			"code": "slsa_build_build_service.allowed_builder_ids_provided",
 			"msg": "Rule data allowed_builder_ids has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "slsa_build_build_service.allowed_builder_ids_provided",
 			"msg": "Rule data allowed_builder_ids has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 	}
 

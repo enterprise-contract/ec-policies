@@ -10,6 +10,7 @@ package rpm_signature
 import rego.v1
 
 import data.lib
+import data.lib.json as j
 
 # METADATA
 # title: Allowed RPM signature key
@@ -63,8 +64,8 @@ deny contains result if {
 #   effective_on: 2024-10-05T00:00:00Z
 #
 deny contains result if {
-	some error in _rule_data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	some e in _rule_data_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
 _allowed_rpm_signature_keys := lib.rule_data("allowed_rpm_signature_keys")
@@ -94,12 +95,9 @@ _result_format_errors contains msg if {
 	msg := sprintf("Task result has unexpected format: %s", [violation.error])
 }
 
-_rule_data_errors contains msg if {
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(_allowed_rpm_signature_keys)
-	some violation in json.match_schema(
-		value,
+_rule_data_errors contains error if {
+	some e in j.validate_schema(
+		_allowed_rpm_signature_keys,
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "array",
@@ -107,14 +105,20 @@ _rule_data_errors contains msg if {
 			"uniqueItems": true,
 			"minItems": 1,
 		},
-	)[1]
-	msg := sprintf("Rule data has unexpected format: %s", [violation.error])
+	)
+	error := {
+		"message": sprintf("Rule data has unexpected format: %s", [e.message]),
+		"severity": e.severity,
+	}
 }
 
-_rule_data_errors contains msg if {
+_rule_data_errors contains error if {
 	some key in _allowed_rpm_signature_keys
 	not _is_valid_key(key)
-	msg := sprintf("Unexpected format of signing key %q", [key])
+	error := {
+		"message": sprintf("Unexpected format of signing key %q", [key]),
+		"severity": "failure",
+	}
 }
 
 _is_valid_key(key) if {

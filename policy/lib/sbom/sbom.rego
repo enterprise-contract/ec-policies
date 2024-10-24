@@ -2,6 +2,7 @@ package lib.sbom
 
 import data.lib
 import data.lib.image
+import data.lib.json as j
 import data.lib.tekton
 import rego.v1
 
@@ -120,53 +121,53 @@ _matches_version(version, matcher) if {
 _to_semver(v) := trim_prefix(v, "v")
 
 # Verify disallowed_packages is an array of objects
-rule_data_errors contains msg if {
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(rule_data_packages_key))
-	some violation in json.match_schema(
-		value,
-		{
-			"$schema": "http://json-schema.org/draft-07/schema#",
-			"type": "array",
-			"uniqueItems": true,
-			"items": {
-				"type": "object",
-				"properties": {
-					"purl": {"type": "string"},
-					"format": {"enum": ["semver", "semverv"]},
-					"min": {"type": "string"},
-					"max": {"type": "string"},
-					"exceptions": {
-						"type": "array",
-						"uniqueItems": true,
-						"items": {
-							"type": "object",
-							"properties": {"subpath": {"type": "string"}},
-						},
+rule_data_errors contains error if {
+	some e in j.validate_schema(lib.rule_data(rule_data_packages_key), {
+		"$schema": "http://json-schema.org/draft-07/schema#",
+		"type": "array",
+		"uniqueItems": true,
+		"items": {
+			"type": "object",
+			"properties": {
+				"purl": {"type": "string"},
+				"format": {"enum": ["semver", "semverv"]},
+				"min": {"type": "string"},
+				"max": {"type": "string"},
+				"exceptions": {
+					"type": "array",
+					"uniqueItems": true,
+					"items": {
+						"type": "object",
+						"properties": {"subpath": {"type": "string"}},
 					},
 				},
-				"additionalProperties": false,
-				"anyOf": [
-					{"required": ["purl", "format", "min"]},
-					{"required": ["purl", "format", "max"]},
-				],
 			},
+			"additionalProperties": false,
+			"anyOf": [
+				{"required": ["purl", "format", "min"]},
+				{"required": ["purl", "format", "max"]},
+			],
 		},
-	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [rule_data_packages_key, violation.error])
+	})
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [rule_data_packages_key, e.message]),
+		"severity": e.severity,
+	}
 }
 
 # Verify each item in disallowed_packages has a parseable PURL
-rule_data_errors contains msg if {
+rule_data_errors contains error if {
 	some index, pkg in lib.rule_data(rule_data_packages_key)
 	purl := pkg.purl
 	not ec.purl.is_valid(purl)
-	msg := sprintf("Item at index %d in %s does not have a valid PURL: %q", [index, rule_data_packages_key, purl])
+	error := {
+		"message": sprintf("Item at index %d in %s does not have a valid PURL: %q", [index, rule_data_packages_key, purl]),
+		"severity": "failure",
+	}
 }
 
 # Verify each item in disallowed_packages has a parseable min/max semver
-rule_data_errors contains msg if {
+rule_data_errors contains error if {
 	some index, pkg in lib.rule_data(rule_data_packages_key)
 	pkg.format in {"semver", "semverv"}
 	some attr in ["min", "max"]
@@ -176,88 +177,82 @@ rule_data_errors contains msg if {
 
 	not semver.is_valid(version)
 
-	msg := sprintf(
-		"Item at index %d in %s does not have a valid %s semver value: %q",
-		[index, rule_data_packages_key, attr, version],
-	)
+	error := {
+		"message": sprintf(
+			"Item at index %d in %s does not have a valid %s semver value: %q",
+			[index, rule_data_packages_key, attr, version],
+		),
+		"severity": "failure",
+	}
 }
 
 # Verify disallowed_attributes is an array of name value pairs
-rule_data_errors contains msg if {
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(rule_data_attributes_key))
-	some violation in json.match_schema(
-		value,
-		{
-			"$schema": "http://json-schema.org/draft-07/schema#",
-			"type": "array",
-			"uniqueItems": true,
-			"items": {
-				"type": "object",
-				"properties": {
-					"name": {"type": "string"},
-					"value": {"type": "string"},
-					"effective_on": {"type": "string", "format": "date-time"},
-				},
-				"additionalProperties": false,
-				"required": ["name"],
+rule_data_errors contains error if {
+	some e in j.validate_schema(lib.rule_data(rule_data_attributes_key), {
+		"$schema": "http://json-schema.org/draft-07/schema#",
+		"type": "array",
+		"uniqueItems": true,
+		"items": {
+			"type": "object",
+			"properties": {
+				"name": {"type": "string"},
+				"value": {"type": "string"},
+				"effective_on": {"type": "string", "format": "date-time"},
 			},
+			"additionalProperties": false,
+			"required": ["name"],
 		},
-	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [rule_data_attributes_key, violation.error])
+	})
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [rule_data_attributes_key, e.message]),
+		"severity": e.severity,
+	}
 }
 
 # Verify allowed_external_references is an array of type/url pairs
-rule_data_errors contains msg if {
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(rule_data_allowed_external_references_key))
-	some violation in json.match_schema(
-		value,
-		{
-			"$schema": "http://json-schema.org/draft-07/schema#",
-			"type": "array",
-			"uniqueItems": true,
-			"items": {
-				"type": "object",
-				"properties": {
-					"type": {"type": "string"},
-					"url": {"type": "string"},
-				},
-				"additionalProperties": false,
-				"required": ["type", "url"],
+rule_data_errors contains error if {
+	some e in j.validate_schema(lib.rule_data(rule_data_allowed_external_references_key), {
+		"$schema": "http://json-schema.org/draft-07/schema#",
+		"type": "array",
+		"uniqueItems": true,
+		"items": {
+			"type": "object",
+			"properties": {
+				"type": {"type": "string"},
+				"url": {"type": "string"},
 			},
+			"additionalProperties": false,
+			"required": ["type", "url"],
 		},
-	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [rule_data_allowed_external_references_key, violation.error])
+	})
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [rule_data_allowed_external_references_key, e.message]),
+		"severity": e.severity,
+	}
 }
 
 # Verify disallowed_external_references is an array of type/url pairs
-rule_data_errors contains msg if {
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(rule_data_disallowed_external_references_key))
-	some violation in json.match_schema(
-		value,
-		{
-			"$schema": "http://json-schema.org/draft-07/schema#",
-			"type": "array",
-			"uniqueItems": true,
-			"items": {
-				"type": "object",
-				"properties": {
-					"type": {"type": "string"},
-					"url": {"type": "string"},
-				},
-				"additionalProperties": false,
-				"required": ["type", "url"],
+rule_data_errors contains error if {
+	some e in j.validate_schema(lib.rule_data(rule_data_disallowed_external_references_key), {
+		"$schema": "http://json-schema.org/draft-07/schema#",
+		"type": "array",
+		"uniqueItems": true,
+		"items": {
+			"type": "object",
+			"properties": {
+				"type": {"type": "string"},
+				"url": {"type": "string"},
 			},
+			"additionalProperties": false,
+			"required": ["type", "url"],
 		},
-	)[1]
+	})
 
-	# regal ignore:line-length
-	msg := sprintf("Rule data %s has unexpected format: %s", [rule_data_disallowed_external_references_key, violation.error])
+	error := {
+		# regal ignore:line-length
+		"message": sprintf("Rule data %s has unexpected format: %s", [rule_data_disallowed_external_references_key, e.message]),
+		"severity": e.severity,
+	}
 }
 
 _sbom_cyclonedx_image_path := "root/buildinfo/content_manifests/sbom-cyclonedx.json"

@@ -10,6 +10,7 @@ package rpm_repos
 import rego.v1
 
 import data.lib
+import data.lib.json as j
 
 # METADATA
 # title: Known repo id list provided
@@ -26,8 +27,8 @@ import data.lib
 #   - policy_data
 #
 deny contains result if {
-	some error in _rule_data_errors
-	result := lib.result_helper(rego.metadata.chain(), [_rule_data_key, error])
+	some e in _rule_data_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [_rule_data_key, e.message], e.severity)
 }
 
 # METADATA
@@ -54,12 +55,9 @@ deny contains result if {
 	result := lib.result_helper_with_term(rego.metadata.chain(), [msg], bad_purl)
 }
 
-_rule_data_errors contains msg if {
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(_known_repo_ids)
-	some violation in json.match_schema(
-		value,
+_rule_data_errors contains error if {
+	some error in j.validate_schema(
+		_known_repo_ids,
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "array",
@@ -67,8 +65,7 @@ _rule_data_errors contains msg if {
 			"uniqueItems": true,
 			"minItems": 1,
 		},
-	)[1]
-	msg := violation.error
+	)
 }
 
 _repo_id_errors[bad_purl] := msg if {

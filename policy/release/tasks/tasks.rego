@@ -28,6 +28,7 @@ package tasks
 import rego.v1
 
 import data.lib
+import data.lib.json as j
 import data.lib.tekton
 
 # METADATA
@@ -288,8 +289,8 @@ deny contains result if {
 #   - policy_data
 #
 deny contains result if {
-	some error in _data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	some e in _data_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
 # _missing_tasks returns a set of task names that are in the given
@@ -408,53 +409,59 @@ _expires_on_annotation := "build.appstudio.redhat.com/expires-on"
 
 _expiry_msg_annotation := "build.appstudio.redhat.com/expiry-message"
 
-_data_errors contains msg if {
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(data["pipeline-required-tasks"])
-	some violation in json.match_schema(
-		value,
+_data_errors contains error if {
+	some e in j.validate_schema(
+		data["pipeline-required-tasks"],
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "object",
 			"patternProperties": {".*": _required_tasks_schema},
 		},
-	)[1]
+	)
 
-	msg := sprintf("Data pipeline-required-tasks has unexpected format: %s", [violation.error])
+	error := {
+		"message": sprintf("Data pipeline-required-tasks has unexpected format: %s", [e.message]),
+		"severity": e.severity,
+	}
 }
 
-_data_errors contains msg if {
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(data["required-tasks"])
-	some violation in json.match_schema(
-		value,
+_data_errors contains error if {
+	some e in j.validate_schema(
+		data["required-tasks"],
 		_required_tasks_schema,
-	)[1]
+	)
 
-	msg := sprintf("Data required-tasks has unexpected format: %s", [violation.error])
+	error := {
+		"message": sprintf("Data required-tasks has unexpected format: %s", [e.message]),
+		"severity": e.severity,
+	}
 }
 
-_data_errors contains msg if {
+_data_errors contains error if {
 	some i, entry in data["required-tasks"]
 	effective_on := entry.effective_on
 	not time.parse_rfc3339_ns(effective_on)
-	msg := sprintf(
-		"required-tasks[%d].effective_on is not valid RFC3339 format: %q",
-		[i, effective_on],
-	)
+	error := {
+		"message": sprintf(
+			"required-tasks[%d].effective_on is not valid RFC3339 format: %q",
+			[i, effective_on],
+		),
+		"severity": "failure",
+	}
 }
 
-_data_errors contains msg if {
+_data_errors contains error if {
 	some key, entries in data["pipeline-required-tasks"]
 	some i, entry in entries
 	effective_on := entry.effective_on
 	not time.parse_rfc3339_ns(effective_on)
-	msg := sprintf(
-		"pipeline-required-tasks.%s[%d].effective_on is not valid RFC3339 format: %q",
-		[key, i, effective_on],
-	)
+	error := {
+		"message": sprintf(
+			"pipeline-required-tasks.%s[%d].effective_on is not valid RFC3339 format: %q",
+			[key, i, effective_on],
+		),
+		"severity": "failure",
+	}
 }
 
 _required_tasks_schema := {

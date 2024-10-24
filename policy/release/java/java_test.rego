@@ -49,6 +49,7 @@ test_trusted_dependency_source_list_provided_not_empty if {
 	expected := {{
 		"code": "java.trusted_dependencies_source_list_provided",
 		"msg": "Rule data allowed_java_component_sources has unexpected format: (Root): Array must have at least 1 items",
+		"severity": "failure",
 	}}
 	lib.assert_equal_results(expected, java.deny) with data.rule_data as {}
 }
@@ -66,11 +67,13 @@ test_trusted_dependency_source_list_provided_format if {
 		{
 			"code": "java.trusted_dependencies_source_list_provided",
 			"msg": "Rule data allowed_java_component_sources has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "java.trusted_dependencies_source_list_provided",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_java_component_sources has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 	}
 

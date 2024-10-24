@@ -496,60 +496,74 @@ test_rule_data_provided if {
 		{
 			"code": "labels.rule_data_provided",
 			"msg": "Rule data deprecated_labels has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "labels.rule_data_provided",
 			"msg": "Rule data deprecated_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "labels.rule_data_provided",
 			"msg": "Rule data deprecated_labels has unexpected format: 3: Additional property foo is not allowed",
+			"severity": "warning",
 		},
 		{
 			"code": "labels.rule_data_provided",
 			"msg": "Rule data disallowed_inherited_labels has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "labels.rule_data_provided",
 			# regal ignore:line-length
 			"msg": "Rule data disallowed_inherited_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "labels.rule_data_provided",
 			"msg": "Rule data disallowed_inherited_labels has unexpected format: 3: Additional property foo is not allowed",
+			"severity": "warning",
 		},
 		{
 			"code": "labels.rule_data_provided",
 			# regal ignore:line-length
 			"msg": "Rule data fbc_disallowed_inherited_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "labels.rule_data_provided",
 			"msg": "Rule data fbc_optional_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "labels.rule_data_provided",
 			"msg": "Rule data fbc_required_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "labels.rule_data_provided",
 			"msg": "Rule data optional_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "labels.rule_data_provided",
 			"msg": "Rule data required_labels has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 		{
 			"code": "labels.rule_data_provided",
 			"msg": "Rule data required_labels has unexpected format: 0: Invalid type. Expected: object, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "labels.rule_data_provided",
 			"msg": "Rule data required_labels has unexpected format: 3: Additional property foo is not allowed",
+			"severity": "warning",
 		},
 		{
 			"code": "labels.rule_data_provided",
 			"msg": "Rule data required_labels has unexpected format: 4.values.0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 	}
 

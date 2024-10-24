@@ -21,7 +21,7 @@ Confirm the `allowed_step_image_registry_prefixes` rule data was provided, since
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `step_image_registries.step_image_registry_prefix_list_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/step_image_registries/step_image_registries.rego#L43[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/step_image_registries/step_image_registries.rego#L44[Source, window="_blank"]
 
 [#step_image_registries__step_images_permitted]
 === link:#step_image_registries__step_images_permitted[Step images come from permitted registry]
@@ -33,7 +33,7 @@ Confirm that each step in the Task uses a container image with a URL that matche
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Step %d uses disallowed image ref '%s'`
 * Code: `step_image_registries.step_images_permitted`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/step_image_registries/step_image_registries.rego#L15[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/step_image_registries/step_image_registries.rego#L16[Source, window="_blank"]
 
 [#annotations_package]
 == link:#annotations_package[Tekton Task annotations]
@@ -67,7 +67,7 @@ Verify if Task defines the required result. This is controlled by the `required_
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `results.required`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/results/results.rego#L12[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/results/results.rego#L13[Source, window="_blank"]
 
 [#results__rule_data_provided]
 === link:#results__rule_data_provided[Rule data provided]
@@ -79,7 +79,7 @@ Confirm the expected `required_task_results` rule data key has been provided in 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `results.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/results/results.rego#L26[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/results/results.rego#L27[Source, window="_blank"]
 
 [#kind_package]
 == link:#kind_package[Tekton task kind checks]

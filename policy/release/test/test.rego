@@ -12,6 +12,7 @@ import rego.v1
 
 import data.lib
 import data.lib.image
+import data.lib.json as j
 
 # METADATA
 # title: No informative tests failed
@@ -225,8 +226,8 @@ deny contains result if {
 #   - policy_data
 #
 deny contains result if {
-	some error in _rule_data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	some e in _rule_data_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
 # METADATA
@@ -274,7 +275,7 @@ _resulted_in(results, key) := {result.name |
 	_did_result(test, results, key)
 }
 
-_rule_data_errors contains msg if {
+_rule_data_errors contains error if {
 	statuses := {
 		"$schema": "http://json-schema.org/draft-07/schema#",
 		"type": "array",
@@ -302,9 +303,9 @@ _rule_data_errors contains msg if {
 	key := item[0]
 	schema := item[1]
 
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(key))
-	some violation in json.match_schema(value, schema)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [key, violation.error])
+	some e in j.validate_schema(lib.rule_data(key), schema)
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [key, e.message]),
+		"severity": e.severity,
+	}
 }

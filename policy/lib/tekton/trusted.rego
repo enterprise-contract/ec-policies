@@ -2,6 +2,7 @@ package lib.tekton
 
 import rego.v1
 
+import data.lib.json as j
 import data.lib.time as time_lib
 
 # regal ignore:prefer-package-imports
@@ -71,12 +72,9 @@ _trusted_tasks[key] := pruned_records if {
 # Merging in the trusted_tasks rule data makes it easier for users to customize their trusted tasks
 _trusted_tasks_data := object.union(data.trusted_tasks, lib_rule_data("trusted_tasks"))
 
-data_errors contains msg if {
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(_trusted_tasks_data)
-	some violation in json.match_schema(
-		value,
+data_errors contains error if {
+	some e in j.validate_schema(
+		_trusted_tasks_data,
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "object",
@@ -96,26 +94,35 @@ data_errors contains msg if {
 				"minItems": 1,
 			}},
 		},
-	)[1]
-	msg := sprintf("trusted_tasks data has unexpected format: %s", [violation.error])
+	)
+	error := {
+		"message": sprintf("trusted_tasks data has unexpected format: %s", [e.message]),
+		"severity": e.severity,
+	}
 }
 
-data_errors contains msg if {
+data_errors contains error if {
 	some task, refs in _trusted_tasks_data
 	some i, ref in refs
 	not time.parse_rfc3339_ns(ref.effective_on)
-	msg := sprintf(
-		"trusted_tasks.%s[%d].effective_on is not valid RFC3339 format: %q",
-		[task, i, ref.effective_on],
-	)
+	error := {
+		"message": sprintf(
+			"trusted_tasks.%s[%d].effective_on is not valid RFC3339 format: %q",
+			[task, i, ref.effective_on],
+		),
+		"severity": "failure",
+	}
 }
 
-data_errors contains msg if {
+data_errors contains error if {
 	some task, refs in _trusted_tasks_data
 	some i, ref in refs
 	not time.parse_rfc3339_ns(ref.expires_on)
-	msg := sprintf(
-		"trusted_tasks.%s[%d].expires_on is not valid RFC3339 format: %q",
-		[task, i, ref.expires_on],
-	)
+	error := {
+		"message": sprintf(
+			"trusted_tasks.%s[%d].expires_on is not valid RFC3339 format: %q",
+			[task, i, ref.expires_on],
+		),
+		"severity": "failure",
+	}
 }

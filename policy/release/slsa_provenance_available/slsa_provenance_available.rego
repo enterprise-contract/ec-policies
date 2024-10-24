@@ -15,6 +15,7 @@ package slsa_provenance_available
 import rego.v1
 
 import data.lib
+import data.lib.json as j
 
 # METADATA
 # title: Expected attestation predicate type found
@@ -59,17 +60,14 @@ deny contains result if {
 #   - policy_data
 #
 deny contains result if {
-	some error in _rule_data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	some e in _rule_data_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
 # Verify allowed_predicate_types is a non-empty list of strings
-_rule_data_errors contains msg if {
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(_rule_data_key))
-	some violation in json.match_schema(
-		value,
+_rule_data_errors contains error if {
+	some e in j.validate_schema(
+		lib.rule_data(_rule_data_key),
 		{
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "array",
@@ -77,8 +75,11 @@ _rule_data_errors contains msg if {
 			"uniqueItems": true,
 			"minItems": 1,
 		},
-	)[1]
-	msg := sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, violation.error])
+	)
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, e.message]),
+		"severity": e.severity,
+	}
 }
 
 _rule_data_key := "allowed_predicate_types"

@@ -99,6 +99,7 @@ test_step_images_permitted_prefix_list_empty if {
 			"code": "step_image_registries.step_image_registry_prefix_list_provided",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_step_image_registry_prefixes has unexpected format: (Root): Array must have at least 1 items",
+			"severity": "failure",
 		},
 		{
 			"code": "step_image_registries.step_images_permitted",
@@ -126,11 +127,13 @@ test_step_image_registry_prefix_list_format if {
 			"code": "step_image_registries.step_image_registry_prefix_list_provided",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_step_image_registry_prefixes has unexpected format: 0: Invalid type. Expected: string, given: integer",
+			"severity": "failure",
 		},
 		{
 			"code": "step_image_registries.step_image_registry_prefix_list_provided",
 			# regal ignore:line-length
 			"msg": "Rule data allowed_step_image_registry_prefixes has unexpected format: (Root): array items[1,2] must be unique",
+			"severity": "failure",
 		},
 	}
 

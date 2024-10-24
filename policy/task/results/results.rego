@@ -8,6 +8,7 @@ package results
 import rego.v1
 
 import data.lib
+import data.lib.json as j
 
 # METADATA
 # title: Required result defined
@@ -37,8 +38,8 @@ deny contains result if {
 #   - policy_data
 #
 deny contains result if {
-	some error in _rule_data_errors
-	result := lib.result_helper(rego.metadata.chain(), [error])
+	some e in _rule_data_errors
+	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
 errors contains err if {
@@ -74,7 +75,7 @@ errors contains err if {
 	err := sprintf("%q result not found in %q Task/v%s", [required.result, required.task, version])
 }
 
-_rule_data_errors contains err if {
+_rule_data_errors contains error if {
 	schema := {
 		"$schema": "http://json-schema.org/draft-07/schema#",
 		"type": "array",
@@ -91,11 +92,11 @@ _rule_data_errors contains err if {
 		"uniqueItems": true,
 	}
 
-	# match_schema expects either a marshaled JSON resource (String) or an Object. It doesn't
-	# handle an Array directly.
-	value := json.marshal(lib.rule_data(_rule_data_key))
-	some violation in json.match_schema(value, schema)[1]
-	err := sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, violation.error])
+	some e in j.validate_schema(lib.rule_data(_rule_data_key), schema)
+	error := {
+		"message": sprintf("Rule data %s has unexpected format: %s", [_rule_data_key, e.message]),
+		"severity": e.severity,
+	}
 }
 
 _rule_data_key := "required_task_results"

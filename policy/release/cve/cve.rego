@@ -6,6 +6,47 @@
 #   the build pipeline, and that the image under test does not contain CVEs
 #   of certain security levels.
 #
+#
+#   The behaviour of the rules in this package is influenced by rule data.
+#   Firstly the rules can be configured to emit violations or warnings based on
+#   the availability of the vulnerability fix: patched -- if there is a
+#   remediation available, e.g. new version with a fix, or unpatched -- if there
+#   is, currently, no remidiation available. Secondly per severity: critical,
+#   high, medium, low or unknown choice can be made of the rule outcome: failure
+#   or warning. And lastly, per severity, choice can be made of how many leeway
+#   days are allowed before a vulnerability causing a failure will be reported
+#   as a warning instead.
+#
+#
+#   In the following example if rule data configuration, failures will be
+#   reported for critical and high patched vulnerabilities, for critical
+#   unpatched vulnerabilities only, warnings will be reported for medium and low
+#   patched, and for high and medium unpatched vulnerabilities. For critical and
+#   high patched vulnerabilities a leeway of 10 days is allowed.
+#
+#
+#   .Example rule data
+#
+#   [source,yaml]
+#
+#   ----
+#
+#   restrict_cve_security_levels:
+#     - critical
+#     - high
+#   warn_cve_security_levels:
+#     - medium
+#     - low
+#   restrict_unpatched_cve_security_levels:
+#     - critical
+#   warn_unpatched_cve_security_levels:
+#     - high
+#     - medium
+#   cve_leeway:
+#     critical: 10
+#     high: 10
+#   ----
+#
 package cve
 
 import rego.v1

@@ -10,6 +10,7 @@ package sbom
 import rego.v1
 
 import data.lib
+import data.lib.konflux
 
 # METADATA
 # title: Found
@@ -24,6 +25,10 @@ import data.lib
 #   - redhat
 #
 deny contains result if {
+	# TODO: Workaround until Konflux produces SBOMs for Image Indexes:
+	# https://issues.redhat.com/browse/KONFLUX-4330
+	not konflux.is_validating_image_index
+
 	count(_sboms) == 0
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

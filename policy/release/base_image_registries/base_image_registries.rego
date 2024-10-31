@@ -12,6 +12,7 @@ import rego.v1
 import data.lib
 import data.lib.image
 import data.lib.json as j
+import data.lib.konflux
 import data.lib.sbom
 
 # METADATA
@@ -61,6 +62,10 @@ deny contains result if {
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
+	# TODO: Workaround until Konflux produces SBOMs for Image Indexes:
+	# https://issues.redhat.com/browse/KONFLUX-4330
+	not konflux.is_validating_image_index
+
 	# Some images are built "from scratch" and not have any base images, e.g. UBI.
 	# This check distinguishes such images by simply ensuring that at least one SBOM
 	# is attached to the image.

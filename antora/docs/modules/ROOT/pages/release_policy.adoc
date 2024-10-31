@@ -308,7 +308,7 @@ Confirm the `allowed_registry_prefixes` rule data was provided, since it's requi
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `base_image_registries.allowed_registries_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L72[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L77[Source, window="_blank"]
 
 [#base_image_registries__base_image_permitted]
 === link:#base_image_registries__base_image_permitted[Base image comes from permitted registry]
@@ -320,7 +320,7 @@ Verify that the base images used when building a container image come from a kno
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Base image %q is from a disallowed registry`
 * Code: `base_image_registries.base_image_permitted`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L17[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L18[Source, window="_blank"]
 
 [#base_image_registries__base_image_info_found]
 === link:#base_image_registries__base_image_info_found[Base images provided]
@@ -332,7 +332,7 @@ Verify the expected information was provided about which base images were used d
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Base images information is missing`
 * Code: `base_image_registries.base_image_info_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L46[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L47[Source, window="_blank"]
 
 [#buildah_build_task_package]
 == link:#buildah_build_task_package[Buildah build task]
@@ -1066,7 +1066,7 @@ Confirm the `disallowed_packages` and `disallowed_attributes` rule data were pro
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `sbom.disallowed_packages_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom/sbom.rego#L31[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom/sbom.rego#L36[Source, window="_blank"]
 
 [#sbom__found]
 === link:#sbom__found[Found]
@@ -1078,7 +1078,7 @@ Confirm an SBOM attestation exists.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `No SBOM attestations found`
 * Code: `sbom.found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom/sbom.rego#L14[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom/sbom.rego#L15[Source, window="_blank"]
 
 [#sbom_cyclonedx_package]
 == link:#sbom_cyclonedx_package[SBOM CycloneDX]

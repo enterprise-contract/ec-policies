@@ -209,12 +209,45 @@ test_sbom_base_image_selection if {
 	lib.assert_empty(base_image_registries.deny) with lib.sbom.cyclonedx_sboms as sboms
 }
 
-test_missing_result if {
+test_base_image_not_found if {
 	expected := {{
 		"code": "base_image_registries.base_image_info_found",
 		"msg": "Base images information is missing",
 	}}
 	lib.assert_equal_results(base_image_registries.deny, expected)
+}
+
+test_base_image_not_found_image_index if {
+	att := {"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": [{"results": [
+			{
+				"name": "IMAGES",
+				"type": "string",
+				"value": "registry.local/spam@sha256:abc, registry.local/bacon@sha256:bcd",
+			},
+			{
+				"name": "IMAGE_URL",
+				"type": "string",
+				"value": "registry.local/eggs:latest",
+			},
+			{
+				"name": "IMAGE_DIGEST",
+				"type": "string",
+				"value": "sha256:fff",
+			},
+		]}]},
+	}}}
+
+	lib.assert_empty(base_image_registries.deny) with input.attestations as [att]
+		with input.image.ref as "registry.local/ham@sha256:fff"
+
+	expected := {{
+		"code": "base_image_registries.base_image_info_found",
+		"msg": "Base images information is missing",
+	}}
+	lib.assert_equal_results(base_image_registries.deny, expected) with input.attestations as [att]
+		with input.image.ref as "registry.local/ham@sha256:aaa"
 }
 
 test_allowed_registries_provided if {

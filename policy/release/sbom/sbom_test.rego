@@ -77,6 +77,10 @@ test_rule_data_validation if {
 			{"type": "distribution", "url": "badurl"},
 			{"invalid": "foo"},
 		],
+		lib.sbom.rule_data_allowed_package_sources_key: [
+			{"type": "generic", "patterns": ["["]},
+			{"invalid": "foo"},
+		],
 	}
 
 	expected := {
@@ -195,6 +199,26 @@ test_rule_data_validation if {
 		},
 		{
 			"code": "sbom.disallowed_packages_provided",
+			"msg": "Rule data allowed_package_sources has unexpected format: 0.patterns.0: Does not match format 'regex'",
+			"severity": "failure",
+		},
+		{
+			"code": "sbom.disallowed_packages_provided",
+			"msg": "Rule data allowed_package_sources has unexpected format: 1: Additional property invalid is not allowed",
+			"severity": "warning",
+		},
+		{
+			"code": "sbom.disallowed_packages_provided",
+			"msg": "Rule data allowed_package_sources has unexpected format: 1: patterns is required",
+			"severity": "failure",
+		},
+		{
+			"code": "sbom.disallowed_packages_provided",
+			"msg": "Rule data allowed_package_sources has unexpected format: 1: type is required",
+			"severity": "failure",
+		},
+		{
+			"code": "sbom.disallowed_packages_provided",
 			# regal ignore:line-length
 			"msg": "Rule data disallowed_external_references has unexpected format: 1: Additional property invalid is not allowed",
 			"severity": "warning",
@@ -227,6 +251,7 @@ test_rule_data_validation if {
 		with data.rule_data as {
 			lib.sbom.rule_data_packages_key: [],
 			lib.sbom.rule_data_attributes_key: [],
+			lib.sbom.rule_data_allowed_package_sources_key: [],
 		}
 }
 

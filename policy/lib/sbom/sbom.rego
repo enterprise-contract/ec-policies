@@ -255,6 +255,38 @@ rule_data_errors contains error if {
 	}
 }
 
+# Verify allowed_package_sources is array of purl/regex list pairs
+rule_data_errors contains error if {
+	some e in j.validate_schema(
+		lib.rule_data(rule_data_allowed_package_sources_key),
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"type": {"type": "string"},
+					"patterns": {
+						"type": "array",
+						"items": {
+							"type": "string",
+							"format": "regex",
+						},
+					},
+				},
+				"required": ["type", "patterns"],
+				"additionalProperties": false,
+			},
+		},
+	)
+
+	error := {
+		# regal ignore:line-length
+		"message": sprintf("Rule data %s has unexpected format: %s", [rule_data_allowed_package_sources_key, e.message]),
+		"severity": e.severity,
+	}
+}
+
 _sbom_cyclonedx_image_path := "root/buildinfo/content_manifests/sbom-cyclonedx.json"
 
 _sbom_spdx_image_path := "root/buildinfo/content_manifests/sbom-spdx.json"
@@ -266,3 +298,5 @@ rule_data_attributes_key := "disallowed_attributes"
 rule_data_allowed_external_references_key := "allowed_external_references"
 
 rule_data_disallowed_external_references_key := "disallowed_external_references"
+
+rule_data_allowed_package_sources_key := "allowed_package_sources"

@@ -57,7 +57,7 @@ deny contains result if {
 	}
 
 	# We're expecting just one attestation, but if there are multiple let's apply this check
-	# to all of them. Note that we don't produce a violation if lib.rhtap_jenkins_attestations
+	# to all of them. Note that we don't produce a violation if _rhtap_attestations
 	# has zero length. (The 'attestation_found' violation defined above would be produced.)
 	count(attestations_with_invocation_id) != count(_rhtap_attestations)
 

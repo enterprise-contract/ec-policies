@@ -944,6 +944,44 @@ Check the image metadata for the presence of a "quay.expires-after" label. If it
 * Code: `quay_expiration.expires_label`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/quay_expiration/quay_expiration.rego#L16[Source, window="_blank"]
 
+[#rhtap_github_package]
+== link:#rhtap_github_package[RHTAP GitHub]
+
+Some initial checks for images built using an RHTAP GitHub build pipeline. Note that the RHTAP GitHub pipeline is WIP currently, but will be shipped in an upcoming release of RHTAP. It's expected more useful checks will be added in future. RHTAP GitHub pipelines are defined under https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
+
+* Package name: `rhtap_github`
+
+[#rhtap_github__attestation_found]
+=== link:#rhtap_github__attestation_found[RHTAP GitHub SLSA Provenance Attestation Found]
+
+Verify an attestation created by the RHTAP GitHub build pipeline is present.
+
+*Solution*: It appears the build pipeline did not create a SLSA provenance attestation. Check the logs in GitHub for the cosign-sign-attest stage to see if you can find out why.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The expected SLSA v1.0 provenance with build type %s was not found.`
+* Code: `rhtap_github.attestation_found`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_github/rhtap_github.rego#L17[Source, window="_blank"]
+
+[#rhtap_gitlab_package]
+== link:#rhtap_gitlab_package[RHTAP GitLab]
+
+Some initial checks for images built using an RHTAP GitLab build pipeline. Note that the RHTAP GitLab pipeline is WIP currently, but will be shipped in an upcoming release of RHTAP. It's expected more useful checks will be added in future. RHTAP GitLab pipelines are defined under https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
+
+* Package name: `rhtap_gitlab`
+
+[#rhtap_gitlab__attestation_found]
+=== link:#rhtap_gitlab__attestation_found[RHTAP GitLab SLSA Provenance Attestation Found]
+
+Verify an attestation created by the RHTAP GitLab build pipeline is present.
+
+*Solution*: It appears the build pipeline did not create a SLSA provenance attestation. Check the logs in GitLab for the cosign-sign-attest stage to see if you can find out why.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The expected SLSA v1.0 provenance with build type %s was not found.`
+* Code: `rhtap_gitlab.attestation_found`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_gitlab/rhtap_gitlab.rego#L17[Source, window="_blank"]
+
 [#rhtap_jenkins_package]
 == link:#rhtap_jenkins_package[RHTAP Jenkins]
 

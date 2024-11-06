@@ -84,17 +84,20 @@ taskrun_attestations := [att |
 	att.statement.predicate.buildType in taskrun_att_build_types
 ]
 
-# For attestations created using an RHTAP Jenkins build pipeline. See also:
+# For attestations created using an RHTAP build pipeline. See also:
 # - https://github.com/redhat-appstudio/tssc-sample-jenkins
 # - https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci/source-repo/jenkins
 # - https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci/gitops-template/jenkins
+# - https://github.com/redhat-appstudio/tssc-dev-multi-ci/blob/main/rhtap/att-predicate-jenkins.sh
+# - https://github.com/redhat-appstudio/tssc-dev-multi-ci/blob/main/rhtap/att-predicate-github.sh
+# - https://github.com/redhat-appstudio/tssc-dev-multi-ci/blob/main/rhtap/att-predicate-gitlab.sh
 #
-rhtap_jenkins_build_type := "https://redhat.com/rhtap/slsa-build-types/jenkins-build/v1"
+rhtap_build_type(rhtap_ci_type) := sprintf("https://redhat.com/rhtap/slsa-build-types/%s-build/v1", [rhtap_ci_type])
 
-rhtap_jenkins_attestations := [att |
+rhtap_attestations(rhtap_ci_type) := [att |
 	some att in input.attestations
 	att.statement.predicateType == slsa_provenance_predicate_type_v1
-	att.statement.predicate.buildDefinition.buildType == rhtap_jenkins_build_type
+	att.statement.predicate.buildDefinition.buildType == rhtap_build_type(rhtap_ci_type)
 ]
 
 tasks_from_pipelinerun := [task |

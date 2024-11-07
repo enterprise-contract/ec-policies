@@ -416,3 +416,10 @@ test_result_values if {
 
 	not lib.result_values(123)
 }
+
+test_rhtap_build_type if {
+	lib.assert_equal(
+		"https://redhat.com/rhtap/slsa-build-types/bacon-build/v1",
+		lib.rhtap_build_type("bacon"),
+	)
+}

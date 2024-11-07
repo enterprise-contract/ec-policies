@@ -29,8 +29,8 @@ import data.lib
 #   - rhtap-jenkins
 #
 deny contains result if {
-	count(lib.rhtap_jenkins_attestations) < 1
-	result := lib.result_helper(rego.metadata.chain(), [lib.rhtap_jenkins_build_type])
+	count(_rhtap_attestations) < 1
+	result := lib.result_helper(rego.metadata.chain(), [_rhtap_build_type])
 }
 
 # METADATA
@@ -51,7 +51,7 @@ deny contains result if {
 #
 deny contains result if {
 	attestations_with_invocation_id := {att |
-		some att in lib.rhtap_jenkins_attestations
+		some att in _rhtap_attestations
 		invocation_id := att.statement.predicate.runDetails.metadata.invocationID
 		trim_space(invocation_id) != ""
 	}
@@ -59,7 +59,13 @@ deny contains result if {
 	# We're expecting just one attestation, but if there are multiple let's apply this check
 	# to all of them. Note that we don't produce a violation if lib.rhtap_jenkins_attestations
 	# has zero length. (The 'attestation_found' violation defined above would be produced.)
-	count(attestations_with_invocation_id) != count(lib.rhtap_jenkins_attestations)
+	count(attestations_with_invocation_id) != count(_rhtap_attestations)
 
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
+
+_rhtap_attestations := lib.rhtap_attestations(_rhtap_ci_type)
+
+_rhtap_build_type := lib.rhtap_build_type(_rhtap_ci_type)
+
+_rhtap_ci_type := "jenkins"

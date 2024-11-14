@@ -104,6 +104,7 @@ Rules included:
 * xref:release_policy.adoc#buildah_build_task__add_capabilities_param[Buildah build task: ADD_CAPABILITIES parameter]
 * xref:release_policy.adoc#buildah_build_task__buildah_uses_local_dockerfile[Buildah build task: Buildah task uses a local Dockerfile]
 * xref:release_policy.adoc#buildah_build_task__platform_param[Buildah build task: PLATFORM parameter]
+* xref:release_policy.adoc#buildah_build_task__privileged_nested_param[Buildah build task: PRIVILEGED_NESTED parameter]
 * xref:release_policy.adoc#buildah_build_task__disallowed_platform_patterns_pattern[Buildah build task: disallowed_platform_patterns format]
 * xref:release_policy.adoc#cve__cve_blockers[CVE checks: Blocking CVE check]
 * xref:release_policy.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]
@@ -378,6 +379,18 @@ Verify the value of the PLATFORM parameter of a builder Task is allowed by match
 * Code: `buildah_build_task.platform_param`
 * Effective from: `2024-09-01T00:00:00Z`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task/buildah_build_task.rego#L58[Source, window="_blank"]
+
+[#buildah_build_task__privileged_nested_param]
+=== link:#buildah_build_task__privileged_nested_param[PRIVILEGED_NESTED parameter]
+
+Verify the PRIVILEGED_NESTED parameter of a builder Tasks was not set to `true`.
+
+*Solution*: Setting PRIVILEGED_NESTED parameter to true is not allowed for most container image builds. Either set the parameter value to false or use a policy config that excludes this policy rule.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `setting PRIVILEGED_NESTED parameter to true is not allowed`
+* Code: `buildah_build_task.privileged_nested_param`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/buildah_build_task/buildah_build_task.rego#L97[Source, window="_blank"]
 
 [#buildah_build_task__disallowed_platform_patterns_pattern]
 === link:#buildah_build_task__disallowed_platform_patterns_pattern[disallowed_platform_patterns format]

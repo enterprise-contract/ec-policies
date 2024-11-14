@@ -94,6 +94,28 @@ deny contains result if {
 	result := lib.result_helper_with_severity(rego.metadata.chain(), [error.message], error.severity)
 }
 
+# METADATA
+# title: PRIVILEGED_NESTED parameter
+# description: >-
+#   Verify the PRIVILEGED_NESTED parameter of a builder Tasks was not set to `true`.
+# custom:
+#   short_name: privileged_nested_param
+#   failure_msg: setting PRIVILEGED_NESTED parameter to true is not allowed
+#   solution: >-
+#     Setting PRIVILEGED_NESTED parameter to true is not allowed for most container
+#     image builds. Either set the parameter value to false or use a policy config
+#     that excludes this policy rule.
+#   collections:
+#   - redhat
+#   depends_on:
+#   - attestation_type.known_attestation_type
+#
+deny contains result if {
+	some param in _privileged_nested_params
+	trim_space(param) == "true"
+	result := lib.result_helper(rego.metadata.chain(), [])
+}
+
 _not_allowed_prefix(search) if {
 	not_allowed_prefixes := ["http://", "https://"]
 	some not_allowed_prefix in not_allowed_prefixes
@@ -118,6 +140,11 @@ _add_capabilities_params contains param if {
 _platform_params contains param if {
 	some buildah_task in _buildah_tasks
 	param := lib.tekton.task_param(buildah_task, "PLATFORM")
+}
+
+_privileged_nested_params contains param if {
+	some buildah_task in _buildah_tasks
+	param := lib.tekton.task_param(buildah_task, "PRIVILEGED_NESTED")
 }
 
 # Verify disallowed_platform_patterns is a list of strings. Empty list is fine.

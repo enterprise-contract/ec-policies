@@ -24,7 +24,7 @@ test_missing_trusted_tasks_data if {
 	lib.assert_equal(false, tekton.missing_trusted_tasks_data) with data.trusted_tasks as trusted_tasks
 }
 
-test_out_of_date_task_refs if {
+test_newer_tasks if {
 	tasks := [
 		same_date_trusted_bundle_task,
 		newest_trusted_bundle_task,
@@ -33,9 +33,18 @@ test_out_of_date_task_refs if {
 		outdated_trusted_git_task,
 	]
 
-	expected := {outdated_trusted_bundle_task, outdated_trusted_git_task}
+	expected := {
+		{
+			"newer_effective_on": "2099-01-01T00:00:00Z",
+			"task": outdated_trusted_bundle_task,
+		},
+		{
+			"newer_effective_on": "2099-01-01T00:00:00Z",
+			"task": outdated_trusted_git_task,
+		},
+	}
 
-	lib.assert_equal(expected, tekton.out_of_date_task_refs(tasks)) with data.trusted_tasks as trusted_tasks
+	lib.assert_equal(expected, tekton.newer_tasks_of(tasks)) with data.trusted_tasks as trusted_tasks
 }
 
 test_untrusted_task_refs if {

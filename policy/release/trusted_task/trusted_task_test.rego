@@ -61,13 +61,13 @@ test_outdated_warning if {
 		{
 			"code": "trusted_task.current",
 			# regal ignore:line-length
-			"msg": "Pipeline task \"outadated-honest-abe-p\" uses an out of date task reference, git+git.local/repo.git//tasks/honest-abe.yaml@37ef630394794f28142224295851a45eea5c63ae",
+			"msg": "Pipeline task \"outadated-honest-abe-p\" uses an out of date task reference, git+git.local/repo.git//tasks/honest-abe.yaml@37ef630394794f28142224295851a45eea5c63ae, new version of the Task must be used before 2099-01-01T00:00:00Z",
 			"term": "honest-abe",
 		},
 		{
 			"code": "trusted_task.current",
 			# regal ignore:line-length
-			"msg": "Pipeline task \"outdated-trusty-p\" uses an out of date task reference, oci://registry.local/trusty:1.0@sha256:outdated-digest",
+			"msg": "Pipeline task \"outdated-trusty-p\" uses an out of date task reference, oci://registry.local/trusty:1.0@sha256:outdated-digest, new version of the Task must be used before 2099-01-01T00:00:00Z",
 			"term": "trusty",
 		},
 	}

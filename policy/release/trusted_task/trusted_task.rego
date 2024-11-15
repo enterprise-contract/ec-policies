@@ -52,7 +52,9 @@ warn contains result if {
 #   Check if all Tekton Tasks use the latest known Task reference.
 # custom:
 #   short_name: current
-#   failure_msg: Pipeline task %q uses an out of date task reference, %s
+#   failure_msg: >-
+#     Pipeline task %q uses an out of date task reference, %s, new version of the
+#     Task must be used before %s
 #   solution: >-
 #     Update the Task reference to a newer version.
 #   collections:
@@ -60,11 +62,11 @@ warn contains result if {
 #   effective_on: 2024-05-07T00:00:00Z
 #
 warn contains result if {
-	some task in tekton.out_of_date_task_refs(lib.tasks_from_pipelinerun)
+	some t in tekton.newer_tasks_of(lib.tasks_from_pipelinerun)
 	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
-		[tekton.pipeline_task_name(task), _task_info(task)],
-		tekton.task_name(task),
+		[tekton.pipeline_task_name(t.task), _task_info(t.task), t.newer_effective_on],
+		tekton.task_name(t.task),
 	)
 }
 

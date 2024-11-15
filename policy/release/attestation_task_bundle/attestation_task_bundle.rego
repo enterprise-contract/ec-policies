@@ -42,7 +42,8 @@ warn contains result if {
 #   the most recent.
 # custom:
 #   short_name: task_ref_bundles_current
-#   failure_msg: Pipeline task '%s' uses an out of date task bundle '%s'
+#   failure_msg: Pipeline task '%s' uses an out of date task bundle '%s', new version of the
+#     Task must be used before %s
 #   solution: >-
 #     A task bundle used is not the most recent. The most recent task bundles are defined
 #     in the data source of your policy config.
@@ -50,10 +51,10 @@ warn contains result if {
 #   - attestation_type.known_attestation_type
 #
 warn contains result if {
-	some task in tekton.out_of_date_task_refs(lib.tasks_from_pipelinerun)
-	bundle := tekton.bundle(task)
+	some t in tekton.newer_tasks_of(lib.tasks_from_pipelinerun)
+	bundle := tekton.bundle(t.task)
 	bundle != ""
-	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task), bundle])
+	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(t.task), bundle, t.newer_effective_on])
 }
 
 # METADATA

@@ -38,13 +38,15 @@ warn contains result if {
 #   the most recent.
 # custom:
 #   short_name: out_of_date_task_bundle
-#   failure_msg: Pipeline task '%s' uses an out of date task bundle '%s'
+#   failure_msg: >-
+#     Pipeline task '%s' uses an out of date task bundle '%s', new version of the
+#     Task must be used before %s
 #
 warn contains result if {
-	some task in tekton.out_of_date_task_refs(input.spec.tasks)
-	bundle := tekton.bundle(task)
+	some t in tekton.newer_tasks_of(input.spec.tasks)
+	bundle := tekton.bundle(t.task)
 	bundle != ""
-	result := lib.result_helper(rego.metadata.chain(), [task.name, bundle])
+	result := lib.result_helper(rego.metadata.chain(), [t.task.name, bundle, t.newer_effective_on])
 }
 
 # METADATA

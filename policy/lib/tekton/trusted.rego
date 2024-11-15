@@ -21,11 +21,17 @@ missing_trusted_tasks_data if {
 	count(_trusted_tasks) == 0
 }
 
-# Returns a subset of tasks that use a trusted Task reference, but an updated Task reference exists.
-out_of_date_task_refs(tasks) := {task |
+# Returns an object containing the task and effective_on of a newer task for a
+# set of Tasks, value is returned for a task only if newer Task, matched by Task
+# reference, exist.
+newer_tasks_of(tasks) := {t |
 	some task in tasks
 	is_trusted_task(task)
-	_newer_record_exists(task)
+	newest := _newest_record_for(task)
+	t := {
+		"task": task,
+		"newer_effective_on": newest.effective_on,
+	}
 }
 
 # Returns a subset of tasks that do not use a trusted Task reference.
@@ -47,8 +53,9 @@ is_trusted_task(task) if {
 	record.ref == ref.pinned_ref
 }
 
-# Returns true if a newer record exists with a different digest.
-_newer_record_exists(task) if {
+# Returns the newer records, that is ones with a newer effective_on and a
+# different digest of a Task matched by the Task reference.
+_newest_record_for(task) := newest_record if {
 	ref := task_ref(task)
 	records := _trusted_tasks[ref.key]
 

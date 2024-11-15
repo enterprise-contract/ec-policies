@@ -79,7 +79,8 @@ test_trusted_bundle_out_of_date_past if {
 
 	lib.assert_equal_results(task_bundle.warn, {{
 		"code": "task_bundle.out_of_date_task_bundle",
-		"msg": "Pipeline task 'my-task-1' uses an out of date task bundle 'reg.com/repo:v2@sha256:bcd'",
+		# regal ignore:line-length
+		"msg": "Pipeline task 'my-task-1' uses an out of date task bundle 'reg.com/repo:v2@sha256:bcd', new version of the Task must be used before 2022-04-11T00:00:00Z",
 	}}) with input.spec.tasks as tasks
 		with data.trusted_tasks as trusted_tasks
 		with data.config.policy.when_ns as time.parse_rfc3339_ns("2022-03-12T00:00:00Z")

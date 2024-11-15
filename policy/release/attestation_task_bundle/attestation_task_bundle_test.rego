@@ -167,7 +167,8 @@ test_trusted_bundle_out_of_date_past if {
 
 	lib.assert_equal_results(attestation_task_bundle.warn, {{
 		"code": "attestation_task_bundle.task_ref_bundles_current",
-		"msg": "Pipeline task 'task-run-0' uses an out of date task bundle 'reg.com/repo:v2@sha256:bcd'",
+		# regal ignore:line-length
+		"msg": "Pipeline task 'task-run-0' uses an out of date task bundle 'reg.com/repo:v2@sha256:bcd', new version of the Task must be used before 2022-04-11T00:00:00Z",
 	}}) with input.attestations as attestations
 		with data.trusted_tasks as trusted_tasks
 		with data.config.policy.when_ns as time.parse_rfc3339_ns("2022-03-12T00:00:00Z")
@@ -237,7 +238,8 @@ test_warn_cases if {
 
 	expected_97f216 := {{
 		"code": "attestation_task_bundle.task_ref_bundles_current",
-		"msg": "Pipeline task 'buildah' uses an out of date task bundle 'q.io/r/task-buildah:0.1@sha256:97f216'",
+		# regal ignore:line-length
+		"msg": "Pipeline task 'buildah' uses an out of date task bundle 'q.io/r/task-buildah:0.1@sha256:97f216', new version of the Task must be used before 2023-11-06T00:00:00Z",
 	}}
 
 	lib.assert_equal_results(
@@ -273,7 +275,8 @@ test_warn_cases if {
 
 	expected_487b82 := {{
 		"code": "attestation_task_bundle.task_ref_bundles_current",
-		"msg": "Pipeline task 'buildah' uses an out of date task bundle 'q.io/r/task-buildah:0.1@sha256:487b82'",
+		# regal ignore:line-length
+		"msg": "Pipeline task 'buildah' uses an out of date task bundle 'q.io/r/task-buildah:0.1@sha256:487b82', new version of the Task must be used before 2023-11-06T00:00:00Z",
 	}}
 
 	lib.assert_equal_results(

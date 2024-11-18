@@ -26,12 +26,11 @@ import data.lib.k8s
 #     Make sure the container image used in each step of the Task comes from an approved registry.
 #
 deny contains result if {
-	allowed_registry_prefixes := lib.rule_data(_rule_data_key)
-
 	input.kind == "Task"
 
 	some step_index, step in input.spec.steps
 	image_ref := step.image
+	allowed_registry_prefixes := lib.rule_data(_rule_data_key)
 	not image_ref_permitted(image_ref, allowed_registry_prefixes)
 
 	result := lib.result_helper_with_term(

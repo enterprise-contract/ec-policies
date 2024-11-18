@@ -303,7 +303,7 @@ test_results_from_tests if {
 		"bundle": "registry.img/acceptable@sha256:digest",
 	}
 
-	att1 = att_mock_helper_ref(
+	att1 := att_mock_helper_ref(
 		lib.task_test_result_name, {
 			"result": "SUCCESS",
 			"foo": "bar",
@@ -313,7 +313,7 @@ test_results_from_tests if {
 	lib.assert_equal([expected], lib.results_from_tests) with input.attestations as [att1]
 
 	# An edge case that may never happen
-	att2 = att_mock_helper_ref(
+	att2 := att_mock_helper_ref(
 		lib.task_test_result_name, {
 			"result": "SUCCESS",
 			"foo": "bar",

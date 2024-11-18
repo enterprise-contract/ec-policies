@@ -6,7 +6,6 @@ import rego.v1
 # of the OCI image reference.
 parse(ref) := d if {
 	digest_parts := split(ref, "@")
-	digest := _get(digest_parts, 1, "")
 
 	contains(digest_parts[0], "/")
 	repo_parts := split(digest_parts[0], "/")
@@ -24,6 +23,8 @@ parse(ref) := d if {
 	)
 
 	not contains(repo, "://")
+
+	digest := _get(digest_parts, 1, "")
 
 	d := {
 		"digest": digest,
@@ -63,13 +64,14 @@ equal_ref(ref1, ref2) if {
 # need to be equal.
 equal_ref(ref1, ref2) if {
 	img1 := parse(ref1)
-	img2 := parse(ref2)
 
 	# need to make sure that the digest of one reference is present, otherwise we
 	# might end up comparing image references without tags and digests. equal_ref is
 	# commutative, so we can check that the digest exists for one of the references,
 	# in this case img1
 	img1.digest != ""
+
+	img2 := parse(ref2)
 	object.remove(img1, ["tag"]) == object.remove(img2, ["tag"])
 }
 

@@ -14,8 +14,8 @@ _validation_issues(doc, schema) := issues if {
 	d := _prepare_document(doc)
 	ok_error := json.match_schema(d, schema)
 	ok := ok_error[0]
-	errors := ok_error[1]
 	not ok
+	errors := ok_error[1]
 	issues := [i |
 		some e in errors
 		i := {
@@ -43,8 +43,8 @@ _check_schema(schema) := ok_msg if {
 	not is_null(schema)
 	ok_error := json.verify_schema(schema)
 	ok := ok_error[0]
-	error := ok_error[1]
 	not ok
+	error := ok_error[1]
 	ok_msg := {false: sprintf("Provided schema is not a valid JSON Schema: %s", [error])}
 } else := {true, ""}
 

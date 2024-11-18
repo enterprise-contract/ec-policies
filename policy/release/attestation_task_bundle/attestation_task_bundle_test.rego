@@ -228,17 +228,18 @@ test_warn_cases if {
 		"bundle": "q.io/r/task-buildah:0.1@sha256:97f216",
 	}})
 
-	expected_97f216 := {{
-		"code": "attestation_task_bundle.task_ref_bundles_current",
-		"msg": "Pipeline task 'buildah' uses an out of date task bundle 'q.io/r/task-buildah:0.1@sha256:97f216'",
-	}}
-
 	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as [attestation_97f216]
 		with data.trusted_tasks as trusted_tasks
 		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-11-07T00:00:00Z")
 	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as [attestation_97f216]
 		with data.trusted_tasks as trusted_tasks
 		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-11-06T00:00:00Z")
+
+	expected_97f216 := {{
+		"code": "attestation_task_bundle.task_ref_bundles_current",
+		"msg": "Pipeline task 'buildah' uses an out of date task bundle 'q.io/r/task-buildah:0.1@sha256:97f216'",
+	}}
+
 	lib.assert_equal_results(
 		expected_97f216,
 		attestation_task_bundle.warn,
@@ -257,11 +258,6 @@ test_warn_cases if {
 		"bundle": "q.io/r/task-buildah:0.1@sha256:487b82",
 	}})
 
-	expected_487b82 := {{
-		"code": "attestation_task_bundle.task_ref_bundles_current",
-		"msg": "Pipeline task 'buildah' uses an out of date task bundle 'q.io/r/task-buildah:0.1@sha256:487b82'",
-	}}
-
 	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as [attestation_487b82]
 		with data.trusted_tasks as trusted_tasks
 		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-11-07T00:00:00Z")
@@ -274,6 +270,12 @@ test_warn_cases if {
 	lib.assert_empty(attestation_task_bundle.warn) with input.attestations as [attestation_487b82]
 		with data.trusted_tasks as trusted_tasks
 		with data.config.policy.when_ns as time.parse_rfc3339_ns("2023-10-25T00:00:00Z")
+
+	expected_487b82 := {{
+		"code": "attestation_task_bundle.task_ref_bundles_current",
+		"msg": "Pipeline task 'buildah' uses an out of date task bundle 'q.io/r/task-buildah:0.1@sha256:487b82'",
+	}}
+
 	lib.assert_equal_results(
 		expected_487b82,
 		attestation_task_bundle.warn,

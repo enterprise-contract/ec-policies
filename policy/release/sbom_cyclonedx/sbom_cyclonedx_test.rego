@@ -188,6 +188,101 @@ test_external_references_disallowed_no_purl if {
 		}]}
 }
 
+test_allowed_package_sources if {
+	expected := {{
+		"code": "sbom_cyclonedx.allowed_package_sources",
+		"term": "pkg:generic/openssl@1.1.10g?download_url=https://openssl.org/source/openssl-1.1.0g.tar.gz",
+		# regal ignore:line-length
+		"msg": `Package pkg:generic/openssl@1.1.10g?download_url=https://openssl.org/source/openssl-1.1.0g.tar.gz fetched by cachi2 was sourced from "https://openssl.org/source/openssl-1.1.0g.tar.gz" which is not allowed`,
+	}}
+
+	att := json.patch(_sbom_attestation, [
+		{
+			"op": "add",
+			"path": "/statement/predicate/components/-",
+			"value": {
+				"type": "file",
+				"name": "openssl",
+				"purl": "pkg:generic/openssl@1.1.10g?download_url=https://openssl.org/source/openssl-1.1.0g.tar.gz",
+				"properties": [{
+					"name": "cachi2:found_by",
+					"value": "cachi2",
+				}],
+				"externalReferences": [{"type": "distribution", "url": "https://openssl.org/source/openssl-1.1.0g.tar.gz"}],
+			},
+		},
+		{
+			"op": "add",
+			"path": "/statement/predicate/components/-",
+			"value": {
+				"type": "library",
+				"name": "batik-anim",
+				"purl": "pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1?type=pom",
+				"properties": [{
+					"name": "cachi2:found_by",
+					"value": "cachi2",
+				}],
+				# regal ignore:line-length
+				"externalReferences": [{"type": "distribution", "url": "https://repo.maven.apache.org/maven2/org/apache/xmlgraphics/batik-anim/1.9.1/batik-anim-1.9.1.pom"}],
+			},
+		},
+		{
+			"op": "add",
+			"path": "/statement/predicate/components/-",
+			"value": {
+				"type": "file",
+				"name": "unrelated",
+				"purl": "pkg:generic/unrelated",
+				"externalReferences": [{"type": "distribution", "url": "https://irrelevant.org"}],
+			},
+		},
+	])
+
+	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [att]
+		with data.rule_data as {sbom.rule_data_allowed_package_sources_key: [
+			{
+				"type": "maven",
+				"patterns": [".*apache.org.*", ".*example.com.*"],
+			},
+			{
+				"type": "generic",
+				"patterns": [".*apache.org.*", ".*example.com.*"],
+			},
+		]}
+}
+
+test_allowed_package_sources_no_rule_defined if {
+	expected := {{
+		"code": "sbom_cyclonedx.allowed_package_sources",
+		"term": "pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1?type=pom",
+		# regal ignore:line-length
+		"msg": `Package pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1?type=pom fetched by cachi2 was sourced from "https://repo.maven.apache.org/maven2/org/apache/xmlgraphics/batik-anim/1.9.1/batik-anim-1.9.1.pom" which is not allowed`,
+	}}
+
+	att := json.patch(_sbom_attestation, [{
+		"op": "add",
+		"path": "/statement/predicate/components/-",
+		"value": {
+			"type": "library",
+			"name": "batik-anim",
+			"purl": "pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1?type=pom",
+			"properties": [{
+				"name": "cachi2:found_by",
+				"value": "cachi2",
+			}],
+			# regal ignore:line-length
+			"externalReferences": [{"type": "distribution", "url": "https://repo.maven.apache.org/maven2/org/apache/xmlgraphics/batik-anim/1.9.1/batik-anim-1.9.1.pom"}],
+		},
+	}])
+
+	# rule data is defined only for purl of type generic
+	lib.assert_equal_results(expected, sbom_cyclonedx.deny) with input.attestations as [att]
+		with data.rule_data as {sbom.rule_data_allowed_package_sources_key: [{
+			"type": "generic",
+			"patterns": [".*example.com.*"],
+		}]}
+}
+
 test_attributes_not_allowed_no_properties if {
 	att := json.patch(_sbom_attestation, [{
 		"op": "remove",

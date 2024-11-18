@@ -90,6 +90,7 @@
 *** xref:release_policy.adoc#sbom_cyclonedx_package[SBOM CycloneDX]
 **** xref:release_policy.adoc#sbom_cyclonedx__allowed[Allowed]
 **** xref:release_policy.adoc#sbom_cyclonedx__allowed_package_external_references[Allowed package external references]
+**** xref:release_policy.adoc#sbom_cyclonedx__allowed_package_sources[Allowed package sources]
 **** xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_attributes[Disallowed package attributes]
 **** xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_external_references[Disallowed package external references]
 **** xref:release_policy.adoc#sbom_cyclonedx__valid[Valid]

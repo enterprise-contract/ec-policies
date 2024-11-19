@@ -59,3 +59,8 @@ _prepare_document(doc) := d if {
 _severity(e) := "warning" if {
 	startswith(e.desc, "Additional property")
 } else := "failure"
+
+with_severity_for_pattern(issue, severity, pattern) := updated_issue if {
+	regex.match(pattern, issue.message)
+	updated_issue := object.union(issue, {"severity": severity})
+} else := issue

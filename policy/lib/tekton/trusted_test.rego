@@ -86,6 +86,10 @@ test_data_errors if {
 			{"ref": "bad-effective-on", "effective_on": "not-a-date"},
 			{"ref": "bad-effective-on", "effective_on": "2024-01-01T00:00:00Z", "expires_on": "not-a-date"},
 		],
+		"duplicated-entries": [
+			{"ref": "sha256:digest", "effective_on": "2099-01-01T00:00:00Z"},
+			{"ref": "sha256:digest", "effective_on": "2099-01-01T00:00:00Z"},
+		],
 	}
 
 	expected := {
@@ -117,6 +121,10 @@ test_data_errors if {
 		{
 			"message": `trusted_tasks.bad-dates[1].expires_on is not valid RFC3339 format: "not-a-date"`,
 			"severity": "failure",
+		},
+		{
+			"message": "trusted_tasks data has unexpected format: duplicated-entries: array items[0,1] must be unique",
+			"severity": "warning",
 		},
 	}
 

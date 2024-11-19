@@ -96,3 +96,29 @@ test_validate_schema_unknown_property_warning if {
 		}),
 	)
 }
+
+test_with_severity_for_pattern if {
+	# Empty issue
+	lib.assert_equal(
+		{},
+		j.with_severity_for_pattern({}, "warning", ".*"),
+	)
+
+	# Empty message
+	lib.assert_equal(
+		{"message": "", "severity": "warning"},
+		j.with_severity_for_pattern({"message": ""}, "warning", ".*"),
+	)
+
+	# Message not matched
+	lib.assert_equal(
+		{"message": "spam"},
+		j.with_severity_for_pattern({"message": "spam"}, "warning", "bacon"),
+	)
+
+	# Severity overwritten
+	lib.assert_equal(
+		{"message": "spam", "severity": "warning"},
+		j.with_severity_for_pattern({"message": "spam", "severity": "failure"}, "warning", "spam"),
+	)
+}

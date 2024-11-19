@@ -270,6 +270,22 @@ test_plat_patterns_rule_data_validation if {
 	lib.assert_equal_results(buildah_build_task.deny, expected) with data.rule_data as d
 }
 
+test_privileged_nested_param if {
+	expected := {{
+		"code": "buildah_build_task.privileged_nested_param",
+		"msg": "setting PRIVILEGED_NESTED parameter to true is not allowed",
+	}}
+
+	attestation := _slsav1_attestation("buildah", [{"name": "PRIVILEGED_NESTED", "value": "true"}], _results)
+	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [attestation]
+
+	attestation_empty := _slsav1_attestation("buildah", [{"name": "PRIVILEGED_NESTED", "value": ""}], _results)
+	lib.assert_empty(buildah_build_task.deny) with input.attestations as [attestation_empty]
+
+	attestation_false := _slsav1_attestation("buildah", [{"name": "PRIVILEGED_NESTED", "value": "false"}], _results)
+	lib.assert_empty(buildah_build_task.deny) with input.attestations as [attestation_false]
+}
+
 _attestation(task_name, params, results) := {"statement": {"predicate": {
 	"buildType": lib.tekton_pipeline_run,
 	"buildConfig": {"tasks": [{

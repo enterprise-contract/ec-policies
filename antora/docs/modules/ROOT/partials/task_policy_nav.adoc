@@ -1,5 +1,7 @@
 * xref:task_policy.adoc[Task Policy]
-** xref:task_policy.adoc#step_image_registries_package[Tekton Task Step image policies]
+** xref:task_policy.adoc#step_images_package[Tekton Task Step image policies]
+*** xref:task_policy.adoc#step_images__step_images_accessible[Step images are valid]
+** xref:task_policy.adoc#step_image_registries_package[Tekton Task Step image registry policies]
 *** xref:task_policy.adoc#step_image_registries__step_image_registry_prefix_list_provided[Permitted step image registry prefix list provided]
 *** xref:task_policy.adoc#step_image_registries__step_images_permitted[Step images come from permitted registry]
 ** xref:task_policy.adoc#annotations_package[Tekton Task annotations]

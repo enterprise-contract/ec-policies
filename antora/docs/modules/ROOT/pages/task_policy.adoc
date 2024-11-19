@@ -4,8 +4,27 @@
 
 These rules are applied to Tekton task definitions.
 
+[#step_images_package]
+== link:#step_images_package[Tekton Task Step image policies]
+
+This package ensures that a Task definition contains valid values for the image references used by the Task's steps.
+
+* Package name: `step_images`
+
+[#step_images__step_images_accessible]
+=== link:#step_images__step_images_accessible[Step images are valid]
+
+Confirm that each step in the Task uses a container image that is accessible.
+
+*Solution*: Make sure the container image used in each step of the Task is pushed to the registry and that it can be fetched.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Step %d uses inaccessible image ref '%s'`
+* Code: `step_images.step_images_accessible`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/step_images/step_images.rego#L14[Source, window="_blank"]
+
 [#step_image_registries_package]
-== link:#step_image_registries_package[Tekton Task Step image policies]
+== link:#step_image_registries_package[Tekton Task Step image registry policies]
 
 This package ensures that a Task definition contains expected values for the image references used by the Task's steps.
 

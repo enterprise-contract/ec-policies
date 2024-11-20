@@ -90,7 +90,6 @@ data_errors contains error if {
 					"required": ["effective_on", "ref"],
 					"additionalProperties": false,
 				},
-				"uniqueItems": true,
 				"minItems": 1,
 			}},
 		},

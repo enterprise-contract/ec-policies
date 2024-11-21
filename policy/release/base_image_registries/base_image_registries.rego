@@ -41,7 +41,8 @@ import data.lib.sbom
 deny contains result if {
 	some image_ref in _base_images
 	not _image_ref_permitted(image_ref)
-	result := lib.result_helper(rego.metadata.chain(), [image_ref])
+	repo := image.parse(image_ref).repo
+	result := lib.result_helper_with_term(rego.metadata.chain(), [image_ref], repo)
 }
 
 # METADATA

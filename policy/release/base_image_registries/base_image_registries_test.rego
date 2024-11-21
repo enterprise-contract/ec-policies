@@ -94,14 +94,17 @@ test_disallowed_base_images if {
 		{
 			"code": "base_image_registries.base_image_permitted",
 			"msg": "Base image \"registry.redhat.yo/ubi7/3\" is from a disallowed registry",
+			"term": "registry.redhat.yo/ubi7/3",
 		},
 		{
 			"code": "base_image_registries.base_image_permitted",
 			"msg": "Base image \"registry.redhat.ioo/spam/3\" is from a disallowed registry",
+			"term": "registry.redhat.ioo/spam/3",
 		},
 		{
 			"code": "base_image_registries.base_image_permitted",
 			"msg": "Base image \"dockery.io/busybox/3\" is from a disallowed registry",
+			"term": "dockery.io/busybox/3",
 		},
 	}
 	lib.assert_equal_results(base_image_registries.deny, expected) with lib.sbom.cyclonedx_sboms as sboms
@@ -136,10 +139,12 @@ test_disallowed_base_images_with_snapshot if {
 		{
 			"code": "base_image_registries.base_image_permitted",
 			"msg": "Base image \"docker.io/library/registry:latest@sha256:bcd\" is from a disallowed registry",
+			"term": "docker.io/library/registry",
 		},
 		{
 			"code": "base_image_registries.base_image_permitted",
 			"msg": "Base image \"registry.redhat.io/ubi7:latest@sha256:abc\" is from a disallowed registry",
+			"term": "registry.redhat.io/ubi7",
 		},
 	}
 

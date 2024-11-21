@@ -3,8 +3,7 @@
 # title: SPDX SBOM
 # description: >-
 #   Checks different properties of the CycloneDX SBOMs associated with the image being validated.
-#   The SBOMs are read from multiple locations: a file within the image, and a CycloneDX SBOM
-#   attestation.
+#
 package sbom_spdx
 
 import rego.v1

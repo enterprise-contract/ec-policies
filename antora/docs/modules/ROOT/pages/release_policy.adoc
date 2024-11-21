@@ -1136,7 +1136,7 @@ Confirm an SBOM attestation exists.
 [#sbom_cyclonedx_package]
 == link:#sbom_cyclonedx_package[SBOM CycloneDX]
 
-Checks different properties of the CycloneDX SBOMs associated with the image being validated. The SBOMs are read from multiple locations: a file within the image, and a CycloneDX SBOM attestation.
+Checks different properties of the CycloneDX SBOMs associated with the image being validated.
 
 * Package name: `sbom_cyclonedx`
 
@@ -1150,7 +1150,7 @@ Confirm the CycloneDX SBOM contains only allowed packages. By default all packag
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package is not allowed: %s`
 * Code: `sbom_cyclonedx.allowed`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L36[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L34[Source, window="_blank"]
 
 [#sbom_cyclonedx__allowed_package_external_references]
 === link:#sbom_cyclonedx__allowed_package_external_references[Allowed package external references]
@@ -1162,7 +1162,7 @@ Confirm the CycloneDX SBOM contains only packages with explicitly allowed extern
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package %s has reference %q of type %q which is not explicitly allowed%s`
 * Code: `sbom_cyclonedx.allowed_package_external_references`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L89[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L87[Source, window="_blank"]
 
 [#sbom_cyclonedx__allowed_package_sources]
 === link:#sbom_cyclonedx__allowed_package_sources[Allowed package sources]
@@ -1175,7 +1175,7 @@ For each of the components fetched by Cachi2 which define externalReferences of 
 * FAILURE message: `Package %s fetched by cachi2 was sourced from %q which is not allowed`
 * Code: `sbom_cyclonedx.allowed_package_sources`
 * Effective from: `2024-12-15T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L151[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L149[Source, window="_blank"]
 
 [#sbom_cyclonedx__disallowed_package_attributes]
 === link:#sbom_cyclonedx__disallowed_package_attributes[Disallowed package attributes]
@@ -1188,7 +1188,7 @@ Confirm the CycloneDX SBOM contains only packages without disallowed attributes.
 * FAILURE message: `Package %s has the attribute %q set%s`
 * Code: `sbom_cyclonedx.disallowed_package_attributes`
 * Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L56[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L54[Source, window="_blank"]
 
 [#sbom_cyclonedx__disallowed_package_external_references]
 === link:#sbom_cyclonedx__disallowed_package_external_references[Disallowed package external references]
@@ -1201,7 +1201,7 @@ Confirm the CycloneDX SBOM contains only packages without disallowed external re
 * FAILURE message: `Package %s has reference %q of type %q which is disallowed%s`
 * Code: `sbom_cyclonedx.disallowed_package_external_references`
 * Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L120[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L118[Source, window="_blank"]
 
 [#sbom_cyclonedx__valid]
 === link:#sbom_cyclonedx__valid[Valid]
@@ -1213,7 +1213,7 @@ Check the CycloneDX SBOM has the expected format. It verifies the CycloneDX SBOM
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `CycloneDX SBOM at index %d is not valid: %s`
 * Code: `sbom_cyclonedx.valid`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L16[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L14[Source, window="_blank"]
 
 [#slsa_build_build_service_package]
 == link:#slsa_build_build_service_package[SLSA - Build - Build Service]
@@ -1462,7 +1462,7 @@ Attestation contains source reference.
 [#sbom_spdx_package]
 == link:#sbom_spdx_package[SPDX SBOM]
 
-Checks different properties of the CycloneDX SBOMs associated with the image being validated. The SBOMs are read from multiple locations: a file within the image, and a CycloneDX SBOM attestation.
+Checks different properties of the CycloneDX SBOMs associated with the image being validated.
 
 * Package name: `sbom_spdx`
 
@@ -1476,7 +1476,7 @@ Confirm the SPDX SBOM contains only allowed packages. By default all packages ar
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package is not allowed: %s`
 * Code: `sbom_spdx.allowed`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L51[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L50[Source, window="_blank"]
 
 [#sbom_spdx__allowed_package_external_references]
 === link:#sbom_spdx__allowed_package_external_references[Allowed package external references]
@@ -1488,7 +1488,7 @@ Confirm the SPDX SBOM contains only packages with explicitly allowed external re
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package %s has reference %q of type %q which is not explicitly allowed%s`
 * Code: `sbom_spdx.allowed_package_external_references`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L73[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L72[Source, window="_blank"]
 
 [#sbom_spdx__contains_files]
 === link:#sbom_spdx__contains_files[Contains files]
@@ -1500,7 +1500,7 @@ Check the list of files in the SPDX SBOM is not empty.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The list of files is empty`
 * Code: `sbom_spdx.contains_files`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L134[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L133[Source, window="_blank"]
 
 [#sbom_spdx__contains_packages]
 === link:#sbom_spdx__contains_packages[Contains packages]
@@ -1512,7 +1512,7 @@ Check the list of packages in the SPDX SBOM is not empty.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The list of packages is empty`
 * Code: `sbom_spdx.contains_packages`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L36[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L35[Source, window="_blank"]
 
 [#sbom_spdx__disallowed_package_external_references]
 === link:#sbom_spdx__disallowed_package_external_references[Disallowed package external references]
@@ -1525,7 +1525,7 @@ Confirm the SPDX SBOM contains only packages without disallowed external referen
 * FAILURE message: `Package %s has reference %q of type %q which is disallowed%s`
 * Code: `sbom_spdx.disallowed_package_external_references`
 * Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L103[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L102[Source, window="_blank"]
 
 [#sbom_spdx__matches_image]
 === link:#sbom_spdx__matches_image[Matches image]
@@ -1537,7 +1537,7 @@ Check the SPDX SBOM targets the image being validated.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image digest in the SBOM, %q, is not as expected, %q`
 * Code: `sbom_spdx.matches_image`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L149[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L148[Source, window="_blank"]
 
 [#sbom_spdx__valid]
 === link:#sbom_spdx__valid[Valid]
@@ -1549,7 +1549,7 @@ Check the SPDX SBOM has the expected format. It verifies the SPDX SBOM matches t
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `SPDX SBOM at index %d is not valid: %s`
 * Code: `sbom_spdx.valid`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L16[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L15[Source, window="_blank"]
 
 [#schedule_package]
 == link:#schedule_package[Schedule related checks]

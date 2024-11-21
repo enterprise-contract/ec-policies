@@ -6,27 +6,13 @@ import data.lib.json as j
 import data.lib.tekton
 import rego.v1
 
-# cyclonedx_sboms and spdx_sboms returns a list of SBOMs associated with the image being validated. It will first
-# try to find them as references in the SLSA Provenance attestation and as an SBOM attestation. If
-# an SBOM is not found in those locations, then it will attempt to retrieve the SBOM from within the
-# image's filesystem. This fallback exists for legacy purposes and support for it will be removed
-# soon.
+# cyclonedx_sboms and spdx_sboms returns a list of SBOMs associated with the image being validated.
+# It will first try to find them as references in the SLSA Provenance attestation and as an SBOM
+# attestation.
 
 all_sboms := array.concat(cyclonedx_sboms, spdx_sboms)
 
-default cyclonedx_sboms := []
-
-cyclonedx_sboms := sboms if {
-	sboms := array.concat(_cyclonedx_sboms_from_attestations, _cyclonedx_sboms_from_oci)
-	count(sboms) > 0
-} else := _cyclonedx_sboms_from_image
-
-_cyclonedx_sboms_from_image := [sbom] if {
-	sbom := input.image.files[_sbom_cyclonedx_image_path]
-} else := [sbom] if {
-	input.image.config.Labels.vendor == "Red Hat, Inc."
-	sbom := ec.oci.image_files(input.image.ref, [_sbom_cyclonedx_image_path])[_sbom_cyclonedx_image_path]
-}
+cyclonedx_sboms := array.concat(_cyclonedx_sboms_from_attestations, _cyclonedx_sboms_from_oci)
 
 _cyclonedx_sboms_from_attestations := [statement.predicate |
 	some att in input.attestations
@@ -41,16 +27,7 @@ _cyclonedx_sboms_from_oci := [sbom |
 	sbom.bomFormat == "CycloneDX"
 ]
 
-spdx_sboms := sboms if {
-	sboms := array.concat(_spdx_sboms_from_attestations, _spdx_sboms_from_oci)
-	count(sboms) > 0
-} else := _spdx_sboms_from_image
-
-default _spdx_sboms_from_image := []
-
-_spdx_sboms_from_image := [sbom] if {
-	sbom := input.image.files[_sbom_spdx_image_path]
-}
+spdx_sboms := array.concat(_spdx_sboms_from_attestations, _spdx_sboms_from_oci)
 
 _spdx_sboms_from_attestations := [statement.predicate |
 	some att in input.attestations
@@ -286,10 +263,6 @@ rule_data_errors contains error if {
 		"severity": e.severity,
 	}
 }
-
-_sbom_cyclonedx_image_path := "root/buildinfo/content_manifests/sbom-cyclonedx.json"
-
-_sbom_spdx_image_path := "root/buildinfo/content_manifests/sbom-spdx.json"
 
 rule_data_packages_key := "disallowed_packages"
 

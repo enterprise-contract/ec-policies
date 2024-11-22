@@ -1,11 +1,8 @@
-ec-policies
-===========
+# ec-policies
 
 [Rego][rego] policies related to the Enterprise Contract.
 
-
-Getting started for developers
-------------------------------
+## Getting started for developers
 
 ### Makefile
 
@@ -143,9 +140,7 @@ Run the locally built `ec-cli` command
 
     dist/ec_<arch> validate image --verbose --images '{"components": [{"containerImage": "<container-image>", "name":"my-image", "source":{"git":{"url":"<repository-url>","revision":"<commit-id>"}}}]}' --policy 'policy.yaml' --public-key <public-key-to-verify-the-image> --strict false  --ignore-rekor --verbose --output=text
 
-
-Policy bundles
---------------
+## Policy bundles
 
 The policies defined here are bundled and pushed as OCI artifacts using
 `conftest`. There are three bundles, one for each of the release and pipeline
@@ -158,16 +153,12 @@ latest bundles are used.
 
 See also the [policy bundle documentation](./antora/docs/modules/ROOT/pages/policy_bundles.adoc).
 
-
-Getting started for policy authors
-----------------------------------
+## Getting started for policy authors
 
 See the [Policy Authoring][authoring] documentation for guidance on
 contributing to the definition of policy rules.
 
-
-See also
---------
+## See also
 
 * [Policy rule documentation][policydocs]
 * ["Verify Enterprise Contract" task definition][taskdef]

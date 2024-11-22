@@ -95,12 +95,10 @@ data_errors contains error if {
 		},
 	)
 
-	original_error := {
+	error := {
 		"message": sprintf("trusted_tasks data has unexpected format: %s", [e.message]),
 		"severity": e.severity,
 	}
-
-	error := j.with_severity_for_pattern(original_error, "warning", "must be unique")
 }
 
 data_errors contains error if {

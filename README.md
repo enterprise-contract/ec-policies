@@ -33,9 +33,11 @@ The documentation is built using [Antora][antora].
 
 Those docs are published [here][docs].
 
-To build the documentation locally:
+When making changes to policy rules, the docs will likely need to be re-generated. To do so run:
 
-    make docs-preview
+    make generate-docs
+
+Commit all of the modified files.
 
 ### Running tests
 

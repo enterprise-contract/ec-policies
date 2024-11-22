@@ -177,6 +177,11 @@ var docs = []doc{
 		Qualifier:   "build_task",
 		Description: "These rules are applied to Tekton build task definitions.",
 	},
+	{
+		Name:        "StepAction",
+		Qualifier:   "stepaction",
+		Description: "These rules are applied to Tekton StepAction definitions.",
+	},
 }
 
 //go:embed nav.template

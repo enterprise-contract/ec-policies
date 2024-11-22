@@ -1,0 +1,7 @@
+* xref:stepaction_policy.adoc[StepAction Policy]
+** xref:stepaction_policy.adoc#image_package[Tekton StepAction images policies]
+*** xref:stepaction_policy.adoc#image__permitted[Image comes from permitted registry]
+*** xref:stepaction_policy.adoc#image__accessible[Image is accessible]
+*** xref:stepaction_policy.adoc#image__rule_data[Rule data provided]
+** xref:stepaction_policy.adoc#kind_package[Tekton StepAction kind checks]
+*** xref:stepaction_policy.adoc#kind__valid[StepAction definition has expected kind]

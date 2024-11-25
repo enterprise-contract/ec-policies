@@ -1,0 +1,65 @@
+= StepAction Policy
+
+:numbered:
+
+These rules are applied to Tekton StepAction definitions.
+
+[#image_package]
+== link:#image_package[Tekton StepAction images policies]
+
+This package ensures that a StepAction definition contains a valid and allowed value for the image reference.
+
+* Package name: `image`
+
+[#image__permitted]
+=== link:#image__permitted[Image comes from permitted registry]
+
+Confirm the StepAction uses a container image with a URL that matches one of the prefixes in the provided list of allowed step image registry prefixes. The list is customizeable via the `allowed_step_image_registry_prefixes` rule data key.
+
+*Solution*: Make sure the container image used comes from an approved registry.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Image ref %q is disallowed`
+* Code: `image.permitted`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/stepaction/image/image.rego#L38[Source, window="_blank"]
+
+[#image__accessible]
+=== link:#image__accessible[Image is accessible]
+
+Confirm the container image used in the StepTemplate is accessible.
+
+*Solution*: Make sure the container image used in the StepTemplate is pushed to the registry and that it can be fetched.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Image ref %q is inaccessible`
+* Code: `image.accessible`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/stepaction/image/image.rego#L16[Source, window="_blank"]
+
+[#image__rule_data]
+=== link:#image__rule_data[Rule data provided]
+
+Confirm the `allowed_step_image_registry_prefixes` rule data is provided.
+
+*Solution*: Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key 'allowed_step_image_registry_prefixes' that contains a list of approved registries.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `image.rule_data`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/stepaction/image/image.rego#L62[Source, window="_blank"]
+
+[#kind_package]
+== link:#kind_package[Tekton StepAction kind checks]
+
+Policies to verify that a Tekton StepAction definition has the expected value for kind.
+
+* Package name: `kind`
+
+[#kind__valid]
+=== link:#kind__valid[StepAction definition has expected kind]
+
+Confirm the StepAction definition has the kind "StepAction".
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Unexpected kind %q for StepAction definition`
+* Code: `kind.valid`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/stepaction/kind/kind.rego#L14[Source, window="_blank"]

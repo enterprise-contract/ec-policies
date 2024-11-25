@@ -1,11 +1,8 @@
-ec-policies
-===========
+# ec-policies
 
 [Rego][rego] policies related to the Enterprise Contract.
 
-
-Getting started for developers
-------------------------------
+## Getting started for developers
 
 ### Makefile
 
@@ -14,23 +11,14 @@ The [`Makefile`](Makefile) contains a lot of useful scripts and commands. Run
 
 ### Dependencies
 
-Three tools are required, [`conftest`][conftest], [`opa`][opa], and [`gomplate`][gomplate].
+Go is required for development. Tools like [`conftest`][conftest] and [`opa`][opa] are executed with
+the Go binary - they do not need to be installed in your system. See the top of the [go.mod](./go.mod)
+file for the minimum version of Go required.
 
-You should be able to install them like this:
+Most of the maintainers use [asdf][asdf] to seamlessly use the right version of Go.
 
-    make install-tools
-
-If that doesn't work, installing them manually and making sure they're
-available in your path should be fine.
-
-An optional but useful tool for running tests while developing, (with `make
-live-test`), is [`entr`][entr]. You can install it with `dnf`:
-
-    sudo dnf install entr
-
-And of course you need make if you don't have it already:
-
-    sudo dnf install make
+Some, optional, make targets may require additional tooling. For example, `make live-test` requires
+[entr][entr] to be installed.
 
 ### Formatting
 
@@ -45,9 +33,11 @@ The documentation is built using [Antora][antora].
 
 Those docs are published [here][docs].
 
-To build the documentation locally:
+When making changes to policy rules, the docs will likely need to be re-generated. To do so run:
 
-    make docs-preview
+    make generate-docs
+
+Commit all of the modified files.
 
 ### Running tests
 
@@ -143,9 +133,7 @@ Run the locally built `ec-cli` command
 
     dist/ec_<arch> validate image --verbose --images '{"components": [{"containerImage": "<container-image>", "name":"my-image", "source":{"git":{"url":"<repository-url>","revision":"<commit-id>"}}}]}' --policy 'policy.yaml' --public-key <public-key-to-verify-the-image> --strict false  --ignore-rekor --verbose --output=text
 
-
-Policy bundles
---------------
+## Policy bundles
 
 The policies defined here are bundled and pushed as OCI artifacts using
 `conftest`. There are three bundles, one for each of the release and pipeline
@@ -158,26 +146,22 @@ latest bundles are used.
 
 See also the [policy bundle documentation](./antora/docs/modules/ROOT/pages/policy_bundles.adoc).
 
-
-Getting started for policy authors
-----------------------------------
+## Getting started for policy authors
 
 See the [Policy Authoring][authoring] documentation for guidance on
 contributing to the definition of policy rules.
 
-
-See also
---------
+## See also
 
 * [Policy rule documentation][policydocs]
 * ["Verify Enterprise Contract" task definition][taskdef]
 * [github.com/enterprise-contract][contract]
 * [github.com/konflux-ci][konflux-ci]
 
+[asdf]: https://asdf-vm.com/
 [rego]: https://www.openpolicyagent.org/docs/latest/policy-language/
 [conftest]: https://www.conftest.dev/
 [opa]: https://www.openpolicyagent.org/docs/latest/
-[gomplate]: https://docs.gomplate.ca/
 [entr]: https://github.com/eradman/entr
 [testing]: https://www.openpolicyagent.org/docs/latest/policy-testing/
 [docs]: https://enterprisecontract.dev/

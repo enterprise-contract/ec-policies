@@ -211,8 +211,7 @@ a| A set of policy rules to validate artifacts built using RHTAP Jenkins pipelin
 
 Rules included:
 
-* xref:release_policy.adoc#rhtap_jenkins__invocation_id_found[RHTAP Jenkins: RHTAP Jenkins SLSA Invocation ID present]
-* xref:release_policy.adoc#rhtap_jenkins__attestation_found[RHTAP Jenkins: RHTAP Jenkins SLSA Provenance Attestation Found]
+* xref:release_policy.adoc#rhtap_multi_ci__attestation_found[RHTAP Multi-CI: SLSA Provenance Attestation Found]
 
 | [#slsa3]`slsa3`
 a| Includes policy rules required to meet SLSA Level 3.
@@ -959,74 +958,24 @@ Check the image metadata for the presence of a "quay.expires-after" label. If it
 * Code: `quay_expiration.expires_label`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/quay_expiration/quay_expiration.rego#L16[Source, window="_blank"]
 
-[#rhtap_github_package]
-== link:#rhtap_github_package[RHTAP GitHub]
+[#rhtap_multi_ci_package]
+== link:#rhtap_multi_ci_package[RHTAP Multi-CI]
 
-Some initial checks for images built using an RHTAP GitHub build pipeline. Note that the RHTAP GitHub pipeline is WIP currently, but will be shipped in an upcoming release of RHTAP. It's expected more useful checks will be added in future. RHTAP GitHub pipelines are defined under https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
+Checks for images built using an RHTAP build pipeline in either Jenkins, GitLab or GitHub. RHTAP pipelines are defined under https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
 
-* Package name: `rhtap_github`
+* Package name: `rhtap_multi_ci`
 
-[#rhtap_github__attestation_found]
-=== link:#rhtap_github__attestation_found[RHTAP GitHub SLSA Provenance Attestation Found]
+[#rhtap_multi_ci__attestation_found]
+=== link:#rhtap_multi_ci__attestation_found[SLSA Provenance Attestation Found]
 
-Verify an attestation created by the RHTAP GitHub build pipeline is present.
+Verify an attestation created by the RHTAP Multi-CI build pipeline is present.
 
-*Solution*: It appears the build pipeline did not create a SLSA provenance attestation. Check the logs in GitHub for the cosign-sign-attest stage to see if you can find out why.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The expected SLSA v1.0 provenance with build type %s was not found.`
-* Code: `rhtap_github.attestation_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_github/rhtap_github.rego#L17[Source, window="_blank"]
-
-[#rhtap_gitlab_package]
-== link:#rhtap_gitlab_package[RHTAP GitLab]
-
-Some initial checks for images built using an RHTAP GitLab build pipeline. Note that the RHTAP GitLab pipeline is WIP currently, but will be shipped in an upcoming release of RHTAP. It's expected more useful checks will be added in future. RHTAP GitLab pipelines are defined under https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
-
-* Package name: `rhtap_gitlab`
-
-[#rhtap_gitlab__attestation_found]
-=== link:#rhtap_gitlab__attestation_found[RHTAP GitLab SLSA Provenance Attestation Found]
-
-Verify an attestation created by the RHTAP GitLab build pipeline is present.
-
-*Solution*: It appears the build pipeline did not create a SLSA provenance attestation. Check the logs in GitLab for the cosign-sign-attest stage to see if you can find out why.
+*Solution*: It appears the build pipeline did not create the expected SLSA provenance attestation. Check for relevant error messages in the 'cosign-sign-attest' pipeline step logs.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The expected SLSA v1.0 provenance with build type %s was not found.`
-* Code: `rhtap_gitlab.attestation_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_gitlab/rhtap_gitlab.rego#L17[Source, window="_blank"]
-
-[#rhtap_jenkins_package]
-== link:#rhtap_jenkins_package[RHTAP Jenkins]
-
-Some initial checks for images built using an RHTAP Jenkins build pipeline. Note that the RHTAP Jenkins pipeline is WIP currently, but will be shipped in an upcoming release of RHTAP. It's expected more useful checks will be added in future. RHTAP Jenkins pipelines are defined under https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
-
-* Package name: `rhtap_jenkins`
-
-[#rhtap_jenkins__invocation_id_found]
-=== link:#rhtap_jenkins__invocation_id_found[RHTAP Jenkins SLSA Invocation ID present]
-
-Confirm that an invocation ID was found in the attestation in the expected location.
-
-*Solution*: For some reason the invocation id was missing or empty in the build provenance. It should be located at `predicate.runDetails.metadata.invocationID` in the attestation statement.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The build provenance metadata did not contain an invocation id.`
-* Code: `rhtap_jenkins.invocation_id_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_jenkins/rhtap_jenkins.rego#L36[Source, window="_blank"]
-
-[#rhtap_jenkins__attestation_found]
-=== link:#rhtap_jenkins__attestation_found[RHTAP Jenkins SLSA Provenance Attestation Found]
-
-Verify an attestation created by the RHTAP Jenkins build pipeline is present.
-
-*Solution*: It appears the build pipeline did not create a SLSA provenance attestation. Check the logs in Jenkins for the cosign-sign-attest stage to see if you can find out why.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The expected SLSA v1.0 provenance with build type %s was not found.`
-* Code: `rhtap_jenkins.attestation_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_jenkins/rhtap_jenkins.rego#L17[Source, window="_blank"]
+* FAILURE message: `A SLSA v1.0 provenance with one of the following RHTAP Multi-CI build types was not found: %s.`
+* Code: `rhtap_multi_ci.attestation_found`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_multi_ci/rhtap_multi_ci.rego#L15[Source, window="_blank"]
 
 [#rpm_repos_package]
 == link:#rpm_repos_package[RPM Repos]

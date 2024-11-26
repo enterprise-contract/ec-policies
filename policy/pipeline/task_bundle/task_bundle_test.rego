@@ -141,12 +141,12 @@ trusted_tasks := {
 		# Latest v2
 		{"ref": "sha256:abc", "effective_on": "2022-04-11T00:00:00Z"},
 		# Older v2
-		{"ref": "sha256:bcd", "effective_on": "2022-03-11T00:00:00Z"},
+		{"ref": "sha256:bcd", "effective_on": "2022-03-11T00:00:00Z", "expires_on": "2022-04-11T00:00:00Z"},
 	],
 	"oci://reg.com/repo:v1": [
 		# Latest v1
 		{"ref": "sha256:cde", "effective_on": "2022-02-01T00:00:00Z"},
 		# Older v1
-		{"ref": "sha256:def", "effective_on": "2021-01-01T00:00:00Z"},
+		{"ref": "sha256:def", "effective_on": "2021-01-01T00:00:00Z", "expires_on": "2022-02-01T00:00:00Z"},
 	],
 }

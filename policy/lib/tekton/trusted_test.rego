@@ -4,6 +4,7 @@ import rego.v1
 
 import data.lib
 import data.lib.tekton
+import data.lib.time as time_lib
 
 test_unpinned_task_references if {
 	tasks := [
@@ -24,27 +25,88 @@ test_missing_trusted_tasks_data if {
 	lib.assert_equal(false, tekton.missing_trusted_tasks_data) with data.trusted_tasks as trusted_tasks
 }
 
-test_newer_tasks if {
-	tasks := [
-		same_date_trusted_bundle_task,
-		newest_trusted_bundle_task,
-		outdated_trusted_bundle_task,
-		newest_trusted_git_task,
-		outdated_trusted_git_task,
-	]
+test_task_expiry_warnings_after if {
+	# default
+	lib.assert_equal(0, tekton.task_expiry_warnings_after)
 
-	expected := {
-		{
-			"newer_effective_on": "2099-01-01T00:00:00Z",
-			"task": outdated_trusted_bundle_task,
-		},
-		{
-			"newer_effective_on": "2099-01-01T00:00:00Z",
-			"task": outdated_trusted_git_task,
-		},
-	}
+	# with rule data
+	lib.assert_equal(
+		time.add_date(
+			time_lib.effective_current_time_ns, 0, 0,
+			16,
+		),
+		tekton.task_expiry_warnings_after,
+	) with data.rule_data.task_expiry_warning_days as 16
+}
 
-	lib.assert_equal(expected, tekton.newer_tasks_of(tasks)) with data.trusted_tasks as trusted_tasks
+test_expiry_of if {
+	# defaults
+	# regal ignore:line-length
+	lib.assert_equal("2099-01-01T00:00:00Z", time.format(tekton.expiry_of(same_date_trusted_bundle_task))) with data.trusted_tasks as trusted_tasks
+	not tekton.expiry_of(newest_trusted_bundle_task) with data.trusted_tasks as trusted_tasks
+
+	# regal ignore:line-length
+	lib.assert_equal("2099-01-01T00:00:00Z", time.format(tekton.expiry_of(outdated_trusted_bundle_task))) with data.trusted_tasks as trusted_tasks
+	not tekton.expiry_of(newest_trusted_git_task) with data.trusted_tasks as trusted_tasks
+
+	# regal ignore:line-length
+	lib.assert_equal("2099-01-01T00:00:00Z", time.format(tekton.expiry_of(outdated_trusted_git_task))) with data.trusted_tasks as trusted_tasks
+
+	# when running far in the future without the grace period
+	# regal ignore:line-length
+	lib.assert_equal("2099-01-01T00:00:00Z", time.format(tekton.expiry_of(same_date_trusted_bundle_task))) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+	not tekton.expiry_of(newest_trusted_bundle_task) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+
+	# regal ignore:line-length
+	lib.assert_equal("2099-01-01T00:00:00Z", time.format(tekton.expiry_of(outdated_trusted_bundle_task))) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+	not tekton.expiry_of(newest_trusted_git_task) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+
+	# regal ignore:line-length
+	lib.assert_equal("2099-01-01T00:00:00Z", time.format(tekton.expiry_of(outdated_trusted_git_task))) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+
+	# when running far in the future within the grace period
+	# regal ignore:line-length
+	lib.assert_equal("2099-01-01T00:00:00Z", time.format(tekton.expiry_of(same_date_trusted_bundle_task))) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+		with data.rule_data.task_expiry_warning_days as 6
+	not tekton.expiry_of(newest_trusted_bundle_task) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+		with data.rule_data.task_expiry_warning_days as 6
+
+	# regal ignore:line-length
+	lib.assert_equal("2099-01-01T00:00:00Z", time.format(tekton.expiry_of(outdated_trusted_bundle_task))) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+		with data.rule_data.task_expiry_warning_days as 6
+	not tekton.expiry_of(newest_trusted_git_task) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+		with data.rule_data.task_expiry_warning_days as 6
+
+	# regal ignore:line-length
+	lib.assert_equal("2099-01-01T00:00:00Z", time.format(tekton.expiry_of(outdated_trusted_git_task))) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+		with data.rule_data.task_expiry_warning_days as 6
+
+	# when running far in the future outside the grace period
+	not tekton.expiry_of(same_date_trusted_bundle_task) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+		with data.rule_data.task_expiry_warning_days as 7
+	not tekton.expiry_of(newest_trusted_bundle_task) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+		with data.rule_data.task_expiry_warning_days as 7
+	not tekton.expiry_of(outdated_trusted_bundle_task) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+		with data.rule_data.task_expiry_warning_days as 7
+	not tekton.expiry_of(newest_trusted_git_task) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+		with data.rule_data.task_expiry_warning_days as 7
+	not tekton.expiry_of(outdated_trusted_git_task) with data.trusted_tasks as trusted_tasks
+		with data.config.policy.when_ns as time.parse_rfc3339_ns("2098-12-25T00:00:00Z")
+		with data.rule_data.task_expiry_warning_days as 7
 }
 
 test_untrusted_task_refs if {
@@ -135,6 +197,20 @@ test_data_errors if {
 	}
 
 	lib.assert_equal(tekton.data_errors, expected) with data.trusted_tasks as tasks
+}
+
+test_task_expiry_warning_days_data if {
+	lib.assert_equal(tekton.data_errors, {{
+		"message": "task_expiry_warning_days: Invalid type. Expected: integer, given: string",
+		"severity": "failure",
+	}}) with data.rule_data.task_expiry_warning_days as "14"
+
+	lib.assert_equal(tekton.data_errors, {{
+		"message": `task_expiry_warning_days: Invalid type. Expected: integer, given: number`,
+		"severity": "failure",
+	}}) with data.rule_data.task_expiry_warning_days as 5.5
+
+	lib.assert_empty(tekton.data_errors) with data.rule_data.task_expiry_warning_days as 14
 }
 
 trusted_bundle_task := {"spec": {"taskRef": {"resolver": "bundles", "params": [
@@ -231,14 +307,17 @@ trusted_tasks := {
 		{
 			"ref": "sha256:same_date",
 			"effective_on": "2099-01-01T00:00:00Z",
+			"expires_on": "2099-01-01T00:00:00Z",
 		},
 		{
 			"ref": "sha256:outdated-digest",
 			"effective_on": "2024-01-01T00:00:00Z",
+			"expires_on": "2099-01-01T00:00:00Z",
 		},
 		{
 			"ref": "sha256:expired-digest",
 			"effective_on": "2023-01-01T00:00:00Z",
+			"expires_on": "2024-01-01T00:00:00Z",
 		},
 	],
 	"git+git.local/repo.git//tasks/honest-abe.yaml": [
@@ -249,10 +328,12 @@ trusted_tasks := {
 		{
 			"ref": "37ef630394794f28142224295851a45eea5c63ae",
 			"effective_on": "2024-01-01T00:00:00Z",
+			"expires_on": "2099-01-01T00:00:00Z",
 		},
 		{
 			"ref": "26ef630394794f28142224295851a45eea5c63ae",
 			"effective_on": "2023-01-01T00:00:00Z",
+			"expires_on": "2024-01-01T00:00:00Z",
 		},
 	],
 }

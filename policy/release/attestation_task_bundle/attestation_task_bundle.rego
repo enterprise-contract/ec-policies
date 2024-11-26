@@ -51,10 +51,10 @@ warn contains result if {
 #   - attestation_type.known_attestation_type
 #
 warn contains result if {
-	some t in tekton.newer_tasks_of(lib.tasks_from_pipelinerun)
-	bundle := tekton.bundle(t.task)
-	bundle != ""
-	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(t.task), bundle, t.newer_effective_on])
+	some task in lib.tasks_from_pipelinerun
+	expiry := tekton.expiry_of(task)
+	bundle := tekton.bundle(task)
+	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task), bundle, time.format(expiry)])
 }
 
 # METADATA

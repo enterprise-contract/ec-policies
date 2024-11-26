@@ -53,8 +53,8 @@ warn contains result if {
 # custom:
 #   short_name: current
 #   failure_msg: >-
-#     Pipeline task %q uses an out of date task reference, %s, new version of the
-#     Task must be used before %s
+#     Pipeline task %q uses an out of date task reference, %s. A new version of the
+#     task must be used before %s
 #   solution: >-
 #     Update the Task reference to a newer version.
 #   collections:
@@ -62,11 +62,12 @@ warn contains result if {
 #   effective_on: 2024-05-07T00:00:00Z
 #
 warn contains result if {
-	some t in tekton.newer_tasks_of(lib.tasks_from_pipelinerun)
+	some task in lib.tasks_from_pipelinerun
+	expiry := tekton.expiry_of(task)
 	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
-		[tekton.pipeline_task_name(t.task), _task_info(t.task), t.newer_effective_on],
-		tekton.task_name(t.task),
+		[tekton.pipeline_task_name(task), _task_info(task), time.format(expiry)],
+		tekton.task_name(task),
 	)
 }
 

@@ -206,8 +206,8 @@ test_trusted_bundles_provided if {
 test_warn_cases if {
 	trusted_tasks := {"oci://q.io/r/task-buildah:0.1": [
 		{"ref": "sha256:c37e54", "effective_on": "2023-11-06T00:00:00Z"},
-		{"ref": "sha256:97f216", "effective_on": "2023-10-25T00:00:00Z"},
-		{"ref": "sha256:487b82", "effective_on": "2023-10-21T00:00:00Z"},
+		{"ref": "sha256:97f216", "effective_on": "2023-10-25T00:00:00Z", "expires_on": "2023-11-06T00:00:00Z"},
+		{"ref": "sha256:487b82", "effective_on": "2023-10-21T00:00:00Z", "expires_on": "2023-10-25T00:00:00Z"},
 	]}
 
 	attestation_c37e54 := mock_data({"ref": {
@@ -276,7 +276,7 @@ test_warn_cases if {
 	expected_487b82 := {{
 		"code": "attestation_task_bundle.task_ref_bundles_current",
 		# regal ignore:line-length
-		"msg": "Pipeline task 'buildah' uses an out of date task bundle 'q.io/r/task-buildah:0.1@sha256:487b82', new version of the Task must be used before 2023-11-06T00:00:00Z",
+		"msg": "Pipeline task 'buildah' uses an out of date task bundle 'q.io/r/task-buildah:0.1@sha256:487b82', new version of the Task must be used before 2023-10-25T00:00:00Z",
 	}}
 
 	lib.assert_equal_results(
@@ -325,12 +325,12 @@ trusted_tasks := {
 		# Latest v2
 		{"ref": "sha256:abc", "effective_on": "2022-04-11T00:00:00Z"},
 		# Older v2
-		{"ref": "sha256:bcd", "effective_on": "2022-03-11T00:00:00Z"},
+		{"ref": "sha256:bcd", "effective_on": "2022-03-11T00:00:00Z", "expires_on": "2022-04-11T00:00:00Z"},
 	],
 	"oci://reg.com/repo:v1": [
 		# Latest v1
 		{"ref": "sha256:cde", "effective_on": "2022-02-01T00:00:00Z"},
 		# Older v1
-		{"ref": "sha256:def", "effective_on": "2021-01-01T00:00:00Z"},
+		{"ref": "sha256:def", "effective_on": "2021-01-01T00:00:00Z", "expires_on": "2022-02-01T00:00:00Z"},
 	],
 }

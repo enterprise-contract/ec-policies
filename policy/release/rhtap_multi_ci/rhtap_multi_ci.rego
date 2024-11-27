@@ -11,6 +11,7 @@ package rhtap_multi_ci
 import rego.v1
 
 import data.lib
+import data.lib.json as j
 
 # METADATA
 # title: SLSA Provenance Attestation Found
@@ -35,6 +36,75 @@ deny contains result if {
 	count(_attestations) < 1
 	result := lib.result_helper(rego.metadata.chain(), [lib.quoted_values_string(_known_build_types)])
 }
+
+# METADATA
+# title: SLSA Provenance Attestation Format
+# description: >-
+#   Confirm the attestation created by the RHTAP Multi-CI build pipeline matches the
+#   expected format.
+# custom:
+#   short_name: attestation_format
+#   failure_msg: "RHTAP %s attestation problem: %s"
+#   solution: >-
+#     This check looks for some fields expected to be present in the SLSA attestation. Modifying
+#     the scripts that produce the attestation predicate might cause this to fail. See also
+#     the `att-predicate-*.sh` scripts at https://github.com/redhat-appstudio/tssc-dev-multi-ci/tree/main/rhtap
+#   collections:
+#   - rhtap-multi-ci
+#   # For compatibility. These will be removed these soon.
+#   - rhtap-github
+#   - rhtap-gitlab
+#   - rhtap-jenkins
+#   depends_on:
+#   - rhtap_multi_ci.attestation_found
+#
+deny contains result if {
+	some att in _attestations
+	some ci_type in _known_ci_types
+	att.statement.predicate.buildDefinition.buildType == _build_type(ci_type)
+	some schema_error in j.validate_schema(att.statement.predicate, _predicate_schema(ci_type))
+	result := lib.result_helper(rego.metadata.chain(), [ci_type, schema_error.message])
+}
+
+# -----------------------------------------------------------------------------
+
+# Common to each ci type
+_predicate_schema_base := {
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"required": ["runDetails"],
+	"properties": {"runDetails": {
+		"type": "object",
+		"required": ["builder", "metadata"],
+		"properties": {
+			"metadata": {
+				"type": "object",
+				"required": ["invocationID"],
+				"properties": {"invocationID": {"type": "string", "minLength": 1}},
+			},
+			"builder": {
+				"type": "object",
+				"required": ["id"],
+				"properties": {"id": {"type": "string", "minLength": 1}},
+			},
+		},
+	}},
+}
+
+# See https://github.com/redhat-appstudio/tssc-dev-multi-ci/blob/main/rhtap/att-predicate-jenkins.sh
+_predicate_schema("jenkins") := json.patch(_predicate_schema_base, [
+	# Check runDetails.builder.version is present and is an object
+	{"op": "add", "path": "/properties/runDetails/properties/builder/required/1", "value": "version"},
+	{"op": "add", "path": "/properties/runDetails/properties/builder/properties/version", "value": {"type": "object"}},
+])
+
+# See https://github.com/redhat-appstudio/tssc-dev-multi-ci/blob/main/rhtap/att-predicate-github.sh
+# (Currently no extra schema checks other than the common checks)
+_predicate_schema("github") := json.patch(_predicate_schema_base, [])
+
+# See https://github.com/redhat-appstudio/tssc-dev-multi-ci/blob/main/rhtap/att-predicate-gitlab.sh
+# (Currently no extra schema checks other than the common checks)
+_predicate_schema("gitlab") := json.patch(_predicate_schema_base, [])
 
 # -----------------------------------------------------------------------------
 

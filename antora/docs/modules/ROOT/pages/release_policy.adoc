@@ -211,6 +211,7 @@ a| A set of policy rules to validate artifacts built using RHTAP Jenkins pipelin
 
 Rules included:
 
+* xref:release_policy.adoc#rhtap_multi_ci__attestation_format[RHTAP Multi-CI: SLSA Provenance Attestation Format]
 * xref:release_policy.adoc#rhtap_multi_ci__attestation_found[RHTAP Multi-CI: SLSA Provenance Attestation Found]
 
 | [#slsa3]`slsa3`
@@ -965,6 +966,18 @@ Checks for images built using an RHTAP build pipeline in either Jenkins, GitLab 
 
 * Package name: `rhtap_multi_ci`
 
+[#rhtap_multi_ci__attestation_format]
+=== link:#rhtap_multi_ci__attestation_format[SLSA Provenance Attestation Format]
+
+Confirm the attestation created by the RHTAP Multi-CI build pipeline matches the expected format.
+
+*Solution*: This check looks for some fields expected to be present in the SLSA attestation. Modifying the scripts that produce the attestation predicate might cause this to fail. See also the `att-predicate-*.sh` scripts at https://github.com/redhat-appstudio/tssc-dev-multi-ci/tree/main/rhtap
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `RHTAP %s attestation problem: %s`
+* Code: `rhtap_multi_ci.attestation_format`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_multi_ci/rhtap_multi_ci.rego#L40[Source, window="_blank"]
+
 [#rhtap_multi_ci__attestation_found]
 === link:#rhtap_multi_ci__attestation_found[SLSA Provenance Attestation Found]
 
@@ -975,7 +988,7 @@ Verify an attestation created by the RHTAP Multi-CI build pipeline is present.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `A SLSA v1.0 provenance with one of the following RHTAP Multi-CI build types was not found: %s.`
 * Code: `rhtap_multi_ci.attestation_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_multi_ci/rhtap_multi_ci.rego#L15[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_multi_ci/rhtap_multi_ci.rego#L16[Source, window="_blank"]
 
 [#rpm_repos_package]
 == link:#rpm_repos_package[RPM Repos]

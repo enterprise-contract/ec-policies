@@ -72,6 +72,7 @@
 *** xref:release_policy.adoc#quay_expiration_package[Quay expiration]
 **** xref:release_policy.adoc#quay_expiration__expires_label[Expires label]
 *** xref:release_policy.adoc#rhtap_multi_ci_package[RHTAP Multi-CI]
+**** xref:release_policy.adoc#rhtap_multi_ci__attestation_format[SLSA Provenance Attestation Format]
 **** xref:release_policy.adoc#rhtap_multi_ci__attestation_found[SLSA Provenance Attestation Found]
 *** xref:release_policy.adoc#rpm_repos_package[RPM Repos]
 **** xref:release_policy.adoc#rpm_repos__ids_known[All rpms have known repo ids]

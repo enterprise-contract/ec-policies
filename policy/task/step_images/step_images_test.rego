@@ -65,4 +65,4 @@ test_task_with_invalid_steps if {
 mock_image_manifest(ref) := m if {
 	startswith(ref, "registry.io/repository/ok")
 	m := {}
-} else := null
+}

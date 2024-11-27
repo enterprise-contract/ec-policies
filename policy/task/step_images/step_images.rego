@@ -21,13 +21,14 @@ import data.lib
 #   solution: >-
 #     Make sure the container image used in each step of the Task is pushed to the
 #     registry and that it can be fetched.
+#   effective_on: 2025-01-10T00:00:00Z
 #
 deny contains result if {
 	input.kind == "Task"
 
 	some step_index, step in input.spec.steps
 	image_ref := step.image
-	is_null(ec.oci.image_manifest(image_ref))
+	not ec.oci.image_manifest(image_ref)
 
 	result := lib.result_helper_with_term(
 		rego.metadata.chain(),

@@ -21,6 +21,7 @@ Confirm that each step in the Task uses a container image that is accessible.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Step %d uses inaccessible image ref '%s'`
 * Code: `step_images.step_images_accessible`
+* Effective from: `2025-01-10T00:00:00Z`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/step_images/step_images.rego#L14[Source, window="_blank"]
 
 [#step_image_registries_package]

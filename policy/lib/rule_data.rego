@@ -97,6 +97,8 @@ rule_data_defaults := {
 	# using the ruleData key. Make this default to an empty dict so we can conveniently
 	# merge it with with `data.trusted_tasks`
 	"trusted_tasks": {},
+	# Number of days before a version of the Task expires that warnings are reported
+	"task_expiry_warning_days": 0,
 }
 
 # Returns the "first found" of the following:

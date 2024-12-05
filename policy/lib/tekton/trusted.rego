@@ -21,11 +21,24 @@ missing_trusted_tasks_data if {
 	count(_trusted_tasks) == 0
 }
 
-# Returns a subset of tasks that use a trusted Task reference, but an updated Task reference exists.
-out_of_date_task_refs(tasks) := {task |
-	some task in tasks
-	is_trusted_task(task)
-	_newer_record_exists(task)
+default task_expiry_warnings_after := 0
+
+task_expiry_warnings_after := grace if {
+	grace_period_days := lib_rule_data("task_expiry_warning_days")
+	grace_period_days > 0
+	grace := time.add_date(
+		time_lib.effective_current_time_ns, 0, 0,
+		grace_period_days,
+	)
+}
+
+# Returns the epoch time in nanoseconds of the time when the Task expires, or
+# nothing if Task is not set to expire currently.
+expiry_of(task) := expires if {
+	expires := _task_expires_on(task)
+
+	# only report if the task is expiring within task_expiry_warning_days days
+	expires > task_expiry_warnings_after
 }
 
 # Returns a subset of tasks that do not use a trusted Task reference.
@@ -47,19 +60,16 @@ is_trusted_task(task) if {
 	record.ref == ref.pinned_ref
 }
 
-# Returns true if a newer record exists with a different digest.
-_newer_record_exists(task) if {
+# Returns the date in epoch nanoseconds when the task expires, or nothing if it
+# hasn't expired yet.
+_task_expires_on(task) := expires if {
 	ref := task_ref(task)
 	records := _trusted_tasks[ref.key]
 
-	newest_record := time_lib.newest(records)
-	newest_record.ref != ref.pinned_ref
-
-	# newest record could have the same effective_on as the record for the given
-	# task, in that case we can't claim that the newer record exists
 	some record in records
 	record.ref == ref.pinned_ref
-	newest_record.effective_on != record.effective_on
+
+	expires = time.parse_rfc3339_ns(record.expires_on)
 }
 
 # _trusted_tasks provides a safe way to access the list of trusted tasks. It prevents a policy rule
@@ -125,4 +135,18 @@ data_errors contains error if {
 		),
 		"severity": "failure",
 	}
+}
+
+data_errors contains error if {
+	some error in j.validate_schema(
+		{"task_expiry_warning_days": lib_rule_data("task_expiry_warning_days")},
+		{
+			"$schema": "http://json-schema.org/draft-07/schema#",
+			"type": "object",
+			"properties": {"task_expiry_warning_days": {
+				"type": "integer",
+				"minimum": 0,
+			}},
+		},
+	)
 }

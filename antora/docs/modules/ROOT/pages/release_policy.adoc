@@ -1602,7 +1602,7 @@ Confirm the `trusted_tasks` rule data was provided, since it's required by the p
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Missing required trusted_tasks data`
 * Code: `attestation_task_bundle.trusted_bundles_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L113[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L114[Source, window="_blank"]
 
 [#attestation_task_bundle__task_ref_bundles_not_empty]
 === link:#attestation_task_bundle__task_ref_bundles_not_empty[Task bundle references not empty]
@@ -1614,7 +1614,7 @@ Check that a valid task bundle reference is being used.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' uses an empty bundle image reference`
 * Code: `attestation_task_bundle.task_ref_bundles_not_empty`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L75[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L76[Source, window="_blank"]
 
 [#attestation_task_bundle__task_ref_bundles_pinned]
 === link:#attestation_task_bundle__task_ref_bundles_pinned[Task bundle references pinned to digest]
@@ -1638,7 +1638,7 @@ For each Task in the SLSA Provenance attestation, check if the Tekton Bundle use
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' uses an untrusted task bundle '%s'`
 * Code: `attestation_task_bundle.task_ref_bundles_trusted`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L92[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L93[Source, window="_blank"]
 
 [#attestation_task_bundle__task_ref_bundles_current]
 === link:#attestation_task_bundle__task_ref_bundles_current[Task bundles are latest versions]
@@ -1648,7 +1648,7 @@ For each Task in the SLSA Provenance attestation, check if the Tekton Bundle use
 *Solution*: A task bundle used is not the most recent. The most recent task bundles are defined in the data source of your policy config.
 
 * Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Pipeline task '%s' uses an out of date task bundle '%s'`
+* WARNING message: `Pipeline task '%s' uses an out of date task bundle '%s', new version of the Task must be used before %s`
 * Code: `attestation_task_bundle.task_ref_bundles_current`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L38[Source, window="_blank"]
 
@@ -1660,7 +1660,7 @@ Check for the existence of a task bundle. This rule will fail if the task is not
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task '%s' does not contain a bundle reference`
 * Code: `attestation_task_bundle.tasks_defined_in_bundle`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L59[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L60[Source, window="_blank"]
 
 [#tasks_package]
 == link:#tasks_package[Tasks]
@@ -1933,7 +1933,7 @@ Confirm the expected `trusted_tasks` data keys have been provided in the expecte
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `trusted_task.data_format`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L184[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L187[Source, window="_blank"]
 
 [#trusted_task__pinned]
 === link:#trusted_task__pinned[Task references are pinned]
@@ -1959,7 +1959,7 @@ Confirm the `trusted_tasks` rule data was provided, since it's required by the p
 * FAILURE message: `Missing required trusted_tasks data`
 * Code: `trusted_task.data`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L134[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L137[Source, window="_blank"]
 
 [#trusted_task__trusted]
 === link:#trusted_task__trusted[Tasks are trusted]
@@ -1972,7 +1972,7 @@ Check the trust of the Tekton Tasks used in the build Pipeline. There are two mo
 * FAILURE message: `%s`
 * Code: `trusted_task.trusted`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L71[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L74[Source, window="_blank"]
 
 [#trusted_task__current]
 === link:#trusted_task__current[Tasks using the latest versions]
@@ -1982,7 +1982,7 @@ Check if all Tekton Tasks use the latest known Task reference.
 *Solution*: Update the Task reference to a newer version.
 
 * Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Pipeline task %q uses an out of date task reference, %s`
+* WARNING message: `Pipeline task %q uses an out of date task reference, %s. A new version of the task must be used before %s`
 * Code: `trusted_task.current`
 * Effective from: `2024-05-07T00:00:00Z`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L49[Source, window="_blank"]
@@ -1997,7 +1997,7 @@ All input trusted artifacts must be produced on the pipeline. If they are not th
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Code tampering detected, input %q for task %q was not produced by the pipeline as attested.`
 * Code: `trusted_task.valid_trusted_artifact_inputs`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L97[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L100[Source, window="_blank"]
 
 [#trusted_task__trusted_parameters]
 === link:#trusted_task__trusted_parameters[Trusted parameters]
@@ -2010,7 +2010,7 @@ Confirm certain parameters provided to each builder Task have come from trusted 
 * FAILURE message: `The %q parameter of the %q PipelineTask includes an untrusted digest: %s`
 * Code: `trusted_task.trusted_parameters`
 * Effective from: `2021-07-04T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L153[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L156[Source, window="_blank"]
 
 [#rpm_ostree_task_package]
 == link:#rpm_ostree_task_package[rpm-ostree Task]

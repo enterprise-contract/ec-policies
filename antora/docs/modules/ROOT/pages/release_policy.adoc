@@ -1933,7 +1933,7 @@ Confirm the expected `trusted_tasks` data keys have been provided in the expecte
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `trusted_task.data_format`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L187[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L190[Source, window="_blank"]
 
 [#trusted_task__pinned]
 === link:#trusted_task__pinned[Task references are pinned]
@@ -1959,7 +1959,7 @@ Confirm the `trusted_tasks` rule data was provided, since it's required by the p
 * FAILURE message: `Missing required trusted_tasks data`
 * Code: `trusted_task.data`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L137[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L140[Source, window="_blank"]
 
 [#trusted_task__trusted]
 === link:#trusted_task__trusted[Tasks are trusted]
@@ -1972,12 +1972,12 @@ Check the trust of the Tekton Tasks used in the build Pipeline. There are two mo
 * FAILURE message: `%s`
 * Code: `trusted_task.trusted`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L74[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L77[Source, window="_blank"]
 
 [#trusted_task__current]
 === link:#trusted_task__current[Tasks using the latest versions]
 
-Check if all Tekton Tasks use the latest known Task reference.
+Check if all Tekton Tasks use the latest known Task reference. When warnings will be reported can be configured using the `task_expiry_warning_days` rule data setting. It holds the number of days before the task is to expire within which the warnings will be reported.
 
 *Solution*: Update the Task reference to a newer version.
 
@@ -1997,7 +1997,7 @@ All input trusted artifacts must be produced on the pipeline. If they are not th
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Code tampering detected, input %q for task %q was not produced by the pipeline as attested.`
 * Code: `trusted_task.valid_trusted_artifact_inputs`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L100[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L103[Source, window="_blank"]
 
 [#trusted_task__trusted_parameters]
 === link:#trusted_task__trusted_parameters[Trusted parameters]
@@ -2010,7 +2010,7 @@ Confirm certain parameters provided to each builder Task have come from trusted 
 * FAILURE message: `The %q parameter of the %q PipelineTask includes an untrusted digest: %s`
 * Code: `trusted_task.trusted_parameters`
 * Effective from: `2021-07-04T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L156[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L159[Source, window="_blank"]
 
 [#rpm_ostree_task_package]
 == link:#rpm_ostree_task_package[rpm-ostree Task]

@@ -49,7 +49,10 @@ warn contains result if {
 # METADATA
 # title: Tasks using the latest versions
 # description: >-
-#   Check if all Tekton Tasks use the latest known Task reference.
+#   Check if all Tekton Tasks use the latest known Task reference. When warnings
+#   will be reported can be configured using the `task_expiry_warning_days` rule
+#   data setting. It holds the number of days before the task is to expire within
+#   which the warnings will be reported.
 # custom:
 #   short_name: current
 #   failure_msg: >-

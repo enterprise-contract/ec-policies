@@ -206,8 +206,8 @@ Rules included:
 * xref:release_policy.adoc#rpm_ostree_task__builder_image_param[rpm-ostree Task: Builder image parameter]
 * xref:release_policy.adoc#rpm_ostree_task__rule_data[rpm-ostree Task: Rule data]
 
-| [#rhtap-jenkins]`rhtap-jenkins`
-a| A set of policy rules to validate artifacts built using RHTAP Jenkins pipelines.
+| [#rhtap-multi-ci]`rhtap-multi-ci`
+a| A set of policy rules to validate artifacts built using RHTAP Multi-CI pipelines.
 
 Rules included:
 

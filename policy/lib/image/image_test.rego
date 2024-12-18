@@ -43,6 +43,11 @@ test_parse if {
 		{"repo": repository_with_port, "tag": tag, "digest": ""},
 	)
 
+	lib.assert_equal(
+		image.parse(concat("", [repository_with_port, ":", tag, " "])),
+		{"repo": repository_with_port, "tag": tag, "digest": ""},
+	)
+
 	not image.parse(concat("", [bad_repository, ":", tag, "@", digest]))
 }
 

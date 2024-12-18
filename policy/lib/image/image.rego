@@ -5,7 +5,7 @@ import rego.v1
 # parse returns a data structure representing the different portions
 # of the OCI image reference.
 parse(ref) := d if {
-	digest_parts := split(ref, "@")
+	digest_parts := split(trim_space(ref), "@")
 
 	contains(digest_parts[0], "/")
 	repo_parts := split(digest_parts[0], "/")

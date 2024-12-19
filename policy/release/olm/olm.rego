@@ -176,6 +176,73 @@ deny contains result if {
 }
 
 # METADATA
+# title: Unable to access related images for a component
+# description: >-
+#   Check the input image for the presence of related images.
+#   Ensure that all images are accessible.
+# custom:
+#   short_name: inaccessible_related_images
+#   failure_msg: The %q related image reference is not accessible.
+#   solution: >-
+#     Ensure all related images are available. The related images are defined by
+#     an file containing a json array attached to the validated image. The digest
+#     of the attached file is pulled from the RELATED_IMAGES_DIGEST result.
+#   collections:
+#   - redhat
+deny contains result if {
+	_release_restrictions_apply
+
+	snapshot_components := input.snapshot.components
+	component_images_digests := [component_image.digest |
+		some component in snapshot_components
+		component_image := image.parse(component.containerImage)
+	]
+
+	some related_images in _related_images(input.image)
+
+	unmatched_image_refs := [related |
+		some related in related_images
+		not related.digest in component_images_digests
+	]
+
+	some unmatched_image in unmatched_image_refs
+	unmatched_ref := sprintf("%s@%s", [unmatched_image.repo, unmatched_image.digest])
+	not ec.oci.descriptor(unmatched_ref)
+
+	result := lib.result_helper_with_term(rego.metadata.chain(), [unmatched_ref], unmatched_ref)
+}
+
+# Extracts the related images attached to the image. The RELATED_IMAGES_DIGEST result
+# contains the digest of a referring image manifest containing the related image json
+# array. We need to find the blob sha in order to download the related images.
+_related_images(tested_image) := [e |
+	some imgs in [[r |
+		input_image := image.parse(tested_image.ref)
+
+		some related in lib.results_named(_related_images_result_name)
+		result_digest := object.union(input_image, {"digest": sprintf("%s", [trim_space(related.value)])})
+		related_image_ref := image.str(result_digest)
+		related_image_manifest := ec.oci.image_manifest(related_image_ref)
+
+		some layer in related_image_manifest.layers
+		layer.mediaType == _related_images_oci_mime_type
+		related_image_blob := object.union(input_image, {"digest": layer.digest})
+		related_image_blob_ref := image.str(related_image_blob)
+
+		raw_related_images := json.unmarshal(ec.oci.blob(related_image_blob_ref))
+
+		some related_ref in raw_related_images
+		r := {
+			"path": "relatedImage",
+			"ref": image.parse(related_ref),
+		}
+	]]
+	some i in imgs
+
+	e := {"ref": i.ref, "path": i.path}
+]
+
+# METADATA
 # title: Unmapped images in OLM bundle
 # description: >-
 #   Check the OLM bundle image for the presence of unmapped image references.
@@ -192,7 +259,6 @@ deny contains result if {
 #   collections:
 #   - redhat
 #   effective_on: 2024-08-15T00:00:00Z
-#
 deny contains result if {
 	_release_restrictions_apply
 
@@ -446,3 +512,7 @@ _image_registry_allowed(image_repo, allowed_prefixes) if {
 	some allowed_prefix in allowed_prefixes
 	startswith(image_repo, allowed_prefix)
 }
+
+_related_images_result_name := "RELATED_IMAGES_DIGEST"
+
+_related_images_oci_mime_type := "application/vnd.konflux-ci.attached-artifact.related-images+json"

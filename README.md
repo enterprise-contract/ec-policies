@@ -123,11 +123,11 @@ Create a `policy.yaml` file in your local `ec-cli` repo with something like:
     ---
     sources:
       - policy:
-        - <path-to>/ec-policies/policy/lib
-        - <path-to>/ec-policies/policy/release
-      data:
-        - oci::quay.io/konflux-ci/tekton-catalog/data-acceptable-bundles:latest
-        - github.com/release-engineering/rhtap-ec-policy//data
+          - <path-to>/ec-policies/policy/lib
+          - <path-to>/ec-policies/policy/release
+        data:
+          - oci::quay.io/konflux-ci/tekton-catalog/data-acceptable-bundles:latest
+          - github.com/release-engineering/rhtap-ec-policy//data
 
 Run the locally built `ec-cli` command
 

@@ -3,6 +3,8 @@ package olm_test
 import rego.v1
 
 import data.lib
+import data.lib.tekton_test
+import data.lib_test
 import data.olm
 
 pinned := "registry.io/repository/image@sha256:cafe"
@@ -377,13 +379,30 @@ test_unmapped_references_in_operator if {
 	lib.assert_equal_results(olm.deny, expected) with input.snapshot.components as [component1]
 		with input.image.files as {"manifests/csv.yaml": manifest}
 		with data.rule_data as {"pipeline_intention": "release", "allowed_registry_prefixes": ["registry.io"]}
-		with ec.oci.image_manifest as mock_ec_oci_image_manifest
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.descriptor as mock_ec_oci_image_descriptor
 		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 }
 
-mock_ec_oci_image_manifest("registry.io/repository/image@sha256:cafe") := `{"config": {"digest": "sha256:cafe"}}`
+test_inaccessible_related_images if {
+	expected_deny := {{
+		"code": "olm.inaccessible_related_images",
+		"msg": "The \"registry.io/repository/image2@sha256:tea\" related image reference is not accessible.",
+		"term": "registry.io/repository/image2@sha256:tea",
+	}}
 
-mock_ec_oci_image_manifest("registry.io/repository/image2@sha256:tea") := false
+	lib.assert_equal_results(olm.deny, expected_deny) with data.rule_data.pipeline_intention as "release"
+		with input.snapshot.components as [component1]
+		with input.attestations as _with_related_images
+		with input.image.ref as "registry.io/repository/image@sha256:image_digest"
+		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.blob as _mock_blob
+		with ec.oci.descriptor as mock_ec_oci_image_descriptor
+}
+
+mock_ec_oci_image_descriptor("registry.io/repository/image3@sha256:coffee") := `{"config": {"digest": "sha256:coffee"}}`
+
+mock_ec_oci_image_descriptor("registry.io/repository/image2@sha256:tea") := false
 
 test_olm_ci_pipeline if {
 	# Make sure no violations are thrown if it isn't a release pipeline
@@ -426,4 +445,45 @@ test_unallowed_registries if {
 		with data.rule_data.allowed_registry_prefixes as ["registry.access.redhat.com", "registry.redhat.io"]
 		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 		with input.image.files as {"manifests/csv.yaml": manifest}
+}
+
+_related_images := [pinned, pinned2, "registry.io/repository/image3@sha256:coffee"]
+
+_manifests := {
+	"registry.io/repository/image@sha256:related_digest": {"layers": [{
+		"mediaType": olm._related_images_oci_mime_type,
+		"digest": "sha256:related_blob_digest",
+	}]},
+	"registry.io/repository/image@sha256:cafe": {"config": {"digest": "sha256:cafe"}},
+}
+
+_blobs := {"registry.io/repository/image@sha256:related_blob_digest": json.marshal(_related_images)}
+
+_mock_image_manifest(ref) := _manifests[ref]
+
+_mock_blob(ref) := _blobs[ref]
+
+_bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
+
+_with_related_images := _attestations_with_attachment("sha256:related_digest")
+
+_attestations_with_attachment(attachment) := attestations if {
+	slsav1_task_with_result := tekton_test.slsav1_task_result_ref(
+		"validate-fbc",
+		[{
+			"name": olm._related_images_result_name,
+			"type": "string",
+			"value": attachment,
+		}],
+	)
+
+	attestations := [
+		lib_test.att_mock_helper_ref(
+			olm._related_images_result_name,
+			attachment,
+			"validate-fbc",
+			_bundle,
+		),
+		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
+	]
 }

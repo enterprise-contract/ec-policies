@@ -21,7 +21,7 @@ import data.lib
 #   solution: >-
 #     Make sure the container image used in each step of the Task is pushed to the
 #     registry and that it can be fetched.
-#   effective_on: 2025-01-10T00:00:00Z
+#   effective_on: 2025-02-10T00:00:00Z
 #
 deny contains result if {
 	input.kind == "Task"

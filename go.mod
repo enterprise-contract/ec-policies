@@ -9,7 +9,7 @@ require (
 	github.com/open-policy-agent/conftest v0.55.0
 	github.com/styrainc/regal v0.29.2
 	github.com/tektoncd/cli v0.39.0
-	oras.land/oras v1.2.1
+	oras.land/oras v1.2.2
 )
 
 require (

@@ -21,7 +21,9 @@ import data.lib.json as j
 #   failure_msg: "Rule data '%s' has unexpected format: %s"
 #   solution: >-
 #     Include a data source that provides a list of known repository ids under the
-#     'known_rpm_repositories' key under the top level 'rule_data' key.
+#     'known_rpm_repositories' key under the top level 'rule_data' key. This list can
+#     extended with the 'extra_rpm_repositories' rule data key. The contents of both
+#     lists are combined.
 #   collections:
 #   - redhat
 #   - policy_data
@@ -62,7 +64,9 @@ _rule_data_errors contains error if {
 			"$schema": "http://json-schema.org/draft-07/schema#",
 			"type": "array",
 			"items": {"type": "string"},
-			"uniqueItems": true,
+			# The list of repo IDs is a combination of two different lists which are often managed
+			# by different people. It's ok if those overlap.
+			"uniqueItems": false,
 			"minItems": 1,
 		},
 	)
@@ -181,9 +185,17 @@ _is_rpmish(purl) if {
 	startswith(purl, "pkg:rpmmod/")
 }
 
-_known_repo_ids := lib.rule_data(_rule_data_key)
+_known_repo_ids := combined if {
+	extra := lib.rule_data(_rule_data_extras_key)
+	known := lib.rule_data(_rule_data_key)
+	combined := array.concat(extra, known)
+} else := known if {
+	known := lib.rule_data(_rule_data_key)
+}
 
 _rule_data_key := "known_rpm_repositories"
+
+_rule_data_extras_key := "extra_rpm_repositories"
 
 # Converts a list of purl objects, as returned by
 # all_purls_with_repo_ids, back into a list of purl strings

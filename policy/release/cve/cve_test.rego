@@ -834,26 +834,71 @@ test_leeway_rule_data_check if {
 		with data.rule_data as d
 }
 
-_fingerprints(a, b) := [v | some n in numbers.range(a, b); v := sprintf("%d", [n])]
-
-_vulns(fingerprits, template) := {v |
-	some fingerprint in fingerprits
-	v := {fingerprint: template}
-}
-
 _vuln(severity, fixed_in, issued) := {
 	"fixed_in_version": fixed_in,
 	"normalized_severity": severity,
 	"issued": issued,
 }
 
-# `opa fmt` is causing this
-# regal ignore:line-length
-vulnerabilities := object.union_n(lib.to_array(((((_vulns(_fingerprints(1, 1), _vuln("Critical", "1.0", "2022-03-26T00:00:00Z")) | _vulns(_fingerprints(2, 3), _vuln("High", "1.0", "2022-03-26T00:00:00Z"))) | _vulns(_fingerprints(4, 6), _vuln("Medium", "1.0", "2022-03-26T00:00:00Z"))) | _vulns(_fingerprints(7, 10), _vuln("Low", "1.0", "2022-03-26T00:00:00Z"))) | _vulns(_fingerprints(11, 15), _vuln("Unknown", "1.0", "2022-03-26T00:00:00Z")))))
+vulnerabilities := d if {
+	combined_vulns := [v |
+		some category in [
+			[v |
+				some idx in numbers.range(1, 1)
+				v := {sprintf("%d", [idx]): _vuln("Critical", "1.0", "2022-03-26T00:00:00Z")}
+			],
+			[v |
+				some idx in numbers.range(2, 3)
+				v := {sprintf("%d", [idx]): _vuln("High", "1.0", "2022-03-26T00:00:00Z")}
+			],
+			[v |
+				some idx in numbers.range(4, 6)
+				v := {sprintf("%d", [idx]): _vuln("Medium", "1.0", "2022-03-26T00:00:00Z")}
+			],
+			[v |
+				some idx in numbers.range(7, 10)
+				v := {sprintf("%d", [idx]): _vuln("Low", "1.0", "2022-03-26T00:00:00Z")}
+			],
+			[v |
+				some idx in numbers.range(11, 15)
+				v := {sprintf("%d", [idx]): _vuln("Unknown", "1.0", "2022-03-26T00:00:00Z")}
+			],
+		]
+		some v in category
+	]
 
-# `opa fmt` is causing this
-# regal ignore:line-length
-unpatched_vulnerabilities := object.union_n(lib.to_array(((((_vulns(_fingerprints(16, 21), _vuln("Critical", "", "2022-03-26T00:00:00Z")) | _vulns(_fingerprints(22, 28), _vuln("High", "", "2022-03-26T00:00:00Z"))) | _vulns(_fingerprints(29, 36), _vuln("Medium", "", "2022-03-26T00:00:00Z"))) | _vulns(_fingerprints(37, 45), _vuln("Low", "", "2022-03-26T00:00:00Z"))) | _vulns(_fingerprints(46, 55), _vuln("Unknown", "", "2022-03-26T00:00:00Z")))))
+	d := object.union_n(combined_vulns)
+}
+
+unpatched_vulnerabilities := d if {
+	combined_vulns := [v |
+		some category in [
+			[v |
+				some idx in numbers.range(16, 21)
+				v := {sprintf("%d", [idx]): _vuln("Critical", "", "2022-03-26T00:00:00Z")}
+			],
+			[v |
+				some idx in numbers.range(22, 28)
+				v := {sprintf("%d", [idx]): _vuln("High", "", "2022-03-26T00:00:00Z")}
+			],
+			[v |
+				some idx in numbers.range(29, 36)
+				v := {sprintf("%d", [idx]): _vuln("Medium", "", "2022-03-26T00:00:00Z")}
+			],
+			[v |
+				some idx in numbers.range(37, 45)
+				v := {sprintf("%d", [idx]): _vuln("Low", "", "2022-03-26T00:00:00Z")}
+			],
+			[v |
+				some idx in numbers.range(46, 55)
+				v := {sprintf("%d", [idx]): _vuln("Unknown", "", "2022-03-26T00:00:00Z")}
+			],
+		]
+		some v in category
+	]
+
+	d := object.union_n(combined_vulns)
+}
 
 _clair_report := {"vulnerabilities": object.union(vulnerabilities, unpatched_vulnerabilities)}
 

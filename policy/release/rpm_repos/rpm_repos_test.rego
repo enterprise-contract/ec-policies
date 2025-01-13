@@ -74,6 +74,22 @@ test_repo_id_all_known if {
 	) with lib.sbom.all_sboms as fake_spdx_sboms with data.rule_data.known_rpm_repositories as fake_repo_id_list
 }
 
+test_repo_id_all_known_with_extras if {
+	rule_data := {
+		"known_rpm_repositories": array.slice(fake_repo_id_list, 1, count(fake_repo_id_list)),
+		"extra_rpm_repositories": array.slice(fake_repo_id_list, 0, 1),
+	}
+	lib.assert_equal(
+		{p1, p2, p7},
+		rpm_repos._plain_purls(rpm_repos.all_c2_purls_with_known_repo_ids),
+	) with lib.sbom.all_sboms as fake_cyclonedx_sboms with data.rule_data as rule_data
+
+	lib.assert_equal(
+		{p1, p2, p7},
+		rpm_repos._plain_purls(rpm_repos.all_c2_purls_with_known_repo_ids),
+	) with lib.sbom.all_sboms as fake_spdx_sboms with data.rule_data as rule_data
+}
+
 test_repo_id_purls_missing_repo_ids if {
 	expected := {
 		{

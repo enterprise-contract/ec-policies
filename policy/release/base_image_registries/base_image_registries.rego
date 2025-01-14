@@ -108,19 +108,36 @@ _image_ref_permitted(image_ref) if {
 	image.parse(image_ref).digest in allowed_digests
 }
 
-_base_images contains base_image if {
+_cyclonedx_base_images := [component.name |
 	some s in sbom.cyclonedx_sboms
 	some formulation in s.formulation
 	some component in formulation.components
 	component.type == "container"
-	_is_base_image(component)
-	base_image := component.name
-}
+	_is_cyclonedx_base_image(component)
+]
 
-_is_base_image(component) if {
+_spdx_base_images := [pkg.name |
+	some s in sbom.spdx_sboms
+	some pkg in s.packages
+	_is_spdx_base_image(pkg)
+]
+
+_base_images := array.concat(_cyclonedx_base_images, _spdx_base_images)
+
+# cyclonedx format
+_is_cyclonedx_base_image(component) if {
 	base_image_properties := [property |
 		some property in component.properties
 		_is_base_image_property(property)
+	]
+	count(base_image_properties) > 0
+}
+
+# spdx format
+_is_spdx_base_image(component) if {
+	base_image_properties := [property |
+		some property in component.annotations
+		_is_base_image_property(json.unmarshal(property.comment))
 	]
 	count(base_image_properties) > 0
 }

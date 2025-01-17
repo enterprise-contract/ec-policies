@@ -78,3 +78,11 @@ equal_ref(ref1, ref2) if {
 _get(ary, index, default_value) := value if {
 	value := ary[index]
 } else := default_value
+
+# Returns a value if the reference is for an Image Index.
+is_image_index(ref) if {
+	ec.oci.descriptor(ref).mediaType in {
+		"application/vnd.oci.image.index.v1+json",
+		"application/vnd.docker.distribution.manifest.list.v2+json",
+	}
+}

@@ -54,7 +54,6 @@ import rego.v1
 import data.lib
 import data.lib.image
 import data.lib.json as j
-import data.lib.time as lib_time
 
 # METADATA
 # title: Non-blocking CVE check
@@ -66,10 +65,9 @@ import data.lib.time as lib_time
 #   levels are critical, high, medium, low, and unknown.
 # custom:
 #   short_name: cve_warnings
-#   failure_msg: Found %d non-blocking CVE vulnerabilities of %s security level
+#   failure_msg: Found %q non-blocking vulnerability of %s security level
 #   solution: >-
-#     Make sure to address any CVE's related to the image. The CVEs are detected
-#     by the task that runs a Clair scan and emits a result named `SCAN_OUTPUT`.
+#     Make sure to address any CVE's related to the image.
 #   collections:
 #   - minimal
 #   - redhat
@@ -77,8 +75,11 @@ import data.lib.time as lib_time
 #   - cve.cve_results_found
 #
 warn contains result if {
-	some level, amount in _non_zero_vulnerabilities("warn_cve_security_levels", _zero_period)
-	result := lib.result_helper_with_term(rego.metadata.chain(), [amount, level], level)
+	some level, vulns in _grouped_vulns.warn_cve_security_levels
+	some vuln in vulns
+
+	name := _name(vuln)
+	result := lib.result_helper_with_term(rego.metadata.chain(), [name, level], name)
 }
 
 # METADATA
@@ -91,11 +92,10 @@ warn contains result if {
 #   available levels are critical, high, medium, low, and unknown.
 # custom:
 #   short_name: unpatched_cve_warnings
-#   failure_msg: Found %d non-blocking unpatched CVE vulnerabilities of %s security level
+#   failure_msg: Found %q non-blocking unpatched vulnerability of %s security level
 #   solution: >-
 #     CVEs without a known fix can only be remediated by either removing the impacted dependency, or
-#     by waiting for a fix to be available. The CVEs are detected by the task that emits a result
-#     named `SCAN_OUTPUT`.
+#     by waiting for a fix to be available.
 #   collections:
 #   - minimal
 #   - redhat
@@ -103,30 +103,11 @@ warn contains result if {
 #   - cve.cve_results_found
 #
 warn contains result if {
-	some level, amount in _non_zero_unpatched("warn_unpatched_cve_security_levels", _zero_period)
-	result := lib.result_helper_with_term(rego.metadata.chain(), [amount, level], level)
-}
+	some level, vulns in _grouped_vulns.warn_unpatched_cve_security_levels
+	some vuln in vulns
 
-# METADATA
-# title: Deprecated CVE result name
-# description: >-
-#   The `CLAIR_SCAN_RESULT` result name has been deprecated, and has been
-#   replaced with `SCAN_OUTPUT`. If any task results with the old name are
-#   found, this rule will raise a warning.
-# custom:
-#   short_name: deprecated_cve_result_name
-#   failure_msg: CVE scan uses deprecated result name
-#   solution: >-
-#     Use the newer `SCAN_OUTPUT` result name.
-#   depends_on:
-#   - attestation_type.known_attestation_type
-#
-warn contains result if {
-	# NOTE: This policy rule is purposely not added to any collection because the new result name
-	# has not been widely adopted yet. See https://issues.redhat.com/browse/STONEINTG-660
-	count(lib.results_named(_result_name)) == 0
-	count(lib.results_named(_deprecated_result_name)) > 0
-	result := lib.result_helper(rego.metadata.chain(), [])
+	name := _name(vuln)
+	result := lib.result_helper_with_term(rego.metadata.chain(), [name, level], name)
 }
 
 # METADATA
@@ -141,10 +122,9 @@ warn contains result if {
 #   found vulnerability's public disclosure date and current effective time, per severity level.
 # custom:
 #   short_name: cve_blockers
-#   failure_msg: Found %d CVE vulnerabilities of %s security level
+#   failure_msg: Found %q vulnerability of %s security level
 #   solution: >-
-#     Make sure to address any CVE's related to the image. The CVEs are detected
-#     by the task that runs a Clair scan and emits a result named `SCAN_OUTPUT`.
+#     Make sure to address any CVE's related to the image.
 #   collections:
 #   - minimal
 #   - redhat
@@ -152,21 +132,16 @@ warn contains result if {
 #   - cve.cve_results_found
 #
 deny contains result if {
-	enforced_results := {result |
-		some level, amount in _non_zero_vulnerabilities("restrict_cve_security_levels", _configured_period)
-		result := lib.result_helper_with_term(rego.metadata.chain(), [amount, level], level)
-	}
+	some level, vulns in _grouped_vulns.restrict_cve_security_levels
+	some vuln in vulns
 
-	leewayed_results := {result |
-		some level, amount in _leewayed_vulnerabilities("restrict_cve_security_levels")
+	leeway := _compute_leeway(vuln, level)
+	name := _name(vuln)
 
-		result := _with_effective_on(
-			lib.result_helper_with_term(rego.metadata.chain(), [amount, level], level),
-			_configured_period[level].end,
-		)
-	}
-
-	some result in (enforced_results | leewayed_results)
+	result := _with_effective_on(
+		lib.result_helper_with_term(rego.metadata.chain(), [name, level], name),
+		leeway,
+	)
 }
 
 # METADATA
@@ -182,11 +157,10 @@ deny contains result if {
 #   severity level.
 # custom:
 #   short_name: unpatched_cve_blockers
-#   failure_msg: Found %d unpatched CVE vulnerabilities of %s security level
+#   failure_msg: Found %q unpatched vulnerability of %s security level
 #   solution: >-
 #     CVEs without a known fix can only be remediated by either removing the impacted dependency, or
-#     by waiting for a fix to be available. The CVEs are detected by the task that emits a result
-#     named `SCAN_OUTPUT`.
+#     by waiting for a fix to be available.
 #   collections:
 #   - minimal
 #   - redhat
@@ -194,21 +168,16 @@ deny contains result if {
 #   - cve.cve_results_found
 #
 deny contains result if {
-	enforced_results := {result |
-		some level, amount in _non_zero_unpatched("restrict_unpatched_cve_security_levels", _configured_period)
-		result := lib.result_helper_with_term(rego.metadata.chain(), [amount, level], level)
-	}
+	some level, vulns in _grouped_vulns.restrict_unpatched_cve_security_levels
+	some vuln in vulns
 
-	leewayed_results := {result |
-		some level, amount in _leewayed_unpatched_vulnerabilities("restrict_unpatched_cve_security_levels")
+	leeway := _compute_leeway(vuln, level)
+	name := _name(vuln)
 
-		result := _with_effective_on(
-			lib.result_helper_with_term(rego.metadata.chain(), [amount, level], level),
-			_configured_period[level].end,
-		)
-	}
-
-	some result in (enforced_results | leewayed_results)
+	result := _with_effective_on(
+		lib.result_helper_with_term(rego.metadata.chain(), [name, level], name),
+		leeway,
+	)
 }
 
 # METADATA
@@ -221,7 +190,7 @@ deny contains result if {
 #   failure_msg: Clair CVE scan results were not found
 #   solution: >-
 #     Make sure there is a successful task in the build pipeline that runs a
-#     Clair scan and creates a task result called `SCAN_OUTPUT`.
+#     Clair scan.
 #   collections:
 #   - minimal
 #   - redhat
@@ -229,10 +198,11 @@ deny contains result if {
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	# NOTE: unpatched vulnerabilities are defined as an optional attribute. The lack of them should
-	# not be considered a violation nor a warning. See details in:
-	# https://github.com/konflux-ci/architecture/blob/main/ADR/0030-tekton-results-naming-convention.md
-	not _vulnerabilities(_configured_period)
+	not _clair_report.vulnerabilities
+
+	# Index Images don't get a CVE scan report since it's just a reference to Image Manifests. The
+	# report is only expected to be found on each of the individual Image Manifests.
+	not image.is_image_index(input.image.ref)
 	result := lib.result_helper(rego.metadata.chain(), [])
 }
 
@@ -256,6 +226,45 @@ deny contains result if {
 	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
+# Create a data structure that represents the different vulnerabilities sorted in different
+# buckets, making it easier to implement the different rules.
+# _grouped_vulns := {
+# 	"restrict_cve_security_levels": {
+# 		"critical": {vuln1, vuln2}
+# 	},
+# 	"restrict_unpatched_cve_security_levels": {
+# 		"critical": {vuln3},
+# 		"high": {vuln4},
+# 	}
+# }
+_grouped_vulns[key][level] contains vuln if {
+	some key, patched in _levels_keys_patched
+	levels := lib.rule_data(key)
+	some vuln in _clair_report.vulnerabilities
+	level := lower(object.get(vuln, "normalized_severity", "unknown"))
+
+	# Match on the expected level.
+	level in levels
+
+	# Match on expected patch state.
+	patched == _is_vuln_patched(vuln)
+}
+
+# Return whether or not the vulnerability is patched. Because this function is used in a comparison
+# it must always return a value, thus the `else` clause.
+_is_vuln_patched(vuln) if {
+	fixed_in_version := object.get(vuln, "fixed_in_version", "")
+	fixed_in_version != ""
+} else := false
+
+# Map each rule data key to whether or not they apply to patched dependencies.
+_levels_keys_patched := {
+	"warn_cve_security_levels": true,
+	"warn_unpatched_cve_security_levels": false,
+	"restrict_cve_security_levels": true,
+	"restrict_unpatched_cve_security_levels": false,
+}
+
 # extracts the clair report attached to the image
 _clair_report := report if {
 	input_image := image.parse(input.image.ref)
@@ -273,137 +282,29 @@ _clair_report := report if {
 	report := json.unmarshal(ec.oci.blob(report_blob_ref))
 }
 
-# maps vulnerabilities and reports the counts by category (patched/unpatched)
-# and severity
-_clair_vulnerabilities(period) := vulns if {
-	reported_vulnerabilities := _clair_report.vulnerabilities
-
-	patched_vulnerabilities := [v |
-		some v in reported_vulnerabilities
-		v.fixed_in_version != ""
-	]
-
-	unpatched_vulnerabilities := [v |
-		some v in reported_vulnerabilities
-		v.fixed_in_version == ""
-	]
-
-	vulns := {
-		"vulnerabilities": {
-			"critical": _count_by_severity_with_period(patched_vulnerabilities, "critical", period),
-			"high": _count_by_severity_with_period(patched_vulnerabilities, "high", period),
-			"medium": _count_by_severity_with_period(patched_vulnerabilities, "medium", period),
-			"low": _count_by_severity_with_period(patched_vulnerabilities, "low", period),
-			"unknown": _count_by_severity_with_period(patched_vulnerabilities, "unknown", period),
-		},
-		"unpatched_vulnerabilities": {
-			"critical": _count_by_severity_with_period(unpatched_vulnerabilities, "critical", period),
-			"high": _count_by_severity_with_period(unpatched_vulnerabilities, "high", period),
-			"medium": _count_by_severity_with_period(unpatched_vulnerabilities, "medium", period),
-			"low": _count_by_severity_with_period(unpatched_vulnerabilities, "low", period),
-			"unknown": _count_by_severity_with_period(unpatched_vulnerabilities, "unknown", period),
-		},
-	}
-}
-
-# counts the vulnerabilities with the given severity excluding vulnerabilities
-# within the given period
-_count_by_severity_with_period(vulnerabilities, severity, period) := count([v |
-	some v in vulnerabilities
-	lower(v.normalized_severity) == severity
-	p := period[severity]
-	time.parse_rfc3339_ns(v.issued) >= p.start
-	time.parse_rfc3339_ns(v.issued) < p.end
-])
-
-_vulnerabilities(period) := vulnerabilities if {
-	vulnerabilities := _clair_vulnerabilities(period).vulnerabilities
-} else := vulnerabilities if {
-	some result in lib.results_named(_result_name)
-	vulnerabilities := result.value.vulnerabilities
-} else := _vulnerabilities_deprecated
-
-_unpatched_vulnerabilities(period) := vulnerabilities if {
-	vulnerabilities := _clair_vulnerabilities(period).unpatched_vulnerabilities
-} else := vulnerabilities if {
-	some result in lib.results_named(_result_name)
-	vulnerabilities := result.value.unpatched_vulnerabilities
-} else := _unpatched_vulnerabilities_deprecated
-
-_vulnerabilities_deprecated := vulnerabilities if {
-	some result in lib.results_named(_deprecated_result_name)
-	vulnerabilities := result.value.vulnerabilities
-}
-
-_unpatched_vulnerabilities_deprecated := vulnerabilities if {
-	some result in lib.results_named(_deprecated_result_name)
-	vulnerabilities := result.value.unpatched_vulnerabilities
-}
-
-_result_name := "SCAN_OUTPUT"
-
-_deprecated_result_name := "CLAIR_SCAN_RESULT"
+_name(vuln) := object.get(vuln, "name", "UNKNOWN")
 
 _reports_result_name := "REPORTS"
 
 _report_oci_mime_type := "application/vnd.redhat.clair-report+json"
 
-_non_zero_vulnerabilities(key, period) := _non_zero_levels(key, _vulnerabilities(period))
-
-_leewayed_vulnerabilities(key) := {l1: amount |
-	some l1, amount_with_leeway in _count_vulnerabilities(key, _configured_period)
-	some l2, amount_without_leeway in _count_vulnerabilities(key, _zero_period)
-	l1 == l2
-	amount := amount_without_leeway - amount_with_leeway
-	amount > 0
-}
-
-_non_zero_unpatched(key, period) := _non_zero_levels(key, _unpatched_vulnerabilities(period))
-
-_leewayed_unpatched_vulnerabilities(key) := {l1: amount |
-	some l1, amount_with_leeway in _count_unpatched_vulnerabilities(key, _configured_period)
-	some l2, amount_without_leeway in _count_unpatched_vulnerabilities(key, _zero_period)
-	l1 == l2
-	amount := amount_without_leeway - amount_with_leeway
-	amount > 0
-}
-
-_count_vulnerabilities(key, period) := _count_levels(key, _vulnerabilities(period))
-
-_count_unpatched_vulnerabilities(key, period) := _count_levels(key, _unpatched_vulnerabilities(period))
-
-_count_levels(key, vulnerabilities) := {level: amount |
-	some level in {a | some a in lib.rule_data(key)}
-	amount := vulnerabilities[level]
-}
-
-_non_zero_levels(key, vulnerabilities) := {level: amount |
-	some level, amount in _count_levels(key, vulnerabilities)
-	amount > 0
-}
-
-_configured_period[severity] := period if {
-	leeway := lib.rule_data("cve_leeway")
-
-	some severity in {"critical", "high", "medium", "low", "unknown"}
-	period := {
-		"start": 0,
-		"end": time.add_date(lib_time.effective_current_time_ns, 0, 0, leeway[severity] * -1),
-	}
-}
-
-_zero_period[severity] := period if {
-	some severity in {"critical", "high", "medium", "low", "unknown"}
-	period := {
-		"start": 0,
-		"end": lib_time.effective_current_time_ns,
-	}
-}
-
 _with_effective_on(result, effective_on) := object.union(
 	result,
-	{"effective_on": time.format([effective_on, "UTC", "2006-01-02T15:04:05Z07:00"])},
+	{"effective_on": effective_on},
 )
+
+_compute_leeway(vuln, severity) := effective_on if {
+	issued := object.get(vuln, "issued", null)
+	ns := time.parse_rfc3339_ns(issued)
+
+	leeway := lib.rule_data("cve_leeway")
+	years := 0
+	months := 0
+	days := leeway[severity]
+
+	new_ns := time.add_date(ns, years, months, days)
+	effective_on := time.format([new_ns, "UTC", "2006-01-02T15:04:05Z07:00"])
+} else := object.get(vuln, "issued", null)
 
 _rule_data_errors contains error if {
 	keys := [

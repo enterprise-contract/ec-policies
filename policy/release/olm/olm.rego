@@ -438,7 +438,7 @@ _subscription_annotation := "operators.openshift.io/valid-subscription"
 default _release_restrictions_apply := false
 
 _release_restrictions_apply if {
-	lib.rule_data("pipeline_intention") == "release"
+	lib.rule_data("pipeline_intention") in {"release", "production", "staging"}
 }
 
 # Used by allowed_registries

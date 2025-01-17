@@ -16,8 +16,8 @@ import data.lib.json as j
 # description: >-
 #   Check if the current weekday is allowed based on the rule data value from the key
 #   `disallowed_weekdays`. By default, the list is empty in which case *any* weekday is
-#   allowed. This check is enforced only for a "release" pipeline, as determined by
-#   the value of the `pipeline_intention` rule data.
+#   allowed. This check is enforced only for a "release" or "production"
+#   pipeline, as determined by the value of the `pipeline_intention` rule data.
 # custom:
 #   short_name: weekday_restriction
 #   failure_msg: '%s is a disallowed weekday: %s'
@@ -39,8 +39,9 @@ deny contains result if {
 # description: >-
 #   Check if the current date is not allowed based on the rule data value
 #   from the key `disallowed_dates`. By default, the list is empty in which
-#   case *any* day is allowed. This check is enforced only for a "release" pipeline,
-#   as determined by the value of the `pipeline_intention` rule data.
+#   case *any* day is allowed. This check is enforced only for a "release" or
+#   "production" pipeline, as determined by the value of the
+#   `pipeline_intention` rule data.
 # custom:
 #   short_name: date_restriction
 #   failure_msg: '%s is a disallowed date: %s'
@@ -76,11 +77,12 @@ deny contains result if {
 }
 
 # We want these checks to apply only if we're doing a release. Detect that by checking
-# the `pipeline_intention` value which is set to "release" for Konflux release pipelines.
+# the `pipeline_intention` value which is set to "release" or "production" for Konflux release pipelines.
+# Notably, the value "staging" is not checked here. The disallowed dates rule doesn't apply to staging releases.
 default _schedule_restrictions_apply := false
 
 _schedule_restrictions_apply if {
-	lib.rule_data("pipeline_intention") == "release"
+	lib.rule_data("pipeline_intention") in {"release", "production"} # But not staging
 }
 
 _rule_data_errors contains error if {

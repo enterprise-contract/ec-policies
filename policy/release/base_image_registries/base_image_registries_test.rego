@@ -26,6 +26,7 @@ test_allowed_base_images if {
 	]}]
 
 	lib.assert_empty(base_image_registries.deny) with lib.sbom.cyclonedx_sboms as sboms
+		with lib.sbom.spdx_sboms as _spdx_sbom
 }
 
 test_allowed_base_images_from_snapshot if {
@@ -54,12 +55,13 @@ test_allowed_base_images_from_snapshot if {
 	]}
 
 	lib.assert_empty(base_image_registries.deny) with lib.sbom.cyclonedx_sboms as sboms
+		with lib.sbom.spdx_sboms as _spdx_sbom
 		with data.rule_data.allowed_registry_prefixes as ["another.registry.io"]
 		with input.snapshot as snapshot
 }
 
 test_empty_base_images_result if {
-	lib.assert_empty(base_image_registries.deny) with lib.sbom.cyclonedx_sboms as [{}]
+	lib.assert_empty(base_image_registries.deny) with lib.sbom.cyclonedx_sboms as [{}] with lib.sbom.spdx_sboms as [{}]
 }
 
 test_disallowed_base_images if {
@@ -90,6 +92,11 @@ test_disallowed_base_images if {
 		}]},
 	]}]
 
+	bad_spdx_sbom := json.patch(_spdx_sbom, [
+		{"op": "replace", "path": "/0/packages/0/name", "value": "registry.redhat.blah/ubi7/3"},
+		{"op": "replace", "path": "/0/packages/1/name", "value": "registry.redhat.whatever/ubi7/3"},
+	])
+
 	expected := {
 		{
 			"code": "base_image_registries.base_image_permitted",
@@ -106,8 +113,19 @@ test_disallowed_base_images if {
 			"msg": "Base image \"dockery.io/busybox/3\" is from a disallowed registry",
 			"term": "dockery.io/busybox/3",
 		},
+		{
+			"code": "base_image_registries.base_image_permitted",
+			"msg": "Base image \"registry.redhat.blah/ubi7/3\" is from a disallowed registry",
+			"term": "registry.redhat.blah/ubi7/3",
+		},
+		{
+			"code": "base_image_registries.base_image_permitted",
+			"msg": "Base image \"registry.redhat.whatever/ubi7/3\" is from a disallowed registry",
+			"term": "registry.redhat.whatever/ubi7/3",
+		},
 	}
 	lib.assert_equal_results(base_image_registries.deny, expected) with lib.sbom.cyclonedx_sboms as sboms
+		with lib.sbom.spdx_sboms as bad_spdx_sbom
 }
 
 test_disallowed_base_images_with_snapshot if {
@@ -130,6 +148,11 @@ test_disallowed_base_images_with_snapshot if {
 		}]},
 	]}]
 
+	bad_spdx_sbom := json.patch(_spdx_sbom, [
+		{"op": "replace", "path": "/0/packages/0/name", "value": "registry.redhat.blah/ubi7/3@sha256:ccc"},
+		{"op": "replace", "path": "/0/packages/1/name", "value": "registry.redhat.whatever/ubi7/3@sha256:ccc"},
+	])
+
 	snapshot := {"components": [
 		{"containerImage": "ignored.io/ignore@sha256:cba"},
 		{"containerImage": "ignored.dev/ignore:ignore@sha256:dcb"},
@@ -146,9 +169,20 @@ test_disallowed_base_images_with_snapshot if {
 			"msg": "Base image \"registry.redhat.io/ubi7:latest@sha256:abc\" is from a disallowed registry",
 			"term": "registry.redhat.io/ubi7",
 		},
+		{
+			"code": "base_image_registries.base_image_permitted",
+			"msg": "Base image \"registry.redhat.blah/ubi7/3@sha256:ccc\" is from a disallowed registry",
+			"term": "registry.redhat.blah/ubi7/3",
+		},
+		{
+			"code": "base_image_registries.base_image_permitted",
+			"msg": "Base image \"registry.redhat.whatever/ubi7/3@sha256:ccc\" is from a disallowed registry",
+			"term": "registry.redhat.whatever/ubi7/3",
+		},
 	}
 
 	lib.assert_equal_results(base_image_registries.deny, expected) with lib.sbom.cyclonedx_sboms as sboms
+		with lib.sbom.spdx_sboms as bad_spdx_sbom
 		with data.rule_data.allowed_registry_prefixes as ["another.registry.io"]
 		with input.snapshot as snapshot
 }
@@ -212,6 +246,7 @@ test_sbom_base_image_selection if {
 	]}]
 
 	lib.assert_empty(base_image_registries.deny) with lib.sbom.cyclonedx_sboms as sboms
+		with lib.sbom.spdx_sboms as []
 }
 
 test_base_image_not_found if {
@@ -263,6 +298,7 @@ test_allowed_registries_provided if {
 	}}
 	lib.assert_equal_results(expected, base_image_registries.deny) with data.rule_data as {}
 		with lib.sbom.cyclonedx_sboms as [{}]
+		with lib.sbom.spdx_sboms as [{}]
 }
 
 test_rule_data_validation if {
@@ -290,4 +326,44 @@ test_rule_data_validation if {
 
 	lib.assert_equal_results(base_image_registries.deny, expected) with data.rule_data as d
 		with lib.sbom.cyclonedx_sboms as [{}]
+		with lib.sbom.spdx_sboms as [{}]
 }
+
+_spdx_sbom := [{"packages": [
+	{
+		# regal ignore:line-length
+		"SPDXID": "SPDXRef-image-registry.redhat.io/single-container-app-9520a72cbb69edfca5cac88ea2a9e0e09142ec934952b9420d686e77765f002c",
+		"name": "registry.redhat.io/single-container-app:latest@sha256:abc",
+		"downloadLocation": "NOASSERTION",
+		"externalRefs": [{
+			"referenceCategory": "PACKAGE-MANAGER",
+			"referenceType": "purl",
+			# regal ignore:line-length
+			"referenceLocator": "pkg:oci/single-container-app@sha256:8f99627e843e931846855c5d899901bf093f5093e613a92745696a26b5420941?repository_url=quay.io/mkosiarc_rhtap/single-container-app",
+		}],
+		"annotations": [{
+			"annotator": "Tool: konflux:jsonencoded",
+			"comment": "{\"name\":\"konflux:container:is_base_image\",\"value\":\"true\"}",
+			"annotationDate": "2024-12-09T12:00:00Z",
+			"annotationType": "OTHER",
+		}],
+	},
+	{
+		# regal ignore:line-length
+		"SPDXID": "SPDXRef-image-docker.io/single-container-app-9520a72cbb69edfca5cac88ea2a9e0e09142ec934952b9420d686e77765f002c",
+		"name": "docker.io/single-container-app:latest@sha256:bcd",
+		"downloadLocation": "NOASSERTION",
+		"externalRefs": [{
+			"referenceCategory": "PACKAGE-MANAGER",
+			"referenceType": "purl",
+			# regal ignore:line-length
+			"referenceLocator": "pkg:oci/single-container-app@sha256:8f99627e843e931846855c5d899901bf093f5093e613a92745696a26b5420941?repository_url=quay.io/mkosiarc_rhtap/single-container-app",
+		}],
+		"annotations": [{
+			"annotator": "Tool: konflux:jsonencoded",
+			"comment": "{\"name\":\"konflux:container:is_builder_image:for_stage\",\"value\":\"0\"}",
+			"annotationDate": "2024-12-09T12:00:00Z",
+			"annotationType": "OTHER",
+		}],
+	},
+]}]

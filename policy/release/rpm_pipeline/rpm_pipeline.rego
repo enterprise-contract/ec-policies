@@ -26,7 +26,7 @@ _rule_data_key := "allowed_rpm_build_pipelines"
 #   failure_msg: >-
 #     Task %q uses invalid pipleline %s, which is not in the list of valid pipelines: %s
 #   collections:
-#   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - tasks.pipeline_has_tasks
 #

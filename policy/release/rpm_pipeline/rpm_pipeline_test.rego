@@ -28,22 +28,22 @@ test_valid_pipelines_met if {
 }
 
 _invalid_pipeline_task := {
-		"name": "build",
-		"status": "Succeeded",
-		"ref": {"name": "init", "kind": "Task", "bundle": "quay.io/konflux-ci/tekton-catalog/task-init"},
-		"invocation": {"environment": {"annotations": {"build.appstudio.redhat.com/pipeline": "not_allowed"}}},
-	}
+	"name": "build",
+	"status": "Succeeded",
+	"ref": {"name": "init", "kind": "Task", "bundle": "quay.io/konflux-ci/tekton-catalog/task-init"},
+	"invocation": {"environment": {"annotations": {"build.appstudio.redhat.com/pipeline": "not_allowed"}}},
+}
 
 _valid_pipeline_task := {
-		"name": "init",
-		"status": "Succeeded",
-		"ref": {"name": "init", "kind": "Task", "bundle": "quay.io/konflux-ci/tekton-catalog/task-init"},
-		"invocation": {"environment": {"annotations": {"build.appstudio.redhat.com/pipeline": "foobar"}}},
-	}
+	"name": "init",
+	"status": "Succeeded",
+	"ref": {"name": "init", "kind": "Task", "bundle": "quay.io/konflux-ci/tekton-catalog/task-init"},
+	"invocation": {"environment": {"annotations": {"build.appstudio.redhat.com/pipeline": "foobar"}}},
+}
 
 _valid_pipeline_task_2 := {
-		"name": "get-rpm-sources",
-		"status": "Succeeded",
-		"ref": {"name": "init", "kind": "Task", "bundle": "quay.io/konflux-ci/tekton-catalog/task-init"},
-		"invocation": {"environment": {"annotations": {"build.appstudio.redhat.com/pipeline": "biff"}}},
-	}
+	"name": "get-rpm-sources",
+	"status": "Succeeded",
+	"ref": {"name": "init", "kind": "Task", "bundle": "quay.io/konflux-ci/tekton-catalog/task-init"},
+	"invocation": {"environment": {"annotations": {"build.appstudio.redhat.com/pipeline": "biff"}}},
+}

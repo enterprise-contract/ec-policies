@@ -162,3 +162,47 @@ deny contains result if {
 	sbom_image.digest != expected_image.digest
 	result := lib.result_helper(rego.metadata.chain(), [sbom_image.digest, expected_image.digest])
 }
+
+# METADATA
+# title: Allowed package sources
+# description: >-
+#   For each of the packages fetched by Cachi2 which define externalReferences,
+#   verify they are allowed based on the allowed_package_sources rule data
+#   key. By default, allowed_package_sources is empty, which means no components with such
+#   references are allowed.
+# custom:
+#   short_name: allowed_package_sources
+#   failure_msg: Package %s fetched by cachi2 was sourced from %q which is not allowed
+#   solution: Update the image to not use a package from a disallowed source.
+#   collections:
+#   - redhat
+#   - policy_data
+#   effective_on: 2025-02-17T00:00:00Z
+deny contains result if {
+	some s in sbom.spdx_sboms
+	some pkg in s.packages
+
+	# only look at components fetched by cachi2
+	some annotation in pkg.annotations
+	properties := json.unmarshal(annotation.comment)
+	properties.name == "cachi2:found_by"
+	properties.value == "cachi2"
+
+	some externalref in pkg.externalRefs
+
+	externalref.referenceType == "purl"
+
+	purl := externalref.referenceLocator
+	parsed_purl := ec.purl.parse(purl)
+
+	# patterns are either those defined by the rule for a given purl type, or empty by default
+	allowed_data := lib.rule_data(sbom.rule_data_allowed_package_sources_key)
+	patterns := sbom.purl_allowed_patterns(parsed_purl.type, allowed_data)
+
+	some qualifier in parsed_purl.qualifiers
+	qualifier.key == "download_url"
+
+	not sbom.url_matches_any_pattern(qualifier.value, patterns)
+
+	result := lib.result_helper_with_term(rego.metadata.chain(), [purl, qualifier.value], purl)
+}

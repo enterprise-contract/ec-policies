@@ -153,6 +153,94 @@ test_external_references_disallowed_regex if {
 		}]}
 }
 
+test_allowed_package_sources if {
+	expected := {{
+		"code": "sbom_spdx.allowed_package_sources",
+		"term": "pkg:generic/openssl@1.1.10g?download_url=https://openssl.org/source/openssl-1.1.0g.tar.gz",
+		# regal ignore:line-length
+		"msg": `Package pkg:generic/openssl@1.1.10g?download_url=https://openssl.org/source/openssl-1.1.0g.tar.gz fetched by cachi2 was sourced from "https://openssl.org/source/openssl-1.1.0g.tar.gz" which is not allowed`,
+	}}
+
+	att := json.patch(_sbom_attestation, [
+		{
+			"op": "add",
+			"path": "/statement/predicate/packages/-",
+			"value": {
+				"SPDXID": "openssl",
+				"name": "openssl",
+				"versionInfo": "None",
+				"externalRefs": [{
+					"referenceCategory": "PACKAGE-MANAGER",
+					"referenceType": "purl",
+					"referenceLocator": "pkg:generic/openssl@1.1.10g?download_url=https://openssl.org/source/openssl-1.1.0g.tar.gz",
+				}],
+				"annotations": [{
+					"annotator": "Tool: cachi2:jsonencoded",
+					"comment": "{\"name\":\"cachi2:found_by\",\"value\":\"cachi2\"}",
+					"annotationDate": "2024-12-09T12:00:00Z",
+					"annotationType": "OTHER",
+				}],
+				"downloadLocation": "NOASSERTION",
+			},
+		},
+		{
+			"op": "add",
+			"path": "/statement/predicate/packages/-",
+			"value": {
+				"SPDXID": "batik-anim",
+				"name": "batik-anim",
+				"versionInfo": "None",
+				"externalRefs": [{
+					"referenceCategory": "PACKAGE-MANAGER",
+					"referenceType": "purl",
+					# regal ignore:line-length
+					"referenceLocator": "pkg:maven/org.apache.xmlgraphics/batik-anim@1.9.1?type=pom&download_url=https://repo.maven.apache.org/maven2/org/apache/xmlgraphics/batik-anim/1.9.1/batik-anim-1.9.1.pom",
+				}],
+				"annotations": [{
+					"annotator": "Tool: cachi2:jsonencoded",
+					"comment": "{\"name\":\"cachi2:found_by\",\"value\":\"cachi2\"}",
+					"annotationDate": "2024-12-09T12:00:00Z",
+					"annotationType": "OTHER",
+				}],
+				"downloadLocation": "NOASSERTION",
+			},
+		},
+		{
+			"op": "add",
+			"path": "/statement/predicate/packages/-",
+			"value": {
+				"SPDXID": "unrelated",
+				"name": "unrelated",
+				"versionInfo": "None",
+				"externalRefs": [{
+					"referenceCategory": "PACKAGE-MANAGER",
+					"referenceType": "purl",
+					"referenceLocator": "pkg:generic/unrelated?download_url=https://irrelevant.org",
+				}],
+				"annotations": [{
+					"annotator": "Tool: cachi2:jsonencoded",
+					"comment": "{\"name\":\"irrelevant\",\"value\":\"im-irrelevant\"}",
+					"annotationDate": "2024-12-09T12:00:00Z",
+					"annotationType": "OTHER",
+				}],
+				"downloadLocation": "NOASSERTION",
+			},
+		},
+	])
+
+	lib.assert_equal_results(expected, sbom_spdx.deny) with input.attestations as [att]
+		with data.rule_data as {sbom.rule_data_allowed_package_sources_key: [
+			{
+				"type": "maven",
+				"patterns": [".*apache.org.*", ".*example.com.*"],
+			},
+			{
+				"type": "generic",
+				"patterns": [".*apache.org.*", ".*example.com.*"],
+			},
+		]}
+}
+
 _sbom_attestation := {"statement": {
 	"predicateType": "https://spdx.dev/Document",
 	"predicate": {

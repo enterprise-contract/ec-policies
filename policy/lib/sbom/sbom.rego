@@ -97,6 +97,19 @@ _matches_version(version, matcher) if {
 
 _to_semver(v) := trim_prefix(v, "v")
 
+# get allowed pattens for given purl type, or empty list if not defined
+purl_allowed_patterns(purl_type, allowed_rule_data) := patterns if {
+	some allowed in allowed_rule_data
+	purl_type == allowed.type
+	patterns := allowed.patterns
+} else := []
+
+# see if any pattern matches given url
+url_matches_any_pattern(url, patterns) if {
+	some pattern in patterns
+	regex.match(pattern, url)
+}
+
 # Verify disallowed_packages is an array of objects
 rule_data_errors contains error if {
 	some e in j.validate_schema(lib.rule_data(rule_data_packages_key), {

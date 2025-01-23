@@ -179,26 +179,13 @@ deny contains result if {
 
 	# patterns are either those defined by the rule for a given purl type, or empty by default
 	allowed_data := lib.rule_data(sbom.rule_data_allowed_package_sources_key)
-	patterns := _get_purl_allowed_patterns(parsed_purl.type, allowed_data)
+	patterns := sbom.purl_allowed_patterns(parsed_purl.type, allowed_data)
 	distribution_url := object.get(reference, "url", "")
 
 	# only progress past this point if no matches were found
-	not _url_matches_any_pattern(distribution_url, patterns)
+	not sbom.url_matches_any_pattern(distribution_url, patterns)
 
 	result := lib.result_helper_with_term(rego.metadata.chain(), [purl, distribution_url], purl)
-}
-
-# get allowed pattens for given purl type, or empty list if not defined
-_get_purl_allowed_patterns(purl_type, allowed_rule_data) := patterns if {
-	some allowed in allowed_rule_data
-	purl_type == allowed.type
-	patterns := allowed.patterns
-} else := []
-
-# see if any pattern matches given url
-_url_matches_any_pattern(url, patterns) if {
-	some pattern in patterns
-	regex.match(pattern, url)
 }
 
 # _with_effective_on annotates the result with the item's effective_on attribute. If the item does

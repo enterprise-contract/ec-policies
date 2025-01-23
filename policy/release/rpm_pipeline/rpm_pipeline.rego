@@ -41,5 +41,8 @@ deny contains result if {
 	some p in allowed_pipelines
 	p != pipeline
 
-	result := lib.result_helper(rego.metadata.chain(), [tekton.pipeline_task_name(task), pipeline, concat(",", allowed_pipelines)])
+	result := lib.result_helper(
+		rego.metadata.chain(),
+		[tekton.pipeline_task_name(task), pipeline, concat(",", allowed_pipelines)],
+	)
 }

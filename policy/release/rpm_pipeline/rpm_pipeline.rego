@@ -38,8 +38,7 @@ deny contains result if {
 	pipeline := annotations[_pipeline_key]
 	allowed_pipelines := lib.rule_data(_rule_data_key)
 
-	some p in allowed_pipelines
-	p != pipeline
+	not pipeline in allowed_pipelines
 
 	result := lib.result_helper(
 		rego.metadata.chain(),

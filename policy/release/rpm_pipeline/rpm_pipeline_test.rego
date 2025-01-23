@@ -24,7 +24,7 @@ test_valid_pipelines_met if {
 		"buildConfig": {"tasks": [_valid_pipeline_task, _valid_pipeline_task_2]},
 	}}}]
 
-	lib.assert_empty(rpm_pipeline.deny) with data.rule_data.allowed_rpm_build_pipelines as [["foobar", "baz"]] with input.attestations as attestations
+	lib.assert_empty(rpm_pipeline.deny) with data.rule_data.allowed_rpm_build_pipelines as ["foobar", "baz"] with input.attestations as attestations
 }
 
 _invalid_pipeline_task := {
@@ -45,5 +45,5 @@ _valid_pipeline_task_2 := {
 	"name": "get-rpm-sources",
 	"status": "Succeeded",
 	"ref": {"name": "init", "kind": "Task", "bundle": "quay.io/konflux-ci/tekton-catalog/task-init"},
-	"invocation": {"environment": {"annotations": {"build.appstudio.redhat.com/pipeline": "biff"}}},
+	"invocation": {"environment": {"annotations": {"build.appstudio.redhat.com/pipeline": "baz"}}},
 }

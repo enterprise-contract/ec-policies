@@ -1,4 +1,4 @@
-* xref:index.adoc[About Enterprise Contract]
+* xref:index.adoc[About Conforma]
 include::partial$release_policy_nav.adoc[]
 include::partial$pipeline_policy_nav.adoc[]
 include::partial$build_task_policy_nav.adoc[]

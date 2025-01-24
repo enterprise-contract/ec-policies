@@ -2,7 +2,7 @@
 # METADATA
 # title: Tasks
 # description: >-
-#   Enterprise Contract expects that a set of tasks were
+#   Conforma expects that a set of tasks were
 #   included in the pipeline build for each image to be
 #   released. This package includes a set of rules to verify
 #   that the expected tasks ran in the pipeline when the image

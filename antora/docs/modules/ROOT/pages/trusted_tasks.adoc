@@ -4,7 +4,7 @@
 
 == Task Provenance using trusted Task list
 
-The Enterprise Contract requires that all Konflux pipelines
+Conforma requires that all Konflux pipelines
 use only tasks with the recorded provenance in the trusted Task list. See also
 the "Trusted Task" xref:release_policy#trusted_task_package[release] and
 xref:pipeline_policy#untrusted_task_bundle[policy] rules where this list is

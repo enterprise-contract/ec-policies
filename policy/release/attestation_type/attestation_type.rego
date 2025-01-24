@@ -75,12 +75,12 @@ deny contains result if {
 # METADATA
 # title: Deprecated policy attestation format
 # description: >-
-#   The Enterprise Contract CLI now places the attestation data in a different location.
+#   The Conforma CLI now places the attestation data in a different location.
 #   This check fails if the expected new format is not found.
 # custom:
 #   short_name: deprecated_policy_attestation_format
 #   failure_msg: Deprecated policy attestation format found
-#   solution: Use a newer version of the Enterprise Contract CLI.
+#   solution: Use a newer version of the Conforma CLI.
 #   collections:
 #   - minimal
 #   - redhat

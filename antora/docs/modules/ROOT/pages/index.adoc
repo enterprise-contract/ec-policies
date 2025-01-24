@@ -1,20 +1,20 @@
-= Enterprise Contract Policies
+= Conforma Policies
 
 :numbered:
 
-The Enterprise Contract is a tool for verifing the provenance of container
-images built in Konflux CI, and validating them against a
-clearly defined Enterprise Contract policy.
+Conforma (formerly known as Enterprise Contract) is a tool for verifing the
+provenance of container images built in a CI system such as Konflux, and
+validating them against a clearly defined policy.
 
-The Enterprise Contract policy is defined using the
+Conforma policies are defined using the
 https://www.openpolicyagent.org/docs/latest/policy-language/[rego policy
-language] and is described here in xref:release_policy.adoc[Release Policy] and
+language] and are described here in xref:release_policy.adoc[Release Policy] and
 xref:pipeline_policy.adoc[Pipeline Policy].
 
 == Additional Documentation
 
 * https://konflux-ci.dev/docs/[Konflux Documentation]
-* xref:ec-cli::index.adoc[EC CLI Documentation]
+* xref:ec-cli::index.adoc[Conforma CLI Documentation]
 
 == Code
 

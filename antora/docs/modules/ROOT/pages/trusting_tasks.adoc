@@ -157,7 +157,7 @@ https://github.com/simonbaird/securesign-ec-config/blob/main/policy.yaml#L24[thi
 
 [,bash]
 ----
-name: Secure Sign Custom Enterprise Contract Policy
+name: Secure Sign Custom Conforma Policy
 
 description: >-
   Based on the standard Red Hat (non hermetic) policy

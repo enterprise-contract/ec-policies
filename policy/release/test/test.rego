@@ -2,7 +2,7 @@
 # METADATA
 # title: Test
 # description: >-
-#   Enterprise Contract requires that each build was subjected
+#   Conforma requires that each build was subjected
 #   to a set of tests and that those tests all passed. This package
 #   includes a set of rules to verify that.
 #
@@ -65,7 +65,7 @@ warn contains result if {
 # title: Test data found in task results
 # description: >-
 #   Ensure that at least one of the tasks in the pipeline includes a
-#   TEST_OUTPUT task result, which is where Enterprise Contract expects
+#   TEST_OUTPUT task result, which is where Conforma expects
 #   to find test result data.
 # custom:
 #   short_name: test_data_found

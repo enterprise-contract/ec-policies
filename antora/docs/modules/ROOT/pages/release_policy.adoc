@@ -250,9 +250,9 @@ Sanity checks related to the format of the image build's attestation.
 [#attestation_type__deprecated_policy_attestation_format]
 === link:#attestation_type__deprecated_policy_attestation_format[Deprecated policy attestation format]
 
-The Enterprise Contract CLI now places the attestation data in a different location. This check fails if the expected new format is not found.
+The Conforma CLI now places the attestation data in a different location. This check fails if the expected new format is not found.
 
-*Solution*: Use a newer version of the Enterprise Contract CLI.
+*Solution*: Use a newer version of the Conforma CLI.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Deprecated policy attestation format found`
@@ -1603,7 +1603,7 @@ Verify the source container image is signed.
 [#attestation_task_bundle_package]
 == link:#attestation_task_bundle_package[Task bundle checks]
 
-To be able to reproduce and audit builds accurately it's important to know exactly what happened during the build. To do this Enterprise Contract requires that all tasks are defined in a set of known and trusted task bundles. This package includes rules to confirm that the tasks that built the image were defined in task bundles, and that the task bundles used are from the list of known and trusted bundles.
+To be able to reproduce and audit builds accurately it's important to know exactly what happened during the build. To do this Conforma requires that all tasks are defined in a set of known and trusted task bundles. This package includes rules to confirm that the tasks that built the image were defined in task bundles, and that the task bundles used are from the list of known and trusted bundles.
 
 * Package name: `attestation_task_bundle`
 
@@ -1680,7 +1680,7 @@ Check for the existence of a task bundle. This rule will fail if the task is not
 [#tasks_package]
 == link:#tasks_package[Tasks]
 
-Enterprise Contract expects that a set of tasks were included in the pipeline build for each image to be released. This package includes a set of rules to verify that the expected tasks ran in the pipeline when the image was built. Required tasks for a pipeline are specified in a data source provided at runtime. This data source features two primary rule data keys: pipeline-required-tasks and required-tasks. The pipeline-required-tasks key lists all required tasks broken down by pipeline name, while required-tasks details a default or baseline set of tasks. If your pipeline corresponds to an entry under pipeline-required-tasks, those tasks will be prioritized; otherwise, the system will default to the tasks listed under required-tasks. Required tasks are listed by the names given to them within the task definition. Optionally invocation parameter of a Task can be also mandated by including the name and the value in square brackets following the name of the task. For example: name[PARAM=val]. Only single parameter is supported, to assert multiple parameters repeat the required task definition for each parameter seperately.
+Conforma expects that a set of tasks were included in the pipeline build for each image to be released. This package includes a set of rules to verify that the expected tasks ran in the pipeline when the image was built. Required tasks for a pipeline are specified in a data source provided at runtime. This data source features two primary rule data keys: pipeline-required-tasks and required-tasks. The pipeline-required-tasks key lists all required tasks broken down by pipeline name, while required-tasks details a default or baseline set of tasks. If your pipeline corresponds to an entry under pipeline-required-tasks, those tasks will be prioritized; otherwise, the system will default to the tasks listed under required-tasks. Required tasks are listed by the names given to them within the task definition. Optionally invocation parameter of a Task can be also mandated by including the name and the value in square brackets following the name of the task. For example: name[PARAM=val]. Only single parameter is supported, to assert multiple parameters repeat the required task definition for each parameter seperately.
 
 * Package name: `tasks`
 
@@ -1805,7 +1805,7 @@ The Tekton Task used is or will be unsupported. The Task is annotated with `buil
 [#test_package]
 == link:#test_package[Test]
 
-Enterprise Contract requires that each build was subjected to a set of tests and that those tests all passed. This package includes a set of rules to verify that.
+Conforma requires that each build was subjected to a set of tests and that those tests all passed. This package includes a set of rules to verify that.
 
 * Package name: `test`
 
@@ -1910,7 +1910,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 [#test__test_data_found]
 === link:#test__test_data_found[Test data found in task results]
 
-Ensure that at least one of the tasks in the pipeline includes a TEST_OUTPUT task result, which is where Enterprise Contract expects to find test result data.
+Ensure that at least one of the tasks in the pipeline includes a TEST_OUTPUT task result, which is where Conforma expects to find test result data.
 
 *Solution*: Confirm at least one task in the build pipeline contains a result named TEST_OUTPUT.
 

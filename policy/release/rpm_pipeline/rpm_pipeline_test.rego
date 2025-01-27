@@ -16,7 +16,7 @@ test_invalid_pipeline if {
 		"msg": "Task \"build\" uses invalid pipleline not_allowed, which is not in the list of valid pipelines: foobar",
 	}}
 	lib.assert_equal_results(expected, rpm_pipeline.deny) with data.rule_data.allowed_rpm_build_pipelines as ["foobar"]
-    with input.attestations as attestations
+		with input.attestations as attestations
 }
 
 test_valid_pipelines_met if {
@@ -26,7 +26,7 @@ test_valid_pipelines_met if {
 	}}}]
 
 	lib.assert_empty(rpm_pipeline.deny) with data.rule_data.allowed_rpm_build_pipelines as ["foobar", "baz"]
-    with input.attestations as attestations
+		with input.attestations as attestations
 }
 
 _invalid_pipeline_task := {

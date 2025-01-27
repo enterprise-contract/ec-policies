@@ -206,6 +206,13 @@ Rules included:
 * xref:release_policy.adoc#rpm_ostree_task__builder_image_param[rpm-ostree Task: Builder image parameter]
 * xref:release_policy.adoc#rpm_ostree_task__rule_data[rpm-ostree Task: Rule data]
 
+| [#redhat_rpms]`redhat_rpms`
+a| Include the set of policy rules required for building Red Hat RPMs.
+
+Rules included:
+
+* xref:release_policy.adoc#rpm_pipeline__invalid_pipeline[RPM Pipeline: Task version invalid_pipeline]
+
 | [#rhtap-multi-ci]`rhtap-multi-ci`
 a| A set of policy rules to validate artifacts built using RHTAP Multi-CI pipelines.
 
@@ -989,6 +996,23 @@ Verify an attestation created by the RHTAP Multi-CI build pipeline is present.
 * FAILURE message: `A SLSA v1.0 provenance with one of the following RHTAP Multi-CI build types was not found: %s.`
 * Code: `rhtap_multi_ci.attestation_found`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rhtap_multi_ci/rhtap_multi_ci.rego#L16[Source, window="_blank"]
+
+[#rpm_pipeline_package]
+== link:#rpm_pipeline_package[RPM Pipeline]
+
+This package provides rules for verifying the RPMs are built in an approved pipeline
+
+* Package name: `rpm_pipeline`
+
+[#rpm_pipeline__invalid_pipeline]
+=== link:#rpm_pipeline__invalid_pipeline[Task version invalid_pipeline]
+
+The Tekton Task used specifies an invalid pipeline. The Task is annotated with `build.appstudio.redhat.com/pipeline` annotation, which must be in the set of `allowed_rpm_build_pipelines` in the rule data.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Task %q uses invalid pipleline %s, which is not in the list of valid pipelines: %s`
+* Code: `rpm_pipeline.invalid_pipeline`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_pipeline/rpm_pipeline.rego#L18[Source, window="_blank"]
 
 [#rpm_repos_package]
 == link:#rpm_repos_package[RPM Repos]

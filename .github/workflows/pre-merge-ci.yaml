@@ -61,6 +61,7 @@ jobs:
           if ! git diff --exit-code -s; then
             for f in $(git diff --exit-code --name-only); do
               echo "::error file=$f,line=1,col=1,endColumn=1::File was modified in build"
+              echo -e "\033[1;33mHint:\033[0m Maybe you need to run \033[1;32mmake generate-docs\033[0m"
             done
             exit 1
           fi

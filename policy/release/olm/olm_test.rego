@@ -381,6 +381,20 @@ test_unmapped_references_in_operator if {
 		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 }
 
+test_inaccessible_related_images if {
+	expected := {{
+		"code": "olm.inaccessible_related_images",
+		"msg": "The \"registry.io/repository/image2@sha256:tea\"related image reference is not accessible.",
+		"term": "registry.io/repository/image2@sha256:tea",
+	}}
+
+	lib.assert_equal_results(olm.deny, expected) with input.snapshot.components as [component1]
+		# with input.image.files as {"manifests/csv.yaml": manifest}
+		with data.rule_data as {"pipeline_intention": "release", "allowed_registry_prefixes": ["registry.io"]}
+		with ec.oci.image_manifest as mock_ec_oci_image_manifest
+		# with input.image.config.Labels as {olm.manifestv1: "manifests/"}
+}
+
 mock_ec_oci_image_manifest("registry.io/repository/image@sha256:cafe") := `{"config": {"digest": "sha256:cafe"}}`
 
 mock_ec_oci_image_manifest("registry.io/repository/image2@sha256:tea") := false
@@ -427,3 +441,13 @@ test_unallowed_registries if {
 		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 		with input.image.files as {"manifests/csv.yaml": manifest}
 }
+
+# `opa fmt` is causing this
+# regal ignore:line-length
+valid_related_images := object.union_n(lib.to_array(pinned))
+
+# `opa fmt` is causing this
+# regal ignore:line-length
+invalid_related_images := object.union_n(lib.to_array(pinned2))
+
+_related_images := [object.union(valid_related_images, invalid_related_images)]

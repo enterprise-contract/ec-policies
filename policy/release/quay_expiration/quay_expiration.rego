@@ -18,8 +18,8 @@ import data.lib
 # description: >-
 #   Check the image metadata for the presence of a "quay.expires-after"
 #   label. If it's present then produce a violation. This check is enforced
-#   only for a "release" pipeline, as determined by the value of the
-#   `pipeline_intention` rule data.
+#   only for a "release", "production", or "staging" pipeline, as determined by
+#   the value of the `pipeline_intention` rule data.
 # custom:
 #   short_name: expires_label
 #   failure_msg: The image has a 'quay.expires-after' label set to '%s'
@@ -52,5 +52,5 @@ deny contains result if {
 default _expires_label_check_applies := false
 
 _expires_label_check_applies if {
-	lib.rule_data("pipeline_intention") == "release"
+	lib.rule_data("pipeline_intention") in {"release", "production", "staging"}
 }

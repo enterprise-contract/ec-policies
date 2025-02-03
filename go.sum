@@ -1452,8 +1452,8 @@ github.com/tchap/go-patricia/v2 v2.3.1 h1:6rQp39lgIYZ+MHmdEq4xzuk1t7OdC35z/xm0BG
 github.com/tchap/go-patricia/v2 v2.3.1/go.mod h1:VZRHKAb53DLaG+nA9EaYYiaEx6YztwDlLElMsnSHD4k=
 github.com/tektoncd/chains v0.23.0 h1:zRhzSUlAPxL/dUH0AXWcW8AtJbF2FrqM2yTyR3J8A5U=
 github.com/tektoncd/chains v0.23.0/go.mod h1:Bhyomb/vr0cnI4+VJmjeukRCyti4XGWb9GPWSttAFIs=
-github.com/tektoncd/cli v0.39.0 h1:sGsDnEa0nsX11L2hKKOZuNOaEQqwDS2mQHlqMM4m34Q=
-github.com/tektoncd/cli v0.39.0/go.mod h1:yUfVpErsZDTtQw3uQvCxukOhgOC0SZfrXEhOu9/kmkc=
+github.com/tektoncd/cli v0.39.1 h1:fAALGeogR2My8yOr1CAotFp83zPdvbWmvCBXSzTm21U=
+github.com/tektoncd/cli v0.39.1/go.mod h1:g0n1qWeJMSsMUbEMVRpWpcL/TNrZMBEA3Sp8K35vsrg=
 github.com/tektoncd/hub v1.19.0 h1:UXl/jPB9uoa4ULyh64SN1VuKMMIZvXq6bkRGI8ATU+g=
 github.com/tektoncd/hub v1.19.0/go.mod h1:JJvxZ37nPygZOaUgDIQddihWnD+hSKExPs261FXmttc=
 github.com/tektoncd/pipeline v0.65.2 h1:N63Xb9uiunewPVDTz4nGamJOtVg+Q38Cy4LRpvr+2e4=

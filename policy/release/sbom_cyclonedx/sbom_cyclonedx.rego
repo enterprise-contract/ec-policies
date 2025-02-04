@@ -40,7 +40,7 @@ deny contains result if {
 #   short_name: allowed
 #   failure_msg: "Package is not allowed: %s"
 #   solution: >-
-#     Update the image to not use a disallowed package.
+#     Update the image to not use any disallowed package.
 #   collections:
 #   - redhat
 #
@@ -61,7 +61,7 @@ deny contains result if {
 # custom:
 #   short_name: disallowed_package_attributes
 #   failure_msg: Package %s has the attribute %q set%s
-#   solution: Update the image to not use a disallowed package attributes.
+#   solution: Update the image to not use any disallowed package attributes.
 #   collections:
 #   - redhat
 #   - policy_data

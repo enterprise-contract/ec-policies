@@ -84,6 +84,7 @@ Rules included:
 * xref:release_policy.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]
 * xref:release_policy.adoc#sbom_spdx__allowed_package_external_references[SPDX SBOM: Allowed package external references]
 * xref:release_policy.adoc#sbom_spdx__allowed_package_sources[SPDX SBOM: Allowed package sources]
+* xref:release_policy.adoc#sbom_spdx__disallowed_package_attributes[SPDX SBOM: Disallowed package attributes]
 * xref:release_policy.adoc#sbom_spdx__disallowed_package_external_references[SPDX SBOM: Disallowed package external references]
 * xref:release_policy.adoc#schedule__rule_data_provided[Schedule related checks: Rule data provided]
 * xref:release_policy.adoc#tasks__data_provided[Tasks: Data provided]
@@ -170,6 +171,7 @@ Rules included:
 * xref:release_policy.adoc#sbom_spdx__allowed[SPDX SBOM: Allowed]
 * xref:release_policy.adoc#sbom_spdx__allowed_package_external_references[SPDX SBOM: Allowed package external references]
 * xref:release_policy.adoc#sbom_spdx__allowed_package_sources[SPDX SBOM: Allowed package sources]
+* xref:release_policy.adoc#sbom_spdx__disallowed_package_attributes[SPDX SBOM: Disallowed package attributes]
 * xref:release_policy.adoc#sbom_spdx__disallowed_package_external_references[SPDX SBOM: Disallowed package external references]
 * xref:release_policy.adoc#sbom_spdx__valid[SPDX SBOM: Valid]
 * xref:release_policy.adoc#schedule__date_restriction[Schedule related checks: Date Restriction]
@@ -1133,7 +1135,7 @@ Checks different properties of the CycloneDX SBOMs associated with the image bei
 
 Confirm the CycloneDX SBOM contains only allowed packages. By default all packages are allowed. Use the "disallowed_packages" rule data key to provide a list of disallowed packages.
 
-*Solution*: Update the image to not use a disallowed package.
+*Solution*: Update the image to not use any disallowed package.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package is not allowed: %s`
@@ -1170,7 +1172,7 @@ For each of the components fetched by Cachi2 which define externalReferences of 
 
 Confirm the CycloneDX SBOM contains only packages without disallowed attributes. By default all attributes are allowed. Use the "disallowed_attributes" rule data key to provide a list of key-value pairs that forbid the use of an attribute set to the given value.
 
-*Solution*: Update the image to not use a disallowed package attributes.
+*Solution*: Update the image to not use any disallowed package attributes.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package %s has the attribute %q set%s`
@@ -1459,7 +1461,7 @@ Checks different properties of the CycloneDX SBOMs associated with the image bei
 
 Confirm the SPDX SBOM contains only allowed packages. By default all packages are allowed. Use the "disallowed_packages" rule data key to provide a list of disallowed packages.
 
-*Solution*: Update the image to not use a disallowed package.
+*Solution*: Update the image to not use any disallowed package.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package is not allowed: %s`
@@ -1514,6 +1516,19 @@ Check the list of packages in the SPDX SBOM is not empty.
 * FAILURE message: `The list of packages is empty`
 * Code: `sbom_spdx.contains_packages`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L35[Source, window="_blank"]
+
+[#sbom_spdx__disallowed_package_attributes]
+=== link:#sbom_spdx__disallowed_package_attributes[Disallowed package attributes]
+
+Confirm the SPDX SBOM contains only packages without disallowed attributes. By default all attributes are allowed. Use the "disallowed_attributes" rule data key to provide a list of key-value pairs that forbid the use of an attribute set to the given value.
+
+*Solution*: Update the image to not use any disallowed package attributes.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Package %s has the attribute %q set%s`
+* Code: `sbom_spdx.disallowed_package_attributes`
+* Effective from: `2025-02-04T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L210[Source, window="_blank"]
 
 [#sbom_spdx__disallowed_package_external_references]
 === link:#sbom_spdx__disallowed_package_external_references[Disallowed package external references]

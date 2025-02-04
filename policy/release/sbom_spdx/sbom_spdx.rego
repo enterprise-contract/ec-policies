@@ -56,7 +56,7 @@ deny contains result if {
 #   short_name: allowed
 #   failure_msg: "Package is not allowed: %s"
 #   solution: >-
-#     Update the image to not use a disallowed package.
+#     Update the image to not use any disallowed package.
 #   collections:
 #   - redhat
 #
@@ -206,3 +206,46 @@ deny contains result if {
 
 	result := lib.result_helper_with_term(rego.metadata.chain(), [purl, qualifier.value], purl)
 }
+
+# METADATA
+# title: Disallowed package attributes
+# description: >-
+#   Confirm the SPDX SBOM contains only packages without disallowed
+#   attributes. By default all attributes are allowed. Use the
+#   "disallowed_attributes" rule data key to provide a list of key-value pairs
+#   that forbid the use of an attribute set to the given value.
+# custom:
+#   short_name: disallowed_package_attributes
+#   failure_msg: Package %s has the attribute %q set%s
+#   solution: Update the image to not use any disallowed package attributes.
+#   collections:
+#   - redhat
+#   - policy_data
+#   effective_on: 2025-02-04T00:00:00Z
+deny contains result if {
+	some s in sbom.spdx_sboms
+	some pkg in s.packages
+
+	some externalref in pkg.externalRefs
+
+	some annotation in pkg.annotations
+	properties := json.unmarshal(annotation.comment)
+	some disallowed in lib.rule_data(sbom.rule_data_attributes_key)
+	properties.name == disallowed.name
+
+	object.get(properties, "value", "") == object.get(disallowed, "value", "")
+
+	msg := regex.replace(object.get(properties, "value", ""), `(.+)`, ` to "$1"`)
+
+	id := object.get(externalref, "referenceLocator", pkg.name)
+	result := _with_effective_on(
+		lib.result_helper_with_term(rego.metadata.chain(), [id, properties.name, msg], id),
+		disallowed,
+	)
+}
+
+# _with_effective_on annotates the result with the item's effective_on attribute. If the item does
+# not have the attribute, result is returned unmodified.
+_with_effective_on(result, item) := new_result if {
+	new_result := object.union(result, {"effective_on": item.effective_on})
+} else := result

@@ -241,6 +241,100 @@ test_allowed_package_sources if {
 		]}
 }
 
+test_attributes_not_allowed_pair if {
+	expected := {{
+		"code": "sbom_spdx.disallowed_package_attributes",
+		# regal ignore:line-length
+		"term": "pkg:oci/kernel-module-management-rhel9-operator@sha256%3Ad845f0bd93dad56c92c47e8c116a11a0cc5924c0b99aed912b4f8b54178efa98",
+		# regal ignore:line-length
+		"msg": `Package pkg:oci/kernel-module-management-rhel9-operator@sha256%3Ad845f0bd93dad56c92c47e8c116a11a0cc5924c0b99aed912b4f8b54178efa98 has the attribute "attr1" set`,
+	}}
+
+	lib.assert_equal_results(expected, sbom_spdx.deny) with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom.rule_data_attributes_key: [{"name": "attr1"}]}
+}
+
+test_attributes_not_allowed_value if {
+	expected := {{
+		"code": "sbom_spdx.disallowed_package_attributes",
+		# regal ignore:line-length
+		"term": "pkg:oci/kernel-module-management-rhel9-operator@sha256%3Ad845f0bd93dad56c92c47e8c116a11a0cc5924c0b99aed912b4f8b54178efa98",
+		# regal ignore:line-length
+		"msg": `Package pkg:oci/kernel-module-management-rhel9-operator@sha256%3Ad845f0bd93dad56c92c47e8c116a11a0cc5924c0b99aed912b4f8b54178efa98 has the attribute "attr2" set to "value2"`,
+	}}
+
+	lib.assert_equal_results(expected, sbom_spdx.deny) with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom.rule_data_attributes_key: [{"name": "attr2", "value": "value2"}]}
+}
+
+test_attributes_not_allowed_effective_on if {
+	expected := {
+		{
+			"code": "sbom_spdx.disallowed_package_attributes",
+			# regal ignore:line-length
+			"term": "pkg:oci/kernel-module-management-rhel9-operator@sha256%3Ad845f0bd93dad56c92c47e8c116a11a0cc5924c0b99aed912b4f8b54178efa98",
+			# regal ignore:line-length
+			"msg": `Package pkg:oci/kernel-module-management-rhel9-operator@sha256%3Ad845f0bd93dad56c92c47e8c116a11a0cc5924c0b99aed912b4f8b54178efa98 has the attribute "attr1" set`,
+			"effective_on": "2025-01-01T00:00:00Z",
+		},
+		{
+			"code": "sbom_spdx.disallowed_package_attributes",
+			# regal ignore:line-length
+			"term": "pkg:oci/kernel-module-management-rhel9-operator@sha256%3Ad845f0bd93dad56c92c47e8c116a11a0cc5924c0b99aed912b4f8b54178efa98",
+			# regal ignore:line-length
+			"msg": `Package pkg:oci/kernel-module-management-rhel9-operator@sha256%3Ad845f0bd93dad56c92c47e8c116a11a0cc5924c0b99aed912b4f8b54178efa98 has the attribute "attr2" set to "value2"`,
+			"effective_on": "2025-02-04T00:00:00Z",
+		},
+	}
+
+	raw_results := sbom_spdx.deny with input.attestations as [_sbom_attestation]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom.rule_data_attributes_key: [
+			{"name": "attr1", "effective_on": "2025-01-01T00:00:00Z"},
+			{"name": "attr2", "value": "value2"},
+		]}
+
+	results := {result_no_collections |
+		some result in raw_results
+		result_no_collections := json.remove(result, ["collections"])
+	}
+
+	lib.assert_equal(expected, results)
+}
+
+test_attributes_multiple_external_refs if {
+	_sbom := json.patch(_sbom_attestation, [{
+		"op": "add",
+		"path": "/statement/predicate/packages/0/externalRefs/-",
+		"value": {
+			"referenceCategory": "SECURITY",
+			"referenceType": "cpe23Type",
+			"referenceLocator": "cpe:2.3:o:example:example:1.0:*:*:*:*:*:*:*",
+		},
+	}])
+
+	expected := {
+		{
+			"code": "sbom_spdx.disallowed_package_attributes",
+			"msg": `Package cpe:2.3:o:example:example:1.0:*:*:*:*:*:*:* has the attribute "attr2" set to "value2"`,
+			"term": "cpe:2.3:o:example:example:1.0:*:*:*:*:*:*:*",
+		},
+		{
+			"code": "sbom_spdx.disallowed_package_attributes",
+			# regal ignore:line-length
+			"term": "pkg:oci/kernel-module-management-rhel9-operator@sha256%3Ad845f0bd93dad56c92c47e8c116a11a0cc5924c0b99aed912b4f8b54178efa98",
+			# regal ignore:line-length
+			"msg": `Package pkg:oci/kernel-module-management-rhel9-operator@sha256%3Ad845f0bd93dad56c92c47e8c116a11a0cc5924c0b99aed912b4f8b54178efa98 has the attribute "attr2" set to "value2"`,
+		},
+	}
+
+	lib.assert_equal_results(expected, sbom_spdx.deny) with input.attestations as [_sbom]
+		with input.image.ref as "registry.local/spam@sha256:123"
+		with data.rule_data as {sbom.rule_data_attributes_key: [{"name": "attr2", "value": "value2"}]}
+}
+
 _sbom_attestation := {"statement": {
 	"predicateType": "https://spdx.dev/Document",
 	"predicate": {
@@ -265,6 +359,20 @@ _sbom_attestation := {"statement": {
 				# regal ignore:line-length
 				"referenceLocator": "pkg:oci/kernel-module-management-rhel9-operator@sha256%3Ad845f0bd93dad56c92c47e8c116a11a0cc5924c0b99aed912b4f8b54178efa98",
 			}],
+			"annotations": [
+				{
+					"annotator": "Tool: konflux:jsonencoded",
+					"comment": "{\"name\":\"attr1\"}",
+					"annotationDate": "2024-12-09T12:00:00Z",
+					"annotationType": "OTHER",
+				},
+				{
+					"annotator": "Tool: konflux:jsonencoded",
+					"comment": "{\"name\":\"attr2\", \"value\":\"value2\"}",
+					"annotationDate": "2024-12-09T12:00:00Z",
+					"annotationType": "OTHER",
+				},
+			],
 			"checksums": [{
 				"algorithm": "SHA256",
 				"checksumValue": "d845f0bd93dad56c92c47e8c116a11a0cc5924c0b99aed912b4f8b54178efa98",

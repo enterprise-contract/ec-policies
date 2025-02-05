@@ -176,6 +176,44 @@ deny contains result if {
 }
 
 # METADATA
+# title: Unable to access related images for a component
+# description: >-
+#   Check the input image for the presence of related images.
+#   Ensure that all images are accessible.
+# custom:
+#   short_name: inaccessible_related_images
+#   failure_msg: The %q related image reference is not accessible.
+#   solution: >-
+#     Ensure all related images are available. Use oras discover to find the
+#     set of related images.
+#   collections:
+#   - redhat
+deny contains result if {
+	# _release_restrictions_apply
+
+	some related_image in _related_images
+	not ec.oci.image_manifest(related_image)
+	result := lib.result_helper_with_term(rego.metadata.chain(), [related_image], related_image)
+}
+
+# extracts the related images attached to the image
+_related_images := related_images if {
+	input_image := image.parse(input.image.ref)
+
+	some related in lib.results_named(_related_images_result_name)
+	result_digest := object.union(input_image, {"digest": related.value[input_image.digest]})
+	related_image_ref := image.str(result_digest)
+	related_image_manifest := ec.oci.image_manifest(related_image_ref)
+
+	some layer in related_image_manifest.layers
+	layer.mediaType == _related_images_oci_mime_type
+	related_image_blob := object.union(input_image, {"digest": layer.digest})
+	related_image_blob_ref := image.str(related_image_blob)
+
+	related_images := json.unmarshal(ec.oci.blob(related_image_blob_ref))
+}
+
+# METADATA
 # title: Unmapped images in OLM bundle
 # description: >-
 #   Check the OLM bundle image for the presence of unmapped image references.
@@ -446,3 +484,7 @@ _image_registry_allowed(image_repo, allowed_prefixes) if {
 	some allowed_prefix in allowed_prefixes
 	startswith(image_repo, allowed_prefix)
 }
+
+_related_images_result_name := "RELATED_IMAGES_DIGEST"
+
+_related_images_oci_mime_type := "application/vnd.konflux-ci.attached-artifact.related-images+json"

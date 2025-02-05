@@ -56,8 +56,8 @@ warn contains result if {
 # custom:
 #   short_name: current
 #   failure_msg: >-
-#     Pipeline task %q uses an out of date task reference, %s. A new version of the
-#     task must be used before %s
+#     A newer version of task %q exists. Please update before %s.
+#     The current bundle is %q and the latest bundle ref is %q
 #   solution: >-
 #     Update the Task reference to a newer version.
 #   collections:
@@ -69,7 +69,7 @@ warn contains result if {
 	expiry := tekton.expiry_of(task)
 	result := lib.result_helper_with_term(
 		rego.metadata.chain(),
-		[tekton.pipeline_task_name(task), _task_info(task), time.format(expiry)],
+		[tekton.pipeline_task_name(task), time.format(expiry), _task_info(task), tekton.latest_trusted_ref(task)],
 		tekton.task_name(task),
 	)
 }

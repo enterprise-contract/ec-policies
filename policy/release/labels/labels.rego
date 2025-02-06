@@ -238,8 +238,13 @@ _image_labels := labels if {
 _parent := {"ref": ref, "manifest": manifest, "config": config} if {
 	image_manifest := ec.oci.image_manifest(input.image.ref)
 
-	name := image_manifest.annotations["org.opencontainers.image.base.name"]
+	raw_name := image_manifest.annotations["org.opencontainers.image.base.name"]
 	digest := image_manifest.annotations["org.opencontainers.image.base.digest"]
+
+	# Sometimes the name annotation is a ref including a digest, likely the
+	# digest of the image index. Make sure that digest gets removed.
+	name := _strip_digest(raw_name)
+
 	ref = sprintf("%s@%s", [name, digest])
 
 	manifest = ec.oci.image_manifest(ref)
@@ -258,6 +263,8 @@ _value(labels, name) := [label.value |
 	some label in labels
 	label.name == name
 ][0]
+
+_strip_digest(ref_with_digest_maybe) := regex.replace(ref_with_digest_maybe, `@[^@]+$`, "")
 
 required_labels := lib.rule_data("required_labels") if {
 	not is_fbc

@@ -2036,7 +2036,7 @@ Check if all Tekton Tasks use the latest known Task reference. When warnings wil
 *Solution*: Update the Task reference to a newer version.
 
 * Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Pipeline task %q uses an out of date task reference, %s. A new version of the task must be used before %s`
+* WARNING message: `A newer version of task %q exists. Please update before %s. The current bundle is %q and the latest bundle ref is %q`
 * Code: `trusted_task.current`
 * Effective from: `2024-05-07T00:00:00Z`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L49[Source, window="_blank"]

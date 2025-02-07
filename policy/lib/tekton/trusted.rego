@@ -60,6 +60,11 @@ is_trusted_task(task) if {
 	record.ref == ref.pinned_ref
 }
 
+latest_trusted_ref(task) := trusted_task_ref if {
+	ref := task_ref(task)
+	trusted_task_ref = _trusted_tasks[ref.key][0].ref
+}
+
 # Returns the date in epoch nanoseconds when the task expires, or nothing if it
 # hasn't expired yet.
 _task_expires_on(task) := expires if {

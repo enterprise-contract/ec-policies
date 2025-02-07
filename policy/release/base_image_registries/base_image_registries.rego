@@ -49,8 +49,8 @@ deny contains result if {
 # title: Base images provided
 # description: >-
 #   Verify the expected information was provided about which base images were used during
-#   the build process.The list of base images comes from the components in the `formulation`
-#   attribute of any associated CycloneDX SBOMs.
+#   the build process. The list of base images comes from any associated CycloneDX or SPDX
+#   SBOMs.
 # custom:
 #   short_name: base_image_info_found
 #   failure_msg: Base images information is missing
@@ -70,7 +70,7 @@ deny contains result if {
 	# Some images are built "from scratch" and not have any base images, e.g. UBI.
 	# This check distinguishes such images by simply ensuring that at least one SBOM
 	# is attached to the image.
-	count(sbom.cyclonedx_sboms) == 0
+	count(sbom.all_sboms) == 0
 
 	result := lib.result_helper(rego.metadata.chain(), [])
 }

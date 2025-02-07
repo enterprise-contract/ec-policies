@@ -578,6 +578,13 @@ test_rule_data_provided if {
 		with data.rule_data as d
 }
 
+test_strip_digest if {
+	lib.assert_equal("foo", labels._strip_digest("foo"))
+	lib.assert_equal("foo", labels._strip_digest("foo@bar"))
+	lib.assert_equal("foo:latest", labels._strip_digest("foo:latest@bar"))
+	lib.assert_equal("registry.io/registry/image", labels._strip_digest("registry.io/registry/image@sha256:ace0fba5e"))
+}
+
 _default_manifest := {
 	"schemaVersion": 2,
 	"mediaType": "application/vnd.oci.image.manifest.v1+json",

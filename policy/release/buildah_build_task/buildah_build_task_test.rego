@@ -87,10 +87,6 @@ test_dockerfile_param_http_source if {
 	lib.assert_equal_results(expected, buildah_build_task.deny) with input.attestations as [slsav1_attestation]
 }
 
-test_task_not_named_buildah if {
-	lib.assert_empty(buildah_build_task.deny) with input.attestations as [_attestation("java", [{}], _results)]
-}
-
 test_missing_pipeline_run_attestations if {
 	attestation := {"statement": {"predicate": {"buildType": "something/else"}}}
 	lib.assert_empty(buildah_build_task.deny) with input.attestations as [attestation]

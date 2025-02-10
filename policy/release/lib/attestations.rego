@@ -37,8 +37,6 @@ task_test_result_name := "TEST_OUTPUT"
 
 task_test_image_result_name := "IMAGES_PROCESSED"
 
-java_sbom_component_count_result_name := "SBOM_JAVA_COMPONENTS_COUNT"
-
 slsa_provenance_attestations := [att |
 	some att in input.attestations
 	att.statement.predicateType in {slsa_provenance_predicate_type_v1, slsa_provenance_predicate_type_v02}

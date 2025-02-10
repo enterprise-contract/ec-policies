@@ -69,7 +69,6 @@ Rules included:
 * xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
 * xref:release_policy.adoc#external_parameters__pipeline_run_params_provided[External parameters: PipelineRun params provided]
 * xref:release_policy.adoc#github_certificate__rule_data_provided[GitHub Certificate Checks: Rule data provided]
-* xref:release_policy.adoc#java__trusted_dependencies_source_list_provided[Java dependency checks: Trusted Java dependency source list was provided]
 * xref:release_policy.adoc#labels__rule_data_provided[Labels: Rule data provided]
 * xref:release_policy.adoc#olm__required_olm_features_annotations_provided[OLM: Required OLM feature annotations list provided]
 * xref:release_policy.adoc#rpm_repos__rule_data_provided[RPM Repos: Known repo id list provided]
@@ -116,8 +115,6 @@ Rules included:
 * xref:release_policy.adoc#cve__unpatched_cve_warnings[CVE checks: Non-blocking unpatched CVE check]
 * xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
 * xref:release_policy.adoc#hermetic_build_task__build_task_hermetic[Hermetic build task: Build task called with hermetic param set]
-* xref:release_policy.adoc#java__no_foreign_dependencies[Java dependency checks: Java builds have no foreign dependencies]
-* xref:release_policy.adoc#java__trusted_dependencies_source_list_provided[Java dependency checks: Trusted Java dependency source list was provided]
 * xref:release_policy.adoc#labels__deprecated_labels[Labels: Deprecated labels]
 * xref:release_policy.adoc#labels__disallowed_inherited_labels[Labels: Disallowed inherited labels]
 * xref:release_policy.adoc#labels__inaccessible_config[Labels: Inaccessible image config]
@@ -655,37 +652,6 @@ Verify the build task in the PipelineRun attestation was invoked with the proper
 * FAILURE message: `Build task was not invoked with the hermetic parameter set`
 * Code: `hermetic_build_task.build_task_hermetic`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/hermetic_build_task/hermetic_build_task.rego#L15[Source, window="_blank"]
-
-[#java_package]
-== link:#java_package[Java dependency checks]
-
-This package contains a rule to confirm that all Java dependencies were rebuilt in house rather than imported directly from potentially untrusted respositories. If the result is missing no violation is reported. The rules depend on the configuration under the key 'allowed_java_component_sources', the key lists all component sources that are allowed by the policy. The values of the list can be 'rebuilt' for dependencies that have been explicitly built from sources, or the name of the Maven repository names where the dependency artifact was retrieved from. The Maven repositories are configured using the 'JBSConfig' custom resources. Default configuration in Konflux currently includes Maven repositories with names : 'jboss', 'confluent', 'redhat', 'jitpack' and 'gradle'.
-
-* Package name: `java`
-
-[#java__no_foreign_dependencies]
-=== link:#java__no_foreign_dependencies[Java builds have no foreign dependencies]
-
-The SBOM_JAVA_COMPONENTS_COUNT task result finds dependencies that have originated from foreign repositories, i.e. ones that are not rebuilt or provided by Red Hat. Verify there are no dependencies from sources not listed in the `allowed_java_component_sources` rule data.
-
-*Solution*: Make sure there are no build dependencies that originate from foreign repositories. The allowed sources are in the rule_data under the key 'allowed_java_component_sources'.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Found Java dependencies from '%s', expecting to find only from '%s'`
-* Code: `java.no_foreign_dependencies`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/java/java.rego#L25[Source, window="_blank"]
-
-[#java__trusted_dependencies_source_list_provided]
-=== link:#java__trusted_dependencies_source_list_provided[Trusted Java dependency source list was provided]
-
-Confirm the `allowed_java_component_sources` rule data was provided, since it's required by the policy rules in this package.
-
-*Solution*: Add a data source that contains allowable source repositories for build dependencies. The source must be located under a key named 'allowed_java_component_sources'. More information on adding xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `java.trusted_dependencies_source_list_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/java/java.rego#L50[Source, window="_blank"]
 
 [#labels_package]
 == link:#labels_package[Labels]

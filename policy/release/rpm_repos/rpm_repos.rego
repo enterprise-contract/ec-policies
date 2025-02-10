@@ -171,7 +171,7 @@ _cachi2_found_by_property := {
 
 _package_found_by_cachi2(pkg) if {
 	some annotation in pkg.annotations
-	annotation.annotator == "cachi2"
+	regex.match(`.*cachi2.*`, annotation.annotator)
 	annotation.annotationType == "OTHER"
 	# `comment` contains additional information, but that is not needed for the purpose of
 	# simply filtering what was found by cachi2.

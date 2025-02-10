@@ -249,7 +249,7 @@ fake_spdx_sboms := [fake_spdx_sbom({p1, p2, p3, p4, p5, p6, p7})]
 
 fake_spdx_sbom(fake_purls) := {"packages": [
 {
-	"annotations": [{"annotator": "cachi2", "annotationType": "OTHER"}],
+	"annotations": [{"annotator": "Tool: cachi2:jsonencoded", "annotationType": "OTHER"}],
 	"externalRefs": [r],
 } |
 	some p in fake_purls

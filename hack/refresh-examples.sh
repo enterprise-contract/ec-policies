@@ -23,6 +23,10 @@ set -o nounset
 
 ROOT_DIR=$(git rev-parse --show-toplevel)
 IMAGE=quay.io/konflux-ci/ec-golden-image:latest
+# If $IMAGE is released to a different repo, some of the attachments may not get copied over, e.g.
+# CVE scan report. Set $ORIGINAL_IMAGE_REPO to the repo in which the image was originally built into
+# which should contain all the attachments.
+ORIGINAL_IMAGE_REPO='quay.io/redhat-user-workloads/rhtap-contract-tenant/golden-container/golden-container'
 REPOSITORY=https://github.com/enterprise-contract/golden-container.git
 PUBLIC_KEY='-----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEZP/0htjhVt2y0ohjgtIIgICOtQtA
@@ -31,53 +35,57 @@ naYJRuLprwIv6FDhZ5yFjYUEtsmoNcW7rx2KM6FOXGsCX3BNc7qhHELT+g==
 INPUT_FILE="${ROOT_DIR}/acceptance/samples/policy-input-golden-container.json"
 TRUSTED_TASKS_FILE="${ROOT_DIR}/example/data/trusted_tekton_tasks.yml"
 
-trap 'rm "${TRUSTED_TASKS_FILE}-update"' EXIT
+trap 'rm -f "${TRUSTED_TASKS_FILE}-update"' EXIT
 
-go run -modfile "${ROOT_DIR}/go.mod" github.com/enterprise-contract/ec-cli validate image \
-    --images <(cat << EOF
-{
+DIGEST="$(skopeo inspect --no-tags "docker://${IMAGE}" --format '{{index .Digest}}')"
+ORIGINAL_IMAGE_REF="${ORIGINAL_IMAGE_REPO}@${DIGEST}"
+REVISION="$(skopeo inspect --no-tags "docker://${ORIGINAL_IMAGE_REF}" --format '{{index .Labels "vcs-ref"}}')"
+
+IMAGES="{
   "components": [
     {
-      "containerImage": "${IMAGE}",
+      "containerImage": "${ORIGINAL_IMAGE_REF}",
       "source": {
         "git": {
-          "revision": "$(skopeo inspect "docker://${IMAGE}" --format '{{index .Labels "vcs-ref"}}')",
+          "revision": "${REVISION}",
           "url": "${REPOSITORY}"
         }
       }
     }
   ]
-}
-EOF
-) \
-    --public-key <(echo "${PUBLIC_KEY}") \
+}"
+
+POLICY='{
+  "sources": [
+    {
+      "policy": [
+        "'${ROOT_DIR}'/policy/lib",
+        "'${ROOT_DIR}'/policy/release"
+      ],
+      "data": [
+        "github.com/release-engineering/rhtap-ec-policy//data",
+        "oci::quay.io/konflux-ci/tekton-catalog/data-acceptable-bundles:latest"
+      ],
+      "config": {
+        "include": [
+          "@redhat"
+        ],
+        "exclude": [
+          "source_image"
+        ]
+      }
+    }
+  ]
+}'
+
+go run -modfile "${ROOT_DIR}/go.mod" github.com/enterprise-contract/ec-cli validate image \
+    --images "${IMAGES}" \
+    --public-key "${PUBLIC_KEY}" \
     --ignore-rekor \
-    --policy "$(printf '{
-    "sources": [
-        {
-            "policy": [
-                "%s/policy/lib",
-                "%s/policy/release"
-            ],
-            "data": [
-                "github.com/release-engineering/rhtap-ec-policy//data",
-                "oci::quay.io/konflux-ci/tekton-catalog/data-acceptable-bundles:latest"
-            ],
-            "config": {
-                "include": [
-                    "@redhat"
-                ],
-                "exclude": [
-                    "cve.deprecated_cve_result_name",
-                    "source_image"
-                ]
-            }
-        }
-    ]
-}' "${ROOT_DIR}" "${ROOT_DIR}"
-)" \
+    --policy "${POLICY}" \
     --output policy-input="${INPUT_FILE}" \
     --output data="${TRUSTED_TASKS_FILE}-update" \
+    --output text
 
 # shellcheck disable=SC2094
 # we have one attestation per CPU architecture, so we pick the first one

@@ -79,3 +79,20 @@ test_str if {
 	lib.assert_equal("registry.io/repository:tag", image.str({"repo": "registry.io/repository", "tag": "tag"}))
 	lib.assert_equal("registry.io/repository@digest", image.str({"repo": "registry.io/repository", "digest": "digest"}))
 }
+
+test_is_image_index if {
+	ref := "registry.io/repository:tag@digest"
+
+	image_index := {"mediaType": "application/vnd.oci.image.index.v1+json"}
+	image.is_image_index(ref) with ec.oci.descriptor as image_index
+
+	manifest_list := {"mediaType": "application/vnd.docker.distribution.manifest.list.v2+json"}
+	image.is_image_index(ref) with ec.oci.descriptor as manifest_list
+
+	image_manifest := {"mediaType": "application/vnd.oci.image.manifest.v1+json"}
+	not image.is_image_index(ref) with ec.oci.descriptor as image_manifest
+
+	not image.is_image_index(ref) with ec.oci.descriptor as {}
+
+	not image.is_image_index(ref) with ec.oci.descriptor as false
+}

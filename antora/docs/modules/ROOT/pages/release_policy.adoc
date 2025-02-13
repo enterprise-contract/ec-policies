@@ -447,72 +447,60 @@ cve_leeway:
 
 The SLSA Provenance attestation for the image is inspected to ensure CVEs that have a known fix and meet a certain security level have not been detected. If detected, this policy rule will fail. By default, only CVEs of critical and high security level cause a failure. This is configurable by the rule data key `restrict_cve_security_levels`. The available levels are critical, high, medium, low, and unknown. In addition to that leeway can be granted per severity using the `cve_leeway` rule data key containing days of allowed leeway, measured as time between found vulnerability's public disclosure date and current effective time, per severity level.
 
-*Solution*: Make sure to address any CVE's related to the image. The CVEs are detected by the task that runs a Clair scan and emits a result named `SCAN_OUTPUT`.
+*Solution*: Make sure to address any CVE's related to the image.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Found %d CVE vulnerabilities of %s security level`
+* FAILURE message: `Found %q vulnerability of %s security level`
 * Code: `cve.cve_blockers`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L132[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L113[Source, window="_blank"]
 
 [#cve__unpatched_cve_blockers]
 === link:#cve__unpatched_cve_blockers[Blocking unpatched CVE check]
 
 The SLSA Provenance attestation for the image is inspected to ensure CVEs that do NOT have a known fix and meet a certain security level have not been detected. If detected, this policy rule will fail. By default, the list of security levels used by this policy is empty. This is configurable by the rule data key `restrict_unpatched_cve_security_levels`. The available levels are critical, high, medium, low, and unknown. In addition to that leeway can be granted per severity using the `cve_leeway` rule data key containing days of allowed leeway, measured as time between found vulnerability's public disclosure date and current effective time, per severity level.
 
-*Solution*: CVEs without a known fix can only be remediated by either removing the impacted dependency, or by waiting for a fix to be available. The CVEs are detected by the task that emits a result named `SCAN_OUTPUT`.
+*Solution*: CVEs without a known fix can only be remediated by either removing the impacted dependency, or by waiting for a fix to be available.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Found %d unpatched CVE vulnerabilities of %s security level`
+* FAILURE message: `Found %q unpatched vulnerability of %s security level`
 * Code: `cve.unpatched_cve_blockers`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L172[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L147[Source, window="_blank"]
 
 [#cve__cve_results_found]
 === link:#cve__cve_results_found[CVE scan results found]
 
 Confirm that clair-scan task results are present in the SLSA Provenance attestation of the build pipeline.
 
-*Solution*: Make sure there is a successful task in the build pipeline that runs a Clair scan and creates a task result called `SCAN_OUTPUT`.
+*Solution*: Make sure there is a successful task in the build pipeline that runs a Clair scan.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Clair CVE scan results were not found`
 * Code: `cve.cve_results_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L214[Source, window="_blank"]
-
-[#cve__deprecated_cve_result_name]
-=== link:#cve__deprecated_cve_result_name[Deprecated CVE result name]
-
-The `CLAIR_SCAN_RESULT` result name has been deprecated, and has been replaced with `SCAN_OUTPUT`. If any task results with the old name are found, this rule will raise a warning.
-
-*Solution*: Use the newer `SCAN_OUTPUT` result name.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `CVE scan uses deprecated result name`
-* Code: `cve.deprecated_cve_result_name`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L110[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L183[Source, window="_blank"]
 
 [#cve__cve_warnings]
 === link:#cve__cve_warnings[Non-blocking CVE check]
 
 The SLSA Provenance attestation for the image is inspected to ensure CVEs that have a known fix and meet a certain security level have not been detected. If detected, this policy rule will raise a warning. By default, the list of CVE security levels used by this policy is empty. However, this is configurable by the rule data key `warn_cve_security_levels`. The available levels are critical, high, medium, low, and unknown.
 
-*Solution*: Make sure to address any CVE's related to the image. The CVEs are detected by the task that runs a Clair scan and emits a result named `SCAN_OUTPUT`.
+*Solution*: Make sure to address any CVE's related to the image.
 
 * Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Found %d non-blocking CVE vulnerabilities of %s security level`
+* WARNING message: `Found %q non-blocking vulnerability of %s security level`
 * Code: `cve.cve_warnings`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L59[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L58[Source, window="_blank"]
 
 [#cve__unpatched_cve_warnings]
 === link:#cve__unpatched_cve_warnings[Non-blocking unpatched CVE check]
 
 The SLSA Provenance attestation for the image is inspected to ensure CVEs that do NOT have a known fix and meet a certain security level have not been detected. If detected, this policy rule will raise a warning. By default, only CVEs of critical and high security level cause a warning. This is configurable by the rule data key `warn_unpatched_cve_security_levels`. The available levels are critical, high, medium, low, and unknown.
 
-*Solution*: CVEs without a known fix can only be remediated by either removing the impacted dependency, or by waiting for a fix to be available. The CVEs are detected by the task that emits a result named `SCAN_OUTPUT`.
+*Solution*: CVEs without a known fix can only be remediated by either removing the impacted dependency, or by waiting for a fix to be available.
 
 * Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Found %d non-blocking unpatched CVE vulnerabilities of %s security level`
+* WARNING message: `Found %q non-blocking unpatched vulnerability of %s security level`
 * Code: `cve.unpatched_cve_warnings`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L84[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L85[Source, window="_blank"]
 
 [#cve__rule_data_provided]
 === link:#cve__rule_data_provided[Rule data provided]
@@ -524,7 +512,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `cve.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L239[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L209[Source, window="_blank"]
 
 [#external_parameters_package]
 == link:#external_parameters_package[External parameters]

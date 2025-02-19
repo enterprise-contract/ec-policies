@@ -60,6 +60,7 @@
 **** xref:release_policy.adoc#olm__required_olm_features_annotations_provided[Required OLM feature annotations list provided]
 **** xref:release_policy.adoc#olm__subscriptions_annotation_format[Subscription annotation has expected value]
 **** xref:release_policy.adoc#olm__inaccessible_snapshot_references[Unable to access images in the input snapshot]
+**** xref:release_policy.adoc#olm__inaccessible_related_images[Unable to access related images for a component]
 **** xref:release_policy.adoc#olm__unmapped_references[Unmapped images in OLM bundle]
 **** xref:release_policy.adoc#olm__unpinned_references[Unpinned images in OLM bundle]
 **** xref:release_policy.adoc#olm__unpinned_snapshot_references[Unpinned images in input snapshot]

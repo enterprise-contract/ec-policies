@@ -27,7 +27,6 @@ set -o nounset
 TARGET_DIR="${1}"
 cd "${TARGET_DIR}" || exit 1
 
-RELEASE_POLICY_REF='quay.io/enterprise-contract/ec-release-policy:latest'
 TASK_POLICY_REF='quay.io/enterprise-contract/ec-task-policy:latest'
 
 function oci_source() {
@@ -70,10 +69,6 @@ function update_ecp_resources() {
     done
 }
 
-echo 'Resolving release bundle image references...'
-RELEASE_POLICY_REF_OCI="$(oci_source ${RELEASE_POLICY_REF})"
-echo "Resolved release policy is ${RELEASE_POLICY_REF_OCI}"
-
 echo 'Resolving task bundle image references...'
 TASK_POLICY_REF_OCI="$(oci_source ${TASK_POLICY_REF})"
 echo "Resolved task policy is ${TASK_POLICY_REF_OCI}"
@@ -81,6 +76,5 @@ echo "Resolved task policy is ${TASK_POLICY_REF_OCI}"
 echo 'Updating infra-deployments...'
 # The "oci::" is not required by EC CLI. The expression below handles both cases. It's important to
 # note that this script will normalize the source references to always include the oci:: prefix.
-update_ecp_resources '\b\(oci::\)\{0,1\}.*/ec-release-policy:.*$' "${RELEASE_POLICY_REF_OCI}"
 update_ecp_resources '\b\(oci::\)\{0,1\}.*/ec-task-policy:.*$' "${TASK_POLICY_REF_OCI}"
 echo 'infra-deployments updated successfully'

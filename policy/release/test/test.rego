@@ -208,6 +208,13 @@ deny contains result if {
 #
 deny contains result if {
 	some test in _resulted_in(lib.rule_data("skipped_tests_results"), "n/a")
+
+	# Workaround/hack: Don't produce a violation for informative_tests that were
+	# skipped Motivation: For operator bundles, the ecosystem-cert-preflight-checks
+	# task intentionally produces a "skipped" result if it things that the image is
+	# an operator bundle. Since we know ecosystem-cert-preflight-checks is in the
+	# informative_tests list, we can do this to side-step a violation.
+	not test in lib.rule_data("informative_tests")
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
 

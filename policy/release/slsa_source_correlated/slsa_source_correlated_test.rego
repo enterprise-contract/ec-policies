@@ -105,7 +105,7 @@ test_deny_expected_source_code_reference_happy_day if {
 	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
 		with input.attestations as [_resolved_dependencies_attestation([{
 			"uri": "git+https://git.repository",
-			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"}, # printf 'commit 3\0ref' | sha1sum
+			"digest": {"gitCommit": "ref"},
 			"name": "inputs/result",
 		}])]
 
@@ -153,7 +153,7 @@ test_deny_expected_source_code_reference_happy_day if {
 	lib.assert_empty(slsa_source_correlated.deny) with input.image as expected
 		with input.attestations as [_resolved_dependencies_attestation([{
 			"uri": "git+https://git.repository.git",
-			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"},
+			"digest": {"gitCommit": "ref"},
 			"name": "inputs/result",
 		}])]
 
@@ -163,7 +163,7 @@ test_deny_expected_source_code_reference_happy_day if {
 	lib.assert_empty(slsa_source_correlated.deny) with input.image as img7
 		with input.attestations as [_resolved_dependencies_attestation([{
 			"uri": "git+https://git.repository",
-			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"},
+			"digest": {"gitCommit": "ref"},
 			"name": "inputs/result",
 		}])]
 
@@ -173,7 +173,7 @@ test_deny_expected_source_code_reference_happy_day if {
 	lib.assert_empty(slsa_source_correlated.deny) with input.image as img8
 		with input.attestations as [_resolved_dependencies_attestation([{
 			"uri": "git+https://git.repository.git",
-			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"},
+			"digest": {"gitCommit": "ref"},
 			"name": "inputs/result",
 		}])]
 
@@ -183,7 +183,7 @@ test_deny_expected_source_code_reference_happy_day if {
 	lib.assert_empty(slsa_source_correlated.deny) with input.image as img9
 		with input.attestations as [_resolved_dependencies_attestation([{
 			"uri": "git+https://git.repository.git.git",
-			"digest": {"gitCommit": "ec74e6310316babc451947a1a749a233e8da0585"},
+			"digest": {"gitCommit": "ref"},
 			"name": "inputs/result",
 		}])]
 }
@@ -444,26 +444,26 @@ test_refs if {
 		{"https://git.repository": "rev"}: {
 			"https://git.repository@sha1:rev",
 			"https://git.repository.git@sha1:rev",
-			"https://git.repository@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
-			"https://git.repository.git@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
+			"https://git.repository@gitCommit:rev",
+			"https://git.repository.git@gitCommit:rev",
 		},
 		{"https://git.repository.git": "rev"}: {
 			"https://git.repository.git@sha1:rev",
 			"https://git.repository.git.git@sha1:rev",
 			"https://git.repository@sha1:rev",
-			"https://git.repository.git@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
-			"https://git.repository.git.git@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
-			"https://git.repository@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
+			"https://git.repository.git@gitCommit:rev",
+			"https://git.repository.git.git@gitCommit:rev",
+			"https://git.repository@gitCommit:rev",
 		},
 		{"https://git.repository/": "rev"}: {
 			"https://git.repository/@sha1:rev",
 			"https://git.repository/.git@sha1:rev",
 			"https://git.repository@sha1:rev",
 			"https://git.repository.git@sha1:rev",
-			"https://git.repository/@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
-			"https://git.repository/.git@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
-			"https://git.repository@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
-			"https://git.repository.git@gitCommit:80fb0826a7207841d9c59ec544bf16b8c8a93c8b",
+			"https://git.repository/@gitCommit:rev",
+			"https://git.repository/.git@gitCommit:rev",
+			"https://git.repository@gitCommit:rev",
+			"https://git.repository.git@gitCommit:rev",
 		},
 	}
 

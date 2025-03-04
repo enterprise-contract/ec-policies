@@ -208,8 +208,21 @@ deny contains result if {
 #
 deny contains result if {
 	some test in _resulted_in(lib.rule_data("skipped_tests_results"), "n/a")
+	not _skippable_test(test)
 	result := lib.result_helper_with_term(rego.metadata.chain(), [test], test)
 }
+
+# Special case for the ecosystem-cert-preflight-checks. The task determines the
+# type of the artifact and outputs it in the ARTIFACT_TYPE task result. If it's
+# an operatorbundle then the actual preflight check will be skipped entirely.
+# This is so we don't produce a violation in that scenario.
+_skippable_test(test) if {
+	test == "ecosystem-cert-preflight-checks"
+	some task in lib.task_in_pipelinerun(test)
+	some result in task.results
+	result.name == "ARTIFACT_TYPE"
+	result.value == "operatorbundle"
+} else := false
 
 # METADATA
 # title: Rule data provided

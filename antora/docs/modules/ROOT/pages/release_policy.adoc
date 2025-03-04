@@ -130,7 +130,6 @@ Rules included:
 * xref:release_policy.adoc#olm__required_olm_features_annotations_provided[OLM: Required OLM feature annotations list provided]
 * xref:release_policy.adoc#olm__subscriptions_annotation_format[OLM: Subscription annotation has expected value]
 * xref:release_policy.adoc#olm__inaccessible_snapshot_references[OLM: Unable to access images in the input snapshot]
-* xref:release_policy.adoc#olm__inaccessible_related_images[OLM: Unable to access related images for a component]
 * xref:release_policy.adoc#olm__unmapped_references[OLM: Unmapped images in OLM bundle]
 * xref:release_policy.adoc#olm__unpinned_references[OLM: Unpinned images in OLM bundle]
 * xref:release_policy.adoc#olm__unpinned_snapshot_references[OLM: Unpinned images in input snapshot]
@@ -799,7 +798,7 @@ Each image referenced by the OLM bundle should match an entry in the list of pre
 * FAILURE message: `The %q CSV image reference is not from an allowed registry.`
 * Code: `olm.allowed_registries`
 * Effective from: `2024-09-01T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L256[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L219[Source, window="_blank"]
 
 [#olm__required_olm_features_annotations_provided]
 === link:#olm__required_olm_features_annotations_provided[Required OLM feature annotations list provided]
@@ -837,18 +836,6 @@ Check the input snapshot and make sure all the images are accessible.
 * Effective from: `2024-08-15T00:00:00Z`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L156[Source, window="_blank"]
 
-[#olm__inaccessible_related_images]
-=== link:#olm__inaccessible_related_images[Unable to access related images for a component]
-
-Check the input image for the presence of related images. Ensure that all images are accessible.
-
-*Solution*: Ensure all related images are available. The related images are defined by an file containing a json array attached to the validated image. The digest of the attached file is pulled from the RELATED_IMAGES_DIGEST result.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The %q related image reference is not accessible.`
-* Code: `olm.inaccessible_related_images`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L178[Source, window="_blank"]
-
 [#olm__unmapped_references]
 === link:#olm__unmapped_references[Unmapped images in OLM bundle]
 
@@ -860,7 +847,7 @@ Check the OLM bundle image for the presence of unmapped image references. Unmapp
 * FAILURE message: `The %q CSV image reference is not in the snapshot or accessible.`
 * Code: `olm.unmapped_references`
 * Effective from: `2024-08-15T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L215[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L178[Source, window="_blank"]
 
 [#olm__unpinned_references]
 === link:#olm__unpinned_references[Unpinned images in OLM bundle]

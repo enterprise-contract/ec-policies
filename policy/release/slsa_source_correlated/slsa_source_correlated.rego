@@ -17,10 +17,6 @@ import rego.v1
 import data.lib
 import data.lib.json as j
 
-# opa fmt will transform "\u0000" into "\x00" which subsequently can't be parsed
-# by OPA, see https://github.com/open-policy-agent/opa/issues/6220
-nul := base64.decode("AA==")
-
 # METADATA
 # title: Source code reference provided
 # description: >-
@@ -123,40 +119,25 @@ deny contains result if {
 	result := lib.result_helper_with_severity(rego.metadata.chain(), [e.message], e.severity)
 }
 
-_refs(expected_vcs_uri, expected_revision) := {
-	sprintf("%s@sha1:%s", [expected_vcs_uri, expected_revision]),
-	# tolerate missing .git suffix
-	sprintf("%s.git@sha1:%s", [expected_vcs_uri, expected_revision]),
-	# tolerate extra or missing .git suffix
-	sprintf("%s@sha1:%s", [trim_suffix(expected_vcs_uri, ".git"), expected_revision]),
-	sprintf("%s@gitCommit:%s", [
+_refs(expected_vcs_uri, expected_revision) := refs if {
+	uris := {
+		# URI as is
 		expected_vcs_uri,
-		crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
-	]),
-	# tolerate slash at the end of the vcs URI
-	sprintf("%s@sha1:%s", [trim_suffix(expected_vcs_uri, "/"), expected_revision]),
-	# tolerate slash at the end of the vcs URI and append .git
-	sprintf("%s.git@sha1:%s", [trim_suffix(expected_vcs_uri, "/"), expected_revision]),
-	# tolerate missing .git suffix
-	sprintf("%s.git@gitCommit:%s", [
-		expected_vcs_uri,
-		crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
-	]),
-	# tolerate extra or missing .git suffix
-	sprintf("%s@gitCommit:%s", [
+		# Tolerate duplicated .git suffix due to attestor bugs
 		trim_suffix(expected_vcs_uri, ".git"),
-		crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
-	]),
-	# tolerate slash at the end of the vcs URI
-	sprintf("%s@gitCommit:%s", [
+		# Tolerate missing .git suffix
+		sprintf("%s.git", [expected_vcs_uri]),
+		# Tolerate trailing slash
 		trim_suffix(expected_vcs_uri, "/"),
-		crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
-	]),
-	# tolerate slash at the end of the vcs URI and append .git
-	sprintf("%s.git@gitCommit:%s", [
-		trim_suffix(expected_vcs_uri, "/"),
-		crypto.sha1(sprintf("commit %d%s%s", [count(expected_revision), nul, expected_revision])),
-	]),
+		# Tolerate trailing slash with missing .git suffix
+		sprintf("%s.git", [trim_suffix(expected_vcs_uri, "/")]),
+	}
+
+	refs := {ref |
+		some uri in uris
+		some algo in {"sha1", "gitCommit"}
+		ref := sprintf("%s@%s:%s", [uri, algo, expected_revision])
+	}
 }
 
 _expected_sources contains expected_source if {

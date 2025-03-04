@@ -1367,7 +1367,7 @@ Verify that the provided source code reference is the one being attested.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The expected source code reference %q is not attested`
 * Code: `slsa_source_correlated.expected_source_code_reference`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L70[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L66[Source, window="_blank"]
 
 [#slsa_source_correlated__rule_data_provided]
 === link:#slsa_source_correlated__rule_data_provided[Rule data provided]
@@ -1377,7 +1377,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `slsa_source_correlated.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L108[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L104[Source, window="_blank"]
 
 [#slsa_source_correlated__source_code_reference_provided]
 === link:#slsa_source_correlated__source_code_reference_provided[Source code reference provided]
@@ -1389,7 +1389,7 @@ Check if the expected source code reference is provided.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Expected source code reference was not provided for verification`
 * Code: `slsa_source_correlated.source_code_reference_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L24[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L20[Source, window="_blank"]
 
 [#slsa_source_correlated__attested_source_code_reference]
 === link:#slsa_source_correlated__attested_source_code_reference[Source reference]
@@ -1401,7 +1401,7 @@ Attestation contains source reference.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The attested material contains no source code reference`
 * Code: `slsa_source_correlated.attested_source_code_reference`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L44[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L40[Source, window="_blank"]
 
 [#sbom_spdx_package]
 == link:#sbom_spdx_package[SPDX SBOM]

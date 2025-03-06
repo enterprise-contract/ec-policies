@@ -187,9 +187,9 @@ deny contains result if {
 #     Ensure all related images are available. The related images are defined by
 #     an file containing a json array attached to the validated image. The digest
 #     of the attached file is pulled from the RELATED_IMAGES_DIGEST result.
-#   collections:
-#   - redhat
+#
 deny contains result if {
+	# This rule was removed from the "redhat" collection for testing
 	_release_restrictions_apply
 
 	snapshot_components := input.snapshot.components
@@ -211,36 +211,6 @@ deny contains result if {
 
 	result := lib.result_helper_with_term(rego.metadata.chain(), [unmatched_ref], unmatched_ref)
 }
-
-# Extracts the related images attached to the image. The RELATED_IMAGES_DIGEST result
-# contains the digest of a referring image manifest containing the related image json
-# array. We need to find the blob sha in order to download the related images.
-_related_images(tested_image) := [e |
-	some imgs in [[r |
-		input_image := image.parse(tested_image.ref)
-
-		some related in lib.results_named(_related_images_result_name)
-		result_digest := object.union(input_image, {"digest": sprintf("%s", [trim_space(related.value)])})
-		related_image_ref := image.str(result_digest)
-		related_image_manifest := ec.oci.image_manifest(related_image_ref)
-
-		some layer in related_image_manifest.layers
-		layer.mediaType == _related_images_oci_mime_type
-		related_image_blob := object.union(input_image, {"digest": layer.digest})
-		related_image_blob_ref := image.str(related_image_blob)
-
-		raw_related_images := json.unmarshal(ec.oci.blob(related_image_blob_ref))
-
-		some related_ref in raw_related_images
-		r := {
-			"path": "relatedImage",
-			"ref": image.parse(related_ref),
-		}
-	]]
-	some i in imgs
-
-	e := {"ref": i.ref, "path": i.path}
-]
 
 # METADATA
 # title: Unmapped images in OLM bundle
@@ -318,6 +288,36 @@ deny contains result if {
 _name(o) := n if {
 	n := o.name
 } else := "unnamed"
+
+# Extracts the related images attached to the image. The RELATED_IMAGES_DIGEST result
+# contains the digest of a referring image manifest containing the related image json
+# array. We need to find the blob sha in order to download the related images.
+_related_images(tested_image) := [e |
+	some imgs in [[r |
+		input_image := image.parse(tested_image.ref)
+
+		some related in lib.results_named(_related_images_result_name)
+		result_digest := object.union(input_image, {"digest": sprintf("%s", [trim_space(related.value)])})
+		related_image_ref := image.str(result_digest)
+		related_image_manifest := ec.oci.image_manifest(related_image_ref)
+
+		some layer in related_image_manifest.layers
+		layer.mediaType == _related_images_oci_mime_type
+		related_image_blob := object.union(input_image, {"digest": layer.digest})
+		related_image_blob_ref := image.str(related_image_blob)
+
+		raw_related_images := json.unmarshal(ec.oci.blob(related_image_blob_ref))
+
+		some related_ref in raw_related_images
+		r := {
+			"path": "relatedImage",
+			"ref": image.parse(related_ref),
+		}
+	]]
+	some i in imgs
+
+	e := {"ref": i.ref, "path": i.path}
+]
 
 # Finds all image references and their locations (paths). Returns all image
 # references (parsed into components) found in locations as specified by:

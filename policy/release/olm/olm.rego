@@ -187,6 +187,9 @@ deny contains result if {
 #     Ensure all related images are available. The related images are defined by
 #     an file containing a json array attached to the validated image. The digest
 #     of the attached file is pulled from the RELATED_IMAGES_DIGEST result.
+#   collections:
+#   - redhat
+#   effective_on: 2025-03-10T00:00:00Z
 #
 deny contains result if {
 	# This rule was removed from the "redhat" collection for testing

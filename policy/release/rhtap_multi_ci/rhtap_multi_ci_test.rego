@@ -13,11 +13,12 @@ test_atts_happy_path if {
 test_atts_missing if {
 	expected := {
 		"code": "rhtap_multi_ci.attestation_found",
-		"msg": sprintf("%s%s%s%s", [
+		"msg": sprintf("%s%s%s%s%s", [
 			"A SLSA v1.0 provenance with one of the following RHTAP Multi-CI build types was not found:",
 			" 'https://redhat.com/rhtap/slsa-build-types/jenkins-build/v1',",
 			" 'https://redhat.com/rhtap/slsa-build-types/github-build/v1',",
-			" 'https://redhat.com/rhtap/slsa-build-types/gitlab-build/v1'.",
+			" 'https://redhat.com/rhtap/slsa-build-types/gitlab-build/v1',",
+			" 'https://redhat.com/rhtap/slsa-build-types/azure-build/v1'.",
 		]),
 	}
 

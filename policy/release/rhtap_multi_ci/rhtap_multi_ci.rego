@@ -113,7 +113,7 @@ _known_build_types := [_build_type(known_ci_type) | some known_ci_type in _known
 _build_type(ci_type) := sprintf("https://redhat.com/rhtap/slsa-build-types/%s-build/v1", [ci_type])
 
 # RHTAP Multi-CI currently supports these environments:
-_known_ci_types := ["jenkins", "github", "gitlab"]
+_known_ci_types := ["jenkins", "github", "gitlab", "azure"]
 
 # Just the potentially relevant attestations
 _attestations := [att |

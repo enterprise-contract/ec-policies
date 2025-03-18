@@ -1004,7 +1004,7 @@ Each RPM package listed in an SBOM must specify the repository id that it comes 
 * FAILURE message: `RPM repo id check failed: %s`
 * Code: `rpm_repos.ids_known`
 * Effective from: `2024-11-10T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos/rpm_repos.rego#L36[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos/rpm_repos.rego#L37[Source, window="_blank"]
 
 [#rpm_repos__rule_data_provided]
 === link:#rpm_repos__rule_data_provided[Known repo id list provided]
@@ -1016,7 +1016,7 @@ A list of known and permitted repository ids should be available in the rule dat
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Rule data '%s' has unexpected format: %s`
 * Code: `rpm_repos.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos/rpm_repos.rego#L15[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos/rpm_repos.rego#L16[Source, window="_blank"]
 
 [#rpm_signature_package]
 == link:#rpm_signature_package[RPM Signature]

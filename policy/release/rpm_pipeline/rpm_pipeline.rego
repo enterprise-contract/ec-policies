@@ -34,8 +34,8 @@ deny contains result if {
 	some att in lib.pipelinerun_attestations
 	some task in tekton.tasks(att)
 
-	annotations := tekton.task_annotations(task)
-	pipeline := annotations[_pipeline_key]
+	labels := tekton.task_labels(task)
+	pipeline := labels[_pipeline_key]
 	allowed_pipelines := lib.rule_data(_rule_data_key)
 
 	not pipeline in allowed_pipelines

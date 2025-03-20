@@ -152,7 +152,7 @@ ready: fmt-amend ## Amend current commit with fmt changes
 
 #--------------------------------------------------------------------
 # The idea here is to use some real live recorded attestations in our tests.
-# If the attestation files in https://github.com/enterprise-contract/hacks/provenance/recordings
+# If the attestation files in https://github.com/conforma/hacks/provenance/recordings
 # change, you can use `make sync-test-data` to sync the changes to this one local rego file.
 RECORDED_ATT_DATA=policy/lib/tekton/recorded_att_data_test.rego
 
@@ -174,11 +174,11 @@ _test-data-%:
 	   FILE_LOWER="$${FILE,,}" && \
 	   REGO_VAR="att_$${FILE_LOWER//-/_}" && \
 	   echo -n "$$REGO_VAR := " && \
-	   curl -sL https://raw.githubusercontent.com/enterprise-contract/hacks/main/provenance/recordings/$*/attestation.json | jq . \
+	   curl -sL https://raw.githubusercontent.com/conforma/hacks/main/provenance/recordings/$*/attestation.json | jq . \
 	) >> $(RECORDED_ATT_DATA)
 	@opa fmt --write $(RECORDED_ATT_DATA)
 
-# There are some other attestation files in https://github.com/enterprise-contract/hacks/provenance/recordings
+# There are some other attestation files in https://github.com/conforma/hacks/provenance/recordings
 # but these two are the most useful for testing currently
 _sync-test-data-01: _test-data-01-SLSA-v0-2-Pipeline-in-cluster
 _sync-test-data-05: _test-data-05-SLSA-v1-0-tekton-build-type-Pipeline-in-cluster

@@ -72,6 +72,8 @@
 *** xref:release_policy.adoc#rhtap_multi_ci_package[RHTAP Multi-CI]
 **** xref:release_policy.adoc#rhtap_multi_ci__attestation_format[SLSA Provenance Attestation Format]
 **** xref:release_policy.adoc#rhtap_multi_ci__attestation_found[SLSA Provenance Attestation Found]
+*** xref:release_policy.adoc#rpm_packages_package[RPM Packages]
+**** xref:release_policy.adoc#rpm_packages__unique_version[Unique Version]
 *** xref:release_policy.adoc#rpm_pipeline_package[RPM Pipeline]
 **** xref:release_policy.adoc#rpm_pipeline__invalid_pipeline[Task version invalid_pipeline]
 *** xref:release_policy.adoc#rpm_repos_package[RPM Repos]

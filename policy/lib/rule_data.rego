@@ -99,6 +99,8 @@ rule_data_defaults := {
 	"trusted_tasks": {},
 	# Number of days before a version of the Task expires that warnings are reported
 	"task_expiry_warning_days": 0,
+	# The gpg-pubkey RPM does not abide to the rule of a single RPM name being installed.
+	"non_unique_rpm_names": ["gpg-pubkey"],
 }
 
 # Returns the "first found" of the following:

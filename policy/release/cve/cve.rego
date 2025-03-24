@@ -71,6 +71,7 @@ import data.lib.json as j
 #   collections:
 #   - minimal
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - cve.cve_results_found
 #
@@ -164,6 +165,7 @@ deny contains result if {
 #   collections:
 #   - minimal
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - cve.cve_results_found
 #
@@ -219,6 +221,7 @@ deny contains result if {
 #   collections:
 #   - minimal
 #   - redhat
+#   - redhat_rpms
 #   - policy_data
 #
 deny contains result if {

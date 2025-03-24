@@ -45,6 +45,7 @@ import data.lib
 #   - minimal
 #   - slsa3
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -70,6 +71,7 @@ deny contains result if {
 #   - minimal
 #   - slsa3
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -95,6 +97,7 @@ deny contains result if {
 #   - minimal
 #   - slsa3
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #

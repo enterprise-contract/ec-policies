@@ -214,7 +214,69 @@ a| Include the set of policy rules required for building Red Hat RPMs.
 
 Rules included:
 
+* xref:release_policy.adoc#attestation_type__deprecated_policy_attestation_format[Attestation type: Deprecated policy attestation format]
+* xref:release_policy.adoc#attestation_type__known_attestation_type[Attestation type: Known attestation type found]
+* xref:release_policy.adoc#attestation_type__known_attestation_types_provided[Attestation type: Known attestation types provided]
+* xref:release_policy.adoc#attestation_type__pipelinerun_attestation_found[Attestation type: PipelineRun attestation found]
+* xref:release_policy.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]
+* xref:release_policy.adoc#cve__cve_warnings[CVE checks: Non-blocking CVE check]
+* xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
+* xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]
+* xref:release_policy.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]
 * xref:release_policy.adoc#rpm_pipeline__invalid_pipeline[RPM Pipeline: Task version invalid_pipeline]
+* xref:release_policy.adoc#rpm_repos__ids_known[RPM Repos: All rpms have known repo ids]
+* xref:release_policy.adoc#rpm_repos__rule_data_provided[RPM Repos: Known repo id list provided]
+* xref:release_policy.adoc#rpm_signature__allowed[RPM Signature: Allowed RPM signature key]
+* xref:release_policy.adoc#rpm_signature__result_format[RPM Signature: Result format]
+* xref:release_policy.adoc#rpm_signature__rule_data_provided[RPM Signature: Rule data provided]
+* xref:release_policy.adoc#sbom_cyclonedx__allowed[SBOM CycloneDX: Allowed]
+* xref:release_policy.adoc#sbom_cyclonedx__allowed_package_external_references[SBOM CycloneDX: Allowed package external references]
+* xref:release_policy.adoc#sbom_cyclonedx__allowed_package_sources[SBOM CycloneDX: Allowed package sources]
+* xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]
+* xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_external_references[SBOM CycloneDX: Disallowed package external references]
+* xref:release_policy.adoc#sbom_cyclonedx__valid[SBOM CycloneDX: Valid]
+* xref:release_policy.adoc#sbom__disallowed_packages_provided[SBOM: Disallowed packages list is provided]
+* xref:release_policy.adoc#slsa_build_build_service__allowed_builder_ids_provided[SLSA - Build - Build Service: Allowed builder IDs provided]
+* xref:release_policy.adoc#slsa_build_build_service__slsa_builder_id_accepted[SLSA - Build - Build Service: SLSA Builder ID is known and accepted]
+* xref:release_policy.adoc#slsa_build_scripted_build__build_script_used[SLSA - Build - Scripted Build: Build task contains steps]
+* xref:release_policy.adoc#slsa_build_scripted_build__build_task_image_results_found[SLSA - Build - Scripted Build: Build task set image digest and url task results]
+* xref:release_policy.adoc#slsa_build_scripted_build__subject_build_task_matches[SLSA - Build - Scripted Build: Provenance subject matches build task image result]
+* xref:release_policy.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]
+* xref:release_policy.adoc#slsa_provenance_available__attestation_predicate_type_accepted[SLSA - Provenance - Available: Expected attestation predicate type found]
+* xref:release_policy.adoc#slsa_source_version_controlled__materials_uri_is_git_repo[SLSA - Source - Version Controlled: Material uri is a git repo]
+* xref:release_policy.adoc#slsa_source_version_controlled__materials_format_okay[SLSA - Source - Version Controlled: Materials have uri and digest]
+* xref:release_policy.adoc#slsa_source_version_controlled__materials_include_git_sha[SLSA - Source - Version Controlled: Materials include git commit shas]
+* xref:release_policy.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]
+* xref:release_policy.adoc#slsa_source_correlated__source_code_reference_provided[SLSA - Verification model - Source: Source code reference provided]
+* xref:release_policy.adoc#sbom_spdx__allowed[SPDX SBOM: Allowed]
+* xref:release_policy.adoc#sbom_spdx__allowed_package_external_references[SPDX SBOM: Allowed package external references]
+* xref:release_policy.adoc#sbom_spdx__allowed_package_sources[SPDX SBOM: Allowed package sources]
+* xref:release_policy.adoc#sbom_spdx__disallowed_package_attributes[SPDX SBOM: Disallowed package attributes]
+* xref:release_policy.adoc#sbom_spdx__disallowed_package_external_references[SPDX SBOM: Disallowed package external references]
+* xref:release_policy.adoc#sbom_spdx__valid[SPDX SBOM: Valid]
+* xref:release_policy.adoc#schedule__date_restriction[Schedule related checks: Date Restriction]
+* xref:release_policy.adoc#schedule__rule_data_provided[Schedule related checks: Rule data provided]
+* xref:release_policy.adoc#schedule__weekday_restriction[Schedule related checks: Weekday Restriction]
+* xref:release_policy.adoc#tasks__required_untrusted_task_found[Tasks: All required tasks are from trusted tasks]
+* xref:release_policy.adoc#tasks__data_provided[Tasks: Data provided]
+* xref:release_policy.adoc#tasks__future_required_tasks_found[Tasks: Future required tasks were found]
+* xref:release_policy.adoc#tasks__pipeline_has_tasks[Tasks: Pipeline run includes at least one task]
+* xref:release_policy.adoc#tasks__pipeline_required_tasks_list_provided[Tasks: Required tasks list for pipeline was provided]
+* xref:release_policy.adoc#tasks__required_tasks_list_provided[Tasks: Required tasks list was provided]
+* xref:release_policy.adoc#tasks__successful_pipeline_tasks[Tasks: Successful pipeline tasks]
+* xref:release_policy.adoc#tasks__unsupported[Tasks: Task version unsupported]
+* xref:release_policy.adoc#test__test_all_images[Test: Image digest is present in IMAGES_PROCESSED result]
+* xref:release_policy.adoc#test__no_erred_tests[Test: No tests erred]
+* xref:release_policy.adoc#test__no_failed_tests[Test: No tests failed]
+* xref:release_policy.adoc#test__no_skipped_tests[Test: No tests were skipped]
+* xref:release_policy.adoc#test__test_results_known[Test: No unsupported test result values found]
+* xref:release_policy.adoc#test__rule_data_provided[Test: Rule data provided]
+* xref:release_policy.adoc#test__test_results_found[Test: Test data includes results key]
+* xref:release_policy.adoc#trusted_task__data_format[Trusted Task checks: Data format]
+* xref:release_policy.adoc#trusted_task__pinned[Trusted Task checks: Task references are pinned]
+* xref:release_policy.adoc#trusted_task__data[Trusted Task checks: Task tracking data was provided]
+* xref:release_policy.adoc#trusted_task__current[Trusted Task checks: Tasks using the latest versions]
+* xref:release_policy.adoc#trusted_task__valid_trusted_artifact_inputs[Trusted Task checks: Trusted Artifact produced in pipeline]
 
 | [#rhtap-multi-ci]`rhtap-multi-ci`
 a| A set of policy rules to validate artifacts built using RHTAP Multi-CI pipelines.
@@ -266,7 +328,7 @@ The Conforma CLI now places the attestation data in a different location. This c
 * FAILURE message: `Deprecated policy attestation format found`
 * Code: `attestation_type.deprecated_policy_attestation_format`
 * Effective from: `2023-08-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L75[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L78[Source, window="_blank"]
 
 [#attestation_type__known_attestation_type]
 === link:#attestation_type__known_attestation_type[Known attestation type found]
@@ -290,7 +352,7 @@ Confirm the `known_attestation_types` rule data was provided.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `attestation_type.known_attestation_types_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L40[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L41[Source, window="_blank"]
 
 [#attestation_type__pipelinerun_attestation_found]
 === link:#attestation_type__pipelinerun_attestation_found[PipelineRun attestation found]
@@ -302,7 +364,7 @@ Confirm at least one PipelineRun attestation is present.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Missing pipelinerun attestation`
 * Code: `attestation_type.pipelinerun_attestation_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L57[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L59[Source, window="_blank"]
 
 [#base_image_registries_package]
 == link:#base_image_registries_package[Base image checks]
@@ -454,7 +516,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that h
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Found %q vulnerability of %s security level`
 * Code: `cve.cve_blockers`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L113[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L114[Source, window="_blank"]
 
 [#cve__unpatched_cve_blockers]
 === link:#cve__unpatched_cve_blockers[Blocking unpatched CVE check]
@@ -466,7 +528,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that d
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Found %q unpatched vulnerability of %s security level`
 * Code: `cve.unpatched_cve_blockers`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L147[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L148[Source, window="_blank"]
 
 [#cve__cve_results_found]
 === link:#cve__cve_results_found[CVE scan results found]
@@ -478,7 +540,7 @@ Confirm that clair-scan task results are present in the SLSA Provenance attestat
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Clair CVE scan results were not found`
 * Code: `cve.cve_results_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L183[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L185[Source, window="_blank"]
 
 [#cve__cve_warnings]
 === link:#cve__cve_warnings[Non-blocking CVE check]
@@ -502,7 +564,7 @@ The SLSA Provenance attestation for the image is inspected to ensure CVEs that d
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Found %q non-blocking unpatched vulnerability of %s security level`
 * Code: `cve.unpatched_cve_warnings`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L85[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L86[Source, window="_blank"]
 
 [#cve__rule_data_provided]
 === link:#cve__rule_data_provided[Rule data provided]
@@ -514,7 +576,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `cve.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L209[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L211[Source, window="_blank"]
 
 [#external_parameters_package]
 == link:#external_parameters_package[External parameters]
@@ -906,7 +968,7 @@ Confirm that the result of the git-clone task is included in the materials secti
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Entry in materials for the git repo %q and commit %q not found`
 * Code: `provenance_materials.git_clone_source_matches_provenance`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/provenance_materials/provenance_materials.rego#L36[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/provenance_materials/provenance_materials.rego#L37[Source, window="_blank"]
 
 [#provenance_materials__git_clone_task_found]
 === link:#provenance_materials__git_clone_task_found[Git clone task found]
@@ -1023,7 +1085,7 @@ Each RPM package listed in an SBOM must specify the repository id that it comes 
 * FAILURE message: `RPM repo id check failed: %s`
 * Code: `rpm_repos.ids_known`
 * Effective from: `2024-11-10T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos/rpm_repos.rego#L37[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_repos/rpm_repos.rego#L38[Source, window="_blank"]
 
 [#rpm_repos__rule_data_provided]
 === link:#rpm_repos__rule_data_provided[Known repo id list provided]
@@ -1066,7 +1128,7 @@ Confirm the format of the RPMS_DATA result is in the expected format.
 * FAILURE message: `%s`
 * Code: `rpm_signature.result_format`
 * Effective from: `2024-10-05T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_signature/rpm_signature.rego#L37[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_signature/rpm_signature.rego#L38[Source, window="_blank"]
 
 [#rpm_signature__rule_data_provided]
 === link:#rpm_signature__rule_data_provided[Rule data provided]
@@ -1077,7 +1139,7 @@ Confirm the expected `allowed_rpm_signature_keys` rule data key has been provide
 * FAILURE message: `%s`
 * Code: `rpm_signature.rule_data_provided`
 * Effective from: `2024-10-05T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_signature/rpm_signature.rego#L53[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_signature/rpm_signature.rego#L55[Source, window="_blank"]
 
 [#sbom_package]
 == link:#sbom_package[SBOM]
@@ -1096,7 +1158,7 @@ Confirm the `disallowed_packages` and `disallowed_attributes` rule data were pro
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `sbom.disallowed_packages_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom/sbom.rego#L36[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom/sbom.rego#L35[Source, window="_blank"]
 
 [#sbom__found]
 === link:#sbom__found[Found]
@@ -1127,7 +1189,7 @@ Confirm the CycloneDX SBOM contains only allowed packages. By default all packag
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package is not allowed: %s`
 * Code: `sbom_cyclonedx.allowed`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L34[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L35[Source, window="_blank"]
 
 [#sbom_cyclonedx__allowed_package_external_references]
 === link:#sbom_cyclonedx__allowed_package_external_references[Allowed package external references]
@@ -1139,7 +1201,7 @@ Confirm the CycloneDX SBOM contains only packages with explicitly allowed extern
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package %s has reference %q of type %q which is not explicitly allowed%s`
 * Code: `sbom_cyclonedx.allowed_package_external_references`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L87[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L90[Source, window="_blank"]
 
 [#sbom_cyclonedx__allowed_package_sources]
 === link:#sbom_cyclonedx__allowed_package_sources[Allowed package sources]
@@ -1152,7 +1214,7 @@ For each of the components fetched by Cachi2 which define externalReferences of 
 * FAILURE message: `Package %s fetched by cachi2 was sourced from %q which is not allowed`
 * Code: `sbom_cyclonedx.allowed_package_sources`
 * Effective from: `2024-12-15T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L149[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L154[Source, window="_blank"]
 
 [#sbom_cyclonedx__disallowed_package_attributes]
 === link:#sbom_cyclonedx__disallowed_package_attributes[Disallowed package attributes]
@@ -1165,7 +1227,7 @@ Confirm the CycloneDX SBOM contains only packages without disallowed attributes.
 * FAILURE message: `Package %s has the attribute %q set%s`
 * Code: `sbom_cyclonedx.disallowed_package_attributes`
 * Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L54[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L56[Source, window="_blank"]
 
 [#sbom_cyclonedx__disallowed_package_external_references]
 === link:#sbom_cyclonedx__disallowed_package_external_references[Disallowed package external references]
@@ -1178,7 +1240,7 @@ Confirm the CycloneDX SBOM contains only packages without disallowed external re
 * FAILURE message: `Package %s has reference %q of type %q which is disallowed%s`
 * Code: `sbom_cyclonedx.disallowed_package_external_references`
 * Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L118[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L122[Source, window="_blank"]
 
 [#sbom_cyclonedx__valid]
 === link:#sbom_cyclonedx__valid[Valid]
@@ -1209,7 +1271,7 @@ Confirm the `allowed_builder_ids` rule data was provided, since it is required b
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `slsa_build_build_service.allowed_builder_ids_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_build_service/slsa_build_build_service.rego#L68[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_build_service/slsa_build_build_service.rego#L69[Source, window="_blank"]
 
 [#slsa_build_build_service__slsa_builder_id_found]
 === link:#slsa_build_build_service__slsa_builder_id_found[SLSA Builder ID found]
@@ -1266,7 +1328,7 @@ Confirm that a build task exists and it has the expected IMAGE_DIGEST and IMAGE_
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Build task not found`
 * Code: `slsa_build_scripted_build.build_task_image_results_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L47[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L48[Source, window="_blank"]
 
 [#slsa_build_scripted_build__image_built_by_trusted_task]
 === link:#slsa_build_scripted_build__image_built_by_trusted_task[Image built by trusted Task]
@@ -1278,7 +1340,7 @@ Verify the digest of the image being validated is reported by a trusted Task in 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image %q not built by a trusted task: %s`
 * Code: `slsa_build_scripted_build.image_built_by_trusted_task`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L103[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L106[Source, window="_blank"]
 
 [#slsa_build_scripted_build__subject_build_task_matches]
 === link:#slsa_build_scripted_build__subject_build_task_matches[Provenance subject matches build task image result]
@@ -1290,7 +1352,7 @@ Verify the subject of the attestations matches the IMAGE_DIGEST and IMAGE_URL va
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The attestation subject, %q, does not match any of the images built`
 * Code: `slsa_build_scripted_build.subject_build_task_matches`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L70[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L72[Source, window="_blank"]
 
 [#slsa_provenance_available_package]
 == link:#slsa_provenance_available_package[SLSA - Provenance - Available]
@@ -1309,7 +1371,7 @@ Confirm the `allowed_predicate_types` rule data was provided, since it is requir
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `slsa_provenance_available.allowed_predicate_types_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_provenance_available/slsa_provenance_available.rego#L48[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_provenance_available/slsa_provenance_available.rego#L49[Source, window="_blank"]
 
 [#slsa_provenance_available__attestation_predicate_type_accepted]
 === link:#slsa_provenance_available__attestation_predicate_type_accepted[Expected attestation predicate type found]
@@ -1355,7 +1417,7 @@ Ensure each entry in the predicate.materials array with a SHA-1 digest includes 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Material URI %q is not a git URI`
 * Code: `slsa_source_version_controlled.materials_uri_is_git_repo`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_version_controlled/slsa_source_version_controlled.rego#L57[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_version_controlled/slsa_source_version_controlled.rego#L58[Source, window="_blank"]
 
 [#slsa_source_version_controlled__materials_format_okay]
 === link:#slsa_source_version_controlled__materials_format_okay[Materials have uri and digest]
@@ -1379,7 +1441,7 @@ Ensure that each entry in the predicate.materials array with a SHA-1 digest incl
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Material digest %q is not a git commit sha`
 * Code: `slsa_source_version_controlled.materials_include_git_sha`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_version_controlled/slsa_source_version_controlled.rego#L82[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_version_controlled/slsa_source_version_controlled.rego#L84[Source, window="_blank"]
 
 [#slsa_source_correlated_package]
 == link:#slsa_source_correlated_package[SLSA - Verification model - Source]
@@ -1400,7 +1462,7 @@ Verify that the provided source code reference is the one being attested.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The expected source code reference %q is not attested`
 * Code: `slsa_source_correlated.expected_source_code_reference`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L66[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L67[Source, window="_blank"]
 
 [#slsa_source_correlated__rule_data_provided]
 === link:#slsa_source_correlated__rule_data_provided[Rule data provided]
@@ -1410,7 +1472,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `slsa_source_correlated.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L104[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L105[Source, window="_blank"]
 
 [#slsa_source_correlated__source_code_reference_provided]
 === link:#slsa_source_correlated__source_code_reference_provided[Source code reference provided]
@@ -1434,7 +1496,7 @@ Attestation contains source reference.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The attested material contains no source code reference`
 * Code: `slsa_source_correlated.attested_source_code_reference`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L40[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L41[Source, window="_blank"]
 
 [#sbom_spdx_package]
 == link:#sbom_spdx_package[SPDX SBOM]
@@ -1453,7 +1515,7 @@ Confirm the SPDX SBOM contains only allowed packages. By default all packages ar
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package is not allowed: %s`
 * Code: `sbom_spdx.allowed`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L50[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L51[Source, window="_blank"]
 
 [#sbom_spdx__allowed_package_external_references]
 === link:#sbom_spdx__allowed_package_external_references[Allowed package external references]
@@ -1465,7 +1527,7 @@ Confirm the SPDX SBOM contains only packages with explicitly allowed external re
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Package %s has reference %q of type %q which is not explicitly allowed%s`
 * Code: `sbom_spdx.allowed_package_external_references`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L72[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L74[Source, window="_blank"]
 
 [#sbom_spdx__allowed_package_sources]
 === link:#sbom_spdx__allowed_package_sources[Allowed package sources]
@@ -1478,7 +1540,7 @@ For each of the packages fetched by Cachi2 which define externalReferences, veri
 * FAILURE message: `Package %s fetched by cachi2 was sourced from %q which is not allowed`
 * Code: `sbom_spdx.allowed_package_sources`
 * Effective from: `2025-02-17T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L166[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L170[Source, window="_blank"]
 
 [#sbom_spdx__contains_files]
 === link:#sbom_spdx__contains_files[Contains files]
@@ -1490,7 +1552,7 @@ Check the list of files in the SPDX SBOM is not empty.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The list of files is empty`
 * Code: `sbom_spdx.contains_files`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L133[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L137[Source, window="_blank"]
 
 [#sbom_spdx__contains_packages]
 === link:#sbom_spdx__contains_packages[Contains packages]
@@ -1502,7 +1564,7 @@ Check the list of packages in the SPDX SBOM is not empty.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The list of packages is empty`
 * Code: `sbom_spdx.contains_packages`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L35[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L36[Source, window="_blank"]
 
 [#sbom_spdx__disallowed_package_attributes]
 === link:#sbom_spdx__disallowed_package_attributes[Disallowed package attributes]
@@ -1515,7 +1577,7 @@ Confirm the SPDX SBOM contains only packages without disallowed attributes. By d
 * FAILURE message: `Package %s has the attribute %q set%s`
 * Code: `sbom_spdx.disallowed_package_attributes`
 * Effective from: `2025-02-04T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L210[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L215[Source, window="_blank"]
 
 [#sbom_spdx__disallowed_package_external_references]
 === link:#sbom_spdx__disallowed_package_external_references[Disallowed package external references]
@@ -1528,7 +1590,7 @@ Confirm the SPDX SBOM contains only packages without disallowed external referen
 * FAILURE message: `Package %s has reference %q of type %q which is disallowed%s`
 * Code: `sbom_spdx.disallowed_package_external_references`
 * Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L102[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L105[Source, window="_blank"]
 
 [#sbom_spdx__matches_image]
 === link:#sbom_spdx__matches_image[Matches image]
@@ -1540,7 +1602,7 @@ Check the SPDX SBOM targets the image being validated.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image digest in the SBOM, %q, is not as expected, %q`
 * Code: `sbom_spdx.matches_image`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L148[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L152[Source, window="_blank"]
 
 [#sbom_spdx__valid]
 === link:#sbom_spdx__valid[Valid]
@@ -1571,7 +1633,7 @@ Check if the current date is not allowed based on the rule data value from the k
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s is a disallowed date: %s`
 * Code: `schedule.date_restriction`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/schedule/schedule.rego#L37[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/schedule/schedule.rego#L38[Source, window="_blank"]
 
 [#schedule__rule_data_provided]
 === link:#schedule__rule_data_provided[Rule data provided]
@@ -1583,7 +1645,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `schedule.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/schedule/schedule.rego#L60[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/schedule/schedule.rego#L62[Source, window="_blank"]
 
 [#schedule__weekday_restriction]
 === link:#schedule__weekday_restriction[Weekday Restriction]
@@ -1732,7 +1794,7 @@ Ensure that the set of required tasks are included in the PipelineRun attestatio
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s is missing`
 * Code: `tasks.required_tasks_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L166[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L171[Source, window="_blank"]
 
 [#tasks__data_provided]
 === link:#tasks__data_provided[Data provided]
@@ -1744,7 +1806,7 @@ Confirm the expected data keys have been provided in the expected format. The ke
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `tasks.data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L278[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L285[Source, window="_blank"]
 
 [#tasks__future_required_tasks_found]
 === link:#tasks__future_required_tasks_found[Future required tasks were found]
@@ -1756,7 +1818,7 @@ Produce a warning when a task that will be required in the future was not includ
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `%s is missing and will be required on %s`
 * Code: `tasks.future_required_tasks_found`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L84[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L86[Source, window="_blank"]
 
 [#tasks__pinned_task_refs]
 === link:#tasks__pinned_task_refs[Pinned Task references]
@@ -1768,7 +1830,7 @@ Ensure that all Tasks in the SLSA Provenance attestation use an immuntable refer
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Task %s is used by pipeline task %s via an unpinned reference.`
 * Code: `tasks.pinned_task_refs`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L213[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L219[Source, window="_blank"]
 
 [#tasks__pipeline_has_tasks]
 === link:#tasks__pipeline_has_tasks[Pipeline run includes at least one task]
@@ -1780,7 +1842,7 @@ Ensure that at least one Task is present in the PipelineRun attestation.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `No tasks found in PipelineRun attestation`
 * Code: `tasks.pipeline_has_tasks`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L113[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L116[Source, window="_blank"]
 
 [#tasks__pipeline_required_tasks_list_provided]
 === link:#tasks__pipeline_required_tasks_list_provided[Required tasks list for pipeline was provided]
@@ -1792,7 +1854,7 @@ Produce a warning if the required tasks list rule data was not provided.
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Required tasks do not exist for pipeline`
 * Code: `tasks.pipeline_required_tasks_list_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L64[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L65[Source, window="_blank"]
 
 [#tasks__required_tasks_list_provided]
 === link:#tasks__required_tasks_list_provided[Required tasks list was provided]
@@ -1804,7 +1866,7 @@ Confirm the `required-tasks` rule data was provided, since it's required by the 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Missing required required-tasks data`
 * Code: `tasks.required_tasks_list_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L190[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L195[Source, window="_blank"]
 
 [#tasks__successful_pipeline_tasks]
 === link:#tasks__successful_pipeline_tasks[Successful pipeline tasks]
@@ -1816,7 +1878,7 @@ Ensure that all of the Tasks in the Pipeline completed successfully. Note that s
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pipeline task %q did not complete successfully, %q`
 * Code: `tasks.successful_pipeline_tasks`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L137[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L141[Source, window="_blank"]
 
 [#tasks__unsupported]
 === link:#tasks__unsupported[Task version unsupported]
@@ -1826,7 +1888,7 @@ The Tekton Task used is or will be unsupported. The Task is annotated with `buil
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Task %q is used by pipeline task %q is or will be unsupported as of %s. %s`
 * Code: `tasks.unsupported`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L240[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L246[Source, window="_blank"]
 
 [#test_package]
 == link:#test_package[Test]
@@ -1846,7 +1908,7 @@ Ensure that task producing the IMAGES_PROCESSED result contains the digests of t
 * FAILURE message: `Test '%s' did not process image with digest '%s'.`
 * Code: `test.test_all_images`
 * Effective from: `2024-05-29T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L233[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L239[Source, window="_blank"]
 
 [#test__no_failed_informative_tests]
 === link:#test__no_failed_informative_tests[No informative tests failed]
@@ -1870,7 +1932,7 @@ Produce a violation if any tests have their result set to "ERROR". The result ty
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The Task %q from the build Pipeline reports a test erred`
 * Code: `test.no_erred_tests`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L166[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L169[Source, window="_blank"]
 
 [#test__no_failed_tests]
 === link:#test__no_failed_tests[No tests failed]
@@ -1882,7 +1944,7 @@ Produce a violation if any non-informative tests have their result set to "FAILE
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The Task %q from the build Pipeline reports a failed test`
 * Code: `test.no_failed_tests`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L142[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L144[Source, window="_blank"]
 
 [#test__no_test_warnings]
 === link:#test__no_test_warnings[No tests produced warnings]
@@ -1907,7 +1969,7 @@ Produce a violation if any tests have their result set to "SKIPPED". A skipped r
 * FAILURE message: `The Task %q from the build Pipeline reports a test was skipped`
 * Code: `test.no_skipped_tests`
 * Effective from: `2023-12-08T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L188[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L192[Source, window="_blank"]
 
 [#test__test_results_known]
 === link:#test__test_results_known[No unsupported test result values found]
@@ -1919,7 +1981,7 @@ Ensure all test data result values are in the set of known/supported result valu
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The Task %q from the build Pipeline has an unsupported test result %q`
 * Code: `test.test_results_known`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L110[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L111[Source, window="_blank"]
 
 [#test__rule_data_provided]
 === link:#test__rule_data_provided[Rule data provided]
@@ -1931,7 +1993,7 @@ Confirm the expected rule data keys have been provided in the expected format. T
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `test.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L214[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L219[Source, window="_blank"]
 
 [#test__test_data_found]
 === link:#test__test_data_found[Test data found in task results]
@@ -1974,7 +2036,7 @@ Confirm the expected `trusted_tasks` data keys have been provided in the expecte
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `trusted_task.data_format`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L190[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L194[Source, window="_blank"]
 
 [#trusted_task__pinned]
 === link:#trusted_task__pinned[Task references are pinned]
@@ -2000,7 +2062,7 @@ Confirm the `trusted_tasks` rule data was provided, since it's required by the p
 * FAILURE message: `Missing required trusted_tasks data`
 * Code: `trusted_task.data`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L140[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L143[Source, window="_blank"]
 
 [#trusted_task__trusted]
 === link:#trusted_task__trusted[Tasks are trusted]
@@ -2013,7 +2075,7 @@ Check the trust of the Tekton Tasks used in the build Pipeline. There are two mo
 * FAILURE message: `%s`
 * Code: `trusted_task.trusted`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L77[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L79[Source, window="_blank"]
 
 [#trusted_task__current]
 === link:#trusted_task__current[Tasks using the latest versions]
@@ -2026,7 +2088,7 @@ Check if all Tekton Tasks use the latest known Task reference. When warnings wil
 * WARNING message: `A newer version of task %q exists. Please update before %s. The current bundle is %q and the latest bundle ref is %q`
 * Code: `trusted_task.current`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L49[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L50[Source, window="_blank"]
 
 [#trusted_task__valid_trusted_artifact_inputs]
 === link:#trusted_task__valid_trusted_artifact_inputs[Trusted Artifact produced in pipeline]
@@ -2038,7 +2100,7 @@ All input trusted artifacts must be produced on the pipeline. If they are not th
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Code tampering detected, input %q for task %q was not produced by the pipeline as attested.`
 * Code: `trusted_task.valid_trusted_artifact_inputs`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L103[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L105[Source, window="_blank"]
 
 [#trusted_task__trusted_parameters]
 === link:#trusted_task__trusted_parameters[Trusted parameters]
@@ -2051,7 +2113,7 @@ Confirm certain parameters provided to each builder Task have come from trusted 
 * FAILURE message: `The %q parameter of the %q PipelineTask includes an untrusted digest: %s`
 * Code: `trusted_task.trusted_parameters`
 * Effective from: `2021-07-04T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L159[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L163[Source, window="_blank"]
 
 [#rpm_ostree_task_package]
 == link:#rpm_ostree_task_package[rpm-ostree Task]

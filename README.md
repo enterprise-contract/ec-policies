@@ -1,6 +1,6 @@
 # ec-policies
 
-[Rego][rego] policies related to the Enterprise Contract.
+[Rego][rego] policies related to the Conforma.
 
 ## Getting started for developers
 

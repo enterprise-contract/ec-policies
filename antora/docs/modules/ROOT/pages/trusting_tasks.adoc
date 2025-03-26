@@ -5,7 +5,7 @@
 :image-built-by-trusted-task: release_policy#slsa_build_scripted_build__image_built_by_trusted_task
 :build-definitions: https://github.com/konflux-ci/build-definitions
 :ec-policies: https://github.com/enterprise-contract/ec-policies
-:ec-track-bundle: https://enterprisecontract.dev/docs/ec-cli/main/ec_track_bundle.html
+:ec-track-bundle: https://conforma.dev/docs/ec-cli/main/ec_track_bundle.html
 :tekton-bundles: https://tekton.dev/docs/pipelines/pipelines/#tekton-bundles
 
 This document details the process of trusting a Task originating in a
@@ -190,7 +190,7 @@ sources:
 
 That custom data source should be kept updated as new Tekton task bundles are
 pushed, perhaps via some automation or using
-https://enterprisecontract.dev/docs/ec-cli/main/ec_track_bundle.html[`ec track tekton-task`].
+https://conforma.dev/docs/ec-cli/main/ec_track_bundle.html[`ec track tekton-task`].
 
 The customized policy can be provided to EC with the `--policy` parameter, and
 should allow custom tasks to validate using the new data source.

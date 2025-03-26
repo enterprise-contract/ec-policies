@@ -26,7 +26,7 @@ readme: |
   are a work in progress and not yet production ready.
 install: |
   `conftest pull oci::quay.io/enterprise-contracttract/ec-pipeline-policy:latest`
-homeURL: https://enterprisecontract.dev/docs/ec-policies/
+homeURL: https://conforma.dev/docs/ec-policies/
 keywords:
   - opa
   - conftest

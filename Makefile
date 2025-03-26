@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-COPY:=The Enterprise Contract Contributors
+COPY:=The Conforma Contributors
 
 DATA_DIR=./example/data
 CONFIG_DATA_FILE=$(DATA_DIR)/config.json

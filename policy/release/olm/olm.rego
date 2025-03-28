@@ -216,6 +216,36 @@ deny contains result if {
 }
 
 # METADATA
+# title: Related images references are from allowed registries
+# description: >-
+#   Each image indicated as a related image should match an entry in the list of prefixes
+#   defined by the rule data key `allowed_registry_prefixes` in your policy configuration.
+# custom:
+#   short_name: allowed_registries_related
+#   failure_msg: The %q related image reference is not from an allowed registry.
+#   solution: >-
+#     Use image from an allowed registry, or modify your
+#     xref:ec-cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
+#   collections:
+#   - redhat
+#   effective_on: 2025-04-15T00:00:00Z
+#
+deny contains result if {
+	# The presence of expected rule_data verified in _rule_data_errors
+	allowed_registry_prefixes := lib.rule_data("allowed_registry_prefixes")
+
+	# Parse manifests from snapshot
+	some related_images in _related_images(input.image)
+
+	some img in related_images
+	not _image_registry_allowed(img.repo, allowed_registry_prefixes)
+
+	img_str := image.str(img)
+
+	result := lib.result_helper_with_term(rego.metadata.chain(), [img_str], img.repo)
+}
+
+# METADATA
 # title: Unmapped images in OLM bundle
 # description: >-
 #   Check the OLM bundle image for the presence of unmapped image references.

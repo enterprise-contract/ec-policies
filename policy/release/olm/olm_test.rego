@@ -11,6 +11,8 @@ pinned := "registry.io/repository/image@sha256:cafe"
 
 pinned2 := "registry.io/repository/image2@sha256:tea"
 
+pinned3 := "registry.io/repository/image3@sha256:coffee"
+
 pinned_ref := {"digest": "sha256:cafe", "repo": "registry.io/repository/image", "tag": ""}
 
 pinned_ref2 := {"digest": "sha256:tea", "repo": "registry.io/repository/image2", "tag": ""}
@@ -24,6 +26,12 @@ component1 := {
 component2 := {
 	"name": "pinned_image2",
 	"containerImage": pinned2,
+	"source": {},
+}
+
+component3 := {
+	"name": "pinned_image3",
+	"containerImage": pinned3,
 	"source": {},
 }
 
@@ -379,7 +387,7 @@ test_unmapped_references_in_operator if {
 	lib.assert_equal_results(olm.deny, expected) with input.snapshot.components as [component1]
 		with input.image.files as {"manifests/csv.yaml": manifest}
 		with data.rule_data as {"pipeline_intention": "release", "allowed_registry_prefixes": ["registry.io"]}
-		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.image_manifest as _mock_image_partial
 		with ec.oci.descriptor as mock_ec_oci_image_descriptor
 		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 }
@@ -392,10 +400,11 @@ test_inaccessible_related_images if {
 	}}
 
 	lib.assert_equal_results(olm.deny, expected_deny) with data.rule_data.pipeline_intention as "release"
+		with data.rule_data.allowed_registry_prefixes as ["registry.io"]
 		with input.snapshot.components as [component1]
 		with input.attestations as _with_related_images
 		with input.image.ref as "registry.io/repository/image@sha256:image_digest"
-		with ec.oci.image_manifest as _mock_image_manifest
+		with ec.oci.image_manifest as _mock_image_partial
 		with ec.oci.blob as _mock_blob
 		with ec.oci.descriptor as mock_ec_oci_image_descriptor
 }
@@ -447,9 +456,49 @@ test_unallowed_registries if {
 		with input.image.files as {"manifests/csv.yaml": manifest}
 }
 
-_related_images := [pinned, pinned2, "registry.io/repository/image3@sha256:coffee"]
+test_allowed_registries_related if {
+	expected_deny := {
+		{
+			"code": "olm.allowed_registries_related",
+			"msg": "The \"registry.io/repository/image@sha256:cafe\" related image reference is not from an allowed registry.",
+			"term": "registry.io/repository/image",
+		},
+		{
+			"code": "olm.allowed_registries_related",
+			"msg": "The \"registry.io/repository/image2@sha256:tea\" related image reference is not from an allowed registry.",
+			"term": "registry.io/repository/image2",
+		},
+		{
+			"code": "olm.allowed_registries_related",
+			# regal ignore:line-length
+			"msg": "The \"registry.io/repository/image3@sha256:coffee\" related image reference is not from an allowed registry.",
+			"term": "registry.io/repository/image3",
+		},
+	}
 
-_manifests := {
+	lib.assert_equal_results(olm.deny, expected_deny) with data.rule_data.pipeline_intention as "release"
+		with data.rule_data.allowed_registry_prefixes as ["registry.access.redhat.com", "registry.redhat.io"]
+		with input.snapshot.components as [component1, component2, component3]
+		with input.attestations as _with_related_images
+		with input.image.ref as "registry.io/repository/image@sha256:image_digest"
+		with ec.oci.image_manifest as _mock_image_all
+		with ec.oci.blob as _mock_blob
+		with ec.oci.descriptor as mock_ec_oci_image_descriptor
+}
+
+_related_images := [pinned, pinned2, pinned3]
+
+_manifests_all := {
+	"registry.io/repository/image@sha256:related_digest": {"layers": [{
+		"mediaType": olm._related_images_oci_mime_type,
+		"digest": "sha256:related_blob_digest",
+	}]},
+	"registry.io/repository/image@sha256:cafe": {"config": {"digest": "sha256:cafe"}},
+	"registry.io/repository/image2@sha256:tea": {"config": {"digest": "sha256:tea"}},
+	"registry.io/repository/image3@sha256:coffee": {"config": {"digest": "sha256:coffee"}},
+}
+
+_manifests_partial := {
 	"registry.io/repository/image@sha256:related_digest": {"layers": [{
 		"mediaType": olm._related_images_oci_mime_type,
 		"digest": "sha256:related_blob_digest",
@@ -459,7 +508,9 @@ _manifests := {
 
 _blobs := {"registry.io/repository/image@sha256:related_blob_digest": json.marshal(_related_images)}
 
-_mock_image_manifest(ref) := _manifests[ref]
+_mock_image_all(ref) := _manifests_all[ref]
+
+_mock_image_partial(ref) := _manifests_partial[ref]
 
 _mock_blob(ref) := _blobs[ref]
 

@@ -30,6 +30,7 @@ import data.lib.json as j
 #   - minimal
 #   - slsa3
 #   - redhat
+#   - redhat_rpms
 deny contains result if {
 	source := object.get(input, ["image", "source"], {})
 	count(source) == 0
@@ -113,6 +114,7 @@ deny contains result if {
 #   - minimal
 #   - slsa3
 #   - redhat
+#   - redhat_rpms
 #   - policy_data
 deny contains result if {
 	some e in _rule_data_errors

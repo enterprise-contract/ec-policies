@@ -43,6 +43,7 @@ import data.lib.tekton
 #     trusted tasks.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - tasks.pipeline_has_tasks
 #
@@ -73,6 +74,7 @@ warn contains result if {
 #     under the key 'required-tasks'. Make sure this list exists.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - tasks.pipeline_has_tasks
 #
@@ -94,6 +96,7 @@ warn contains result if {
 #     from the build pipeline.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - tasks.pipeline_has_tasks
 #
@@ -124,6 +127,7 @@ warn contains result if {
 #   collections:
 #   - minimal
 #   - redhat
+#   - redhat_rpms
 #   - slsa3
 #   depends_on:
 #   - attestation_type.known_attestation_type
@@ -148,6 +152,7 @@ deny contains result if {
 #   collections:
 #   - minimal
 #   - redhat
+#   - redhat_rpms
 #   - slsa3
 #   depends_on:
 #   - tasks.pipeline_has_tasks
@@ -201,6 +206,7 @@ deny contains result if {
 #     build pipeline.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - tasks.pipeline_has_tasks
 #
@@ -249,6 +255,7 @@ deny contains result if {
 #     Task %q is used by pipeline task %q is or will be unsupported as of %s. %s
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - tasks.pipeline_has_tasks
 #
@@ -286,6 +293,7 @@ deny contains result if {
 #   solution: If provided, ensure the data is in the expected format.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   - policy_data
 #
 deny contains result if {

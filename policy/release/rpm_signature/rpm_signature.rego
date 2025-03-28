@@ -26,6 +26,7 @@ import data.lib.json as j
 #     signature, usually indicated the RPM is not ready for consumption.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   effective_on: 2024-10-05T00:00:00Z
 #
 deny contains result if {
@@ -43,6 +44,7 @@ deny contains result if {
 #   failure_msg: '%s'
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   effective_on: 2024-10-05T00:00:00Z
 #
 deny contains result if {
@@ -60,6 +62,7 @@ deny contains result if {
 #   failure_msg: '%s'
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   - policy_data
 #   effective_on: 2024-10-05T00:00:00Z
 #

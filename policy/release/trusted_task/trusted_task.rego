@@ -35,6 +35,7 @@ _digest_patterns := {`sha256:[0-9a-f]{64}`}
 #     in the description.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   effective_on: 2024-05-07T00:00:00Z
 #
 warn contains result if {
@@ -62,6 +63,7 @@ warn contains result if {
 #     Update the Task reference to a newer version.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   effective_on: 2024-05-07T00:00:00Z
 #
 warn contains result if {
@@ -114,6 +116,7 @@ deny contains result if {
 #     Audit the pipeline to make sure all inputs are produced by the pipeline.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -149,6 +152,7 @@ deny contains result if {
 #     Create a, or use an existing, trusted tasks list as a data source.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   effective_on: 2024-05-07T00:00:00Z
 #
 deny contains result if {
@@ -197,6 +201,7 @@ deny contains result if {
 #   solution: If provided, ensure the data is in the expected format.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   - policy_data
 #
 deny contains result if {

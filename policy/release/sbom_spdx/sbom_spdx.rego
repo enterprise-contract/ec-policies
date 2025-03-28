@@ -24,6 +24,7 @@ import data.lib.sbom
 #   collections:
 #   - minimal
 #   - redhat
+#   - redhat_rpms
 #
 deny contains result if {
 	some index, s in sbom.spdx_sboms
@@ -59,6 +60,7 @@ deny contains result if {
 #     Update the image to not use any disallowed package.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #
 deny contains result if {
 	some s in sbom.spdx_sboms
@@ -83,6 +85,7 @@ deny contains result if {
 #   solution: Update the image to use only packages with explicitly allowed external references.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   - policy_data
 #
 deny contains result if {
@@ -113,6 +116,7 @@ deny contains result if {
 #   solution: Update the image to not use a package with a disallowed external reference.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   - policy_data
 #   effective_on: 2024-07-31T00:00:00Z
 deny contains result if {
@@ -176,6 +180,7 @@ deny contains result if {
 #   solution: Update the image to not use a package from a disallowed source.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   - policy_data
 #   effective_on: 2025-02-17T00:00:00Z
 deny contains result if {
@@ -220,6 +225,7 @@ deny contains result if {
 #   solution: Update the image to not use any disallowed package attributes.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   - policy_data
 #   effective_on: 2025-02-04T00:00:00Z
 deny contains result if {

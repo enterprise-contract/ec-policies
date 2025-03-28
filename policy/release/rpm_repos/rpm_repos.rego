@@ -27,6 +27,7 @@ import data.lib.sbom
 #     lists are combined.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   - policy_data
 #
 deny contains result if {
@@ -48,6 +49,7 @@ deny contains result if {
 #     SBOM correctly records that.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   effective_on: "2024-11-10T00:00:00Z"
 #
 deny contains result if {

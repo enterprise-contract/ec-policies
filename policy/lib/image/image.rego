@@ -5,9 +5,18 @@ import rego.v1
 # parse returns a data structure representing the different portions
 # of the OCI image reference.
 parse(ref) := d if {
-	digest_parts := split(trim_space(ref), "@")
+	trimmed_ref := trim_space(ref)
 
-	contains(digest_parts[0], "/")
+	# Note: This regex is simplified and does not cover all valid hostname cases.
+	# It only matches hostnames in the form of registry.local' or 'Registry1.io'.
+	# It does not include all subdomains and does not support Unicode.
+	regex.match(`^(?:[a-zA-Z0-9-])+\.[a-zA-Z]+`, trimmed_ref)
+
+	# a valid repo will contain a /
+	contains(trimmed_ref, "/")
+
+	digest_parts := split(trimmed_ref, "@")
+
 	repo_parts := split(digest_parts[0], "/")
 
 	tag_parts := split(repo_parts[count(repo_parts) - 1], ":")
@@ -21,8 +30,6 @@ parse(ref) := d if {
 			[tag_parts[0]],
 		),
 	)
-
-	not contains(repo, "://")
 
 	digest := _get(digest_parts, 1, "")
 

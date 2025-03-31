@@ -57,6 +57,7 @@
 **** xref:release_policy.adoc#olm__csv_semver_format[ClusterServiceVersion semver format]
 **** xref:release_policy.adoc#olm__feature_annotations_format[Feature annotations have expected value]
 **** xref:release_policy.adoc#olm__allowed_registries[Images referenced by OLM bundle are from allowed registries]
+**** xref:release_policy.adoc#olm__olm_bundle_multi_arch[OLM bundle images are not multi-arch]
 **** xref:release_policy.adoc#olm__allowed_registries_related[Related images references are from allowed registries]
 **** xref:release_policy.adoc#olm__required_olm_features_annotations_provided[Required OLM feature annotations list provided]
 **** xref:release_policy.adoc#olm__subscriptions_annotation_format[Subscription annotation has expected value]

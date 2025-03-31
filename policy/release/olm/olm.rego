@@ -192,7 +192,6 @@ deny contains result if {
 #   effective_on: 2025-03-10T00:00:00Z
 #
 deny contains result if {
-	# This rule was removed from the "redhat" collection for testing
 	_release_restrictions_apply
 
 	snapshot_components := input.snapshot.components
@@ -316,6 +315,29 @@ deny contains result if {
 	img_str := image.str(img.ref)
 
 	result := lib.result_helper_with_term(rego.metadata.chain(), [img_str], img.ref.repo)
+}
+
+# METADATA
+# title: OLM bundle images are not multi-arch
+# description: >-
+#   OLM bundle images should be multi-arch. It should not be an OCI image index
+#   nor should it be a Docker v2s2 manifest list.
+# custom:
+#   short_name: olm_bundle_multi_arch
+#   failure_msg: The %q bundle image is a multi-arch reference.
+#   solution: >-
+#     Rebuild your bundle image without creating an image index.
+#   collections:
+#   - redhat
+#   effective_on: 2025-5-01T00:00:00Z
+deny contains result if {
+	# Parse manifests from snapshot
+	some csv_manifest in _csv_manifests
+
+	# If we have a CSV manifest, ensure that the input image is not an image index
+	image.is_image_index(input.image.ref)
+
+	result := lib.result_helper_with_term(rego.metadata.chain(), [input.image.ref], input.image.ref)
 }
 
 _name(o) := n if {

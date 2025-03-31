@@ -433,6 +433,23 @@ test_allowed_registries if {
 		with input.image.files as {"manifests/csv.yaml": manifest}
 }
 
+test_bundle_image_index if {
+	descriptor := {"mediaType": "application/vnd.oci.image.index.v1+json"}
+
+	expected_deny := {{
+		"code": "olm.olm_bundle_multi_arch",
+		"msg": "The \"registry.io/repository/image@sha256:cafe\" bundle image is a multi-arch reference.",
+		"term": "registry.io/repository/image@sha256:cafe",
+	}}
+
+	lib.assert_equal_results(olm.deny, expected_deny) with data.rule_data.pipeline_intention as "release"
+		with data.rule_data.allowed_registry_prefixes as ["registry.io", "registry.redhat.io"]
+		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
+		with input.image.files as {"manifests/csv.yaml": manifest}
+		with input.image.ref as pinned
+		with ec.oci.descriptor as descriptor
+}
+
 test_unallowed_registries if {
 	expected := {
 		{

@@ -1,11 +1,10 @@
 module github.com/enterprise-contract/ec-policies
 
 go 1.23.1
-
-toolchain go1.23.4
+toolchain go1.24.1
 
 require (
-	github.com/enterprise-contract/ec-cli v0.7.23
+	github.com/enterprise-contract/ec-cli v0.7.31
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.55.0
 	github.com/styrainc/regal v0.29.2

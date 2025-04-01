@@ -1,6 +1,6 @@
 # ec-policies
 
-[Rego][rego] policies related to the Enterprise Contract.
+[Rego][rego] policies related to the Conforma.
 
 ## Getting started for developers
 
@@ -164,14 +164,14 @@ contributing to the definition of policy rules.
 [opa]: https://www.openpolicyagent.org/docs/latest/
 [entr]: https://github.com/eradman/entr
 [testing]: https://www.openpolicyagent.org/docs/latest/policy-testing/
-[docs]: https://enterprisecontract.dev/
-[policydocs]: https://enterprisecontract.dev/docs/ec-policies/release_policy.html
+[docs]: https://conforma.dev/
+[policydocs]: https://conforma.dev/docs/ec-policies/release_policy.html
 [taskdef]: https://github.com/enterprise-contract/ec-cli/blob/main/tasks/verify-enterprise-contract/0.1/verify-enterprise-contract.yaml
 [contract]: https://github.com/enterprise-contract
 [ec-cli]: https://github.com/enterprise-contract/ec-cli
 [konflux-ci]: https://github.com/konflux-ci
 [builddefs]: https://github.com/konflux-ci/build-definitions
-[authoring]: https://enterprisecontract.dev/docs/ec-policies/authoring.html
+[authoring]: https://conforma.dev/docs/ec-policies/authoring.html
 [antora]: https://docs.antora.org/antora/latest/install-and-run-quickstart/
 [quay]: https://quay.io/
 [infradeployments]: https://github.com/redhat-appstudio/infra-deployments

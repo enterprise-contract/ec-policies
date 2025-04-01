@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright The Enterprise Contract Contributors
+# Copyright The Conforma Contributors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Use the Enterprise Contract to validate the Tekton pipeline bundles being added to
+# Use Conforma to validate the Tekton pipeline bundles being added to
 # data/acceptable_tekton_bundles.yml. The list of bundles to verify is a computed by
 # diff'ing against the list of bundles in origin/main. If there's no difference, this
 # script succeeds.

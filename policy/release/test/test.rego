@@ -98,6 +98,7 @@ deny contains result if {
 #     named 'result'. For a TEST_OUTPUT result to be valid, this key must exist.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - test.test_data_found
 #
@@ -119,6 +120,7 @@ deny contains result if {
 #     xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - test.test_data_found
 #
@@ -154,6 +156,7 @@ deny contains result if {
 #     should be available in the logs for the build Pipeline.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - test.test_data_found
 #
@@ -177,6 +180,7 @@ deny contains result if {
 #     should be available in the logs for the build Pipeline.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - test.test_data_found
 #
@@ -202,6 +206,7 @@ deny contains result if {
 #     information about the test should be available in the logs for the build Pipeline.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - test.test_data_found
 #   effective_on: 2023-12-08T00:00:00Z
@@ -223,6 +228,7 @@ deny contains result if {
 #   solution: If provided, ensure the rule data is in the expected format.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   - policy_data
 #
 deny contains result if {
@@ -244,6 +250,7 @@ deny contains result if {
 #     `IMAGES_PROCESSED` result.
 #   collections:
 #   - redhat
+#   - redhat_rpms
 #   effective_on: 2024-05-29T00:00:00Z
 #
 deny contains result if {

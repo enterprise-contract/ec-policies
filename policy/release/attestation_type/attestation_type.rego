@@ -25,6 +25,7 @@ import data.lib.json as j
 #   collections:
 #   - minimal
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - attestation_type.pipelinerun_attestation_found
 #
@@ -47,6 +48,7 @@ deny contains result if {
 #   collections:
 #   - minimal
 #   - redhat
+#   - redhat_rpms
 #   - policy_data
 #
 deny contains result if {
@@ -66,6 +68,7 @@ deny contains result if {
 #   collections:
 #   - minimal
 #   - redhat
+#   - redhat_rpms
 #
 deny contains result if {
 	count(lib.pipelinerun_attestations) == 0
@@ -84,6 +87,7 @@ deny contains result if {
 #   collections:
 #   - minimal
 #   - redhat
+#   - redhat_rpms
 #   effective_on: 2023-08-31T00:00:00Z
 deny contains result if {
 	# Use input.attestations directly so we can detect the actual format in use.

@@ -33,6 +33,7 @@ import data.lib.tekton
 #   collections:
 #   - slsa3
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -58,6 +59,7 @@ deny contains result if {
 #   collections:
 #   - slsa3
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -81,6 +83,7 @@ deny contains result if {
 #   collections:
 #   - slsa3
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #

@@ -24,6 +24,7 @@ import data.lib.tekton
 #   collections:
 #   - minimal
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - attestation_type.known_attestation_type
 #
@@ -48,6 +49,7 @@ deny contains result if {
 #   collections:
 #   - minimal
 #   - redhat
+#   - redhat_rpms
 #   depends_on:
 #   - provenance_materials.git_clone_task_found
 #

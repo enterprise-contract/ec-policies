@@ -59,6 +59,8 @@ manifest := {
 		"features.operators.openshift.io/token-auth-gcp": "false",
 		"operators.openshift.io/valid-subscription": `["spam"]`,
 		"alm-examples": `"endpoint": "http://example:4317" spam`,
+		# regal ignore:line-length
+		"features.operators.image": `{"kind":"Namespace","apiVersion":"v1","metadata":{"name":"openshift-workload-availability","annotations":{"openshift.io/node-selector":""}}}`,
 	}},
 	"spec": {
 		"version": "0.1.3",

@@ -9,7 +9,6 @@ import data.lib.image
 test_parse if {
 	repository := "registry.com/re/po"
 	repository_with_port := "registry.com:8443/re/po"
-	bad_repository := "http://not-a-registry.com"
 	tag := "latest"
 	digest := "sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
 
@@ -47,8 +46,15 @@ test_parse if {
 		image.parse(concat("", [repository_with_port, ":", tag, " "])),
 		{"repo": repository_with_port, "tag": tag, "digest": ""},
 	)
+}
 
-	not image.parse(concat("", [bad_repository, ":", tag, "@", digest]))
+test_not_parse if {
+	tag := "latest"
+	digest := "sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+	not image.parse(concat("", ["http://not-a-registry.com", ":", tag, "@", digest]))
+	not image.parse("oci://not-a-registry.com")
+	not image.parse("operator-sdk-v1.32.0")
+	not image.parse("quay.io")
 }
 
 test_equal if {

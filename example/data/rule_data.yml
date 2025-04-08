@@ -16,6 +16,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 rule_data:
+  # Usage: https://conforma.dev/docs/ec-policies/release_policy.html#git_branch__git_branch
+  allowed_branch_patterns:
+  - ^refs/heads/main$
+  - ^refs/heads/release-v[\d\.]+$
+
   # Usage: https://conforma.dev/docs/policy/release_policy.html#base_image_registries__allowed_registries_provided
   allowed_registry_prefixes:
   - localhost:5000/

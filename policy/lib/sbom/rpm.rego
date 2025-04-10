@@ -44,21 +44,29 @@ _is_rpmish(purl) if {
 	startswith(purl, "pkg:rpmmod/")
 }
 
+# CycloneDX style
 _component_found_by_cachi2(component) if {
 	some property in component.properties
-	property == cachi2_found_by_property
+	some cachi2_name in _cachi2_names
+	property == _cachi2_found_by_property(cachi2_name)
 } else := false
 
-# This is what cachi2 produces in the component property list
-cachi2_found_by_property := {
-	"name": "cachi2:found_by",
-	"value": "cachi2",
+# Expecting this to be called with one of _cachi2_names
+_cachi2_found_by_property(cachi2_name) := {
+	"name": sprintf("%s:found_by", [cachi2_name]),
+	"value": cachi2_name,
 }
 
+# SPDX style
 _package_found_by_cachi2(pkg) if {
 	some annotation in pkg.annotations
-	regex.match(`.*cachi2.*`, annotation.annotator)
+	some cachi2_name in _cachi2_names
+	regex.match(sprintf(`.*%s.*`, [cachi2_name]), annotation.annotator)
 	annotation.annotationType == "OTHER"
 	# `comment` contains additional information, but that is not needed for the purpose of
 	# simply filtering what was found by cachi2.
 } else := false
+
+# The new name for cachi2 is hermeto. We want to treat them
+# as as synonymous when looking in the SBOM data.
+_cachi2_names := ["cachi2", "hermeto"]

@@ -213,7 +213,7 @@ fake_cyclonedx_sboms := [fake_cyclonedx_sbom({p1, p2, p3, p4, p5, p6, p7})]
 fake_cyclonedx_sbom(fake_purls) := {"components": [
 {
 	"purl": p,
-	"properties": [sbom.cachi2_found_by_property],
+	"properties": [sbom._cachi2_found_by_property("hermeto")],
 } |
 	some p in fake_purls
 ]}

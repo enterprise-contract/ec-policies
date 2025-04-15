@@ -1,8 +1,14 @@
-= Trusted Tasks
+= Trusted Tasks and Trusted Artifacts
+
+Konflux uses "trusted tasks" to ensure secure and compliant task execution in build
+pipelines. There are two different ways that the pipeline is considered trusted:
+
+1. Original (Non-Trusted Artifact) Pipelines.
+2. Trusted Artifact Pipelines.
 
 :numbered:
 
-== Task Provenance using trusted Task list
+== Original (Non-Trusted Artifact) Pipelines
 
 Conforma requires that all Konflux pipelines
 use only tasks with the recorded provenance in the trusted Task list. See also
@@ -36,7 +42,7 @@ would result in such a warning.
 The process of adding Tasks to the list of trusted Tasks is described
 xref:trusting_tasks.adoc[here].
 
-== Trusted Task list
+=== Example Structure
 
 The structure of the trusted Task list is best illustrated by an example:
 
@@ -66,3 +72,50 @@ compatibility. Will be removed entirely in future.
 <5> The _expires on_ time
 <6> Unique reference of the Task within the provenance URI (git commit id or
 image digest)
+
+== Trusted Artifact Pipelines
+
+Trusted Artifacts is the current approach to securely share files between Tekton tasks in Konflux, especially for custom task use without compromising build integrity.
+
+This approach allows users to include their own Tekton tasks (e.g. unit tests) in a secure and verified way.
+
+Inspired by TEP-0139, this implementation acts as a stop-gap until full upstream support is available.
+
+=== How It Works
+
+* A Task that creates a Trusted Artifact wraps files into an archive.
+
+* The archive location and checksums are exposed via task results.
+
+* A Task that consumes the artifact verifies the checksum and unpacks it into a secure emptyDir volume.
+
+Artifacts are shared via OCI registries (e.g. quay.io), not via Persistent Volume Claims (PVCs).
+
+Also, note that when using Trusted Artifacts, only the tasks that directly impact the pipeline's output must be in the trusted task list. Typically this is the git clone task, the prefetch dependencies task, and the build tasks.
+
+In contrast, when using the non-trusted artifacts pipeline, **every** task in the pipeline must be in the trusted task list.
+
+=== Naming Conventions and Rules
+
+* Producing tasks must use result names ending in _ARTIFACT (e.g. SOURCE_ARTIFACT).
+
+* Consuming tasks must use parameter names ending in _ARTIFACT.
+
+* These tasks must NOT use general-purpose workspaces for file sharing.
+
+* Workspaces are allowed for non-sharing purposes, like mounting Secrets.
+
+=== Migration and Task Variants To aid transition:
+
+* New variants of standard tasks exist, using the suffix -oci-ta, e.g. git-clone-oci-ta.
+
+* New tasks with fresh functionality that use Trusted Artifacts need not follow the suffix naming convention.
+
+
+== Summary
+
+* The **Trusted Tasks List** enforces a time-based, curated system to approve and validate tasks for pipeline security.
+
+* **Non-Trusted Artifact Pipelines** require **every** task in the pipeline to be included in the trusted task list, enforcing stricter end-to-end compliance.
+
+* **Trusted Artifact Pipelines** offer flexibility: only tasks that directly impact the pipeline’s output (e.g., git clone, prefetch dependencies, build tasks) must come from the trusted task list.

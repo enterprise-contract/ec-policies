@@ -33,12 +33,12 @@ test_pinned_warning if {
 		{
 			"code": "trusted_task.pinned",
 			# regal ignore:line-length
-			"msg": "Pipeline task \"unpinned-honest-abe-p\" uses an unpinned task reference, git+git.local/repo.git//tasks/honest-abe.yaml@", "term": "honest-abe",
+			"msg": `Pipeline task "unpinned-honest-abe-p" uses an unpinned task reference, git+git.local/repo.git//tasks/honest-abe.yaml@`, "term": "honest-abe",
 		},
 		{
 			"code": "trusted_task.pinned",
 			# regal ignore:line-length
-			"msg": "Pipeline task \"unpinned-trusty-p\" uses an unpinned task reference, oci://registry.local/trusty:1.0@", "term": "trusty",
+			"msg": `Pipeline task "unpinned-trusty-p" uses an unpinned task reference, oci://registry.local/trusty:1.0@`, "term": "trusty",
 		},
 	}
 
@@ -61,13 +61,13 @@ test_outdated_warning if {
 		{
 			"code": "trusted_task.current",
 			# regal ignore:line-length
-			"msg": "A newer version of task \"outadated-honest-abe-p\" exists. Please update before 2099-01-01T00:00:00Z. The current bundle is \"git+git.local/repo.git//tasks/honest-abe.yaml@37ef630394794f28142224295851a45eea5c63ae\" and the latest bundle ref is \"48df630394794f28142224295851a45eea5c63ae\"",
+			"msg": `A newer version of task "outadated-honest-abe-p" exists. Please update before 2099-01-01T00:00:00Z. The current bundle is "git+git.local/repo.git//tasks/honest-abe.yaml@37ef630394794f28142224295851a45eea5c63ae" and the latest bundle ref is "48df630394794f28142224295851a45eea5c63ae"`,
 			"term": "honest-abe",
 		},
 		{
 			"code": "trusted_task.current",
 			# regal ignore:line-length
-			"msg": "A newer version of task \"outdated-trusty-p\" exists. Please update before 2099-01-01T00:00:00Z. The current bundle is \"oci://registry.local/trusty:1.0@sha256:outdated-digest\" and the latest bundle ref is \"sha256:digest\"",
+			"msg": `A newer version of task "outdated-trusty-p" exists. Please update before 2099-01-01T00:00:00Z. The current bundle is "oci://registry.local/trusty:1.0@sha256:outdated-digest" and the latest bundle ref is "sha256:digest"`,
 			"term": "trusty",
 		},
 	}
@@ -95,30 +95,30 @@ test_trusted_violation if {
 	expected := {
 		{
 			"code": "trusted_task.trusted",
-			"msg": "Pipeline task \"crook-p\" uses an untrusted task reference, oci://registry.local/crook:1.0@sha256:digest",
+			"msg": `Pipeline task "crook-p" uses an untrusted task reference, oci://registry.local/crook:1.0@sha256:digest`,
 			"term": "crook",
 		},
 		{
 			"code": "trusted_task.trusted",
 			# regal ignore:line-length
-			"msg": "Pipeline task \"expired-honest-abe-p\" uses an untrusted task reference, git+git.local/repo.git//tasks/honest-abe.yaml@26ef630394794f28142224295851a45eea5c63ae",
+			"msg": `Pipeline task "expired-honest-abe-p" uses an untrusted task reference, git+git.local/repo.git//tasks/honest-abe.yaml@26ef630394794f28142224295851a45eea5c63ae`,
 			"term": "honest-abe",
 		},
 		{
 			"code": "trusted_task.trusted",
 			# regal ignore:line-length
-			"msg": "Pipeline task \"expired-trusty-p\" uses an untrusted task reference, oci://registry.local/trusty:1.0@sha256:expired-digest",
+			"msg": `Pipeline task "expired-trusty-p" uses an untrusted task reference, oci://registry.local/trusty:1.0@sha256:expired-digest`,
 			"term": "trusty",
 		},
 		{
 			# regal ignore:line-length
-			"code": "trusted_task.trusted", "msg": "Pipeline task \"inlined-p\" uses an untrusted task reference, <UNKNOWN>@<INLINED>",
+			"code": "trusted_task.trusted", "msg": `Pipeline task "inlined-p" uses an untrusted task reference, <UNKNOWN>@<INLINED>`,
 			"term": "<NAMELESS>",
 		},
 		{
 			"code": "trusted_task.trusted",
 			# regal ignore:line-length
-			"msg": "Pipeline task \"untrusted-lawless-p\" uses an untrusted task reference, git+git.local/repo.git//tasks/lawless.yaml@37ef630394794f28142224295851a45eea5c63ae",
+			"msg": `Pipeline task "untrusted-lawless-p" uses an untrusted task reference, git+git.local/repo.git//tasks/lawless.yaml@37ef630394794f28142224295851a45eea5c63ae`,
 			"term": "lawless",
 		},
 	}
@@ -138,7 +138,7 @@ test_trusted_artifact_tampering if {
 		{
 			"code": "trusted_task.trusted",
 			# regal ignore:line-length
-			"msg": "Code tampering detected, untrusted PipelineTask \"task_b\" (Task \"TaskB\") was included in build chain comprised of: task_a, task_b, task_c",
+			"msg": `Code tampering detected, untrusted PipelineTask "task_b" (Task "TaskB") was included in build chain comprised of: task_a, task_b, task_c`,
 			"term": "TaskB",
 		},
 		{
@@ -479,7 +479,7 @@ task_test_a := {
 	"invocation": {"parameters": {"B_ARTIFACT": artifact_b}},
 	"results": [{
 		"name": "TEST_OUTPUT",
-		"value": "{\"FAILED\": \"1\"}",
+		"value": `{"FAILED": "1"}`,
 		"type": "string",
 	}],
 	"ref": {"name": "TaskTestA", "kind": "Task", "bundle": trusted_bundle},

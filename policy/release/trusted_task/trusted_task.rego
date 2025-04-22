@@ -106,7 +106,7 @@ deny contains result if {
 # title: Trusted Artifact produced in pipeline
 # description: >-
 #   All input trusted artifacts must be produced on the pipeline. If they are not
-#   the artifact could have been injected by a rouge task.
+#   the artifact could have been injected by a rogue task.
 # custom:
 #   short_name: valid_trusted_artifact_inputs
 #   failure_msg: >-

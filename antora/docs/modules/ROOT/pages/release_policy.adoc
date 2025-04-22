@@ -2121,7 +2121,7 @@ Check if all Tekton Tasks use the latest known Task reference. When warnings wil
 [#trusted_task__valid_trusted_artifact_inputs]
 === link:#trusted_task__valid_trusted_artifact_inputs[Trusted Artifact produced in pipeline]
 
-All input trusted artifacts must be produced on the pipeline. If they are not the artifact could have been injected by a rouge task.
+All input trusted artifacts must be produced on the pipeline. If they are not the artifact could have been injected by a rogue task.
 
 *Solution*: Audit the pipeline to make sure all inputs are produced by the pipeline.
 

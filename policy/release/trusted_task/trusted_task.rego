@@ -15,6 +15,7 @@ package trusted_task
 import rego.v1
 
 import data.lib
+import data.lib.image
 import data.lib.tekton
 
 _supported_ta_uris_reg := {"oci:.*@sha256:[0-9a-f]{64}"}
@@ -305,6 +306,23 @@ _trusted_build_digests contains digest if {
 	tekton.is_trusted_task(build_task)
 	some result in tekton.task_results(build_task)
 	some digest in _digests_from_values(lib.result_values(result))
+}
+
+# If an image is part of the snapshot we assume that was built in Konflux and
+# therefore it is considered trustworthy. IIUC the use case is something to do
+# with building an image in one component, and being able to use it while
+# building another component in the same application.
+_trusted_build_digests contains digest if {
+	some component in input.snapshot.components
+	digest := image.parse(component.containerImage).digest
+
+	# From policy/lib/image/image_test.rego I think it's always going
+	# to be a string but let's be defensive and make sure of it
+	is_string(digest)
+
+	# Ensure we don't include empty strings in case
+	# component.containerImage doesn't include a digest
+	digest != ""
 }
 
 _digests_from_values(values) := {digest |

@@ -246,6 +246,14 @@ test_trusted_parameters if {
 		"msg": `The "image" parameter of the "task_image_index" PipelineTask includes an untrusted digest: sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff`,
 	}}) with data.trusted_tasks as trusted_tasks_data
 		with input.attestations as [evil_attestation]
+
+	# regal ignore:line-length
+	fake_component := {"containerImage": "registry.io/repository/image@sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}
+
+	# If that same digest was found in the snapshot then we assume that it's not actually evil and therefore permit it
+	lib.assert_empty(trusted_task.deny) with data.trusted_tasks as trusted_tasks_data
+		with input.attestations as [evil_attestation]
+		with input.snapshot.components as [fake_component]
 }
 
 test_data_missing if {

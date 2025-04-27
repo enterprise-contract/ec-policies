@@ -3,7 +3,7 @@
 This directory contains sample files meant to use in the acceptance test scenarios.
 
 [policy-input-golden-container.json](./policy-input-golden-container.json) holds the
-[policy input](https://conforma.dev/docs/ec-cli/main/policy_input.html) as used by the
+[policy input](https://conforma.dev/docs/ec-cli/policy_input.html) as used by the
 the EC CLI.
 
 The script `hack/refresh-examples.sh` will regenerate these files.

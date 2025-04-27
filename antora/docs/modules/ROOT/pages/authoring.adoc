@@ -55,9 +55,9 @@ further reference on annotations.
 
 == Input
 
-The https://conforma.dev/docs/ec-cli/main/index.html[ec-cli] is reponsible for gathering
+The https://conforma.dev/docs/ec-cli/index.html[ec-cli] is reponsible for gathering
 the information to be validated which is made available to policies via the `input` object. Its
-structure is defined https://conforma.dev/docs/ec-cli/main/policy_input.html[here].
+structure is defined https://conforma.dev/docs/ec-cli/policy_input.html[here].
 
 == Pitfalls
 

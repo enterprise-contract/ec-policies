@@ -25,7 +25,8 @@ import data.lib.tekton
 #   failure_msg: 'Multiple versions of the %q RPM were found: %s'
 #   collections:
 #   - redhat
-#   effective_on: 2025-04-28T00:00:00Z
+#   # Pushed back due to https://issues.redhat.com/browse/EC-1232
+#   effective_on: 2025-06-28T00:00:00Z
 #
 deny contains result if {
 	image.is_image_index(input.image.ref)

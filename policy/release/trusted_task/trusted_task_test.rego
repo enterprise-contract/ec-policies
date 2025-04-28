@@ -46,6 +46,25 @@ test_pinned_warning if {
 		with data.trusted_tasks as trusted_tasks_data
 }
 
+test_tagged_warning if {
+	att := {"statement": {"predicate": {
+		"buildType": lib.tekton_pipeline_run,
+		"buildConfig": {"tasks": [
+			trusted_bundle_pipeline_task,
+			untagged_bundle_pipeline_task,
+		]},
+	}}}
+
+	expected := {{
+		"code": "trusted_task.tagged",
+		# regal ignore:line-length
+		"msg": "Pipeline task \"untagged-trusty-p\" uses an untagged task reference, oci://registry.local/trusty@sha256:digest", "term": "trusty",
+	}}
+
+	lib.assert_equal_results(trusted_task.warn, expected) with input.attestations as [att]
+		with data.trusted_tasks as trusted_tasks_data
+}
+
 test_outdated_warning if {
 	att := {"statement": {"predicate": {
 		"buildType": lib.tekton_pipeline_run,
@@ -61,7 +80,7 @@ test_outdated_warning if {
 		{
 			"code": "trusted_task.current",
 			# regal ignore:line-length
-			"msg": `A newer version of task "outadated-honest-abe-p" exists. Please update before 2099-01-01T00:00:00Z. The current bundle is "git+git.local/repo.git//tasks/honest-abe.yaml@37ef630394794f28142224295851a45eea5c63ae" and the latest bundle ref is "48df630394794f28142224295851a45eea5c63ae"`,
+			"msg": `A newer version of task "outdated-honest-abe-p" exists. Please update before 2099-01-01T00:00:00Z. The current bundle is "git+git.local/repo.git//tasks/honest-abe.yaml@37ef630394794f28142224295851a45eea5c63ae" and the latest bundle ref is "48df630394794f28142224295851a45eea5c63ae"`,
 			"term": "honest-abe",
 		},
 		{
@@ -81,6 +100,7 @@ test_trusted_violation if {
 		"buildType": lib.tekton_pipeline_run,
 		"buildConfig": {"tasks": [
 			trusted_bundle_pipeline_task,
+			untagged_bundle_pipeline_task,
 			outdated_bundle_pipeline_task,
 			unknown_bundle_pipeline_task,
 			expired_bundle_pipeline_task,
@@ -326,6 +346,15 @@ unpinned_bundle_pipeline_task := {
 	]},
 }
 
+untagged_bundle_pipeline_task := {
+	"name": "untagged-trusty-p",
+	"ref": {"resolver": "bundles", "params": [
+		{"name": "bundle", "value": "registry.local/trusty@sha256:digest"},
+		{"name": "name", "value": "trusty"},
+		{"name": "kind", "value": "task"},
+	]},
+}
+
 unknown_bundle_pipeline_task := {
 	"name": "crook-p",
 	"ref": {"resolver": "bundles", "params": [
@@ -352,7 +381,7 @@ trusted_git_pipeline_task := {
 newest_git_pipeline_task := trusted_git_pipeline_task
 
 outdated_git_pipeline_task := {
-	"name": "outadated-honest-abe-p",
+	"name": "outdated-honest-abe-p",
 	"ref": {"resolver": "git", "params": [
 		{"name": "revision", "value": "37ef630394794f28142224295851a45eea5c63ae"},
 		{"name": "pathInRepo", "value": "tasks/honest-abe.yaml"},

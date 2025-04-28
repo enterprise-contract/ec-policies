@@ -1075,7 +1075,7 @@ Check if there is more than one version of the same RPM installed across differe
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Multiple versions of the %q RPM were found: %s`
 * Code: `rpm_packages.unique_version`
-* Effective from: `2025-04-28T00:00:00Z`
+* Effective from: `2025-06-28T00:00:00Z`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/rpm_packages/rpm_packages.rego#L17[Source, window="_blank"]
 
 [#rpm_pipeline_package]

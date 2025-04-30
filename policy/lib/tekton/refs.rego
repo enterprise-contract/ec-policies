@@ -15,7 +15,7 @@ import data.lib.image
 # a bundle is not used in neither format. The "else" usage in this function ensures the
 # same precendence order is honored.
 # regal ignore:rule-length
-task_ref(task) := i if {
+task_ref(task) := j if {
 	# Handle old-style bundle reference
 	r := _ref(task)
 	bundle := r.bundle
@@ -29,7 +29,9 @@ task_ref(task) := i if {
 		},
 		pinned_ref,
 	)
-} else := i if {
+	tagged_ref := _tagged_ref_for_bundle(bundle)
+	j = _with_tagged_ref(i, tagged_ref)
+} else := j if {
 	# Handle bundle-resolver reference
 	r := _ref(task)
 	r.resolver == "bundles"
@@ -44,6 +46,8 @@ task_ref(task) := i if {
 		},
 		pinned_ref,
 	)
+	tagged_ref := _tagged_ref_for_bundle(bundle)
+	j = _with_tagged_ref(i, tagged_ref)
 } else := i if {
 	r := _ref(task)
 	r.resolver == "git"
@@ -155,6 +159,11 @@ _with_git_suffix(url) := with_suffix if {
 	with_suffix := sprintf("%s.git", [url])
 } else := url
 
+_tagged_ref_for_bundle(bundle) := tag if {
+	parts := image.parse(bundle)
+	tag := parts.tag
+} else := ""
+
 _pinned_ref_for_bundle(bundle) := digest if {
 	parts := image.parse(bundle)
 	digest := parts.digest
@@ -163,6 +172,16 @@ _pinned_ref_for_bundle(bundle) := digest if {
 _pinned_ref_for_git(revision) := revision if {
 	_is_sha1(revision)
 } else := ""
+
+_with_tagged_ref(obj, tagged_ref) := new_obj if {
+	tagged_ref != ""
+	new_obj := object.union(obj, {
+		"tagged": true,
+		"tagged_ref": tagged_ref,
+	})
+} else := new_obj if {
+	new_obj := object.union(obj, {"tagged": false})
+}
 
 _with_pinned_ref(obj, pinned_ref) := new_obj if {
 	pinned_ref != ""

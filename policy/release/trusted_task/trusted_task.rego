@@ -23,6 +23,30 @@ _supported_ta_uris_reg := {"oci:.*@sha256:[0-9a-f]{64}"}
 _digest_patterns := {`sha256:[0-9a-f]{64}`}
 
 # METADATA
+# title: Task references are tagged
+# description: >-
+#   Check if all Tekton Tasks defined with the bundle format contain a tag reference.
+# custom:
+#   short_name: tagged
+#   failure_msg: Pipeline task %q uses an untagged task reference, %s
+#   solution: >-
+#     Update the Pipeline definition so that all Task references have a tagged value as mentioned
+#     in the description.
+#   collections:
+#   - redhat
+#   - redhat_rpms
+#   effective_on: 2024-05-07T00:00:00Z
+#
+warn contains result if {
+	some task in tekton.untagged_task_references(lib.tasks_from_pipelinerun)
+	result := lib.result_helper_with_term(
+		rego.metadata.chain(),
+		[tekton.pipeline_task_name(task), _task_info(task)],
+		tekton.task_name(task),
+	)
+}
+
+# METADATA
 # title: Task references are pinned
 # description: >-
 #   Check if all Tekton Tasks use a Task definition by a pinned reference. When using the git

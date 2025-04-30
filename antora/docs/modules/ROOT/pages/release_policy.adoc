@@ -203,6 +203,7 @@ Rules included:
 * xref:release_policy.adoc#test__test_results_found[Test: Test data includes results key]
 * xref:release_policy.adoc#trusted_task__data_format[Trusted Task checks: Data format]
 * xref:release_policy.adoc#trusted_task__pinned[Trusted Task checks: Task references are pinned]
+* xref:release_policy.adoc#trusted_task__tagged[Trusted Task checks: Task references are tagged]
 * xref:release_policy.adoc#trusted_task__data[Trusted Task checks: Task tracking data was provided]
 * xref:release_policy.adoc#trusted_task__trusted[Trusted Task checks: Tasks are trusted]
 * xref:release_policy.adoc#trusted_task__current[Trusted Task checks: Tasks using the latest versions]
@@ -276,6 +277,7 @@ Rules included:
 * xref:release_policy.adoc#test__test_results_found[Test: Test data includes results key]
 * xref:release_policy.adoc#trusted_task__data_format[Trusted Task checks: Data format]
 * xref:release_policy.adoc#trusted_task__pinned[Trusted Task checks: Task references are pinned]
+* xref:release_policy.adoc#trusted_task__tagged[Trusted Task checks: Task references are tagged]
 * xref:release_policy.adoc#trusted_task__data[Trusted Task checks: Task tracking data was provided]
 * xref:release_policy.adoc#trusted_task__current[Trusted Task checks: Tasks using the latest versions]
 * xref:release_policy.adoc#trusted_task__valid_trusted_artifact_inputs[Trusted Task checks: Trusted Artifact produced in pipeline]
@@ -2064,7 +2066,7 @@ Confirm the expected `trusted_tasks` data keys have been provided in the expecte
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `trusted_task.data_format`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L195[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L219[Source, window="_blank"]
 
 [#trusted_task__pinned]
 === link:#trusted_task__pinned[Task references are pinned]
@@ -2076,6 +2078,19 @@ Check if all Tekton Tasks use a Task definition by a pinned reference. When usin
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Pipeline task %q uses an unpinned task reference, %s`
 * Code: `trusted_task.pinned`
+* Effective from: `2024-05-07T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L49[Source, window="_blank"]
+
+[#trusted_task__tagged]
+=== link:#trusted_task__tagged[Task references are tagged]
+
+Check if all Tekton Tasks defined with the bundle format contain a tag reference.
+
+*Solution*: Update the Pipeline definition so that all Task references have a tagged value as mentioned in the description.
+
+* Rule type: [rule-type-indicator warning]#WARNING#
+* WARNING message: `Pipeline task %q uses an untagged task reference, %s`
+* Code: `trusted_task.tagged`
 * Effective from: `2024-05-07T00:00:00Z`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L25[Source, window="_blank"]
 
@@ -2090,7 +2105,7 @@ Confirm the `trusted_tasks` rule data was provided, since it's required by the p
 * FAILURE message: `Missing required trusted_tasks data`
 * Code: `trusted_task.data`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L144[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L168[Source, window="_blank"]
 
 [#trusted_task__trusted]
 === link:#trusted_task__trusted[Tasks are trusted]
@@ -2103,7 +2118,7 @@ Check the trust of the Tekton Tasks used in the build Pipeline. There are two mo
 * FAILURE message: `%s`
 * Code: `trusted_task.trusted`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L80[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L104[Source, window="_blank"]
 
 [#trusted_task__current]
 === link:#trusted_task__current[Tasks using the latest versions]
@@ -2116,7 +2131,7 @@ Check if all Tekton Tasks use the latest known Task reference. When warnings wil
 * WARNING message: `A newer version of task %q exists. Please update before %s. The current bundle is %q and the latest bundle ref is %q`
 * Code: `trusted_task.current`
 * Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L51[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L75[Source, window="_blank"]
 
 [#trusted_task__valid_trusted_artifact_inputs]
 === link:#trusted_task__valid_trusted_artifact_inputs[Trusted Artifact produced in pipeline]
@@ -2128,7 +2143,7 @@ All input trusted artifacts must be produced on the pipeline. If they are not th
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Code tampering detected, input %q for task %q was not produced by the pipeline as attested.`
 * Code: `trusted_task.valid_trusted_artifact_inputs`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L106[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L130[Source, window="_blank"]
 
 [#trusted_task__trusted_parameters]
 === link:#trusted_task__trusted_parameters[Trusted parameters]
@@ -2141,7 +2156,7 @@ Confirm certain parameters provided to each builder Task have come from trusted 
 * FAILURE message: `The %q parameter of the %q PipelineTask includes an untrusted digest: %s`
 * Code: `trusted_task.trusted_parameters`
 * Effective from: `2021-07-04T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L164[Source, window="_blank"]
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L188[Source, window="_blank"]
 
 [#rpm_ostree_task_package]
 == link:#rpm_ostree_task_package[rpm-ostree Task]

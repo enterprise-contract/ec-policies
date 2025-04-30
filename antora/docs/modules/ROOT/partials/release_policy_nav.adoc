@@ -165,6 +165,7 @@
 *** xref:release_policy.adoc#trusted_task_package[Trusted Task checks]
 **** xref:release_policy.adoc#trusted_task__data_format[Data format]
 **** xref:release_policy.adoc#trusted_task__pinned[Task references are pinned]
+**** xref:release_policy.adoc#trusted_task__tagged[Task references are tagged]
 **** xref:release_policy.adoc#trusted_task__data[Task tracking data was provided]
 **** xref:release_policy.adoc#trusted_task__trusted[Tasks are trusted]
 **** xref:release_policy.adoc#trusted_task__current[Tasks using the latest versions]

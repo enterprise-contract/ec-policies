@@ -28,36 +28,42 @@ _git_key := "git+https://git.local/repo.git//tasks/test.yaml"
 test_bundle_in_definition if {
 	lib.assert_equal(
 		tekton.task_ref({"taskRef": {"bundle": _image, "name": "test", "kind": "Task"}}),
-		{"bundle": _image, "kind": "task", "name": "test", "pinned": true, "pinned_ref": _image_digest, "key": _image_key},
+		# regal ignore:line-length
+		{"bundle": _image, "kind": "task", "name": "test", "pinned": true, "pinned_ref": _image_digest, "tagged": false, "key": _image_key},
 	)
 
 	lib.assert_equal(
 		tekton.task_ref({"taskRef": {"bundle": _unpinned_image, "name": "test", "kind": "Task"}}),
-		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false, "key": _unpinned_image_key},
+		# regal ignore:line-length
+		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false, "tagged": true, "tagged_ref": "latest", "key": _unpinned_image_key},
 	)
 }
 
 test_bundle_in_slsa_v1_0 if {
 	lib.assert_equal(
 		tekton.task_ref({"spec": {"taskRef": {"name": "test", "kind": "Task", "bundle": _image}}}),
-		{"bundle": _image, "kind": "task", "name": "test", "pinned": true, "pinned_ref": _image_digest, "key": _image_key},
+		# regal ignore:line-length
+		{"bundle": _image, "kind": "task", "name": "test", "pinned": true, "pinned_ref": _image_digest, "tagged": false, "key": _image_key},
 	)
 
 	lib.assert_equal(
 		tekton.task_ref({"spec": {"taskRef": {"name": "test", "kind": "Task", "bundle": _unpinned_image}}}),
-		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false, "key": _unpinned_image_key},
+		# regal ignore:line-length
+		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false, "tagged": true, "tagged_ref": "latest", "key": _unpinned_image_key},
 	)
 }
 
 test_bundle_in_slsa_v0_2 if {
 	lib.assert_equal(
 		tekton.task_ref({"ref": {"name": "test", "kind": "Task", "bundle": _image}}),
-		{"bundle": _image, "kind": "task", "name": "test", "pinned": true, "pinned_ref": _image_digest, "key": _image_key},
+		# regal ignore:line-length
+		{"bundle": _image, "kind": "task", "name": "test", "pinned": true, "pinned_ref": _image_digest, "tagged": false, "key": _image_key},
 	)
 
 	lib.assert_equal(
 		tekton.task_ref({"ref": {"name": "test", "kind": "Task", "bundle": _unpinned_image}}),
-		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false, "key": _unpinned_image_key},
+		# regal ignore:line-length
+		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false, "tagged": true, "tagged_ref": "latest", "key": _unpinned_image_key},
 	)
 }
 
@@ -68,7 +74,8 @@ test_bundles_resolver_in_definition if {
 			{"name": "name", "value": "test"},
 			{"name": "kind", "value": "task"},
 		]}}),
-		{"bundle": _image, "kind": "task", "name": "test", "pinned": true, "pinned_ref": _image_digest, "key": _image_key},
+		# regal ignore:line-length
+		{"bundle": _image, "kind": "task", "name": "test", "pinned": true, "pinned_ref": _image_digest, "tagged": false, "key": _image_key},
 	)
 
 	lib.assert_equal(
@@ -77,7 +84,8 @@ test_bundles_resolver_in_definition if {
 			{"name": "name", "value": "test"},
 			{"name": "kind", "value": "task"},
 		]}}),
-		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false, "key": _unpinned_image_key},
+		# regal ignore:line-length
+		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false, "tagged": true, "tagged_ref": "latest", "key": _unpinned_image_key},
 	)
 }
 
@@ -88,7 +96,8 @@ test_bundles_resolver_in_slsa_v1_0 if {
 			{"name": "name", "value": "test"},
 			{"name": "kind", "value": "task"},
 		]}}}),
-		{"bundle": _image, "kind": "task", "name": "test", "pinned": true, "pinned_ref": _image_digest, "key": _image_key},
+		# regal ignore:line-length
+		{"bundle": _image, "kind": "task", "name": "test", "pinned": true, "pinned_ref": _image_digest, "tagged": false, "key": _image_key},
 	)
 
 	lib.assert_equal(
@@ -97,7 +106,8 @@ test_bundles_resolver_in_slsa_v1_0 if {
 			{"name": "name", "value": "test"},
 			{"name": "kind", "value": "task"},
 		]}}}),
-		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false, "key": _unpinned_image_key},
+		# regal ignore:line-length
+		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false, "tagged": true, "tagged_ref": "latest", "key": _unpinned_image_key},
 	)
 }
 
@@ -108,7 +118,8 @@ test_bundles_resolver_in_slsa_v0_2 if {
 			{"name": "name", "value": "test"},
 			{"name": "kind", "value": "task"},
 		]}}),
-		{"bundle": _image, "kind": "task", "name": "test", "pinned": true, "pinned_ref": _image_digest, "key": _image_key},
+		# regal ignore:line-length
+		{"bundle": _image, "kind": "task", "name": "test", "pinned": true, "pinned_ref": _image_digest, "tagged": false, "key": _image_key},
 	)
 
 	lib.assert_equal(
@@ -117,7 +128,8 @@ test_bundles_resolver_in_slsa_v0_2 if {
 			{"name": "name", "value": "test"},
 			{"name": "kind", "value": "task"},
 		]}}),
-		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false, "key": _unpinned_image_key},
+		# regal ignore:line-length
+		{"bundle": _unpinned_image, "kind": "task", "name": "test", "pinned": false, "tagged": true, "tagged_ref": "latest", "key": _unpinned_image_key},
 	)
 }
 
@@ -324,7 +336,7 @@ test_bundle_with_defaults if {
 	lib.assert_equal(
 		tekton.task_ref({"ref": {"bundle": _image}}),
 		# regal ignore:line-length
-		{"bundle": _image, "kind": "task", "name": tekton._no_task_name, "pinned": true, "pinned_ref": _image_digest, "key": _image_key},
+		{"bundle": _image, "kind": "task", "name": tekton._no_task_name, "pinned": true, "pinned_ref": _image_digest, "tagged": false, "key": _image_key},
 	)
 }
 
@@ -332,6 +344,6 @@ test_bundle_resolver_with_defaults if {
 	lib.assert_equal(
 		tekton.task_ref({"ref": {"resolver": "bundles", "params": [{"name": "bundle", "value": _image}]}}),
 		# regal ignore:line-length
-		{"bundle": _image, "kind": "task", "name": tekton._no_task_name, "pinned": true, "pinned_ref": _image_digest, "key": _image_key},
+		{"bundle": _image, "kind": "task", "name": tekton._no_task_name, "pinned": true, "pinned_ref": _image_digest, "tagged": false, "key": _image_key},
 	)
 }

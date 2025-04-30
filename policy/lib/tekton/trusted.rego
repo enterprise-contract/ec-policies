@@ -8,6 +8,14 @@ import data.lib.time as time_lib
 # regal ignore:prefer-package-imports
 import data.lib.rule_data as lib_rule_data
 
+# Returns a subset of tasks that use untagged bundle Task references.
+untagged_task_references(tasks) := {task |
+	some task in tasks
+	ref := task_ref(task)
+	ref.bundle
+	not ref.tagged
+}
+
 # Returns a subset of tasks that use unpinned Task references.
 unpinned_task_references(tasks) := {task |
 	some task in tasks
@@ -50,14 +58,30 @@ untrusted_task_refs(tasks) := {task |
 # Returns true if the task uses a trusted Task reference.
 is_trusted_task(task) if {
 	ref := task_ref(task)
-	records := _trusted_tasks[ref.key]
 
-	some record in records
+	some record in trusted_task_records(ref.key)
 
 	# A trusted task reference is one that is recorded in the trusted tasks data, this is done by
 	# matching its pinned reference; note no care is given to the expiry or freshness since expired
 	# records have already been filtered out.
 	record.ref == ref.pinned_ref
+}
+
+trusted_task_records(ref_key) := records if {
+	# the reference key matches exactly the key in the trusted tasks set
+	records := _trusted_tasks[ref_key]
+	count(records) > 0
+} else := records if {
+	startswith(ref_key, "oci://") # only for oci refs
+	records := [match |
+		some key, matches in _trusted_tasks
+		short_key := regex.replace(key, `:[0-9.]+$`, "")
+		ref_key == short_key
+		some match in matches
+	]
+} else := records if {
+	# If the key is not found, default to an empty list
+	records := []
 }
 
 latest_trusted_ref(task) := trusted_task_ref if {

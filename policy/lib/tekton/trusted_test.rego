@@ -135,6 +135,21 @@ test_is_trusted_task if {
 	tekton.is_trusted_task(newest_trusted_git_task) with data.trusted_tasks as future_trusted_tasks
 }
 
+test_trusted_task_records if {
+	task_ref_expected_matches := {
+		"oci://registry.local/trusty:1.0": 3,
+		"oci://registry.local/trusty": 3,
+		"git+git.local/repo.git//tasks/honest-abe.yaml": 2,
+		"git+git.local/repo.git//tasks/untrusted.yaml": 0,
+		"oci://reg": 0,
+	}
+
+	every ref, expected in task_ref_expected_matches {
+		records := tekton.trusted_task_records(ref) with data.trusted_tasks as trusted_tasks
+		lib.assert_equal(expected, count(records))
+	}
+}
+
 test_rule_data_merging if {
 	lib.assert_equal(tekton._trusted_tasks_data.foo, "baz") with data.trusted_tasks as {"foo": "baz"}
 

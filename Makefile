@@ -323,3 +323,15 @@ acceptance: ## Run acceptance tests
 	@cd acceptance && go test ./...
 
 #--------------------------------------------------------------------
+
+##@ IDE Binaries
+
+bin/ec: go.mod ## Create the EC binary
+	@go build -o bin/ec github.com/enterprise-contract/ec-cli
+
+bin/regal: go.mod regal.go ## Create the regal binary
+	@go build -o bin/regal regal.go
+
+.PHONY: ide-binaries
+ide-binaries: bin/ec bin/regal ## Build binaries for IDE integration
+#--------------------------------------------------------------------

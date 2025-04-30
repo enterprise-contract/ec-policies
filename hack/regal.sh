@@ -19,5 +19,5 @@
 # the expected regal version is used.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-# exec go run github.com/styrainc/regal "$@"
-exec go run regal.go "$@"
+make --silent bin/regal
+exec bin/regal "$@"

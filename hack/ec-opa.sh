@@ -19,4 +19,5 @@
 # by EC, e.g. ec.oci.image_files, a custom version of OPA is required.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-exec go run github.com/enterprise-contract/ec-cli opa "$@"
+make --silent bin/ec
+exec bin/ec opa "$@"

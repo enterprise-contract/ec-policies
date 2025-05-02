@@ -5,7 +5,7 @@
 #   Rules used to verify different properties of specific RPM packages found in the SBOM of the
 #   image being validated.
 #
-package policy.release.rpm_packages
+package rpm_packages
 
 import rego.v1
 

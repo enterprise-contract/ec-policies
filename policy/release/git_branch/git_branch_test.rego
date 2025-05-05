@@ -3,14 +3,14 @@ package git_branch_test
 import rego.v1
 import data.lib
 
-rule_data := {
+mock_rule_data := {
   "git_branch": {
     "allowed_branch_patterns": ["^refs/heads/main$", "^refs/heads/release-[23]$"]
   }
 }
 
 test_deny_with_disallowed_branch {
-  input := {
+  mock_input := {
     "attestations": [{
       "statement": {
         "predicate": {
@@ -30,15 +30,16 @@ test_deny_with_disallowed_branch {
     }]
   }
 
-  data := {"rule_data": rule_data}
+  expected := [{
+    "msg": "invalid branch",
+    "details": ["invalid branch", "refs/heads/feature-branch"]
+  }]
 
-  deny contains result
-  result.msg == "invalid branch"
-  result.details[1] == "refs/heads/feature-branch"
+  lib.assert_equal_results(expected, deny) with input as mock_input with data.rule_data as mock_rule_data
 }
 
 test_deny_with_unmatched_branch {
-  input := {
+  mock_input := {
     "attestations": [{
       "statement": {
         "predicate": {
@@ -58,15 +59,16 @@ test_deny_with_unmatched_branch {
     }]
   }
 
-  data := {"rule_data": rule_data}
+  expected := [{
+    "msg": "invalid branch",
+    "details": ["invalid branch", "refs/heads/release-1"]
+  }]
 
-  deny contains result
-  result.msg == "invalid branch"
-  result.details[1] == "refs/heads/feature-branch"
+  lib.assert_equal_results(expected, deny) with input as mock_input with data.rule_data as mock_rule_data
 }
 
 test_allow_with_main_branch {
-  input := {
+  mock_input := {
     "attestations": [{
       "statement": {
         "predicate": {
@@ -86,13 +88,13 @@ test_allow_with_main_branch {
     }]
   }
 
-  data := {"rule_data": rule_data}
+  expected := []
 
-  not deny[result]
+  lib.assert_equal_results(expected, deny) with input as mock_input with data.rule_data as mock_rule_data
 }
 
 test_allow_with_release_branch {
-  input := {
+  mock_input := {
     "attestations": [{
       "statement": {
         "predicate": {
@@ -112,7 +114,7 @@ test_allow_with_release_branch {
     }]
   }
 
-  data := {"rule_data": rule_data}
+  expected := []
 
-  not deny[result]
+  lib.assert_equal_results(expected, deny) with input as mock_input with data.rule_data as mock_rule_data
 }

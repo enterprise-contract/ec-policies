@@ -10,10 +10,7 @@ import data.lib
 #   short_name: git_protected_branch_required
 #   failure_msg: Build is not from a trusted branch
 #   collections:
-#   - minimal
-#   - redhat
-
-default deny = []
+#   - redhat_rpms
 
 deny contains result if {
   some task in input.attestations[_].statement.predicate.buildConfig.tasks

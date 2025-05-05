@@ -320,13 +320,14 @@ deny contains result if {
 # METADATA
 # title: OLM bundle images are not multi-arch
 # description: >-
-#   OLM bundle images should be multi-arch. It should not be an OCI image index
-#   nor should it be a Docker v2s2 manifest list.
+#   OLM bundle images should be built for a single architecture. They should
+#   not be OCI image indexes nor should they be Docker v2s2 manifest lists.
 # custom:
 #   short_name: olm_bundle_multi_arch
 #   failure_msg: The %q bundle image is a multi-arch reference.
 #   solution: >-
-#     Rebuild your bundle image without creating an image index.
+#     Rebuild your bundle image using a single architecture (e.g.
+#     `linux/amd64`). Do not create an image index for the OLM bundle.
 #   collections:
 #   - redhat
 #   effective_on: 2025-5-01T00:00:00Z

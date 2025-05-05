@@ -1,11 +1,11 @@
-package policy.release.rpm_packages_test
+package rpm_packages_test
 
 import rego.v1
 
 import data.lib
 import data.lib.tekton_test
 import data.lib_test
-import data.policy.release.rpm_packages
+import data.rpm_packages
 
 test_success_cyclonedx if {
 	att := _attestation_with_sboms([_cyclonedx_url_1, _cyclonedx_url_1])
@@ -29,7 +29,7 @@ test_failure_cyclonedx if {
 	att := _attestation_with_sboms([_cyclonedx_url_1, _cyclonedx_url_2])
 
 	expected := {{
-		"code": "policy.release.rpm_packages.unique_version",
+		"code": "rpm_packages.unique_version",
 		"msg": "Multiple versions of the \"spam\" RPM were found: 1.0.0-1, 1.0.0-2",
 		"term": "spam",
 	}}
@@ -44,7 +44,7 @@ test_failure_spdx if {
 	att := _attestation_with_sboms([_spdx_url_1, _spdx_url_2])
 
 	expected := {{
-		"code": "policy.release.rpm_packages.unique_version",
+		"code": "rpm_packages.unique_version",
 		"msg": "Multiple versions of the \"spam\" RPM were found: 1.0.0-1, 1.0.0-2",
 		"term": "spam",
 	}}

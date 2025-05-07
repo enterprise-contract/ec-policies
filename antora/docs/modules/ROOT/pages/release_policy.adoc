@@ -871,9 +871,9 @@ Each image referenced by the OLM bundle should match an entry in the list of pre
 [#olm__olm_bundle_multi_arch]
 === link:#olm__olm_bundle_multi_arch[OLM bundle images are not multi-arch]
 
-OLM bundle images should be multi-arch. It should not be an OCI image index nor should it be a Docker v2s2 manifest list.
+OLM bundle images should be built for a single architecture. They should not be OCI image indexes nor should they be Docker v2s2 manifest lists.
 
-*Solution*: Rebuild your bundle image without creating an image index.
+*Solution*: Rebuild your bundle image using a single architecture (e.g. `linux/amd64`). Do not create an image index for the OLM bundle.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The %q bundle image is a multi-arch reference.`

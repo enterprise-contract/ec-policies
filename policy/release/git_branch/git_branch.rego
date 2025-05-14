@@ -11,6 +11,7 @@ import data.lib
 #   failure_msg: Build is not from a trusted branch
 #   collections:
 #   - redhat_rpms
+#   effective_on: 2025-07-01
 
 deny contains result if {
   some task in input.attestations[_].statement.predicate.buildConfig.tasks

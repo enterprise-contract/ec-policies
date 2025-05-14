@@ -30,7 +30,11 @@ git_branch_test_case(branch, expected_results) = passed {
     }
   }
 
-  lib.assert_equal_results(expected_results, deny) with input as mock_input with data.rule_data as mock_rule_data
+  mock_tasks := mock_input.attestations[0].statement.predicate.buildConfig.tasks
+  lib.assert_equal_results(expected_results, deny)
+    with input as mock_input
+    with data.rule_data as mock_rule_data
+    with data.lib.tasks_from_pipelinerun as mock_tasks
 
   passed := true
 }

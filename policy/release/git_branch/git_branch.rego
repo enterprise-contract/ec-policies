@@ -7,7 +7,7 @@ import data.lib
 # title: Only allow builds from a trusted branch
 # description: Build must originate from a configured branch pattern (e.g., 'refs/heads/main')
 # custom:
-#   short_name: git_protected_branch_required
+#   short_name: git_branch
 #   failure_msg: Build is not from a trusted branch
 #   collections:
 #   - redhat_rpms
@@ -22,6 +22,6 @@ deny contains result if {
 }
 
 matches_any(branch) {
-  some pattern in data.rule_data.git_branch.allowed_branch_patterns[_]
+  some pattern in lib.rule_data("allowed_branch_patterns")
   regex.match(pattern, branch)
 }

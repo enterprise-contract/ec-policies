@@ -2049,6 +2049,23 @@ Each test result is expected to have a `results` key. Verify that the `results` 
 * Code: `test.test_results_found`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test/test.rego#L88[Source, window="_blank"]
 
+[#test_results_package]
+== link:#test_results_package[Test Results Attestation]
+
+Rules that verify the test results attestations associated with the image being verified.
+
+* Package name: `test_results`
+
+[#test_results__valid]
+=== link:#test_results__valid[Test Results Attestation]
+
+Verify that the image has at least one valid test results attestation with a passing result. By default the same sigstore options used to verify the image are also used to verify the test results attestations. Any test results attestations signed with a different key, or identity, will be ignored. Use the `test_result_sigstore_opts` rule_data to configure alternate sigstore options for the test results attestations.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `test_results.valid`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/test_results/test_results.rego#L14[Source, window="_blank"]
+
 [#trusted_task_package]
 == link:#trusted_task_package[Trusted Task checks]
 

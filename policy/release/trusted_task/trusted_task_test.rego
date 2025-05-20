@@ -173,6 +173,32 @@ test_trusted_artifact_tampering if {
 		with input.attestations as [evil_attestation]
 }
 
+test_trusted_artifact_outdated if {
+	attestation_with_outdated_task := json.patch(attestation_ta, [{
+		"op": "replace",
+		"path": "/statement/predicate/buildConfig/tasks/1/ref/bundle",
+		"value": outdated_bundle,
+	}])
+
+	expected := {
+		{
+			"code": "trusted_task.trusted",
+			# regal ignore:line-length
+			"msg": `Untrusted version of PipelineTask "task_b" (Task "TaskB") was included in build chain comprised of: task_a, task_b, task_c. Please upgrade the task version to: sha256:digest`,
+			"term": "TaskB",
+		},
+		{
+			"code": "trusted_task.trusted",
+			# regal ignore:line-length
+			"msg": `Untrusted version of PipelineTask "task_b" (Task "TaskB") was included in build chain comprised of: task_b, task_c, task_test_a. Please upgrade the task version to: sha256:digest`,
+			"term": "TaskB",
+		},
+	}
+
+	lib.assert_equal_results(trusted_task.deny, expected) with data.trusted_tasks as trusted_tasks_data
+		with input.attestations as [attestation_with_outdated_task]
+}
+
 test_trusted_artifact_test_tasks if {
 	lib.assert_empty(trusted_task.deny) with data.trusted_tasks as trusted_tasks_data
 		with input.attestations as [attestation_ta]
@@ -444,6 +470,8 @@ artifact_d := "oci:registry.io/repository/image@sha256:ddddddddddddddddddddddddd
 image_a_digest := "sha256:49a6fd43239ae41643426daefc5239857a1cc1a6f2c1595f88965d7de88efcb9"
 
 image_index_digest := "sha256:6e69e396950defe6ff7981636e30498f99128310a4ee37a87c48729888cb77b3"
+
+outdated_bundle := "registry.local/trusty:1.0@sha256:outdated"
 
 trusted_bundle := "registry.local/trusty:1.0@sha256:digest"
 

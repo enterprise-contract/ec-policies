@@ -76,7 +76,7 @@ deny contains result if {
 #   in the Pipeline definition.
 # custom:
 #   short_name: missing_required_task
-#   failure_msg: '%s is missing'
+#   failure_msg: '%s is missing or outdated'
 deny contains result if {
 	count(tekton.tasks(input)) > 0
 

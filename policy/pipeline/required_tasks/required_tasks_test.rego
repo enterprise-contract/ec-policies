@@ -274,12 +274,12 @@ test_one_of_required_tasks_missing if {
 	expected := {
 		{
 			"code": "required_tasks.missing_required_task",
-			"msg": `One of "c1", "c2", "c3" tasks is missing`,
+			"msg": `One of "c1", "c2", "c3" tasks is missing or outdated`,
 			"term": ["c1", "c2", "c3"],
 		},
 		{
 			"code": "required_tasks.missing_required_task",
-			"msg": `One of "d1", "d3" tasks is missing`,
+			"msg": `One of "d1", "d3" tasks is missing or outdated`,
 			"term": ["d1", "d3"],
 		},
 	}
@@ -376,7 +376,7 @@ _missing_tasks_violation(tasks) := {error |
 	some task in tasks
 	error := {
 		"code": "required_tasks.missing_required_task",
-		"msg": sprintf("Required task %q is missing", [task]),
+		"msg": sprintf("Required task %q is missing or outdated", [task]),
 		"term": task,
 	}
 }
@@ -385,7 +385,7 @@ _missing_default_tasks_violation(tasks) := {error |
 	some task in tasks
 	error := {
 		"code": "required_tasks.missing_required_task",
-		"msg": sprintf("Required task %q is missing", [task]),
+		"msg": sprintf("Required task %q is missing or outdated", [task]),
 		"term": task,
 	}
 }

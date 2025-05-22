@@ -111,7 +111,7 @@ Produce a warning when a task that will be required in the future is not current
 Ensure that the set of required tasks is included in the Pipeline definition.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s is missing`
+* FAILURE message: `%s is missing or outdated`
 * Code: `required_tasks.missing_required_task`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/required_tasks/required_tasks.rego#L72[Source, window="_blank"]
 

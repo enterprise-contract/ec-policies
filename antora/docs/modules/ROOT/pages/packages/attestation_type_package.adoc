@@ -1,0 +1,60 @@
+= Attestation type
+
+Sanity checks related to the format of the image build's attestation.
+
+== Package name
+
+* `attestation_type`
+
+== Rules included:
+
+:numbered:
+
+[#attestation_type__deprecated_policy_attestation_format]
+=== link:#attestation_type__deprecated_policy_attestation_format[Deprecated policy attestation format]
+
+The Conforma CLI now places the attestation data in a different location. This check fails if the expected new format is not found.
+
+*Solution*: Use a newer version of the Conforma CLI.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Deprecated policy attestation format found`
+* Code: `attestation_type.deprecated_policy_attestation_format`
+* Effective from: `2023-08-31T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L78[Source, window="_blank"]
+
+[#attestation_type__known_attestation_type]
+=== link:#attestation_type__known_attestation_type[Known attestation type found]
+
+Confirm the attestation found for the image has a known attestation type.
+
+*Solution*: Make sure the "_type" field in the attestation is supported. Supported types are configured in xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Unknown attestation type '%s'`
+* Code: `attestation_type.known_attestation_type`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L14[Source, window="_blank"]
+
+[#attestation_type__known_attestation_types_provided]
+=== link:#attestation_type__known_attestation_types_provided[Known attestation types provided]
+
+Confirm the `known_attestation_types` rule data was provided.
+
+*Solution*: Provide a list of known attestation types.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `attestation_type.known_attestation_types_provided`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L41[Source, window="_blank"]
+
+[#attestation_type__pipelinerun_attestation_found]
+=== link:#attestation_type__pipelinerun_attestation_found[PipelineRun attestation found]
+
+Confirm at least one PipelineRun attestation is present.
+
+*Solution*: Make sure the attestation being verified was generated from a Tekton pipelineRun.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Missing pipelinerun attestation`
+* Code: `attestation_type.pipelinerun_attestation_found`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L59[Source, window="_blank"]

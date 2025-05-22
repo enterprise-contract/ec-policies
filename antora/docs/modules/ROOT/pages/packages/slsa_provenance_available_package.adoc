@@ -1,0 +1,35 @@
+= SLSA - Provenance - Available
+
+The SLSA Provenance Available requirement states the following:
+"The provenance is available to the consumer in a format that the consumer accepts. The format SHOULD be in-toto SLSA Provenance, but another format MAY be used if both producer and consumer agree and it meets all the other requirements."
+This package only accepts the in-toto SLSA Provenance format.
+
+== Package name
+
+* `slsa_provenance_available`
+
+== Rules included:
+
+:numbered:
+
+[#slsa_provenance_available__allowed_predicate_types_provided]
+=== link:#slsa_provenance_available__allowed_predicate_types_provided[Allowed predicate types provided]
+
+Confirm the `allowed_predicate_types` rule data was provided, since it is required by the policy rules in this package.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `slsa_provenance_available.allowed_predicate_types_provided`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_provenance_available/slsa_provenance_available.rego#L49[Source, window="_blank"]
+
+[#slsa_provenance_available__attestation_predicate_type_accepted]
+=== link:#slsa_provenance_available__attestation_predicate_type_accepted[Expected attestation predicate type found]
+
+Verify that the predicateType field of the attestation indicates the in-toto SLSA Provenance format was used to attest the PipelineRun.
+
+*Solution*: The predicate type field in the attestation does not match the 'allowed_predicate_types' field. This field is set in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Attestation predicate type %q is not an expected type (%s)`
+* Code: `slsa_provenance_available.attestation_predicate_type_accepted`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/slsa_provenance_available/slsa_provenance_available.rego#L20[Source, window="_blank"]

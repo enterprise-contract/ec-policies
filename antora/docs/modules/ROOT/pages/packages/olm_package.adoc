@@ -1,0 +1,161 @@
+= OLM
+
+Checks for Operator Lifecycle Manager (OLM) bundles.
+
+== Package name
+
+* `olm`
+
+== Rules included:
+
+:numbered:
+
+[#olm__csv_semver_format]
+=== link:#olm__csv_semver_format[ClusterServiceVersion semver format]
+
+Check the `spec.version` value in the ClusterServiceVersion manifest of the OLM bundle uses a properly formatted semver.
+
+*Solution*: Update the ClusterServiceVersion manifest of the OLM bundle to set the spec.version value to a valid semver.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The ClusterServiceVersion spec.version, %q, is not a valid semver`
+* Code: `olm.csv_semver_format`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L17[Source, window="_blank"]
+
+[#olm__feature_annotations_format]
+=== link:#olm__feature_annotations_format[Feature annotations have expected value]
+
+Check the feature annotations in the ClusterServiceVersion manifest of the OLM bundle. All of required feature annotations must be present and set to either the string `"true"` or the string `"false"`. The list of feature annotations can be customize via the `required_olm_features_annotations` rule data.
+
+*Solution*: Update the ClusterServiceVersion manifest of the OLM bundle to set the feature annotations to the expected value.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The annotation %q is either missing or has an unexpected value`
+* Code: `olm.feature_annotations_format`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L64[Source, window="_blank"]
+
+[#olm__allowed_registries]
+=== link:#olm__allowed_registries[Images referenced by OLM bundle are from allowed registries]
+
+Each image referenced by the OLM bundle should match an entry in the list of prefixes defined by the rule data key `allowed_registry_prefixes` in your policy configuration.
+
+*Solution*: Use image from an allowed registry, or modify your xref:ec-cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q CSV image reference is not from an allowed registry.`
+* Code: `olm.allowed_registries`
+* Effective from: `2024-09-01T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L287[Source, window="_blank"]
+
+[#olm__olm_bundle_multi_arch]
+=== link:#olm__olm_bundle_multi_arch[OLM bundle images are not multi-arch]
+
+OLM bundle images should be built for a single architecture. They should not be OCI image indexes nor should they be Docker v2s2 manifest lists.
+
+*Solution*: Rebuild your bundle image using a single architecture (e.g. `linux/amd64`). Do not create an image index for the OLM bundle.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q bundle image is a multi-arch reference.`
+* Code: `olm.olm_bundle_multi_arch`
+* Effective from: `2025-5-01T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L320[Source, window="_blank"]
+
+[#olm__allowed_registries_related]
+=== link:#olm__allowed_registries_related[Related images references are from allowed registries]
+
+Each image indicated as a related image should match an entry in the list of prefixes defined by the rule data key `allowed_registry_prefixes` in your policy configuration.
+
+*Solution*: Use image from an allowed registry, or modify your xref:ec-cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q related image reference is not from an allowed registry.`
+* Code: `olm.allowed_registries_related`
+* Effective from: `2025-04-15T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L217[Source, window="_blank"]
+
+[#olm__required_olm_features_annotations_provided]
+=== link:#olm__required_olm_features_annotations_provided[Required OLM feature annotations list provided]
+
+Confirm the `required_olm_features_annotations` rule data was provided, since it's required by the policy rules in this package.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `olm.required_olm_features_annotations_provided`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L109[Source, window="_blank"]
+
+[#olm__subscriptions_annotation_format]
+=== link:#olm__subscriptions_annotation_format[Subscription annotation has expected value]
+
+Check the value of the operators.openshift.io/valid-subscription annotation from the ClusterServiceVersion manifest is in the expected format, i.e. JSON encoded non-empty array of strings.
+
+*Solution*: Update the ClusterServiceVersion manifest of the OLM bundle to set the subscription annotation to the expected value.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `olm.subscriptions_annotation_format`
+* Effective from: `2024-04-18T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L88[Source, window="_blank"]
+
+[#olm__inaccessible_snapshot_references]
+=== link:#olm__inaccessible_snapshot_references[Unable to access images in the input snapshot]
+
+Check the input snapshot and make sure all the images are accessible.
+
+*Solution*: Ensure all images in the input snapshot are valid.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q image reference is not accessible in the input snapshot.`
+* Code: `olm.inaccessible_snapshot_references`
+* Effective from: `2024-08-15T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L156[Source, window="_blank"]
+
+[#olm__inaccessible_related_images]
+=== link:#olm__inaccessible_related_images[Unable to access related images for a component]
+
+Check the input image for the presence of related images. Ensure that all images are accessible.
+
+*Solution*: Ensure all related images are available. The related images are defined by an file containing a json array attached to the validated image. The digest of the attached file is pulled from the RELATED_IMAGES_DIGEST result.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q related image reference is not accessible.`
+* Code: `olm.inaccessible_related_images`
+* Effective from: `2025-03-10T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L178[Source, window="_blank"]
+
+[#olm__unmapped_references]
+=== link:#olm__unmapped_references[Unmapped images in OLM bundle]
+
+Check the OLM bundle image for the presence of unmapped image references. Unmapped image pull references are references to images found in link:https://osbs.readthedocs.io/en/latest/users.html#pullspec-locations[varying locations] that are either not in the RPA about to be released or not accessible already.
+
+*Solution*: Add the missing image to the snapshot or check if the CSV pullspec is valid and accessible.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q CSV image reference is not in the snapshot or accessible.`
+* Code: `olm.unmapped_references`
+* Effective from: `2024-08-15T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L247[Source, window="_blank"]
+
+[#olm__unpinned_references]
+=== link:#olm__unpinned_references[Unpinned images in OLM bundle]
+
+Check the OLM bundle image for the presence of unpinned image references. Unpinned image pull references are references to images found in link:https://osbs.readthedocs.io/en/latest/users.html#pullspec-locations[varying locations] that do not contain a digest -- uniquely identifying the version of the image being pulled.
+
+*Solution*: Update the OLM bundle replacing the unpinned image reference with pinned image reference. Pinned image reference contains the image digest.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q image reference is not pinned at %s.`
+* Code: `olm.unpinned_references`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L38[Source, window="_blank"]
+
+[#olm__unpinned_snapshot_references]
+=== link:#olm__unpinned_snapshot_references[Unpinned images in input snapshot]
+
+Check the input snapshot for the presence of unpinned image references. Unpinned image pull references are references to images that do not contain a digest -- uniquely identifying the version of the image being pulled.
+
+*Solution*: Update the input snapshot replacing the unpinned image reference with pinned image reference. Pinned image reference contains the image digest.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q image reference is not pinned in the input snapshot.`
+* Code: `olm.unpinned_snapshot_references`
+* Effective from: `2024-08-15T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L126[Source, window="_blank"]

@@ -1,0 +1,106 @@
+= CVE checks
+
+This package is responsible for verifying a CVE scan was performed during the build pipeline, and that the image under test does not contain CVEs of certain security levels.
+
+The behaviour of the rules in this package is influenced by rule data. Firstly the rules can be configured to emit violations or warnings based on the availability of the vulnerability fix: patched -- if there is a remediation available, e.g. new version with a fix, or unpatched -- if there is, currently, no remidiation available. Secondly per severity: critical, high, medium, low or unknown choice can be made of the rule outcome: failure or warning. And lastly, per severity, choice can be made of how many leeway days are allowed before a vulnerability causing a failure will be reported as a warning instead.
+
+In the following example if rule data configuration, failures will be reported for critical and high patched vulnerabilities, for critical unpatched vulnerabilities only, warnings will be reported for medium and low patched, and for high and medium unpatched vulnerabilities. For critical and high patched vulnerabilities a leeway of 10 days is allowed.
+
+.Example rule data
+[source,yaml]
+----
+restrict_cve_security_levels:
+  - critical
+  - high
+warn_cve_security_levels:
+  - medium
+  - low
+restrict_unpatched_cve_security_levels:
+  - critical
+warn_unpatched_cve_security_levels:
+  - high
+  - medium
+cve_leeway:
+  critical: 10
+  high: 10
+----
+
+== Package name
+
+* `cve`
+
+== Rules included:
+
+:numbered:
+
+[#cve__cve_blockers]
+=== link:#cve__cve_blockers[Blocking CVE check]
+
+The SLSA Provenance attestation for the image is inspected to ensure CVEs that have a known fix and meet a certain security level have not been detected. If detected, this policy rule will fail. By default, only CVEs of critical and high security level cause a failure. This is configurable by the rule data key `restrict_cve_security_levels`. The available levels are critical, high, medium, low, and unknown. In addition to that leeway can be granted per severity using the `cve_leeway` rule data key containing days of allowed leeway, measured as time between found vulnerability's public disclosure date and current effective time, per severity level.
+
+*Solution*: Make sure to address any CVE's related to the image.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Found %q vulnerability of %s security level`
+* Code: `cve.cve_blockers`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L114[Source, window="_blank"]
+
+[#cve__unpatched_cve_blockers]
+=== link:#cve__unpatched_cve_blockers[Blocking unpatched CVE check]
+
+The SLSA Provenance attestation for the image is inspected to ensure CVEs that do NOT have a known fix and meet a certain security level have not been detected. If detected, this policy rule will fail. By default, the list of security levels used by this policy is empty. This is configurable by the rule data key `restrict_unpatched_cve_security_levels`. The available levels are critical, high, medium, low, and unknown. In addition to that leeway can be granted per severity using the `cve_leeway` rule data key containing days of allowed leeway, measured as time between found vulnerability's public disclosure date and current effective time, per severity level.
+
+*Solution*: CVEs without a known fix can only be remediated by either removing the impacted dependency, or by waiting for a fix to be available.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Found %q unpatched vulnerability of %s security level`
+* Code: `cve.unpatched_cve_blockers`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L148[Source, window="_blank"]
+
+[#cve__cve_results_found]
+=== link:#cve__cve_results_found[CVE scan results found]
+
+Confirm that clair-scan task results are present in the SLSA Provenance attestation of the build pipeline.
+
+*Solution*: Make sure there is a successful task in the build pipeline that runs a Clair scan.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Clair CVE scan results were not found`
+* Code: `cve.cve_results_found`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L185[Source, window="_blank"]
+
+[#cve__cve_warnings]
+=== link:#cve__cve_warnings[Non-blocking CVE check]
+
+The SLSA Provenance attestation for the image is inspected to ensure CVEs that have a known fix and meet a certain security level have not been detected. If detected, this policy rule will raise a warning. By default, the list of CVE security levels used by this policy is empty. However, this is configurable by the rule data key `warn_cve_security_levels`. The available levels are critical, high, medium, low, and unknown.
+
+*Solution*: Make sure to address any CVE's related to the image.
+
+* Rule type: [rule-type-indicator warning]#WARNING#
+* WARNING message: `Found %q non-blocking vulnerability of %s security level`
+* Code: `cve.cve_warnings`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L58[Source, window="_blank"]
+
+[#cve__unpatched_cve_warnings]
+=== link:#cve__unpatched_cve_warnings[Non-blocking unpatched CVE check]
+
+The SLSA Provenance attestation for the image is inspected to ensure CVEs that do NOT have a known fix and meet a certain security level have not been detected. If detected, this policy rule will raise a warning. By default, only CVEs of critical and high security level cause a warning. This is configurable by the rule data key `warn_unpatched_cve_security_levels`. The available levels are critical, high, medium, low, and unknown.
+
+*Solution*: CVEs without a known fix can only be remediated by either removing the impacted dependency, or by waiting for a fix to be available.
+
+* Rule type: [rule-type-indicator warning]#WARNING#
+* WARNING message: `Found %q non-blocking unpatched vulnerability of %s security level`
+* Code: `cve.unpatched_cve_warnings`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L86[Source, window="_blank"]
+
+[#cve__rule_data_provided]
+=== link:#cve__rule_data_provided[Rule data provided]
+
+Confirm the expected rule data keys have been provided in the expected format. The keys are `restrict_cve_security_levels`,	`warn_cve_security_levels`, `restrict_unpatched_cve_security_levels`, and `warn_unpatched_cve_security_levels`.
+
+*Solution*: If provided, ensure the rule data is in the expected format.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `cve.rule_data_provided`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L211[Source, window="_blank"]

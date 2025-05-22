@@ -1,0 +1,33 @@
+= Source image
+
+This package is reponsible for verifying the source container image associated with the image being validated.
+
+== Package name
+
+* `source_image`
+
+== Rules included:
+
+:numbered:
+
+[#source_image__exists]
+=== link:#source_image__exists[Exists]
+
+Verify the source container image exists.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `source_image.exists`
+* Effective from: `2024-06-05T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/source_image/source_image.rego#L15[Source, window="_blank"]
+
+[#source_image__signed]
+=== link:#source_image__signed[Signed]
+
+Verify the source container image is signed.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `source_image.signed`
+* Effective from: `2024-05-04T00:00:00Z`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/source_image/source_image.rego#L30[Source, window="_blank"]

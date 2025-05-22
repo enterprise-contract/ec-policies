@@ -1,0 +1,119 @@
+= Labels
+
+Check if the image has the expected labels set. The rules in this package distinguish file-based catalog (FBC) images from all other images. When checking an FBC image, a policy rule may use a different set of rule data. An FBC image is detected by the presence of the operators.operatorframework.io.index.configs.v1 label.
+
+== Package name
+
+* `labels`
+
+== Rules included:
+
+:numbered:
+
+[#labels__deprecated_labels]
+=== link:#labels__deprecated_labels[Deprecated labels]
+
+Check the image for the presence of labels that have been deprecated. Use the rule data key `deprecated_labels` to set the list of labels to check.
+
+*Solution*: Update the image build process to not set the deprecated labels.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q label is deprecated, replace with %q`
+* Code: `labels.deprecated_labels`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L87[Source, window="_blank"]
+
+[#labels__disallowed_inherited_labels]
+=== link:#labels__disallowed_inherited_labels[Disallowed inherited labels]
+
+Check that certain labels on the image have different values than the labels from the parent image. If the label is inherited from the parent image but not redefined for the image, it will contain an incorrect value for the image. Use the rule data `disallowed_inherited_labels` key to set the list of labels to check, or the `fbc_disallowed_inherited_labels` key for fbc images.
+
+*Solution*: Update the image build process to overwrite the inherited labels.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q label should not be inherited from the parent image`
+* Code: `labels.disallowed_inherited_labels`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L136[Source, window="_blank"]
+
+[#labels__inaccessible_config]
+=== link:#labels__inaccessible_config[Inaccessible image config]
+
+The image config is not accessible.
+
+*Solution*: Check the provided authentication configuration and the credentials within it.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Image config of the image %q is inaccessible`
+* Code: `labels.inaccessible_config`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L65[Source, window="_blank"]
+
+[#labels__inaccessible_manifest]
+=== link:#labels__inaccessible_manifest[Inaccessible image manifest]
+
+The image manifest is not accessible.
+
+*Solution*: Check the provided authentication configuration and the credentials within it.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Manifest of the image %q is inaccessible`
+* Code: `labels.inaccessible_manifest`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L46[Source, window="_blank"]
+
+[#labels__inaccessible_parent_config]
+=== link:#labels__inaccessible_parent_config[Inaccessible parent image config]
+
+The parent image config is not accessible.
+
+*Solution*: Check the provided authentication configuration and the credentials within it.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Image config of the image %q, parent of image %q is inaccessible`
+* Code: `labels.inaccessible_parent_config`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L199[Source, window="_blank"]
+
+[#labels__inaccessible_parent_manifest]
+=== link:#labels__inaccessible_parent_manifest[Inaccessible parent image manifest]
+
+The parent image manifest is not accessible.
+
+*Solution*: Check the provided authentication configuration and the credentials within it.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Manifest of the image %q, parent of image %q is inaccessible`
+* Code: `labels.inaccessible_parent_manifest`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L181[Source, window="_blank"]
+
+[#labels__optional_labels]
+=== link:#labels__optional_labels[Optional labels]
+
+Check the image for the presence of labels that are recommended, but not required. Use the rule data `optional_labels` key to set the list of labels to check, or the `fbc_optional_labels` key for fbc images.
+
+*Solution*: Update the image build process to set the optional labels.
+
+* Rule type: [rule-type-indicator warning]#WARNING#
+* WARNING message: `The optional %q label is missing. Label description: %s`
+* Code: `labels.optional_labels`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L19[Source, window="_blank"]
+
+[#labels__required_labels]
+=== link:#labels__required_labels[Required labels]
+
+Check the image for the presence of labels that are required. Use the rule data `required_labels` key to set the list of labels to check, or the `fbc_required_labels` key for fbc images.
+
+*Solution*: Update the image build process to set the required labels.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `labels.required_labels`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L115[Source, window="_blank"]
+
+[#labels__rule_data_provided]
+=== link:#labels__rule_data_provided[Rule data provided]
+
+Confirm the expected rule data keys have been provided in the expected format. The keys are `required_labels`,	`fbc_required_labels`, `optional_labels`, `fbc_optional_labels`, `disallowed_inherited_labels`, `fbc_disallowed_inherited_labels`, and `deprecated_labels`.
+
+*Solution*: If provided, ensure the rule data is in the expected format.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `labels.rule_data_provided`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L162[Source, window="_blank"]

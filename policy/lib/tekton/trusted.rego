@@ -2,6 +2,7 @@ package lib.tekton
 
 import rego.v1
 
+import data.lib.arrays
 import data.lib.json as j
 import data.lib.time as time_lib
 
@@ -101,11 +102,27 @@ _task_expires_on(task) := expires if {
 	expires = time.parse_rfc3339_ns(record.expires_on)
 }
 
+_unexpired_records(records) := all_unexpired if {
+	never_expires := [record |
+		some record in records
+		not "expires_on" in object.keys(record)
+	]
+
+	future_expires := [record |
+		some record in records
+		expires := time.parse_rfc3339_ns(record.expires_on)
+		expires > time_lib.effective_current_time_ns
+	]
+	future_expires_sorted := array.reverse(arrays.sort_by("expires_on", future_expires))
+
+	all_unexpired := array.concat(never_expires, future_expires_sorted)
+}
+
 # _trusted_tasks provides a safe way to access the list of trusted tasks. It prevents a policy rule
 # from incorrectly not evaluating due to missing data. It also removes stale records.
 _trusted_tasks[key] := pruned_records if {
 	some key, records in _trusted_tasks_data
-	pruned_records := time_lib.acceptable_items(records)
+	pruned_records := _unexpired_records(records)
 }
 
 # Merging in the trusted_tasks rule data makes it easier for users to customize their trusted tasks
@@ -126,7 +143,7 @@ data_errors contains error if {
 						"expires_on": {"type": "string"},
 						"ref": {"type": "string"},
 					},
-					"required": ["effective_on", "ref"],
+					"required": ["ref"],
 					"additionalProperties": false,
 				},
 				"minItems": 1,

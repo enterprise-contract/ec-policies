@@ -292,11 +292,6 @@ test_data_errors if {
 		},
 		{
 			"code": "trusted_task.data_format",
-			"msg": "trusted_tasks data has unexpected format: spam.0: effective_on is required",
-			"severity": "failure",
-		},
-		{
-			"code": "trusted_task.data_format",
 			"msg": "trusted_tasks data has unexpected format: spam.0: ref is required",
 			"severity": "failure",
 		},

@@ -26,8 +26,8 @@ IMAGE=quay.io/konflux-ci/ec-golden-image:latest
 # If $IMAGE is released to a different repo, some of the attachments may not get copied over, e.g.
 # CVE scan report. Set $ORIGINAL_IMAGE_REPO to the repo in which the image was originally built into
 # which should contain all the attachments.
-ORIGINAL_IMAGE_REPO='quay.io/redhat-user-workloads/rhtap-contract-tenant/golden-container/golden-container'
-REPOSITORY=https://github.com/enterprise-contract/golden-container.git
+ORIGINAL_IMAGE_REPO='quay.io/redhat-user-workloads/rhtap-contract-tenant/golden-container'
+REPOSITORY=https://github.com/conforma/golden-container.git
 PUBLIC_KEY='-----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEZP/0htjhVt2y0ohjgtIIgICOtQtA
 naYJRuLprwIv6FDhZ5yFjYUEtsmoNcW7rx2KM6FOXGsCX3BNc7qhHELT+g==

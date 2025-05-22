@@ -20,7 +20,7 @@ $ cat images.json
       "source": {
         "git": {
           "revision": "68b69547cad3c4ba856fe6b06154012f33dd8b5a",
-          "url": "https://github.com/enterprise-contract/golden-container.git"
+          "url": "https://github.com/conforma/golden-container.git"
         }
       }
     }

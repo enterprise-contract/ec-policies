@@ -130,9 +130,8 @@ test_is_trusted_task if {
 
 	not tekton.is_trusted_task(untrusted_bundle_task) with data.trusted_tasks as trusted_tasks
 	not tekton.is_trusted_task(untrusted_git_task) with data.trusted_tasks as trusted_tasks
-
-	tekton.is_trusted_task(newest_trusted_bundle_task) with data.trusted_tasks as future_trusted_tasks
-	tekton.is_trusted_task(newest_trusted_git_task) with data.trusted_tasks as future_trusted_tasks
+	not tekton.is_trusted_task(expired_trusted_git_task) with data.trusted_tasks as trusted_tasks
+	not tekton.is_trusted_task(expired_trusted_bundle_task) with data.trusted_tasks as trusted_tasks
 }
 
 test_trusted_task_records if {
@@ -147,6 +146,21 @@ test_trusted_task_records if {
 	every ref, expected in task_ref_expected_matches {
 		records := tekton.trusted_task_records(ref) with data.trusted_tasks as trusted_tasks
 		lib.assert_equal(expected, count(records))
+	}
+}
+
+test_unexpired_records if {
+	expected_refs_by_index := {
+		0: "sha256:latest",
+		1: "sha256:digest-1",
+		2: "sha256:digest-2",
+		3: "sha256:oldest",
+	}
+
+	# regal ignore:line-length
+	sorted_tasks := tekton.trusted_task_records("oci://registry.local/trusty:1.0") with data.trusted_tasks as unsorted_trusted_task
+	every index, ref in expected_refs_by_index {
+		lib.assert_equal(ref, sorted_tasks[index].ref)
 	}
 }
 
@@ -174,8 +188,8 @@ test_data_errors if {
 		],
 		# this is allowed
 		"duplicated-entries": [
-			{"ref": "sha256:digest", "effective_on": "2099-01-01T00:00:00Z"},
-			{"ref": "sha256:digest", "effective_on": "2099-01-01T00:00:00Z"},
+			{"ref": "sha256:digest", "expires_on": "2099-01-01T00:00:00Z"},
+			{"ref": "sha256:digest", "expires_on": "2099-01-01T00:00:00Z"},
 		],
 	}
 
@@ -186,10 +200,6 @@ test_data_errors if {
 		},
 		{
 			"message": "trusted_tasks data has unexpected format: empty-array: Array must have at least 1 items",
-			"severity": "failure",
-		},
-		{
-			"message": "trusted_tasks data has unexpected format: missing-required-properties.0: effective_on is required",
 			"severity": "failure",
 		},
 		{
@@ -315,52 +325,53 @@ untrusted_git_task := {
 
 trusted_tasks := {
 	"oci://registry.local/trusty:1.0": [
-		{
-			"ref": "sha256:digest",
-			"effective_on": "2099-01-01T00:00:00Z",
-		},
+		{"ref": "sha256:digest"},
 		{
 			"ref": "sha256:same_date",
-			"effective_on": "2099-01-01T00:00:00Z",
 			"expires_on": "2099-01-01T00:00:00Z",
 		},
 		{
 			"ref": "sha256:outdated-digest",
-			"effective_on": "2024-01-01T00:00:00Z",
 			"expires_on": "2099-01-01T00:00:00Z",
 		},
 		{
 			"ref": "sha256:expired-digest",
-			"effective_on": "2023-01-01T00:00:00Z",
 			"expires_on": "2024-01-01T00:00:00Z",
 		},
 	],
 	"git+git.local/repo.git//tasks/honest-abe.yaml": [
-		{
-			"ref": "48df630394794f28142224295851a45eea5c63ae",
-			"effective_on": "2099-01-01T00:00:00Z",
-		},
+		{"ref": "48df630394794f28142224295851a45eea5c63ae"},
 		{
 			"ref": "37ef630394794f28142224295851a45eea5c63ae",
-			"effective_on": "2024-01-01T00:00:00Z",
 			"expires_on": "2099-01-01T00:00:00Z",
 		},
 		{
 			"ref": "26ef630394794f28142224295851a45eea5c63ae",
-			"effective_on": "2023-01-01T00:00:00Z",
 			"expires_on": "2024-01-01T00:00:00Z",
 		},
 	],
 }
 
-# Corner case where all entries are in the future.
-future_trusted_tasks := {
-	"oci://registry.local/trusty:1.0": [{
-		"ref": "sha256:digest",
-		"effective_on": "2099-01-01T00:00:00Z",
-	}],
-	"git+git.local/repo.git//tasks/honest-abe.yaml": [{
-		"ref": "48df630394794f28142224295851a45eea5c63ae",
-		"effective_on": "2099-01-01T00:00:00Z",
-	}],
-}
+unsorted_trusted_task := {"oci://registry.local/trusty:1.0": [
+	{
+		"ref": "sha256:digest-1",
+		"expires_on": "2100-01-01T00:00:00Z",
+	},
+	{
+		"ref": "sha256:digest-2",
+		"expires_on": "2075-01-01T00:00:00Z",
+	},
+	{"ref": "sha256:latest"},
+	{
+		"ref": "sha256:oldest",
+		"expires_on": "2050-01-01T00:00:00Z",
+	},
+	{
+		"ref": "sha256:expired",
+		"expires_on": "2000-01-01T00:00:00Z",
+	},
+	{
+		"ref": "sha256:invalid-expires-on",
+		"expires_on": "bad-data",
+	},
+]}

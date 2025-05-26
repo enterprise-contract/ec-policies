@@ -2,13 +2,17 @@ package sbom_spdx
 
 import rego.v1
 
-# https://github.com/RedHatProductSecurity/security-data-guidelines/blob/main/sbom/spdx-2.3-schema.json
+# https://github.com/spdx/spdx-spec/blame/support/2.3.1/schemas/spdx-schema.json
 schema_2_3 := {
-	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$schema": "https://json-schema.org/draft/2019-09/schema",
 	"$id": "http://spdx.org/rdf/terms/2.3",
 	"title": "SPDX 2.3",
 	"type": "object",
 	"properties": {
+		"$schema": {
+			"type": "string",
+			"description": "Reference the SPDX 2.3 JSON schema.",
+		},
 		"SPDXID": {
 			"type": "string",
 			"description": "Uniquely identify any element in an SPDX document which may be referenced by other elements.",
@@ -182,6 +186,7 @@ schema_2_3 := {
 		},
 		"revieweds": {
 			"description": "Reviewed",
+			"deprecated": true,
 			"type": "array",
 			"items": {
 				"type": "object",
@@ -210,7 +215,9 @@ schema_2_3 := {
 			"description": "The URI provides an unambiguous mechanism for other SPDX documents to reference SPDX elements within this SPDX document.",
 		},
 		"documentDescribes": {
-			"description": "Packages, files and/or Snippets described by this SPDX document",
+			"description": "DEPRECATED: use relationships instead of this field. Packages, files and/or Snippets described by this SPDX document",
+			"deprecated": true,
+			"$comment": "This field has been deprecated as it is a duplicate of using the SPDXRef-DOCUMENT DESCRIBES relationship",
 			"type": "array",
 			"items": {
 				"type": "string",
@@ -309,14 +316,14 @@ schema_2_3 := {
 								"referenceCategory": {
 									"description": "Category for the external reference",
 									"type": "string",
-									"enum": ["OTHER", "PERSISTENT-ID", "SECURITY", "PACKAGE-MANAGER"],
+									"enum": ["OTHER", "PERSISTENT-ID", "PERSISTENT_ID", "SECURITY", "PACKAGE-MANAGER", "PACKAGE_MANAGER"],
 								},
 								"referenceLocator": {
 									"description": "The unique string with no spaces necessary to access the package-specific information, metadata, or content within the target location. The format of the locator is subject to constraints defined by the <type>.",
 									"type": "string",
 								},
 								"referenceType": {
-									"description": "Type of the external reference. These are definined in an appendix in the SPDX specification.",
+									"description": "Type of the external reference. These are defined in an appendix in the SPDX specification.",
 									"type": "string",
 								},
 							},
@@ -330,7 +337,9 @@ schema_2_3 := {
 						"type": "boolean",
 					},
 					"hasFiles": {
-						"description": "Indicates that a particular file belongs to a package.",
+						"description": "DEPRECATED: use relationships instead of this field. Indicates that a particular file belongs to a package.",
+						"deprecated": true,
+						"$comment": "This field has been deprecated as it is a duplicate of using CONTAINS relationships from a package to files",
 						"type": "array",
 						"items": {
 							"description": "SPDX ID for File.  Indicates that a particular file belongs to a package.",
@@ -351,10 +360,10 @@ schema_2_3 := {
 						"type": "string",
 					},
 					"licenseInfoFromFiles": {
-						"description": "The licensing information that was discovered directly within the package. There will be an instance of this property for each distinct value of alllicenseInfoInFile properties of all files contained in the package.\n\nIf the licenseInfoFromFiles field is not present for a package and filesAnalyzed property for that same pacakge is true or omitted, it implies an equivalent meaning to NOASSERTION.",
+						"description": "The licensing information that was discovered directly within the package. There will be an instance of this property for each distinct value of alllicenseInfoInFile properties of all files contained in the package.\n\nIf the licenseInfoFromFiles field is not present for a package and filesAnalyzed property for that same package is true or omitted, it implies an equivalent meaning to NOASSERTION.",
 						"type": "array",
 						"items": {
-							"description": "License expression for licenseInfoFromFiles. See SPDX Annex D for the license expression syntax.  The licensing information that was discovered directly within the package. There will be an instance of this property for each distinct value of alllicenseInfoInFile properties of all files contained in the package.\n\nIf the licenseInfoFromFiles field is not present for a package and filesAnalyzed property for that same pacakge is true or omitted, it implies an equivalent meaning to NOASSERTION.",
+							"description": "License expression for licenseInfoFromFiles. See SPDX Annex D for the license expression syntax.  The licensing information that was discovered directly within the package. There will be an instance of this property for each distinct value of alllicenseInfoInFile properties of all files contained in the package.\n\nIf the licenseInfoFromFiles field is not present for a package and filesAnalyzed property for that same package is true or omitted, it implies an equivalent meaning to NOASSERTION.",
 							"type": "string",
 						},
 					},
@@ -510,6 +519,7 @@ schema_2_3 := {
 					},
 					"fileDependencies": {
 						"description": "This field is deprecated since SPDX 2.0 in favor of using Section 7 which provides more granularity about relationships.",
+						"deprecated": true,
 						"type": "array",
 						"items": {
 							"description": "SPDX ID for File.  This field is deprecated since SPDX 2.0 in favor of using Section 7 which provides more granularity about relationships.",
@@ -708,6 +718,6 @@ schema_2_3 := {
 			},
 		},
 	},
-	"required": ["SPDXID", "creationInfo", "dataLicense", "name", "spdxVersion"],
+	"required": ["SPDXID", "creationInfo", "dataLicense", "name", "spdxVersion", "documentNamespace"],
 	"additionalProperties": false,
 }

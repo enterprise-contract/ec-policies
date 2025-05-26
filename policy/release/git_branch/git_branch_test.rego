@@ -3,7 +3,7 @@ package git_branch_test
 import rego.v1
 import data.lib
 
-git_branch_test_case(branch, expected_results) = passed {
+git_branch_test_case(branch, expected_results) = true if {
   mock_input := {
     "attestations": [{
       "statement": {
@@ -39,7 +39,7 @@ git_branch_test_case(branch, expected_results) = passed {
   passed := true
 }
 
-test_deny_with_disallowed_branch {
+test_deny_with_disallowed_branch if {
   expected := [{
     "msg": "invalid branch",
     "details": ["invalid branch", "refs/heads/feature-branch"]
@@ -47,7 +47,7 @@ test_deny_with_disallowed_branch {
   git_branch_test_case("refs/heads/feature-branch", expected)
 }
 
-test_deny_with_unmatched_branch {
+test_deny_with_unmatched_branch if {
   expected := [{
     "msg": "invalid branch",
     "details": ["invalid branch", "refs/heads/release-1"]
@@ -55,10 +55,10 @@ test_deny_with_unmatched_branch {
   git_branch_test_case("refs/heads/release-1", expected)
 }
 
-test_allow_with_main_branch {
+test_allow_with_main_branch if {
   git_branch_test_case("refs/heads/main", [])
 }
 
-test_allow_with_release_branch {
+test_allow_with_release_branch if {
   git_branch_test_case("refs/heads/release-2", [])
 }

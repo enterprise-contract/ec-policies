@@ -1,0 +1,21 @@
+= Pipeline definition sanity checks
+
+Policies to confirm the Tekton Pipeline definition has the expected kind.
+
+== Package name
+
+* `basic`
+
+== Rules included:
+
+:numbered:
+
+[#basic__expected_kind]
+=== link:#basic__expected_kind[Pipeline definition has expected kind]
+
+Confirm that the pipeline definition has the kind "Pipeline".
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Unexpected kind '%s' for pipeline definition`
+* Code: `basic.expected_kind`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/pipeline/basic/basic.rego#L19[Source, window="_blank"]

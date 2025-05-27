@@ -261,6 +261,7 @@ _spdx_sbom_attestation := {"statement": {
 	"predicateType": "https://spdx.dev/Document",
 	"predicate": {
 		"spdxVersion": "SPDX-2.3",
+		"documentNamespace": "https://example.dev/spdxdocs/example-310683af-e9a0-4f66-a6a4-119352915b51",
 		"dataLicense": "CC0-1.0",
 		"SPDXID": "SPDXRef-DOCUMENT",
 		"name": "registry.local/bacon@sha256:123",

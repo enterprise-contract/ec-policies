@@ -13,13 +13,11 @@ import data.lib
 #   - redhat_rpms
 #   effective_on: 2025-07-01
 
-deny if result {
+deny := lib.result_helper(rego.metadata.chain(), ["invalid branch", branch]) {
   some task in lib.tasks_from_pipelinerun
   branch := task.invocation.environment.annotations["pipelinesascode.tekton.dev/source-branch"]
 
   not matches_any(branch)
-
-  result := lib.result_helper(rego.metadata.chain(), ["invalid branch", branch])
 }
 
 matches_any(branch) if {

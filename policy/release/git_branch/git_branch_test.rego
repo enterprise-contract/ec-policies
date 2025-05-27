@@ -2,6 +2,7 @@ package git_branch_test
 
 import rego.v1
 import data.lib
+import data.git_branch
 
 git_branch_test_case(branch, expected_results) = true if {
   mock_input := {

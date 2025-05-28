@@ -251,16 +251,8 @@ _trust_errors contains error if {
 	]
 
 	some untrusted_task in tekton.untrusted_task_refs(chain)
-	untrusted_pipeline_task_name := tekton.pipeline_task_name(untrusted_task)
-	untrusted_task_name := tekton.task_name(untrusted_task)
 
-	error := {
-		"msg": sprintf(
-			"Code tampering detected, untrusted PipelineTask %q (Task %q) was included in build chain comprised of: %s",
-			[untrusted_pipeline_task_name, untrusted_task_name, concat(", ", dependency_chain)],
-		),
-		"term": untrusted_task_name,
-	}
+	error := _format_trust_error(untrusted_task, dependency_chain)
 }
 
 _trust_errors contains error if {
@@ -353,4 +345,30 @@ _digests_from_values(values) := {digest |
 	some value in values
 	some pattern in _digest_patterns
 	some digest in regex.find_n(pattern, value, -1)
+}
+
+_format_trust_error(task, dependency_chain) := error if {
+	latest_trusted_ref := tekton.latest_trusted_ref(task)
+	untrusted_pipeline_task_name := tekton.pipeline_task_name(task)
+	untrusted_task_name := tekton.task_name(task)
+
+	error := {
+		"msg": sprintf(
+			# regal ignore:line-length
+			"Untrusted version of PipelineTask %q (Task %q) was included in build chain comprised of: %s. Please upgrade the task version to: %s",
+			[untrusted_pipeline_task_name, untrusted_task_name, concat(", ", dependency_chain), latest_trusted_ref],
+		),
+		"term": untrusted_task_name,
+	}
+} else := error if {
+	untrusted_pipeline_task_name := tekton.pipeline_task_name(task)
+	untrusted_task_name := tekton.task_name(task)
+
+	error := {
+		"msg": sprintf(
+			"Code tampering detected, untrusted PipelineTask %q (Task %q) was included in build chain comprised of: %s",
+			[untrusted_pipeline_task_name, untrusted_task_name, concat(", ", dependency_chain)],
+		),
+		"term": untrusted_task_name,
+	}
 }

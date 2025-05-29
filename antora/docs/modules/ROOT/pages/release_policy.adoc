@@ -706,7 +706,7 @@ Verify the build task in the PipelineRun attestation was invoked with the proper
 *Solution*: Make sure the task that builds the image has a parameter named 'HERMETIC' and it's set to 'true'.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Build task was not invoked with the hermetic parameter set`
+* FAILURE message: `Build task was not invoked with the hermetic parameter set: '%s'`
 * Code: `hermetic_build_task.build_task_hermetic`
 * https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/hermetic_build_task/hermetic_build_task.rego#L15[Source, window="_blank"]
 

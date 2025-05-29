@@ -20,7 +20,8 @@ import data.lib.tekton
 #   hermetic.
 # custom:
 #   short_name: build_task_hermetic
-#   failure_msg: Build task was not invoked with the hermetic parameter set
+#   failure_msg: >-
+#     Build task was not invoked with the hermetic parameter set: '%s'
 #   solution: >-
 #     Make sure the task that builds the image has a parameter named 'HERMETIC' and
 #     it's set to 'true'.
@@ -30,12 +31,12 @@ import data.lib.tekton
 #   - attestation_type.known_attestation_type
 #
 deny contains result if {
-	_hermetic_build != {"true"}
-	result := lib.result_helper(rego.metadata.chain(), [])
+	some not_hermetic_task in _not_hermetic_tasks
+	result := lib.result_helper(rego.metadata.chain(), [tekton.task_name(not_hermetic_task)])
 }
 
-_hermetic_build contains value if {
+_not_hermetic_tasks contains task if {
 	some attestation in lib.pipelinerun_attestations
 	some task in tekton.build_tasks(attestation)
-	value := tekton.task_param(task, "HERMETIC")
+	not tekton.task_is_hermetic(task)
 }

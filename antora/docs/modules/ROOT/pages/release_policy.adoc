@@ -115,6 +115,7 @@ Rules included:
 * xref:release_policy.adoc#cve__unpatched_cve_warnings[CVE checks: Non-blocking unpatched CVE check]
 * xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
 * xref:release_policy.adoc#hermetic_build_task__build_task_hermetic[Hermetic build task: Build task called with hermetic param set]
+* xref:release_policy.adoc#hermetic_pre_build_script__pre_build_script_hermetic[Hermetic pre-build-script task: Pre-Build-Script task called with hermetic param set]
 * xref:release_policy.adoc#labels__deprecated_labels[Labels: Deprecated labels]
 * xref:release_policy.adoc#labels__disallowed_inherited_labels[Labels: Disallowed inherited labels]
 * xref:release_policy.adoc#labels__inaccessible_config[Labels: Inaccessible image config]
@@ -705,9 +706,28 @@ Verify the build task in the PipelineRun attestation was invoked with the proper
 *Solution*: Make sure the task that builds the image has a parameter named 'HERMETIC' and it's set to 'true'.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Build task was not invoked with the hermetic parameter set`
+* FAILURE message: `Build task was not invoked with the hermetic parameter set: '%s'`
 * Code: `hermetic_build_task.build_task_hermetic`
 * https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/hermetic_build_task/hermetic_build_task.rego#L15[Source, window="_blank"]
+
+[#hermetic_pre_build_script_package]
+== link:#hermetic_pre_build_script_package[Hermetic pre-build-script task]
+
+This package verifies the pre-build-script task in the attestation was invoked with the expected parameters to perform a hermetic build.
+
+* Package name: `hermetic_pre_build_script`
+
+[#hermetic_pre_build_script__pre_build_script_hermetic]
+=== link:#hermetic_pre_build_script__pre_build_script_hermetic[Pre-Build-Script task called with hermetic param set]
+
+Verify the pre-build-script task (run-script-oci-ta) in the PipelineRun	attestation was invoked with the proper parameters to make the pre-build script execution hermetic.
+
+*Solution*: Make sure that the pre-build-script task (run-script-oci-ta) has a parameter named 'HERMETIC' and it's set to 'true'.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Pre-Build-Script task was not invoked with the hermetic parameter set: '%s'`
+* Code: `hermetic_pre_build_script.pre_build_script_hermetic`
+* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/release/hermetic_pre_build_script/hermetic_pre_build_script.rego#L15[Source, window="_blank"]
 
 [#labels_package]
 == link:#labels_package[Labels]

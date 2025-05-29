@@ -162,6 +162,36 @@ test_task_slsav1_param if {
 	not tekton.task_param(task, "missing")
 }
 
+test_task_is_hermetic if {
+	task_hermetic := {
+		"kind": "TaskRun",
+		"metadata": {"name": "some-task"},
+		"spec": {"params": [{"name": "HERMETIC", "value": "true"}]},
+	}
+	tekton.task_is_hermetic(task_hermetic)
+
+	task_not_hermetic := {
+		"kind": "TaskRun",
+		"metadata": {"name": "some-task"},
+		"spec": {"params": [{"name": "HERMETIC", "value": "false"}]},
+	}
+	not tekton.task_is_hermetic(task_not_hermetic)
+
+	task_invalid_hermetic_param = {
+		"kind": "TaskRun",
+		"metadata": {"name": "some-task"},
+		"spec": {"params": [{"name": "HERMETIC", "value": "not a valid value"}]},
+	}
+	not tekton.task_is_hermetic(task_invalid_hermetic_param)
+
+	task_hermetic_param_not_present = {
+		"kind": "TaskRun",
+		"metadata": {"name": "some-task"},
+		"spec": {"params": [{"name": "OTHERPARAM", "value": "other-value"}]},
+	}
+	not tekton.task_is_hermetic(task_hermetic_param_not_present)
+}
+
 test_task_result if {
 	task := {"results": [{"name": "SPAM", "value": "maps"}]}
 	lib.assert_equal("maps", tekton.task_result(task, "SPAM"))

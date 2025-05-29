@@ -1,0 +1,43 @@
+#
+# METADATA
+# title: Hermetic pre-build-script task
+# description: >-
+#   This package verifies the pre-build-script task in the attestation was invoked
+#   with the expected parameters to perform a hermetic build.
+#
+package hermetic_pre_build_script
+
+import rego.v1
+
+import data.lib
+import data.lib.tekton
+
+# METADATA
+# title: Pre-Build-Script task called with hermetic param set
+# description: >-
+#   Verify the pre-build-script task (run-script-oci-ta) in the
+#   PipelineRun	attestation was invoked with the proper parameters to
+#   make the pre-build script execution hermetic.
+# custom:
+#   short_name: pre_build_script_hermetic
+#   failure_msg: >-
+#     Pre-Build-Script task was not invoked with
+#     the hermetic parameter set: '%s'
+#   solution: >-
+#     Make sure that the pre-build-script task (run-script-oci-ta) has
+#     a parameter named 'HERMETIC' and it's set to 'true'.
+#   collections:
+#   - redhat
+#   depends_on:
+#   - attestation_type.known_attestation_type
+#
+deny contains result if {
+	some not_hermetic_script in _hermetic_pre_build_scripts
+	result := lib.result_helper(rego.metadata.chain(), [tekton.task_name(not_hermetic_script)])
+}
+
+_hermetic_pre_build_scripts contains task if {
+	some attestation in lib.pipelinerun_attestations
+	some task in tekton.pre_build_scripts(attestation)
+	not tekton.task_is_hermetic(task)
+}

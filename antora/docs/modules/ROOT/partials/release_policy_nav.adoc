@@ -43,6 +43,8 @@
 **** xref:release_policy.adoc#github_certificate__rule_data_provided[Rule data provided]
 *** xref:release_policy.adoc#hermetic_build_task_package[Hermetic build task]
 **** xref:release_policy.adoc#hermetic_build_task__build_task_hermetic[Build task called with hermetic param set]
+*** xref:release_policy.adoc#hermetic_pre_build_script_package[Hermetic pre-build-script task]
+**** xref:release_policy.adoc#hermetic_pre_build_script__pre_build_script_hermetic[Pre-Build-Script task called with hermetic param set]
 *** xref:release_policy.adoc#labels_package[Labels]
 **** xref:release_policy.adoc#labels__deprecated_labels[Deprecated labels]
 **** xref:release_policy.adoc#labels__disallowed_inherited_labels[Disallowed inherited labels]

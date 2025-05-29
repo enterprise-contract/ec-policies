@@ -1,4 +1,4 @@
-module github.com/enterprise-contract/ec-policies/acceptance
+module github.com/conforma/policy/acceptance
 
 go 1.23.6
 

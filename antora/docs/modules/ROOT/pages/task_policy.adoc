@@ -22,7 +22,7 @@ Confirm that each step in the Task uses a container image that is accessible.
 * FAILURE message: `Step %d uses inaccessible image ref '%s'`
 * Code: `step_images.step_images_accessible`
 * Effective from: `2025-02-10T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/step_images/step_images.rego#L14[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/step_images/step_images.rego#L14[Source, window="_blank"]
 
 [#step_image_registries_package]
 == link:#step_image_registries_package[Tekton Task Step image registry policies]
@@ -41,7 +41,7 @@ Confirm the `allowed_step_image_registry_prefixes` rule data was provided, since
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `step_image_registries.step_image_registry_prefix_list_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/step_image_registries/step_image_registries.rego#L43[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/step_image_registries/step_image_registries.rego#L43[Source, window="_blank"]
 
 [#step_image_registries__step_images_permitted]
 === link:#step_image_registries__step_images_permitted[Step images come from permitted registry]
@@ -53,7 +53,7 @@ Confirm that each step in the Task uses a container image with a URL that matche
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Step %d uses disallowed image ref '%s'`
 * Code: `step_image_registries.step_images_permitted`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/step_image_registries/step_image_registries.rego#L16[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/step_image_registries/step_image_registries.rego#L16[Source, window="_blank"]
 
 [#annotations_package]
 == link:#annotations_package[Tekton Task annotations]
@@ -70,7 +70,7 @@ Make sure to use the date format in RFC3339 format in the "build.appstudio.redha
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Expires on time is not in RFC3339 format: %q`
 * Code: `annotations.expires_on_format`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/annotations/annotations.rego#L14[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/annotations/annotations.rego#L14[Source, window="_blank"]
 
 [#results_package]
 == link:#results_package[Tekton Task result]
@@ -87,7 +87,7 @@ Verify if Task defines the required result. This is controlled by the `required_
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `results.required`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/results/results.rego#L13[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/results/results.rego#L13[Source, window="_blank"]
 
 [#results__rule_data_provided]
 === link:#results__rule_data_provided[Rule data provided]
@@ -99,7 +99,7 @@ Confirm the expected `required_task_results` rule data key has been provided in 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `results.rule_data_provided`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/results/results.rego#L27[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/results/results.rego#L27[Source, window="_blank"]
 
 [#kind_package]
 == link:#kind_package[Tekton task kind checks]
@@ -116,7 +116,7 @@ Confirm the task definition includes the kind field.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Required field 'kind' not found`
 * Code: `kind.kind_present`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/kind/kind.rego#L29[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/kind/kind.rego#L29[Source, window="_blank"]
 
 [#kind__expected_kind]
 === link:#kind__expected_kind[Task definition has expected kind]
@@ -126,7 +126,7 @@ Confirm the task definition has the kind "Task".
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Unexpected kind '%s' for task definition`
 * Code: `kind.expected_kind`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/kind/kind.rego#L16[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/kind/kind.rego#L16[Source, window="_blank"]
 
 [#trusted_artifacts_package]
 == link:#trusted_artifacts_package[Trusted Artifacts Conventions]
@@ -143,7 +143,7 @@ Trusted Artifact parameters follow the expected naming convention.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The parameter %q of the Task %q does not use the _ARTIFACT suffix`
 * Code: `trusted_artifacts.parameter`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/trusted_artifacts/trusted_artifacts.rego#L15[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/trusted_artifacts/trusted_artifacts.rego#L15[Source, window="_blank"]
 
 [#trusted_artifacts__result]
 === link:#trusted_artifacts__result[Result]
@@ -153,7 +153,7 @@ Trusted Artifact results follow the expected naming convention.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The result %q of the Task %q does not use the _ARTIFACT suffix`
 * Code: `trusted_artifacts.result`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/trusted_artifacts/trusted_artifacts.rego#L28[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/trusted_artifacts/trusted_artifacts.rego#L28[Source, window="_blank"]
 
 [#trusted_artifacts__workspace]
 === link:#trusted_artifacts__workspace[Workspace]
@@ -164,4 +164,4 @@ Tasks that implement the Trusted Artifacts pattern should not allow general purp
 * FAILURE message: `General purpose workspace %q is not allowed`
 * Code: `trusted_artifacts.workspace`
 * Effective from: `2024-07-07T00:00:00Z`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/task/trusted_artifacts/trusted_artifacts.rego#L41[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/trusted_artifacts/trusted_artifacts.rego#L41[Source, window="_blank"]

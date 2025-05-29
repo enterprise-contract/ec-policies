@@ -27,10 +27,10 @@ test_gh_workflow_repository_mismatch if {
 	signatures := [{"certificate": good_cert}]
 	expected := {{
 		"code": "github_certificate.gh_workflow_repository",
-		"msg": "Repository \"lcarva/festoji\" not in allowed list: [\"ec-cli\", \"ec-policies\"]",
+		"msg": "Repository \"lcarva/festoji\" not in allowed list: [\"ec-cli\", \"policy\"]",
 	}}
 	lib.assert_equal_results(github_certificate.deny, expected) with input.image.signatures as signatures
-		with data.rule_data.allowed_gh_workflow_repos as ["ec-cli", "ec-policies"]
+		with data.rule_data.allowed_gh_workflow_repos as ["ec-cli", "policy"]
 }
 
 test_gh_workflow_ref_match if {

@@ -18,7 +18,7 @@ xref:pipeline_policy.adoc[Pipeline Policy].
 
 == Code
 
-* https://github.com/enterprise-contract/ec-policies[github.com/enterprise-contract/ec-policies]
+* https://github.com/conforma/plicy[github.com/conforma/policy]
 * https://github.com/enterprise-contract/ec-cli[github.com/enterprise-contract/ec-cli]
 * https://github.com/enterprise-contract[github.com/enterprise-contract]
 * https://github.com/konflux-ci[github.com/konflux-ci]

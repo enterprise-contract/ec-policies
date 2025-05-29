@@ -30,7 +30,7 @@ updates:
       time: '15:00'
       timezone: Etc/UTC
   - package-ecosystem: "npm"
-    directory: "/antora/ec-policies-antora-extension"
+    directory: "/antora/policy-antora-extension"
     schedule:
       interval: weekly
       time: '15:00'

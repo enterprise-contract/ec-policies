@@ -131,6 +131,11 @@ task_params(task) := params if {
 # task_param returns the value of the given parameter in the task.
 task_param(task, name) := task_params(task)[name]
 
+task_is_hermetic(task) if {
+	task_param(task, "HERMETIC")
+	task_param(task, "HERMETIC") == "true"
+}
+
 # slsa v0.2 results
 task_results(task) := task.results
 
@@ -169,6 +174,16 @@ build_tasks(attestation) := [task |
 
 	image_digest := task_result_artifact_digest(task)
 	count(image_digest) > 0
+]
+
+pre_build_scripts(attestation) := [task |
+	_tasks := tasks(attestation)
+
+	some build_task in build_tasks(attestation)
+	some pre_build_task in build_task.after
+	some task in _tasks
+	task.name == pre_build_task
+	task_param(task, "SCRIPT")
 ]
 
 # return the tasks that have "TEST_OUTPUT" as a result

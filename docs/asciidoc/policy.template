@@ -54,7 +54,7 @@ Rules included:{{ "\n" }}
 * Effective from: `{{ . }}`
 {{- end }}{{/* index .Custom "effective_on" */}}
 {{- if not (isBuiltIn .) }}
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/{{ .Location.File }}#L{{ .Location.Row }}[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/{{ .Location.File }}#L{{ .Location.Row }}[Source, window="_blank"]
 {{- end }}{{/* isBuiltIn */}}
 {{- end }}{{/* range .Rules */}}
 

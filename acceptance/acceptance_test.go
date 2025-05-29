@@ -291,7 +291,7 @@ func replaceVariables(content string, variables map[string]string) string {
 }
 
 func setupScenario(ctx context.Context, sc *godog.Scenario) (context.Context, error) {
-	tempDir, err := os.MkdirTemp("", "ec-policies-")
+	tempDir, err := os.MkdirTemp("", "policy-")
 	if err != nil {
 		return ctx, fmt.Errorf("setting up scenario: %w", err)
 	}

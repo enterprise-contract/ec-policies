@@ -22,7 +22,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/enterprise-contract/ec-policies/docs/asciidoc"
+	"github.com/conforma/policy/docs/asciidoc"
 )
 
 var adoc = flag.String("adoc", "", "Location of the generated Asciidoc files")

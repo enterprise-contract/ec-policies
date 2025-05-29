@@ -1,4 +1,4 @@
-# ec-policies
+# policy
 
 [Rego][rego] policies related to the Conforma.
 
@@ -123,8 +123,8 @@ Create a `policy.yaml` file in your local `ec-cli` repo with something like:
     ---
     sources:
       - policy:
-          - <path-to>/ec-policies/policy/lib
-          - <path-to>/ec-policies/policy/release
+          - <path-to>/policy/policy/lib
+          - <path-to>/policy/policy/release
         data:
           - oci::quay.io/konflux-ci/tekton-catalog/data-acceptable-bundles:latest
           - github.com/release-engineering/rhtap-ec-policy//data
@@ -165,13 +165,13 @@ contributing to the definition of policy rules.
 [entr]: https://github.com/eradman/entr
 [testing]: https://www.openpolicyagent.org/docs/latest/policy-testing/
 [docs]: https://conforma.dev/
-[policydocs]: https://conforma.dev/docs/ec-policies/release_policy.html
+[policydocs]: https://conforma.dev/docs/policy/release_policy.html
 [taskdef]: https://github.com/enterprise-contract/ec-cli/blob/main/tasks/verify-enterprise-contract/0.1/verify-enterprise-contract.yaml
 [contract]: https://github.com/enterprise-contract
 [ec-cli]: https://github.com/enterprise-contract/ec-cli
 [konflux-ci]: https://github.com/konflux-ci
 [builddefs]: https://github.com/konflux-ci/build-definitions
-[authoring]: https://conforma.dev/docs/ec-policies/authoring.html
+[authoring]: https://conforma.dev/docs/policy/authoring.html
 [antora]: https://docs.antora.org/antora/latest/install-and-run-quickstart/
 [quay]: https://quay.io/
 [infradeployments]: https://github.com/redhat-appstudio/infra-deployments

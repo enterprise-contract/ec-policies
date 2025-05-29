@@ -85,7 +85,7 @@ test_result_helper_with_term if {
 }
 
 test_result_helper_pkg_name if {
-	# "Normal" for ec-policies repo
+	# "Normal" for policy repo
 	lib.assert_equal("foo", lib._pkg_name(["data", "foo", "deny"]))
 	lib.assert_equal("foo", lib._pkg_name(["data", "foo", "warn"]))
 

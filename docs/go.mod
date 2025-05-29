@@ -1,6 +1,6 @@
-module github.com/enterprise-contract/ec-policies/docs
+module github.com/conforma/policy/docs
 
-go 1.23.6
+go 1.24.2
 
 require github.com/open-policy-agent/opa v0.68.0
 

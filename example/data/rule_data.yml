@@ -16,7 +16,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 rule_data:
-  # Usage: https://conforma.dev/docs/ec-policies/release_policy.html#base_image_registries__allowed_registries_provided
+  # Usage: https://conforma.dev/docs/policy/release_policy.html#base_image_registries__allowed_registries_provided
   allowed_registry_prefixes:
   - localhost:5000/
   - registry.local/namespace/repo/
@@ -24,7 +24,7 @@ rule_data:
   - docker.io/
   - registry.access.redhat.com
 
-  # Usage: https://conforma.dev/docs/ec-policies/release_policy.html#step_image_registries_package
+  # Usage: https://conforma.dev/docs/policy/release_policy.html#step_image_registries_package
   allowed_step_image_registry_prefixes:
   - localhost:5000/
   - registry.local/namespace/repo/
@@ -32,19 +32,19 @@ rule_data:
   - docker.io/
   - quay.io/
 
-  # Usage: https://conforma.dev/docs/ec-policies/release_policy.html#java__no_foreign_dependencies
+  # Usage: https://conforma.dev/docs/policy/release_policy.html#java__no_foreign_dependencies
   # TODO: Document in the policy docs which values are expected here.
   allowed_java_component_sources:
   - redhat
   - rebuilt
 
-  # Usage: https://conforma.dev/docs/ec-policies/release_policy.html#external_parameters_package
+  # Usage: https://conforma.dev/docs/policy/release_policy.html#external_parameters_package
   pipeline_run_params:
   - git-repo
   - git-revision
   - output-image
 
-  # Usage: https://conforma.dev/docs/ec-policies/release_policy.html#labels__deprecated_labels
+  # Usage: https://conforma.dev/docs/policy/release_policy.html#labels__deprecated_labels
   deprecated_labels:
   - name: INSTALL
     replacement: install
@@ -53,7 +53,7 @@ rule_data:
   - name: Name
     replacement: name
 
-  # Usage: https://conforma.dev/docs/ec-policies/release_policy.html#labels__required_labels
+  # Usage: https://conforma.dev/docs/policy/release_policy.html#labels__required_labels
   required_labels:
   - name: architecture
     description: Architecture the software in the image should target.
@@ -64,7 +64,7 @@ rule_data:
   - name: vendor
     description: Name of the vendor.
 
-  # Usage: https://conforma.dev/docs/ec-policies/release_policy.html#labels__optional_labels
+  # Usage: https://conforma.dev/docs/policy/release_policy.html#labels__optional_labels
   optional_labels:
   - name: maintainer
     description: >-
@@ -73,22 +73,22 @@ rule_data:
   - name: summary
     description: A short description of the image.
 
-  # Usage: https://conforma.dev/docs/ec-policies/release_policy.html#labels__disallowed_inherited_labels
+  # Usage: https://conforma.dev/docs/policy/release_policy.html#labels__disallowed_inherited_labels
   disallowed_inherited_labels:
   - name: description
   - name: summary
 
-  # Usage: https://conforma.dev/docs/ec-policies/release_policy.html#labels__required_labels
+  # Usage: https://conforma.dev/docs/policy/release_policy.html#labels__required_labels
   fbc_required_labels:
   - name: build-date
     description: Date/Time image was built as RFC 3339 date-time.
 
-  # Usage: https://conforma.dev/docs/ec-policies/release_policy.html#labels__optional_labels
+  # Usage: https://conforma.dev/docs/policy/release_policy.html#labels__optional_labels
   fbc_optional_labels:
   - name: summary
     description: A short description of the image.
 
-  # https://conforma.dev/docs/ec-policies/release_policy.html#labels__disallowed_inherited_labels
+  # https://conforma.dev/docs/policy/release_policy.html#labels__disallowed_inherited_labels
   fbc_disallowed_inherited_labels:
   - name: description
   - name: summary

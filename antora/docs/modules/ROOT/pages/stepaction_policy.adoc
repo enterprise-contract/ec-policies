@@ -21,7 +21,7 @@ Confirm the StepAction uses a container image with a URL that matches one of the
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image ref %q is disallowed`
 * Code: `image.permitted`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/stepaction/image/image.rego#L38[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/stepaction/image/image.rego#L38[Source, window="_blank"]
 
 [#image__accessible]
 === link:#image__accessible[Image is accessible]
@@ -33,7 +33,7 @@ Confirm the container image used in the StepTemplate is accessible.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Image ref %q is inaccessible`
 * Code: `image.accessible`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/stepaction/image/image.rego#L16[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/stepaction/image/image.rego#L16[Source, window="_blank"]
 
 [#image__rule_data]
 === link:#image__rule_data[Rule data provided]
@@ -45,7 +45,7 @@ Confirm the `allowed_step_image_registry_prefixes` rule data is provided.
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
 * Code: `image.rule_data`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/stepaction/image/image.rego#L62[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/stepaction/image/image.rego#L62[Source, window="_blank"]
 
 [#kind_package]
 == link:#kind_package[Tekton StepAction kind checks]
@@ -62,4 +62,4 @@ Confirm the StepAction definition has the kind "StepAction".
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Unexpected kind %q for StepAction definition`
 * Code: `kind.valid`
-* https://github.com/enterprise-contract/ec-policies/blob/{page-origin-refhash}/policy/stepaction/kind/kind.rego#L14[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/stepaction/kind/kind.rego#L14[Source, window="_blank"]

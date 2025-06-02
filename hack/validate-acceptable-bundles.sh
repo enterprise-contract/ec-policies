@@ -47,7 +47,7 @@ function list_pipeline_bundles() {
         '."pipeline-bundles" | to_entries | .[] | [.key + "@" + .value[].digest] | .[]' | sort -u
 }
 
-origin_bundles="$(list_pipeline_bundles <(curl -s "https://raw.githubusercontent.com/enterprise-contract/ec-policies/main/${bundles_file}"))"
+origin_bundles="$(list_pipeline_bundles <(curl -s "https://raw.githubusercontent.com/conforma/policy/main/${bundles_file}"))"
 pr_bundles="$(list_pipeline_bundles "${bundles_file}")"
 new_bundles="$(comm -13 <(echo "${origin_bundles}") <(echo "${pr_bundles}"))"
 
@@ -68,8 +68,8 @@ for ref in ${new_bundles}; do
 
     # Evaluate the pipeline definition
     report="$(ec validate definition \
-        --policy git::https://github.com/enterprise-contract/ec-policies//policy/lib?ref=main \
-        --policy git::https://github.com/enterprise-contract/ec-policies//policy/pipeline?ref=main \
+        --policy git::https://github.com/conforma/policy//policy/lib?ref=main \
+        --policy git::https://github.com/conforma/policy//policy/pipeline?ref=main \
         --data git::https://github.com/release-engineering/rhtap-ec-policy//data \
         --file <(${TKN} bundle list -o json "${ref}" 2> /dev/null) \
         || true)"

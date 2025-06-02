@@ -6,7 +6,7 @@
 #   Trust is established by comparing the Task references found in the SLSA Provenance with a
 #   pre-defined list of trusted Tasks, which is expected to be provided as a data source that
 #   creates the `data.trusted_tasks` in the format demonstrated at
-#   https://github.com/enterprise-contract/ec-policies/blob/main/example/data/trusted_tekton_tasks.yml.
+#   https://github.com/conforma/policy/blob/main/example/data/trusted_tekton_tasks.yml.
 #   The list can be extended or customized using the `trusted_tasks` rule data key which is merged
 #   into the `trusted_tasks` data.
 #

@@ -4,7 +4,7 @@
 :attestation-task-bundle: release_policy#attestation_task_bundle_package
 :image-built-by-trusted-task: release_policy#slsa_build_scripted_build__image_built_by_trusted_task
 :build-definitions: https://github.com/konflux-ci/build-definitions
-:ec-policies: https://github.com/enterprise-contract/ec-policies
+:policy: https://github.com/conforma/policy
 :ec-track-bundle: https://conforma.dev/docs/ec-cli/ec_track_bundle.html
 :tekton-bundles: https://tekton.dev/docs/pipelines/pipelines/#tekton-bundles
 
@@ -169,8 +169,8 @@ publicKey: "k8s://openshift-pipelines/public-key"
 sources:
   - name: Default with extra source
     policy:
-      - github.com/enterprise-contract/ec-policies//policy/lib
-      - github.com/enterprise-contract/ec-policies//policy/release
+      - github.com/conforma/policy//policy/lib
+      - github.com/conforma/policy//policy/release
 
     data:
       - oci::quay.io/konflux-ci/tekton-catalog/data-acceptable-bundles:latest

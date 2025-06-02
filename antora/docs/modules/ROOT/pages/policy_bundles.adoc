@@ -12,15 +12,15 @@ The latest versions of the bundles can be found in the following repos:
 https://quay.io/repository/enterprise-contract/ec-release-policy?tab=tags[`quay.io/enterprise-contract/ec-release-policy`]::
 
 Used for validating attestations created by Tekton Chains. Contains the
-contents of https://github.com/enterprise-contract/ec-policies/tree/main/policy/release[`policy/release`]
-and https://github.com/enterprise-contract/ec-policies/tree/main/policy/lib[`policy/lib`]
+contents of https://github.com/conforma/policy/tree/main/policy/release[`policy/release`]
+and https://github.com/conforma/policy/tree/main/policy/lib[`policy/lib`]
 in this repo.
 
 https://quay.io/repository/enterprise-contract/ec-pipeline-policy?tab=tags[`quay.io/enterprise-contract/ec-pipeline-policy`]::
 
 Used for validating Tekton Pipeline definitions. Contains the contents of
-https://github.com/enterprise-contract/ec-policies/tree/main/policy/pipeline[`policy/pipeline`]
-and https://github.com/enterprise-contract/ec-policies/tree/main/policy/lib[`policy/lib`].
+https://github.com/conforma/policy/tree/main/policy/pipeline[`policy/pipeline`]
+and https://github.com/conforma/policy/tree/main/policy/lib[`policy/lib`].
 
 == Artifact Hub entries
 

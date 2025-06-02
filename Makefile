@@ -33,7 +33,7 @@ else
   TEST_CMD=$(EC) version > /dev/null && unshare -r -n $(TEST_CMD_DEFAULT)
 endif
 
-LICENSE_IGNORE=-ignore '.git/**'
+LICENSE_IGNORE=-ignore '.git/**' -ignore '.idea/**'
 
 TEST_FILES = $(DATA_DIR)/rule_data.yml $(POLICY_DIR) checks
 define COVERAGE

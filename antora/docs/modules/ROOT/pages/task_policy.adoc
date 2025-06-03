@@ -4,164 +4,29 @@
 
 These rules are applied to Tekton task definitions.
 
-[#step_images_package]
-== link:#step_images_package[Tekton Task Step image policies]
+== Available Packages
 
-This package ensures that a Task definition contains valid values for the image references used by the Task's steps.
+[cols="2,6"]
+|===
+|*Package Name*
+|*Description*
 
-* Package name: `step_images`
+| xref:packages/task_step_images.adoc[step_images]
+a| This package ensures that a Task definition contains valid values for the image references used by the Task's steps.
 
-[#step_images__step_images_accessible]
-=== link:#step_images__step_images_accessible[Step images are valid]
+| xref:packages/task_step_image_registries.adoc[step_image_registries]
+a| This package ensures that a Task definition contains expected values for the image references used by the Task's steps.
 
-Confirm that each step in the Task uses a container image that is accessible.
+| xref:packages/task_annotations.adoc[annotations]
+a| Policies to verify that a Tekton Task definition uses well formed expected annotations .
 
-*Solution*: Make sure the container image used in each step of the Task is pushed to the registry and that it can be fetched.
+| xref:packages/task_results.adoc[results]
+a| Verify Tekton Task definitions provide expected results.
 
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Step %d uses inaccessible image ref '%s'`
-* Code: `step_images.step_images_accessible`
-* Effective from: `2025-02-10T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/step_images/step_images.rego#L14[Source, window="_blank"]
+| xref:packages/task_kind.adoc[kind]
+a| Policies to verify that a Tekton task definition has the expected value for kind.
 
-[#step_image_registries_package]
-== link:#step_image_registries_package[Tekton Task Step image registry policies]
+| xref:packages/task_trusted_artifacts.adoc[trusted_artifacts]
+a| Policies to verify that a Tekton task definition conforms to the expected conventions required for using Trusted Artifacts.
 
-This package ensures that a Task definition contains expected values for the image references used by the Task's steps.
-
-* Package name: `step_image_registries`
-
-[#step_image_registries__step_image_registry_prefix_list_provided]
-=== link:#step_image_registries__step_image_registry_prefix_list_provided[Permitted step image registry prefix list provided]
-
-Confirm the `allowed_step_image_registry_prefixes` rule data was provided, since it's required by the policy rules in this package.
-
-*Solution*: Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key 'allowed_step_image_registry_prefixes' that contains a list of approved registries that can be used to run tasks in the build pipeline.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `step_image_registries.step_image_registry_prefix_list_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/step_image_registries/step_image_registries.rego#L43[Source, window="_blank"]
-
-[#step_image_registries__step_images_permitted]
-=== link:#step_image_registries__step_images_permitted[Step images come from permitted registry]
-
-Confirm that each step in the Task uses a container image with a URL that matches one of the prefixes in the provided list of allowed step image registry prefixes. The list is customizeable via the `allowed_step_image_registry_prefixes` rule data key.
-
-*Solution*: Make sure the container image used in each step of the Task comes from an approved registry.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Step %d uses disallowed image ref '%s'`
-* Code: `step_image_registries.step_images_permitted`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/step_image_registries/step_image_registries.rego#L16[Source, window="_blank"]
-
-[#annotations_package]
-== link:#annotations_package[Tekton Task annotations]
-
-Policies to verify that a Tekton Task definition uses well formed expected annotations .
-
-* Package name: `annotations`
-
-[#annotations__expires_on_format]
-=== link:#annotations__expires_on_format[Task definition uses expires-on annotation in RFC3339 format]
-
-Make sure to use the date format in RFC3339 format in the "build.appstudio.redhat.com/expires-on" annotation.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Expires on time is not in RFC3339 format: %q`
-* Code: `annotations.expires_on_format`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/annotations/annotations.rego#L14[Source, window="_blank"]
-
-[#results_package]
-== link:#results_package[Tekton Task result]
-
-Verify Tekton Task definitions provide expected results.
-
-* Package name: `results`
-
-[#results__required]
-=== link:#results__required[Required result defined]
-
-Verify if Task defines the required result. This is controlled by the `required_task_results` rule data key. By default this is empty making this rule a no-op.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `results.required`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/results/results.rego#L13[Source, window="_blank"]
-
-[#results__rule_data_provided]
-=== link:#results__rule_data_provided[Rule data provided]
-
-Confirm the expected `required_task_results` rule data key has been provided in the expected format.
-
-*Solution*: If provided, ensure the rule data is in the expected format.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `results.rule_data_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/results/results.rego#L27[Source, window="_blank"]
-
-[#kind_package]
-== link:#kind_package[Tekton task kind checks]
-
-Policies to verify that a Tekton task definition has the expected value for kind.
-
-* Package name: `kind`
-
-[#kind__kind_present]
-=== link:#kind__kind_present[Kind field is present in task definition]
-
-Confirm the task definition includes the kind field.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Required field 'kind' not found`
-* Code: `kind.kind_present`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/kind/kind.rego#L29[Source, window="_blank"]
-
-[#kind__expected_kind]
-=== link:#kind__expected_kind[Task definition has expected kind]
-
-Confirm the task definition has the kind "Task".
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Unexpected kind '%s' for task definition`
-* Code: `kind.expected_kind`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/kind/kind.rego#L16[Source, window="_blank"]
-
-[#trusted_artifacts_package]
-== link:#trusted_artifacts_package[Trusted Artifacts Conventions]
-
-Policies to verify that a Tekton task definition conforms to the expected conventions required for using Trusted Artifacts.
-
-* Package name: `trusted_artifacts`
-
-[#trusted_artifacts__parameter]
-=== link:#trusted_artifacts__parameter[Parameter]
-
-Trusted Artifact parameters follow the expected naming convention.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The parameter %q of the Task %q does not use the _ARTIFACT suffix`
-* Code: `trusted_artifacts.parameter`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/trusted_artifacts/trusted_artifacts.rego#L15[Source, window="_blank"]
-
-[#trusted_artifacts__result]
-=== link:#trusted_artifacts__result[Result]
-
-Trusted Artifact results follow the expected naming convention.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The result %q of the Task %q does not use the _ARTIFACT suffix`
-* Code: `trusted_artifacts.result`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/trusted_artifacts/trusted_artifacts.rego#L28[Source, window="_blank"]
-
-[#trusted_artifacts__workspace]
-=== link:#trusted_artifacts__workspace[Workspace]
-
-Tasks that implement the Trusted Artifacts pattern should not allow general purpose workspaces to share data. Instead, data should be passed around via Trusted Artifacts. Workspaces used for other purposes, e.g. provide auth credentials, are allowed. Use the rule data key `allowed_trusted_artifacts_workspaces` to specify which workspace names are allowed. By default this value is empty which effectively disallows any workspace.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `General purpose workspace %q is not allowed`
-* Code: `trusted_artifacts.workspace`
-* Effective from: `2024-07-07T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/trusted_artifacts/trusted_artifacts.rego#L41[Source, window="_blank"]
+|===

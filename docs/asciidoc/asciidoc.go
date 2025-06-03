@@ -141,6 +141,7 @@ func (c *col) SetAnnotations(a []ast.FlatAnnotationsRefSet) {
 				}
 				for _, collection := range cs {
 					a.Custom["package_title"] = pkgInfo.Title
+					a.Custom["package_name"] = packageName(pkgInfo)
 					if collection == title {
 						rules = append(rules, a)
 					}

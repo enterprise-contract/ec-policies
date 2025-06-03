@@ -1,0 +1,20 @@
+= Git branch checks Package
+
+Check that the build was done from an expected git branch. The specific branches permitted are specified as a list of regexes in the `allowed_branch_patterns` rule data.
+
+== Package Name
+
+* `git_branch`
+
+== Rules Included
+
+[#git_branch__git_branch]
+=== link:#git_branch__git_branch[Only allow builds from a trusted branch]
+
+Build must originate from a configured branch pattern (e.g., 'refs/heads/main')
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Build is from a branch %s which is not a trusted branch`
+* Code: `git_branch.git_branch`
+* Effective from: `2025-07-01`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/git_branch/git_branch.rego#L14[Source, window="_blank"]

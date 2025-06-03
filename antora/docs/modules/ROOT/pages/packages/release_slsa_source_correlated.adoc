@@ -1,0 +1,57 @@
+= SLSA - Verification model - Source Package
+
+SLSA v1 verification model states:
+"...artifacts are verified to ensure they meet the producer defined expectations of where the package source code was retrieved from..."
+This package correlates the provided source code reference with the source code referenced in the attestation.
+
+== Package Name
+
+* `slsa_source_correlated`
+
+== Rules Included
+
+[#slsa_source_correlated__expected_source_code_reference]
+=== link:#slsa_source_correlated__expected_source_code_reference[Expected source code reference]
+
+Verify that the provided source code reference is the one being attested.
+
+*Solution*: The source code reference in the attestation doesn't match the expected and provided source code reference. Make sure that the provided source code reference is correct, and if it is make sure that the build process is configured to retrieve the source code from the appropriate source code repository. Make sure that the source code reference is pointing to a explicit revision not to a symbolic identifier, e.g. a branch or tag name.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The expected source code reference %q is not attested`
+* Code: `slsa_source_correlated.expected_source_code_reference`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L67[Source, window="_blank"]
+
+[#slsa_source_correlated__rule_data_provided]
+=== link:#slsa_source_correlated__rule_data_provided[Rule data provided]
+
+Confirm the expected rule data keys have been provided in the expected format. The keys are `supported_vcs` and `supported_digests`.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `slsa_source_correlated.rule_data_provided`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L105[Source, window="_blank"]
+
+[#slsa_source_correlated__source_code_reference_provided]
+=== link:#slsa_source_correlated__source_code_reference_provided[Source code reference provided]
+
+Check if the expected source code reference is provided.
+
+*Solution*: Provide the expected source code reference in inputs.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Expected source code reference was not provided for verification`
+* Code: `slsa_source_correlated.source_code_reference_provided`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L20[Source, window="_blank"]
+
+[#slsa_source_correlated__attested_source_code_reference]
+=== link:#slsa_source_correlated__attested_source_code_reference[Source reference]
+
+Attestation contains source reference.
+
+*Solution*: Check that the attestation creation process includes the source code reference in the predicate.materials for SLSA Provenance v0.2, or in predicate.buildDefinition.resolvedDependencies for SLSA Provenance v1.0 attestations. Check that the Version Control System prefix is the list of the supported VCS types in rule data (`supported_vcs` key).
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The attested material contains no source code reference`
+* Code: `slsa_source_correlated.attested_source_code_reference`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L41[Source, window="_blank"]

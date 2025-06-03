@@ -1,0 +1,19 @@
+= Tekton Task annotations Package
+
+Policies to verify that a Tekton Task definition uses well formed expected annotations .
+
+== Package Name
+
+* `annotations`
+
+== Rules Included
+
+[#annotations__expires_on_format]
+=== link:#annotations__expires_on_format[Task definition uses expires-on annotation in RFC3339 format]
+
+Make sure to use the date format in RFC3339 format in the "build.appstudio.redhat.com/expires-on" annotation.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Expires on time is not in RFC3339 format: %q`
+* Code: `annotations.expires_on_format`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/annotations/annotations.rego#L14[Source, window="_blank"]

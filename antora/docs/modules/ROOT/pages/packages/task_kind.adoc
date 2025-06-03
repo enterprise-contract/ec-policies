@@ -1,0 +1,29 @@
+= Tekton task kind checks Package
+
+Policies to verify that a Tekton task definition has the expected value for kind.
+
+== Package Name
+
+* `kind`
+
+== Rules Included
+
+[#kind__kind_present]
+=== link:#kind__kind_present[Kind field is present in task definition]
+
+Confirm the task definition includes the kind field.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Required field 'kind' not found`
+* Code: `kind.kind_present`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/kind/kind.rego#L29[Source, window="_blank"]
+
+[#kind__expected_kind]
+=== link:#kind__expected_kind[Task definition has expected kind]
+
+Confirm the task definition has the kind "Task".
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Unexpected kind '%s' for task definition`
+* Code: `kind.expected_kind`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/kind/kind.rego#L16[Source, window="_blank"]

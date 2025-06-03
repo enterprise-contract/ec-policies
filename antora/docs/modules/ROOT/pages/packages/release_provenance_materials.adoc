@@ -1,0 +1,33 @@
+= Provenance Materials Package
+
+This package provides rules for verifying the contents of the materials section of the SLSA Provenance attestation.
+
+== Package Name
+
+* `provenance_materials`
+
+== Rules Included
+
+[#provenance_materials__git_clone_source_matches_provenance]
+=== link:#provenance_materials__git_clone_source_matches_provenance[Git clone source matches materials provenance]
+
+Confirm that the result of the git-clone task is included in the materials section of the SLSA provenance attestation.
+
+*Solution*: The build pipeline must contain a task named 'git-clone' and that task must emit results named 'url' and 'commit' and contain the clone git repository and commit, respectively.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Entry in materials for the git repo %q and commit %q not found`
+* Code: `provenance_materials.git_clone_source_matches_provenance`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/provenance_materials/provenance_materials.rego#L37[Source, window="_blank"]
+
+[#provenance_materials__git_clone_task_found]
+=== link:#provenance_materials__git_clone_task_found[Git clone task found]
+
+Confirm that the attestation contains a git-clone task with `commit` and `url` task results.
+
+*Solution*: Make sure the build pipeline contains a task named 'git-clone'.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Task git-clone not found`
+* Code: `provenance_materials.git_clone_task_found`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/provenance_materials/provenance_materials.rego#L15[Source, window="_blank"]

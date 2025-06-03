@@ -1,0 +1,22 @@
+= Tekton Task Step image policies Package
+
+This package ensures that a Task definition contains valid values for the image references used by the Task's steps.
+
+== Package Name
+
+* `step_images`
+
+== Rules Included
+
+[#step_images__step_images_accessible]
+=== link:#step_images__step_images_accessible[Step images are valid]
+
+Confirm that each step in the Task uses a container image that is accessible.
+
+*Solution*: Make sure the container image used in each step of the Task is pushed to the registry and that it can be fetched.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Step %d uses inaccessible image ref '%s'`
+* Code: `step_images.step_images_accessible`
+* Effective from: `2025-02-10T00:00:00Z`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/step_images/step_images.rego#L14[Source, window="_blank"]

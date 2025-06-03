@@ -1,0 +1,20 @@
+= RPM Packages Package
+
+Rules used to verify different properties of specific RPM packages found in the SBOM of the image being validated.
+
+== Package Name
+
+* `rpm_packages`
+
+== Rules Included
+
+[#rpm_packages__unique_version]
+=== link:#rpm_packages__unique_version[Unique Version]
+
+Check if there is more than one version of the same RPM installed across different architectures. This check only applies for Image Indexes, aka multi-platform images. Use the `non_unique_rpm_names` rule data key to ignore certain RPMs.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Multiple versions of the %q RPM were found: %s`
+* Code: `rpm_packages.unique_version`
+* Effective from: `2025-06-28T00:00:00Z`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rpm_packages/rpm_packages.rego#L17[Source, window="_blank"]

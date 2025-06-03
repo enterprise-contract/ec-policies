@@ -1,0 +1,69 @@
+= Pipeline definition Task bundle policies Package
+
+To be able to reproduce and audit builds accurately it's important to know exactly what happens during the build. To do this Conforma requires that all tasks are defined in a set of known and trusted task bundles. This package includes rules to confirm that the tasks in a Pipeline definition are defined in task bundles, and that the task bundles are from the list of known and trusted bundles.
+
+== Package Name
+
+* `task_bundle`
+
+== Rules Included
+
+[#task_bundle__missing_required_data]
+=== link:#task_bundle__missing_required_data[Missing required data]
+
+Confirm the `trusted_tasks` rule data was provided, since it's required by the policy rules in this package.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Missing required trusted_tasks data`
+* Code: `task_bundle.missing_required_data`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/pipeline/task_bundle/task_bundle.rego#L94[Source, window="_blank"]
+
+[#task_bundle__untrusted_task_bundle]
+=== link:#task_bundle__untrusted_task_bundle[Task bundle is not trusted]
+
+For each Task in the Pipeline definition, check if the Tekton Bundle used is a trusted task.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Pipeline task '%s' uses an untrusted task bundle '%s'`
+* Code: `task_bundle.untrusted_task_bundle`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/pipeline/task_bundle/task_bundle.rego#L79[Source, window="_blank"]
+
+[#task_bundle__out_of_date_task_bundle]
+=== link:#task_bundle__out_of_date_task_bundle[Task bundle is out of date]
+
+For each Task in the Pipeline definition, check if the Tekton Bundle used is the most recent.
+
+* Rule type: [rule-type-indicator warning]#WARNING#
+* WARNING message: `Pipeline task '%s' uses an out of date task bundle '%s', new version of the Task must be used before %s`
+* Code: `task_bundle.out_of_date_task_bundle`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/pipeline/task_bundle/task_bundle.rego#L34[Source, window="_blank"]
+
+[#task_bundle__empty_task_bundle_reference]
+=== link:#task_bundle__empty_task_bundle_reference[Task bundle reference is empty]
+
+Check that a valid task bundle reference is being used.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Pipeline task '%s' uses an empty bundle image reference`
+* Code: `task_bundle.empty_task_bundle_reference`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/pipeline/task_bundle/task_bundle.rego#L66[Source, window="_blank"]
+
+[#task_bundle__disallowed_task_reference]
+=== link:#task_bundle__disallowed_task_reference[Task bundle was not used or is not defined]
+
+Check for the existence of a task bundle. This rule will fail if the task is not called from a bundle.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Pipeline task '%s' does not contain a bundle reference`
+* Code: `task_bundle.disallowed_task_reference`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/pipeline/task_bundle/task_bundle.rego#L52[Source, window="_blank"]
+
+[#task_bundle__unpinned_task_bundle]
+=== link:#task_bundle__unpinned_task_bundle[Unpinned task bundle reference]
+
+Check if the Tekton Bundle used for the Tasks in the Pipeline definition is pinned to a digest.
+
+* Rule type: [rule-type-indicator warning]#WARNING#
+* WARNING message: `Pipeline task '%s' uses an unpinned task bundle reference '%s'`
+* Code: `task_bundle.unpinned_task_bundle`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/pipeline/task_bundle/task_bundle.rego#L20[Source, window="_blank"]

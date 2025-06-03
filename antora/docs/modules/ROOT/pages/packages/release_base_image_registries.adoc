@@ -1,0 +1,45 @@
+= Base image checks Package
+
+This package is responsible for verifying the base (parent) images reported in the SLSA Provenace or the SBOM are allowed.
+
+== Package Name
+
+* `base_image_registries`
+
+== Rules Included
+
+[#base_image_registries__allowed_registries_provided]
+=== link:#base_image_registries__allowed_registries_provided[Allowed base image registry prefixes list was provided]
+
+Confirm the `allowed_registry_prefixes` rule data was provided, since it's required by the policy rules in this package.
+
+*Solution*: Make sure to configure a list of trusted registries as a xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `base_image_registries.allowed_registries_provided`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L78[Source, window="_blank"]
+
+[#base_image_registries__base_image_permitted]
+=== link:#base_image_registries__base_image_permitted[Base image comes from permitted registry]
+
+Verify that the base images used when building a container image come from a known set of trusted registries to reduce potential supply chain attacks. By default this policy defines trusted registries as registries that are fully maintained by Red Hat and only contain content produced by Red Hat. The list of permitted registries can be customized by setting the `allowed_registry_prefixes` list in the rule data. Base images that are found in the snapshot being validated are also allowed since EC will also validate those images individually.
+
+*Solution*: Make sure the image used in each task comes from a trusted registry. The list of trusted registries is a configurable xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Base image %q is from a disallowed registry`
+* Code: `base_image_registries.base_image_permitted`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L18[Source, window="_blank"]
+
+[#base_image_registries__base_image_info_found]
+=== link:#base_image_registries__base_image_info_found[Base images provided]
+
+Verify the expected information was provided about which base images were used during the build process. The list of base images comes from any associated CycloneDX or SPDX SBOMs.
+
+*Solution*: Ensure a CycloneDX SBOM is associated with the image.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Base images information is missing`
+* Code: `base_image_registries.base_image_info_found`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L48[Source, window="_blank"]

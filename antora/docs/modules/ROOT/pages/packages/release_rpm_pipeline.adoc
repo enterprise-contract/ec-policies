@@ -1,0 +1,19 @@
+= RPM Pipeline Package
+
+This package provides rules for verifying the RPMs are built in an approved pipeline
+
+== Package Name
+
+* `rpm_pipeline`
+
+== Rules Included
+
+[#rpm_pipeline__invalid_pipeline]
+=== link:#rpm_pipeline__invalid_pipeline[Task version invalid_pipeline]
+
+The Tekton Task used specifies an invalid pipeline. The Task is annotated with `build.appstudio.redhat.com/pipeline` annotation, which must be in the set of `allowed_rpm_build_pipelines` in the rule data.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Task %q uses invalid pipleline %s, which is not in the list of valid pipelines: %s`
+* Code: `rpm_pipeline.invalid_pipeline`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rpm_pipeline/rpm_pipeline.rego#L18[Source, window="_blank"]

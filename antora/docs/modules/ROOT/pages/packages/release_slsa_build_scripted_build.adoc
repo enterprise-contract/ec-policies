@@ -1,0 +1,59 @@
+= SLSA - Build - Scripted Build Package
+
+The SLSA requirement states the following:
+"All build steps were fully defined in some sort of “build script”. The only manual command, if any, was to invoke the build script."
+This package verifies the requirement by asserting the image was built by Tekton Pipelines.
+
+== Package Name
+
+* `slsa_build_scripted_build`
+
+== Rules Included
+
+[#slsa_build_scripted_build__build_script_used]
+=== link:#slsa_build_scripted_build__build_script_used[Build task contains steps]
+
+Verify that the predicate.buildConfig.tasks.steps attribute for the task responsible for building and pushing the image is not empty.
+
+*Solution*: There were no build tasks detected. Make sure the build pipeline contains tasks and that the build system is recording them properly when the attestation is generated.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Build task %q does not contain any steps`
+* Code: `slsa_build_scripted_build.build_script_used`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L21[Source, window="_blank"]
+
+[#slsa_build_scripted_build__build_task_image_results_found]
+=== link:#slsa_build_scripted_build__build_task_image_results_found[Build task set image digest and url task results]
+
+Confirm that a build task exists and it has the expected IMAGE_DIGEST and IMAGE_URL task results.
+
+*Solution*: Make sure the build pipeline contains a build task. The build task must contain results named 'IMAGE_DIGEST' and 'IMAGE_URL'.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Build task not found`
+* Code: `slsa_build_scripted_build.build_task_image_results_found`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L48[Source, window="_blank"]
+
+[#slsa_build_scripted_build__image_built_by_trusted_task]
+=== link:#slsa_build_scripted_build__image_built_by_trusted_task[Image built by trusted Task]
+
+Verify the digest of the image being validated is reported by a trusted Task in its IMAGE_DIGEST result.
+
+*Solution*: Make sure the build Pipeline definition uses a trusted Task to build images.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Image %q not built by a trusted task: %s`
+* Code: `slsa_build_scripted_build.image_built_by_trusted_task`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L106[Source, window="_blank"]
+
+[#slsa_build_scripted_build__subject_build_task_matches]
+=== link:#slsa_build_scripted_build__subject_build_task_matches[Provenance subject matches build task image result]
+
+Verify the subject of the attestations matches the IMAGE_DIGEST and IMAGE_URL values from the build task.
+
+*Solution*: Make sure the subject in the attestation matches the 'IMAGE_URL' and 'IMAGE_DIGEST' results from the build task. The format for the subject should be 'IMAGE_URL@IMAGE_DIGEST'.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The attestation subject, %q, does not match any of the images built`
+* Code: `slsa_build_scripted_build.subject_build_task_matches`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L72[Source, window="_blank"]

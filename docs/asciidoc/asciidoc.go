@@ -105,6 +105,18 @@ func (d doc) generatePolicy(module string) error {
 	return policyTemplate.Execute(nav, d)
 }
 
+func (d doc) generatePackage(module string, p pkg) error {
+	navpath := filepath.Join(module, "pages", "packages", d.Qualifier+"_"+packageName(&p)+".adoc")
+	nav, err := os.Create(navpath)
+	if err != nil {
+		return fmt.Errorf("creating file %q: %w", navpath, err)
+	}
+	defer nav.Close()
+	
+	return packageTemplate.Execute(nav, &p)
+}
+
+
 type col struct {
 	*ast.Annotations
 	Rules *[]*ast.Annotations
@@ -190,9 +202,14 @@ var navTemplateText string
 //go:embed policy.template
 var policyTemplateText string
 
+//go:embed package.template
+var packageTemplateText string
+
 var navTemplate *template.Template
 
 var policyTemplate *template.Template
+
+var packageTemplate *template.Template
 
 func init() {
 	funcs := template.FuncMap{
@@ -207,6 +224,8 @@ func init() {
 	navTemplate = template.Must(template.New("nav").Funcs(funcs).Parse(navTemplateText))
 
 	policyTemplate = template.Must(template.New("policy").Funcs(funcs).Parse(policyTemplateText))
+
+	packageTemplate = template.Must(template.New("Package").Funcs(funcs).Parse(packageTemplateText))
 }
 
 func packageName(p *pkg) string {
@@ -328,6 +347,11 @@ func GenerateAsciidoc(module string, rego ...string) error {
 		}
 		if err := d.generatePolicy(module); err != nil {
 			return err
+		}
+		for _, p := range *d.Packages {
+			if err := d.generatePackage(module, p); err != nil {
+				return err
+			}
 		}
 	}
 

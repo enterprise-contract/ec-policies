@@ -224,6 +224,7 @@ Rules included:
 * xref:release_policy.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]
 * xref:release_policy.adoc#cve__cve_warnings[CVE checks: Non-blocking CVE check]
 * xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
+* xref:release_policy.adoc#git_branch__git_branch[: Only allow builds from a trusted branch]
 * xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]
 * xref:release_policy.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]
 * xref:release_policy.adoc#rpm_pipeline__invalid_pipeline[RPM Pipeline: Task version invalid_pipeline]

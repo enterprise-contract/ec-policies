@@ -154,6 +154,35 @@ deny contains result if {
 }
 
 # METADATA
+# title: Unpinned related images for a component
+# description: >-
+#   Check the input image for the presence of related images.
+#   Ensure all related image references include a digest.
+# custom:
+#   short_name: unpinned_related_images
+#   failure_msg: The reference of %d related images is not pinned with a digest.
+#   solution: >-
+#     Update the related images replacing the unpinned image reference
+#     with pinned image reference. Pinned image reference contains the image digest
+#   collections:
+#   - redhat
+#
+deny contains result if {
+	_release_restrictions_apply
+
+	unpinned_related_images := [related |
+		some related in _related_images_not_in_snapshot
+		# If the image ref is not pinned this will be an empty string
+		related.digest == ""
+	]
+
+	# If any are unpinned we produce the violation
+	count(unpinned_related_images) > 0
+
+	result := lib.result_helper(rego.metadata.chain(), [count(unpinned_related_images)])
+}
+
+# METADATA
 # title: Unable to access related images for a component
 # description: >-
 #   Check the input image for the presence of related images.
@@ -172,20 +201,7 @@ deny contains result if {
 deny contains result if {
 	_release_restrictions_apply
 
-	snapshot_components := input.snapshot.components
-	component_images_digests := [component_image.digest |
-		some component in snapshot_components
-		component_image := image.parse(component.containerImage)
-	]
-
-	some related_images in _related_images(input.image)
-
-	unmatched_image_refs := [related |
-		some related in related_images
-		not related.digest in component_images_digests
-	]
-
-	some unmatched_image in unmatched_image_refs
+	some unmatched_image in _related_images_not_in_snapshot
 	unmatched_ref := sprintf("%s@%s", [unmatched_image.repo, unmatched_image.digest])
 	not ec.oci.descriptor(unmatched_ref)
 
@@ -322,6 +338,17 @@ deny contains result if {
 _name(o) := n if {
 	n := o.name
 } else := "unnamed"
+
+_related_images_not_in_snapshot := [related_image.ref |
+	snapshot_components := input.snapshot.components
+	component_images_digests := [component_image.digest |
+		some component in snapshot_components
+		component_image := image.parse(component.containerImage)
+	]
+
+	some related_image in _related_images(input.image)
+	not related_image.ref.digest in component_images_digests
+]
 
 # Extracts the related images attached to the image. The RELATED_IMAGES_DIGEST result
 # contains the digest of a referring image manifest containing the related image json

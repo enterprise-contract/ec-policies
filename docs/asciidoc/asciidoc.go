@@ -124,17 +124,23 @@ type col struct {
 
 func (c *col) SetAnnotations(a []ast.FlatAnnotationsRefSet) {
 	rules := make([]*ast.Annotations, 0, 5)
-	packageTitles := map[string]string{}
+	packageAnnotations := map[string]*pkg{}
 	title := c.Annotations.Title
 	for _, set := range a {
 		for _, ref := range set {
 			a := ref.Annotations
 			if a.Scope == "package" {
-				packageTitles[ref.Path.String()] = a.Title
+				packageAnnotations[ref.Path.String()] = &pkg{a, nil}
 			}
 			if cs, ok := ref.Annotations.Custom["collections"].([]any); ok {
+				pkgPath := ref.GetPackage().Path.String()
+				pkgInfo, ok := packageAnnotations[pkgPath]
+				if !ok {
+					fmt.Fprintf(os.Stderr, "Warning: Package path '%v' not found for rule '%v'\n", pkgPath, a.Location)
+					continue
+				}
 				for _, collection := range cs {
-					a.Custom["package_title"] = packageTitles[ref.GetPackage().Path.String()]
+					a.Custom["package_title"] = pkgInfo.Title
 					if collection == title {
 						rules = append(rules, a)
 					}

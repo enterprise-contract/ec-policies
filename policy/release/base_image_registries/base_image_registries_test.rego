@@ -5,6 +5,12 @@ import rego.v1
 import data.base_image_registries
 import data.lib
 
+# There are two formats of SBOM supported, CycloneDX and SPDX. In these tests,
+# the mocked CycloneDX SBOMS are generally defined inline in the test, while
+# the mocked SPDX SBOMS are defined in one place at the bottom, and then patched
+# in each test as required. Todo maybe: Make it more consistent, perhaps with
+# some helper functions for generating mocked sbom components/packages.
+
 test_allowed_base_images if {
 	sboms := [{"formulation": [
 		{"components": [{
@@ -93,6 +99,12 @@ test_disallowed_base_images if {
 	]}]
 
 	bad_spdx_sbom := json.patch(_spdx_sbom, [
+		# Tweak the repository_url so they're no longer allowed
+		# regal ignore:line-length
+		{"op": "replace", "path": "/0/packages/0/externalRefs/0/referenceLocator", "value": "pkg:oci/ignored@sha256:123?repository_url=registry.redhat.blah/ubi7/3"},
+		# regal ignore:line-length
+		{"op": "replace", "path": "/0/packages/1/externalRefs/0/referenceLocator", "value": "pkg:oci/ignored@sha256:456?repository_url=registry.redhat.whatever/ubi7/3"},
+		# Actually these two won't matter, but let's change them anyhow so the name and repository_url are consistent
 		{"op": "replace", "path": "/0/packages/0/name", "value": "registry.redhat.blah/ubi7/3"},
 		{"op": "replace", "path": "/0/packages/1/name", "value": "registry.redhat.whatever/ubi7/3"},
 	])
@@ -115,12 +127,12 @@ test_disallowed_base_images if {
 		},
 		{
 			"code": "base_image_registries.base_image_permitted",
-			"msg": "Base image \"registry.redhat.blah/ubi7/3\" is from a disallowed registry",
+			"msg": "Base image \"registry.redhat.blah/ubi7/3@sha256:123\" is from a disallowed registry",
 			"term": "registry.redhat.blah/ubi7/3",
 		},
 		{
 			"code": "base_image_registries.base_image_permitted",
-			"msg": "Base image \"registry.redhat.whatever/ubi7/3\" is from a disallowed registry",
+			"msg": "Base image \"registry.redhat.whatever/ubi7/3@sha256:456\" is from a disallowed registry",
 			"term": "registry.redhat.whatever/ubi7/3",
 		},
 	}
@@ -149,8 +161,14 @@ test_disallowed_base_images_with_snapshot if {
 	]}]
 
 	bad_spdx_sbom := json.patch(_spdx_sbom, [
-		{"op": "replace", "path": "/0/packages/0/name", "value": "registry.redhat.blah/ubi7/3@sha256:ccc"},
-		{"op": "replace", "path": "/0/packages/1/name", "value": "registry.redhat.whatever/ubi7/3@sha256:ccc"},
+		# Tweak the repository_url so they're no longer allowed
+		# regal ignore:line-length
+		{"op": "replace", "path": "/0/packages/0/externalRefs/0/referenceLocator", "value": "pkg:oci/whatever@sha256:ccc?repository_url=registry.redhat.blah/ubi7/3"},
+		# regal ignore:line-length
+		{"op": "replace", "path": "/0/packages/1/externalRefs/0/referenceLocator", "value": "pkg:oci/whatever@sha256:ddd?repository_url=registry.redhat.whatever/ubi7/3"},
+		# Actually these two won't matter, but let's change them anyhow so the name and repository_url are consistent
+		{"op": "replace", "path": "/0/packages/0/name", "value": "registry.redhat.blah/ubi7/3"},
+		{"op": "replace", "path": "/0/packages/1/name", "value": "registry.redhat.whatever/ubi7/3"},
 	])
 
 	snapshot := {"components": [
@@ -176,7 +194,7 @@ test_disallowed_base_images_with_snapshot if {
 		},
 		{
 			"code": "base_image_registries.base_image_permitted",
-			"msg": "Base image \"registry.redhat.whatever/ubi7/3@sha256:ccc\" is from a disallowed registry",
+			"msg": "Base image \"registry.redhat.whatever/ubi7/3@sha256:ddd\" is from a disallowed registry",
 			"term": "registry.redhat.whatever/ubi7/3",
 		},
 	}
@@ -333,13 +351,13 @@ _spdx_sbom := [{"packages": [
 	{
 		# regal ignore:line-length
 		"SPDXID": "SPDXRef-image-registry.redhat.io/single-container-app-9520a72cbb69edfca5cac88ea2a9e0e09142ec934952b9420d686e77765f002c",
-		"name": "registry.redhat.io/single-container-app:latest@sha256:abc",
+		"name": "registry.redhat.io/single-container-app",
 		"downloadLocation": "NOASSERTION",
 		"externalRefs": [{
 			"referenceCategory": "PACKAGE-MANAGER",
 			"referenceType": "purl",
 			# regal ignore:line-length
-			"referenceLocator": "pkg:oci/single-container-app@sha256:8f99627e843e931846855c5d899901bf093f5093e613a92745696a26b5420941?repository_url=quay.io/mkosiarc_rhtap/single-container-app",
+			"referenceLocator": "pkg:oci/single-container-app@sha256:abc?repository_url=registry.redhat.io/single-container-app",
 		}],
 		"annotations": [{
 			"annotator": "Tool: konflux:jsonencoded",
@@ -351,13 +369,13 @@ _spdx_sbom := [{"packages": [
 	{
 		# regal ignore:line-length
 		"SPDXID": "SPDXRef-image-docker.io/single-container-app-9520a72cbb69edfca5cac88ea2a9e0e09142ec934952b9420d686e77765f002c",
-		"name": "docker.io/single-container-app:latest@sha256:bcd",
+		"name": "docker.io/single-container-app",
 		"downloadLocation": "NOASSERTION",
 		"externalRefs": [{
 			"referenceCategory": "PACKAGE-MANAGER",
 			"referenceType": "purl",
 			# regal ignore:line-length
-			"referenceLocator": "pkg:oci/single-container-app@sha256:8f99627e843e931846855c5d899901bf093f5093e613a92745696a26b5420941?repository_url=quay.io/mkosiarc_rhtap/single-container-app",
+			"referenceLocator": "pkg:oci/single-container-app@sha256:bcd?repository_url=docker.io/single-container-app",
 		}],
 		"annotations": [{
 			"annotator": "Tool: konflux:jsonencoded",

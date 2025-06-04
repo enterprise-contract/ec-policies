@@ -116,7 +116,7 @@ _cyclonedx_base_images := [component.name |
 	_is_cyclonedx_base_image(component)
 ]
 
-_spdx_base_images := [pkg.name |
+_spdx_base_images := [_spdx_image_ref(pkg) |
 	some s in sbom.spdx_sboms
 	some pkg in s.packages
 	_is_spdx_base_image(pkg)
@@ -134,15 +134,16 @@ _is_cyclonedx_base_image(component) if {
 }
 
 # spdx format
-_is_spdx_base_image(component) if {
+_is_spdx_base_image(pkg) if {
 	base_image_properties := [property |
-		some property in component.annotations
+		some property in pkg.annotations
 		_is_base_image_property(json.unmarshal(property.comment))
 	]
 	count(base_image_properties) > 0
 }
 
 _is_base_image_property(property) if {
+	# Todo maybe: Make this less Konflux specific
 	property.name == "konflux:container:is_base_image"
 	value := property.value
 	json.is_valid(value)
@@ -150,10 +151,41 @@ _is_base_image_property(property) if {
 }
 
 _is_base_image_property(property) if {
+	# Todo maybe: Make this less Konflux specific
 	property.name == "konflux:container:is_builder_image:for_stage"
 	value := property.value
 	json.is_valid(value)
 	type_name(json.unmarshal(value)) == "number"
+}
+
+# Extract the image ref from the externalRef data in the SPDX package
+_spdx_image_ref(pkg) := image_ref if {
+	some ref in pkg.externalRefs
+	ref.referenceType == "purl"
+
+	# Example purl:
+	#   "pkg:oci/someapp@sha256:012abc?repository_url=someregistry.io/someorg/someapp"
+	raw_purl := ref.referenceLocator
+
+	purl := ec.purl.parse(raw_purl)
+	purl.type == "oci"
+
+	# Todo maybe: We see "oci" in SBOMs produced by Konflux, but I think
+	# other SPDX creators might reasonably use "pkg:docker/" in the purl.
+	# purl.type in {"oci", "docker"}
+
+	# Example image_digest: "sha256:012abc"
+	image_digest := purl.version
+
+	some qualifier in purl.qualifiers
+	qualifier.key == "repository_url"
+
+	# Example repo_url: "someregistry.io/someorg/someapp"
+	# It's probably the same as pkg.name, but let's use the value from the purl
+	repo_url := qualifier.value
+
+	# Put them together to make a pinned image_ref
+	image_ref := sprintf("%s@%s", [repo_url, image_digest])
 }
 
 # Verify allowed_registry_prefixes is a non-empty list of strings

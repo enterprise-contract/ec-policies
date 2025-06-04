@@ -5,9 +5,9 @@ go 1.24.2
 require (
 	github.com/enterprise-contract/ec-cli v0.7.75
 	github.com/google/addlicense v1.1.1
-	github.com/open-policy-agent/conftest v0.55.0
-	github.com/styrainc/regal v0.29.2
-	github.com/tektoncd/cli v0.39.1
+	github.com/open-policy-agent/conftest v0.60.0
+	github.com/styrainc/regal v0.33.1
+	github.com/tektoncd/cli v0.41.0
 	oras.land/oras v1.2.3
 )
 

@@ -19,43 +19,26 @@ a| {{ .Description }}
 
 Rules included:{{ "\n" }}
 
-        {{- range .Rules }}
-* xref:{{ $doc.Qualifier }}_policy.adoc#{{ anchor . }}[{{ index .Custom "package_title" }}: {{ .Title }}]
+        {{- range .Rules }}        
+* xref:packages/{{ $doc.Qualifier }}_{{ index .Custom "package_name" }}.adoc#{{ anchor . }}[{{ index .Custom "package_title" }}: {{ .Title }}]
         {{- end}}
     {{- end }}{{/* range . */}}
 |===
 {{- end }}{{/* .Collections */}}
+
+== Available Packages
+
+[cols="2,6"]
+|===
+|*Package Name*
+|*Description*
+
 {{- range .Packages }}
 {{- $pkg := . }}
 
-[#{{ anchor .Annotations }}]
-== link:#{{ anchor .Annotations }}[{{ .Title }}]
-
-{{ .Description }}
-
-* Package name: `{{ packageName . }}`
-
-{{- range .Rules }}
-
-[#{{ anchor . }}]
-=== link:#{{ anchor . }}[{{ .Title }}]
-
-{{ .Description }}
-
-{{- with index .Custom "solution" }}
-
-*Solution*: {{ . }}
-{{- end }}
-
-* Rule type: [rule-type-indicator {{ warningOrFailure . }}]#{{ toUpper (warningOrFailure .) }}#
-* {{ toTitle (warningOrFailure .) }} message: `{{ index .Custom "failure_msg" }}`
-* Code: `{{ packageName $pkg }}.{{ index .Custom "short_name" }}`
-{{- with index .Custom "effective_on" }}
-* Effective from: `{{ . }}`
-{{- end }}{{/* index .Custom "effective_on" */}}
-{{- if not (isBuiltIn .) }}
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/{{ .Location.File }}#L{{ .Location.Row }}[Source, window="_blank"]
-{{- end }}{{/* isBuiltIn */}}
-{{- end }}{{/* range .Rules */}}
+| xref:packages/{{ $doc.Qualifier }}_{{ packageName . }}.adoc[{{ packageName . }}]
+a| {{ .Description }}
 
 {{- end}}
+
+|===

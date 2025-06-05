@@ -375,6 +375,37 @@ test_trusted_build_digests_from_run_script_no_result if {
 		with data.trusted_tasks as trusted_tasks_data
 }
 
+test_trusted_build_digests_from_build_task_results if {
+	# A digest from the the IMAGE_DIGEST build task result appears in _trusted_build_digests
+	# if the build task is considered a trusted task
+	attestation := _mock_att_with_task({
+		"ref": {"name": "some-task", "bundle": "registry.local/trusty:1.0@sha256:digest"},
+		"results": [
+			{"name": "SOME_IMAGE_URL", "value": "registry.io/whatever/image", "type": "string"},
+			# regal ignore:line-length
+			{"name": "SOME_IMAGE_DIGEST", "value": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "type": "string"},
+		],
+	})
+	expected := {"sha256:2222222222222222222222222222222222222222222222222222222222222222"}
+	lib.assert_equal(trusted_task._trusted_build_digests, expected) with input.attestations as [attestation]
+		with data.trusted_tasks as trusted_tasks_data
+}
+
+test_trusted_build_digests_from_snapshot_components if {
+	# Digests present in the snapshot components should appear in _trusted_build_digests
+	components := [
+		# regal ignore:line-length
+		{"containerImage": "registry.io/repository/image1@sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+		# regal ignore:line-length
+		{"containerImage": "registry.io/repository/image2@sha256:4444444444444444444444444444444444444444444444444444444444444444"},
+	]
+	expected := {
+		"sha256:3333333333333333333333333333333333333333333333333333333333333333",
+		"sha256:4444444444444444444444444444444444444444444444444444444444444444",
+	}
+	lib.assert_equal(trusted_task._trusted_build_digests, expected) with input.snapshot.components as components
+}
+
 #########################################
 # Pipeline Tasks using bundles resolver #
 #########################################

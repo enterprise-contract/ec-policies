@@ -324,6 +324,19 @@ _trusted_build_digests contains digest if {
 	some digest in _digests_from_values(lib.result_values(result))
 }
 
+# If an image is included in the "SCRIPT_RUNNER_IMAGE_REFERENCE" task result
+# produced by a trusted "run-script-oci-ta" task, then we permit it. This
+# image ref gets placed in the ADDITIONAL_BASE_IMAGES task param for the build
+# task so the build task can include the additional base image in the SBOM.
+_trusted_build_digests contains digest if {
+	some attestation in lib.pipelinerun_attestations
+	some task in tekton.tasks(attestation)
+	tekton.task_ref(task).name == "run-script-oci-ta"
+	tekton.is_trusted_task(task)
+	runner_image_result_value := tekton.task_result(task, "SCRIPT_RUNNER_IMAGE_REFERENCE")
+	some digest in _digests_from_values({runner_image_result_value})
+}
+
 # If an image is part of the snapshot we assume that was built in Konflux and
 # therefore it is considered trustworthy. IIUC the use case is something to do
 # with building an image in one component, and being able to use it while

@@ -12,7 +12,7 @@ test_hermetic_build if {
 test_not_hermetic_build if {
 	expected := {{
 		"code": "hermetic_build_task.build_task_hermetic",
-		"msg": "Build task was not invoked with the hermetic parameter set",
+		"msg": "Build task was not invoked with the hermetic parameter set: 'any-task'",
 	}}
 
 	hermetic_not_true := json.patch(_good_attestation, [{
@@ -63,11 +63,13 @@ test_hermetic_build_many_build_tasks if {
 			"value": "false",
 		}],
 	)
-	expected := {{
+	expected_mixed_hermetic := {{
 		"code": "hermetic_build_task.build_task_hermetic",
-		"msg": "Build task was not invoked with the hermetic parameter set",
+		"msg": "Build task was not invoked with the hermetic parameter set: 'build-1'",
 	}}
-	lib.assert_equal_results(expected, hermetic_build_task.deny) with input.attestations as [attestation_mixed_hermetic]
+
+	# regal ignore:line-length
+	lib.assert_equal_results(expected_mixed_hermetic, hermetic_build_task.deny) with input.attestations as [attestation_mixed_hermetic]
 
 	attestation_non_hermetic := json.patch(
 		{"statement": {"predicate": {
@@ -87,7 +89,19 @@ test_hermetic_build_many_build_tasks if {
 			},
 		],
 	)
-	lib.assert_equal_results(expected, hermetic_build_task.deny) with input.attestations as [attestation_non_hermetic]
+	expected_non_hermetic := {
+		{
+			"code": "hermetic_build_task.build_task_hermetic",
+			"msg": "Build task was not invoked with the hermetic parameter set: 'build-1'",
+		},
+		{
+			"code": "hermetic_build_task.build_task_hermetic",
+			"msg": "Build task was not invoked with the hermetic parameter set: 'build-2'",
+		},
+	}
+
+	# regal ignore:line-length
+	lib.assert_equal_results(expected_non_hermetic, hermetic_build_task.deny) with input.attestations as [attestation_non_hermetic]
 }
 
 _good_attestation := {"statement": {"predicate": {

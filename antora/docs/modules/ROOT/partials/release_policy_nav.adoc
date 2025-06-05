@@ -66,6 +66,8 @@
 **** xref:release_policy.adoc#olm__unmapped_references[Unmapped images in OLM bundle]
 **** xref:release_policy.adoc#olm__unpinned_references[Unpinned images in OLM bundle]
 **** xref:release_policy.adoc#olm__unpinned_snapshot_references[Unpinned images in input snapshot]
+*** xref:release_policy.adoc#pre_build_script_package[Pre-build-script task checks]
+**** xref:release_policy.adoc#pre_build_script__pre_build_script_hermetic[Pre-Build-Script task called with hermetic param set]
 *** xref:release_policy.adoc#provenance_materials_package[Provenance Materials]
 **** xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Git clone source matches materials provenance]
 **** xref:release_policy.adoc#provenance_materials__git_clone_task_found[Git clone task found]

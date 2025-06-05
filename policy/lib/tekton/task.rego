@@ -18,6 +18,8 @@ latest_required_default_tasks := ectime.newest(data["required-tasks"])
 # The set of required tasks that are required right now.
 current_required_default_tasks := ectime.most_current(data["required-tasks"])
 
+_pre_build_script_task_name := "run-script-oci-ta"
+
 # tasks returns the set of tasks found in the object.
 tasks(obj) := {task |
 	some task in _maybe_tasks(obj)
@@ -131,6 +133,11 @@ task_params(task) := params if {
 # task_param returns the value of the given parameter in the task.
 task_param(task, name) := task_params(task)[name]
 
+task_is_hermetic(task) if {
+	task_param(task, "HERMETIC")
+	task_param(task, "HERMETIC") == "true"
+}
+
 # slsa v0.2 results
 task_results(task) := task.results
 
@@ -169,6 +176,11 @@ build_tasks(attestation) := [task |
 
 	image_digest := task_result_artifact_digest(task)
 	count(image_digest) > 0
+]
+
+pre_build_script_tasks(attestation) := [task |
+	some task in tasks(attestation)
+	task_name(task) == _pre_build_script_task_name
 ]
 
 # return the tasks that have "TEST_OUTPUT" as a result

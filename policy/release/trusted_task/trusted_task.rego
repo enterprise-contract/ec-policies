@@ -341,6 +341,27 @@ _trusted_build_digests contains digest if {
 	digest != ""
 }
 
+# If an image is included in the "SCRIPT_RUNNER_IMAGE_REFERENCE" task result
+# produced by a trusted "run-script-oci-ta" task, then we permit it. This
+# image ref gets placed in the ADDITIONAL_BASE_IMAGES task param for the build
+# task so the build task can include the additional base image in the SBOM.
+_trusted_build_digests contains digest if {
+	some attestation in lib.pipelinerun_attestations
+	some task in _pre_build_run_script_tasks(attestation)
+	tekton.is_trusted_task(task)
+	runner_image_result_value := tekton.task_result(task, _pre_build_run_script_runner_image_result)
+	some digest in _digests_from_values({runner_image_result_value})
+}
+
+_pre_build_run_script_tasks(attestation) := [task |
+	some task in tekton.tasks(attestation)
+	tekton.task_ref(task).name == _pre_build_run_script_task_name
+]
+
+_pre_build_run_script_task_name := "run-script-oci-ta"
+
+_pre_build_run_script_runner_image_result := "SCRIPT_RUNNER_IMAGE_REFERENCE"
+
 _digests_from_values(values) := {digest |
 	some value in values
 	some pattern in _digest_patterns

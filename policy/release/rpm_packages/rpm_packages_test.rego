@@ -14,6 +14,7 @@ test_success_cyclonedx if {
 		with input.image.ref as "registry.local/image-index@sha256:image_index_digest"
 		with ec.oci.descriptor as {"mediaType": "application/vnd.oci.image.index.v1+json"}
 		with ec.oci.blob as _mock_blob
+		with ec.oci.image_index as _mock_image_index
 }
 
 test_success_spdx if {
@@ -23,6 +24,7 @@ test_success_spdx if {
 		with input.image.ref as "registry.local/image-index@sha256:image_index_digest"
 		with ec.oci.descriptor as {"mediaType": "application/vnd.oci.image.index.v1+json"}
 		with ec.oci.blob as _mock_blob
+		with ec.oci.image_index as _mock_image_index
 }
 
 test_failure_cyclonedx if {
@@ -38,6 +40,7 @@ test_failure_cyclonedx if {
 		with input.image.ref as "registry.local/image-index@sha256:image_index_digest"
 		with ec.oci.descriptor as {"mediaType": "application/vnd.oci.image.index.v1+json"}
 		with ec.oci.blob as _mock_blob
+		with ec.oci.image_index as _mock_image_index
 }
 
 test_failure_spdx if {
@@ -53,6 +56,7 @@ test_failure_spdx if {
 		with input.image.ref as "registry.local/image-index@sha256:image-index-digest"
 		with ec.oci.descriptor as {"mediaType": "application/vnd.oci.image.index.v1+json"}
 		with ec.oci.blob as _mock_blob
+		with ec.oci.image_index as _mock_image_index
 }
 
 test_non_image_index if {
@@ -72,6 +76,33 @@ test_ignore_names if {
 		with ec.oci.descriptor as {"mediaType": "application/vnd.oci.image.index.v1+json"}
 		with ec.oci.blob as _mock_blob
 		with data.rule_data.non_unique_rpm_names as ["spam"]
+		with ec.oci.image_index as _mock_image_index
+}
+
+test_single_image_index if {
+	att := _attestation_with_sboms([_spdx_url_1, _spdx_url_2])
+
+	lib.assert_empty(rpm_packages.deny) with input.attestations as [att]
+		with input.image.ref as "registry.local/image-index@sha256:single-image-index"
+		with ec.oci.descriptor as {"mediaType": "application/vnd.oci.image.index.v1+json"}
+		with ec.oci.blob as _mock_blob
+		with ec.oci.image_index as _mock_image_index
+}
+
+test_multi_image_index if {
+	att := _attestation_with_sboms([_spdx_url_1, _spdx_url_2])
+
+	expected := {{
+		"code": "rpm_packages.unique_version",
+		"msg": "Multiple versions of the \"spam\" RPM were found: 1.0.0-1, 1.0.0-2",
+		"term": "spam",
+	}}
+
+	lib.assert_equal_results(expected, rpm_packages.deny) with input.attestations as [att]
+		with input.image.ref as "registry.local/image-index@sha256:multi-image-index"
+		with ec.oci.descriptor as {"mediaType": "application/vnd.oci.image.index.v1+json"}
+		with ec.oci.blob as _mock_blob
+		with ec.oci.image_index as _mock_image_index
 }
 
 _mock_blob(`"registry.local/cyclonedx-1@sha256:cyclonedx-1-digest"`) := json.marshal({"components": [
@@ -155,3 +186,32 @@ _attestation_with_sboms(sbom_urls) := attestation if {
 }
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
+
+# Mock image index responses
+_mock_image_index("registry.local/image-index@sha256:single-image-index") := {"manifests": [{
+	"mediaType": "application/vnd.oci.image.manifest.v1+json",
+	"digest": "sha256:abc123",
+	"platform": {
+		"architecture": "amd64",
+		"os": "linux",
+	},
+}]}
+
+_mock_image_index("registry.local/image-index@sha256:multi-image-index") := {"manifests": [
+	{
+		"mediaType": "application/vnd.oci.image.manifest.v1+json",
+		"digest": "sha256:abc123",
+		"platform": {
+			"architecture": "amd64",
+			"os": "linux",
+		},
+	},
+	{
+		"mediaType": "application/vnd.oci.image.manifest.v1+json",
+		"digest": "sha256:def456",
+		"platform": {
+			"architecture": "arm64",
+			"os": "linux",
+		},
+	},
+]}

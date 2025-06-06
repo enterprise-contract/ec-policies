@@ -218,7 +218,7 @@ deny contains result if {
 # title: Related images references are from allowed registries
 # description: >-
 #   Each image indicated as a related image should match an entry in the list of prefixes
-#   defined by the rule data key `allowed_registry_prefixes` in your policy configuration.
+#   defined by the rule data key `allowed_olm_image_registry_prefixes` in your policy configuration.
 # custom:
 #   short_name: allowed_registries_related
 #   failure_msg: The %q related image reference is not from an allowed registry.
@@ -231,13 +231,13 @@ deny contains result if {
 #
 deny contains result if {
 	# The presence of expected rule_data verified in _rule_data_errors
-	allowed_registry_prefixes := lib.rule_data("allowed_registry_prefixes")
+	allowed_olm_image_registry_prefixes := lib.rule_data("allowed_olm_image_registry_prefixes")
 
 	# Parse manifests from snapshot
 	some related_images in _related_images(input.image)
 
 	some img in related_images
-	not _image_registry_allowed(img.repo, allowed_registry_prefixes)
+	not _image_registry_allowed(img.repo, allowed_olm_image_registry_prefixes)
 
 	img_str := image.str(img)
 
@@ -288,7 +288,7 @@ deny contains result if {
 # title: Images referenced by OLM bundle are from allowed registries
 # description: >-
 #   Each image referenced by the OLM bundle should match an entry in the list of prefixes
-#   defined by the rule data key `allowed_registry_prefixes` in your policy configuration.
+#   defined by the rule data key `allowed_olm_image_registry_prefixes` in your policy configuration.
 # custom:
 #   short_name: allowed_registries
 #   failure_msg: The %q CSV image reference is not from an allowed registry.
@@ -301,7 +301,7 @@ deny contains result if {
 #
 deny contains result if {
 	# The presence of expected rule_data verified in _rule_data_errors
-	allowed_registry_prefixes := lib.rule_data("allowed_registry_prefixes")
+	allowed_olm_image_registry_prefixes := lib.rule_data("allowed_olm_image_registry_prefixes")
 
 	# Parse manifests from snapshot
 	some csv_manifest in _csv_manifests
@@ -310,7 +310,7 @@ deny contains result if {
 	all_csv_images := all_image_ref(csv_manifest)
 
 	some img in all_csv_images
-	not _image_registry_allowed(img.ref.repo, allowed_registry_prefixes)
+	not _image_registry_allowed(img.ref.repo, allowed_olm_image_registry_prefixes)
 
 	img_str := image.str(img.ref)
 
@@ -492,7 +492,7 @@ _csv_manifests contains manifest if {
 	manifest.kind == "ClusterServiceVersion"
 }
 
-# Verify allowed_registry_prefixes & required_olm_features_annotations are non-empty list of strings
+# Verify allowed_olm_image_registry_prefixes & required_olm_features_annotations are non-empty list of strings
 _rule_data_errors contains error if {
 	some rule_data_key in _rule_data_keys
 	some e in j.validate_schema(
@@ -513,7 +513,7 @@ _rule_data_errors contains error if {
 
 _rule_data_keys := [
 	"required_olm_features_annotations",
-	"allowed_registry_prefixes",
+	"allowed_olm_image_registry_prefixes",
 ]
 
 _subscriptions_errors contains error if {

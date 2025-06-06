@@ -1,3 +1,11 @@
+#
+# METADATA
+# title: Git branch checks
+# description: >-
+#   Check that the build was done from an expected git branch. The
+#   specific branches permitted are specified as a list of regexes
+#   in the `allowed_branch_patterns` rule data.
+#
 package git_branch
 
 import data.lib

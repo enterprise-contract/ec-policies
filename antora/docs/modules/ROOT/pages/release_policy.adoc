@@ -224,7 +224,7 @@ Rules included:
 * xref:release_policy.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]
 * xref:release_policy.adoc#cve__cve_warnings[CVE checks: Non-blocking CVE check]
 * xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
-* xref:release_policy.adoc#git_branch__git_branch[: Only allow builds from a trusted branch]
+* xref:release_policy.adoc#git_branch__git_branch[Git branch checks: Only allow builds from a trusted branch]
 * xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]
 * xref:release_policy.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]
 * xref:release_policy.adoc#rpm_pipeline__invalid_pipeline[RPM Pipeline: Task version invalid_pipeline]
@@ -621,6 +621,24 @@ Verify the PipelineRun did not use any pre-existing PersistentVolumeClaim worksp
 * FAILURE message: `PipelineRun uses shared volumes, %v.`
 * Code: `external_parameters.restrict_shared_volumes`
 * https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/external_parameters/external_parameters.rego#L54[Source, window="_blank"]
+
+[#git_branch_package]
+== link:#git_branch_package[Git branch checks]
+
+Check that the build was done from an expected git branch. The specific branches permitted are specified as a list of regexes in the `allowed_branch_patterns` rule data.
+
+* Package name: `git_branch`
+
+[#git_branch__git_branch]
+=== link:#git_branch__git_branch[Only allow builds from a trusted branch]
+
+Build must originate from a configured branch pattern (e.g., 'refs/heads/main')
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Build is from a branch %s which is not a trusted branch`
+* Code: `git_branch.git_branch`
+* Effective from: `2025-07-01`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/git_branch/git_branch.rego#L14[Source, window="_blank"]
 
 [#github_certificate_package]
 == link:#github_certificate_package[GitHub Certificate Checks]

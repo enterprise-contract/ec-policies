@@ -106,7 +106,7 @@ func (d doc) generatePolicy(module string) error {
 }
 
 func (d doc) generatePackage(module string, p pkg) error {
-	navpath := filepath.Join(module, "pages", "packages", d.Qualifier+"_"+packageName(&p)+".adoc")
+	navpath := filepath.Join(module, "pages", "packages", policyOrigin(p.Annotations)+"_"+packageName(&p)+".adoc")
 	nav, err := os.Create(navpath)
 	if err != nil {
 		return fmt.Errorf("creating file %q: %w", navpath, err)
@@ -226,6 +226,7 @@ func init() {
 		"toUpper":          strings.ToUpper,
 		"toTitle":          strings.ToTitle,
 		"isBuiltIn":        isBuiltIn,
+		"policyOrigin":     policyOrigin,
 	}
 
 	navTemplate = template.Must(template.New("nav").Funcs(funcs).Parse(navTemplateText))
@@ -363,4 +364,13 @@ func GenerateAsciidoc(module string, rego ...string) error {
 	}
 
 	return nil
+}
+
+// obtain policy origin of a package or a rule
+func policyOrigin(a *ast.Annotations) string {
+	path := strings.Split(a.Location.File, "/")
+	if len(path) > 1 && path[0] == "policy" {
+		return path[1]
+	}
+	return ""
 }

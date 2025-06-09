@@ -20,7 +20,7 @@ a| {{ .Description }}
 Rules included:{{ "\n" }}
 
         {{- range .Rules }}        
-* xref:packages/{{ $doc.Qualifier }}_{{ index .Custom "package_name" }}.adoc#{{ anchor . }}[{{ index .Custom "package_title" }}: {{ .Title }}]
+* xref:packages/{{ policyOrigin . }}_{{ index .Custom "package_name" }}.adoc#{{ anchor . }}[{{ index .Custom "package_title" }}: {{ .Title }}]
         {{- end}}
     {{- end }}{{/* range . */}}
 |===

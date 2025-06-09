@@ -16,7 +16,7 @@ Feature: Task Definition
                         ],
                         "config": {
                             "include": [
-                                "@redhat"
+                                "results.*"
                             ]
                         }
                     }

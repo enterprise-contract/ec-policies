@@ -33,9 +33,6 @@ deny contains result if {
 #   short_name: rule_data_provided
 #   failure_msg: '%s'
 #   solution: If provided, ensure the rule data is in the expected format.
-#   collections:
-#   - redhat
-#   - policy_data
 #
 deny contains result if {
 	some e in _rule_data_errors

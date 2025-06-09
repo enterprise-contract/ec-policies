@@ -3,7 +3,7 @@ module github.com/conforma/policy
 go 1.24.2
 
 require (
-	github.com/enterprise-contract/ec-cli v0.7.78
+	github.com/enterprise-contract/ec-cli v0.7.81
 	github.com/google/addlicense v1.1.1
 	github.com/open-policy-agent/conftest v0.55.0
 	github.com/styrainc/regal v0.29.2
@@ -148,7 +148,7 @@ require (
 	github.com/eapache/queue v1.1.0 // indirect
 	github.com/emicklei/go-restful/v3 v3.12.1 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
-	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.79 // indirect
+	github.com/enterprise-contract/enterprise-contract-controller/api v0.1.107 // indirect
 	github.com/envoyproxy/go-control-plane v0.13.0 // indirect
 	github.com/envoyproxy/protoc-gen-validate v1.1.0 // indirect
 	github.com/evanphx/json-patch v5.9.0+incompatible // indirect

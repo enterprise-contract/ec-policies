@@ -10,8 +10,9 @@
 ** {{ $doc.Name }} Rules
 {{- end }}{{/* .Collections */}}
 {{- range .Packages }}
-{{ $lvl }}** xref:{{ $doc.Qualifier }}_policy.adoc#{{ anchor .Annotations }}[{{ .Annotations.Title }}]
+{{- $pkg := . }}
+{{ $lvl }}** xref:packages/{{ $doc.Qualifier }}_{{ packageName $pkg}}.adoc[{{ .Annotations.Title }}]
     {{- range .Rules }}
-{{ $lvl }}*** xref:{{ $doc.Qualifier }}_policy.adoc#{{ anchor . }}[{{ .Title }}]
+{{ $lvl }}*** xref:packages/{{ $doc.Qualifier }}_{{ packageName $pkg }}.adoc#{{ anchor . }}[{{ .Title }}]
     {{- end}}
 {{- end}}

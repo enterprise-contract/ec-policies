@@ -1,0 +1,33 @@
+= SBOM Package
+
+Checks general properties of the SBOMs associated with the image being validated. More specific rules for SPDX and CycloneDX SBOMs are in separate packages.
+
+== Package Name
+
+* `sbom`
+
+== Rules Included
+
+[#sbom__disallowed_packages_provided]
+=== link:#sbom__disallowed_packages_provided[Disallowed packages list is provided]
+
+Confirm the `disallowed_packages` and `disallowed_attributes` rule data were provided, since they are required by the policy rules in this package.
+
+*Solution*: Provide a list of disallowed packages or package attributes in the expected format.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `sbom.disallowed_packages_provided`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom/sbom.rego#L35[Source, window="_blank"]
+
+[#sbom__found]
+=== link:#sbom__found[Found]
+
+Confirm an SBOM attestation exists.
+
+*Solution*: Make sure the build process produces an SBOM attestation.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `No SBOM attestations found`
+* Code: `sbom.found`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom/sbom.rego#L15[Source, window="_blank"]

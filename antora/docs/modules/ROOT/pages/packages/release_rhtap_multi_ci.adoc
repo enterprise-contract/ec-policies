@@ -1,0 +1,33 @@
+= RHTAP Multi-CI Package
+
+Checks for images built using an RHTAP build pipeline in either Jenkins, GitLab or GitHub. RHTAP pipelines are defined under https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
+
+== Package Name
+
+* `rhtap_multi_ci`
+
+== Rules Included
+
+[#rhtap_multi_ci__attestation_format]
+=== link:#rhtap_multi_ci__attestation_format[SLSA Provenance Attestation Format]
+
+Confirm the attestation created by the RHTAP Multi-CI build pipeline matches the expected format.
+
+*Solution*: This check looks for some fields expected to be present in the SLSA attestation. Modifying the scripts that produce the attestation predicate might cause this to fail. See also the `att-predicate-*.sh` scripts at https://github.com/redhat-appstudio/tssc-dev-multi-ci/tree/main/rhtap
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `RHTAP %s attestation problem: %s`
+* Code: `rhtap_multi_ci.attestation_format`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rhtap_multi_ci/rhtap_multi_ci.rego#L40[Source, window="_blank"]
+
+[#rhtap_multi_ci__attestation_found]
+=== link:#rhtap_multi_ci__attestation_found[SLSA Provenance Attestation Found]
+
+Verify an attestation created by the RHTAP Multi-CI build pipeline is present.
+
+*Solution*: It appears the build pipeline did not create the expected SLSA provenance attestation. Check for relevant error messages in the 'cosign-sign-attest' pipeline step logs.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `A SLSA v1.0 provenance with one of the following RHTAP Multi-CI build types was not found: %s.`
+* Code: `rhtap_multi_ci.attestation_found`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rhtap_multi_ci/rhtap_multi_ci.rego#L16[Source, window="_blank"]

@@ -1,0 +1,79 @@
+= Task bundle checks Package
+
+To be able to reproduce and audit builds accurately it's important to know exactly what happened during the build. To do this Conforma requires that all tasks are defined in a set of known and trusted task bundles. This package includes rules to confirm that the tasks that built the image were defined in task bundles, and that the task bundles used are from the list of known and trusted bundles.
+
+== Package Name
+
+* `attestation_task_bundle`
+
+== Rules Included
+
+[#attestation_task_bundle__trusted_bundles_provided]
+=== link:#attestation_task_bundle__trusted_bundles_provided[A trusted Tekton bundles list was provided]
+
+Confirm the `trusted_tasks` rule data was provided, since it's required by the policy rules in this package.
+
+*Solution*: Create a lsit of trusted tasks. This is a list of task bundles with a top-level key of 'trusted_tasks'.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Missing required trusted_tasks data`
+* Code: `attestation_task_bundle.trusted_bundles_provided`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L114[Source, window="_blank"]
+
+[#attestation_task_bundle__task_ref_bundles_not_empty]
+=== link:#attestation_task_bundle__task_ref_bundles_not_empty[Task bundle references not empty]
+
+Check that a valid task bundle reference is being used.
+
+*Solution*: Specify a task bundle with a reference as the full digest.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Pipeline task '%s' uses an empty bundle image reference`
+* Code: `attestation_task_bundle.task_ref_bundles_not_empty`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L76[Source, window="_blank"]
+
+[#attestation_task_bundle__task_ref_bundles_pinned]
+=== link:#attestation_task_bundle__task_ref_bundles_pinned[Task bundle references pinned to digest]
+
+Check if the Tekton Bundle used for the Tasks in the Pipeline definition is pinned to a digest.
+
+*Solution*: Specify the task bundle reference with a full digest rather than a tag.
+
+* Rule type: [rule-type-indicator warning]#WARNING#
+* WARNING message: `Pipeline task '%s' uses an unpinned task bundle reference '%s'`
+* Code: `attestation_task_bundle.task_ref_bundles_pinned`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L20[Source, window="_blank"]
+
+[#attestation_task_bundle__task_ref_bundles_trusted]
+=== link:#attestation_task_bundle__task_ref_bundles_trusted[Task bundles are in trusted tasks list]
+
+For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is a trusted task.
+
+*Solution*: For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is a trusted task.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Pipeline task '%s' uses an untrusted task bundle '%s'`
+* Code: `attestation_task_bundle.task_ref_bundles_trusted`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L93[Source, window="_blank"]
+
+[#attestation_task_bundle__task_ref_bundles_current]
+=== link:#attestation_task_bundle__task_ref_bundles_current[Task bundles are latest versions]
+
+For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is the most recent.
+
+*Solution*: A task bundle used is not the most recent. The most recent task bundles are defined in the data source of your policy config.
+
+* Rule type: [rule-type-indicator warning]#WARNING#
+* WARNING message: `Pipeline task '%s' uses an out of date task bundle '%s', new version of the Task must be used before %s`
+* Code: `attestation_task_bundle.task_ref_bundles_current`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L38[Source, window="_blank"]
+
+[#attestation_task_bundle__tasks_defined_in_bundle]
+=== link:#attestation_task_bundle__tasks_defined_in_bundle[Tasks defined using bundle references]
+
+Check for the existence of a task bundle. This rule will fail if the task is not called from a bundle.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Pipeline task '%s' does not contain a bundle reference`
+* Code: `attestation_task_bundle.tasks_defined_in_bundle`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L60[Source, window="_blank"]

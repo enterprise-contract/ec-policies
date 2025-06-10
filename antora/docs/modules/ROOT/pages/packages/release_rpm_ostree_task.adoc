@@ -1,0 +1,34 @@
+= rpm-ostree Task Package
+
+This package is responsible for verifying the rpm-ostree Tekton Task was executed with the expected parameters.
+
+== Package Name
+
+* `rpm_ostree_task`
+
+== Rules Included
+
+[#rpm_ostree_task__builder_image_param]
+=== link:#rpm_ostree_task__builder_image_param[Builder image parameter]
+
+Verify the BUILDER_IMAGE parameter of the rpm-ostree Task uses an image reference that is both pinned to a digest and starts with a pre-defined list of prefixes. By default, the list of prefixes is empty allowing any pinned image reference to be used. This is customizable via the `allowed_rpm_ostree_builder_image_prefixes` rule data.
+
+*Solution*: Make sure the rpm-ostree Task uses a pinned image reference from a pre-approved location.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `rpm_ostree_task.builder_image_param`
+* Effective from: `2024-03-20T00:00:00Z`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rpm_ostree_task/rpm_ostree_task.rego#L16[Source, window="_blank"]
+
+[#rpm_ostree_task__rule_data]
+=== link:#rpm_ostree_task__rule_data[Rule data]
+
+Verify the rule data used by this package, `allowed_rpm_ostree_builder_image_prefixes`, is in the expected format.
+
+*Solution*: Make sure the `allowed_rpm_ostree_builder_image_prefixes` rule data is in the expected format in the data source.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `rpm_ostree_task.rule_data`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rpm_ostree_task/rpm_ostree_task.rego#L37[Source, window="_blank"]

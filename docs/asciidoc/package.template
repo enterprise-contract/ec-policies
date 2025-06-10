@@ -1,0 +1,33 @@
+{{- $pkg := . -}}
+= {{ .Title }} Package
+
+{{ .Description }}
+
+== Package Name
+
+* `{{ packageName . }}`
+
+== Rules Included
+
+{{- range .Rules }}
+
+[#{{ anchor . }}]
+=== link:#{{ anchor . }}[{{ .Title }}]
+
+{{ .Description }}
+
+{{- with index .Custom "solution" }}
+
+*Solution*: {{ . }}
+{{- end }}
+
+* Rule type: [rule-type-indicator {{ warningOrFailure . }}]#{{ toUpper (warningOrFailure .) }}#
+* {{ toTitle (warningOrFailure .) }} message: `{{ index .Custom "failure_msg" }}`
+* Code: `{{ packageName $pkg }}.{{ index .Custom "short_name" }}`
+{{- with index .Custom "effective_on" }}
+* Effective from: `{{ . }}`
+{{- end }}{{/* index .Custom "effective_on" */}}
+{{- if not (isBuiltIn .) }}
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/{{ .Location.File }}#L{{ .Location.Row }}[Source, window="_blank"]
+{{- end }}{{/* isBuiltIn */}}
+{{- end }}{{/* range .Rules */}}

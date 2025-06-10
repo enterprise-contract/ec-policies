@@ -105,6 +105,18 @@ func (d doc) generatePolicy(module string) error {
 	return policyTemplate.Execute(nav, d)
 }
 
+func (d doc) generatePackage(module string, p pkg) error {
+	navpath := filepath.Join(module, "pages", "packages", policyOrigin(p.Annotations)+"_"+packageName(&p)+".adoc")
+	nav, err := os.Create(navpath)
+	if err != nil {
+		return fmt.Errorf("creating file %q: %w", navpath, err)
+	}
+	defer nav.Close()
+	
+	return packageTemplate.Execute(nav, &p)
+}
+
+
 type col struct {
 	*ast.Annotations
 	Rules *[]*ast.Annotations
@@ -112,17 +124,24 @@ type col struct {
 
 func (c *col) SetAnnotations(a []ast.FlatAnnotationsRefSet) {
 	rules := make([]*ast.Annotations, 0, 5)
-	packageTitles := map[string]string{}
+	packageAnnotations := map[string]*pkg{}
 	title := c.Annotations.Title
 	for _, set := range a {
 		for _, ref := range set {
 			a := ref.Annotations
 			if a.Scope == "package" {
-				packageTitles[ref.Path.String()] = a.Title
+				packageAnnotations[ref.Path.String()] = &pkg{a, nil}
 			}
 			if cs, ok := ref.Annotations.Custom["collections"].([]any); ok {
+				pkgPath := ref.GetPackage().Path.String()
+				pkgInfo, ok := packageAnnotations[pkgPath]
+				if !ok {
+					fmt.Fprintf(os.Stderr, "Warning: Package path '%v' not found for rule '%v'\n", pkgPath, a.Location)
+					continue
+				}
 				for _, collection := range cs {
-					a.Custom["package_title"] = packageTitles[ref.GetPackage().Path.String()]
+					a.Custom["package_title"] = pkgInfo.Title
+					a.Custom["package_name"] = packageName(pkgInfo)
 					if collection == title {
 						rules = append(rules, a)
 					}
@@ -190,9 +209,14 @@ var navTemplateText string
 //go:embed policy.template
 var policyTemplateText string
 
+//go:embed package.template
+var packageTemplateText string
+
 var navTemplate *template.Template
 
 var policyTemplate *template.Template
+
+var packageTemplate *template.Template
 
 func init() {
 	funcs := template.FuncMap{
@@ -202,11 +226,14 @@ func init() {
 		"toUpper":          strings.ToUpper,
 		"toTitle":          strings.ToTitle,
 		"isBuiltIn":        isBuiltIn,
+		"policyOrigin":     policyOrigin,
 	}
 
 	navTemplate = template.Must(template.New("nav").Funcs(funcs).Parse(navTemplateText))
 
 	policyTemplate = template.Must(template.New("policy").Funcs(funcs).Parse(policyTemplateText))
+
+	packageTemplate = template.Must(template.New("Package").Funcs(funcs).Parse(packageTemplateText))
 }
 
 func packageName(p *pkg) string {
@@ -329,7 +356,21 @@ func GenerateAsciidoc(module string, rego ...string) error {
 		if err := d.generatePolicy(module); err != nil {
 			return err
 		}
+		for _, p := range *d.Packages {
+			if err := d.generatePackage(module, p); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
+}
+
+// obtain policy origin of a package or a rule
+func policyOrigin(a *ast.Annotations) string {
+	path := strings.Split(a.Location.File, "/")
+	if len(path) > 1 && path[0] == "policy" {
+		return path[1]
+	}
+	return ""
 }

@@ -1,0 +1,40 @@
+= Trusted Artifacts Conventions Package
+
+Policies to verify that a Tekton task definition conforms to the expected conventions required for using Trusted Artifacts.
+
+== Package Name
+
+* `trusted_artifacts`
+
+== Rules Included
+
+[#trusted_artifacts__parameter]
+=== link:#trusted_artifacts__parameter[Parameter]
+
+Trusted Artifact parameters follow the expected naming convention.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The parameter %q of the Task %q does not use the _ARTIFACT suffix`
+* Code: `trusted_artifacts.parameter`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/trusted_artifacts/trusted_artifacts.rego#L15[Source, window="_blank"]
+
+[#trusted_artifacts__result]
+=== link:#trusted_artifacts__result[Result]
+
+Trusted Artifact results follow the expected naming convention.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The result %q of the Task %q does not use the _ARTIFACT suffix`
+* Code: `trusted_artifacts.result`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/trusted_artifacts/trusted_artifacts.rego#L28[Source, window="_blank"]
+
+[#trusted_artifacts__workspace]
+=== link:#trusted_artifacts__workspace[Workspace]
+
+Tasks that implement the Trusted Artifacts pattern should not allow general purpose workspaces to share data. Instead, data should be passed around via Trusted Artifacts. Workspaces used for other purposes, e.g. provide auth credentials, are allowed. Use the rule data key `allowed_trusted_artifacts_workspaces` to specify which workspace names are allowed. By default this value is empty which effectively disallows any workspace.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `General purpose workspace %q is not allowed`
+* Code: `trusted_artifacts.workspace`
+* Effective from: `2024-07-07T00:00:00Z`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/task/trusted_artifacts/trusted_artifacts.rego#L41[Source, window="_blank"]

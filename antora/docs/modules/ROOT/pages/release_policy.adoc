@@ -15,474 +15,322 @@ These rules are applied to pipeline run attestations associated with container i
 a| A set of policy rules to validate artifacts built on GitHub.
 
 Rules included:
-
-* xref:release_policy.adoc#github_certificate__gh_workflow_extensions[GitHub Certificate Checks: GitHub Workflow Certificate Extensions]
-* xref:release_policy.adoc#github_certificate__gh_workflow_name[GitHub Certificate Checks: GitHub Workflow Name]
-* xref:release_policy.adoc#github_certificate__gh_workflow_repository[GitHub Certificate Checks: GitHub Workflow Repository]
-* xref:release_policy.adoc#github_certificate__gh_workflow_ref[GitHub Certificate Checks: GitHub Workflow Repository]
-* xref:release_policy.adoc#github_certificate__gh_workflow_trigger[GitHub Certificate Checks: GitHub Workflow Trigger]
-* xref:release_policy.adoc#github_certificate__rule_data_provided[GitHub Certificate Checks: Rule data provided]
+        
+* xref:packages/release_github_certificate.adoc#github_certificate__gh_workflow_extensions[GitHub Certificate Checks: GitHub Workflow Certificate Extensions]        
+* xref:packages/release_github_certificate.adoc#github_certificate__gh_workflow_name[GitHub Certificate Checks: GitHub Workflow Name]        
+* xref:packages/release_github_certificate.adoc#github_certificate__gh_workflow_repository[GitHub Certificate Checks: GitHub Workflow Repository]        
+* xref:packages/release_github_certificate.adoc#github_certificate__gh_workflow_ref[GitHub Certificate Checks: GitHub Workflow Repository]        
+* xref:packages/release_github_certificate.adoc#github_certificate__gh_workflow_trigger[GitHub Certificate Checks: GitHub Workflow Trigger]        
+* xref:packages/release_github_certificate.adoc#github_certificate__rule_data_provided[GitHub Certificate Checks: Rule data provided]
 
 | [#minimal]`minimal`
 a| Includes a minimal set of policy rules to ensure the build pipeline is functioning as expected, and able to produce signed attestations of the expected type.
 
 Rules included:
-
-* xref:release_policy.adoc#attestation_type__deprecated_policy_attestation_format[Attestation type: Deprecated policy attestation format]
-* xref:release_policy.adoc#attestation_type__known_attestation_type[Attestation type: Known attestation type found]
-* xref:release_policy.adoc#attestation_type__known_attestation_types_provided[Attestation type: Known attestation types provided]
-* xref:release_policy.adoc#attestation_type__pipelinerun_attestation_found[Attestation type: PipelineRun attestation found]
-* xref:release_policy.adoc#base_image_registries__allowed_registries_provided[Base image checks: Allowed base image registry prefixes list was provided]
-* xref:release_policy.adoc#base_image_registries__base_image_permitted[Base image checks: Base image comes from permitted registry]
-* xref:release_policy.adoc#base_image_registries__base_image_info_found[Base image checks: Base images provided]
-* xref:release_policy.adoc#cve__cve_blockers[CVE checks: Blocking CVE check]
-* xref:release_policy.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]
-* xref:release_policy.adoc#cve__cve_results_found[CVE checks: CVE scan results found]
-* xref:release_policy.adoc#cve__cve_warnings[CVE checks: Non-blocking CVE check]
-* xref:release_policy.adoc#cve__unpatched_cve_warnings[CVE checks: Non-blocking unpatched CVE check]
-* xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
-* xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]
-* xref:release_policy.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]
-* xref:release_policy.adoc#sbom_cyclonedx__valid[SBOM CycloneDX: Valid]
-* xref:release_policy.adoc#sbom__found[SBOM: Found]
-* xref:release_policy.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]
-* xref:release_policy.adoc#slsa_provenance_available__attestation_predicate_type_accepted[SLSA - Provenance - Available: Expected attestation predicate type found]
-* xref:release_policy.adoc#slsa_source_version_controlled__materials_uri_is_git_repo[SLSA - Source - Version Controlled: Material uri is a git repo]
-* xref:release_policy.adoc#slsa_source_version_controlled__materials_format_okay[SLSA - Source - Version Controlled: Materials have uri and digest]
-* xref:release_policy.adoc#slsa_source_version_controlled__materials_include_git_sha[SLSA - Source - Version Controlled: Materials include git commit shas]
-* xref:release_policy.adoc#slsa_source_correlated__expected_source_code_reference[SLSA - Verification model - Source: Expected source code reference]
-* xref:release_policy.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]
-* xref:release_policy.adoc#slsa_source_correlated__source_code_reference_provided[SLSA - Verification model - Source: Source code reference provided]
-* xref:release_policy.adoc#slsa_source_correlated__attested_source_code_reference[SLSA - Verification model - Source: Source reference]
-* xref:release_policy.adoc#sbom_spdx__valid[SPDX SBOM: Valid]
-* xref:release_policy.adoc#tasks__pipeline_has_tasks[Tasks: Pipeline run includes at least one task]
-* xref:release_policy.adoc#tasks__successful_pipeline_tasks[Tasks: Successful pipeline tasks]
+        
+* xref:packages/release_attestation_type.adoc#attestation_type__deprecated_policy_attestation_format[Attestation type: Deprecated policy attestation format]        
+* xref:packages/release_attestation_type.adoc#attestation_type__known_attestation_type[Attestation type: Known attestation type found]        
+* xref:packages/release_attestation_type.adoc#attestation_type__known_attestation_types_provided[Attestation type: Known attestation types provided]        
+* xref:packages/release_attestation_type.adoc#attestation_type__pipelinerun_attestation_found[Attestation type: PipelineRun attestation found]        
+* xref:packages/release_base_image_registries.adoc#base_image_registries__allowed_registries_provided[Base image checks: Allowed base image registry prefixes list was provided]        
+* xref:packages/release_base_image_registries.adoc#base_image_registries__base_image_permitted[Base image checks: Base image comes from permitted registry]        
+* xref:packages/release_base_image_registries.adoc#base_image_registries__base_image_info_found[Base image checks: Base images provided]        
+* xref:packages/release_cve.adoc#cve__cve_blockers[CVE checks: Blocking CVE check]        
+* xref:packages/release_cve.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]        
+* xref:packages/release_cve.adoc#cve__cve_results_found[CVE checks: CVE scan results found]        
+* xref:packages/release_cve.adoc#cve__cve_warnings[CVE checks: Non-blocking CVE check]        
+* xref:packages/release_cve.adoc#cve__unpatched_cve_warnings[CVE checks: Non-blocking unpatched CVE check]        
+* xref:packages/release_cve.adoc#cve__rule_data_provided[CVE checks: Rule data provided]        
+* xref:packages/release_provenance_materials.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]        
+* xref:packages/release_provenance_materials.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__valid[SBOM CycloneDX: Valid]        
+* xref:packages/release_sbom.adoc#sbom__found[SBOM: Found]        
+* xref:packages/release_slsa_provenance_available.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]        
+* xref:packages/release_slsa_provenance_available.adoc#slsa_provenance_available__attestation_predicate_type_accepted[SLSA - Provenance - Available: Expected attestation predicate type found]        
+* xref:packages/release_slsa_source_version_controlled.adoc#slsa_source_version_controlled__materials_uri_is_git_repo[SLSA - Source - Version Controlled: Material uri is a git repo]        
+* xref:packages/release_slsa_source_version_controlled.adoc#slsa_source_version_controlled__materials_format_okay[SLSA - Source - Version Controlled: Materials have uri and digest]        
+* xref:packages/release_slsa_source_version_controlled.adoc#slsa_source_version_controlled__materials_include_git_sha[SLSA - Source - Version Controlled: Materials include git commit shas]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__expected_source_code_reference[SLSA - Verification model - Source: Expected source code reference]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__source_code_reference_provided[SLSA - Verification model - Source: Source code reference provided]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__attested_source_code_reference[SLSA - Verification model - Source: Source reference]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__valid[SPDX SBOM: Valid]        
+* xref:packages/release_tasks.adoc#tasks__pipeline_has_tasks[Tasks: Pipeline run includes at least one task]        
+* xref:packages/release_tasks.adoc#tasks__successful_pipeline_tasks[Tasks: Successful pipeline tasks]
 
 | [#policy_data]`policy_data`
 a| Include policy rules responsible for validating rule data.
 
 Rules included:
-
-* xref:release_policy.adoc#attestation_type__known_attestation_types_provided[Attestation type: Known attestation types provided]
-* xref:release_policy.adoc#base_image_registries__allowed_registries_provided[Base image checks: Allowed base image registry prefixes list was provided]
-* xref:release_policy.adoc#buildah_build_task__disallowed_platform_patterns_pattern[Buildah build task: disallowed_platform_patterns format]
-* xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
-* xref:release_policy.adoc#external_parameters__pipeline_run_params_provided[External parameters: PipelineRun params provided]
-* xref:release_policy.adoc#github_certificate__rule_data_provided[GitHub Certificate Checks: Rule data provided]
-* xref:release_policy.adoc#labels__rule_data_provided[Labels: Rule data provided]
-* xref:release_policy.adoc#olm__required_olm_features_annotations_provided[OLM: Required OLM feature annotations list provided]
-* xref:release_policy.adoc#rpm_repos__rule_data_provided[RPM Repos: Known repo id list provided]
-* xref:release_policy.adoc#rpm_signature__rule_data_provided[RPM Signature: Rule data provided]
-* xref:release_policy.adoc#sbom_cyclonedx__allowed_package_external_references[SBOM CycloneDX: Allowed package external references]
-* xref:release_policy.adoc#sbom_cyclonedx__allowed_package_sources[SBOM CycloneDX: Allowed package sources]
-* xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]
-* xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_external_references[SBOM CycloneDX: Disallowed package external references]
-* xref:release_policy.adoc#sbom__disallowed_packages_provided[SBOM: Disallowed packages list is provided]
-* xref:release_policy.adoc#slsa_build_build_service__allowed_builder_ids_provided[SLSA - Build - Build Service: Allowed builder IDs provided]
-* xref:release_policy.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]
-* xref:release_policy.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]
-* xref:release_policy.adoc#sbom_spdx__allowed_package_external_references[SPDX SBOM: Allowed package external references]
-* xref:release_policy.adoc#sbom_spdx__allowed_package_sources[SPDX SBOM: Allowed package sources]
-* xref:release_policy.adoc#sbom_spdx__disallowed_package_attributes[SPDX SBOM: Disallowed package attributes]
-* xref:release_policy.adoc#sbom_spdx__disallowed_package_external_references[SPDX SBOM: Disallowed package external references]
-* xref:release_policy.adoc#schedule__rule_data_provided[Schedule related checks: Rule data provided]
-* xref:release_policy.adoc#tasks__data_provided[Tasks: Data provided]
-* xref:release_policy.adoc#test__rule_data_provided[Test: Rule data provided]
-* xref:release_policy.adoc#trusted_task__data_format[Trusted Task checks: Data format]
+        
+* xref:packages/release_attestation_type.adoc#attestation_type__known_attestation_types_provided[Attestation type: Known attestation types provided]        
+* xref:packages/release_base_image_registries.adoc#base_image_registries__allowed_registries_provided[Base image checks: Allowed base image registry prefixes list was provided]        
+* xref:packages/release_buildah_build_task.adoc#buildah_build_task__disallowed_platform_patterns_pattern[Buildah build task: disallowed_platform_patterns format]        
+* xref:packages/release_cve.adoc#cve__rule_data_provided[CVE checks: Rule data provided]        
+* xref:packages/release_external_parameters.adoc#external_parameters__pipeline_run_params_provided[External parameters: PipelineRun params provided]        
+* xref:packages/release_github_certificate.adoc#github_certificate__rule_data_provided[GitHub Certificate Checks: Rule data provided]        
+* xref:packages/release_labels.adoc#labels__rule_data_provided[Labels: Rule data provided]        
+* xref:packages/release_olm.adoc#olm__required_olm_features_annotations_provided[OLM: Required OLM feature annotations list provided]        
+* xref:packages/release_rpm_repos.adoc#rpm_repos__rule_data_provided[RPM Repos: Known repo id list provided]        
+* xref:packages/release_rpm_signature.adoc#rpm_signature__rule_data_provided[RPM Signature: Rule data provided]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__allowed_package_external_references[SBOM CycloneDX: Allowed package external references]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__allowed_package_sources[SBOM CycloneDX: Allowed package sources]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__disallowed_package_external_references[SBOM CycloneDX: Disallowed package external references]        
+* xref:packages/release_sbom.adoc#sbom__disallowed_packages_provided[SBOM: Disallowed packages list is provided]        
+* xref:packages/release_slsa_build_build_service.adoc#slsa_build_build_service__allowed_builder_ids_provided[SLSA - Build - Build Service: Allowed builder IDs provided]        
+* xref:packages/release_slsa_provenance_available.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__allowed_package_external_references[SPDX SBOM: Allowed package external references]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__allowed_package_sources[SPDX SBOM: Allowed package sources]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__disallowed_package_attributes[SPDX SBOM: Disallowed package attributes]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__disallowed_package_external_references[SPDX SBOM: Disallowed package external references]        
+* xref:packages/release_schedule.adoc#schedule__rule_data_provided[Schedule related checks: Rule data provided]        
+* xref:packages/release_tasks.adoc#tasks__data_provided[Tasks: Data provided]        
+* xref:packages/release_test.adoc#test__rule_data_provided[Test: Rule data provided]        
+* xref:packages/release_trusted_task.adoc#trusted_task__data_format[Trusted Task checks: Data format]
 
 | [#redhat]`redhat`
 a| Include the set of policy rules required for Red Hat products.
 
 Rules included:
-
-* xref:release_policy.adoc#attestation_type__deprecated_policy_attestation_format[Attestation type: Deprecated policy attestation format]
-* xref:release_policy.adoc#attestation_type__known_attestation_type[Attestation type: Known attestation type found]
-* xref:release_policy.adoc#attestation_type__known_attestation_types_provided[Attestation type: Known attestation types provided]
-* xref:release_policy.adoc#attestation_type__pipelinerun_attestation_found[Attestation type: PipelineRun attestation found]
-* xref:release_policy.adoc#base_image_registries__allowed_registries_provided[Base image checks: Allowed base image registry prefixes list was provided]
-* xref:release_policy.adoc#base_image_registries__base_image_permitted[Base image checks: Base image comes from permitted registry]
-* xref:release_policy.adoc#base_image_registries__base_image_info_found[Base image checks: Base images provided]
-* xref:release_policy.adoc#buildah_build_task__add_capabilities_param[Buildah build task: ADD_CAPABILITIES parameter]
-* xref:release_policy.adoc#buildah_build_task__buildah_uses_local_dockerfile[Buildah build task: Buildah task uses a local Dockerfile]
-* xref:release_policy.adoc#buildah_build_task__platform_param[Buildah build task: PLATFORM parameter]
-* xref:release_policy.adoc#buildah_build_task__privileged_nested_param[Buildah build task: PRIVILEGED_NESTED parameter]
-* xref:release_policy.adoc#buildah_build_task__disallowed_platform_patterns_pattern[Buildah build task: disallowed_platform_patterns format]
-* xref:release_policy.adoc#cve__cve_blockers[CVE checks: Blocking CVE check]
-* xref:release_policy.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]
-* xref:release_policy.adoc#cve__cve_results_found[CVE checks: CVE scan results found]
-* xref:release_policy.adoc#cve__cve_warnings[CVE checks: Non-blocking CVE check]
-* xref:release_policy.adoc#cve__unpatched_cve_warnings[CVE checks: Non-blocking unpatched CVE check]
-* xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
-* xref:release_policy.adoc#hermetic_build_task__build_task_hermetic[Hermetic build task: Build task called with hermetic param set]
-* xref:release_policy.adoc#labels__deprecated_labels[Labels: Deprecated labels]
-* xref:release_policy.adoc#labels__disallowed_inherited_labels[Labels: Disallowed inherited labels]
-* xref:release_policy.adoc#labels__inaccessible_config[Labels: Inaccessible image config]
-* xref:release_policy.adoc#labels__inaccessible_manifest[Labels: Inaccessible image manifest]
-* xref:release_policy.adoc#labels__inaccessible_parent_config[Labels: Inaccessible parent image config]
-* xref:release_policy.adoc#labels__inaccessible_parent_manifest[Labels: Inaccessible parent image manifest]
-* xref:release_policy.adoc#labels__optional_labels[Labels: Optional labels]
-* xref:release_policy.adoc#labels__required_labels[Labels: Required labels]
-* xref:release_policy.adoc#labels__rule_data_provided[Labels: Rule data provided]
-* xref:release_policy.adoc#olm__csv_semver_format[OLM: ClusterServiceVersion semver format]
-* xref:release_policy.adoc#olm__feature_annotations_format[OLM: Feature annotations have expected value]
-* xref:release_policy.adoc#olm__allowed_registries[OLM: Images referenced by OLM bundle are from allowed registries]
-* xref:release_policy.adoc#olm__olm_bundle_multi_arch[OLM: OLM bundle images are not multi-arch]
-* xref:release_policy.adoc#olm__allowed_registries_related[OLM: Related images references are from allowed registries]
-* xref:release_policy.adoc#olm__required_olm_features_annotations_provided[OLM: Required OLM feature annotations list provided]
-* xref:release_policy.adoc#olm__subscriptions_annotation_format[OLM: Subscription annotation has expected value]
-* xref:release_policy.adoc#olm__inaccessible_snapshot_references[OLM: Unable to access images in the input snapshot]
-* xref:release_policy.adoc#olm__inaccessible_related_images[OLM: Unable to access related images for a component]
-* xref:release_policy.adoc#olm__unmapped_references[OLM: Unmapped images in OLM bundle]
-* xref:release_policy.adoc#olm__unpinned_references[OLM: Unpinned images in OLM bundle]
-* xref:release_policy.adoc#olm__unpinned_snapshot_references[OLM: Unpinned images in input snapshot]
-* xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]
-* xref:release_policy.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]
-* xref:release_policy.adoc#quay_expiration__expires_label[Quay expiration: Expires label]
-* xref:release_policy.adoc#rpm_packages__unique_version[RPM Packages: Unique Version]
-* xref:release_policy.adoc#rpm_repos__ids_known[RPM Repos: All rpms have known repo ids]
-* xref:release_policy.adoc#rpm_repos__rule_data_provided[RPM Repos: Known repo id list provided]
-* xref:release_policy.adoc#rpm_signature__allowed[RPM Signature: Allowed RPM signature key]
-* xref:release_policy.adoc#rpm_signature__result_format[RPM Signature: Result format]
-* xref:release_policy.adoc#rpm_signature__rule_data_provided[RPM Signature: Rule data provided]
-* xref:release_policy.adoc#sbom_cyclonedx__allowed[SBOM CycloneDX: Allowed]
-* xref:release_policy.adoc#sbom_cyclonedx__allowed_package_external_references[SBOM CycloneDX: Allowed package external references]
-* xref:release_policy.adoc#sbom_cyclonedx__allowed_package_sources[SBOM CycloneDX: Allowed package sources]
-* xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]
-* xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_external_references[SBOM CycloneDX: Disallowed package external references]
-* xref:release_policy.adoc#sbom_cyclonedx__valid[SBOM CycloneDX: Valid]
-* xref:release_policy.adoc#sbom__disallowed_packages_provided[SBOM: Disallowed packages list is provided]
-* xref:release_policy.adoc#sbom__found[SBOM: Found]
-* xref:release_policy.adoc#slsa_build_build_service__allowed_builder_ids_provided[SLSA - Build - Build Service: Allowed builder IDs provided]
-* xref:release_policy.adoc#slsa_build_build_service__slsa_builder_id_found[SLSA - Build - Build Service: SLSA Builder ID found]
-* xref:release_policy.adoc#slsa_build_build_service__slsa_builder_id_accepted[SLSA - Build - Build Service: SLSA Builder ID is known and accepted]
-* xref:release_policy.adoc#slsa_build_scripted_build__build_script_used[SLSA - Build - Scripted Build: Build task contains steps]
-* xref:release_policy.adoc#slsa_build_scripted_build__build_task_image_results_found[SLSA - Build - Scripted Build: Build task set image digest and url task results]
-* xref:release_policy.adoc#slsa_build_scripted_build__image_built_by_trusted_task[SLSA - Build - Scripted Build: Image built by trusted Task]
-* xref:release_policy.adoc#slsa_build_scripted_build__subject_build_task_matches[SLSA - Build - Scripted Build: Provenance subject matches build task image result]
-* xref:release_policy.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]
-* xref:release_policy.adoc#slsa_provenance_available__attestation_predicate_type_accepted[SLSA - Provenance - Available: Expected attestation predicate type found]
-* xref:release_policy.adoc#slsa_source_version_controlled__materials_uri_is_git_repo[SLSA - Source - Version Controlled: Material uri is a git repo]
-* xref:release_policy.adoc#slsa_source_version_controlled__materials_format_okay[SLSA - Source - Version Controlled: Materials have uri and digest]
-* xref:release_policy.adoc#slsa_source_version_controlled__materials_include_git_sha[SLSA - Source - Version Controlled: Materials include git commit shas]
-* xref:release_policy.adoc#slsa_source_correlated__expected_source_code_reference[SLSA - Verification model - Source: Expected source code reference]
-* xref:release_policy.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]
-* xref:release_policy.adoc#slsa_source_correlated__source_code_reference_provided[SLSA - Verification model - Source: Source code reference provided]
-* xref:release_policy.adoc#slsa_source_correlated__attested_source_code_reference[SLSA - Verification model - Source: Source reference]
-* xref:release_policy.adoc#sbom_spdx__allowed[SPDX SBOM: Allowed]
-* xref:release_policy.adoc#sbom_spdx__allowed_package_external_references[SPDX SBOM: Allowed package external references]
-* xref:release_policy.adoc#sbom_spdx__allowed_package_sources[SPDX SBOM: Allowed package sources]
-* xref:release_policy.adoc#sbom_spdx__disallowed_package_attributes[SPDX SBOM: Disallowed package attributes]
-* xref:release_policy.adoc#sbom_spdx__disallowed_package_external_references[SPDX SBOM: Disallowed package external references]
-* xref:release_policy.adoc#sbom_spdx__valid[SPDX SBOM: Valid]
-* xref:release_policy.adoc#schedule__date_restriction[Schedule related checks: Date Restriction]
-* xref:release_policy.adoc#schedule__rule_data_provided[Schedule related checks: Rule data provided]
-* xref:release_policy.adoc#schedule__weekday_restriction[Schedule related checks: Weekday Restriction]
-* xref:release_policy.adoc#source_image__exists[Source image: Exists]
-* xref:release_policy.adoc#source_image__signed[Source image: Signed]
-* xref:release_policy.adoc#tasks__required_untrusted_task_found[Tasks: All required tasks are from trusted tasks]
-* xref:release_policy.adoc#tasks__required_tasks_found[Tasks: All required tasks were included in the pipeline]
-* xref:release_policy.adoc#tasks__data_provided[Tasks: Data provided]
-* xref:release_policy.adoc#tasks__future_required_tasks_found[Tasks: Future required tasks were found]
-* xref:release_policy.adoc#tasks__pinned_task_refs[Tasks: Pinned Task references]
-* xref:release_policy.adoc#tasks__pipeline_has_tasks[Tasks: Pipeline run includes at least one task]
-* xref:release_policy.adoc#tasks__pipeline_required_tasks_list_provided[Tasks: Required tasks list for pipeline was provided]
-* xref:release_policy.adoc#tasks__required_tasks_list_provided[Tasks: Required tasks list was provided]
-* xref:release_policy.adoc#tasks__successful_pipeline_tasks[Tasks: Successful pipeline tasks]
-* xref:release_policy.adoc#tasks__unsupported[Tasks: Task version unsupported]
-* xref:release_policy.adoc#test__test_all_images[Test: Image digest is present in IMAGES_PROCESSED result]
-* xref:release_policy.adoc#test__no_failed_informative_tests[Test: No informative tests failed]
-* xref:release_policy.adoc#test__no_erred_tests[Test: No tests erred]
-* xref:release_policy.adoc#test__no_failed_tests[Test: No tests failed]
-* xref:release_policy.adoc#test__no_test_warnings[Test: No tests produced warnings]
-* xref:release_policy.adoc#test__no_skipped_tests[Test: No tests were skipped]
-* xref:release_policy.adoc#test__test_results_known[Test: No unsupported test result values found]
-* xref:release_policy.adoc#test__rule_data_provided[Test: Rule data provided]
-* xref:release_policy.adoc#test__test_data_found[Test: Test data found in task results]
-* xref:release_policy.adoc#test__test_results_found[Test: Test data includes results key]
-* xref:release_policy.adoc#trusted_task__data_format[Trusted Task checks: Data format]
-* xref:release_policy.adoc#trusted_task__pinned[Trusted Task checks: Task references are pinned]
-* xref:release_policy.adoc#trusted_task__tagged[Trusted Task checks: Task references are tagged]
-* xref:release_policy.adoc#trusted_task__data[Trusted Task checks: Task tracking data was provided]
-* xref:release_policy.adoc#trusted_task__trusted[Trusted Task checks: Tasks are trusted]
-* xref:release_policy.adoc#trusted_task__current[Trusted Task checks: Tasks using the latest versions]
-* xref:release_policy.adoc#trusted_task__valid_trusted_artifact_inputs[Trusted Task checks: Trusted Artifact produced in pipeline]
-* xref:release_policy.adoc#trusted_task__trusted_parameters[Trusted Task checks: Trusted parameters]
-* xref:release_policy.adoc#rpm_ostree_task__builder_image_param[rpm-ostree Task: Builder image parameter]
-* xref:release_policy.adoc#rpm_ostree_task__rule_data[rpm-ostree Task: Rule data]
+        
+* xref:packages/release_attestation_type.adoc#attestation_type__deprecated_policy_attestation_format[Attestation type: Deprecated policy attestation format]        
+* xref:packages/release_attestation_type.adoc#attestation_type__known_attestation_type[Attestation type: Known attestation type found]        
+* xref:packages/release_attestation_type.adoc#attestation_type__known_attestation_types_provided[Attestation type: Known attestation types provided]        
+* xref:packages/release_attestation_type.adoc#attestation_type__pipelinerun_attestation_found[Attestation type: PipelineRun attestation found]        
+* xref:packages/release_base_image_registries.adoc#base_image_registries__allowed_registries_provided[Base image checks: Allowed base image registry prefixes list was provided]        
+* xref:packages/release_base_image_registries.adoc#base_image_registries__base_image_permitted[Base image checks: Base image comes from permitted registry]        
+* xref:packages/release_base_image_registries.adoc#base_image_registries__base_image_info_found[Base image checks: Base images provided]        
+* xref:packages/release_buildah_build_task.adoc#buildah_build_task__add_capabilities_param[Buildah build task: ADD_CAPABILITIES parameter]        
+* xref:packages/release_buildah_build_task.adoc#buildah_build_task__buildah_uses_local_dockerfile[Buildah build task: Buildah task uses a local Dockerfile]        
+* xref:packages/release_buildah_build_task.adoc#buildah_build_task__platform_param[Buildah build task: PLATFORM parameter]        
+* xref:packages/release_buildah_build_task.adoc#buildah_build_task__privileged_nested_param[Buildah build task: PRIVILEGED_NESTED parameter]        
+* xref:packages/release_buildah_build_task.adoc#buildah_build_task__disallowed_platform_patterns_pattern[Buildah build task: disallowed_platform_patterns format]        
+* xref:packages/release_cve.adoc#cve__cve_blockers[CVE checks: Blocking CVE check]        
+* xref:packages/release_cve.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]        
+* xref:packages/release_cve.adoc#cve__cve_results_found[CVE checks: CVE scan results found]        
+* xref:packages/release_cve.adoc#cve__cve_warnings[CVE checks: Non-blocking CVE check]        
+* xref:packages/release_cve.adoc#cve__unpatched_cve_warnings[CVE checks: Non-blocking unpatched CVE check]        
+* xref:packages/release_cve.adoc#cve__rule_data_provided[CVE checks: Rule data provided]        
+* xref:packages/release_hermetic_build_task.adoc#hermetic_build_task__build_task_hermetic[Hermetic build task: Build task called with hermetic param set]        
+* xref:packages/release_labels.adoc#labels__deprecated_labels[Labels: Deprecated labels]        
+* xref:packages/release_labels.adoc#labels__disallowed_inherited_labels[Labels: Disallowed inherited labels]        
+* xref:packages/release_labels.adoc#labels__inaccessible_config[Labels: Inaccessible image config]        
+* xref:packages/release_labels.adoc#labels__inaccessible_manifest[Labels: Inaccessible image manifest]        
+* xref:packages/release_labels.adoc#labels__inaccessible_parent_config[Labels: Inaccessible parent image config]        
+* xref:packages/release_labels.adoc#labels__inaccessible_parent_manifest[Labels: Inaccessible parent image manifest]        
+* xref:packages/release_labels.adoc#labels__optional_labels[Labels: Optional labels]        
+* xref:packages/release_labels.adoc#labels__required_labels[Labels: Required labels]        
+* xref:packages/release_labels.adoc#labels__rule_data_provided[Labels: Rule data provided]        
+* xref:packages/release_olm.adoc#olm__csv_semver_format[OLM: ClusterServiceVersion semver format]        
+* xref:packages/release_olm.adoc#olm__feature_annotations_format[OLM: Feature annotations have expected value]        
+* xref:packages/release_olm.adoc#olm__allowed_registries[OLM: Images referenced by OLM bundle are from allowed registries]        
+* xref:packages/release_olm.adoc#olm__olm_bundle_multi_arch[OLM: OLM bundle images are not multi-arch]        
+* xref:packages/release_olm.adoc#olm__allowed_registries_related[OLM: Related images references are from allowed registries]        
+* xref:packages/release_olm.adoc#olm__required_olm_features_annotations_provided[OLM: Required OLM feature annotations list provided]        
+* xref:packages/release_olm.adoc#olm__subscriptions_annotation_format[OLM: Subscription annotation has expected value]        
+* xref:packages/release_olm.adoc#olm__inaccessible_snapshot_references[OLM: Unable to access images in the input snapshot]        
+* xref:packages/release_olm.adoc#olm__inaccessible_related_images[OLM: Unable to access related images for a component]        
+* xref:packages/release_olm.adoc#olm__unmapped_references[OLM: Unmapped images in OLM bundle]        
+* xref:packages/release_olm.adoc#olm__unpinned_references[OLM: Unpinned images in OLM bundle]        
+* xref:packages/release_olm.adoc#olm__unpinned_snapshot_references[OLM: Unpinned images in input snapshot]        
+* xref:packages/release_provenance_materials.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]        
+* xref:packages/release_provenance_materials.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]        
+* xref:packages/release_quay_expiration.adoc#quay_expiration__expires_label[Quay expiration: Expires label]        
+* xref:packages/release_rpm_packages.adoc#rpm_packages__unique_version[RPM Packages: Unique Version]        
+* xref:packages/release_rpm_repos.adoc#rpm_repos__ids_known[RPM Repos: All rpms have known repo ids]        
+* xref:packages/release_rpm_repos.adoc#rpm_repos__rule_data_provided[RPM Repos: Known repo id list provided]        
+* xref:packages/release_rpm_signature.adoc#rpm_signature__allowed[RPM Signature: Allowed RPM signature key]        
+* xref:packages/release_rpm_signature.adoc#rpm_signature__result_format[RPM Signature: Result format]        
+* xref:packages/release_rpm_signature.adoc#rpm_signature__rule_data_provided[RPM Signature: Rule data provided]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__allowed[SBOM CycloneDX: Allowed]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__allowed_package_external_references[SBOM CycloneDX: Allowed package external references]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__allowed_package_sources[SBOM CycloneDX: Allowed package sources]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__disallowed_package_external_references[SBOM CycloneDX: Disallowed package external references]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__valid[SBOM CycloneDX: Valid]        
+* xref:packages/release_sbom.adoc#sbom__disallowed_packages_provided[SBOM: Disallowed packages list is provided]        
+* xref:packages/release_sbom.adoc#sbom__found[SBOM: Found]        
+* xref:packages/release_slsa_build_build_service.adoc#slsa_build_build_service__allowed_builder_ids_provided[SLSA - Build - Build Service: Allowed builder IDs provided]        
+* xref:packages/release_slsa_build_build_service.adoc#slsa_build_build_service__slsa_builder_id_found[SLSA - Build - Build Service: SLSA Builder ID found]        
+* xref:packages/release_slsa_build_build_service.adoc#slsa_build_build_service__slsa_builder_id_accepted[SLSA - Build - Build Service: SLSA Builder ID is known and accepted]        
+* xref:packages/release_slsa_build_scripted_build.adoc#slsa_build_scripted_build__build_script_used[SLSA - Build - Scripted Build: Build task contains steps]        
+* xref:packages/release_slsa_build_scripted_build.adoc#slsa_build_scripted_build__build_task_image_results_found[SLSA - Build - Scripted Build: Build task set image digest and url task results]        
+* xref:packages/release_slsa_build_scripted_build.adoc#slsa_build_scripted_build__image_built_by_trusted_task[SLSA - Build - Scripted Build: Image built by trusted Task]        
+* xref:packages/release_slsa_build_scripted_build.adoc#slsa_build_scripted_build__subject_build_task_matches[SLSA - Build - Scripted Build: Provenance subject matches build task image result]        
+* xref:packages/release_slsa_provenance_available.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]        
+* xref:packages/release_slsa_provenance_available.adoc#slsa_provenance_available__attestation_predicate_type_accepted[SLSA - Provenance - Available: Expected attestation predicate type found]        
+* xref:packages/release_slsa_source_version_controlled.adoc#slsa_source_version_controlled__materials_uri_is_git_repo[SLSA - Source - Version Controlled: Material uri is a git repo]        
+* xref:packages/release_slsa_source_version_controlled.adoc#slsa_source_version_controlled__materials_format_okay[SLSA - Source - Version Controlled: Materials have uri and digest]        
+* xref:packages/release_slsa_source_version_controlled.adoc#slsa_source_version_controlled__materials_include_git_sha[SLSA - Source - Version Controlled: Materials include git commit shas]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__expected_source_code_reference[SLSA - Verification model - Source: Expected source code reference]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__source_code_reference_provided[SLSA - Verification model - Source: Source code reference provided]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__attested_source_code_reference[SLSA - Verification model - Source: Source reference]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__allowed[SPDX SBOM: Allowed]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__allowed_package_external_references[SPDX SBOM: Allowed package external references]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__allowed_package_sources[SPDX SBOM: Allowed package sources]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__disallowed_package_attributes[SPDX SBOM: Disallowed package attributes]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__disallowed_package_external_references[SPDX SBOM: Disallowed package external references]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__valid[SPDX SBOM: Valid]        
+* xref:packages/release_schedule.adoc#schedule__date_restriction[Schedule related checks: Date Restriction]        
+* xref:packages/release_schedule.adoc#schedule__rule_data_provided[Schedule related checks: Rule data provided]        
+* xref:packages/release_schedule.adoc#schedule__weekday_restriction[Schedule related checks: Weekday Restriction]        
+* xref:packages/release_source_image.adoc#source_image__exists[Source image: Exists]        
+* xref:packages/release_source_image.adoc#source_image__signed[Source image: Signed]        
+* xref:packages/release_tasks.adoc#tasks__required_untrusted_task_found[Tasks: All required tasks are from trusted tasks]        
+* xref:packages/release_tasks.adoc#tasks__required_tasks_found[Tasks: All required tasks were included in the pipeline]        
+* xref:packages/release_tasks.adoc#tasks__data_provided[Tasks: Data provided]        
+* xref:packages/release_tasks.adoc#tasks__future_required_tasks_found[Tasks: Future required tasks were found]        
+* xref:packages/release_tasks.adoc#tasks__pinned_task_refs[Tasks: Pinned Task references]        
+* xref:packages/release_tasks.adoc#tasks__pipeline_has_tasks[Tasks: Pipeline run includes at least one task]        
+* xref:packages/release_tasks.adoc#tasks__pipeline_required_tasks_list_provided[Tasks: Required tasks list for pipeline was provided]        
+* xref:packages/release_tasks.adoc#tasks__required_tasks_list_provided[Tasks: Required tasks list was provided]        
+* xref:packages/release_tasks.adoc#tasks__successful_pipeline_tasks[Tasks: Successful pipeline tasks]        
+* xref:packages/release_tasks.adoc#tasks__unsupported[Tasks: Task version unsupported]        
+* xref:packages/release_test.adoc#test__test_all_images[Test: Image digest is present in IMAGES_PROCESSED result]        
+* xref:packages/release_test.adoc#test__no_failed_informative_tests[Test: No informative tests failed]        
+* xref:packages/release_test.adoc#test__no_erred_tests[Test: No tests erred]        
+* xref:packages/release_test.adoc#test__no_failed_tests[Test: No tests failed]        
+* xref:packages/release_test.adoc#test__no_test_warnings[Test: No tests produced warnings]        
+* xref:packages/release_test.adoc#test__no_skipped_tests[Test: No tests were skipped]        
+* xref:packages/release_test.adoc#test__test_results_known[Test: No unsupported test result values found]        
+* xref:packages/release_test.adoc#test__rule_data_provided[Test: Rule data provided]        
+* xref:packages/release_test.adoc#test__test_data_found[Test: Test data found in task results]        
+* xref:packages/release_test.adoc#test__test_results_found[Test: Test data includes results key]        
+* xref:packages/release_trusted_task.adoc#trusted_task__data_format[Trusted Task checks: Data format]        
+* xref:packages/release_trusted_task.adoc#trusted_task__pinned[Trusted Task checks: Task references are pinned]        
+* xref:packages/release_trusted_task.adoc#trusted_task__tagged[Trusted Task checks: Task references are tagged]        
+* xref:packages/release_trusted_task.adoc#trusted_task__data[Trusted Task checks: Task tracking data was provided]        
+* xref:packages/release_trusted_task.adoc#trusted_task__trusted[Trusted Task checks: Tasks are trusted]        
+* xref:packages/release_trusted_task.adoc#trusted_task__current[Trusted Task checks: Tasks using the latest versions]        
+* xref:packages/release_trusted_task.adoc#trusted_task__valid_trusted_artifact_inputs[Trusted Task checks: Trusted Artifact produced in pipeline]        
+* xref:packages/release_trusted_task.adoc#trusted_task__trusted_parameters[Trusted Task checks: Trusted parameters]        
+* xref:packages/release_rpm_ostree_task.adoc#rpm_ostree_task__builder_image_param[rpm-ostree Task: Builder image parameter]        
+* xref:packages/release_rpm_ostree_task.adoc#rpm_ostree_task__rule_data[rpm-ostree Task: Rule data]
 
 | [#redhat_rpms]`redhat_rpms`
 a| Include the set of policy rules required for building Red Hat RPMs.
 
 Rules included:
-
-* xref:release_policy.adoc#attestation_type__deprecated_policy_attestation_format[Attestation type: Deprecated policy attestation format]
-* xref:release_policy.adoc#attestation_type__known_attestation_type[Attestation type: Known attestation type found]
-* xref:release_policy.adoc#attestation_type__known_attestation_types_provided[Attestation type: Known attestation types provided]
-* xref:release_policy.adoc#attestation_type__pipelinerun_attestation_found[Attestation type: PipelineRun attestation found]
-* xref:release_policy.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]
-* xref:release_policy.adoc#cve__cve_warnings[CVE checks: Non-blocking CVE check]
-* xref:release_policy.adoc#cve__rule_data_provided[CVE checks: Rule data provided]
-* xref:release_policy.adoc#git_branch__git_branch[Git branch checks: Only allow builds from a trusted branch]
-* xref:release_policy.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]
-* xref:release_policy.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]
-* xref:release_policy.adoc#rpm_pipeline__invalid_pipeline[RPM Pipeline: Task version invalid_pipeline]
-* xref:release_policy.adoc#rpm_repos__ids_known[RPM Repos: All rpms have known repo ids]
-* xref:release_policy.adoc#rpm_repos__rule_data_provided[RPM Repos: Known repo id list provided]
-* xref:release_policy.adoc#rpm_signature__allowed[RPM Signature: Allowed RPM signature key]
-* xref:release_policy.adoc#rpm_signature__result_format[RPM Signature: Result format]
-* xref:release_policy.adoc#rpm_signature__rule_data_provided[RPM Signature: Rule data provided]
-* xref:release_policy.adoc#sbom_cyclonedx__allowed[SBOM CycloneDX: Allowed]
-* xref:release_policy.adoc#sbom_cyclonedx__allowed_package_external_references[SBOM CycloneDX: Allowed package external references]
-* xref:release_policy.adoc#sbom_cyclonedx__allowed_package_sources[SBOM CycloneDX: Allowed package sources]
-* xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]
-* xref:release_policy.adoc#sbom_cyclonedx__disallowed_package_external_references[SBOM CycloneDX: Disallowed package external references]
-* xref:release_policy.adoc#sbom_cyclonedx__valid[SBOM CycloneDX: Valid]
-* xref:release_policy.adoc#sbom__disallowed_packages_provided[SBOM: Disallowed packages list is provided]
-* xref:release_policy.adoc#slsa_build_build_service__allowed_builder_ids_provided[SLSA - Build - Build Service: Allowed builder IDs provided]
-* xref:release_policy.adoc#slsa_build_build_service__slsa_builder_id_accepted[SLSA - Build - Build Service: SLSA Builder ID is known and accepted]
-* xref:release_policy.adoc#slsa_build_scripted_build__build_script_used[SLSA - Build - Scripted Build: Build task contains steps]
-* xref:release_policy.adoc#slsa_build_scripted_build__build_task_image_results_found[SLSA - Build - Scripted Build: Build task set image digest and url task results]
-* xref:release_policy.adoc#slsa_build_scripted_build__subject_build_task_matches[SLSA - Build - Scripted Build: Provenance subject matches build task image result]
-* xref:release_policy.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]
-* xref:release_policy.adoc#slsa_provenance_available__attestation_predicate_type_accepted[SLSA - Provenance - Available: Expected attestation predicate type found]
-* xref:release_policy.adoc#slsa_source_version_controlled__materials_uri_is_git_repo[SLSA - Source - Version Controlled: Material uri is a git repo]
-* xref:release_policy.adoc#slsa_source_version_controlled__materials_format_okay[SLSA - Source - Version Controlled: Materials have uri and digest]
-* xref:release_policy.adoc#slsa_source_version_controlled__materials_include_git_sha[SLSA - Source - Version Controlled: Materials include git commit shas]
-* xref:release_policy.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]
-* xref:release_policy.adoc#slsa_source_correlated__source_code_reference_provided[SLSA - Verification model - Source: Source code reference provided]
-* xref:release_policy.adoc#sbom_spdx__allowed[SPDX SBOM: Allowed]
-* xref:release_policy.adoc#sbom_spdx__allowed_package_external_references[SPDX SBOM: Allowed package external references]
-* xref:release_policy.adoc#sbom_spdx__allowed_package_sources[SPDX SBOM: Allowed package sources]
-* xref:release_policy.adoc#sbom_spdx__disallowed_package_attributes[SPDX SBOM: Disallowed package attributes]
-* xref:release_policy.adoc#sbom_spdx__disallowed_package_external_references[SPDX SBOM: Disallowed package external references]
-* xref:release_policy.adoc#sbom_spdx__valid[SPDX SBOM: Valid]
-* xref:release_policy.adoc#schedule__date_restriction[Schedule related checks: Date Restriction]
-* xref:release_policy.adoc#schedule__rule_data_provided[Schedule related checks: Rule data provided]
-* xref:release_policy.adoc#schedule__weekday_restriction[Schedule related checks: Weekday Restriction]
-* xref:release_policy.adoc#tasks__required_untrusted_task_found[Tasks: All required tasks are from trusted tasks]
-* xref:release_policy.adoc#tasks__data_provided[Tasks: Data provided]
-* xref:release_policy.adoc#tasks__future_required_tasks_found[Tasks: Future required tasks were found]
-* xref:release_policy.adoc#tasks__pipeline_has_tasks[Tasks: Pipeline run includes at least one task]
-* xref:release_policy.adoc#tasks__pipeline_required_tasks_list_provided[Tasks: Required tasks list for pipeline was provided]
-* xref:release_policy.adoc#tasks__required_tasks_list_provided[Tasks: Required tasks list was provided]
-* xref:release_policy.adoc#tasks__successful_pipeline_tasks[Tasks: Successful pipeline tasks]
-* xref:release_policy.adoc#tasks__unsupported[Tasks: Task version unsupported]
-* xref:release_policy.adoc#test__test_all_images[Test: Image digest is present in IMAGES_PROCESSED result]
-* xref:release_policy.adoc#test__no_erred_tests[Test: No tests erred]
-* xref:release_policy.adoc#test__no_failed_tests[Test: No tests failed]
-* xref:release_policy.adoc#test__no_skipped_tests[Test: No tests were skipped]
-* xref:release_policy.adoc#test__test_results_known[Test: No unsupported test result values found]
-* xref:release_policy.adoc#test__rule_data_provided[Test: Rule data provided]
-* xref:release_policy.adoc#test__test_results_found[Test: Test data includes results key]
-* xref:release_policy.adoc#trusted_task__data_format[Trusted Task checks: Data format]
-* xref:release_policy.adoc#trusted_task__pinned[Trusted Task checks: Task references are pinned]
-* xref:release_policy.adoc#trusted_task__tagged[Trusted Task checks: Task references are tagged]
-* xref:release_policy.adoc#trusted_task__data[Trusted Task checks: Task tracking data was provided]
-* xref:release_policy.adoc#trusted_task__current[Trusted Task checks: Tasks using the latest versions]
-* xref:release_policy.adoc#trusted_task__valid_trusted_artifact_inputs[Trusted Task checks: Trusted Artifact produced in pipeline]
+        
+* xref:packages/release_attestation_type.adoc#attestation_type__deprecated_policy_attestation_format[Attestation type: Deprecated policy attestation format]        
+* xref:packages/release_attestation_type.adoc#attestation_type__known_attestation_type[Attestation type: Known attestation type found]        
+* xref:packages/release_attestation_type.adoc#attestation_type__known_attestation_types_provided[Attestation type: Known attestation types provided]        
+* xref:packages/release_attestation_type.adoc#attestation_type__pipelinerun_attestation_found[Attestation type: PipelineRun attestation found]        
+* xref:packages/release_cve.adoc#cve__unpatched_cve_blockers[CVE checks: Blocking unpatched CVE check]        
+* xref:packages/release_cve.adoc#cve__cve_warnings[CVE checks: Non-blocking CVE check]        
+* xref:packages/release_cve.adoc#cve__rule_data_provided[CVE checks: Rule data provided]        
+* xref:packages/release_git_branch.adoc#git_branch__git_branch[Git branch checks: Only allow builds from a trusted branch]        
+* xref:packages/release_provenance_materials.adoc#provenance_materials__git_clone_source_matches_provenance[Provenance Materials: Git clone source matches materials provenance]        
+* xref:packages/release_provenance_materials.adoc#provenance_materials__git_clone_task_found[Provenance Materials: Git clone task found]        
+* xref:packages/release_rpm_pipeline.adoc#rpm_pipeline__invalid_pipeline[RPM Pipeline: Task version invalid_pipeline]        
+* xref:packages/release_rpm_repos.adoc#rpm_repos__ids_known[RPM Repos: All rpms have known repo ids]        
+* xref:packages/release_rpm_repos.adoc#rpm_repos__rule_data_provided[RPM Repos: Known repo id list provided]        
+* xref:packages/release_rpm_signature.adoc#rpm_signature__allowed[RPM Signature: Allowed RPM signature key]        
+* xref:packages/release_rpm_signature.adoc#rpm_signature__result_format[RPM Signature: Result format]        
+* xref:packages/release_rpm_signature.adoc#rpm_signature__rule_data_provided[RPM Signature: Rule data provided]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__allowed[SBOM CycloneDX: Allowed]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__allowed_package_external_references[SBOM CycloneDX: Allowed package external references]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__allowed_package_sources[SBOM CycloneDX: Allowed package sources]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__disallowed_package_attributes[SBOM CycloneDX: Disallowed package attributes]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__disallowed_package_external_references[SBOM CycloneDX: Disallowed package external references]        
+* xref:packages/release_sbom_cyclonedx.adoc#sbom_cyclonedx__valid[SBOM CycloneDX: Valid]        
+* xref:packages/release_sbom.adoc#sbom__disallowed_packages_provided[SBOM: Disallowed packages list is provided]        
+* xref:packages/release_slsa_build_build_service.adoc#slsa_build_build_service__allowed_builder_ids_provided[SLSA - Build - Build Service: Allowed builder IDs provided]        
+* xref:packages/release_slsa_build_build_service.adoc#slsa_build_build_service__slsa_builder_id_accepted[SLSA - Build - Build Service: SLSA Builder ID is known and accepted]        
+* xref:packages/release_slsa_build_scripted_build.adoc#slsa_build_scripted_build__build_script_used[SLSA - Build - Scripted Build: Build task contains steps]        
+* xref:packages/release_slsa_build_scripted_build.adoc#slsa_build_scripted_build__build_task_image_results_found[SLSA - Build - Scripted Build: Build task set image digest and url task results]        
+* xref:packages/release_slsa_build_scripted_build.adoc#slsa_build_scripted_build__subject_build_task_matches[SLSA - Build - Scripted Build: Provenance subject matches build task image result]        
+* xref:packages/release_slsa_provenance_available.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]        
+* xref:packages/release_slsa_provenance_available.adoc#slsa_provenance_available__attestation_predicate_type_accepted[SLSA - Provenance - Available: Expected attestation predicate type found]        
+* xref:packages/release_slsa_source_version_controlled.adoc#slsa_source_version_controlled__materials_uri_is_git_repo[SLSA - Source - Version Controlled: Material uri is a git repo]        
+* xref:packages/release_slsa_source_version_controlled.adoc#slsa_source_version_controlled__materials_format_okay[SLSA - Source - Version Controlled: Materials have uri and digest]        
+* xref:packages/release_slsa_source_version_controlled.adoc#slsa_source_version_controlled__materials_include_git_sha[SLSA - Source - Version Controlled: Materials include git commit shas]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__source_code_reference_provided[SLSA - Verification model - Source: Source code reference provided]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__allowed[SPDX SBOM: Allowed]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__allowed_package_external_references[SPDX SBOM: Allowed package external references]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__allowed_package_sources[SPDX SBOM: Allowed package sources]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__disallowed_package_attributes[SPDX SBOM: Disallowed package attributes]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__disallowed_package_external_references[SPDX SBOM: Disallowed package external references]        
+* xref:packages/release_sbom_spdx.adoc#sbom_spdx__valid[SPDX SBOM: Valid]        
+* xref:packages/release_schedule.adoc#schedule__date_restriction[Schedule related checks: Date Restriction]        
+* xref:packages/release_schedule.adoc#schedule__rule_data_provided[Schedule related checks: Rule data provided]        
+* xref:packages/release_schedule.adoc#schedule__weekday_restriction[Schedule related checks: Weekday Restriction]        
+* xref:packages/release_tasks.adoc#tasks__required_untrusted_task_found[Tasks: All required tasks are from trusted tasks]        
+* xref:packages/release_tasks.adoc#tasks__data_provided[Tasks: Data provided]        
+* xref:packages/release_tasks.adoc#tasks__future_required_tasks_found[Tasks: Future required tasks were found]        
+* xref:packages/release_tasks.adoc#tasks__pipeline_has_tasks[Tasks: Pipeline run includes at least one task]        
+* xref:packages/release_tasks.adoc#tasks__pipeline_required_tasks_list_provided[Tasks: Required tasks list for pipeline was provided]        
+* xref:packages/release_tasks.adoc#tasks__required_tasks_list_provided[Tasks: Required tasks list was provided]        
+* xref:packages/release_tasks.adoc#tasks__successful_pipeline_tasks[Tasks: Successful pipeline tasks]        
+* xref:packages/release_tasks.adoc#tasks__unsupported[Tasks: Task version unsupported]        
+* xref:packages/release_test.adoc#test__test_all_images[Test: Image digest is present in IMAGES_PROCESSED result]        
+* xref:packages/release_test.adoc#test__no_erred_tests[Test: No tests erred]        
+* xref:packages/release_test.adoc#test__no_failed_tests[Test: No tests failed]        
+* xref:packages/release_test.adoc#test__no_skipped_tests[Test: No tests were skipped]        
+* xref:packages/release_test.adoc#test__test_results_known[Test: No unsupported test result values found]        
+* xref:packages/release_test.adoc#test__rule_data_provided[Test: Rule data provided]        
+* xref:packages/release_test.adoc#test__test_results_found[Test: Test data includes results key]        
+* xref:packages/release_trusted_task.adoc#trusted_task__data_format[Trusted Task checks: Data format]        
+* xref:packages/release_trusted_task.adoc#trusted_task__pinned[Trusted Task checks: Task references are pinned]        
+* xref:packages/release_trusted_task.adoc#trusted_task__tagged[Trusted Task checks: Task references are tagged]        
+* xref:packages/release_trusted_task.adoc#trusted_task__data[Trusted Task checks: Task tracking data was provided]        
+* xref:packages/release_trusted_task.adoc#trusted_task__current[Trusted Task checks: Tasks using the latest versions]        
+* xref:packages/release_trusted_task.adoc#trusted_task__valid_trusted_artifact_inputs[Trusted Task checks: Trusted Artifact produced in pipeline]
 
 | [#rhtap-multi-ci]`rhtap-multi-ci`
 a| A set of policy rules to validate artifacts built using RHTAP Multi-CI pipelines.
 
 Rules included:
-
-* xref:release_policy.adoc#rhtap_multi_ci__attestation_format[RHTAP Multi-CI: SLSA Provenance Attestation Format]
-* xref:release_policy.adoc#rhtap_multi_ci__attestation_found[RHTAP Multi-CI: SLSA Provenance Attestation Found]
+        
+* xref:packages/release_rhtap_multi_ci.adoc#rhtap_multi_ci__attestation_format[RHTAP Multi-CI: SLSA Provenance Attestation Format]        
+* xref:packages/release_rhtap_multi_ci.adoc#rhtap_multi_ci__attestation_found[RHTAP Multi-CI: SLSA Provenance Attestation Found]
 
 | [#slsa3]`slsa3`
 a| Includes policy rules required to meet SLSA Level 3.
 
 Rules included:
-
-* xref:release_policy.adoc#slsa_build_build_service__allowed_builder_ids_provided[SLSA - Build - Build Service: Allowed builder IDs provided]
-* xref:release_policy.adoc#slsa_build_build_service__slsa_builder_id_found[SLSA - Build - Build Service: SLSA Builder ID found]
-* xref:release_policy.adoc#slsa_build_build_service__slsa_builder_id_accepted[SLSA - Build - Build Service: SLSA Builder ID is known and accepted]
-* xref:release_policy.adoc#slsa_build_scripted_build__build_script_used[SLSA - Build - Scripted Build: Build task contains steps]
-* xref:release_policy.adoc#slsa_build_scripted_build__build_task_image_results_found[SLSA - Build - Scripted Build: Build task set image digest and url task results]
-* xref:release_policy.adoc#slsa_build_scripted_build__subject_build_task_matches[SLSA - Build - Scripted Build: Provenance subject matches build task image result]
-* xref:release_policy.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]
-* xref:release_policy.adoc#slsa_provenance_available__attestation_predicate_type_accepted[SLSA - Provenance - Available: Expected attestation predicate type found]
-* xref:release_policy.adoc#slsa_source_version_controlled__materials_uri_is_git_repo[SLSA - Source - Version Controlled: Material uri is a git repo]
-* xref:release_policy.adoc#slsa_source_version_controlled__materials_format_okay[SLSA - Source - Version Controlled: Materials have uri and digest]
-* xref:release_policy.adoc#slsa_source_version_controlled__materials_include_git_sha[SLSA - Source - Version Controlled: Materials include git commit shas]
-* xref:release_policy.adoc#slsa_source_correlated__expected_source_code_reference[SLSA - Verification model - Source: Expected source code reference]
-* xref:release_policy.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]
-* xref:release_policy.adoc#slsa_source_correlated__source_code_reference_provided[SLSA - Verification model - Source: Source code reference provided]
-* xref:release_policy.adoc#slsa_source_correlated__attested_source_code_reference[SLSA - Verification model - Source: Source reference]
-* xref:release_policy.adoc#tasks__pipeline_has_tasks[Tasks: Pipeline run includes at least one task]
-* xref:release_policy.adoc#tasks__successful_pipeline_tasks[Tasks: Successful pipeline tasks]
+        
+* xref:packages/release_slsa_build_build_service.adoc#slsa_build_build_service__allowed_builder_ids_provided[SLSA - Build - Build Service: Allowed builder IDs provided]        
+* xref:packages/release_slsa_build_build_service.adoc#slsa_build_build_service__slsa_builder_id_found[SLSA - Build - Build Service: SLSA Builder ID found]        
+* xref:packages/release_slsa_build_build_service.adoc#slsa_build_build_service__slsa_builder_id_accepted[SLSA - Build - Build Service: SLSA Builder ID is known and accepted]        
+* xref:packages/release_slsa_build_scripted_build.adoc#slsa_build_scripted_build__build_script_used[SLSA - Build - Scripted Build: Build task contains steps]        
+* xref:packages/release_slsa_build_scripted_build.adoc#slsa_build_scripted_build__build_task_image_results_found[SLSA - Build - Scripted Build: Build task set image digest and url task results]        
+* xref:packages/release_slsa_build_scripted_build.adoc#slsa_build_scripted_build__subject_build_task_matches[SLSA - Build - Scripted Build: Provenance subject matches build task image result]        
+* xref:packages/release_slsa_provenance_available.adoc#slsa_provenance_available__allowed_predicate_types_provided[SLSA - Provenance - Available: Allowed predicate types provided]        
+* xref:packages/release_slsa_provenance_available.adoc#slsa_provenance_available__attestation_predicate_type_accepted[SLSA - Provenance - Available: Expected attestation predicate type found]        
+* xref:packages/release_slsa_source_version_controlled.adoc#slsa_source_version_controlled__materials_uri_is_git_repo[SLSA - Source - Version Controlled: Material uri is a git repo]        
+* xref:packages/release_slsa_source_version_controlled.adoc#slsa_source_version_controlled__materials_format_okay[SLSA - Source - Version Controlled: Materials have uri and digest]        
+* xref:packages/release_slsa_source_version_controlled.adoc#slsa_source_version_controlled__materials_include_git_sha[SLSA - Source - Version Controlled: Materials include git commit shas]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__expected_source_code_reference[SLSA - Verification model - Source: Expected source code reference]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__rule_data_provided[SLSA - Verification model - Source: Rule data provided]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__source_code_reference_provided[SLSA - Verification model - Source: Source code reference provided]        
+* xref:packages/release_slsa_source_correlated.adoc#slsa_source_correlated__attested_source_code_reference[SLSA - Verification model - Source: Source reference]        
+* xref:packages/release_tasks.adoc#tasks__pipeline_has_tasks[Tasks: Pipeline run includes at least one task]        
+* xref:packages/release_tasks.adoc#tasks__successful_pipeline_tasks[Tasks: Successful pipeline tasks]
 |===
 
-[#attestation_type_package]
-== link:#attestation_type_package[Attestation type]
+== Available Packages
 
-Sanity checks related to the format of the image build's attestation.
+[cols="2,6"]
+|===
+|*Package Name*
+|*Description*
 
-* Package name: `attestation_type`
+| xref:packages/release_attestation_type.adoc[attestation_type]
+a| Sanity checks related to the format of the image build's attestation.
 
-[#attestation_type__deprecated_policy_attestation_format]
-=== link:#attestation_type__deprecated_policy_attestation_format[Deprecated policy attestation format]
+| xref:packages/release_base_image_registries.adoc[base_image_registries]
+a| This package is responsible for verifying the base (parent) images reported in the SLSA Provenace or the SBOM are allowed.
 
-The Conforma CLI now places the attestation data in a different location. This check fails if the expected new format is not found.
+| xref:packages/release_buildah_build_task.adoc[buildah_build_task]
+a| This package is responsible for verifying the buildah build task
 
-*Solution*: Use a newer version of the Conforma CLI.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Deprecated policy attestation format found`
-* Code: `attestation_type.deprecated_policy_attestation_format`
-* Effective from: `2023-08-31T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L78[Source, window="_blank"]
-
-[#attestation_type__known_attestation_type]
-=== link:#attestation_type__known_attestation_type[Known attestation type found]
-
-Confirm the attestation found for the image has a known attestation type.
-
-*Solution*: Make sure the "_type" field in the attestation is supported. Supported types are configured in xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Unknown attestation type '%s'`
-* Code: `attestation_type.known_attestation_type`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L14[Source, window="_blank"]
-
-[#attestation_type__known_attestation_types_provided]
-=== link:#attestation_type__known_attestation_types_provided[Known attestation types provided]
-
-Confirm the `known_attestation_types` rule data was provided.
-
-*Solution*: Provide a list of known attestation types.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `attestation_type.known_attestation_types_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L41[Source, window="_blank"]
-
-[#attestation_type__pipelinerun_attestation_found]
-=== link:#attestation_type__pipelinerun_attestation_found[PipelineRun attestation found]
-
-Confirm at least one PipelineRun attestation is present.
-
-*Solution*: Make sure the attestation being verified was generated from a Tekton pipelineRun.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Missing pipelinerun attestation`
-* Code: `attestation_type.pipelinerun_attestation_found`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_type/attestation_type.rego#L59[Source, window="_blank"]
-
-[#base_image_registries_package]
-== link:#base_image_registries_package[Base image checks]
-
-This package is responsible for verifying the base (parent) images reported in the SLSA Provenace or the SBOM are allowed.
-
-* Package name: `base_image_registries`
-
-[#base_image_registries__allowed_registries_provided]
-=== link:#base_image_registries__allowed_registries_provided[Allowed base image registry prefixes list was provided]
-
-Confirm the `allowed_registry_prefixes` rule data was provided, since it's required by the policy rules in this package.
-
-*Solution*: Make sure to configure a list of trusted registries as a xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `base_image_registries.allowed_registries_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L78[Source, window="_blank"]
-
-[#base_image_registries__base_image_permitted]
-=== link:#base_image_registries__base_image_permitted[Base image comes from permitted registry]
-
-Verify that the base images used when building a container image come from a known set of trusted registries to reduce potential supply chain attacks. By default this policy defines trusted registries as registries that are fully maintained by Red Hat and only contain content produced by Red Hat. The list of permitted registries can be customized by setting the `allowed_registry_prefixes` list in the rule data. Base images that are found in the snapshot being validated are also allowed since EC will also validate those images individually.
-
-*Solution*: Make sure the image used in each task comes from a trusted registry. The list of trusted registries is a configurable xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Base image %q is from a disallowed registry`
-* Code: `base_image_registries.base_image_permitted`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L18[Source, window="_blank"]
-
-[#base_image_registries__base_image_info_found]
-=== link:#base_image_registries__base_image_info_found[Base images provided]
-
-Verify the expected information was provided about which base images were used during the build process. The list of base images comes from any associated CycloneDX or SPDX SBOMs.
-
-*Solution*: Ensure a CycloneDX SBOM is associated with the image.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Base images information is missing`
-* Code: `base_image_registries.base_image_info_found`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/base_image_registries/base_image_registries.rego#L48[Source, window="_blank"]
-
-[#buildah_build_task_package]
-== link:#buildah_build_task_package[Buildah build task]
-
-This package is responsible for verifying the buildah build task
-
-* Package name: `buildah_build_task`
-
-[#buildah_build_task__add_capabilities_param]
-=== link:#buildah_build_task__add_capabilities_param[ADD_CAPABILITIES parameter]
-
-Verify the ADD_CAPABILITIES parameter of a builder Tasks was not used.
-
-*Solution*: The ADD_CAPABILITIES parameter is not allowed for most container image builds. This, however, might be required for certain build types, e.g. flatpaks. Either unset the parameter or use a policy config that excludes this policy rule.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `ADD_CAPABILITIES parameter is not allowed`
-* Code: `buildah_build_task.add_capabilities_param`
-* Effective from: `2024-08-31T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/buildah_build_task/buildah_build_task.rego#L35[Source, window="_blank"]
-
-[#buildah_build_task__buildah_uses_local_dockerfile]
-=== link:#buildah_build_task__buildah_uses_local_dockerfile[Buildah task uses a local Dockerfile]
-
-Verify the Dockerfile used in the buildah task was not fetched from an external source.
-
-*Solution*: Make sure the 'DOCKERFILE' parameter does not come from an external source.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `DOCKERFILE param value (%s) is an external source`
-* Code: `buildah_build_task.buildah_uses_local_dockerfile`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/buildah_build_task/buildah_build_task.rego#L14[Source, window="_blank"]
-
-[#buildah_build_task__platform_param]
-=== link:#buildah_build_task__platform_param[PLATFORM parameter]
-
-Verify the value of the PLATFORM parameter of a builder Task is allowed by matching against a list of disallowed patterns. The list of patterns can be customized via the `disallowed_platform_patterns` rule data key. If empty, all values are allowed.
-
-*Solution*: Use a different PLATFORM value that is not disallowed by the policy config.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `PLATFORM parameter value %q is disallowed by regex %q`
-* Code: `buildah_build_task.platform_param`
-* Effective from: `2024-09-01T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/buildah_build_task/buildah_build_task.rego#L58[Source, window="_blank"]
-
-[#buildah_build_task__privileged_nested_param]
-=== link:#buildah_build_task__privileged_nested_param[PRIVILEGED_NESTED parameter]
-
-Verify the PRIVILEGED_NESTED parameter of a builder Tasks was not set to `true`.
-
-*Solution*: Setting PRIVILEGED_NESTED parameter to true is not allowed for most container image builds. Either set the parameter value to false or use a policy config that excludes this policy rule.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `setting PRIVILEGED_NESTED parameter to true is not allowed`
-* Code: `buildah_build_task.privileged_nested_param`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/buildah_build_task/buildah_build_task.rego#L97[Source, window="_blank"]
-
-[#buildah_build_task__disallowed_platform_patterns_pattern]
-=== link:#buildah_build_task__disallowed_platform_patterns_pattern[disallowed_platform_patterns format]
-
-Confirm the `disallowed_platform_patterns` rule data, if provided matches the expected format.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `buildah_build_task.disallowed_platform_patterns_pattern`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/buildah_build_task/buildah_build_task.rego#L81[Source, window="_blank"]
-
-[#cve_package]
-== link:#cve_package[CVE checks]
-
-This package is responsible for verifying a CVE scan was performed during the build pipeline, and that the image under test does not contain CVEs of certain security levels.
+| xref:packages/release_cve.adoc[cve]
+a| This package is responsible for verifying a CVE scan was performed during the build pipeline, and that the image under test does not contain CVEs of certain security levels.
 
 The behaviour of the rules in this package is influenced by rule data. Firstly the rules can be configured to emit violations or warnings based on the availability of the vulnerability fix: patched -- if there is a remediation available, e.g. new version with a fix, or unpatched -- if there is, currently, no remidiation available. Secondly per severity: critical, high, medium, low or unknown choice can be made of the rule outcome: failure or warning. And lastly, per severity, choice can be made of how many leeway days are allowed before a vulnerability causing a failure will be reported as a warning instead.
 
@@ -507,935 +355,68 @@ cve_leeway:
   high: 10
 ----
 
-* Package name: `cve`
+| xref:packages/release_external_parameters.adoc[external_parameters]
+a| Verify the attribute .predicate.buildDefinition.externalParameters of a SLSA Provenance v1.0 matches the expectation.
 
-[#cve__cve_blockers]
-=== link:#cve__cve_blockers[Blocking CVE check]
+| xref:packages/release_git_branch.adoc[git_branch]
+a| Check that the build was done from an expected git branch. The specific branches permitted are specified as a list of regexes in the `allowed_branch_patterns` rule data.
 
-The SLSA Provenance attestation for the image is inspected to ensure CVEs that have a known fix and meet a certain security level have not been detected. If detected, this policy rule will fail. By default, only CVEs of critical and high security level cause a failure. This is configurable by the rule data key `restrict_cve_security_levels`. The available levels are critical, high, medium, low, and unknown. In addition to that leeway can be granted per severity using the `cve_leeway` rule data key containing days of allowed leeway, measured as time between found vulnerability's public disclosure date and current effective time, per severity level.
+| xref:packages/release_github_certificate.adoc[github_certificate]
+a| Verify attributes on the certificate involved in the image signature when using slsa-github-generator on GitHub Actions with Sigstore Fulcio
 
-*Solution*: Make sure to address any CVE's related to the image.
+| xref:packages/release_hermetic_build_task.adoc[hermetic_build_task]
+a| This package verifies the build task in the attestation was invoked with the expected parameters to perform a hermetic build.
 
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Found %q vulnerability of %s security level`
-* Code: `cve.cve_blockers`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L114[Source, window="_blank"]
+| xref:packages/release_labels.adoc[labels]
+a| Check if the image has the expected labels set. The rules in this package distinguish file-based catalog (FBC) images from all other images. When checking an FBC image, a policy rule may use a different set of rule data. An FBC image is detected by the presence of the operators.operatorframework.io.index.configs.v1 label.
 
-[#cve__unpatched_cve_blockers]
-=== link:#cve__unpatched_cve_blockers[Blocking unpatched CVE check]
+| xref:packages/release_olm.adoc[olm]
+a| Checks for Operator Lifecycle Manager (OLM) bundles.
 
-The SLSA Provenance attestation for the image is inspected to ensure CVEs that do NOT have a known fix and meet a certain security level have not been detected. If detected, this policy rule will fail. By default, the list of security levels used by this policy is empty. This is configurable by the rule data key `restrict_unpatched_cve_security_levels`. The available levels are critical, high, medium, low, and unknown. In addition to that leeway can be granted per severity using the `cve_leeway` rule data key containing days of allowed leeway, measured as time between found vulnerability's public disclosure date and current effective time, per severity level.
+| xref:packages/release_provenance_materials.adoc[provenance_materials]
+a| This package provides rules for verifying the contents of the materials section of the SLSA Provenance attestation.
 
-*Solution*: CVEs without a known fix can only be remediated by either removing the impacted dependency, or by waiting for a fix to be available.
+| xref:packages/release_quay_expiration.adoc[quay_expiration]
+a| Policies to prevent releasing an image to quay that has a quay expiration date. In Konflux images with an expiration date are produced by "on-pr" build pipelines, i.e. pre-merge CI builds, so this is intended to prevent accidentally releasing a CI build.
 
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Found %q unpatched vulnerability of %s security level`
-* Code: `cve.unpatched_cve_blockers`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L148[Source, window="_blank"]
+| xref:packages/release_rhtap_multi_ci.adoc[rhtap_multi_ci]
+a| Checks for images built using an RHTAP build pipeline in either Jenkins, GitLab or GitHub. RHTAP pipelines are defined under https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
 
-[#cve__cve_results_found]
-=== link:#cve__cve_results_found[CVE scan results found]
+| xref:packages/release_rpm_packages.adoc[rpm_packages]
+a| Rules used to verify different properties of specific RPM packages found in the SBOM of the image being validated.
 
-Confirm that clair-scan task results are present in the SLSA Provenance attestation of the build pipeline.
+| xref:packages/release_rpm_pipeline.adoc[rpm_pipeline]
+a| This package provides rules for verifying the RPMs are built in an approved pipeline
 
-*Solution*: Make sure there is a successful task in the build pipeline that runs a Clair scan.
+| xref:packages/release_rpm_repos.adoc[rpm_repos]
+a| This package defines rules to confirm that all RPM packages listed in SBOMs specify a known and permitted repository id.
 
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Clair CVE scan results were not found`
-* Code: `cve.cve_results_found`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L185[Source, window="_blank"]
+| xref:packages/release_rpm_signature.adoc[rpm_signature]
+a| This package provides rules for verifying the signatures of RPMs identified in the the SLSA Provenance attestation.
 
-[#cve__cve_warnings]
-=== link:#cve__cve_warnings[Non-blocking CVE check]
+| xref:packages/release_sbom.adoc[sbom]
+a| Checks general properties of the SBOMs associated with the image being validated. More specific rules for SPDX and CycloneDX SBOMs are in separate packages.
 
-The SLSA Provenance attestation for the image is inspected to ensure CVEs that have a known fix and meet a certain security level have not been detected. If detected, this policy rule will raise a warning. By default, the list of CVE security levels used by this policy is empty. However, this is configurable by the rule data key `warn_cve_security_levels`. The available levels are critical, high, medium, low, and unknown.
+| xref:packages/release_sbom_cyclonedx.adoc[sbom_cyclonedx]
+a| Checks different properties of the CycloneDX SBOMs associated with the image being validated.
 
-*Solution*: Make sure to address any CVE's related to the image.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Found %q non-blocking vulnerability of %s security level`
-* Code: `cve.cve_warnings`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L58[Source, window="_blank"]
-
-[#cve__unpatched_cve_warnings]
-=== link:#cve__unpatched_cve_warnings[Non-blocking unpatched CVE check]
-
-The SLSA Provenance attestation for the image is inspected to ensure CVEs that do NOT have a known fix and meet a certain security level have not been detected. If detected, this policy rule will raise a warning. By default, only CVEs of critical and high security level cause a warning. This is configurable by the rule data key `warn_unpatched_cve_security_levels`. The available levels are critical, high, medium, low, and unknown.
-
-*Solution*: CVEs without a known fix can only be remediated by either removing the impacted dependency, or by waiting for a fix to be available.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Found %q non-blocking unpatched vulnerability of %s security level`
-* Code: `cve.unpatched_cve_warnings`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L86[Source, window="_blank"]
-
-[#cve__rule_data_provided]
-=== link:#cve__rule_data_provided[Rule data provided]
-
-Confirm the expected rule data keys have been provided in the expected format. The keys are `restrict_cve_security_levels`,	`warn_cve_security_levels`, `restrict_unpatched_cve_security_levels`, and `warn_unpatched_cve_security_levels`.
-
-*Solution*: If provided, ensure the rule data is in the expected format.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `cve.rule_data_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/cve/cve.rego#L211[Source, window="_blank"]
-
-[#external_parameters_package]
-== link:#external_parameters_package[External parameters]
-
-Verify the attribute .predicate.buildDefinition.externalParameters of a SLSA Provenance v1.0 matches the expectation.
-
-* Package name: `external_parameters`
-
-[#external_parameters__pipeline_run_params]
-=== link:#external_parameters__pipeline_run_params[Pipeline run params]
-
-Verify the PipelineRun was initialized with a set of expected parameters. By default it asserts git-repo, git-revision, and output-image are provided with non-empty values. This is configurable by the rule data key `pipeline_run_params`. Any additional parameters are NOT allowed.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `PipelineRun params, %v, do not match expectation, %v.`
-* Code: `external_parameters.pipeline_run_params`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/external_parameters/external_parameters.rego#L15[Source, window="_blank"]
-
-[#external_parameters__pipeline_run_params_provided]
-=== link:#external_parameters__pipeline_run_params_provided[PipelineRun params provided]
-
-Confirm the `pipeline_run_params` rule data was provided.
-
-*Solution*: Provide a non-empty list of expected PipelineRun parameters.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `external_parameters.pipeline_run_params_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/external_parameters/external_parameters.rego#L39[Source, window="_blank"]
-
-[#external_parameters__restrict_shared_volumes]
-=== link:#external_parameters__restrict_shared_volumes[Restrict shared volumes]
-
-Verify the PipelineRun did not use any pre-existing PersistentVolumeClaim workspaces.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `PipelineRun uses shared volumes, %v.`
-* Code: `external_parameters.restrict_shared_volumes`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/external_parameters/external_parameters.rego#L54[Source, window="_blank"]
-
-[#git_branch_package]
-== link:#git_branch_package[Git branch checks]
-
-Check that the build was done from an expected git branch. The specific branches permitted are specified as a list of regexes in the `allowed_branch_patterns` rule data.
-
-* Package name: `git_branch`
-
-[#git_branch__git_branch]
-=== link:#git_branch__git_branch[Only allow builds from a trusted branch]
-
-Build must originate from a configured branch pattern (e.g., 'refs/heads/main')
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Build is from a branch %s which is not a trusted branch`
-* Code: `git_branch.git_branch`
-* Effective from: `2025-07-01`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/git_branch/git_branch.rego#L14[Source, window="_blank"]
-
-[#github_certificate_package]
-== link:#github_certificate_package[GitHub Certificate Checks]
-
-Verify attributes on the certificate involved in the image signature when using slsa-github-generator on GitHub Actions with Sigstore Fulcio
-
-* Package name: `github_certificate`
-
-[#github_certificate__gh_workflow_extensions]
-=== link:#github_certificate__gh_workflow_extensions[GitHub Workflow Certificate Extensions]
-
-Check if the image signature certificate contains the expected GitHub extensions. These are the extensions that represent the GitHub workflow trigger, sha, name, repository, and ref.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Missing extension %q`
-* Code: `github_certificate.gh_workflow_extensions`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/github_certificate/github_certificate.rego#L15[Source, window="_blank"]
-
-[#github_certificate__gh_workflow_name]
-=== link:#github_certificate__gh_workflow_name[GitHub Workflow Name]
-
-Check if the value of the GitHub Workflow Name extension in the image signature certificate matches one of the allowed values. Use the rule data key `allowed_gh_workflow_names` to specify the list of allowed values. An empty allow list, which is the default value, causes this check to succeeded.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Name %q not in allowed list: %v`
-* Code: `github_certificate.gh_workflow_name`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/github_certificate/github_certificate.rego#L63[Source, window="_blank"]
-
-[#github_certificate__gh_workflow_repository]
-=== link:#github_certificate__gh_workflow_repository[GitHub Workflow Repository]
-
-Check if the value of the GitHub Workflow Repository extension in the image signature certificate matches one of the allowed values. Use the rule data key `allowed_gh_workflow_repos` to specify the list of allowed values. An empty allow list, which is the default value, causes this check to succeeded.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Repository %q not in allowed list: %v`
-* Code: `github_certificate.gh_workflow_repository`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/github_certificate/github_certificate.rego#L33[Source, window="_blank"]
-
-[#github_certificate__gh_workflow_ref]
-=== link:#github_certificate__gh_workflow_ref[GitHub Workflow Repository]
-
-Check if the value of the GitHub Workflow Ref extension in the image signature certificate matches one of the allowed values. Use the rule data key `allowed_gh_workflow_refs` to specify the list of allowed values. An empty allow list, which is the default value, causes this check to succeeded.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Ref %q not in allowed list: %v`
-* Code: `github_certificate.gh_workflow_ref`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/github_certificate/github_certificate.rego#L48[Source, window="_blank"]
-
-[#github_certificate__gh_workflow_trigger]
-=== link:#github_certificate__gh_workflow_trigger[GitHub Workflow Trigger]
-
-Check if the value of the GitHub Workflow Trigger extension in the image signature certificate matches one of the allowed values. Use the rule data key `allowed_gh_workflow_triggers` to specify the list of allowed values. An empty allow list, which is the default value, causes this check to succeeded.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Trigger %q not in allowed list: %v`
-* Code: `github_certificate.gh_workflow_trigger`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/github_certificate/github_certificate.rego#L78[Source, window="_blank"]
-
-[#github_certificate__rule_data_provided]
-=== link:#github_certificate__rule_data_provided[Rule data provided]
-
-Confirm the expected rule data keys have been provided in the expected format. The keys are `allowed_gh_workflow_repos`, `allowed_gh_workflow_refs`, `allowed_gh_workflow_names`, and `allowed_gh_workflow_triggers`.
-
-*Solution*: If provided, ensure the rule data is in the expected format.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `github_certificate.rule_data_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/github_certificate/github_certificate.rego#L93[Source, window="_blank"]
-
-[#hermetic_build_task_package]
-== link:#hermetic_build_task_package[Hermetic build task]
-
-This package verifies the build task in the attestation was invoked with the expected parameters to perform a hermetic build.
-
-* Package name: `hermetic_build_task`
-
-[#hermetic_build_task__build_task_hermetic]
-=== link:#hermetic_build_task__build_task_hermetic[Build task called with hermetic param set]
-
-Verify the build task in the PipelineRun attestation was invoked with the proper parameters to make the build process hermetic.
-
-*Solution*: Make sure the task that builds the image has a parameter named 'HERMETIC' and it's set to 'true'.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Build task was not invoked with the hermetic parameter set`
-* Code: `hermetic_build_task.build_task_hermetic`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/hermetic_build_task/hermetic_build_task.rego#L15[Source, window="_blank"]
-
-[#labels_package]
-== link:#labels_package[Labels]
-
-Check if the image has the expected labels set. The rules in this package distinguish file-based catalog (FBC) images from all other images. When checking an FBC image, a policy rule may use a different set of rule data. An FBC image is detected by the presence of the operators.operatorframework.io.index.configs.v1 label.
-
-* Package name: `labels`
-
-[#labels__deprecated_labels]
-=== link:#labels__deprecated_labels[Deprecated labels]
-
-Check the image for the presence of labels that have been deprecated. Use the rule data key `deprecated_labels` to set the list of labels to check.
-
-*Solution*: Update the image build process to not set the deprecated labels.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The %q label is deprecated, replace with %q`
-* Code: `labels.deprecated_labels`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L87[Source, window="_blank"]
-
-[#labels__disallowed_inherited_labels]
-=== link:#labels__disallowed_inherited_labels[Disallowed inherited labels]
-
-Check that certain labels on the image have different values than the labels from the parent image. If the label is inherited from the parent image but not redefined for the image, it will contain an incorrect value for the image. Use the rule data `disallowed_inherited_labels` key to set the list of labels to check, or the `fbc_disallowed_inherited_labels` key for fbc images.
-
-*Solution*: Update the image build process to overwrite the inherited labels.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The %q label should not be inherited from the parent image`
-* Code: `labels.disallowed_inherited_labels`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L136[Source, window="_blank"]
-
-[#labels__inaccessible_config]
-=== link:#labels__inaccessible_config[Inaccessible image config]
-
-The image config is not accessible.
-
-*Solution*: Check the provided authentication configuration and the credentials within it.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Image config of the image %q is inaccessible`
-* Code: `labels.inaccessible_config`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L65[Source, window="_blank"]
-
-[#labels__inaccessible_manifest]
-=== link:#labels__inaccessible_manifest[Inaccessible image manifest]
-
-The image manifest is not accessible.
-
-*Solution*: Check the provided authentication configuration and the credentials within it.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Manifest of the image %q is inaccessible`
-* Code: `labels.inaccessible_manifest`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L46[Source, window="_blank"]
-
-[#labels__inaccessible_parent_config]
-=== link:#labels__inaccessible_parent_config[Inaccessible parent image config]
-
-The parent image config is not accessible.
-
-*Solution*: Check the provided authentication configuration and the credentials within it.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Image config of the image %q, parent of image %q is inaccessible`
-* Code: `labels.inaccessible_parent_config`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L199[Source, window="_blank"]
-
-[#labels__inaccessible_parent_manifest]
-=== link:#labels__inaccessible_parent_manifest[Inaccessible parent image manifest]
-
-The parent image manifest is not accessible.
-
-*Solution*: Check the provided authentication configuration and the credentials within it.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Manifest of the image %q, parent of image %q is inaccessible`
-* Code: `labels.inaccessible_parent_manifest`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L181[Source, window="_blank"]
-
-[#labels__optional_labels]
-=== link:#labels__optional_labels[Optional labels]
-
-Check the image for the presence of labels that are recommended, but not required. Use the rule data `optional_labels` key to set the list of labels to check, or the `fbc_optional_labels` key for fbc images.
-
-*Solution*: Update the image build process to set the optional labels.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `The optional %q label is missing. Label description: %s`
-* Code: `labels.optional_labels`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L19[Source, window="_blank"]
-
-[#labels__required_labels]
-=== link:#labels__required_labels[Required labels]
-
-Check the image for the presence of labels that are required. Use the rule data `required_labels` key to set the list of labels to check, or the `fbc_required_labels` key for fbc images.
-
-*Solution*: Update the image build process to set the required labels.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `labels.required_labels`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L115[Source, window="_blank"]
-
-[#labels__rule_data_provided]
-=== link:#labels__rule_data_provided[Rule data provided]
-
-Confirm the expected rule data keys have been provided in the expected format. The keys are `required_labels`,	`fbc_required_labels`, `optional_labels`, `fbc_optional_labels`, `disallowed_inherited_labels`, `fbc_disallowed_inherited_labels`, and `deprecated_labels`.
-
-*Solution*: If provided, ensure the rule data is in the expected format.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `labels.rule_data_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/labels/labels.rego#L162[Source, window="_blank"]
-
-[#olm_package]
-== link:#olm_package[OLM]
-
-Checks for Operator Lifecycle Manager (OLM) bundles.
-
-* Package name: `olm`
-
-[#olm__csv_semver_format]
-=== link:#olm__csv_semver_format[ClusterServiceVersion semver format]
-
-Check the `spec.version` value in the ClusterServiceVersion manifest of the OLM bundle uses a properly formatted semver.
-
-*Solution*: Update the ClusterServiceVersion manifest of the OLM bundle to set the spec.version value to a valid semver.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The ClusterServiceVersion spec.version, %q, is not a valid semver`
-* Code: `olm.csv_semver_format`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L17[Source, window="_blank"]
-
-[#olm__feature_annotations_format]
-=== link:#olm__feature_annotations_format[Feature annotations have expected value]
-
-Check the feature annotations in the ClusterServiceVersion manifest of the OLM bundle. All of required feature annotations must be present and set to either the string `"true"` or the string `"false"`. The list of feature annotations can be customize via the `required_olm_features_annotations` rule data.
-
-*Solution*: Update the ClusterServiceVersion manifest of the OLM bundle to set the feature annotations to the expected value.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The annotation %q is either missing or has an unexpected value`
-* Code: `olm.feature_annotations_format`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L64[Source, window="_blank"]
-
-[#olm__allowed_registries]
-=== link:#olm__allowed_registries[Images referenced by OLM bundle are from allowed registries]
-
-Each image referenced by the OLM bundle should match an entry in the list of prefixes defined by the rule data key `allowed_registry_prefixes` in your policy configuration.
-
-*Solution*: Use image from an allowed registry, or modify your xref:ec-cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The %q CSV image reference is not from an allowed registry.`
-* Code: `olm.allowed_registries`
-* Effective from: `2024-09-01T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L287[Source, window="_blank"]
-
-[#olm__olm_bundle_multi_arch]
-=== link:#olm__olm_bundle_multi_arch[OLM bundle images are not multi-arch]
-
-OLM bundle images should be built for a single architecture. They should not be OCI image indexes nor should they be Docker v2s2 manifest lists.
-
-*Solution*: Rebuild your bundle image using a single architecture (e.g. `linux/amd64`). Do not create an image index for the OLM bundle.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The %q bundle image is a multi-arch reference.`
-* Code: `olm.olm_bundle_multi_arch`
-* Effective from: `2025-5-01T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L320[Source, window="_blank"]
-
-[#olm__allowed_registries_related]
-=== link:#olm__allowed_registries_related[Related images references are from allowed registries]
-
-Each image indicated as a related image should match an entry in the list of prefixes defined by the rule data key `allowed_registry_prefixes` in your policy configuration.
-
-*Solution*: Use image from an allowed registry, or modify your xref:ec-cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The %q related image reference is not from an allowed registry.`
-* Code: `olm.allowed_registries_related`
-* Effective from: `2025-04-15T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L217[Source, window="_blank"]
-
-[#olm__required_olm_features_annotations_provided]
-=== link:#olm__required_olm_features_annotations_provided[Required OLM feature annotations list provided]
-
-Confirm the `required_olm_features_annotations` rule data was provided, since it's required by the policy rules in this package.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `olm.required_olm_features_annotations_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L109[Source, window="_blank"]
-
-[#olm__subscriptions_annotation_format]
-=== link:#olm__subscriptions_annotation_format[Subscription annotation has expected value]
-
-Check the value of the operators.openshift.io/valid-subscription annotation from the ClusterServiceVersion manifest is in the expected format, i.e. JSON encoded non-empty array of strings.
-
-*Solution*: Update the ClusterServiceVersion manifest of the OLM bundle to set the subscription annotation to the expected value.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `olm.subscriptions_annotation_format`
-* Effective from: `2024-04-18T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L88[Source, window="_blank"]
-
-[#olm__inaccessible_snapshot_references]
-=== link:#olm__inaccessible_snapshot_references[Unable to access images in the input snapshot]
-
-Check the input snapshot and make sure all the images are accessible.
-
-*Solution*: Ensure all images in the input snapshot are valid.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The %q image reference is not accessible in the input snapshot.`
-* Code: `olm.inaccessible_snapshot_references`
-* Effective from: `2024-08-15T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L156[Source, window="_blank"]
-
-[#olm__inaccessible_related_images]
-=== link:#olm__inaccessible_related_images[Unable to access related images for a component]
-
-Check the input image for the presence of related images. Ensure that all images are accessible.
-
-*Solution*: Ensure all related images are available. The related images are defined by an file containing a json array attached to the validated image. The digest of the attached file is pulled from the RELATED_IMAGES_DIGEST result.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The %q related image reference is not accessible.`
-* Code: `olm.inaccessible_related_images`
-* Effective from: `2025-03-10T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L178[Source, window="_blank"]
-
-[#olm__unmapped_references]
-=== link:#olm__unmapped_references[Unmapped images in OLM bundle]
-
-Check the OLM bundle image for the presence of unmapped image references. Unmapped image pull references are references to images found in link:https://osbs.readthedocs.io/en/latest/users.html#pullspec-locations[varying locations] that are either not in the RPA about to be released or not accessible already.
-
-*Solution*: Add the missing image to the snapshot or check if the CSV pullspec is valid and accessible.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The %q CSV image reference is not in the snapshot or accessible.`
-* Code: `olm.unmapped_references`
-* Effective from: `2024-08-15T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L247[Source, window="_blank"]
-
-[#olm__unpinned_references]
-=== link:#olm__unpinned_references[Unpinned images in OLM bundle]
-
-Check the OLM bundle image for the presence of unpinned image references. Unpinned image pull references are references to images found in link:https://osbs.readthedocs.io/en/latest/users.html#pullspec-locations[varying locations] that do not contain a digest -- uniquely identifying the version of the image being pulled.
-
-*Solution*: Update the OLM bundle replacing the unpinned image reference with pinned image reference. Pinned image reference contains the image digest.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The %q image reference is not pinned at %s.`
-* Code: `olm.unpinned_references`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L38[Source, window="_blank"]
-
-[#olm__unpinned_snapshot_references]
-=== link:#olm__unpinned_snapshot_references[Unpinned images in input snapshot]
-
-Check the input snapshot for the presence of unpinned image references. Unpinned image pull references are references to images that do not contain a digest -- uniquely identifying the version of the image being pulled.
-
-*Solution*: Update the input snapshot replacing the unpinned image reference with pinned image reference. Pinned image reference contains the image digest.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The %q image reference is not pinned in the input snapshot.`
-* Code: `olm.unpinned_snapshot_references`
-* Effective from: `2024-08-15T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/olm/olm.rego#L126[Source, window="_blank"]
-
-[#provenance_materials_package]
-== link:#provenance_materials_package[Provenance Materials]
-
-This package provides rules for verifying the contents of the materials section of the SLSA Provenance attestation.
-
-* Package name: `provenance_materials`
-
-[#provenance_materials__git_clone_source_matches_provenance]
-=== link:#provenance_materials__git_clone_source_matches_provenance[Git clone source matches materials provenance]
-
-Confirm that the result of the git-clone task is included in the materials section of the SLSA provenance attestation.
-
-*Solution*: The build pipeline must contain a task named 'git-clone' and that task must emit results named 'url' and 'commit' and contain the clone git repository and commit, respectively.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Entry in materials for the git repo %q and commit %q not found`
-* Code: `provenance_materials.git_clone_source_matches_provenance`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/provenance_materials/provenance_materials.rego#L37[Source, window="_blank"]
-
-[#provenance_materials__git_clone_task_found]
-=== link:#provenance_materials__git_clone_task_found[Git clone task found]
-
-Confirm that the attestation contains a git-clone task with `commit` and `url` task results.
-
-*Solution*: Make sure the build pipeline contains a task named 'git-clone'.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Task git-clone not found`
-* Code: `provenance_materials.git_clone_task_found`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/provenance_materials/provenance_materials.rego#L15[Source, window="_blank"]
-
-[#quay_expiration_package]
-== link:#quay_expiration_package[Quay expiration]
-
-Policies to prevent releasing an image to quay that has a quay expiration date. In Konflux images with an expiration date are produced by "on-pr" build pipelines, i.e. pre-merge CI builds, so this is intended to prevent accidentally releasing a CI build.
-
-* Package name: `quay_expiration`
-
-[#quay_expiration__expires_label]
-=== link:#quay_expiration__expires_label[Expires label]
-
-Check the image metadata for the presence of a "quay.expires-after" label. If it's present then produce a violation. This check is enforced only for a "release", "production", or "staging" pipeline, as determined by the value of the `pipeline_intention` rule data.
-
-*Solution*: Make sure the image is built without setting the "quay.expires-after" label. This label is usually set if the container image was built by an "on-pr" pipeline during pre-merge CI.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The image has a 'quay.expires-after' label set to '%s'`
-* Code: `quay_expiration.expires_label`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/quay_expiration/quay_expiration.rego#L16[Source, window="_blank"]
-
-[#rhtap_multi_ci_package]
-== link:#rhtap_multi_ci_package[RHTAP Multi-CI]
-
-Checks for images built using an RHTAP build pipeline in either Jenkins, GitLab or GitHub. RHTAP pipelines are defined under https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/skeleton/ci
-
-* Package name: `rhtap_multi_ci`
-
-[#rhtap_multi_ci__attestation_format]
-=== link:#rhtap_multi_ci__attestation_format[SLSA Provenance Attestation Format]
-
-Confirm the attestation created by the RHTAP Multi-CI build pipeline matches the expected format.
-
-*Solution*: This check looks for some fields expected to be present in the SLSA attestation. Modifying the scripts that produce the attestation predicate might cause this to fail. See also the `att-predicate-*.sh` scripts at https://github.com/redhat-appstudio/tssc-dev-multi-ci/tree/main/rhtap
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `RHTAP %s attestation problem: %s`
-* Code: `rhtap_multi_ci.attestation_format`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rhtap_multi_ci/rhtap_multi_ci.rego#L40[Source, window="_blank"]
-
-[#rhtap_multi_ci__attestation_found]
-=== link:#rhtap_multi_ci__attestation_found[SLSA Provenance Attestation Found]
-
-Verify an attestation created by the RHTAP Multi-CI build pipeline is present.
-
-*Solution*: It appears the build pipeline did not create the expected SLSA provenance attestation. Check for relevant error messages in the 'cosign-sign-attest' pipeline step logs.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `A SLSA v1.0 provenance with one of the following RHTAP Multi-CI build types was not found: %s.`
-* Code: `rhtap_multi_ci.attestation_found`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rhtap_multi_ci/rhtap_multi_ci.rego#L16[Source, window="_blank"]
-
-[#rpm_packages_package]
-== link:#rpm_packages_package[RPM Packages]
-
-Rules used to verify different properties of specific RPM packages found in the SBOM of the image being validated.
-
-* Package name: `rpm_packages`
-
-[#rpm_packages__unique_version]
-=== link:#rpm_packages__unique_version[Unique Version]
-
-Check if there is more than one version of the same RPM installed across different architectures. This check only applies for Image Indexes, aka multi-platform images. Use the `non_unique_rpm_names` rule data key to ignore certain RPMs.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Multiple versions of the %q RPM were found: %s`
-* Code: `rpm_packages.unique_version`
-* Effective from: `2025-06-28T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rpm_packages/rpm_packages.rego#L17[Source, window="_blank"]
-
-[#rpm_pipeline_package]
-== link:#rpm_pipeline_package[RPM Pipeline]
-
-This package provides rules for verifying the RPMs are built in an approved pipeline
-
-* Package name: `rpm_pipeline`
-
-[#rpm_pipeline__invalid_pipeline]
-=== link:#rpm_pipeline__invalid_pipeline[Task version invalid_pipeline]
-
-The Tekton Task used specifies an invalid pipeline. The Task is annotated with `build.appstudio.redhat.com/pipeline` annotation, which must be in the set of `allowed_rpm_build_pipelines` in the rule data.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Task %q uses invalid pipleline %s, which is not in the list of valid pipelines: %s`
-* Code: `rpm_pipeline.invalid_pipeline`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rpm_pipeline/rpm_pipeline.rego#L18[Source, window="_blank"]
-
-[#rpm_repos_package]
-== link:#rpm_repos_package[RPM Repos]
-
-This package defines rules to confirm that all RPM packages listed in SBOMs specify a known and permitted repository id.
-
-* Package name: `rpm_repos`
-
-[#rpm_repos__ids_known]
-=== link:#rpm_repos__ids_known[All rpms have known repo ids]
-
-Each RPM package listed in an SBOM must specify the repository id that it comes from, and that repository id must be present in the list of known and permitted repository ids. Currently this is rule enforced only for SBOM components created by cachi2.
-
-*Solution*: Ensure every rpm comes from a known and permitted repository, and that the data in the SBOM correctly records that.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `RPM repo id check failed: %s`
-* Code: `rpm_repos.ids_known`
-* Effective from: `2024-11-10T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rpm_repos/rpm_repos.rego#L38[Source, window="_blank"]
-
-[#rpm_repos__rule_data_provided]
-=== link:#rpm_repos__rule_data_provided[Known repo id list provided]
-
-A list of known and permitted repository ids should be available in the rule data.
-
-*Solution*: Include a data source that provides a list of known repository ids under the 'known_rpm_repositories' key under the top level 'rule_data' key. This list can extended with the 'extra_rpm_repositories' rule data key. The contents of both lists are combined.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Rule data '%s' has unexpected format: %s`
-* Code: `rpm_repos.rule_data_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rpm_repos/rpm_repos.rego#L16[Source, window="_blank"]
-
-[#rpm_signature_package]
-== link:#rpm_signature_package[RPM Signature]
-
-This package provides rules for verifying the signatures of RPMs identified in the the SLSA Provenance attestation.
-
-* Package name: `rpm_signature`
-
-[#rpm_signature__allowed]
-=== link:#rpm_signature__allowed[Allowed RPM signature key]
-
-The SLSA Provenance attestation for the image is inspected to ensure RPMs have been signed by pre-defined set of signing keys. The list of signing keys can be set via the `allowed_rpm_signature_keys` rule data. Use the special value "unsigned" to allow unsigned RPMs.
-
-*Solution*: Make sure to use RPMs that have been signed by the expected signing key. An RPM lacking such signature, usually indicated the RPM is not ready for consumption.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Signing key %q is not one of the allowed keys: %s`
-* Code: `rpm_signature.allowed`
-* Effective from: `2024-10-05T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rpm_signature/rpm_signature.rego#L15[Source, window="_blank"]
-
-[#rpm_signature__result_format]
-=== link:#rpm_signature__result_format[Result format]
-
-Confirm the format of the RPMS_DATA result is in the expected format.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `rpm_signature.result_format`
-* Effective from: `2024-10-05T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rpm_signature/rpm_signature.rego#L38[Source, window="_blank"]
-
-[#rpm_signature__rule_data_provided]
-=== link:#rpm_signature__rule_data_provided[Rule data provided]
-
-Confirm the expected `allowed_rpm_signature_keys` rule data key has been provided in the expected format.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `rpm_signature.rule_data_provided`
-* Effective from: `2024-10-05T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rpm_signature/rpm_signature.rego#L55[Source, window="_blank"]
-
-[#sbom_package]
-== link:#sbom_package[SBOM]
-
-Checks general properties of the SBOMs associated with the image being validated. More specific rules for SPDX and CycloneDX SBOMs are in separate packages.
-
-* Package name: `sbom`
-
-[#sbom__disallowed_packages_provided]
-=== link:#sbom__disallowed_packages_provided[Disallowed packages list is provided]
-
-Confirm the `disallowed_packages` and `disallowed_attributes` rule data were provided, since they are required by the policy rules in this package.
-
-*Solution*: Provide a list of disallowed packages or package attributes in the expected format.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `sbom.disallowed_packages_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom/sbom.rego#L35[Source, window="_blank"]
-
-[#sbom__found]
-=== link:#sbom__found[Found]
-
-Confirm an SBOM attestation exists.
-
-*Solution*: Make sure the build process produces an SBOM attestation.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `No SBOM attestations found`
-* Code: `sbom.found`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom/sbom.rego#L15[Source, window="_blank"]
-
-[#sbom_cyclonedx_package]
-== link:#sbom_cyclonedx_package[SBOM CycloneDX]
-
-Checks different properties of the CycloneDX SBOMs associated with the image being validated.
-
-* Package name: `sbom_cyclonedx`
-
-[#sbom_cyclonedx__allowed]
-=== link:#sbom_cyclonedx__allowed[Allowed]
-
-Confirm the CycloneDX SBOM contains only allowed packages. By default all packages are allowed. Use the "disallowed_packages" rule data key to provide a list of disallowed packages.
-
-*Solution*: Update the image to not use any disallowed package.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Package is not allowed: %s`
-* Code: `sbom_cyclonedx.allowed`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L35[Source, window="_blank"]
-
-[#sbom_cyclonedx__allowed_package_external_references]
-=== link:#sbom_cyclonedx__allowed_package_external_references[Allowed package external references]
-
-Confirm the CycloneDX SBOM contains only packages with explicitly allowed external references. By default all external references are allowed unless the "allowed_external_references" rule data key provides a list of type-pattern pairs that forbid the use of any other external reference of the given type where the reference url matches the given pattern.
-
-*Solution*: Update the image to use only packages with explicitly allowed external references.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Package %s has reference %q of type %q which is not explicitly allowed%s`
-* Code: `sbom_cyclonedx.allowed_package_external_references`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L90[Source, window="_blank"]
-
-[#sbom_cyclonedx__allowed_package_sources]
-=== link:#sbom_cyclonedx__allowed_package_sources[Allowed package sources]
-
-For each of the components fetched by Cachi2 which define externalReferences of type distribution, verify they are allowed based on the allowed_package_sources rule data key. By default, allowed_package_sources is empty, which means no components with such references are allowed.
-
-*Solution*: Update the image to not use a package from a disallowed source.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Package %s fetched by cachi2 was sourced from %q which is not allowed`
-* Code: `sbom_cyclonedx.allowed_package_sources`
-* Effective from: `2024-12-15T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L154[Source, window="_blank"]
-
-[#sbom_cyclonedx__disallowed_package_attributes]
-=== link:#sbom_cyclonedx__disallowed_package_attributes[Disallowed package attributes]
-
-Confirm the CycloneDX SBOM contains only packages without disallowed attributes. By default all attributes are allowed. Use the "disallowed_attributes" rule data key to provide a list of key-value pairs that forbid the use of an attribute set to the given value.
-
-*Solution*: Update the image to not use any disallowed package attributes.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Package %s has the attribute %q set%s`
-* Code: `sbom_cyclonedx.disallowed_package_attributes`
-* Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L56[Source, window="_blank"]
-
-[#sbom_cyclonedx__disallowed_package_external_references]
-=== link:#sbom_cyclonedx__disallowed_package_external_references[Disallowed package external references]
-
-Confirm the CycloneDX SBOM contains only packages without disallowed external references. By default all external references are allowed. Use the "disallowed_external_references" rule data key to provide a list of type-pattern pairs that forbid the use of an external reference of the given type where the reference url matches the given pattern.
-
-*Solution*: Update the image to not use a package with a disallowed external reference.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Package %s has reference %q of type %q which is disallowed%s`
-* Code: `sbom_cyclonedx.disallowed_package_external_references`
-* Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L122[Source, window="_blank"]
-
-[#sbom_cyclonedx__valid]
-=== link:#sbom_cyclonedx__valid[Valid]
-
-Check the CycloneDX SBOM has the expected format. It verifies the CycloneDX SBOM matches the 1.5 version of the schema.
-
-*Solution*: Make sure the build process produces a valid CycloneDX SBOM.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `CycloneDX SBOM at index %d is not valid: %s`
-* Code: `sbom_cyclonedx.valid`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_cyclonedx/sbom_cyclonedx.rego#L14[Source, window="_blank"]
-
-[#slsa_build_build_service_package]
-== link:#slsa_build_build_service_package[SLSA - Build - Build Service]
-
-The SLSA requirement states the following:
+| xref:packages/release_slsa_build_build_service.adoc[slsa_build_build_service]
+a| The SLSA requirement states the following:
 "All build steps ran using some build service, not on a developer’s workstation."
 This package verifies the requirement by asserting the image was built by Tekton Pipelines.
 
-* Package name: `slsa_build_build_service`
-
-[#slsa_build_build_service__allowed_builder_ids_provided]
-=== link:#slsa_build_build_service__allowed_builder_ids_provided[Allowed builder IDs provided]
-
-Confirm the `allowed_builder_ids` rule data was provided, since it is required by the policy rules in this package.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `slsa_build_build_service.allowed_builder_ids_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_build_build_service/slsa_build_build_service.rego#L69[Source, window="_blank"]
-
-[#slsa_build_build_service__slsa_builder_id_found]
-=== link:#slsa_build_build_service__slsa_builder_id_found[SLSA Builder ID found]
-
-Verify that the attestation attribute predicate.builder.id is set.
-
-*Solution*: The builder id in the attestation is missing. Make sure the build system is setting the build id when generating an attestation.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Builder ID not set in attestation`
-* Code: `slsa_build_build_service.slsa_builder_id_found`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_build_build_service/slsa_build_build_service.rego#L20[Source, window="_blank"]
-
-[#slsa_build_build_service__slsa_builder_id_accepted]
-=== link:#slsa_build_build_service__slsa_builder_id_accepted[SLSA Builder ID is known and accepted]
-
-Verify that the attestation attribute predicate.builder.id is set to one of the values in the `allowed_builder_ids` rule data, e.g. "https://tekton.dev/chains/v2".
-
-*Solution*: Make sure the build id is set to an expected value. The expected values are set in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Builder ID %q is unexpected`
-* Code: `slsa_build_build_service.slsa_builder_id_accepted`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_build_build_service/slsa_build_build_service.rego#L42[Source, window="_blank"]
-
-[#slsa_build_scripted_build_package]
-== link:#slsa_build_scripted_build_package[SLSA - Build - Scripted Build]
-
-The SLSA requirement states the following:
+| xref:packages/release_slsa_build_scripted_build.adoc[slsa_build_scripted_build]
+a| The SLSA requirement states the following:
 "All build steps were fully defined in some sort of “build script”. The only manual command, if any, was to invoke the build script."
 This package verifies the requirement by asserting the image was built by Tekton Pipelines.
 
-* Package name: `slsa_build_scripted_build`
-
-[#slsa_build_scripted_build__build_script_used]
-=== link:#slsa_build_scripted_build__build_script_used[Build task contains steps]
-
-Verify that the predicate.buildConfig.tasks.steps attribute for the task responsible for building and pushing the image is not empty.
-
-*Solution*: There were no build tasks detected. Make sure the build pipeline contains tasks and that the build system is recording them properly when the attestation is generated.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Build task %q does not contain any steps`
-* Code: `slsa_build_scripted_build.build_script_used`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L21[Source, window="_blank"]
-
-[#slsa_build_scripted_build__build_task_image_results_found]
-=== link:#slsa_build_scripted_build__build_task_image_results_found[Build task set image digest and url task results]
-
-Confirm that a build task exists and it has the expected IMAGE_DIGEST and IMAGE_URL task results.
-
-*Solution*: Make sure the build pipeline contains a build task. The build task must contain results named 'IMAGE_DIGEST' and 'IMAGE_URL'.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Build task not found`
-* Code: `slsa_build_scripted_build.build_task_image_results_found`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L48[Source, window="_blank"]
-
-[#slsa_build_scripted_build__image_built_by_trusted_task]
-=== link:#slsa_build_scripted_build__image_built_by_trusted_task[Image built by trusted Task]
-
-Verify the digest of the image being validated is reported by a trusted Task in its IMAGE_DIGEST result.
-
-*Solution*: Make sure the build Pipeline definition uses a trusted Task to build images.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Image %q not built by a trusted task: %s`
-* Code: `slsa_build_scripted_build.image_built_by_trusted_task`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L106[Source, window="_blank"]
-
-[#slsa_build_scripted_build__subject_build_task_matches]
-=== link:#slsa_build_scripted_build__subject_build_task_matches[Provenance subject matches build task image result]
-
-Verify the subject of the attestations matches the IMAGE_DIGEST and IMAGE_URL values from the build task.
-
-*Solution*: Make sure the subject in the attestation matches the 'IMAGE_URL' and 'IMAGE_DIGEST' results from the build task. The format for the subject should be 'IMAGE_URL@IMAGE_DIGEST'.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The attestation subject, %q, does not match any of the images built`
-* Code: `slsa_build_scripted_build.subject_build_task_matches`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_build_scripted_build/slsa_build_scripted_build.rego#L72[Source, window="_blank"]
-
-[#slsa_provenance_available_package]
-== link:#slsa_provenance_available_package[SLSA - Provenance - Available]
-
-The SLSA Provenance Available requirement states the following:
+| xref:packages/release_slsa_provenance_available.adoc[slsa_provenance_available]
+a| The SLSA Provenance Available requirement states the following:
 "The provenance is available to the consumer in a format that the consumer accepts. The format SHOULD be in-toto SLSA Provenance, but another format MAY be used if both producer and consumer agree and it meets all the other requirements."
 This package only accepts the in-toto SLSA Provenance format.
 
-* Package name: `slsa_provenance_available`
-
-[#slsa_provenance_available__allowed_predicate_types_provided]
-=== link:#slsa_provenance_available__allowed_predicate_types_provided[Allowed predicate types provided]
-
-Confirm the `allowed_predicate_types` rule data was provided, since it is required by the policy rules in this package.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `slsa_provenance_available.allowed_predicate_types_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_provenance_available/slsa_provenance_available.rego#L49[Source, window="_blank"]
-
-[#slsa_provenance_available__attestation_predicate_type_accepted]
-=== link:#slsa_provenance_available__attestation_predicate_type_accepted[Expected attestation predicate type found]
-
-Verify that the predicateType field of the attestation indicates the in-toto SLSA Provenance format was used to attest the PipelineRun.
-
-*Solution*: The predicate type field in the attestation does not match the 'allowed_predicate_types' field. This field is set in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Attestation predicate type %q is not an expected type (%s)`
-* Code: `slsa_provenance_available.attestation_predicate_type_accepted`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_provenance_available/slsa_provenance_available.rego#L20[Source, window="_blank"]
-
-[#slsa_source_version_controlled_package]
-== link:#slsa_source_version_controlled_package[SLSA - Source - Version Controlled]
-
-The SLSA requirement states the following:
+| xref:packages/release_slsa_source_version_controlled.adoc[slsa_source_version_controlled]
+a| The SLSA requirement states the following:
 "Every change to the source is tracked in a version control system that meets the following requirements:
 
   [Change history] There exists a record of the history of changes
@@ -1452,757 +433,33 @@ The SLSA requirement states the following:
 Most popular version control system meet this requirement, such as git, Mercurial, Subversion, or Perforce."
 This package verifies the requirement by asserting the image was built from a git repository.
 
-* Package name: `slsa_source_version_controlled`
-
-[#slsa_source_version_controlled__materials_uri_is_git_repo]
-=== link:#slsa_source_version_controlled__materials_uri_is_git_repo[Material uri is a git repo]
-
-Ensure each entry in the predicate.materials array with a SHA-1 digest includes a valid Git URI.
-
-*Solution*: Ensure the URI associated with a SHA-1 digest in the materials section of the attestation is valid. This URI is derived from the 'CHAINS-GIT_URL' output of the 'git-clone' task.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Material URI %q is not a git URI`
-* Code: `slsa_source_version_controlled.materials_uri_is_git_repo`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_source_version_controlled/slsa_source_version_controlled.rego#L58[Source, window="_blank"]
-
-[#slsa_source_version_controlled__materials_format_okay]
-=== link:#slsa_source_version_controlled__materials_format_okay[Materials have uri and digest]
-
-Confirm at least one entry in the predicate.materials array of the attestation contains the expected attributes: uri and digest.sha1.
-
-*Solution*: Make sure the attestation contains the repository URI and digest.sha1. This information comes from the 'CHAINS-GIT_URL' and 'CHAINS-GIT_COMMIT' results in the 'git-clone' task.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `No materials match expected format`
-* Code: `slsa_source_version_controlled.materials_format_okay`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_source_version_controlled/slsa_source_version_controlled.rego#L33[Source, window="_blank"]
-
-[#slsa_source_version_controlled__materials_include_git_sha]
-=== link:#slsa_source_version_controlled__materials_include_git_sha[Materials include git commit shas]
-
-Ensure that each entry in the predicate.materials array with a SHA-1 digest includes a valid Git commit SHA.
-
-*Solution*: Ensure the digest.sha1 in the materials section of the attestation is a valid Git commit SHA. This commit information is derived from the 'CHAINS-GIT_COMMIT' output of the 'git-clone' task.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Material digest %q is not a git commit sha`
-* Code: `slsa_source_version_controlled.materials_include_git_sha`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_source_version_controlled/slsa_source_version_controlled.rego#L84[Source, window="_blank"]
-
-[#slsa_source_correlated_package]
-== link:#slsa_source_correlated_package[SLSA - Verification model - Source]
-
-SLSA v1 verification model states:
+| xref:packages/release_slsa_source_correlated.adoc[slsa_source_correlated]
+a| SLSA v1 verification model states:
 "...artifacts are verified to ensure they meet the producer defined expectations of where the package source code was retrieved from..."
 This package correlates the provided source code reference with the source code referenced in the attestation.
 
-* Package name: `slsa_source_correlated`
+| xref:packages/release_sbom_spdx.adoc[sbom_spdx]
+a| Checks different properties of the CycloneDX SBOMs associated with the image being validated.
 
-[#slsa_source_correlated__expected_source_code_reference]
-=== link:#slsa_source_correlated__expected_source_code_reference[Expected source code reference]
+| xref:packages/release_schedule.adoc[schedule]
+a| Rules that verify the current date conform to a given schedule.
 
-Verify that the provided source code reference is the one being attested.
+| xref:packages/release_source_image.adoc[source_image]
+a| This package is reponsible for verifying the source container image associated with the image being validated.
 
-*Solution*: The source code reference in the attestation doesn't match the expected and provided source code reference. Make sure that the provided source code reference is correct, and if it is make sure that the build process is configured to retrieve the source code from the appropriate source code repository. Make sure that the source code reference is pointing to a explicit revision not to a symbolic identifier, e.g. a branch or tag name.
+| xref:packages/release_attestation_task_bundle.adoc[attestation_task_bundle]
+a| To be able to reproduce and audit builds accurately it's important to know exactly what happened during the build. To do this Conforma requires that all tasks are defined in a set of known and trusted task bundles. This package includes rules to confirm that the tasks that built the image were defined in task bundles, and that the task bundles used are from the list of known and trusted bundles.
 
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The expected source code reference %q is not attested`
-* Code: `slsa_source_correlated.expected_source_code_reference`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L67[Source, window="_blank"]
+| xref:packages/release_tasks.adoc[tasks]
+a| Conforma expects that a set of tasks were included in the pipeline build for each image to be released. This package includes a set of rules to verify that the expected tasks ran in the pipeline when the image was built. Required tasks for a pipeline are specified in a data source provided at runtime. This data source features two primary rule data keys: pipeline-required-tasks and required-tasks. The pipeline-required-tasks key lists all required tasks broken down by pipeline name, while required-tasks details a default or baseline set of tasks. If your pipeline corresponds to an entry under pipeline-required-tasks, those tasks will be prioritized; otherwise, the system will default to the tasks listed under required-tasks. Required tasks are listed by the names given to them within the task definition. Optionally invocation parameter of a Task can be also mandated by including the name and the value in square brackets following the name of the task. For example: name[PARAM=val]. Only single parameter is supported, to assert multiple parameters repeat the required task definition for each parameter seperately.
 
-[#slsa_source_correlated__rule_data_provided]
-=== link:#slsa_source_correlated__rule_data_provided[Rule data provided]
+| xref:packages/release_test.adoc[test]
+a| Conforma requires that each build was subjected to a set of tests and that those tests all passed. This package includes a set of rules to verify that.
 
-Confirm the expected rule data keys have been provided in the expected format. The keys are `supported_vcs` and `supported_digests`.
+| xref:packages/release_trusted_task.adoc[trusted_task]
+a| This package is used to verify all the Tekton Tasks involved in building the image are trusted. Trust is established by comparing the Task references found in the SLSA Provenance with a pre-defined list of trusted Tasks, which is expected to be provided as a data source that creates the `data.trusted_tasks` in the format demonstrated at https://github.com/conforma/policy/blob/main/example/data/trusted_tekton_tasks.yml. The list can be extended or customized using the `trusted_tasks` rule data key which is merged into the `trusted_tasks` data.
 
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `slsa_source_correlated.rule_data_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L105[Source, window="_blank"]
+| xref:packages/release_rpm_ostree_task.adoc[rpm_ostree_task]
+a| This package is responsible for verifying the rpm-ostree Tekton Task was executed with the expected parameters.
 
-[#slsa_source_correlated__source_code_reference_provided]
-=== link:#slsa_source_correlated__source_code_reference_provided[Source code reference provided]
-
-Check if the expected source code reference is provided.
-
-*Solution*: Provide the expected source code reference in inputs.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Expected source code reference was not provided for verification`
-* Code: `slsa_source_correlated.source_code_reference_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L20[Source, window="_blank"]
-
-[#slsa_source_correlated__attested_source_code_reference]
-=== link:#slsa_source_correlated__attested_source_code_reference[Source reference]
-
-Attestation contains source reference.
-
-*Solution*: Check that the attestation creation process includes the source code reference in the predicate.materials for SLSA Provenance v0.2, or in predicate.buildDefinition.resolvedDependencies for SLSA Provenance v1.0 attestations. Check that the Version Control System prefix is the list of the supported VCS types in rule data (`supported_vcs` key).
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The attested material contains no source code reference`
-* Code: `slsa_source_correlated.attested_source_code_reference`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/slsa_source_correlated/slsa_source_correlated.rego#L41[Source, window="_blank"]
-
-[#sbom_spdx_package]
-== link:#sbom_spdx_package[SPDX SBOM]
-
-Checks different properties of the CycloneDX SBOMs associated with the image being validated.
-
-* Package name: `sbom_spdx`
-
-[#sbom_spdx__allowed]
-=== link:#sbom_spdx__allowed[Allowed]
-
-Confirm the SPDX SBOM contains only allowed packages. By default all packages are allowed. Use the "disallowed_packages" rule data key to provide a list of disallowed packages.
-
-*Solution*: Update the image to not use any disallowed package.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Package is not allowed: %s`
-* Code: `sbom_spdx.allowed`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L51[Source, window="_blank"]
-
-[#sbom_spdx__allowed_package_external_references]
-=== link:#sbom_spdx__allowed_package_external_references[Allowed package external references]
-
-Confirm the SPDX SBOM contains only packages with explicitly allowed external references. By default all external references are allowed unless the "allowed_external_references" rule data key provides a list of type-pattern pairs that forbid the use of any other external reference of the given type where the reference url matches the given pattern.
-
-*Solution*: Update the image to use only packages with explicitly allowed external references.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Package %s has reference %q of type %q which is not explicitly allowed%s`
-* Code: `sbom_spdx.allowed_package_external_references`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L74[Source, window="_blank"]
-
-[#sbom_spdx__allowed_package_sources]
-=== link:#sbom_spdx__allowed_package_sources[Allowed package sources]
-
-For each of the packages fetched by Cachi2 which define externalReferences, verify they are allowed based on the allowed_package_sources rule data key. By default, allowed_package_sources is empty, which means no components with such references are allowed.
-
-*Solution*: Update the image to not use a package from a disallowed source.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Package %s fetched by cachi2 was sourced from %q which is not allowed`
-* Code: `sbom_spdx.allowed_package_sources`
-* Effective from: `2025-02-17T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L170[Source, window="_blank"]
-
-[#sbom_spdx__contains_files]
-=== link:#sbom_spdx__contains_files[Contains files]
-
-Check the list of files in the SPDX SBOM is not empty.
-
-*Solution*: Verify the SBOM is correctly identifying the files in the image.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The list of files is empty`
-* Code: `sbom_spdx.contains_files`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L137[Source, window="_blank"]
-
-[#sbom_spdx__contains_packages]
-=== link:#sbom_spdx__contains_packages[Contains packages]
-
-Check the list of packages in the SPDX SBOM is not empty.
-
-*Solution*: Verify the SBOM is correctly identifying the package in the image.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The list of packages is empty`
-* Code: `sbom_spdx.contains_packages`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L36[Source, window="_blank"]
-
-[#sbom_spdx__disallowed_package_attributes]
-=== link:#sbom_spdx__disallowed_package_attributes[Disallowed package attributes]
-
-Confirm the SPDX SBOM contains only packages without disallowed attributes. By default all attributes are allowed. Use the "disallowed_attributes" rule data key to provide a list of key-value pairs that forbid the use of an attribute set to the given value.
-
-*Solution*: Update the image to not use any disallowed package attributes.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Package %s has the attribute %q set%s`
-* Code: `sbom_spdx.disallowed_package_attributes`
-* Effective from: `2025-02-04T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L215[Source, window="_blank"]
-
-[#sbom_spdx__disallowed_package_external_references]
-=== link:#sbom_spdx__disallowed_package_external_references[Disallowed package external references]
-
-Confirm the SPDX SBOM contains only packages without disallowed external references. By default all external references are allowed. Use the "disallowed_external_references" rule data key to provide a list of type-pattern pairs that forbid the use of an external reference of the given type where the reference url matches the given pattern.
-
-*Solution*: Update the image to not use a package with a disallowed external reference.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Package %s has reference %q of type %q which is disallowed%s`
-* Code: `sbom_spdx.disallowed_package_external_references`
-* Effective from: `2024-07-31T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L105[Source, window="_blank"]
-
-[#sbom_spdx__matches_image]
-=== link:#sbom_spdx__matches_image[Matches image]
-
-Check the SPDX SBOM targets the image being validated.
-
-*Solution*: The SPDX SBOM associated with the image describes a different image. Verify the integrity of the build system.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Image digest in the SBOM, %q, is not as expected, %q`
-* Code: `sbom_spdx.matches_image`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L152[Source, window="_blank"]
-
-[#sbom_spdx__valid]
-=== link:#sbom_spdx__valid[Valid]
-
-Check the SPDX SBOM has the expected format. It verifies the SPDX SBOM matches the 2.3 version of the schema.
-
-*Solution*: Make sure the build process produces a valid SPDX SBOM.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `SPDX SBOM at index %d is not valid: %s`
-* Code: `sbom_spdx.valid`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/sbom_spdx/sbom_spdx.rego#L15[Source, window="_blank"]
-
-[#schedule_package]
-== link:#schedule_package[Schedule related checks]
-
-Rules that verify the current date conform to a given schedule.
-
-* Package name: `schedule`
-
-[#schedule__date_restriction]
-=== link:#schedule__date_restriction[Date Restriction]
-
-Check if the current date is not allowed based on the rule data value from the key `disallowed_dates`. By default, the list is empty in which case *any* day is allowed. This check is enforced only for a "release" or "production" pipeline, as determined by the value of the `pipeline_intention` rule data.
-
-*Solution*: Try again on a different day.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s is a disallowed date: %s`
-* Code: `schedule.date_restriction`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/schedule/schedule.rego#L38[Source, window="_blank"]
-
-[#schedule__rule_data_provided]
-=== link:#schedule__rule_data_provided[Rule data provided]
-
-Confirm the expected rule data keys have been provided in the expected format. The keys are `disallowed_weekdays` and `disallowed_dates`.
-
-*Solution*: If provided, ensure the rule data is in the expected format.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `schedule.rule_data_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/schedule/schedule.rego#L62[Source, window="_blank"]
-
-[#schedule__weekday_restriction]
-=== link:#schedule__weekday_restriction[Weekday Restriction]
-
-Check if the current weekday is allowed based on the rule data value from the key `disallowed_weekdays`. By default, the list is empty in which case *any* weekday is allowed. This check is enforced only for a "release" or "production" pipeline, as determined by the value of the `pipeline_intention` rule data.
-
-*Solution*: Try again on a different weekday.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s is a disallowed weekday: %s`
-* Code: `schedule.weekday_restriction`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/schedule/schedule.rego#L14[Source, window="_blank"]
-
-[#source_image_package]
-== link:#source_image_package[Source image]
-
-This package is reponsible for verifying the source container image associated with the image being validated.
-
-* Package name: `source_image`
-
-[#source_image__exists]
-=== link:#source_image__exists[Exists]
-
-Verify the source container image exists.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `source_image.exists`
-* Effective from: `2024-06-05T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/source_image/source_image.rego#L15[Source, window="_blank"]
-
-[#source_image__signed]
-=== link:#source_image__signed[Signed]
-
-Verify the source container image is signed.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `source_image.signed`
-* Effective from: `2024-05-04T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/source_image/source_image.rego#L30[Source, window="_blank"]
-
-[#attestation_task_bundle_package]
-== link:#attestation_task_bundle_package[Task bundle checks]
-
-To be able to reproduce and audit builds accurately it's important to know exactly what happened during the build. To do this Conforma requires that all tasks are defined in a set of known and trusted task bundles. This package includes rules to confirm that the tasks that built the image were defined in task bundles, and that the task bundles used are from the list of known and trusted bundles.
-
-* Package name: `attestation_task_bundle`
-
-[#attestation_task_bundle__trusted_bundles_provided]
-=== link:#attestation_task_bundle__trusted_bundles_provided[A trusted Tekton bundles list was provided]
-
-Confirm the `trusted_tasks` rule data was provided, since it's required by the policy rules in this package.
-
-*Solution*: Create a lsit of trusted tasks. This is a list of task bundles with a top-level key of 'trusted_tasks'.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Missing required trusted_tasks data`
-* Code: `attestation_task_bundle.trusted_bundles_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L114[Source, window="_blank"]
-
-[#attestation_task_bundle__task_ref_bundles_not_empty]
-=== link:#attestation_task_bundle__task_ref_bundles_not_empty[Task bundle references not empty]
-
-Check that a valid task bundle reference is being used.
-
-*Solution*: Specify a task bundle with a reference as the full digest.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Pipeline task '%s' uses an empty bundle image reference`
-* Code: `attestation_task_bundle.task_ref_bundles_not_empty`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L76[Source, window="_blank"]
-
-[#attestation_task_bundle__task_ref_bundles_pinned]
-=== link:#attestation_task_bundle__task_ref_bundles_pinned[Task bundle references pinned to digest]
-
-Check if the Tekton Bundle used for the Tasks in the Pipeline definition is pinned to a digest.
-
-*Solution*: Specify the task bundle reference with a full digest rather than a tag.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Pipeline task '%s' uses an unpinned task bundle reference '%s'`
-* Code: `attestation_task_bundle.task_ref_bundles_pinned`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L20[Source, window="_blank"]
-
-[#attestation_task_bundle__task_ref_bundles_trusted]
-=== link:#attestation_task_bundle__task_ref_bundles_trusted[Task bundles are in trusted tasks list]
-
-For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is a trusted task.
-
-*Solution*: For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is a trusted task.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Pipeline task '%s' uses an untrusted task bundle '%s'`
-* Code: `attestation_task_bundle.task_ref_bundles_trusted`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L93[Source, window="_blank"]
-
-[#attestation_task_bundle__task_ref_bundles_current]
-=== link:#attestation_task_bundle__task_ref_bundles_current[Task bundles are latest versions]
-
-For each Task in the SLSA Provenance attestation, check if the Tekton Bundle used is the most recent.
-
-*Solution*: A task bundle used is not the most recent. The most recent task bundles are defined in the data source of your policy config.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Pipeline task '%s' uses an out of date task bundle '%s', new version of the Task must be used before %s`
-* Code: `attestation_task_bundle.task_ref_bundles_current`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L38[Source, window="_blank"]
-
-[#attestation_task_bundle__tasks_defined_in_bundle]
-=== link:#attestation_task_bundle__tasks_defined_in_bundle[Tasks defined using bundle references]
-
-Check for the existence of a task bundle. This rule will fail if the task is not called from a bundle.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Pipeline task '%s' does not contain a bundle reference`
-* Code: `attestation_task_bundle.tasks_defined_in_bundle`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/attestation_task_bundle/attestation_task_bundle.rego#L60[Source, window="_blank"]
-
-[#tasks_package]
-== link:#tasks_package[Tasks]
-
-Conforma expects that a set of tasks were included in the pipeline build for each image to be released. This package includes a set of rules to verify that the expected tasks ran in the pipeline when the image was built. Required tasks for a pipeline are specified in a data source provided at runtime. This data source features two primary rule data keys: pipeline-required-tasks and required-tasks. The pipeline-required-tasks key lists all required tasks broken down by pipeline name, while required-tasks details a default or baseline set of tasks. If your pipeline corresponds to an entry under pipeline-required-tasks, those tasks will be prioritized; otherwise, the system will default to the tasks listed under required-tasks. Required tasks are listed by the names given to them within the task definition. Optionally invocation parameter of a Task can be also mandated by including the name and the value in square brackets following the name of the task. For example: name[PARAM=val]. Only single parameter is supported, to assert multiple parameters repeat the required task definition for each parameter seperately.
-
-* Package name: `tasks`
-
-[#tasks__required_untrusted_task_found]
-=== link:#tasks__required_untrusted_task_found[All required tasks are from trusted tasks]
-
-Ensure that the all required tasks are resolved from trusted tasks.
-
-*Solution*: Make sure all required tasks in the build pipeline are resolved from trusted tasks.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `%s is required and present but not from a trusted task`
-* Code: `tasks.required_untrusted_task_found`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L34[Source, window="_blank"]
-
-[#tasks__required_tasks_found]
-=== link:#tasks__required_tasks_found[All required tasks were included in the pipeline]
-
-Ensure that the set of required tasks are included in the PipelineRun attestation.
-
-*Solution*: Make sure all required tasks are in the build pipeline. The required task list is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s is missing`
-* Code: `tasks.required_tasks_found`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L171[Source, window="_blank"]
-
-[#tasks__data_provided]
-=== link:#tasks__data_provided[Data provided]
-
-Confirm the expected data keys have been provided in the expected format. The keys are `pipeline-required-tasks` and `required-tasks`.
-
-*Solution*: If provided, ensure the data is in the expected format.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `tasks.data_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L285[Source, window="_blank"]
-
-[#tasks__future_required_tasks_found]
-=== link:#tasks__future_required_tasks_found[Future required tasks were found]
-
-Produce a warning when a task that will be required in the future was not included in the PipelineRun attestation.
-
-*Solution*: There is a task that will be required at a future date that is missing from the build pipeline.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `%s is missing and will be required on %s`
-* Code: `tasks.future_required_tasks_found`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L86[Source, window="_blank"]
-
-[#tasks__pinned_task_refs]
-=== link:#tasks__pinned_task_refs[Pinned Task references]
-
-Ensure that all Tasks in the SLSA Provenance attestation use an immuntable reference to the Task definition.
-
-*Solution*: Make sure the build pipeline uses Tasks via pinned references. For example, if the git resolver is used, use a commit ID instead of a branch name.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Task %s is used by pipeline task %s via an unpinned reference.`
-* Code: `tasks.pinned_task_refs`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L219[Source, window="_blank"]
-
-[#tasks__pipeline_has_tasks]
-=== link:#tasks__pipeline_has_tasks[Pipeline run includes at least one task]
-
-Ensure that at least one Task is present in the PipelineRun attestation.
-
-*Solution*: Make sure the build pipeline ran any tasks and that the build system is generating a proper attestation.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `No tasks found in PipelineRun attestation`
-* Code: `tasks.pipeline_has_tasks`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L116[Source, window="_blank"]
-
-[#tasks__pipeline_required_tasks_list_provided]
-=== link:#tasks__pipeline_required_tasks_list_provided[Required tasks list for pipeline was provided]
-
-Produce a warning if the required tasks list rule data was not provided.
-
-*Solution*: The required task list is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'. Make sure this list exists.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Required tasks do not exist for pipeline`
-* Code: `tasks.pipeline_required_tasks_list_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L65[Source, window="_blank"]
-
-[#tasks__required_tasks_list_provided]
-=== link:#tasks__required_tasks_list_provided[Required tasks list was provided]
-
-Confirm the `required-tasks` rule data was provided, since it's required by the policy rules in this package.
-
-*Solution*: Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key 'required-tasks' that contains a list of tasks that are required to run in the build pipeline.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Missing required required-tasks data`
-* Code: `tasks.required_tasks_list_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L195[Source, window="_blank"]
-
-[#tasks__successful_pipeline_tasks]
-=== link:#tasks__successful_pipeline_tasks[Successful pipeline tasks]
-
-Ensure that all of the Tasks in the Pipeline completed successfully. Note that skipped Tasks are not taken into account and do not influence the outcome.
-
-*Solution*: Make sure the build pipeline is properly configured so all the tasks can be executed successfully.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Pipeline task %q did not complete successfully, %q`
-* Code: `tasks.successful_pipeline_tasks`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L141[Source, window="_blank"]
-
-[#tasks__unsupported]
-=== link:#tasks__unsupported[Task version unsupported]
-
-The Tekton Task used is or will be unsupported. The Task is annotated with `build.appstudio.redhat.com/expires-on` annotation marking it as unsupported after a certain date.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Task %q is used by pipeline task %q is or will be unsupported as of %s. %s`
-* Code: `tasks.unsupported`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/tasks/tasks.rego#L246[Source, window="_blank"]
-
-[#test_package]
-== link:#test_package[Test]
-
-Conforma requires that each build was subjected to a set of tests and that those tests all passed. This package includes a set of rules to verify that.
-
-* Package name: `test`
-
-[#test__test_all_images]
-=== link:#test__test_all_images[Image digest is present in IMAGES_PROCESSED result]
-
-Ensure that task producing the IMAGES_PROCESSED result contains the digests of the built image.
-
-*Solution*: Found an image not processed by a task. Make sure that the task processes and includes the image digest of all images in the `IMAGES_PROCESSED` result.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Test '%s' did not process image with digest '%s'.`
-* Code: `test.test_all_images`
-* Effective from: `2024-05-29T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/test/test.rego#L239[Source, window="_blank"]
-
-[#test__no_failed_informative_tests]
-=== link:#test__no_failed_informative_tests[No informative tests failed]
-
-Produce a warning if any informative tests have their result set to "FAILED". The result type is configurable by the "failed_tests_results" key, and the list of informative tests is configurable by the "informative_tests" key in the rule data.
-
-*Solution*: There is a test that failed. Make sure that any task in the build pipeline with a result named 'TEST_OUTPUT' does not fail. More information about the test should be available in the logs for the build Pipeline.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `The Task %q from the build Pipeline reports a failed informative test`
-* Code: `test.no_failed_informative_tests`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/test/test.rego#L17[Source, window="_blank"]
-
-[#test__no_erred_tests]
-=== link:#test__no_erred_tests[No tests erred]
-
-Produce a violation if any tests have their result set to "ERROR". The result type is configurable by the "erred_tests_results" key in the rule data.
-
-*Solution*: There is a test that erred. Make sure that any task in the build pipeline with a result named 'TEST_OUTPUT' does not err. More information about the test should be available in the logs for the build Pipeline.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The Task %q from the build Pipeline reports a test erred`
-* Code: `test.no_erred_tests`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/test/test.rego#L169[Source, window="_blank"]
-
-[#test__no_failed_tests]
-=== link:#test__no_failed_tests[No tests failed]
-
-Produce a violation if any non-informative tests have their result set to "FAILED". The result type is configurable by the "failed_tests_results" key, and the list of informative tests is configurable by the "informative_tests" key in the rule data.
-
-*Solution*: There is a test that failed. Make sure that any task in the build pipeline with a result named 'TEST_OUTPUT' does not fail. More information about the test should be available in the logs for the build Pipeline.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The Task %q from the build Pipeline reports a failed test`
-* Code: `test.no_failed_tests`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/test/test.rego#L144[Source, window="_blank"]
-
-[#test__no_test_warnings]
-=== link:#test__no_test_warnings[No tests produced warnings]
-
-Produce a warning if any tests have their result set to "WARNING". The result type is configurable by the "warned_tests_results" key in the rule data.
-
-*Solution*: There is a task with result 'TEST_OUTPUT' that returned a result of 'WARNING'. You can find which test resulted in 'WARNING' by examining the 'result' key in the 'TEST_OUTPUT'. More information about the test should be available in the logs for the build Pipeline.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `The Task %q from the build Pipeline reports a test contains warnings`
-* Code: `test.no_test_warnings`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/test/test.rego#L41[Source, window="_blank"]
-
-[#test__no_skipped_tests]
-=== link:#test__no_skipped_tests[No tests were skipped]
-
-Produce a violation if any tests have their result set to "SKIPPED". A skipped result means a pre-requirement for executing the test was not met, e.g. a license key for executing a scanner was not provided. The result type is configurable by the "skipped_tests_results" key in the rule data.
-
-*Solution*: There is a test that was skipped. Make sure that each task with a result named 'TEST_OUTPUT' was not skipped. You can find which test was skipped by examining the 'result' key in the 'TEST_OUTPUT'. More information about the test should be available in the logs for the build Pipeline.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The Task %q from the build Pipeline reports a test was skipped`
-* Code: `test.no_skipped_tests`
-* Effective from: `2023-12-08T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/test/test.rego#L192[Source, window="_blank"]
-
-[#test__test_results_known]
-=== link:#test__test_results_known[No unsupported test result values found]
-
-Ensure all test data result values are in the set of known/supported result values.
-
-*Solution*: The test results should be of a known value. Values can be set as a xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The Task %q from the build Pipeline has an unsupported test result %q`
-* Code: `test.test_results_known`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/test/test.rego#L111[Source, window="_blank"]
-
-[#test__rule_data_provided]
-=== link:#test__rule_data_provided[Rule data provided]
-
-Confirm the expected rule data keys have been provided in the expected format. The keys are `supported_tests_results`, `failed_tests_results`, `informative_tests`, `erred_tests_results`, `skipped_tests_results`, and `warned_tests_results`.
-
-*Solution*: If provided, ensure the rule data is in the expected format.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `test.rule_data_provided`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/test/test.rego#L219[Source, window="_blank"]
-
-[#test__test_data_found]
-=== link:#test__test_data_found[Test data found in task results]
-
-Ensure that at least one of the tasks in the pipeline includes a TEST_OUTPUT task result, which is where Conforma expects to find test result data.
-
-*Solution*: Confirm at least one task in the build pipeline contains a result named TEST_OUTPUT.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `No test data found`
-* Code: `test.test_data_found`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/test/test.rego#L64[Source, window="_blank"]
-
-[#test__test_results_found]
-=== link:#test__test_results_found[Test data includes results key]
-
-Each test result is expected to have a `results` key. Verify that the `results` key is present in all of the TEST_OUTPUT task results.
-
-*Solution*: There was at least one result named TEST_OUTPUT found, but it did not contain a key named 'result'. For a TEST_OUTPUT result to be valid, this key must exist.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Found tests without results`
-* Code: `test.test_results_found`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/test/test.rego#L88[Source, window="_blank"]
-
-[#trusted_task_package]
-== link:#trusted_task_package[Trusted Task checks]
-
-This package is used to verify all the Tekton Tasks involved in building the image are trusted. Trust is established by comparing the Task references found in the SLSA Provenance with a pre-defined list of trusted Tasks, which is expected to be provided as a data source that creates the `data.trusted_tasks` in the format demonstrated at https://github.com/conforma/policy/blob/main/example/data/trusted_tekton_tasks.yml. The list can be extended or customized using the `trusted_tasks` rule data key which is merged into the `trusted_tasks` data.
-
-* Package name: `trusted_task`
-
-[#trusted_task__data_format]
-=== link:#trusted_task__data_format[Data format]
-
-Confirm the expected `trusted_tasks` data keys have been provided in the expected format.
-
-*Solution*: If provided, ensure the data is in the expected format.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `trusted_task.data_format`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L219[Source, window="_blank"]
-
-[#trusted_task__pinned]
-=== link:#trusted_task__pinned[Task references are pinned]
-
-Check if all Tekton Tasks use a Task definition by a pinned reference. When using the git resolver, a commit ID is expected for the revision parameter. When using the bundles resolver, the bundle parameter is expected to include an image reference with a digest.
-
-*Solution*: Update the Pipeline definition so that all Task references have a pinned value as mentioned in the description.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Pipeline task %q uses an unpinned task reference, %s`
-* Code: `trusted_task.pinned`
-* Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L49[Source, window="_blank"]
-
-[#trusted_task__tagged]
-=== link:#trusted_task__tagged[Task references are tagged]
-
-Check if all Tekton Tasks defined with the bundle format contain a tag reference.
-
-*Solution*: Update the Pipeline definition so that all Task references have a tagged value as mentioned in the description.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `Pipeline task %q uses an untagged task reference, %s`
-* Code: `trusted_task.tagged`
-* Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L25[Source, window="_blank"]
-
-[#trusted_task__data]
-=== link:#trusted_task__data[Task tracking data was provided]
-
-Confirm the `trusted_tasks` rule data was provided, since it's required by the policy rules in this package.
-
-*Solution*: Create a, or use an existing, trusted tasks list as a data source.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Missing required trusted_tasks data`
-* Code: `trusted_task.data`
-* Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L168[Source, window="_blank"]
-
-[#trusted_task__trusted]
-=== link:#trusted_task__trusted[Tasks are trusted]
-
-Check the trust of the Tekton Tasks used in the build Pipeline. There are two modes in which trust is verified. The first mode is used if Trusted Artifacts are enabled. In this case, a chain of trust is established for all the Tasks involved in creating an artifact. If the chain contains an untrusted Task, then a violation is emitted. The second mode is used as a fallback when Trusted Artifacts are not enabled. In this case, **all** Tasks in the build Pipeline must be trusted.
-
-*Solution*: If using Trusted Artifacts, be sure every Task in the build Pipeline responsible for producing a Trusted Artifact is trusted. Otherwise, ensure **all** Tasks in the build Pipeline are trusted. Note that trust is eventually revoked from Tasks when newer versions are made available.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `trusted_task.trusted`
-* Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L104[Source, window="_blank"]
-
-[#trusted_task__current]
-=== link:#trusted_task__current[Tasks using the latest versions]
-
-Check if all Tekton Tasks use the latest known Task reference. When warnings will be reported can be configured using the `task_expiry_warning_days` rule data setting. It holds the number of days before the task is to expire within which the warnings will be reported.
-
-*Solution*: Update the Task reference to a newer version.
-
-* Rule type: [rule-type-indicator warning]#WARNING#
-* WARNING message: `A newer version of task %q exists. Please update before %s. The current bundle is %q and the latest bundle ref is %q`
-* Code: `trusted_task.current`
-* Effective from: `2024-05-07T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L75[Source, window="_blank"]
-
-[#trusted_task__valid_trusted_artifact_inputs]
-=== link:#trusted_task__valid_trusted_artifact_inputs[Trusted Artifact produced in pipeline]
-
-All input trusted artifacts must be produced on the pipeline. If they are not the artifact could have been injected by a rogue task.
-
-*Solution*: Audit the pipeline to make sure all inputs are produced by the pipeline.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `Code tampering detected, input %q for task %q was not produced by the pipeline as attested.`
-* Code: `trusted_task.valid_trusted_artifact_inputs`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L130[Source, window="_blank"]
-
-[#trusted_task__trusted_parameters]
-=== link:#trusted_task__trusted_parameters[Trusted parameters]
-
-Confirm certain parameters provided to each builder Task have come from trusted Tasks.
-
-*Solution*: Update your build Pipeline to ensure all the parameters provided to your builder Tasks come from trusted Tasks.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `The %q parameter of the %q PipelineTask includes an untrusted digest: %s`
-* Code: `trusted_task.trusted_parameters`
-* Effective from: `2021-07-04T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L188[Source, window="_blank"]
-
-[#rpm_ostree_task_package]
-== link:#rpm_ostree_task_package[rpm-ostree Task]
-
-This package is responsible for verifying the rpm-ostree Tekton Task was executed with the expected parameters.
-
-* Package name: `rpm_ostree_task`
-
-[#rpm_ostree_task__builder_image_param]
-=== link:#rpm_ostree_task__builder_image_param[Builder image parameter]
-
-Verify the BUILDER_IMAGE parameter of the rpm-ostree Task uses an image reference that is both pinned to a digest and starts with a pre-defined list of prefixes. By default, the list of prefixes is empty allowing any pinned image reference to be used. This is customizable via the `allowed_rpm_ostree_builder_image_prefixes` rule data.
-
-*Solution*: Make sure the rpm-ostree Task uses a pinned image reference from a pre-approved location.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `rpm_ostree_task.builder_image_param`
-* Effective from: `2024-03-20T00:00:00Z`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rpm_ostree_task/rpm_ostree_task.rego#L16[Source, window="_blank"]
-
-[#rpm_ostree_task__rule_data]
-=== link:#rpm_ostree_task__rule_data[Rule data]
-
-Verify the rule data used by this package, `allowed_rpm_ostree_builder_image_prefixes`, is in the expected format.
-
-*Solution*: Make sure the `allowed_rpm_ostree_builder_image_prefixes` rule data is in the expected format in the data source.
-
-* Rule type: [rule-type-indicator failure]#FAILURE#
-* FAILURE message: `%s`
-* Code: `rpm_ostree_task.rule_data`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/rpm_ostree_task/rpm_ostree_task.rego#L37[Source, window="_blank"]
+|===

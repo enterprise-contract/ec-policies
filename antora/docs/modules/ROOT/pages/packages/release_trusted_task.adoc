@@ -1,0 +1,111 @@
+= Trusted Task checks Package
+
+This package is used to verify all the Tekton Tasks involved in building the image are trusted. Trust is established by comparing the Task references found in the SLSA Provenance with a pre-defined list of trusted Tasks, which is expected to be provided as a data source that creates the `data.trusted_tasks` in the format demonstrated at https://github.com/conforma/policy/blob/main/example/data/trusted_tekton_tasks.yml. The list can be extended or customized using the `trusted_tasks` rule data key which is merged into the `trusted_tasks` data.
+
+== Package Name
+
+* `trusted_task`
+
+== Rules Included
+
+[#trusted_task__data_format]
+=== link:#trusted_task__data_format[Data format]
+
+Confirm the expected `trusted_tasks` data keys have been provided in the expected format.
+
+*Solution*: If provided, ensure the data is in the expected format.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `trusted_task.data_format`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L219[Source, window="_blank"]
+
+[#trusted_task__pinned]
+=== link:#trusted_task__pinned[Task references are pinned]
+
+Check if all Tekton Tasks use a Task definition by a pinned reference. When using the git resolver, a commit ID is expected for the revision parameter. When using the bundles resolver, the bundle parameter is expected to include an image reference with a digest.
+
+*Solution*: Update the Pipeline definition so that all Task references have a pinned value as mentioned in the description.
+
+* Rule type: [rule-type-indicator warning]#WARNING#
+* WARNING message: `Pipeline task %q uses an unpinned task reference, %s`
+* Code: `trusted_task.pinned`
+* Effective from: `2024-05-07T00:00:00Z`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L49[Source, window="_blank"]
+
+[#trusted_task__tagged]
+=== link:#trusted_task__tagged[Task references are tagged]
+
+Check if all Tekton Tasks defined with the bundle format contain a tag reference.
+
+*Solution*: Update the Pipeline definition so that all Task references have a tagged value as mentioned in the description.
+
+* Rule type: [rule-type-indicator warning]#WARNING#
+* WARNING message: `Pipeline task %q uses an untagged task reference, %s`
+* Code: `trusted_task.tagged`
+* Effective from: `2024-05-07T00:00:00Z`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L25[Source, window="_blank"]
+
+[#trusted_task__data]
+=== link:#trusted_task__data[Task tracking data was provided]
+
+Confirm the `trusted_tasks` rule data was provided, since it's required by the policy rules in this package.
+
+*Solution*: Create a, or use an existing, trusted tasks list as a data source.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Missing required trusted_tasks data`
+* Code: `trusted_task.data`
+* Effective from: `2024-05-07T00:00:00Z`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L168[Source, window="_blank"]
+
+[#trusted_task__trusted]
+=== link:#trusted_task__trusted[Tasks are trusted]
+
+Check the trust of the Tekton Tasks used in the build Pipeline. There are two modes in which trust is verified. The first mode is used if Trusted Artifacts are enabled. In this case, a chain of trust is established for all the Tasks involved in creating an artifact. If the chain contains an untrusted Task, then a violation is emitted. The second mode is used as a fallback when Trusted Artifacts are not enabled. In this case, **all** Tasks in the build Pipeline must be trusted.
+
+*Solution*: If using Trusted Artifacts, be sure every Task in the build Pipeline responsible for producing a Trusted Artifact is trusted. Otherwise, ensure **all** Tasks in the build Pipeline are trusted. Note that trust is eventually revoked from Tasks when newer versions are made available.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `%s`
+* Code: `trusted_task.trusted`
+* Effective from: `2024-05-07T00:00:00Z`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L104[Source, window="_blank"]
+
+[#trusted_task__current]
+=== link:#trusted_task__current[Tasks using the latest versions]
+
+Check if all Tekton Tasks use the latest known Task reference. When warnings will be reported can be configured using the `task_expiry_warning_days` rule data setting. It holds the number of days before the task is to expire within which the warnings will be reported.
+
+*Solution*: Update the Task reference to a newer version.
+
+* Rule type: [rule-type-indicator warning]#WARNING#
+* WARNING message: `A newer version of task %q exists. Please update before %s. The current bundle is %q and the latest bundle ref is %q`
+* Code: `trusted_task.current`
+* Effective from: `2024-05-07T00:00:00Z`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L75[Source, window="_blank"]
+
+[#trusted_task__valid_trusted_artifact_inputs]
+=== link:#trusted_task__valid_trusted_artifact_inputs[Trusted Artifact produced in pipeline]
+
+All input trusted artifacts must be produced on the pipeline. If they are not the artifact could have been injected by a rogue task.
+
+*Solution*: Audit the pipeline to make sure all inputs are produced by the pipeline.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Code tampering detected, input %q for task %q was not produced by the pipeline as attested.`
+* Code: `trusted_task.valid_trusted_artifact_inputs`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L130[Source, window="_blank"]
+
+[#trusted_task__trusted_parameters]
+=== link:#trusted_task__trusted_parameters[Trusted parameters]
+
+Confirm certain parameters provided to each builder Task have come from trusted Tasks.
+
+*Solution*: Update your build Pipeline to ensure all the parameters provided to your builder Tasks come from trusted Tasks.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The %q parameter of the %q PipelineTask includes an untrusted digest: %s`
+* Code: `trusted_task.trusted_parameters`
+* Effective from: `2021-07-04T00:00:00Z`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/trusted_task/trusted_task.rego#L188[Source, window="_blank"]

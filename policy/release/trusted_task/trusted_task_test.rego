@@ -325,6 +325,87 @@ test_data_errors if {
 	lib.assert_equal_results(trusted_task.deny, expected) with data.trusted_tasks as bad_data
 }
 
+################################
+# _trusted_build_digests tests #
+################################
+
+_mock_run_script_result := {
+	"name": "SCRIPT_RUNNER_IMAGE_REFERENCE",
+	"value": "registry.io/runner/image@sha256:1111111111111111111111111111111111111111111111111111111111111111",
+	"type": "string",
+}
+
+_mock_att_with_task(task) := {"statement": {"predicate": {
+	"buildType": lib.tekton_pipeline_run,
+	"buildConfig": {"tasks": [task]},
+}}}
+
+test_trusted_build_digests_from_run_script_result if {
+	# A digest from the SCRIPT_RUNNER_IMAGE_REFERENCE task result in the run-script-oci-ta
+	# task appears in _trusted_build_digests if the task is considered a trusted task
+	attestation := _mock_att_with_task({
+		"ref": {"name": "run-script-oci-ta", "bundle": "registry.local/trusty:1.0@sha256:digest"},
+		"results": [_mock_run_script_result],
+	})
+	expected := {"sha256:1111111111111111111111111111111111111111111111111111111111111111"}
+	lib.assert_equal(trusted_task._trusted_build_digests, expected) with input.attestations as [attestation]
+		with data.trusted_tasks as trusted_tasks_data
+}
+
+test_trusted_build_digests_from_run_script_untrusted if {
+	# A digest from the SCRIPT_RUNNER_IMAGE_REFERENCE task result in the run-script-oci-ta
+	# task does not appear in _trusted_build_digests if the task is not considered a trusted task
+	attestation := _mock_att_with_task({
+		"ref": {"name": "run-script-oci-ta", "bundle": "registry.local/unknown:1.0@sha256:digest"},
+		"results": [_mock_run_script_result],
+	})
+	lib.assert_empty(trusted_task._trusted_build_digests) with input.attestations as [attestation]
+		with data.trusted_tasks as trusted_tasks_data
+}
+
+test_trusted_build_digests_from_run_script_no_result if {
+	# A digest from the some other task result in the run-script-oci-ta task does not appear
+	# in _trusted_build_digests even if the task is not considered a trusted task
+	results := json.patch(_mock_run_script_result, [{"op": "add", "path": "/name", "value": "SOME_OTHER_NAME"}])
+	attestation := _mock_att_with_task({
+		"ref": {"name": "run-script-oci-ta", "bundle": "registry.local/trusty:1.0@sha256:digest"},
+		"results": [results],
+	})
+	lib.assert_equal(trusted_task._trusted_build_digests, set()) with input.attestations as [attestation]
+		with data.trusted_tasks as trusted_tasks_data
+}
+
+test_trusted_build_digests_from_build_task_results if {
+	# A digest from the the IMAGE_DIGEST build task result appears in _trusted_build_digests
+	# if the build task is considered a trusted task
+	attestation := _mock_att_with_task({
+		"ref": {"name": "some-task", "bundle": "registry.local/trusty:1.0@sha256:digest"},
+		"results": [
+			{"name": "SOME_IMAGE_URL", "value": "registry.io/whatever/image", "type": "string"},
+			# regal ignore:line-length
+			{"name": "SOME_IMAGE_DIGEST", "value": "sha256:2222222222222222222222222222222222222222222222222222222222222222", "type": "string"},
+		],
+	})
+	expected := {"sha256:2222222222222222222222222222222222222222222222222222222222222222"}
+	lib.assert_equal(trusted_task._trusted_build_digests, expected) with input.attestations as [attestation]
+		with data.trusted_tasks as trusted_tasks_data
+}
+
+test_trusted_build_digests_from_snapshot_components if {
+	# Digests present in the snapshot components should appear in _trusted_build_digests
+	components := [
+		# regal ignore:line-length
+		{"containerImage": "registry.io/repository/image1@sha256:3333333333333333333333333333333333333333333333333333333333333333"},
+		# regal ignore:line-length
+		{"containerImage": "registry.io/repository/image2@sha256:4444444444444444444444444444444444444444444444444444444444444444"},
+	]
+	expected := {
+		"sha256:3333333333333333333333333333333333333333333333333333333333333333",
+		"sha256:4444444444444444444444444444444444444444444444444444444444444444",
+	}
+	lib.assert_equal(trusted_task._trusted_build_digests, expected) with input.snapshot.components as components
+}
+
 #########################################
 # Pipeline Tasks using bundles resolver #
 #########################################

@@ -15,7 +15,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Usage: https://conforma.dev/docs/policy/release_policy.html#tasks_package
+# Usage: https://conforma.dev/docs/policy/packages/release_tasks.html
 pipeline-required-tasks:
   fbc:
     - effective_on: "2023-08-31T00:00:00Z"
@@ -85,7 +85,7 @@ pipeline-required-tasks:
         - show-sbom
         - summary
 
-# Usage: https://conforma.dev/docs/policy/release_policy.html#tasks_package
+# Usage: https://conforma.dev/docs/policy/packages/release_tasks.html
 required-tasks:
   - effective_on: "2023-08-31T00:00:00Z"
     tasks:

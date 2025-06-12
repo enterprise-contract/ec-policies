@@ -18,4 +18,4 @@ Verify that the images used to run the pre-build script tasks come from a known 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pre-Build-Script task runner image %q is from a disallowed registry`
 * Code: `pre_build_script_task.pre_build_script_task_runner_image_allowed`
-* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/pre_build_script_task/pre_build_script_task.rego#L20[Source, window="_blank"]
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/pre_build_script_task/pre_build_script_task.rego#L16[Source, window="_blank"]

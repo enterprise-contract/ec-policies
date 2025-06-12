@@ -13,8 +13,6 @@ import data.lib
 import data.lib.image
 import data.lib.tekton
 
-_pre_build_script_task_names := ["run-script-oci-ta"]
-
 # METADATA
 # title: Script runner image comes from allowed registry
 # description: >-
@@ -38,9 +36,7 @@ _pre_build_script_task_names := ["run-script-oci-ta"]
 #
 deny contains result if {
 	some attestation in lib.pipelinerun_attestations
-	some task in tekton.tasks(attestation)
-	some pre_build_task_name in _pre_build_script_task_names
-	tekton.task_name(task) == pre_build_task_name
+	some task in tekton.pre_build_tasks(attestation)
 	image_ref := tekton.task_param(task, _pre_build_script_runner_image_param)
 	not _image_ref_permitted(image_ref)
 	repo := image.parse(image_ref).repo

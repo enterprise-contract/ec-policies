@@ -327,6 +327,11 @@ test_build_task_not_found if {
 	count(tekton.build_tasks(missing_results)) == 0
 }
 
+test_pre_build_tasks if {
+	expected := [_pre_build_task]
+	lib.assert_equal(expected, tekton.pre_build_tasks(_good_attestation))
+}
+
 test_multiple_build_tasks if {
 	task1 := json.patch(_good_build_task, [{
 		"op": "replace",
@@ -644,6 +649,11 @@ _time_based_required_tasks := [
 	},
 ]
 
+_pre_build_task := {
+	"ref": {"kind": "Task", "name": "run-script-oci-ta", "bundle": _bundle},
+	"invocation": {"parameters": {"HERMETIC": "true"}},
+}
+
 _good_build_task := {
 	"results": [
 		{"name": "IMAGE_URL", "value": "registry/repo"},
@@ -671,7 +681,7 @@ _good_source_build_task := {
 
 _good_attestation := {"statement": {"predicate": {
 	"buildType": lib.tekton_pipeline_run,
-	"buildConfig": {"tasks": [_good_build_task, _good_git_clone_task, _good_source_build_task]},
+	"buildConfig": {"tasks": [_good_build_task, _good_git_clone_task, _good_source_build_task, _pre_build_task]},
 }}}
 
 slsav1_attestation_local_spec := {

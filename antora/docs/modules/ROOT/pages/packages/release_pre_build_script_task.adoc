@@ -1,0 +1,33 @@
+= Pre-build-script task checks Package
+
+This package verifies that the pre-build-script tasks in the attestation are executed in a controlled environment
+
+== Package Name
+
+* `pre_build_script_task`
+
+== Rules Included
+
+[#pre_build_script_task__pre_build_script_task_runner_image_in_sbom]
+=== link:#pre_build_script_task__pre_build_script_task_runner_image_in_sbom[Script runner image is included in the sbom]
+
+Verify that the image used to run the pre-build script task is included in the SBOM
+
+*Solution*: Make sure the image referenced in the 'SCRIPT_RUNNER_IMAGE_REFERENCE' output is included in the SBOM.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `Pre-Build-Script task runner image %q is not in the SBOM`
+* Code: `pre_build_script_task.pre_build_script_task_runner_image_in_sbom`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/pre_build_script_task/pre_build_script_task.rego#L39[Source, window="_blank"]
+
+[#pre_build_script_task__pre_build_script_task_runner_image_in_results]
+=== link:#pre_build_script_task__pre_build_script_task_runner_image_in_results[Script runner image is listed in the task results]
+
+Verify that the image used to run the pre-build script task is listed in the task output SCRIPT_RUNNER_IMAGE_REFERENCE
+
+*Solution*: Make sure the image used to run the pre-build task is referenced in the 'SCRIPT_RUNNER_IMAGE_REFERENCE' task result.
+
+* Rule type: [rule-type-indicator failure]#FAILURE#
+* FAILURE message: `The runner image used for the pre-Build-Script task '%s' is not listed in the task results`
+* Code: `pre_build_script_task.pre_build_script_task_runner_image_in_results`
+* https://github.com/conforma/policy/blob/{page-origin-refhash}/policy/release/pre_build_script_task/pre_build_script_task.rego#L16[Source, window="_blank"]

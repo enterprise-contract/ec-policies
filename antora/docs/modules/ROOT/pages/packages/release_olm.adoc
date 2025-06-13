@@ -35,7 +35,7 @@ Check the feature annotations in the ClusterServiceVersion manifest of the OLM b
 [#olm__allowed_registries]
 === link:#olm__allowed_registries[Images referenced by OLM bundle are from allowed registries]
 
-Each image referenced by the OLM bundle should match an entry in the list of prefixes defined by the rule data key `allowed_registry_prefixes` in your policy configuration.
+Each image referenced by the OLM bundle should match an entry in the list of prefixes defined by the rule data key `allowed_olm_image_registry_prefixes` in your policy configuration.
 
 *Solution*: Use image from an allowed registry, or modify your xref:ec-cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
 
@@ -61,7 +61,7 @@ OLM bundle images should be built for a single architecture. They should not be 
 [#olm__allowed_registries_related]
 === link:#olm__allowed_registries_related[Related images references are from allowed registries]
 
-Each image indicated as a related image should match an entry in the list of prefixes defined by the rule data key `allowed_registry_prefixes` in your policy configuration.
+Each image indicated as a related image should match an entry in the list of prefixes defined by the rule data key `allowed_olm_image_registry_prefixes` in your policy configuration.
 
 *Solution*: Use image from an allowed registry, or modify your xref:ec-cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
 

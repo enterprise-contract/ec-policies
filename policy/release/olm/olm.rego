@@ -154,28 +154,6 @@ deny contains result if {
 }
 
 # METADATA
-# title: Unable to access images in the input snapshot
-# description: >-
-#   Check the input snapshot and make sure all the images are accessible.
-# custom:
-#   short_name: inaccessible_snapshot_references
-#   failure_msg: The %q image reference is not accessible in the input snapshot.
-#   solution: >-
-#     Ensure all images in the input snapshot are valid.
-#   collections:
-#   - redhat
-#   effective_on: 2024-08-15T00:00:00Z
-#
-deny contains result if {
-	_release_restrictions_apply
-
-	components := input.snapshot.components
-	some component in components
-	not ec.oci.image_manifest(component.containerImage)
-	result := lib.result_helper_with_term(rego.metadata.chain(), [component.containerImage], component.containerImage)
-}
-
-# METADATA
 # title: Unable to access related images for a component
 # description: >-
 #   Check the input image for the presence of related images.

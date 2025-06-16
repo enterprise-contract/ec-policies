@@ -366,19 +366,6 @@ test_unpinned_snapshot_references_different_input if {
 		with input.image.ref as pinned2
 }
 
-test_inaccessible_snapshot_references if {
-	expected := {{
-		"code": "olm.inaccessible_snapshot_references",
-		"msg": "The \"registry.io/repository/image@sha256:cafe\" image reference is not accessible in the input snapshot.",
-		"term": "registry.io/repository/image@sha256:cafe",
-	}}
-
-	lib.assert_equal_results(olm.deny, expected) with input.snapshot.components as [component1]
-		with data.rule_data.pipeline_intention as "release"
-		with data.rule_data.allowed_olm_image_registry_prefixes as ["registry.io"]
-		with ec.oci.image_manifest as false
-}
-
 test_unmapped_references_in_operator if {
 	expected := {{
 		"code": "olm.unmapped_references",

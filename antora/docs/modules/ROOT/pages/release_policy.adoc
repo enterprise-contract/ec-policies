@@ -130,7 +130,6 @@ Rules included:
 * xref:packages/release_olm.adoc#olm__allowed_registries_related[OLM: Related images references are from allowed registries]        
 * xref:packages/release_olm.adoc#olm__required_olm_features_annotations_provided[OLM: Required OLM feature annotations list provided]        
 * xref:packages/release_olm.adoc#olm__subscriptions_annotation_format[OLM: Subscription annotation has expected value]        
-* xref:packages/release_olm.adoc#olm__inaccessible_snapshot_references[OLM: Unable to access images in the input snapshot]        
 * xref:packages/release_olm.adoc#olm__inaccessible_related_images[OLM: Unable to access related images for a component]        
 * xref:packages/release_olm.adoc#olm__unmapped_references[OLM: Unmapped images in OLM bundle]        
 * xref:packages/release_olm.adoc#olm__unpinned_references[OLM: Unpinned images in OLM bundle]        

@@ -87,6 +87,11 @@ rule_data_defaults := {
 		"features.operators.openshift.io/token-auth-azure",
 		"features.operators.openshift.io/token-auth-gcp",
 	],
+	# Used in release/olm.rego
+	"allowed_olm_image_registry_prefixes": [
+		"registry.access.redhat.com/",
+		"registry.redhat.io/",
+	],
 	# This will be set to "release" in Konflux release pipelines defined at
 	# https://github.com/konflux-ci/release-service-catalog/tree/development/pipelines
 	# Some checks are influenced by this value. Let's use null as a default instead

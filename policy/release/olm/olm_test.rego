@@ -424,6 +424,12 @@ test_olm_ci_pipeline if {
 	lib.assert_equal(false, olm._release_restrictions_apply) with data.rule_data as {"pipeline_intention": null}
 }
 
+test_mock_cafe_descriptor if {
+	# Test case that uses the mock_ec_oci_image_descriptor for cafe image
+	expected := `{"config": {"digest": "sha256:cafe"}}`
+	lib.assert_equal(mock_ec_oci_image_descriptor("registry.io/repository/image@sha256:cafe"), expected)
+}
+
 test_unmapped_references_none_found if {
 	lib.assert_empty(olm.deny) with input.snapshot.components as [component1, component2]
 		with input.image.files as {"manifests/csv.yaml": manifest}
@@ -578,4 +584,22 @@ _attestations_with_attachment(attachment) := attestations if {
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
+}
+
+test_image_ref_with_digest if {
+	img := {"repo": "registry.io/repo", "digest": "sha256:abc", "tag": "latest"}
+	expected := "registry.io/repo@sha256:abc"
+	lib.assert_equal(olm._image_ref(img), expected)
+}
+
+test_image_ref_with_tag if {
+	img := {"repo": "registry.io/repo", "digest": "", "tag": "latest"}
+	expected := "registry.io/repo:latest"
+	lib.assert_equal(olm._image_ref(img), expected)
+}
+
+test_image_ref_with_repo_only if {
+	img := {"repo": "registry.io/repo", "digest": "", "tag": ""}
+	expected := "registry.io/repo"
+	lib.assert_equal(olm._image_ref(img), expected)
 }

@@ -425,6 +425,12 @@ test_olm_ci_pipeline if {
 	lib.assert_equal(false, olm._release_restrictions_apply) with data.rule_data as {"pipeline_intention": null}
 }
 
+test_mock_cafe_descriptor if {
+	# Test case that uses the mock_ec_oci_image_descriptor for cafe image
+	expected := `{"config": {"digest": "sha256:cafe"}}`
+	lib.assert_equal(mock_ec_oci_image_descriptor("registry.io/repository/image@sha256:cafe"), expected)
+}
+
 test_unmapped_references_none_found if {
 	lib.assert_empty(olm.deny) with input.snapshot.components as [component1, component2]
 		with input.image.files as {"manifests/csv.yaml": manifest}

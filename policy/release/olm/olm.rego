@@ -172,6 +172,7 @@ deny contains result if {
 
 	unpinned_related_images := [related |
 		some related in _related_images_not_in_snapshot
+
 		# If the image ref is not pinned this will be an empty string
 		related.digest == ""
 	]
@@ -202,7 +203,11 @@ deny contains result if {
 	_release_restrictions_apply
 
 	some unmatched_image in _related_images_not_in_snapshot
-	unmatched_ref := sprintf("%s@%s", [unmatched_image.repo, unmatched_image.digest])
+	unmatched_ref := _image_ref(unmatched_image)
+
+	# Add a check here to ensure unmatched_ref is not empty or malformed
+	unmatched_ref != ""
+
 	not ec.oci.descriptor(unmatched_ref)
 
 	result := lib.result_helper_with_term(rego.metadata.chain(), [unmatched_ref], unmatched_ref)
@@ -577,3 +582,25 @@ _image_registry_allowed(image_repo, allowed_prefixes) if {
 _related_images_result_name := "RELATED_IMAGES_DIGEST"
 
 _related_images_oci_mime_type := "application/vnd.konflux-ci.attached-artifact.related-images+json"
+
+# Helper function to get the correctly formatted image reference string
+_image_ref(unmatched_image) := ref if {
+	# Case 1: Prioritize digest if present
+	unmatched_image.digest != ""
+	ref := sprintf("%s@%s", [unmatched_image.repo, unmatched_image.digest])
+}
+
+_image_ref(unmatched_image) := ref if {
+	# Case 2: If no digest, but a tag is present
+	unmatched_image.digest == ""
+	unmatched_image.tag != ""
+	ref := sprintf("%s:%s", [unmatched_image.repo, unmatched_image.tag])
+}
+
+_image_ref(unmatched_image) := ref if {
+	# Case 3: Fallback if neither digest nor tag is present (only repo)
+	# This ensures that image_ref is *always* defined if repo exists
+	unmatched_image.digest == ""
+	unmatched_image.tag == ""
+	ref := unmatched_image.repo
+}

@@ -50,9 +50,6 @@ manifest := {
 		"features.operators.openshift.io/disconnected": "true",
 		"features.operators.openshift.io/fips-compliant": "true",
 		"features.operators.openshift.io/proxy-aware": "true",
-		"features.operators.openshift.io/cnf": "false",
-		"features.operators.openshift.io/cni": "false",
-		"features.operators.openshift.io/csi": "false",
 		"features.operators.openshift.io/tls-profiles": "false",
 		"features.operators.openshift.io/token-auth-aws": "false",
 		"features.operators.openshift.io/token-auth-azure": "false",
@@ -160,8 +157,6 @@ test_feature_annotations_format if {
 		{"op": "add", "path": "/metadata/annotations/features.operators.openshift.io~1disconnected", "value": false},
 		{"op": "add", "path": "/metadata/annotations/features.operators.openshift.io~1fips-compliant", "value": true},
 		{"op": "add", "path": "/metadata/annotations/features.operators.openshift.io~1proxy-aware", "value": 1},
-		{"op": "add", "path": "/metadata/annotations/features.operators.openshift.io~1cnf", "value": "True"},
-		{"op": "add", "path": "/metadata/annotations/features.operators.openshift.io~1cni", "value": null},
 		{"op": "remove", "path": "/metadata/annotations/features.operators.openshift.io~1tls-profiles"},
 	])
 
@@ -182,16 +177,6 @@ test_feature_annotations_format if {
 			"code": "olm.feature_annotations_format",
 			"msg": "The annotation \"features.operators.openshift.io/proxy-aware\" is either missing or has an unexpected value",
 			"term": "features.operators.openshift.io/proxy-aware",
-		},
-		{
-			"code": "olm.feature_annotations_format",
-			"msg": "The annotation \"features.operators.openshift.io/cnf\" is either missing or has an unexpected value",
-			"term": "features.operators.openshift.io/cnf",
-		},
-		{
-			"code": "olm.feature_annotations_format",
-			"msg": "The annotation \"features.operators.openshift.io/cni\" is either missing or has an unexpected value",
-			"term": "features.operators.openshift.io/cni",
 		},
 		{
 			"code": "olm.feature_annotations_format",

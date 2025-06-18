@@ -67,6 +67,8 @@
 **** xref:packages/release_olm.adoc#olm__unmapped_references[Unmapped images in OLM bundle]
 **** xref:packages/release_olm.adoc#olm__unpinned_references[Unpinned images in OLM bundle]
 **** xref:packages/release_olm.adoc#olm__unpinned_snapshot_references[Unpinned images in input snapshot]
+*** xref:packages/release_pre_build_script_task.adoc[Pre-build-script task checks]
+**** xref:packages/release_pre_build_script_task.adoc#pre_build_script_task__pre_build_script_task_runner_image_allowed[Script runner image comes from allowed registry]
 *** xref:packages/release_provenance_materials.adoc[Provenance Materials]
 **** xref:packages/release_provenance_materials.adoc#provenance_materials__git_clone_source_matches_provenance[Git clone source matches materials provenance]
 **** xref:packages/release_provenance_materials.adoc#provenance_materials__git_clone_task_found[Git clone task found]

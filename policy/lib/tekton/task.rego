@@ -171,6 +171,14 @@ build_tasks(attestation) := [task |
 	count(image_digest) > 0
 ]
 
+pre_build_tasks(attestation) := [task |
+	some task in tasks(attestation)
+	some pre_build_task_name in _pre_build_task_names
+	task_name(task) == pre_build_task_name
+]
+
+_pre_build_task_names := ["run-script-oci-ta"]
+
 # return the tasks that have "TEST_OUTPUT" as a result
 tasks_output_result(attestation) := [task |
 	some task in tasks(attestation)

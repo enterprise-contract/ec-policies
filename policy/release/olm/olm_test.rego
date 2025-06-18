@@ -548,7 +548,9 @@ _manifests_unpinned := {
 
 _blobs := {"registry.io/repository/image@sha256:related_blob_digest": json.marshal(_related_images)}
 
-_unpinned_blobs := {"registry.io/repository/image@sha256:related_unpinned_blob_digest": json.marshal(_unpinned_related_images)}
+unpinned_blob_key := "registry.io/repository/image@sha256:related_unpinned_blob_digest"
+
+_unpinned_blobs := {unpinned_blob_key: json.marshal(_unpinned_related_images)}
 
 _mock_image_all(ref) := _manifests_all[ref]
 

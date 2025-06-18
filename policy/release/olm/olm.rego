@@ -180,7 +180,11 @@ deny contains result if {
 	# If any are unpinned we produce the violation
 	count(unpinned_related_images) > 0
 
-	result := lib.result_helper_with_term(rego.metadata.chain(), [count(unpinned_related_images)], count(unpinned_related_images))
+	result := lib.result_helper_with_term(
+		rego.metadata.chain(),
+		[count(unpinned_related_images)],
+		count(unpinned_related_images),
+	)
 }
 
 # METADATA

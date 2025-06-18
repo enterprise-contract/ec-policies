@@ -162,30 +162,7 @@ _is_base_image_property(property) if {
 _spdx_image_ref(pkg) := image_ref if {
 	some ref in pkg.externalRefs
 	ref.referenceType == "purl"
-
-	# Example purl:
-	#   "pkg:oci/someapp@sha256:012abc?repository_url=someregistry.io/someorg/someapp"
-	raw_purl := ref.referenceLocator
-
-	purl := ec.purl.parse(raw_purl)
-	purl.type == "oci"
-
-	# Todo maybe: We see "oci" in SBOMs produced by Konflux, but I think
-	# other SPDX creators might reasonably use "pkg:docker/" in the purl.
-	# purl.type in {"oci", "docker"}
-
-	# Example image_digest: "sha256:012abc"
-	image_digest := purl.version
-
-	some qualifier in purl.qualifiers
-	qualifier.key == "repository_url"
-
-	# Example repo_url: "someregistry.io/someorg/someapp"
-	# It's probably the same as pkg.name, but let's use the value from the purl
-	repo_url := qualifier.value
-
-	# Put them together to make a pinned image_ref
-	image_ref := sprintf("%s@%s", [repo_url, image_digest])
+	image_ref := sbom.image_ref_from_purl(ref.referenceLocator)
 }
 
 # Verify allowed_registry_prefixes is a non-empty list of strings

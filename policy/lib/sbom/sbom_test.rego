@@ -136,6 +136,15 @@ test_ignore_unrelated_sboms if {
 		with ec.oci.blob as ""
 }
 
+test_image_ref_from_purl if {
+	# regal ignore:line-length
+	purl := "pkg:oci/ubi-minimal@sha256:92b1d5747a93608b6adb64dfd54515c3c5a360802db4706765ff3d8470df6290?repository_url=registry.access.redhat.com/ubi9/ubi-minimal"
+
+	# regal ignore:line-length
+	image_ref := "registry.access.redhat.com/ubi9/ubi-minimal@sha256:92b1d5747a93608b6adb64dfd54515c3c5a360802db4706765ff3d8470df6290"
+	lib.assert_equal(sbom.image_ref_from_purl(purl), image_ref)
+}
+
 mock_ec_oci_cyclonedx_blob := `{"sbom": "from oci blob", "bomFormat": "CycloneDX"}`
 
 mock_ec_oci_spdx_blob := `{"sbom": "from oci blob", "SPDXID": "SPDXRef-DOCUMENT"}`

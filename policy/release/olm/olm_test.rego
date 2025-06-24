@@ -13,7 +13,7 @@ unpinned_related_img := "registry.io/repo/msd:latest"
 
 pinned0 := "registry.io/repository/image@sha256:dosa"
 
-pinned := "registry.io/repository/image@sha256:cafe"
+pinned1 := "registry.io/repository/image@sha256:cafe"
 
 pinned2 := "registry.io/repository/image2@sha256:tea"
 
@@ -31,7 +31,7 @@ component0 := {
 
 component1 := {
 	"name": "Unnamed",
-	"containerImage": pinned,
+	"containerImage": pinned1,
 	"source": {},
 }
 
@@ -57,8 +57,8 @@ manifest := {
 	"apiVersion": "operators.coreos.com/v1alpha1",
 	"kind": "ClusterServiceVersion",
 	"metadata": {"annotations": {
-		"containerImage": pinned,
-		"enclosurePicture": sprintf("%s,  %s", [pinned, pinned2]),
+		"containerImage": pinned1,
+		"enclosurePicture": sprintf("%s,  %s", [pinned1, pinned2]),
 		"features.operators.openshift.io/disconnected": "true",
 		"features.operators.openshift.io/fips-compliant": "true",
 		"features.operators.openshift.io/proxy-aware": "true",
@@ -73,21 +73,21 @@ manifest := {
 	}},
 	"spec": {
 		"version": "0.1.3",
-		"relatedImages": [{"image": pinned}],
+		"relatedImages": [{"image": pinned1}],
 		"install": {"spec": {"deployments": [{
-			"metadata": {"annotations": {"docket": sprintf("%s\n  %s", [pinned, pinned2])}},
+			"metadata": {"annotations": {"docket": sprintf("%s\n  %s", [pinned1, pinned2])}},
 			"spec": {"template": {
 				"metadata": {"name": "c1"},
 				"spec": {
 					"containers": [{
 						"name": "c1",
-						"image": pinned,
-						"env": [{"name": "RELATED_IMAGE_C1", "value": pinned}],
+						"image": pinned1,
+						"env": [{"name": "RELATED_IMAGE_C1", "value": pinned1}],
 					}],
 					"initContainers": [{
 						"name": "i1",
-						"image": pinned,
-						"env": [{"name": "RELATED_IMAGE_E1", "value": pinned}],
+						"image": pinned1,
+						"env": [{"name": "RELATED_IMAGE_E1", "value": pinned1}],
 					}],
 				},
 			}},
@@ -458,7 +458,7 @@ test_bundle_image_index if {
 		with data.rule_data.allowed_olm_image_registry_prefixes as ["registry.io", "registry.redhat.io"]
 		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 		with input.image.files as {"manifests/csv.yaml": manifest}
-		with input.image.ref as pinned
+		with input.image.ref as pinned1
 		with ec.oci.descriptor as descriptor
 }
 
@@ -515,7 +515,7 @@ test_allowed_registries_related if {
 		with ec.oci.descriptor as mock_ec_oci_image_descriptor
 }
 
-_related_images := [pinned, pinned2, pinned3]
+_related_images := [pinned1, pinned2, pinned3]
 
 _unpinned_related_images := [unpinned_related_img]
 

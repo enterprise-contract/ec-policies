@@ -381,7 +381,7 @@ test_unmapped_references_in_operator if {
 test_unpinned_related_images if {
 	expected_deny := {{
 		"code": "olm.unpinned_related_images",
-		"msg": "The reference of 2 related images is not pinned with a digest.",
+		"msg": "2 related images are not pinned with a digest: registry.io/repo/msd:latest, registry.io/repo/msd:latest.",
 	}}
 
 	lib.assert_equal_results(olm.deny, expected_deny) with data.rule_data.pipeline_intention as "release"

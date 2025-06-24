@@ -160,7 +160,7 @@ deny contains result if {
 #   Ensure all related image references include a digest.
 # custom:
 #   short_name: unpinned_related_images
-#   failure_msg: The reference of %d related images is not pinned with a digest.
+#   failure_msg: "%d related images are not pinned with a digest: %s."
 #   solution: >-
 #     Update the related images replacing the unpinned image reference
 #     with pinned image reference. Pinned image reference contains the image digest
@@ -180,7 +180,9 @@ deny contains result if {
 	# If any are unpinned we produce the violation
 	count(unpinned_related_images) > 0
 
-	result := lib.result_helper(rego.metadata.chain(), [count(unpinned_related_images)])
+	unpinned_refs := [_image_ref(r) | some r in unpinned_related_images]
+
+	result := lib.result_helper(rego.metadata.chain(), [count(unpinned_related_images), concat(", ", unpinned_refs)])
 }
 
 # METADATA

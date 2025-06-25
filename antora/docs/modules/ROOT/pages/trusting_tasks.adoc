@@ -151,7 +151,7 @@ must include an additional data source with task provenance information and
 digests relevant to the new custom task.
 
 For example, starting with
-https://github.com/enterprise-contract/config/blob/main/redhat-no-hermetic/policy.yaml[Red Hat's non-hermetic build policy],
+https://github.com/conforma/config/blob/main/redhat-no-hermetic/policy.yaml[Red Hat's non-hermetic build policy],
 a new data source can be added under the `sources.data` key. See
 https://github.com/simonbaird/securesign-ec-config/blob/main/policy.yaml#L24[this policy] for a complete example.
 
@@ -161,7 +161,7 @@ name: Secure Sign Custom Conforma Policy
 
 description: >-
   Based on the standard Red Hat (non hermetic) policy
-  (see https://github.com/enterprise-contract/config/blob/main/redhat-no-hermetic/policy.yaml)
+  (see https://github.com/conforma/config/blob/main/redhat-no-hermetic/policy.yaml)
   but with one additional data source.
 
 publicKey: "k8s://openshift-pipelines/public-key"

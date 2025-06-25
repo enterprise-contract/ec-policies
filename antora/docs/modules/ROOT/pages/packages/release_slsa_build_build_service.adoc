@@ -37,7 +37,7 @@ Verify that the attestation attribute predicate.builder.id is set.
 
 Verify that the attestation attribute predicate.builder.id is set to one of the values in the `allowed_builder_ids` rule data, e.g. "https://tekton.dev/chains/v2".
 
-*Solution*: Make sure the build id is set to an expected value. The expected values are set in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
+*Solution*: Make sure the build id is set to an expected value. The expected values are set in the xref:cli:ROOT:configuration.adoc#_data_sources[data sources].
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Builder ID %q is unexpected`

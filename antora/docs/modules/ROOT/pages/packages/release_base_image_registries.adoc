@@ -13,7 +13,7 @@ This package is responsible for verifying the base (parent) images reported in t
 
 Confirm the `allowed_registry_prefixes` rule data was provided, since it's required by the policy rules in this package.
 
-*Solution*: Make sure to configure a list of trusted registries as a xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
+*Solution*: Make sure to configure a list of trusted registries as a xref:cli:ROOT:configuration.adoc#_data_sources[data source].
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`
@@ -25,7 +25,7 @@ Confirm the `allowed_registry_prefixes` rule data was provided, since it's requi
 
 Verify that the base images used when building a container image come from a known set of trusted registries to reduce potential supply chain attacks. By default this policy defines trusted registries as registries that are fully maintained by Red Hat and only contain content produced by Red Hat. The list of permitted registries can be customized by setting the `allowed_registry_prefixes` list in the rule data. Base images that are found in the snapshot being validated are also allowed since EC will also validate those images individually.
 
-*Solution*: Make sure the image used in each task comes from a trusted registry. The list of trusted registries is a configurable xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
+*Solution*: Make sure the image used in each task comes from a trusted registry. The list of trusted registries is a configurable xref:cli:ROOT:configuration.adoc#_data_sources[data source].
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Base image %q is from a disallowed registry`

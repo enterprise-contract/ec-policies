@@ -13,7 +13,7 @@ This package verifies that the pre-build-script tasks in the attestation are exe
 
 Verify that the images used to run the pre-build script tasks come from a known set of trusted registries to reduce potential supply chain attacks. By default this policy defines trusted registries as registries that are fully maintained by Red Hat and only contain content produced by Red Hat. The list of allowed registries can be customized by setting the `allowed_registry_prefixes` list in the rule data.
 
-*Solution*: Make sure the image referenced in the parameter 'SCRIPT_RUNNER_IMAGE' comes from a trusted registry. The list of trusted registries is a configurable xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
+*Solution*: Make sure the image referenced in the parameter 'SCRIPT_RUNNER_IMAGE' comes from a trusted registry. The list of trusted registries is a configurable xref:cli:ROOT:configuration.adoc#_data_sources[data source].
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Pre-Build-Script task runner image %q is from a disallowed registry`

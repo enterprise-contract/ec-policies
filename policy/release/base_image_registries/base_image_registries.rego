@@ -30,7 +30,7 @@ import data.lib.sbom
 #   failure_msg: Base image %q is from a disallowed registry
 #   solution: >-
 #     Make sure the image used in each task comes from a trusted registry. The list of
-#     trusted registries is a configurable xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
+#     trusted registries is a configurable xref:cli:ROOT:configuration.adoc#_data_sources[data source].
 #   collections:
 #   - minimal
 #   - redhat
@@ -85,7 +85,7 @@ deny contains result if {
 #   failure_msg: "%s"
 #   solution: >-
 #     Make sure to configure a list of trusted registries as a
-#     xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
+#     xref:cli:ROOT:configuration.adoc#_data_sources[data source].
 #   collections:
 #   - minimal
 #   - redhat

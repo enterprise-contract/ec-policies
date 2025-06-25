@@ -17,7 +17,7 @@
 package main
 
 import (
-	_ "github.com/enterprise-contract/ec-cli"
+	_ "github.com/conforma/cli"
 	_ "github.com/google/addlicense"
 	_ "github.com/open-policy-agent/conftest"
 	_ "github.com/styrainc/regal"

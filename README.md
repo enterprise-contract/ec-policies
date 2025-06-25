@@ -52,7 +52,7 @@ You can run a single test like this:
 
 or
 
-    go run github.com/enterprise-contract/ec-cli opa test ./policy -r <test_name_matcher>
+    go run github.com/conforma/cli opa test ./policy -r <test_name_matcher>
 
 The `<test_name_matcher>` is a regex, so you can use it to run more than one
 test.
@@ -112,13 +112,13 @@ Then to verify the pipeline definition using the defined policies:
 
     make check-pipeline
 
-### Running policies against local [ec-cli] build
+### Running policies against local [ec] build
 
-Build a local version of `ec-cli` in your local ec-cli repo:
+Build a local version of `ec` in your local cli repo:
 
     make build
 
-Create a `policy.yaml` file in your local `ec-cli` repo with something like:
+Create a `policy.yaml` file in your local `cli` repo with something like:
 
     ---
     sources:
@@ -129,7 +129,7 @@ Create a `policy.yaml` file in your local `ec-cli` repo with something like:
           - oci::quay.io/konflux-ci/tekton-catalog/data-acceptable-bundles:latest
           - github.com/release-engineering/rhtap-ec-policy//data
 
-Run the locally built `ec-cli` command
+Run the locally built `ec` command
 
     dist/ec_<arch> validate image --verbose --images '{"components": [{"containerImage": "<container-image>", "name":"my-image", "source":{"git":{"url":"<repository-url>","revision":"<commit-id>"}}}]}' --policy 'policy.yaml' --public-key <public-key-to-verify-the-image> --strict false  --ignore-rekor --verbose --output=text
 
@@ -166,9 +166,9 @@ contributing to the definition of policy rules.
 [testing]: https://www.openpolicyagent.org/docs/latest/policy-testing/
 [docs]: https://conforma.dev/
 [policydocs]: https://conforma.dev/docs/policy/release_policy.html
-[taskdef]: https://github.com/enterprise-contract/ec-cli/blob/main/tasks/verify-enterprise-contract/0.1/verify-enterprise-contract.yaml
+[taskdef]: https://github.com/conforma/cli/blob/main/tasks/verify-enterprise-contract/0.1/verify-enterprise-contract.yaml
 [contract]: https://github.com/enterprise-contract
-[ec-cli]: https://github.com/enterprise-contract/ec-cli
+[ec]: https://github.com/conforma/cli
 [konflux-ci]: https://github.com/konflux-ci
 [builddefs]: https://github.com/konflux-ci/build-definitions
 [authoring]: https://conforma.dev/docs/policy/authoring.html

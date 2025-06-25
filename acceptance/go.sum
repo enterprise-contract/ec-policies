@@ -458,6 +458,8 @@ github.com/codahale/rfc6979 v0.0.0-20141003034818-6a90f24967eb h1:EDmT6Q9Zs+SbUo
 github.com/codahale/rfc6979 v0.0.0-20141003034818-6a90f24967eb/go.mod h1:ZjrT6AXHbDs86ZSdt/osfBi5qfexBrKUdONk989Wnk4=
 github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be h1:J5BL2kskAlV9ckgEsNQXscjIaLiOYiZ75d4e94E6dcQ=
 github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be/go.mod h1:mk5IQ+Y0ZeO87b858TlA645sVcEcbiX6YqP98kt+7+w=
+github.com/conforma/cli v0.7.95 h1:4PrUsPgNatLAlPCQU7fhSZQy6ZkFayMKSFpafG/2Gtc=
+github.com/conforma/cli v0.7.95/go.mod h1:L8uDqCxr5r0GfjxBtMm73S4GrTm+lSaLd1ChfOWbH8o=
 github.com/conforma/go-gather v1.0.2 h1:385cOcDpMxA7JpccMdbQOLIPsagQtDRAnSqZc1YTetI=
 github.com/conforma/go-gather v1.0.2/go.mod h1:e2yxUmy6KWE9+4mCcB0Vpk4CAHkvk21ktrq1m79BIyA=
 github.com/containerd/cgroups v1.1.0 h1:v8rEWFl6EoqHB+swVNjVoCJE8o3jX7e8nqBGPLaDFBM=
@@ -545,10 +547,8 @@ github.com/emicklei/proto v1.13.2 h1:z/etSFO3uyXeuEsVPzfl56WNgzcvIr42aQazXaQmFZY
 github.com/emicklei/proto v1.13.2/go.mod h1:rn1FgRS/FANiZdD2djyH7TMA9jdRDcYQ9IEN9yvjX0A=
 github.com/emirpasic/gods v1.18.1 h1:FXtiHYKDGKCW2KzwZKx0iC0PQmdlorYgdFG9jPXJ1Bc=
 github.com/emirpasic/gods v1.18.1/go.mod h1:8tpGGwCnJ5H4r6BWwaV6OrWmMoPhUl5jm/FMNAnJvWQ=
-github.com/enterprise-contract/ec-cli v0.7.81 h1:m9CQz2QsjFFTuVMWCSx25NmthDU5VnJDUnyAsRAbybs=
-github.com/enterprise-contract/ec-cli v0.7.81/go.mod h1:IEkv3RUpgN9zPjlIu0CUihU+Rgp5zSVrosCNi/RbwR0=
-github.com/enterprise-contract/enterprise-contract-controller/api v0.1.107 h1:WB9KEfybpKP01EaERyCCx4rHW9F5JgBIATlr3Fyjky4=
-github.com/enterprise-contract/enterprise-contract-controller/api v0.1.107/go.mod h1:zkK1IrRezUgKGK4tkN9hJtpu8NVqjKTMh4EshxXOi3g=
+github.com/enterprise-contract/enterprise-contract-controller/api v0.1.112 h1:4/PBvqANhDiJgpzOZG/zCj7Gl6jtsaMFRwCiFF2KNOg=
+github.com/enterprise-contract/enterprise-contract-controller/api v0.1.112/go.mod h1:YfIsqAmIc3ncPfxOw6LEsngWdeAVSO+V7svjoNpxyKs=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=
@@ -1189,8 +1189,8 @@ github.com/spdx/tools-golang v0.5.5 h1:61c0KLfAcNqAjlg6UNMdkwpMernhw3zVRwDZ2x9XO
 github.com/spdx/tools-golang v0.5.5/go.mod h1:MVIsXx8ZZzaRWNQpUDhC4Dud34edUYJYecciXgrw5vE=
 github.com/spf13/afero v1.1.2/go.mod h1:j4pytiNVoe2o6bmDsKpLACNPDBIoEAkihy7loJ1B0CQ=
 github.com/spf13/afero v1.3.4/go.mod h1:Ai8FlHk4v/PARR026UzYexafAt9roJ7LcLMAmO6Z93I=
-github.com/spf13/afero v1.11.0 h1:WJQKhtpdm3v2IzqG8VMqrr6Rf3UYpEF239Jy9wNepM8=
-github.com/spf13/afero v1.11.0/go.mod h1:GH9Y3pIexgf1MTIWtNGyogA5MwRIDXGUr+hbWNoBjkY=
+github.com/spf13/afero v1.14.0 h1:9tH6MapGnn/j0eb0yIXiLjERO8RB6xIVZRDCX7PtqWA=
+github.com/spf13/afero v1.14.0/go.mod h1:acJQ8t0ohCGuMN3O+Pv0V0hgMxNYDlvdk+VTfyZmbYo=
 github.com/spf13/cast v1.3.0/go.mod h1:Qx5cxh0v+4UWYiBimWS+eyWzqEqokIECu5etghLkUJE=
 github.com/spf13/cast v1.7.0 h1:ntdiHjuueXFgm5nzDRdOS4yfT43P5Fnud6DH50rz/7w=
 github.com/spf13/cast v1.7.0/go.mod h1:ancEpBxwJDODSW/UG4rDrAqiKolqNNh2DX3mk86cAdo=

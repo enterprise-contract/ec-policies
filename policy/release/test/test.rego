@@ -117,7 +117,7 @@ deny contains result if {
 #   failure_msg: The Task %q from the build Pipeline has an unsupported test result %q
 #   solution: >-
 #     The test results should be of a known value. Values can be set as a
-#     xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
+#     xref:cli:ROOT:configuration.adoc#_data_sources[data source].
 #   collections:
 #   - redhat
 #   - redhat_rpms

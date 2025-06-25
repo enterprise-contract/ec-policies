@@ -50,7 +50,7 @@ deny contains result if {
 #   failure_msg: Builder ID %q is unexpected
 #   solution: >-
 #     Make sure the build id is set to an expected value. The expected values
-#     are set in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
+#     are set in the xref:cli:ROOT:configuration.adoc#_data_sources[data sources].
 #   collections:
 #   - slsa3
 #   - redhat

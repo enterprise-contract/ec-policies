@@ -25,7 +25,7 @@ Confirm the `allowed_predicate_types` rule data was provided, since it is requir
 
 Verify that the predicateType field of the attestation indicates the in-toto SLSA Provenance format was used to attest the PipelineRun.
 
-*Solution*: The predicate type field in the attestation does not match the 'allowed_predicate_types' field. This field is set in the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
+*Solution*: The predicate type field in the attestation does not match the 'allowed_predicate_types' field. This field is set in the xref:cli:ROOT:configuration.adoc#_data_sources[data sources].
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Attestation predicate type %q is not an expected type (%s)`

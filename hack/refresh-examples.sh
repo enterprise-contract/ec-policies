@@ -78,7 +78,7 @@ POLICY='{
   ]
 }'
 
-go run -modfile "${ROOT_DIR}/go.mod" github.com/enterprise-contract/ec-cli validate image \
+go run -modfile "${ROOT_DIR}/go.mod" github.com/conforma/cli validate image \
     --images "${IMAGES}" \
     --public-key "${PUBLIC_KEY}" \
     --ignore-rekor \

@@ -14,11 +14,11 @@ xref:pipeline_policy.adoc[Pipeline Policy].
 == Additional Documentation
 
 * https://konflux-ci.dev/docs/[Konflux Documentation]
-* xref:ec-cli::index.adoc[Conforma CLI Documentation]
+* xref:cli::index.adoc[Conforma CLI Documentation]
 
 == Code
 
 * https://github.com/conforma/plicy[github.com/conforma/policy]
-* https://github.com/enterprise-contract/ec-cli[github.com/enterprise-contract/ec-cli]
+* https://github.com/conforma/cli[github.com/conforma/cli]
 * https://github.com/enterprise-contract[github.com/enterprise-contract]
 * https://github.com/konflux-ci[github.com/konflux-ci]

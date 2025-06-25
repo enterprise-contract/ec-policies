@@ -21,7 +21,7 @@ import data.lib.json as j
 #   failure_msg: Unknown attestation type '%s'
 #   solution: >-
 #     Make sure the "_type" field in the attestation is supported. Supported types are configured
-#     in xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
+#     in xref:cli:ROOT:configuration.adoc#_data_sources[data sources].
 #   collections:
 #   - minimal
 #   - redhat

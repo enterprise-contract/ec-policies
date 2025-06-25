@@ -25,7 +25,7 @@ Ensure that the all required tasks are resolved from trusted tasks.
 
 Ensure that the set of required tasks are included in the PipelineRun attestation.
 
-*Solution*: Make sure all required tasks are in the build pipeline. The required task list is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'.
+*Solution*: Make sure all required tasks are in the build pipeline. The required task list is contained as xref:cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s is missing`
@@ -85,7 +85,7 @@ Ensure that at least one Task is present in the PipelineRun attestation.
 
 Produce a warning if the required tasks list rule data was not provided.
 
-*Solution*: The required task list is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'. Make sure this list exists.
+*Solution*: The required task list is contained as xref:cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'. Make sure this list exists.
 
 * Rule type: [rule-type-indicator warning]#WARNING#
 * WARNING message: `Required tasks do not exist for pipeline`
@@ -97,7 +97,7 @@ Produce a warning if the required tasks list rule data was not provided.
 
 Confirm the `required-tasks` rule data was provided, since it's required by the policy rules in this package.
 
-*Solution*: Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key 'required-tasks' that contains a list of tasks that are required to run in the build pipeline.
+*Solution*: Make sure the xref:cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key 'required-tasks' that contains a list of tasks that are required to run in the build pipeline.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Missing required required-tasks data`

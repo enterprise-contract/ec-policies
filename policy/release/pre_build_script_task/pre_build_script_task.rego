@@ -28,7 +28,7 @@ import data.lib.tekton
 #   solution: >-
 #     Make sure the image referenced in the parameter 'SCRIPT_RUNNER_IMAGE' comes from
 #     a trusted registry. The list of trusted registries is a configurable
-#     xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
+#     xref:cli:ROOT:configuration.adoc#_data_sources[data source].
 #   collections:
 #   - redhat
 #   depends_on:

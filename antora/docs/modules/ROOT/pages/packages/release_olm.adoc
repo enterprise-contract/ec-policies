@@ -37,7 +37,7 @@ Check the feature annotations in the ClusterServiceVersion manifest of the OLM b
 
 Each image referenced by the OLM bundle should match an entry in the list of prefixes defined by the rule data key `allowed_olm_image_registry_prefixes` in your policy configuration.
 
-*Solution*: Use image from an allowed registry, or modify your xref:ec-cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
+*Solution*: Use image from an allowed registry, or modify your xref:cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The %q CSV image reference is not from an allowed registry.`
@@ -63,7 +63,7 @@ OLM bundle images should be built for a single architecture. They should not be 
 
 Each image indicated as a related image should match an entry in the list of prefixes defined by the rule data key `allowed_olm_image_registry_prefixes` in your policy configuration.
 
-*Solution*: Use image from an allowed registry, or modify your xref:ec-cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
+*Solution*: Use image from an allowed registry, or modify your xref:cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The %q related image reference is not from an allowed registry.`

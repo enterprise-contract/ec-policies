@@ -25,7 +25,7 @@ set -o nounset
 REPO_PREFIX="${REPO_PREFIX-quay.io/enterprise-contract/}"
 ROOT_DIR=$( git rev-parse --show-toplevel )
 BUNDLES="release pipeline task build_task"
-OPA="go run github.com/enterprise-contract/ec-cli opa"
+OPA="go run github.com/conforma/cli opa"
 ORAS="go run oras.land/oras/cmd/oras"
 
 DRY_RUN=${DRY_RUN:-""}

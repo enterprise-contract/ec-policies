@@ -13,7 +13,7 @@ This package ensures that a Task definition contains expected values for the ima
 
 Confirm the `allowed_step_image_registry_prefixes` rule data was provided, since it's required by the policy rules in this package.
 
-*Solution*: Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key 'allowed_step_image_registry_prefixes' that contains a list of approved registries that can be used to run tasks in the build pipeline.
+*Solution*: Make sure the xref:cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key 'allowed_step_image_registry_prefixes' that contains a list of approved registries that can be used to run tasks in the build pipeline.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`

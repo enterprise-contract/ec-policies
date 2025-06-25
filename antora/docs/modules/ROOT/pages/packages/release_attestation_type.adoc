@@ -26,7 +26,7 @@ The Conforma CLI now places the attestation data in a different location. This c
 
 Confirm the attestation found for the image has a known attestation type.
 
-*Solution*: Make sure the "_type" field in the attestation is supported. Supported types are configured in xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources].
+*Solution*: Make sure the "_type" field in the attestation is supported. Supported types are configured in xref:cli:ROOT:configuration.adoc#_data_sources[data sources].
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `Unknown attestation type '%s'`

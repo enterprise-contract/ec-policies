@@ -22,7 +22,7 @@ import (
 	"os"
 
 	// Register custom rego functions
-	_ "github.com/enterprise-contract/ec-cli/cmd/validate"
+	_ "github.com/conforma/cli/cmd/validate"
 	"github.com/styrainc/regal/cmd"
 )
 

@@ -131,5 +131,5 @@ _attestations := [att |
 _slsa_provenance_predicate_type_v1 := "https://slsa.dev/provenance/v1"
 
 # The actual raw attestation is found under the 'statement' key.
-# See https://conforma.dev/docs/ec-cli/policy_input.html#_validate_image
+# See https://conforma.dev/docs/cli/policy_input.html#_validate_image
 _all_attestations := input.attestations

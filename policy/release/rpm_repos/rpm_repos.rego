@@ -153,7 +153,7 @@ _purl_qualifier(key, purl) := result if {
 
 # SBOMs often list many hundreds of components. Let's avoid producing that
 # many violations if none of the purls are passing this test. (In future we
-# might move this to a shared library or to the ec-cli.)
+# might move this to a shared library or to ec.)
 
 # If there are more than this then truncate the list
 _truncate_threshold := 10

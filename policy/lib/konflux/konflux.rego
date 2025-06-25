@@ -7,7 +7,7 @@ import data.lib.image
 import data.lib.tekton
 
 # Currently, it's not possible to determine if the image being validated is an Image Index or an
-# Image Manifest, see https://github.com/enterprise-contract/ec-cli/issues/2121. This function is
+# Image Manifest, see https://github.com/conforma/cli/issues/2121. This function is
 # implemented as a workaround. It uses Konflux-specific heuristics to determine if the provided
 # image is an Image Index.
 is_validating_image_index if {

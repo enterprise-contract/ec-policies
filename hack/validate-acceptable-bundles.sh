@@ -34,7 +34,7 @@ TKN="go run github.com/tektoncd/cli/cmd/tkn"
 
 if ! command -v ec > /dev/null 2>&1; then
     # this is most likely on GitHub Actions, which runs on 64bit Linux
-    curl -o ec -sSL https://github.com/enterprise-contract/ec-cli/releases/download/snapshot/ec_linux_amd64
+    curl -o ec -sSL https://github.com/conforma/cli/releases/download/snapshot/ec_linux_amd64
     chmod +x ec
     PATH=$PATH:$PWD
     trap "rm ec" EXIT

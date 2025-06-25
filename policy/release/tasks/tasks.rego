@@ -70,7 +70,7 @@ warn contains result if {
 #   short_name: pipeline_required_tasks_list_provided
 #   failure_msg: Required tasks do not exist for pipeline
 #   solution: >-
-#     The required task list is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data]
+#     The required task list is contained as xref:cli:ROOT:configuration.adoc#_data_sources[data]
 #     under the key 'required-tasks'. Make sure this list exists.
 #   collections:
 #   - redhat
@@ -178,7 +178,7 @@ deny contains result if {
 #   failure_msg: '%s is missing'
 #   solution: >-
 #     Make sure all required tasks are in the build pipeline. The required task list
-#     is contained as xref:ec-cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'.
+#     is contained as xref:cli:ROOT:configuration.adoc#_data_sources[data] under the key 'required-tasks'.
 #   collections:
 #   - redhat
 #   depends_on:
@@ -201,7 +201,7 @@ deny contains result if {
 #   short_name: required_tasks_list_provided
 #   failure_msg: Missing required required-tasks data
 #   solution: >-
-#     Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key
+#     Make sure the xref:cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key
 #     'required-tasks' that contains a list of tasks that are required to run in the
 #     build pipeline.
 #   collections:

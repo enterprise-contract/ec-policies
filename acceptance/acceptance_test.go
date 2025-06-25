@@ -34,7 +34,7 @@ import (
 
 	"github.com/cucumber/godog"
 	// Neded so the "go run" command can execute.
-	_ "github.com/enterprise-contract/ec-cli/cmd"
+	_ "github.com/conforma/cli/cmd"
 )
 
 const (
@@ -146,7 +146,7 @@ func validateInputWithPolicyConfig(ctx context.Context) (context.Context, error)
 	cmd := exec.Command(
 		"go",
 		"run",
-		"github.com/enterprise-contract/ec-cli",
+		"github.com/conforma/cli",
 		"validate",
 		"input",
 		"--file",

@@ -87,7 +87,7 @@ Produce a violation if any tests have their result set to "SKIPPED". A skipped r
 
 Ensure all test data result values are in the set of known/supported result values.
 
-*Solution*: The test results should be of a known value. Values can be set as a xref:ec-cli:ROOT:configuration.adoc#_data_sources[data source].
+*Solution*: The test results should be of a known value. Values can be set as a xref:cli:ROOT:configuration.adoc#_data_sources[data source].
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `The Task %q from the build Pipeline has an unsupported test result %q`

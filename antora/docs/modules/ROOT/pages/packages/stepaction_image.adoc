@@ -37,7 +37,7 @@ Confirm the container image used in the StepTemplate is accessible.
 
 Confirm the `allowed_step_image_registry_prefixes` rule data is provided.
 
-*Solution*: Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key 'allowed_step_image_registry_prefixes' that contains a list of approved registries.
+*Solution*: Make sure the xref:cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key 'allowed_step_image_registry_prefixes' that contains a list of approved registries.
 
 * Rule type: [rule-type-indicator failure]#FAILURE#
 * FAILURE message: `%s`

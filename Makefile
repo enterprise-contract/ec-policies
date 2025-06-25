@@ -11,11 +11,11 @@ POLICY_DIR=./policy
 # Use ec for the opa and conftest commands so that our custom rego
 # functions are available.
 ifndef EC_REF
-  EC_MOD=github.com/enterprise-contract/ec-cli
+  EC_MOD=github.com/conforma/cli
 else
   # EC_REF can be set to use ec built from a particular ref, e.g.:
   #   EC_REF=release-v0.2 make ec-version quiet-test
-  EC_MOD=github.com/enterprise-contract/ec-cli@$(EC_REF)
+  EC_MOD=github.com/conforma/cli@$(EC_REF)
 endif
 
 EC=go run $(EC_MOD)
@@ -197,7 +197,7 @@ annotations-opa:
 SHORT_SHA=$(shell git rev-parse --short HEAD)
 
 generate-docs:  ## Generate static docs
-	@cd docs && go run github.com/conforma/policy/docs -adoc ../antora/docs/modules/ROOT -rego .. -rego "$$(go list -modfile ../go.mod -f '{{.Dir}}' github.com/enterprise-contract/ec-cli)/docs/policy/release"
+	@cd docs && go run github.com/conforma/policy/docs -adoc ../antora/docs/modules/ROOT -rego .. -rego "$$(go list -modfile ../go.mod -f '{{.Dir}}' github.com/conforma/cli)/docs/policy/release"
 
 ##@ CI
 
@@ -251,7 +251,7 @@ ifndef IMAGE
 endif
 
 ifndef KEY
-  KEY="../ec-cli/key.pub"
+  KEY="../cli/key.pub"
 endif
 
 .PHONY: fetch-att
@@ -327,7 +327,7 @@ acceptance: ## Run acceptance tests
 ##@ IDE Binaries
 
 bin/ec: go.mod ## Create the EC binary
-	@go build -o bin/ec github.com/enterprise-contract/ec-cli
+	@go build -o bin/ec github.com/conforma/cli
 
 bin/regal: go.mod regal.go ## Create the regal binary
 	@go build -o bin/regal regal.go

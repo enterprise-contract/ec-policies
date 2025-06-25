@@ -67,7 +67,7 @@ deny contains result if {
 #   short_name: rule_data
 #   failure_msg: "%s"
 #   solution: >-
-#     Make sure the xref:ec-cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key
+#     Make sure the xref:cli:ROOT:configuration.adoc#_data_sources[data sources] contains a key
 #     'allowed_step_image_registry_prefixes' that contains a list of approved registries.
 #
 deny contains result if {

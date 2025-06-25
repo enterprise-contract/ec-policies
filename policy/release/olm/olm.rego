@@ -202,7 +202,7 @@ deny contains result if {
 #   failure_msg: The %q related image reference is not from an allowed registry.
 #   solution: >-
 #     Use image from an allowed registry, or modify your
-#     xref:ec-cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
+#     xref:cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
 #   collections:
 #   - redhat
 #   effective_on: 2025-04-15T00:00:00Z
@@ -272,7 +272,7 @@ deny contains result if {
 #   failure_msg: The %q CSV image reference is not from an allowed registry.
 #   solution: >-
 #     Use image from an allowed registry, or modify your
-#     xref:ec-cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
+#     xref:cli:ROOT:configuration.adoc#_data_sources[policy configuration] to include additional registry prefixes.
 #   collections:
 #   - redhat
 #   effective_on: 2024-09-01T00:00:00Z

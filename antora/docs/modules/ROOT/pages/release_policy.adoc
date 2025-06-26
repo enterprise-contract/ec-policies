@@ -134,6 +134,7 @@ Rules included:
 * xref:packages/release_olm.adoc#olm__unmapped_references[OLM: Unmapped images in OLM bundle]        
 * xref:packages/release_olm.adoc#olm__unpinned_references[OLM: Unpinned images in OLM bundle]        
 * xref:packages/release_olm.adoc#olm__unpinned_snapshot_references[OLM: Unpinned images in input snapshot]        
+* xref:packages/release_olm.adoc#olm__unpinned_related_images[OLM: Unpinned related images for a component]        
 * xref:packages/release_pre_build_script_task.adoc#pre_build_script_task__pre_build_script_task_runner_image_allowed[Pre-build-script task checks: Script runner image comes from allowed registry]        
 * xref:packages/release_pre_build_script_task.adoc#pre_build_script_task__valid_pre_build_script_task_runner_image_ref[Pre-build-script task checks: Script runner image is a valid image reference]        
 * xref:packages/release_pre_build_script_task.adoc#pre_build_script_task__pre_build_script_task_runner_image_in_sbom[Pre-build-script task checks: Script runner image is included in the sbom]        

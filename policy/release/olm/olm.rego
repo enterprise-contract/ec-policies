@@ -154,6 +154,38 @@ deny contains result if {
 }
 
 # METADATA
+# title: Unpinned related images for a component
+# description: >-
+#   Check the input image for the presence of related images.
+#   Ensure all related image references include a digest.
+# custom:
+#   short_name: unpinned_related_images
+#   failure_msg: "%d related images are not pinned with a digest: %s."
+#   solution: >-
+#     Update the related images replacing the unpinned image reference
+#     with pinned image reference. Pinned image reference contains the image digest
+#   collections:
+#   - redhat
+#
+deny contains result if {
+	_release_restrictions_apply
+
+	unpinned_related_images := [related |
+		some related in _related_images_not_in_snapshot
+
+		# If the image ref is not pinned this will be an empty string
+		related.digest == ""
+	]
+
+	# If any are unpinned we produce the violation
+	count(unpinned_related_images) > 0
+
+	unpinned_refs := [_image_ref(r) | some r in unpinned_related_images]
+
+	result := lib.result_helper(rego.metadata.chain(), [count(unpinned_related_images), concat(", ", unpinned_refs)])
+}
+
+# METADATA
 # title: Unable to access related images for a component
 # description: >-
 #   Check the input image for the presence of related images.
@@ -172,21 +204,12 @@ deny contains result if {
 deny contains result if {
 	_release_restrictions_apply
 
-	snapshot_components := input.snapshot.components
-	component_images_digests := [component_image.digest |
-		some component in snapshot_components
-		component_image := image.parse(component.containerImage)
-	]
+	some unmatched_image in _related_images_not_in_snapshot
+	unmatched_ref := _image_ref(unmatched_image)
 
-	some related_images in _related_images(input.image)
+	# Add a check here to ensure unmatched_ref is not empty or malformed
+	unmatched_ref != ""
 
-	unmatched_image_refs := [related |
-		some related in related_images
-		not related.digest in component_images_digests
-	]
-
-	some unmatched_image in unmatched_image_refs
-	unmatched_ref := sprintf("%s@%s", [unmatched_image.repo, unmatched_image.digest])
 	not ec.oci.descriptor(unmatched_ref)
 
 	result := lib.result_helper_with_term(rego.metadata.chain(), [unmatched_ref], unmatched_ref)
@@ -322,6 +345,17 @@ deny contains result if {
 _name(o) := n if {
 	n := o.name
 } else := "unnamed"
+
+_related_images_not_in_snapshot := [related_image.ref |
+	snapshot_components := input.snapshot.components
+	component_images_digests := [component_image.digest |
+		some component in snapshot_components
+		component_image := image.parse(component.containerImage)
+	]
+
+	some related_image in _related_images(input.image)
+	not related_image.ref.digest in component_images_digests
+]
 
 # Extracts the related images attached to the image. The RELATED_IMAGES_DIGEST result
 # contains the digest of a referring image manifest containing the related image json
@@ -550,3 +584,25 @@ _image_registry_allowed(image_repo, allowed_prefixes) if {
 _related_images_result_name := "RELATED_IMAGES_DIGEST"
 
 _related_images_oci_mime_type := "application/vnd.konflux-ci.attached-artifact.related-images+json"
+
+# Helper function to get the correctly formatted image reference string
+_image_ref(unmatched_image) := ref if {
+	# Case 1: Prioritize digest if present
+	unmatched_image.digest != ""
+	ref := sprintf("%s@%s", [unmatched_image.repo, unmatched_image.digest])
+}
+
+_image_ref(unmatched_image) := ref if {
+	# Case 2: If no digest, but a tag is present
+	unmatched_image.digest == ""
+	unmatched_image.tag != ""
+	ref := sprintf("%s:%s", [unmatched_image.repo, unmatched_image.tag])
+}
+
+_image_ref(unmatched_image) := ref if {
+	# Case 3: Fallback if neither digest nor tag is present (only repo)
+	# This ensures that image_ref is *always* defined if repo exists
+	unmatched_image.digest == ""
+	unmatched_image.tag == ""
+	ref := unmatched_image.repo
+}

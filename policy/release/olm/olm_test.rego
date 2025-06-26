@@ -7,7 +7,13 @@ import data.lib.tekton_test
 import data.lib_test
 import data.olm
 
-pinned := "registry.io/repository/image@sha256:cafe"
+unpinned := "registry.io/repo/msd:no_digest"
+
+unpinned_related_img := "registry.io/repo/msd:latest"
+
+pinned0 := "registry.io/repository/image@sha256:dosa"
+
+pinned1 := "registry.io/repository/image@sha256:cafe"
 
 pinned2 := "registry.io/repository/image2@sha256:tea"
 
@@ -17,9 +23,15 @@ pinned_ref := {"digest": "sha256:cafe", "repo": "registry.io/repository/image", 
 
 pinned_ref2 := {"digest": "sha256:tea", "repo": "registry.io/repository/image2", "tag": ""}
 
+component0 := {
+	"name": "Unnamed",
+	"containerImage": pinned0,
+	"source": {},
+}
+
 component1 := {
 	"name": "Unnamed",
-	"containerImage": pinned,
+	"containerImage": pinned1,
 	"source": {},
 }
 
@@ -37,7 +49,7 @@ component3 := {
 
 unpinned_component := {
 	"name": "unpinned_image",
-	"containerImage": "registry.io/repo/msd:no_digest",
+	"containerImage": unpinned,
 	"source": {},
 }
 
@@ -45,8 +57,8 @@ manifest := {
 	"apiVersion": "operators.coreos.com/v1alpha1",
 	"kind": "ClusterServiceVersion",
 	"metadata": {"annotations": {
-		"containerImage": pinned,
-		"enclosurePicture": sprintf("%s,  %s", [pinned, pinned2]),
+		"containerImage": pinned1,
+		"enclosurePicture": sprintf("%s,  %s", [pinned1, pinned2]),
 		"features.operators.openshift.io/disconnected": "true",
 		"features.operators.openshift.io/fips-compliant": "true",
 		"features.operators.openshift.io/proxy-aware": "true",
@@ -61,21 +73,21 @@ manifest := {
 	}},
 	"spec": {
 		"version": "0.1.3",
-		"relatedImages": [{"image": pinned}],
+		"relatedImages": [{"image": pinned1}],
 		"install": {"spec": {"deployments": [{
-			"metadata": {"annotations": {"docket": sprintf("%s\n  %s", [pinned, pinned2])}},
+			"metadata": {"annotations": {"docket": sprintf("%s\n  %s", [pinned1, pinned2])}},
 			"spec": {"template": {
 				"metadata": {"name": "c1"},
 				"spec": {
 					"containers": [{
 						"name": "c1",
-						"image": pinned,
-						"env": [{"name": "RELATED_IMAGE_C1", "value": pinned}],
+						"image": pinned1,
+						"env": [{"name": "RELATED_IMAGE_C1", "value": pinned1}],
 					}],
 					"initContainers": [{
 						"name": "i1",
-						"image": pinned,
-						"env": [{"name": "RELATED_IMAGE_E1", "value": pinned}],
+						"image": pinned1,
+						"env": [{"name": "RELATED_IMAGE_E1", "value": pinned1}],
 					}],
 				},
 			}},
@@ -366,6 +378,22 @@ test_unmapped_references_in_operator if {
 		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 }
 
+test_unpinned_related_images if {
+	expected_deny := {{
+		"code": "olm.unpinned_related_images",
+		"msg": "2 related images are not pinned with a digest: registry.io/repo/msd:latest, registry.io/repo/msd:latest.",
+	}}
+
+	lib.assert_equal_results(olm.deny, expected_deny) with data.rule_data.pipeline_intention as "release"
+		with data.rule_data.allowed_olm_image_registry_prefixes as ["registry.io"]
+		with input.snapshot.components as [component0]
+		with input.attestations as _with_related_images
+		with input.image.ref as "registry.io/repository/image@sha256:image_digest"
+		with ec.oci.image_manifest as _mock_unpinned_image_partial
+		with ec.oci.blob as _mock_unpinned_blob
+		with ec.oci.descriptor as mock_ec_oci_image_descriptor
+}
+
 test_inaccessible_related_images if {
 	expected_deny := {{
 		"code": "olm.inaccessible_related_images",
@@ -383,13 +411,23 @@ test_inaccessible_related_images if {
 		with ec.oci.descriptor as mock_ec_oci_image_descriptor
 }
 
+mock_ec_oci_image_descriptor("registry.io/repository/image@sha256:cafe") := `{"config": {"digest": "sha256:cafe"}}`
+
 mock_ec_oci_image_descriptor("registry.io/repository/image3@sha256:coffee") := `{"config": {"digest": "sha256:coffee"}}`
 
 mock_ec_oci_image_descriptor("registry.io/repository/image2@sha256:tea") := false
 
+mock_ec_oci_image_descriptor("registry.io/repo/msd:latest") := `{"config": {"digest": ""}}`
+
 test_olm_ci_pipeline if {
 	# Make sure no violations are thrown if it isn't a release pipeline
 	lib.assert_equal(false, olm._release_restrictions_apply) with data.rule_data as {"pipeline_intention": null}
+}
+
+test_mock_cafe_descriptor if {
+	# Test case that uses the mock_ec_oci_image_descriptor for cafe image
+	expected := `{"config": {"digest": "sha256:cafe"}}`
+	lib.assert_equal(mock_ec_oci_image_descriptor("registry.io/repository/image@sha256:cafe"), expected)
 }
 
 test_unmapped_references_none_found if {
@@ -420,7 +458,7 @@ test_bundle_image_index if {
 		with data.rule_data.allowed_olm_image_registry_prefixes as ["registry.io", "registry.redhat.io"]
 		with input.image.config.Labels as {olm.manifestv1: "manifests/"}
 		with input.image.files as {"manifests/csv.yaml": manifest}
-		with input.image.ref as pinned
+		with input.image.ref as pinned1
 		with ec.oci.descriptor as descriptor
 }
 
@@ -477,7 +515,9 @@ test_allowed_registries_related if {
 		with ec.oci.descriptor as mock_ec_oci_image_descriptor
 }
 
-_related_images := [pinned, pinned2, pinned3]
+_related_images := [pinned1, pinned2, pinned3]
+
+_unpinned_related_images := [unpinned_related_img]
 
 _manifests_all := {
 	"registry.io/repository/image@sha256:related_digest": {"layers": [{
@@ -497,13 +537,29 @@ _manifests_partial := {
 	"registry.io/repository/image@sha256:cafe": {"config": {"digest": "sha256:cafe"}},
 }
 
+_manifests_unpinned := {
+	"registry.io/repository/image@sha256:related_digest": {"layers": [{
+		"mediaType": olm._related_images_oci_mime_type,
+		"digest": "sha256:related_unpinned_blob_digest",
+	}]},
+	"registry.io/repository/image@sha256:dosa": {"config": {"digest": "sha256:dosa"}},
+}
+
 _blobs := {"registry.io/repository/image@sha256:related_blob_digest": json.marshal(_related_images)}
+
+unpinned_blob_key := "registry.io/repository/image@sha256:related_unpinned_blob_digest"
+
+_unpinned_blobs := {unpinned_blob_key: json.marshal(_unpinned_related_images)}
 
 _mock_image_all(ref) := _manifests_all[ref]
 
 _mock_image_partial(ref) := _manifests_partial[ref]
 
+_mock_unpinned_image_partial(ref) := _manifests_unpinned[ref]
+
 _mock_blob(ref) := _blobs[ref]
+
+_mock_unpinned_blob(ref) := _unpinned_blobs[ref]
 
 _bundle := "registry.img/spam@sha256:4e388ab32b10dc8dbc7e28144f552830adc74787c1e2c0824032078a79f227fb"
 
@@ -528,4 +584,22 @@ _attestations_with_attachment(attachment) := attestations if {
 		),
 		lib_test.mock_slsav1_attestation_with_tasks([tekton_test.slsav1_task_bundle(slsav1_task_with_result, _bundle)]),
 	]
+}
+
+test_image_ref_with_digest if {
+	img := {"repo": "registry.io/repo", "digest": "sha256:abc", "tag": "latest"}
+	expected := "registry.io/repo@sha256:abc"
+	lib.assert_equal(olm._image_ref(img), expected)
+}
+
+test_image_ref_with_tag if {
+	img := {"repo": "registry.io/repo", "digest": "", "tag": "latest"}
+	expected := "registry.io/repo:latest"
+	lib.assert_equal(olm._image_ref(img), expected)
+}
+
+test_image_ref_with_repo_only if {
+	img := {"repo": "registry.io/repo", "digest": "", "tag": ""}
+	expected := "registry.io/repo"
+	lib.assert_equal(olm._image_ref(img), expected)
 }

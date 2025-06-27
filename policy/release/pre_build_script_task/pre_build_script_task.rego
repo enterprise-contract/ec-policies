@@ -130,10 +130,11 @@ _script_runner_image_refs := [image_ref |
 
 _pre_build_run_script_runner_image_result := "SCRIPT_RUNNER_IMAGE_REFERENCE"
 
-_is_image_in_sbom(image) if {
+_is_image_in_sbom(image_ref) if {
 	some s in sbom.all_sboms
 	some purl in _purls_from_sbom(s)
-	sbom.image_ref_from_purl(purl) == image
+	image_ref_from_purl := sbom.image_ref_from_purl(purl)
+	image.equal_ref(image_ref_from_purl, image_ref)
 }
 
 _purls_from_sbom(s) := purls if {

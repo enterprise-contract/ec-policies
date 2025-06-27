@@ -55,6 +55,30 @@ test_pre_build_image_in_sbom if {
 		with data.rule_data.allowed_registry_prefixes as _allowed_registries
 }
 
+test_pre_build_image_in_sbom_ignoring_tag if {
+	# Add a tag into the image refs as well as the digest, "some-tag" and "latest".
+	good_attestation_with_tag_in_image_ref := json.patch(_good_attestation, [
+		{
+			"op": "replace",
+			"path": "/statement/predicate/buildConfig/tasks/0/results/0/value",
+			"value": "registry.redhat.io/ubi7:some-tag@sha256:bcd",
+		},
+		{
+			"op": "replace",
+			"path": "/statement/predicate/buildConfig/tasks/1/results/0/value",
+			"value": "quay.io/konflux-ci/bazel6-ubi9:latest@sha256:def",
+		},
+	])
+
+	# regal ignore:line-length
+	lib.assert_empty(pre_build_script_task.deny) with input.attestations as [good_attestation_with_tag_in_image_ref, _cyclonedx_sbom_attestation]
+		with data.rule_data.allowed_registry_prefixes as _allowed_registries
+
+	# regal ignore:line-length
+	lib.assert_empty(pre_build_script_task.deny) with input.attestations as [good_attestation_with_tag_in_image_ref, _spdx_sbom_attestation]
+		with data.rule_data.allowed_registry_prefixes as _allowed_registries
+}
+
 test_pre_build_image_not_in_sbom if {
 	expected := {{
 		"code": "pre_build_script_task.pre_build_script_task_runner_image_in_sbom",
